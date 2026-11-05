@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>108課綱標準教具與三端自適應展演台 (V3 Visual-First Engine)</title>
+  <style>
+    :root {
+      --bg: #0F172A;
+      --card-bg: #1E293B;
+      --card-border: #334155;
+      --primary: #38BDF8;
+      --accent: #F59E0B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --purple: #A855F7;
+      --text-main: #F8FAFC;
+      --text-sub: #94A3B8;
+      --text-muted: #64748B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #020617;
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px 10px;
+    }
+
+    /* 頂部控制面板：教具切換 + 裝置模擬切換 */
+    .top-control-panel {
+      width: 100%;
+      max-width: 960px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #1E293B;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px 16px;
+    }
+
+    .panel-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .curriculum-meta {
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    /* 裝置切換器 (手機 📱 / 平板 💻 / 電腦 🖥️) */
+    .device-switcher {
+      display: flex;
+      background: #0F172A;
+      border-radius: 8px;
+      padding: 3px;
+      border: 1px solid var(--card-border);
+    }
+
+    .device-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .device-btn.active {
+      background: #0284C7;
+      color: #fff;
+    }
+
+    /* 教具切換列 */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+      background: #0F172A;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #38BDF8;
+      color: #0F172A;
+      border-color: #38BDF8;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+    }
+
+    /* 模擬容器：依裝置動態縮放排版 */
+    .viewport-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    /* 1. 手機模式 (Mobile 390px) */
+    .viewport-wrapper.mode-mobile .app-frame {
+      width: 390px;
+      height: 820px;
+      border-radius: 36px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 6px #1E293B;
+      flex-direction: column;
+    }
+
+    /* 2. 平板模式 (Tablet 768px iPad 雙欄排版) */
+    .viewport-wrapper.mode-tablet .app-frame {
+      width: 768px;
+      height: 640px;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 8px #1E293B;
+      flex-direction: column;
+    }
+
+    .viewport-wrapper.mode-tablet .main-content-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      height: calc(100% - 50px);
+    }
+
+    /* 3. 電腦模式 (Desktop 960px 寬螢幕排版) */
+    .viewport-wrapper.mode-desktop .app-frame {
+      width: 960px;
+      height: 660px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 10px #1E293B;
+      flex-direction: column;
+    }
+
+    .viewport-wrapper.mode-desktop .main-content-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      height: calc(100% - 50px);
+    }
+
+    /* 主應用外框通用樣式 */
+    .app-frame {
+      background: var(--bg);
+      border: 1px solid #475569;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    /* 頂部極簡導航 (<40px) */
+    .app-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px 8px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+      z-index: 10;
+    }
+
+    .unit-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .source-tag {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: #1E293B;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+
+    /* 內容視窗 */
+    .screen-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px;
+      overflow-y: auto;
+    }
+
+    /* 雙欄模式自適應包裹區 */
+    .main-content-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    /* 左側/上半部：題幹 + 核心教具 */
+    .left-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* 右側/下半部：選項 + 破招解析 */
+    .right-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    /* 題幹卡片 */
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .curriculum-code-tag {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .question-stem {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .question-stem .hl {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* 核心視覺教具展演台 (可自適應放大) */
+    .visual-stage {
+      background: #0B1120;
+      border: 1px solid #1E293B;
+      border-radius: 14px;
+      min-height: 230px;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .visual-toolbar {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .visual-label {
+      font-size: 11px;
+      color: var(--text-sub);
+      background: rgba(15, 23, 42, 0.85);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+    }
+
+    .visual-step-btn {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0F172A;
+      background: #38BDF8;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+      transition: all 0.2s;
+    }
+
+    .visual-step-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* 直式計算樣式 (課綱標準) */
+    .vertical-calc-table {
+      font-family: "Courier New", Courier, monospace, "Microsoft JhengHei";
+      font-size: 22px;
+      font-weight: 700;
+      color: #F8FAFC;
+      border-collapse: collapse;
+      letter-spacing: 4px;
+    }
+
+    .vertical-calc-table td {
+      padding: 3px 8px;
+      text-align: center;
+      min-width: 32px;
+    }
+
+    .val-cell { position: relative; }
+
+    .borrow-sub {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .borrow-slashed {
+      position: relative;
+      color: #64748B;
+    }
+    .borrow-slashed::after {
+      content: "/";
+      position: absolute;
+      left: 8px;
+      top: -2px;
+      color: var(--danger);
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .calc-line {
+      border-bottom: 2px solid #94A3B8;
+    }
+
+    /* 選項 2x2 矩陣 */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .option-btn {
+      background: #1E293B;
+      border: 1.5px solid #334155;
+      border-radius: 12px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover { background: #273549; }
+    .option-btn:active { transform: scale(0.96); }
+
+    .option-btn.selected-correct {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--success);
+      color: #34D399;
+    }
+
+    .option-btn.selected-wrong {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: var(--danger);
+      color: #F87171;
+    }
+
+    .option-key {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      position: absolute;
+      top: 5px;
+      left: 8px;
+    }
+
+    .option-value {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* 平板/電腦模式的內嵌破招詳解面板 (手機為抽屜) */
+    .solution-panel {
+      background: #1E293B;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: none;
+    }
+
+    .solution-step {
+      background: #0F172A;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .solution-step .step-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+
+    /* 手機模式抽屜 */
+    .drawer-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 40;
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .solution-drawer {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: #1E293B;
+      border-top: 2px solid #475569;
+      border-radius: 20px 20px 0 0;
+      padding: 14px 18px 20px;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      transform: translateY(105%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 50;
+      max-height: 75%;
+      overflow-y: auto;
+    }
+
+    .solution-drawer.open { transform: translateY(0); }
+    .drawer-handle { width: 36px; height: 4px; background: #475569; border-radius: 2px; margin: 0 auto 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部控制面板 -->
+  <div class="top-control-panel">
+    <div class="panel-row">
+      <div class="curriculum-meta">🏛️ 108 課綱官方教具與三端自適應展演台 (Visual-First)</div>
+      
+      <!-- 裝置視角切換器 -->
+      <div class="device-switcher">
+        <button class="device-btn active" onclick="switchDevice('mobile')">📱 手機 (390px)</button>
+        <button class="device-btn" onclick="switchDevice('tablet')">💻 平板 (768px)</button>
+        <button class="device-btn" onclick="switchDevice('desktop')">🖥️ 電腦 (960px)</button>
+      </div>
+    </div>
+
+    <!-- 教具切換列 -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchDemo('fraction')">異分母通分 (N-5-4)</button>
+      <button class="tab-btn" onclick="switchDemo('subtraction')">減法退位直式 (N-2-2)</button>
+      <button class="tab-btn" onclick="switchDemo('multiplication')">乘法分層直式 (N-3-3)</button>
+      <button class="tab-btn" onclick="switchDemo('division')">除法長除法階梯 (N-3-4)</button>
+      <button class="tab-btn" onclick="switchDemo('geometry')">周長拉直線段 (S-4-2)</button>
+    </div>
+  </div>
+
+  <!-- 主模擬容器 -->
+  <div class="viewport-wrapper mode-mobile" id="viewportWrapper">
+    <div class="app-frame">
+      
+      <!-- 頂部狀態列 (<40px) -->
+      <div class="app-top-bar">
+        <div class="unit-badge">
+          <span id="demoGradeTag">G5</span>
+          <span style="color:#64748B;">•</span>
+          <span id="demoTitle">異分母分數加減</span>
+        </div>
+        <div class="source-tag" id="demoCurriculumTag">課綱 N-5-4</div>
+      </div>
+
+      <!-- 內容視窗 -->
+      <div class="screen-content">
+        <div class="main-content-layout">
+          
+          <!-- 左區塊：題幹 + 核心教具 -->
+          <div class="left-zone">
+            <!-- 題幹卡片 -->
+            <div class="question-card">
+              <div class="curriculum-code-tag" id="demoSubTag">【通分算理與矩陣雙重切割】</div>
+              <div class="question-stem" id="demoStem">
+                大水壺有 <span class='hl'>1/2 公升</span> 柳橙汁，小水壺有 <span class='hl'>1/3 公升</span> 蘋果汁，請問兩者合共有多少公升？
+              </div>
+            </div>
+
+            <!-- 核心視覺教具展演台 -->
+            <div class="visual-stage" id="visualStage">
+              <div class="visual-toolbar">
+                <span class="visual-label" id="stageLabel">步驟 0：單位量不同無法直接相加</span>
+                <button class="visual-step-btn" id="stepActionBtn" onclick="onStepAction()">
+                  ▶️ 演示下一步算理
+                </button>
+              </div>
+
+              <!-- 動態內容掛載點 -->
+              <div id="canvasWrapper" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+              </div>
+            </div>
+          </div>
+
+          <!-- 右區塊：選項 + 平板/電腦內嵌解析 -->
+          <div class="right-zone">
+            <!-- 選項 2x2 矩陣 -->
+            <div class="options-grid" id="optionsGrid">
+              <!-- 動態渲染選項 -->
+            </div>
+
+            <!-- 平板/電腦內嵌解析面板 -->
+            <div class="solution-panel" id="inlineSolutionPanel">
+              <div id="inlineContent"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 手機專用彈出抽屜 -->
+      <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+      <div class="solution-drawer" id="solutionDrawer">
+        <div class="drawer-handle"></div>
+        <div id="drawerContent"></div>
+        <button style="width:100%; background:#0284C7; border:none; color:#fff; font-size:14px; font-weight:700; padding:10px; border-radius:8px; margin-top:8px; cursor:pointer;" onclick="closeDrawer()">關閉解析</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // 裝置切換
+    var currentDevice = 'mobile';
+    function switchDevice(device) {
+      currentDevice = device;
+      var wrapper = document.getElementById("viewportWrapper");
+      wrapper.className = "viewport-wrapper mode-" + device;
+
+      document.querySelectorAll(".device-btn").forEach(function(b) {
+        b.classList.remove("active");
+        if (b.getAttribute("onclick").indexOf(device) !== -1) b.classList.add("active");
+      });
+
+      // 平板與電腦模式若已答題，直接在右側顯示解析
+      updateSolutionView();
+    }
+
+    // 5 大課綱領域資料 (重點深化：異分母通分包含擴分步驟算理)
+    var demos = {
+      // 1. 異分母分數通分 (深度算理：找公倍數、分子分母同乘、矩陣切割)
+      fraction: {
+        grade: "G5·上",
+        curriculum: "課綱 N-5-4 異分母分數加減與通分",
+        sub: "【通分算理：找公倍數 ➔ 擴分 ➔ 矩陣等分切割】",
+        stem: "大水壺有 <span class='hl'>1/2 公升</span> 柳橙汁，小水壺有 <span class='hl'>1/3 公升</span> 蘋果汁，合共有多少公升？",
+        choices: ["2/5 公升", "5/6 公升", "1/6 公升", "3/5 公升"],
+        correctIndex: 1,
+        explanation: {
+          concept: "課綱重點：分母不同（單位量不一致）不能直接加。必須找出分母最小公倍數擴分，才能相加。",
+          steps: [
+            "步驟 1：分母 2 和 3 的最小公倍數是 6（共同分母）。",
+            "步驟 2 擴分：<code>1/2 ＝ (1×3)/(2×3) ＝ 3/6</code>",
+            "步驟 3 擴分：<code>1/3 ＝ (1×2)/(3×2) ＝ 2/6</code>",
+            "步驟 4 相加：<code>3/6 ＋ 2/6 ＝ 5/6</code> 公升。"
+          ],
+          trap: "最經典課綱示警錯誤：分子加分子、分母加分母（1+1 / 2+3 = 2/5），此乃大忌！"
+        },
+        steps: [
+          {
+            label: "步驟 0：原始異分母（單位量不同，不能直接加）",
+            render: function() {
+              return `
+                <div style="display:flex; flex-direction:column; width:100%; max-width:340px; gap:8px;">
+                  <div style="font-size:12px; color:#38BDF8; font-weight:700;">1/2 公升 (分2大格，佔1格)</div>
+                  <div style="width:100%; height:26px; background:#1E293B; border:1px solid #475569; border-radius:4px; display:flex;">
+                    <div style="width:50%; background:#0284C7; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1/2</div>
+                    <div style="width:50%;"></div>
+                  </div>
+
+                  <div style="font-size:12px; color:#F59E0B; font-weight:700;">1/3 公升 (分3大格，佔1格)</div>
+                  <div style="width:100%; height:26px; background:#1E293B; border:1px solid #475569; border-radius:4px; display:flex;">
+                    <div style="width:33.3%; background:#D97706; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;">1/3</div>
+                    <div style="width:66.7%; border-left:1px dashed #64748B;"></div>
+                  </div>
+
+                  <div style="text-align:center; color:#EF4444; font-size:12px; font-weight:700; background:rgba(239,68,68,0.1); padding:4px; border-radius:6px; margin-top:4px;">
+                    ⚠️ 格子長度不同（單位量不一致），絕對不能直接相加！
+                  </div>
+                </div>
+              `;
+            }
+          },
+          {
+            label: "步驟 1：找分母公倍數，進行「擴分」計算",
+            render: function() {
+              return `
+                <div style="background:#0F172A; border:1px solid #334155; border-radius:10px; padding:12px; width:100%; max-width:340px; text-align:center;">
+                  <div style="font-size:12px; color:#38BDF8; font-weight:700; margin-bottom:8px;">
+                    尋找 [2, 3] 的最小公倍數 ＝ 6
+                  </div>
+                  
+                  <div style="display:flex; justify-content:space-around; align-items:center; font-family:monospace; font-size:15px; margin-bottom:8px;">
+                    <div style="background:#1E293B; padding:8px 12px; border-radius:8px; border:1px solid #0284C7;">
+                      <div>1 &times; <span style="color:#38BDF8;">3</span> ＝ 3</div>
+                      <div style="border-top:1px solid #94A3B8; margin:2px 0;"></div>
+                      <div>2 &times; <span style="color:#38BDF8;">3</span> ＝ <span style="color:#38BDF8; font-weight:800;">6</span></div>
+                    </div>
+
+                    <span style="font-size:20px; color:#64748B;">＋</span>
+
+                    <div style="background:#1E293B; padding:8px 12px; border-radius:8px; border:1px solid #D97706;">
+                      <div>1 &times; <span style="color:#F59E0B;">2</span> ＝ 2</div>
+                      <div style="border-top:1px solid #94A3B8; margin:2px 0;"></div>
+                      <div>3 &times; <span style="color:#F59E0B;">2</span> ＝ <span style="color:#F59E0B; font-weight:800;">6</span></div>
+                    </div>
+                  </div>
+
+                  <div style="font-size:12px; color:#34D399; font-weight:700;">
+                    兩數成功通分成相同分母：3/6 ＋ 2/6
+                  </div>
+                </div>
+              `;
+            }
+          },
+          {
+            label: "步驟 2：長條細分成 6 等分，直接合併",
+            render: function() {
+              return `
+                <div style="display:flex; flex-direction:column; width:100%; max-width:340px; gap:6px;">
+                  <div style="font-size:12px; color:#38BDF8; font-weight:700;">1/2 變成 3/6 (細分後得 3 個 1/6)</div>
+                  <div style="width:100%; height:24px; background:#1E293B; border:1px solid #475569; border-radius:4px; display:flex;">
+                    <div style="width:16.6%; background:#0284C7; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#0284C7; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#0284C7; border-right:1px solid #fff;"></div>
+                    <div style="width:50.2%;"></div>
+                  </div>
+
+                  <div style="font-size:12px; color:#F59E0B; font-weight:700;">1/3 變成 2/6 (細分後得 2 個 1/6)</div>
+                  <div style="width:100%; height:24px; background:#1E293B; border:1px solid #475569; border-radius:4px; display:flex;">
+                    <div style="width:16.6%; background:#D97706; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#D97706; border-right:1px solid #fff;"></div>
+                    <div style="width:66.8%;"></div>
+                  </div>
+
+                  <div style="font-size:12px; color:#34D399; font-weight:800; margin-top:4px;">合併：3 格 ＋ 2 格 ＝ 5 格 (5/6 公升)</div>
+                  <div style="width:100%; height:24px; background:#1E293B; border:2px solid #10B981; border-radius:4px; display:flex;">
+                    <div style="width:16.6%; background:#0284C7; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#0284C7; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#0284C7; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#D97706; border-right:1px solid #fff;"></div>
+                    <div style="width:16.6%; background:#D97706; border-right:1px solid #fff;"></div>
+                    <div style="width:17%;"></div>
+                  </div>
+                </div>
+              `;
+            }
+          }
+        ]
+      },
+
+      // 2. 減法退位直式
+      subtraction: {
+        grade: "G2·下",
+        curriculum: "課綱 N-2-2 加減算式與直式計算",
+        sub: "【位值退位與借位標記法】",
+        stem: "小明存了 <span class='hl'>52 元</span>，買文具花去 <span class='hl'>28 元</span>，請問還剩下多少元？",
+        choices: ["34 元", "24 元", "36 元", "26 元"],
+        correctIndex: 1,
+        explanation: {
+          concept: "課綱重點：個位 2 減 8 不夠減，必須向十位借 1 當 10。",
+          steps: [
+            "十位的 5 被借走 1，剩下 4（劃線標記 4）。",
+            "借來的 10 加上個位的 2 變成 12，<code>12 − 8 ＝ 4</code>。",
+            "十位剩下 4，減去 2：<code>4 − 2 ＝ 2</code>，故答案為 24 元。"
+          ],
+          trap: "常見學生錯誤：直接用減數反減被減數（把 8−2 算成 6，得出 36），此為課綱手冊重點示警錯誤！"
+        },
+        steps: [
+          {
+            label: "步驟 0：位值對齊列式",
+            render: function() {
+              return `
+                <table class="vertical-calc-table">
+                  <tr style="color:#64748B; font-size:12px;"><td style="border-right:1px dashed #334155;">十</td><td>個</td></tr>
+                  <tr><td class="val-cell" style="border-right:1px dashed #334155;">5</td><td class="val-cell">2</td></tr>
+                  <tr class="calc-line"><td style="border-right:1px dashed #334155;">− 2</td><td>8</td></tr>
+                  <tr><td style="color:#64748B; border-right:1px dashed #334155;">?</td><td style="color:#64748B;">?</td></tr>
+                </table>
+              `;
+            }
+          },
+          {
+            label: "步驟 1：個位不夠減，十位退 1 作 10",
+            render: function() {
+              return `
+                <table class="vertical-calc-table">
+                  <tr style="height:20px;">
+                    <td style="border-right:1px dashed #334155;"><span class="borrow-sub" style="color:#38BDF8;">4</span></td>
+                    <td><span class="borrow-sub" style="color:#F59E0B;">10</span></td>
+                  </tr>
+                  <tr>
+                    <td class="val-cell borrow-slashed" style="border-right:1px dashed #334155;">5</td>
+                    <td class="val-cell" style="color:#F59E0B; font-weight:800;">2</td>
+                  </tr>
+                  <tr class="calc-line"><td style="border-right:1px dashed #334155;">− 2</td><td>8</td></tr>
+                  <tr><td style="border-right:1px dashed #334155;">&nbsp;</td><td style="color:#34D399; font-weight:800;">4</td></tr>
+                </table>
+                <div style="font-size:12px; color:#94A3B8; margin-top:8px;">(10＋2) − 8 ＝ 4</div>
+              `;
+            }
+          },
+          {
+            label: "步驟 2：十位 4 減 2 ＝ 2",
+            render: function() {
+              return `
+                <table class="vertical-calc-table">
+                  <tr style="height:20px;">
+                    <td style="border-right:1px dashed #334155;"><span class="borrow-sub" style="color:#38BDF8;">4</span></td>
+                    <td><span class="borrow-sub" style="color:#F59E0B;">10</span></td>
+                  </tr>
+                  <tr>
+                    <td class="val-cell borrow-slashed" style="border-right:1px dashed #334155;">5</td>
+                    <td class="val-cell">2</td>
+                  </tr>
+                  <tr class="calc-line"><td style="border-right:1px dashed #334155;">− 2</td><td>8</td></tr>
+                  <tr style="background:rgba(16,185,129,0.1);"><td style="color:#34D399; font-weight:800; border-right:1px dashed #334155;">2</td><td style="color:#34D399; font-weight:800;">4</td></tr>
+                </table>
+                <div style="font-size:12px; color:#34D399; font-weight:700; margin-top:8px;">算理完成：差為 24</div>
+              `;
+            }
+          }
+        ]
+      },
+
+      // 3. 乘法直式
+      multiplication: {
+        grade: "G3·上",
+        curriculum: "課綱 N-3-3 乘以一位數與多位數",
+        sub: "【分層部分積 (Partial Products) 算理】",
+        stem: "每盒蛋塔賣 <span class='hl'>46 元</span>，買 <span class='hl'>3 盒</span> 總共需要付多少元？",
+        choices: ["128 元", "138 元", "148 元", "72 元"],
+        correctIndex: 1,
+        explanation: {
+          concept: "課綱重點：二位數乘一位數直式，是 40×3 與 6×3 的加總。",
+          steps: [
+            "個位計算：6 × 3 ＝ 18（在個位記 8，進 1 到十位）。",
+            "十位計算：40 × 3 ＝ 120，加上進位 1 個十，得到 13 個十（130）。",
+            "合計：120 ＋ 18 ＝ 138 元。"
+          ],
+          trap: "常見錯誤：忘記加上進位的 1，算成 4×3=12，寫成 128。"
+        },
+        steps: [
+          {
+            label: "步驟 0：乘法直式列式",
+            render: function() {
+              return `
+                <table class="vertical-calc-table">
+                  <tr><td>&nbsp;</td><td>4</td><td>6</td></tr>
+                  <tr class="calc-line"><td>×</td><td>&nbsp;</td><td>3</td></tr>
+                  <tr><td colspan="3" style="color:#64748B;">?</td></tr>
+                </table>
+              `;
+            }
+          },
+          {
+            label: "步驟 1：個位 6 × 3 ＝ 18 (進 1 到十位)",
+            render: function() {
+              return `
+                <table class="vertical-calc-table">
+                  <tr style="height:16px;"><td>&nbsp;</td><td style="color:#F59E0B; font-size:12px;">¹</td><td>&nbsp;</td></tr>
+                  <tr><td>&nbsp;</td><td>4</td><td style="color:#F59E0B;">6</td></tr>
+                  <tr class="calc-line"><td>×</td><td>&nbsp;</td><td style="color:#F59E0B;">3</td></tr>
+                  <tr><td>&nbsp;</td><td>&nbsp;</td><td style="color:#38BDF8;">8</td></tr>
+                </table>
+                <div style="font-size:12px; color:#94A3B8; margin-top:6px;">6×3=18：個位寫8，十位進1</div>
+              `;
+            }
+          },
+          {
+            label: "步驟 2：十位 4 × 3 ＝ 12，加進位 1 ＝ 13",
+            render: function() {
+              return `
+                <table class="vertical-calc-table">
+                  <tr style="height:16px;"><td>&nbsp;</td><td style="color:#F59E0B; font-size:12px;">¹</td><td>&nbsp;</td></tr>
+                  <tr><td>&nbsp;</td><td style="color:#38BDF8;">4</td><td>6</td></tr>
+                  <tr class="calc-line"><td>×</td><td>&nbsp;</td><td style="color:#38BDF8;">3</td></tr>
+                  <tr style="background:rgba(56,189,248,0.15);"><td style="color:#34D399;">1</td><td style="color:#34D399;">3</td><td style="color:#34D399;">8</td></tr>
+                </table>
+                <div style="font-size:12px; color:#34D399; font-weight:700; margin-top:6px;">十位 12＋1＝13，答案 138</div>
+              `;
+            }
+          }
+        ]
+      },
+
+      // 4. 除法長除法階梯
+      division: {
+        grade: "G3·下",
+        curriculum: "課綱 N-3-4 除法意義與長除法直式",
+        sub: "【商數相乘、相減、落位 (Bring Down)】",
+        stem: "將 <span class='hl'>85 顆蘋果</span> 平分裝進 <span class='hl'>4 個箱子</span>，每箱有幾顆？還剩下幾顆？",
+        choices: ["21顆 餘 1", "20顆 餘 5", "22顆 餘 1", "19顆 餘 9"],
+        correctIndex: 0,
+        explanation: {
+          concept: "課綱手冊重點：除法平分先處理高位（十位），再處理低位（個位）。餘數必小於除數！",
+          steps: [
+            "十位：8 個十平分給 4 箱，每箱分得 2 個十（商十位寫 2，4×2=8，8-8=0）。",
+            "個位落位：將個位的 5 落下。5 平分給 4，每箱分得 1（商個位寫 1，4×1=4）。",
+            "求餘數：5 − 4 ＝ 1（餘數 1 < 除數 4，計算成立）。"
+          ],
+          trap: "選項 B (餘5)：餘數 5 大於除數 4，表示還能再分，未除盡！"
+        },
+        steps: [
+          {
+            label: "步驟 0：長除法列式",
+            render: function() {
+              return `
+                <div style="font-family:'Courier New', monospace; font-size:20px; line-height:1.4;">
+                  <div style="margin-left:50px; color:#64748B;">?? &larr; 商</div>
+                  <div style="display:flex; align-items:center;">
+                    <span style="color:#F59E0B; margin-right:8px;">4</span>
+                    <span style="border-left:2px solid #fff; border-top:2px solid #fff; padding:2px 8px; border-radius:4px 0 0 0;">8 5</span>
+                  </div>
+                </div>
+              `;
+            }
+          },
+          {
+            label: "步驟 1：除十位 (8 ÷ 4 ＝ 2)",
+            render: function() {
+              return `
+                <div style="font-family:'Courier New', monospace; font-size:18px; line-height:1.3;">
+                  <div style="margin-left:46px; color:#38BDF8; font-weight:800;">2 &nbsp;</div>
+                  <div style="display:flex; align-items:center;">
+                    <span style="color:#F59E0B; margin-right:8px;">4</span>
+                    <span style="border-left:2px solid #fff; border-top:2px solid #fff; padding:2px 8px;">8 5</span>
+                  </div>
+                  <div style="margin-left:46px; color:#94A3B8; border-bottom:1px solid #64748B; width:36px;">8</div>
+                  <div style="margin-left:46px; color:#38BDF8;">0</div>
+                </div>
+              `;
+            }
+          },
+          {
+            label: "步驟 2：個位 5 落下，5 ÷ 4 ＝ 1 餘 1",
+            render: function() {
+              return `
+                <div style="font-family:'Courier New', monospace; font-size:18px; line-height:1.3;">
+                  <div style="margin-left:46px; color:#34D399; font-weight:800;">2 1 &larr; 商</div>
+                  <div style="display:flex; align-items:center;">
+                    <span style="color:#F59E0B; margin-right:8px;">4</span>
+                    <span style="border-left:2px solid #fff; border-top:2px solid #fff; padding:2px 8px;">8 5</span>
+                  </div>
+                  <div style="margin-left:46px; color:#94A3B8;">8 &darr;</div>
+                  <div style="margin-left:58px; color:#F59E0B;">5</div>
+                  <div style="margin-left:58px; color:#94A3B8; border-bottom:1px solid #64748B; width:24px;">4</div>
+                  <div style="margin-left:58px; color:#34D399; font-weight:800;">1 &larr; 餘數</div>
+                </div>
+              `;
+            }
+          }
+        ]
+      },
+
+      // 5. 幾何周長展開
+      geometry: {
+        grade: "G4·下",
+        curriculum: "課綱 S-4-2 周長與面積之算理",
+        sub: "【封閉多邊形 ↔ 拉直線段轉換】",
+        stem: "學校要在長 <span class='hl'>24 公尺</span>、寬 <span class='hl'>16 公尺</span> 的花圃周圍架設圍籬，需要多長的圍籬？",
+        choices: ["40 公尺", "80 公尺", "384 公尺", "48 公尺"],
+        correctIndex: 1,
+        explanation: {
+          concept: "課綱手冊重點：周長是一周長度（長+寬+長+寬），公式為 (長＋寬)×2。",
+          steps: [
+            "一組長加寬：24 ＋ 16 ＝ 40 公尺。",
+            "長方形有兩組長寬：40 × 2 ＝ 80 公尺。"
+          ],
+          trap: "384 是面積（24×16＝384 平方公尺），題目求長度圍籬，非面積！"
+        },
+        steps: [
+          {
+            label: "模式 A：長方形閉合圖",
+            render: function() {
+              return `
+                <svg viewBox="0 0 320 150" style="width:100%; height:100%;">
+                  <rect x="60" y="25" width="200" height="90" rx="6" fill="rgba(56,189,248,0.1)" stroke="#38BDF8" stroke-width="2"/>
+                  <text x="160" y="18" fill="#38BDF8" font-size="12" font-weight="700" text-anchor="middle">長 ＝ 24m</text>
+                  <text x="270" y="75" fill="#F59E0B" font-size="12" font-weight="700">寬 16m</text>
+                  <text x="160" y="130" fill="#64748B" font-size="11" text-anchor="middle">(長 24m)</text>
+                  <text x="45" y="75" fill="#64748B" font-size="11" text-anchor="end">(寬 16m)</text>
+                  <text x="160" y="75" fill="#F8FAFC" font-size="12" font-weight="700" text-anchor="middle">周長 ＝ 繞一圈總和</text>
+                </svg>
+              `;
+            }
+          },
+          {
+            label: "模式 B：拉直成直條線段分組",
+            render: function() {
+              return `
+                <svg viewBox="0 0 320 150" style="width:100%; height:100%;">
+                  <rect x="20" y="45" width="80" height="24" rx="4" fill="#0284C7"/>
+                  <text x="60" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">長 24</text>
+                  <rect x="105" y="45" width="50" height="24" rx="4" fill="#D97706"/>
+                  <text x="130" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">寬 16</text>
+                  <rect x="165" y="45" width="80" height="24" rx="4" fill="#0284C7"/>
+                  <text x="205" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">長 24</text>
+                  <rect x="250" y="45" width="50" height="24" rx="4" fill="#D97706"/>
+                  <text x="275" y="61" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">寬 16</text>
+                  <text x="160" y="110" fill="#38BDF8" font-size="12" font-weight="700" text-anchor="middle">兩組 40m：40 × 2 ＝ 80m</text>
+                </svg>
+              `;
+            }
+          }
+        ]
+      }
+    };
+
+    var currentDemoKey = 'fraction';
+    var currentStepIndex = 0;
+    var lastAnswerState = null;
+
+    function switchDemo(key) {
+      currentDemoKey = key;
+      currentStepIndex = 0;
+      lastAnswerState = null;
+      document.getElementById("inlineSolutionPanel").style.display = "none";
+
+      document.querySelectorAll(".tab-btn").forEach(function(b) {
+        b.classList.remove("active");
+        if (b.getAttribute("onclick").indexOf(key) !== -1) b.classList.add("active");
+      });
+
+      var data = demos[key];
+      document.getElementById("demoGradeTag").textContent = data.grade;
+      document.getElementById("demoTitle").textContent = data.curriculum.split(" ")[1] || data.curriculum;
+      document.getElementById("demoCurriculumTag").textContent = data.curriculum.split(" ")[0];
+      document.getElementById("demoSubTag").textContent = data.sub;
+      document.getElementById("demoStem").innerHTML = data.stem;
+
+      var optGrid = document.getElementById("optionsGrid");
+      optGrid.innerHTML = "";
+      data.choices.forEach(function(ch, idx) {
+        var isCorrect = (idx === data.correctIndex);
+        var keyLabel = String.fromCharCode(65 + idx);
+        var btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span class="option-key">${keyLabel}</span><span class="option-value">${ch}</span>`;
+        btn.onclick = function() { onSelectAnswer(btn, isCorrect); };
+        optGrid.appendChild(btn);
+      });
+
+      renderStep();
+    }
+
+    function renderStep() {
+      var data = demos[currentDemoKey];
+      var step = data.steps[currentStepIndex];
+      document.getElementById("stageLabel").textContent = step.label;
+      document.getElementById("canvasWrapper").innerHTML = step.render();
+
+      var btn = document.getElementById("stepActionBtn");
+      if (currentStepIndex === data.steps.length - 1) {
+        btn.textContent = "🔄 重新播放";
+      } else {
+        btn.textContent = "▶️ 演示下一步算理";
+      }
+    }
+
+    function onStepAction() {
+      var data = demos[currentDemoKey];
+      currentStepIndex++;
+      if (currentStepIndex >= data.steps.length) {
+        currentStepIndex = 0;
+      }
+      renderStep();
+    }
+
+    function onSelectAnswer(btn, isCorrect) {
+      var data = demos[currentDemoKey];
+      lastAnswerState = { btn: btn, isCorrect: isCorrect };
+      document.querySelectorAll(".option-btn").forEach(function(b) { b.disabled = true; });
+
+      if (isCorrect) {
+        btn.classList.add("selected-correct");
+      } else {
+        btn.classList.add("selected-wrong");
+      }
+
+      var html = `
+        <div style="font-size:14px; font-weight:800; color:${isCorrect ? '#34D399':'#F87171'}; margin-bottom:8px;">
+          ${isCorrect ? '🎯 答對了！算理完全命中' : '❌ 答錯了！課綱盲點解析'}
+        </div>
+        <div class="solution-step">
+          <div class="step-title">課綱核心觀念</div>
+          ${data.explanation.concept}
+        </div>
+        <div class="solution-step">
+          <div class="step-title">逐步計算拆解</div>
+          ${data.explanation.steps.map(s => `<div>• ${s}</div>`).join('')}
+        </div>
+        <div class="solution-step" style="border-color:rgba(245,158,11,0.4); background:rgba(245,158,11,0.08);">
+          <div class="step-title" style="color:#F59E0B;">⚠️ 官方常見錯誤提示</div>
+          ${data.explanation.trap}
+        </div>
+      `;
+
+      updateSolutionView(html);
+    }
+
+    function updateSolutionView(html) {
+      if (!lastAnswerState) return;
+      var drawer = document.getElementById("solutionDrawer");
+      var overlay = document.getElementById("drawerOverlay");
+      var inlinePanel = document.getElementById("inlineSolutionPanel");
+
+      if (html) {
+        document.getElementById("drawerContent").innerHTML = html;
+        document.getElementById("inlineContent").innerHTML = html;
+      }
+
+      if (currentDevice === 'mobile') {
+        inlinePanel.style.display = "none";
+        overlay.classList.add("active");
+        drawer.classList.add("open");
+      } else {
+        overlay.classList.remove("active");
+        drawer.classList.remove("open");
+        inlinePanel.style.display = "block";
+      }
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawerOverlay").classList.remove("active");
+      document.getElementById("solutionDrawer").classList.remove("open");
+      document.querySelectorAll(".option-btn").forEach(function(b) {
+        b.disabled = false;
+        b.classList.remove("selected-correct", "selected-wrong");
+      });
+      lastAnswerState = null;
+    }
+
+    // 初始載入通分演示
+    switchDemo('fraction');
+  </script>
+</body>
+</html>
