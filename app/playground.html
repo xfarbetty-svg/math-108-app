@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>028-1 一年級教具調試台 (T-04)</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: #EEF2F7; color: #0F172A;
+    padding: 12px 12px 200px;
+  }
+  .toolbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    padding: 10px 12px; margin: -12px -12px 12px;
+    background: rgba(255,255,255,.94); backdrop-filter: blur(6px);
+    border-bottom: 1px solid #CBD5E1;
+  }
+  .toolbar .group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .toolbar .sep { width: 1px; height: 24px; background: #CBD5E1; }
+  .toolbar .cap { font-size: 12px; color: #64748B; font-weight: 700; }
+  button {
+    font: inherit; font-size: 13px; padding: 7px 12px; min-height: 34px;
+    border: 1px solid #CBD5E1; border-radius: 8px; background: #fff; color: #0F172A;
+    cursor: pointer; touch-action: manipulation;
+  }
+  button:hover { border-color: #94A3B8; }
+  button:active { transform: translateY(1px); }
+  button.on { background: #1D4ED8; border-color: #1D4ED8; color: #fff; }
+  button.warn { border-color: #FCA5A5; color: #B91C1C; }
+  .stage {
+    max-width: 960px; margin-inline: auto;
+    transition: max-width 200ms ease-out;
+    outline: 1px dashed #CBD5E1; outline-offset: 6px;
+    padding: 12px; border-radius: 10px; background: #F8FAFC;
+  }
+  .cards { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .stage.is-wide .cards { grid-template-columns: 1fr 1fr; }
+  .stage.is-xl .cards { gap: 24px; }
+  .card {
+    background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+    padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  }
+  .card h2 { margin: 0; font-size: 14px; letter-spacing: .02em; }
+  .card h2 small { font-weight: 400; color: #64748B; font-size: 11px; }
+  .view {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 150px; padding: 10px; border-radius: 8px;
+    background: #0F172A; overflow: hidden;
+  }
+  .card.frame-only .view { background: #F1F5F9; }
+  .panel { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; }
+  .panel label { display: flex; align-items: center; gap: 6px; color: #334155; font-weight: 700; }
+  .panel input[type=range] { width: 96px; accent-color: #1D4ED8; }
+  .panel input[type=number] { width: 58px; padding: 4px 6px; border: 1px solid #CBD5E1; border-radius: 6px; }
+  .readout {
+    font-size: 12px; font-variant-numeric: tabular-nums; color: #334155;
+    background: #F1F5F9; border-radius: 6px; padding: 6px 8px; min-height: 30px;
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .readout b { color: #1D4ED8; }
+  .log-wrap { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: #0B1220; color: #E2E8F0; border-top: 1px solid #1E293B; }
+  .log-head { display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 12px; font-size: 11px; color: #94A3B8; border-bottom: 1px solid #1E293B; }
+  #log { height: 160px; overflow-y: auto; margin: 0; padding: 6px 12px;
+    font: 11px/1.55 ui-monospace, Consolas, "Courier New", monospace;
+    white-space: pre-wrap; overflow-wrap: anywhere; }
+  #log .t { color: #64748B; }
+  #log .n { color: #7DD3FC; }
+  #log .v { color: #86EFAC; }
+  #fly {
+    position: fixed; width: 24px; height: 24px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #F87171, #DC2626);
+    pointer-events: none; z-index: 30; display: none;
+    box-shadow: 0 0 12px rgba(250,204,21,.9);
+  }
+</style>
+</head>
+<body>
+<header class="toolbar">
+  <span class="cap">寬度</span>
+  <div class="group" id="widthBtns">
+    <button type="button" data-w="390">手機 390</button>
+    <button type="button" data-w="768">平板 768</button>
+    <button type="button" data-w="960">電腦 960</button>
+  </div>
+  <span class="sep"></span>
+  <span class="cap">情境</span>
+  <div class="group">
+    <button type="button" data-scene="ten">湊十 9+4</button>
+    <button type="button" data-scene="diff">比較 8 vs 5</button>
+    <button type="button" data-scene="balance">天平 5 = 2+3</button>
+  </div>
+  <span class="sep"></span>
+  <button type="button" class="warn" id="resetAll">全部重設</button>
+  <span class="cap" id="widthLabel">960px</span>
+</header>
+
+<main class="stage" id="stage">
+  <div class="cards" id="cards">
+    <section class="card frame-only" id="cardTen">
+      <h2>T-01 &lt;ten-frame-grid&gt; <small>N-1-3 湊十法</small></h2>
+      <div class="view">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <ten-frame-grid id="tfLeft" label="左盒" value="9"></ten-frame-grid>
+          <ten-frame-grid id="tfRight" label="右盒" value="4" fill-color="#2563EB"></ten-frame-grid>
+        </div>
+      </div>
+      <div class="panel">
+        <label>左盒 <input type="range" id="tfRange" min="0" max="10" step="1" value="9"></label>
+        <button type="button" id="tfPlus">+1</button>
+        <button type="button" id="tfMinus">-1</button>
+        <button type="button" id="tfNine">設為 9</button>
+        <button type="button" id="tfFull">湊滿 10</button>
+        <button type="button" id="tfReset">重設</button>
+      </div>
+      <div class="readout">
+        <span>value <b id="tfValue">9</b></span>
+        <span>右盒 <b id="tfRightValue">4</b></span>
+        <span id="tfState">EMPTY_OR_PARTIAL</span>
+      </div>
+    </section>
+
+    <section class="card" id="cardDiff">
+      <h2>T-02 &lt;dual-track-diff&gt; <small>N-1-2 比較型減法</small></h2>
+      <div class="view">
+        <dual-track-diff id="diff" style="width:100%;--dtd-ink:#F8FAFC" top-count="8" bottom-count="5"></dual-track-diff>
+      </div>
+      <div class="panel">
+        <label>上軌 <input type="range" id="diffTop" min="0" max="10" step="1" value="8"></label>
+        <label>下軌 <input type="range" id="diffBottom" min="0" max="10" step="1" value="5"></label>
+        <label><input type="checkbox" id="diffFormula" checked> 顯示算式</label>
+        <label><input type="checkbox" id="diffAnimate" checked> 流光</label>
+      </div>
+      <div class="readout">
+        <span>上 <b id="diffTopOut">8</b> / 下 <b id="diffBottomOut">5</b></span>
+        <span>差值 <b id="diffOut">3</b></span>
+        <span id="diffFormulaOut">8 － 5 ＝ 3</span>
+      </div>
+    </section>
+
+    <section class="card" id="cardBalance">
+      <h2>T-03 &lt;balance-beam&gt; <small>R-1-1 等號＝平衡</small></h2>
+      <div class="view">
+        <balance-beam id="beam" style="width:100%;--bb-ink:#F8FAFC" left-weight="5" right-weight="2"></balance-beam>
+      </div>
+      <div class="panel">
+        <label>左 <input type="range" id="beamLeft" min="0" max="10" step="1" value="5"></label>
+        <label>右 <input type="range" id="beamRight" min="0" max="10" step="1" value="2"></label>
+        <label>阻尼 <input type="range" id="beamDamping" min="0.05" max="0.6" step="0.01" value="0.18"></label>
+        <button type="button" id="beamBal">5 = 2+3</button>
+        <button type="button" id="beamReset">重設</button>
+      </div>
+      <div class="readout">
+        <span>θ <b id="beamTheta">0.0</b>°</span>
+        <span>Δτ <b id="beamTorque">300</b></span>
+        <span id="beamState">UNBALANCED</span>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="log-wrap">
+  <div class="log-head"><span>事件日誌（最近 20 筆）</span><span id="logCount">0</span></div>
+  <pre id="log"></pre>
+</div>
+<div id="fly"></div>
+
+<script src="components/ten-frame-grid.js"></script>
+<script src="components/dual-track-diff.js"></script>
+<script src="components/balance-beam.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var stage = $('stage');
+  var log = $('log');
+  var MAX_LOG = 20;
+
+  function stamp() {
+    var d = new Date();
+    function p(n, w) { return String(n).padStart(w, '0'); }
+    return p(d.getHours(), 2) + ':' + p(d.getMinutes(), 2) + ':' + p(d.getSeconds(), 2) + '.' + p(d.getMilliseconds(), 3);
+  }
+
+  function pushLog(name, detail) {
+    var line = document.createElement('div');
+    var t = document.createElement('span'); t.className = 't'; t.textContent = '[' + stamp() + '] ';
+    var n = document.createElement('span'); n.className = 'n'; n.textContent = name + ' ';
+    var v = document.createElement('span'); v.className = 'v'; v.textContent = JSON.stringify(detail);
+    line.appendChild(t); line.appendChild(n); line.appendChild(v);
+    log.appendChild(line);
+    while (log.children.length > MAX_LOG) log.removeChild(log.firstChild);
+    log.scrollTop = log.scrollHeight;
+    $('logCount').textContent = log.children.length + ' / ' + MAX_LOG;
+  }
+
+  var lastChange = 0;
+  stage.addEventListener('ten-frame:fill', function (e) { pushLog(e.type, e.detail); syncTen(); });
+  stage.addEventListener('ten-frame:full', function (e) { pushLog(e.type, e.detail); syncTen(); });
+  stage.addEventListener('ten-frame:overflow', function (e) { pushLog(e.type, e.detail); syncTen(); });
+  stage.addEventListener('ten-frame:reset', function (e) { pushLog(e.type, e.detail); syncTen(); });
+  stage.addEventListener('diff:change', function (e) {
+    pushLog(e.type, e.detail);
+    $('diffOut').textContent = e.detail.diff;
+    $('diffFormulaOut').textContent = e.detail.formula;
+    $('diffTopOut').textContent = e.detail.top;
+    $('diffBottomOut').textContent = e.detail.bottom;
+  });
+  stage.addEventListener('diff:invalid', function (e) { pushLog(e.type, e.detail); });
+  stage.addEventListener('balance:change', function (e) {
+    var now = performance.now();
+    if (now - lastChange < 120) return;
+    lastChange = now;
+    pushLog(e.type, e.detail);
+    $('beamTheta').textContent = e.detail.theta.toFixed(1);
+    $('beamTorque').textContent = e.detail.torqueDelta;
+    $('beamState').textContent = e.detail.balanced ? 'EQUALS_ACHIEVED' : 'BALANCING';
+  });
+  stage.addEventListener('balance:balanced', function (e) {
+    pushLog(e.type, e.detail);
+    $('beamState').textContent = 'EQUALS_ACHIEVED';
+  });
+  stage.addEventListener('balance:clamped', function (e) { pushLog(e.type, e.detail); });
+
+  /* ---- 寬度切換（真容器寬度，非 window.innerWidth） ---- */
+  function setWidth(w) {
+    stage.style.maxWidth = w + 'px';
+    $('widthLabel').textContent = w + 'px';
+    stage.classList.toggle('is-wide', w >= 700);
+    stage.classList.toggle('is-xl', w >= 900);
+    Array.prototype.forEach.call($('widthBtns').children, function (b) {
+      b.classList.toggle('on', Number(b.dataset.w) === w);
+    });
+  }
+  $('widthBtns').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-w]');
+    if (b) setWidth(Number(b.dataset.w));
+  });
+  if (window.ResizeObserver) {
+    new ResizeObserver(function (entries) {
+      var w = entries[0].contentRect.width;
+      stage.classList.toggle('is-wide', w >= 700);
+      stage.classList.toggle('is-xl', w >= 900);
+    }).observe(stage);
+  }
+  setWidth(960);
+
+  /* ---- T-01 面板 ---- */
+  var tfLeft = $('tfLeft'), tfRight = $('tfRight');
+  function syncTen() {
+    $('tfValue').textContent = tfLeft.value;
+    $('tfRightValue').textContent = tfRight.value;
+    $('tfRange').value = tfLeft.value;
+    $('tfState').textContent = tfLeft.value >= 10 ? 'FULL_LOCKED' : 'EMPTY_OR_PARTIAL';
+  }
+  $('tfRange').addEventListener('input', function () { tfLeft.value = this.value; });
+  $('tfPlus').addEventListener('click', function () { tfLeft.value = Math.min(10, tfLeft.value + 1); });
+  $('tfMinus').addEventListener('click', function () { tfLeft.value = Math.max(0, tfLeft.value - 1); });
+  $('tfNine').addEventListener('click', function () { tfLeft.value = 9; });
+  $('tfFull').addEventListener('click', function () { tfLeft.value = 10; });
+  $('tfReset').addEventListener('click', function () { tfLeft.reset(); tfRight.reset(); syncTen(); });
+
+  /* ---- T-02 面板 ---- */
+  var diff = $('diff');
+  function bindDiff(sel, attr) {
+    $(sel).addEventListener('input', function () { diff.setAttribute(attr, this.value); });
+  }
+  bindDiff('diffTop', 'top-count');
+  bindDiff('diffBottom', 'bottom-count');
+  $('diffFormula').addEventListener('change', function () {
+    diff.setAttribute('show-formula', this.checked ? 'true' : 'false');
+  });
+  $('diffAnimate').addEventListener('change', function () {
+    diff.setAttribute('animate', this.checked ? 'true' : 'false');
+  });
+
+  /* ---- T-03 面板 ---- */
+  var beam = $('beam');
+  $('beamLeft').addEventListener('input', function () { beam.setAttribute('left-weight', this.value); });
+  $('beamRight').addEventListener('input', function () { beam.setAttribute('right-weight', this.value); });
+  $('beamDamping').addEventListener('input', function () { beam.setAttribute('damping', this.value); });
+  $('beamBal').addEventListener('click', function () {
+    beam.setAttribute('right-expression', '2+3');
+    beam.setAttribute('left-weight', '5');
+    beam.setAttribute('right-weight', '5');
+    $('beamLeft').value = 5;
+    $('beamRight').value = 5;
+  });
+  $('beamReset').addEventListener('click', function () {
+    beam.reset();
+    $('beamLeft').value = 5;
+    $('beamRight').value = 2;
+  });
+
+  /* ---- 情境：湊十 9+4（拋物線飛補由本層編排，元件不耦合） ---- */
+  function flyDot(fromEl, toEl, done) {
+    var a = fromEl.getBoundingClientRect();
+    var b = toEl.getBoundingClientRect();
+    var fly = $('fly');
+    var sx = a.left, sy = a.top, ex = b.left, ey = b.top;
+    fly.style.display = 'block';
+    fly.style.left = sx + 'px';
+    fly.style.top = sy + 'px';
+    if (fly.animate) {
+      fly.animate([
+        { transform: 'translate(0,0) scale(1)' },
+        { transform: 'translate(' + (ex - sx) * 0.5 + 'px,' + ((ey - sy) * 0.5 - 60) + 'px) scale(1.15)', offset: 0.55 },
+        { transform: 'translate(' + (ex - sx) + 'px,' + (ey - sy) + 'px) scale(1)' }
+      ], { duration: 300, easing: 'cubic-bezier(.4,0,.6,1)' }).onfinish = function () {
+        fly.style.display = 'none';
+        done();
+      };
+    } else {
+      done();
+    }
+  }
+
+  function sceneTen() {
+    tfRight.value = 4;
+    tfLeft.value = 9;
+    setTimeout(function () {
+      var dots = tfRight.shadowRoot.querySelectorAll('.dot');
+      var slots = tfLeft.shadowRoot.querySelectorAll('.slot');
+      if (!dots.length || slots.length < 10) { tfLeft.value = 10; tfRight.value = 3; return; }
+      flyDot(dots[dots.length - 1], slots[9], function () {
+        tfLeft.value = 10;
+        tfRight.value = 3;
+      });
+    }, 120);
+  }
+  function sceneDiff() {
+    diff.setAttribute('top-count', '8');
+    diff.setAttribute('bottom-count', '5');
+    $('diffTop').value = 8;
+    $('diffBottom').value = 5;
+  }
+  function sceneBalance() { $('beamBal').click(); }
+
+  document.querySelector('.toolbar').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-scene]');
+    if (!b) return;
+    if (b.dataset.scene === 'ten') sceneTen();
+    if (b.dataset.scene === 'diff') sceneDiff();
+    if (b.dataset.scene === 'balance') sceneBalance();
+  });
+
+  $('resetAll').addEventListener('click', function () {
+    tfLeft.reset();
+    tfRight.reset();
+    tfRight.setAttribute('value', '4');
+    diff.reset();
+    beam.reset();
+    $('diffTop').value = 8;
+    $('diffBottom').value = 5;
+    $('beamLeft').value = 5;
+    $('beamRight').value = 2;
+    $('beamDamping').value = 0.18;
+    log.innerHTML = '';
+    $('logCount').textContent = '0 / ' + MAX_LOG;
+    syncTen();
+  });
+
+  syncTen();
+})();
+</script>
+</body>
+</html>

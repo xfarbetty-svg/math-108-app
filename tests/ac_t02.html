@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>AC-T02</title>
+<style>body{margin:0;font:14px/1.5 monospace}#stage{width:390px}</style>
+</head>
+<body>
+<div id="stage"></div>
+<pre id="result">RUNNING</pre>
+<script src="../app/components/dual-track-diff.js"></script>
+<script>
+(function () {
+  var out = [];
+  function rec(id, pass, info) { out.push((pass ? 'PASS ' : 'FAIL ') + id + ' :: ' + info); }
+  function mk(attrs) {
+    var e = document.createElement('dual-track-diff');
+    Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    document.getElementById('stage').appendChild(e);
+    return e;
+  }
+  function q(e, sel) { return e.shadowRoot.querySelectorAll(sel); }
+  function step(e) {
+    var c = q(e, '.coin.top');
+    return Number(c[1].getAttribute('cx')) - Number(c[0].getAttribute('cx'));
+  }
+
+  (async function run() {
+    // AC-02-1
+    var a = mk({ 'top-count': '8', 'bottom-count': '5' });
+    var s = step(a);
+    var box = q(a, '.diff-box')[0];
+    var w = box.getBBox().width;
+    rec('AC-02-1', Math.abs(w - 3 * s) <= 1,
+      'boxW=' + w.toFixed(2) + ' 3*step=' + (3 * s).toFixed(2) + ' step=' + s.toFixed(2));
+
+    // AC-02-4
+    rec('AC-02-4', q(a, '.link').length === 5, 'links=' + q(a, '.link').length + ' (expect 5)');
+
+    // AC-02-2
+    var b = mk({ 'top-count': '5', 'bottom-count': '5' });
+    var sameTxt = (q(b, '.same-label')[0] || {}).textContent || '';
+    var f2 = (q(b, '.formula')[0] || {}).textContent || '';
+    rec('AC-02-2', q(b, '.diff-box').length === 0 && sameTxt === '一樣多' && f2 === '5 ＝ 5',
+      'diffBox=' + q(b, '.diff-box').length + ' label=' + sameTxt + ' formula=' + f2);
+
+    // AC-02-3
+    var c = mk({ 'top-count': '8', 'bottom-count': '5' });
+    var invalid = 0, lastDetail = null;
+    c.addEventListener('diff:invalid', function (e) { invalid++; lastDetail = e.detail; });
+    c.setAttribute('top-count', '11');
+    var coins = q(c, '.coin');
+    var inside = true;
+    for (var i = 0; i < coins.length; i++) {
+      var cx = Number(coins[i].getAttribute('cx')), r = Number(coins[i].getAttribute('r'));
+      if (cx - r < 0 || cx + r > 320) inside = false;
+    }
+    rec('AC-02-3', c.top === 10 && invalid === 1 && inside,
+      'clampedTop=' + c.top + ' invalid=' + invalid + ' attempted=' + (lastDetail && lastDetail.attempted) +
+      ' insideViewBox=' + inside);
+
+    // AC-02-5
+    var d = mk({ 'top-count': '8', 'bottom-count': '5' });
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var flow = q(d, '.diff-box')[0];
+    var animName = getComputedStyle(flow).animationName;
+    var ruleFound = false;
+    var ss = d.shadowRoot.querySelector('style').sheet;
+    for (var k = 0; k < ss.cssRules.length; k++) {
+      var rule = ss.cssRules[k];
+      if (rule.conditionText && /prefers-reduced-motion/.test(rule.conditionText)) ruleFound = true;
+    }
+    rec('AC-02-5', ruleFound && (reduced ? animName === 'none' : animName === 'dtd-flow'),
+      'reducedMode=' + reduced + ' animationName=' + animName + ' rule=' + ruleFound);
+
+    document.getElementById('result').textContent = 'RESULT_BEGIN\n' + out.join('\n') + '\nRESULT_END';
+  })().catch(function (err) {
+    document.getElementById('result').textContent =
+      'RESULT_BEGIN\nFAIL harness :: ' + (err && err.message) + '\nRESULT_END';
+  });
+})();
+</script>
+</body>
+</html>

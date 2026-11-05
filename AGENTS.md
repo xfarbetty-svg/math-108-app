@@ -50,10 +50,11 @@
    - **第一層 (決策大腦 AGY)**：反推 Given-When-Then R0 藍圖規格書，**零業務代碼寫入權 (WRITE-FILE LOCKED)**。
    - **第二層 (現場指揮官 Big Pickle)**：接收 R0 拆解任務卡，調度 GLM 施工，**親自審查代碼與盲審比對**後向 AGY 回報。
    - **第三層 (施工工兵 GLM / Worker)**：本機 OpenCode CLI 實體帶手腳施工（注入 `stdin=subprocess.DEVNULL` 破除假死），提交 Git 鋼印。
-2. **三大算力通道 (全部 Exit Code 0 驗真)**：
-   - **通道 1 (本地 Magpie)**：`http://127.0.0.1:3425/v1` (BP / GLM / DeepSeek 拔思維鏈)。
-   - **通道 2 (A-SERVER SSH)**：`ssh a-server` (遠端 OpenCode 1.19.5 備援)。
+2. **三大法定免費算力通道 (全部 Exit Code 0 驗真)**：
+   - **通道 1 (本地 OpenCode CLI 主力)**：`opencode run --auto` (v2.2.5 本機子進程，真實工具手腳施工)。
+   - **通道 2 (A-SERVER SSH 備援)**：`ssh a-server "opencode run ..."` (遠端 OpenCode CLI，已同步對齊升級至 v2.2.5 備援)。
    - **通道 3 (035 Key Pool)**：`http://127.0.0.1:4000/v1` (7 把 Google API Key 輪詢，僅限 Gemini 系列，0-Token 攔截非 Gemini)。
+   - **備用網關 (本地 Magpie)**：`http://127.0.0.1:3425/v1` (純文字審查開票備援，Fallback Only，無工具執行手腳)。
 
 ---
 

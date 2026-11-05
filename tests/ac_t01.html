@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>AC-T01</title>
+<style>
+  body { margin: 0; font: 14px/1.5 monospace; }
+  #stage { width: 390px; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<pre id="result">RUNNING</pre>
+<script src="../app/components/ten-frame-grid.js"></script>
+<script>
+(function () {
+  var out = [];
+  function rec(id, pass, info) {
+    out.push((pass ? 'PASS ' : 'FAIL ') + id + ' :: ' + info);
+  }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  var consoleNoise = 0;
+  ['error', 'warn'].forEach(function (k) {
+    var orig = console[k];
+    console[k] = function () { consoleNoise++; return orig.apply(console, arguments); };
+  });
+
+  function mk(attrs) {
+    var el = document.createElement('ten-frame-grid');
+    Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    document.getElementById('stage').appendChild(el);
+    return el;
+  }
+  function dots(el) { return el.shadowRoot.querySelectorAll('.dot').length; }
+  function frame(el) { return el.shadowRoot.querySelector('.frame'); }
+  function cells(el) { return el.shadowRoot.querySelectorAll('.cell'); }
+  function clickNext(el) {
+    var cs = cells(el);
+    for (var i = 0; i < cs.length; i++) {
+      if (!cs[i].disabled) { cs[i].click(); return true; }
+    }
+    cs[0].click();
+    return false;
+  }
+
+  (async function run() {
+    // AC-01-1
+    var a = mk({ label: '左盒' });
+    var overflow = 0;
+    a.addEventListener('ten-frame:overflow', function () { overflow++; });
+    var maxDots = 0;
+    for (var i = 0; i < 25; i++) { clickNext(a); maxDots = Math.max(maxDots, dots(a)); }
+    await wait(400);
+    rec('AC-01-1', maxDots <= 10 && dots(a) === 10 && overflow === 15,
+      'maxDots=' + maxDots + ' dotsAfter=' + dots(a) + ' overflow=' + overflow + ' (expect 15)');
+    a.remove();
+
+    // AC-01-2
+    var b = mk({ value: '9' });
+    var tFill = 0, tFull = 0;
+    b.addEventListener('ten-frame:fill', function (e) { if (e.detail.value === 10) tFill = performance.now(); });
+    b.addEventListener('ten-frame:full', function () { tFull = performance.now(); });
+    await wait(50);
+    clickNext(b);
+    await wait(600);
+    var gap = tFull - tFill;
+    rec('AC-01-2', gap >= 270 && gap <= 330, 'fill->full=' + gap.toFixed(1) + 'ms (expect 270~330)');
+    b.remove();
+
+    // AC-01-3
+    var c = mk({ value: '10' });
+    await wait(600);
+    var bc = getComputedStyle(frame(c)).borderColor.replace(/\s/g, '');
+    rec('AC-01-3', bc === 'rgb(250,204,21)', 'borderColor=' + bc);
+    c.remove();
+
+    // AC-01-4
+    var d = mk({});
+    var r = cells(d)[0].getBoundingClientRect();
+    rec('AC-01-4', r.width >= 44 && r.height >= 44,
+      'cell=' + r.width.toFixed(1) + 'x' + r.height.toFixed(1) + ' viewport=' + window.innerWidth);
+    d.remove();
+
+    // AC-01-5
+    var e = mk({ value: '9' });
+    var after = 0;
+    e.addEventListener('ten-frame:full', function () { after++; });
+    clickNext(e);
+    e.remove();
+    var noiseBefore = consoleNoise;
+    await wait(500);
+    rec('AC-01-5', after === 0 && consoleNoise === noiseBefore,
+      'eventsAfterRemove=' + after + ' consoleNoiseDelta=' + (consoleNoise - noiseBefore));
+
+    document.getElementById('result').textContent =
+      'RESULT_BEGIN\n' + out.join('\n') + '\nRESULT_END';
+  })().catch(function (err) {
+    document.getElementById('result').textContent =
+      'RESULT_BEGIN\nFAIL harness :: ' + (err && err.message) + '\nRESULT_END';
+  });
+})();
+</script>
+</body>
+</html>

@@ -9,9 +9,10 @@
 
 ## 📌 2026-11-06 (Session 03) - 算力通道地毯式驗真與 026 AutoFlow 三層閉環對齊
 - [x] **028/026 算力通道地毯式驗真**：
-  - 通道 1 本地 Magpie (3425) 實測在線，BP/GLM/DeepSeek 拔除思維鏈驗證成功。
-  - 通道 2 A-SERVER SSH 實測在線，遠端 OpenCode 1.19.5 驗證成功。
+  - 通道 1 本地 OpenCode CLI (v2.2.5 帶手腳) 實測在線，秒級回傳 Exit Code 0。
+  - 通道 2 A-SERVER SSH 實測在線，遠端 OpenCode CLI (已同步對齊升級至 v2.2.5) 備援 Exit Code 0。
   - 通道 3 035 Key Pool (4000) 實測在線，7 把 Google API Key 全部 ACTIVE。
+  - 備用網關：本地 Magpie (3425) 實測在線，僅作純文字盲測開票備援 (Fallback Only)。
 - [x] **OpenCode CLI Windows 假死根因解鎖**：依 026 處方注入 `stdin=DEVNULL` 與 `shell=True`，實測本機 CLI 帶手腳秒回 (Exit Code 0)。
 - [x] **三層閉環認知 100% 對齊**：確認 AGY (大腦規格) -> BP (現場指揮) -> GLM (帶手腳施工) -> BP (代碼盲審比對) -> AGY (回報終驗) 鋼鐵閉環。
 - [ ] **下一目標**：開新框啟動 AutoFlow Stage 1，由 BP 拆解 T-01~T-03 任務卡交由 OpenCode GLM 施工。

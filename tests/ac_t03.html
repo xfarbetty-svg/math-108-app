@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>AC-T03</title>
+<style>body{margin:0;font:14px/1.5 monospace}#stage{width:390px}</style>
+</head>
+<body>
+<div id="stage"></div>
+<pre id="result">RUNNING</pre>
+<script src="../app/components/balance-beam.js"></script>
+<script>
+(function () {
+  var out = [];
+  var FRAME = 16.6667;
+  function rec(id, pass, info) { out.push((pass ? 'PASS ' : 'FAIL ') + id + ' :: ' + info); }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function mk(attrs) {
+    var e = document.createElement('balance-beam');
+    Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    document.getElementById('stage').appendChild(e);
+    return e;
+  }
+  function txt(e, sel) { var n = e.shadowRoot.querySelector(sel); return n ? n.textContent : null; }
+  function drive(e, frames) {
+    var maxAbs = 0, nan = false, settledAt = -1;
+    for (var i = 0; i < frames; i++) {
+      var s = e.step(FRAME);
+      if (!Number.isFinite(e.theta)) nan = true;
+      maxAbs = Math.max(maxAbs, Math.abs(e.theta));
+      if (s && settledAt < 0) settledAt = i + 1;
+    }
+    return { maxAbs: maxAbs, nan: nan, settledAt: settledAt };
+  }
+
+  (async function run() {
+    // AC-03-1：5 vs 2 → 傾向左側下沉且 8°~15°
+    var a = mk({ 'left-weight': '5', 'right-weight': '2' });
+    await wait(30);
+    drive(a, 300);
+    rec('AC-03-1', Math.abs(a.theta) >= 8 && Math.abs(a.theta) <= 15 && a.theta < 0,
+      'theta=' + a.theta.toFixed(2) + ' (expect -14.04) balanced=' + a.balanced);
+
+    // AC-03-2：切到 5 vs 5 → 72 幀(1.2s) 內收斂，balanced 恰派 1 次
+    var balancedCount = 0;
+    a.addEventListener('balance:balanced', function () { balancedCount++; });
+    a.setAttribute('left-weight', '5');
+    a.setAttribute('right-weight', '5');
+    var r2 = drive(a, 72);
+    rec('AC-03-2', Math.abs(a.theta) < 0.1 && balancedCount === 1,
+      'theta=' + a.theta.toFixed(3) + ' settledAt=' + r2.settledAt + 'frame balancedEvents=' + balancedCount);
+    a.remove();
+
+    // AC-03-3：5→6→5→6 抖動，θ 全程 ≤15°，無 NaN
+    var b = mk({ 'left-weight': '5', 'right-weight': '5' });
+    await wait(30);
+    drive(b, 60);
+    var worst = 0, nan = false;
+    ['6', '5', '6', '5', '6'].forEach(function (w) {
+      b.setAttribute('left-weight', w);
+      var r = drive(b, 40);
+      worst = Math.max(worst, r.maxAbs);
+      nan = nan || r.nan;
+    });
+    worst = Math.max(worst, Math.abs(b.theta));
+    rec('AC-03-3', worst <= 15 && !nan, 'maxAbsTheta=' + worst.toFixed(2) + ' nan=' + nan);
+
+    // AC-03-4：右盤分解字串 → 雙向算式同時成立
+    var c = mk({ 'left-weight': '5', 'right-weight': '5', 'right-expression': '2+3' });
+    await wait(30);
+    drive(c, 60);
+    var f1 = txt(c, '.formula'), f2 = txt(c, '.formula.reverse');
+    rec('AC-03-4', f1 === '5 ＝ 2 ＋ 3' && f2 === '2 ＋ 3 ＝ 5' && c.balanced,
+      'f1=' + f1 + ' | f2=' + f2 + ' | balanced=' + c.balanced);
+    c.remove();
+
+    // AC-03-5：damping=0.05 仍於 5s(300 幀) 內收斂（取未觸及 ±15° 硬夾的 6v4，避免夾值假收斂）
+    var d = mk({ 'left-weight': '6', 'right-weight': '4', 'damping': '0.05' });
+    await wait(30);
+    var r5 = drive(d, 300);
+    var tgt5 = -Math.atan2(200, 1200) * 180 / Math.PI;
+    rec('AC-03-5', Math.abs(d.theta - tgt5) < 0.1 && r5.maxAbs <= 15 && !r5.nan && r5.settledAt > 0,
+      'theta=' + d.theta.toFixed(3) + ' target=' + tgt5.toFixed(3) + ' settledAt=' + r5.settledAt +
+      'frame maxAbs=' + r5.maxAbs.toFixed(2));
+    d.remove();
+
+    // AC-03-6：disconnectedCallback 必須 cancelAnimationFrame 且不再派事件
+    var cancelled = [];
+    var origCancel = window.cancelAnimationFrame;
+    window.cancelAnimationFrame = function (id) { cancelled.push(id); return origCancel.call(window, id); };
+    var e = mk({ 'left-weight': '5', 'right-weight': '2' });
+    await wait(50);
+    var after = 0;
+    e.addEventListener('balance:change', function () { after++; });
+    e.remove();
+    await wait(500);
+    window.cancelAnimationFrame = origCancel;
+    rec('AC-03-6', cancelled.length >= 1 && after === 0,
+      'cancelAnimationFrameCalls=' + cancelled.length + ' eventsAfterRemove=' + after);
+
+    document.getElementById('result').textContent = 'RESULT_BEGIN\n' + out.join('\n') + '\nRESULT_END';
+  })().catch(function (err) {
+    document.getElementById('result').textContent =
+      'RESULT_BEGIN\nFAIL harness :: ' + (err && err.message) + '\nRESULT_END';
+  });
+})();
+</script>
+</body>
+</html>

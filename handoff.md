@@ -4,9 +4,10 @@
 - **【人類三端實機驗收通過】**：人類專家審核 `reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html` 9 大樣品手感 OK。
 - **【026 AutoFlow v2.6.3 三層閉環拓撲 100% 對齊驗真】**：
   - 徹底查明並實測通過三大法定免費算力通道：
-    - **通道 1 (本地 Magpie)**：`127.0.0.1:3425` 在線，BP / GLM / DeepSeek (已驗證拔除思維鏈) Exit Code 0。
-    - **通道 2 (A-SERVER SSH)**：`100.64.178.56` 在線，遠端 OpenCode 1.19.5 Exit Code 0。
-    - **通道 3 (035 Key Pool)**：`127.0.0.1:4000` 在線，7 把 Google API Key 全部 ACTIVE。
+    - **通道 1 (本地 OpenCode CLI)**：`opencode run --auto` (v2.2.5 帶真實工具手腳施工)，本機 Exit Code 0。
+    - **通道 2 (A-SERVER SSH)**：`100.64.178.56` 在線，遠端 OpenCode CLI (已同步對齊升級至 v2.2.5) 備援 Exit Code 0。
+    - **通道 3 (035 Key Pool)**：`127.0.0.1:4000` 在線，7 把 Google API Key 全部 ACTIVE，0-Token 攔截非 Gemini。
+    - **備用網關 (本地 Magpie)**：`127.0.0.1:3425` 在線，僅作為純文字盲測開票備援 (Fallback Only，無手腳無工具執行能力)。
   - **解鎖本地 Windows OpenCode CLI 假死 (BUG-AF-WIN-STDIN-HANG-001)**：
     子進程注入 `stdin=subprocess.DEVNULL`、`shell=True`、`encoding="utf-8", errors="replace"`，本機 OpenCode CLI 秒級回傳 Exit Code 0！
   - **確認法定調用順序**：
