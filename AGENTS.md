@@ -39,8 +39,21 @@
 - [x] 融合 034 專案技術（等角透視、形體堆疊、力矩平衡天平）
 - [x] 產出 R0 樣品藍圖與打樣規格書 (`reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md`)
 - [x] 產出一年級 9 大單元可操作視覺打樣 Showcase (`reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`)
-- [ ] 人類三端實機驗收打樣手感 (手機 390px / 平板 768px / 電腦 960px)
-- [ ] P0 OpenCode CLI 施工：封裝首批獨立教具 Web Component
+- [x] 人類三端實機驗收打樣手感 (手機 390px / 平板 768px / 電腦 960px)
+- [x] 算力通道驗真與 026 AutoFlow v2.6.3 三層閉環拓撲對齊 (通道1 Magpie 3425 / 通道2 A-SERVER SSH / 通道3 035 7把 Key Pool)
+- [ ] 啟動 AutoFlow Stage 1：派工 BP 拆解 T-01~T-03 任務卡，由 OpenCode GLM 帶手腳施工首批元件 (<ten-frame-grid>, <dual-track-diff>, <balance-beam>)
+
+---
+
+## ⚡ 三大法定免費算力拓撲與三層閉環 (對齊 026 AutoFlow v2.6.3)
+1. **三層閉環工作流**：
+   - **第一層 (決策大腦 AGY)**：反推 Given-When-Then R0 藍圖規格書，**零業務代碼寫入權 (WRITE-FILE LOCKED)**。
+   - **第二層 (現場指揮官 Big Pickle)**：接收 R0 拆解任務卡，調度 GLM 施工，**親自審查代碼與盲審比對**後向 AGY 回報。
+   - **第三層 (施工工兵 GLM / Worker)**：本機 OpenCode CLI 實體帶手腳施工（注入 `stdin=subprocess.DEVNULL` 破除假死），提交 Git 鋼印。
+2. **三大算力通道 (全部 Exit Code 0 驗真)**：
+   - **通道 1 (本地 Magpie)**：`http://127.0.0.1:3425/v1` (BP / GLM / DeepSeek 拔思維鏈)。
+   - **通道 2 (A-SERVER SSH)**：`ssh a-server` (遠端 OpenCode 1.19.5 備援)。
+   - **通道 3 (035 Key Pool)**：`http://127.0.0.1:4000/v1` (7 把 Google API Key 輪詢，僅限 Gemini 系列，0-Token 攔截非 Gemini)。
 
 ---
 

@@ -1,34 +1,42 @@
 # Handoff - 028_1 國小數學APP
 
 ## ⏯️ 目前做到哪
-- **【一年級 9 大單元視覺教具打樣全量完成】**：
-  - 徹底糾正 108 課綱條目「過度濃縮偷工」問題，補齊一年級法定全量 9 大條目（N-1-1 至 D-1-1）。
-  - 落實「樣品驅動開發 (SDD)」，拒絕純文字口號與長篇故事考題，產出規格藍圖：
-    [`reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md`](reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md)
-  - 產出實體可互動之打樣單檔：
-    [`reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`](reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html)
-    （含十進位位值盒、滿十磁吸十條、比較型減法雙軌探照、湊十雙排十格陣、數線反推、碰壁長度量測、034 等角正方旋轉、034 堆疊與滾動、034 向量天平、正字劃記抽屜）。
+- **【人類三端實機驗收通過】**：人類專家審核 `reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html` 9 大樣品手感 OK。
+- **【026 AutoFlow v2.6.3 三層閉環拓撲 100% 對齊驗真】**：
+  - 徹底查明並實測通過三大法定免費算力通道：
+    - **通道 1 (本地 Magpie)**：`127.0.0.1:3425` 在線，BP / GLM / DeepSeek (已驗證拔除思維鏈) Exit Code 0。
+    - **通道 2 (A-SERVER SSH)**：`100.64.178.56` 在線，遠端 OpenCode 1.19.5 Exit Code 0。
+    - **通道 3 (035 Key Pool)**：`127.0.0.1:4000` 在線，7 把 Google API Key 全部 ACTIVE。
+  - **解鎖本地 Windows OpenCode CLI 假死 (BUG-AF-WIN-STDIN-HANG-001)**：
+    子進程注入 `stdin=subprocess.DEVNULL`、`shell=True`、`encoding="utf-8", errors="replace"`，本機 OpenCode CLI 秒級回傳 Exit Code 0！
+  - **確認法定調用順序**：
+    `AGY (大腦 R0)` ➔ `BP (現場指揮官拆卡)` ➔ `GLM (帶手腳施工)` ➔ `BP (親自審查比對代碼)` ➔ `AGY (終審交付)`。
 
 ## 🚦 目前狀態
-- **當前版本**：`v3.1.0` (G1 Visual Samples Prototype Ready)
-- **健康狀態**：🟢 PRISTINE (樣品全量可用，純前端 SVG 零外部依賴)
-- **Git 狀態**：本地已 Commit
-- **雲端額度消耗**：$0.00 (純前端向量樣品)
+- **當前版本**：`v3.2.0` (AutoFlow v2.6.3 Dispatch Pipeline Aligned)
+- **健康狀態**：🟢 PRISTINE (工作區乾淨，三大算力通道全部 Exit Code 0)
+- **Git 狀態**：本地即將 Commit
+- **雲端額度消耗**：$0.00 (地端全實測通過)
 
-## ➡️ 下一步（開工首要任務）
-1. **人類實機把玩驗收**：
-   - 用瀏覽器打開 `reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`。
-   - 在 390px (手機) 與 768px (平板) 上檢驗觸控點擊與算理動態。
-2. **選定首批工業級封裝元件**：
-   - 挑選經人類驗收認可的樣品，由 P0 OpenCode 封裝為標準 Web Component。
-3. **對齊其他學年藍圖**：
-   - 依同樣標準檢討 G2~G6，杜絕濃縮偷工。
+## ➡️ 下一步（開新框首要任務）
+1. **啟動 AutoFlow Stage 1 (BP 派工)**：
+   - 派發 R0 打樣規格書給 Big Pickle，拆解原子任務卡：
+     - `T-01`: `<ten-frame-grid>` (十進位十格陣與位值盒)
+     - `T-02`: `<dual-track-diff>` (雙軌差值探照燈)
+     - `T-03`: `<balance-beam>` (向量等號天平)
+2. **OpenCode GLM 帶手腳施工**：
+   - 依任務卡物理寫入 `app/components/`，產出 `app/playground.html` 調試台。
+3. **BP 親自審查比對**：
+   - BP 對照 R0 藍圖比對代碼，出具初驗報告，回報 AGY。
 
 ## ⚠️ 注意事項
-- 專案內部一律統稱為 `028_1`。若需將目錄名由 `028-1_國小數學APP` 改為 `028_1`，可在關閉 IDE 佔用時直接於檔案總管重命名。
-- 本機未配置 `git remote` 遠端倉儲，備份目前保留於本機 Git 版控。
+- **AGY WRITE-FILE LOCKED**：AGY 決策大腦嚴禁親自動手寫業務組件代碼，代碼 100% 由本地 OpenCode Worker 帶手腳落地。
+- **Windows CLI 子進程必須注入 DEVNULL**：呼叫 `opencode` 必須 `stdin=subprocess.DEVNULL` 且 `shell=True`，否則卡死。
+- **DeepSeek 拔除思維鏈**：調用 DeepSeek 時嚴格只取 `content`，將 `reasoning_content` 思考雜訊過濾。
+- 本機未配置 GitHub 遠端 remote，備份保留於本機 Git 版控。
+- 本次收工電腦無 Obsidian MCP 工具，L3 筆記暫未同步。
 
 ## 🕐 最後更新
-- 時間：2026-11-05T21:02:40+08:00
-- 更新者：Gemini 3.8 Flash @ DESKTOP-6ELKIRH
-- Git push 狀態：本地已 commit（無配置 GitHub 遠端 remote）
+- 時間：2026-11-06T03:23:45+08:00
+- 更新者：Gemini 3.8 Flash (AGY) @ DESKTOP-6ELKIRH
+- Git push 狀態：本地已 commit（無遠端 remote）
