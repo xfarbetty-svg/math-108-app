@@ -33,9 +33,31 @@
 
 ---
 
-## 📚 專案地圖與重要連結
-- **架構交接檔**：[`handoff.md`](handoff.md)
-- **里程碑紀錄**：[`PROGRESS.md`](PROGRESS.md)
-- **課綱教具規格**：[`docs/108課綱規格書_全學年視覺教具對照表.md`](docs/108課綱規格書_全學年視覺教具對照表.md)
-- **重構規格藍圖**：[`docs/R0_AGY_BLUEPRINT.md`](docs/R0_AGY_BLUEPRINT.md)
-- **核心前端入口**：[`app/index.html`](app/index.html)
+## 🗺️ 里程碑路線圖
+- [x] 專案開工：切斷 028 歷史包袱，建立 L1 乾淨工程標準
+- [x] 一年級 108 課綱官方 9 大條目全量補齊與視覺痛點剖析
+- [x] 融合 034 專案技術（等角透視、形體堆疊、力矩平衡天平）
+- [x] 產出 R0 樣品藍圖與打樣規格書 (`reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md`)
+- [x] 產出一年級 9 大單元可操作視覺打樣 Showcase (`reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`)
+- [ ] 人類三端實機驗收打樣手感 (手機 390px / 平板 768px / 電腦 960px)
+- [ ] P0 OpenCode CLI 施工：封裝首批獨立教具 Web Component
+
+---
+
+## 📁 核心目錄結構
+```text
+028_1/
+├── AGENTS.md                  # 專案憲法與架構約定
+├── handoff.md                 # 斷點交接日誌 (收工必寫)
+├── PROGRESS.md                # 極簡進展看板 (≤40行)
+├── INDEX.md                   # 模組導航地圖
+├── app/                       # 正式前端入口與組件
+│   └── index.html             # 三端自適應展演台原型
+├── reports/                   # 歷程報告與討論打樣
+│   └── 20261105_2035_g1_visual_spec/
+│       ├── R0_AGY_BLUEPRINT.md            # 一年級 9 大條目打樣與驗收規格
+│       └── g1_visual_samples_showcase.html # 一年級 9 大單元可操作視覺打樣
+├── data/                      # 題庫資料
+├── docs/                      # 課綱規格手冊
+└── tests/                     # 驗收守門員
+```

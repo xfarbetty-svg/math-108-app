@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>028_1 一年級 (G1) 9大單元視覺教具黃金打樣 Showcase</title>
+  <style>
+    :root {
+      --bg-main: #0F172A;
+      --bg-card: #1E293B;
+      --bg-card-hover: #334155;
+      --accent: #38BDF8;
+      --accent-orange: #FB923C;
+      --accent-green: #4ADE80;
+      --accent-red: #F87171;
+      --accent-yellow: #FACC15;
+      --text-main: #F8FAFC;
+      --text-sub: #94A3B8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      padding: 16px;
+      line-height: 1.5;
+    }
+    header {
+      max-width: 1200px;
+      margin: 0 auto 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    p.desc { font-size: 14px; color: var(--text-sub); }
+
+    /* 頂部快速切換 Tab */
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      scrollbar-width: thin;
+    }
+    .tab-btn {
+      padding: 8px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-sub);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { background: var(--bg-card-hover); color: var(--text-main); }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #0F172A;
+      border-color: var(--accent);
+    }
+
+    /* 網格展示區 */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .sample-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .sample-card:hover {
+      border-color: var(--accent);
+    }
+    .card-header {
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .card-code {
+      font-family: monospace;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #0F172A;
+      color: var(--accent-orange);
+      border: 1px solid var(--border);
+    }
+    .canvas-box {
+      height: 250px;
+      background: #0B1120;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .card-footer {
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-desc { font-size: 12px; color: var(--text-sub); }
+    .action-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-action {
+      flex: 1;
+      padding: 8px;
+      background: #334155;
+      color: #FFF;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s;
+    }
+    .btn-action:hover { background: var(--accent); color: #0F172A; }
+    .btn-action.highlight { background: var(--accent-orange); color: #000; }
+    .btn-action.highlight:hover { background: #fdba74; }
+
+    /* 各樣品專用樣式 */
+    /* N-1-1 位值盒 */
+    .mat-container {
+      display: flex;
+      width: 90%;
+      height: 85%;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px dashed #475569;
+    }
+    .mat-tens {
+      flex: 1.1;
+      background: rgba(251, 146, 60, 0.08);
+      border-right: 2px dashed #FB923C;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px;
+      position: relative;
+    }
+    .mat-ones {
+      flex: 0.9;
+      background: rgba(148, 163, 184, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px;
+      position: relative;
+    }
+    .mat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+    .mat-tens .mat-label { color: var(--accent-orange); }
+    .blocks-shelf {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+      align-content: flex-start;
+      height: 100%;
+      width: 100%;
+    }
+    .block-one {
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, #FFF 0%, #CBD5E1 100%);
+      border: 1px solid #64748B;
+      border-radius: 3px;
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+      cursor: pointer;
+    }
+    .block-ten {
+      width: 22px;
+      height: 140px;
+      background: linear-gradient(90deg, #F97316 0%, #EA580C 100%);
+      border: 1px solid #C2410C;
+      border-radius: 3px;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .block-ten-cell {
+      flex: 1;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+    .block-ten-cell:last-child { border-bottom: none; }
+
+    /* N-1-3 蛋盒 */
+    .ten-frame-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 26px);
+      grid-template-rows: repeat(2, 26px);
+      gap: 4px;
+      padding: 6px;
+      background: #1E293B;
+      border: 2px solid #475569;
+      border-radius: 8px;
+    }
+    .ten-cell {
+      width: 26px;
+      height: 26px;
+      border: 1px dashed #475569;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dot-chip {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #F87171, #DC2626);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .dot-chip.blue {
+      background: radial-gradient(circle at 30% 30%, #60A5FA, #2563EB);
+    }
+
+    /* 狀態提示字 */
+    .status-pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.5);
+      color: var(--accent-yellow);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">028_1 國小一年級 (G1) • 實體樣品 Showcase</div>
+    <h1>教育部 108 課綱一年級 9 大單元視覺教具打樣</h1>
+    <p class="desc">
+      本頁為<b>「樣品驅動開發 (SDD)」黃金模具</b>。徹底廢除長篇文字考題，以可互動純向量 SVG 直球對決視覺算理。
+    </p>
+  </header>
+
+  <!-- 9個單元網格 Showcase -->
+  <div class="showcase-grid">
+
+    <!-- 樣品 01: N-1-1 -->
+    <div class="sample-card" id="card-n11">
+      <div class="card-header">
+        <span class="card-title">01. 一百以內的數 (位值與化聚)</span>
+        <span class="card-code">N-1-1</span>
+      </div>
+      <div class="canvas-box">
+        <div class="mat-container">
+          <div class="mat-tens">
+            <span class="mat-label">十位 (十條)</span>
+            <div class="blocks-shelf" id="shelf-tens">
+              <!-- 十條動態注入 -->
+            </div>
+          </div>
+          <div class="mat-ones">
+            <span class="mat-label">個位 (積木)</span>
+            <div class="blocks-shelf" id="shelf-ones">
+              <!-- 小白方塊動態注入 -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc" id="desc-n11">當前數值：<b style="color:var(--accent-orange)" id="val-n11">0</b>（湊滿 10 個自動吸附成十條）</div>
+        <div class="action-row">
+          <button class="btn-action highlight" onclick="addOneBlock()">＋放 1 顆小白塊</button>
+          <button class="btn-action" onclick="demo60plus20()">示範 60 + 20</button>
+          <button class="btn-action" onclick="resetN11()">重設</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 02: N-1-2 -->
+    <div class="sample-card" id="card-n12">
+      <div class="card-header">
+        <span class="card-title">02. 比較型減法 (雙軌差值探照)</span>
+        <span class="card-code">N-1-2</span>
+      </div>
+      <div class="canvas-box">
+        <svg width="320" height="200" id="svg-n12" style="background:#0F172A; border-radius:8px;"></svg>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc">情境：紅球 8 顆比藍球 5 顆多幾顆？（金色框為差值）</div>
+        <div class="action-row">
+          <button class="btn-action highlight" onclick="renderN12(8, 5)">示範 8 比 5</button>
+          <button class="btn-action" onclick="renderN12(9, 6)">示範 9 比 6</button>
+          <button class="btn-action" onclick="renderN12(7, 3)">示範 7 比 3</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 03: N-1-3 -->
+    <div class="sample-card" id="card-n13">
+      <div class="card-header">
+        <span class="card-title">03. 20以內湊十法 (雙排十格陣)</span>
+        <span class="card-code">N-1-3</span>
+      </div>
+      <div class="canvas-box" style="gap:12px; flex-direction:column;">
+        <div style="display:flex; gap:16px; align-items:center;">
+          <div class="ten-frame-grid" id="box-left"></div>
+          <span style="font-weight:900; color:var(--accent); font-size:18px;">＋</span>
+          <div class="ten-frame-grid" id="box-right"></div>
+        </div>
+        <div class="status-pill" id="status-n13">9 ＋ 4 ＝ ？</div>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc" id="desc-n13">湊十算理：點擊「湊十」看右盒 1 顆飛補進左盒滿十。</div>
+        <div class="action-row">
+          <button class="btn-action highlight" onclick="animateMakeTen()">動態湊十 (9+4)</button>
+          <button class="btn-action" onclick="resetN13()">重設</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 04: N-1-4 -->
+    <div class="sample-card" id="card-n14">
+      <div class="card-header">
+        <span class="card-title">04. 未知數反推 (毛玻璃數線盒)</span>
+        <span class="card-code">N-1-4</span>
+      </div>
+      <div class="canvas-box">
+        <svg width="340" height="180" id="svg-n14" style="background:#0F172A; border-radius:8px;"></svg>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc">情境：( ? ) ＋ 5 ＝ 12，點擊反推倒退 5 格求出起點。</div>
+        <div class="action-row">
+          <button class="btn-action highlight" onclick="revealN14()">倒退 5 格求未知數</button>
+          <button class="btn-action" onclick="resetN14()">重設問題</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 05: N-1-5 -->
+    <div class="sample-card" id="card-n15">
+      <div class="card-header">
+        <span class="card-title">05. 長度量測 (碰壁紅線與個別單位)</span>
+        <span class="card-code">N-1-5</span>
+      </div>
+      <div class="canvas-box">
+        <svg width="340" height="200" id="svg-n15" style="background:#0F172A; border-radius:8px;"></svg>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc">紅色碰壁線強制對齊，個別單位（迴紋針）鏈式相扣量測。</div>
+        <div class="action-row">
+          <button class="btn-action highlight" onclick="alignAndMeasureN15()">碰壁對齊＋鋪上迴紋針</button>
+          <button class="btn-action" onclick="resetN15()">重設散落</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 06: S-1-1 (034 Anatomy 重用) -->
+    <div class="sample-card" id="card-s11">
+      <div class="card-header">
+        <span class="card-title">06. 幾何形體旋轉投影儀</span>
+        <span class="card-code">S-1-1</span>
+      </div>
+      <div class="canvas-box">
+        <svg width="220" height="180" viewBox="-110 -90 220 180" id="svg-s11"></svg>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc">034 專案技術：純向量等角透視，旋轉證明轉歪了依然是正方形。</div>
+        <div class="action-row" style="flex-direction:column; gap:4px;">
+          <input type="range" min="0" max="360" value="0" id="rot-s11" style="width:100%;" oninput="rotateSquare(this.value)">
+          <div style="font-size:11px; color:var(--text-sub); display:flex; justify-content:space-between; width:100%;">
+            <span>旋轉角度：<b id="ang-s11" style="color:var(--accent);">0°</b></span>
+            <span>四角均為 90°，四邊等長</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 07: S-1-2 (034 堆疊與滾動) -->
+    <div class="sample-card" id="card-s12">
+      <div class="card-header">
+        <span class="card-title">07. 形體操作 (堆疊穩固 vs 曲面滾動)</span>
+        <span class="card-code">S-1-2</span>
+      </div>
+      <div class="canvas-box">
+        <svg width="320" height="200" id="svg-s12" style="background:#0F172A; border-radius:8px;"></svg>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc" id="desc-s12">操作認知：平面可平穩堆高；球只有曲面，會滾落無法堆疊。</div>
+        <div class="action-row">
+          <button class="btn-action" onclick="stackCubes()">堆疊正方體 (平穩)</button>
+          <button class="btn-action highlight" onclick="stackSpheres()">堆疊球體 (滾落)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 08: R-1-1 (034 等號槓桿天平) -->
+    <div class="sample-card" id="card-r11">
+      <div class="card-header">
+        <span class="card-title">08. 算式與等號 (向量力矩平衡天平)</span>
+        <span class="card-code">R-1-1</span>
+      </div>
+      <div class="canvas-box">
+        <svg width="340" height="200" id="svg-r11" style="background:#0F172A; border-radius:8px;"></svg>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc" id="desc-r11">等號「＝」不是算答案，而是天平兩端重量完全平衡。</div>
+        <div class="action-row">
+          <button class="btn-action" onclick="setBalance(5, 2)">左盤 5 vs 右盤 2 (不平)</button>
+          <button class="btn-action highlight" onclick="setBalance(5, 5)">右盤補 3 達到配平 (5=2+3)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 樣品 09: D-1-1 -->
+    <div class="sample-card" id="card-d11">
+      <div class="card-header">
+        <span class="card-title">09. 資料分類與統計 (正字計數抽屜)</span>
+        <span class="card-code">D-1-1</span>
+      </div>
+      <div class="canvas-box" style="flex-direction:column; padding:10px; gap:8px;">
+        <div id="scatter-area" style="width:100%; height:80px; background:#1E293B; border-radius:6px; display:flex; align-items:center; justify-content:center; gap:8px;"></div>
+        <div id="drawer-area" style="width:100%; display:flex; gap:6px;"></div>
+      </div>
+      <div class="card-footer">
+        <div class="footer-desc">點擊散落形狀收納入抽屜，自動以毛筆「正」字計數。</div>
+        <div class="action-row">
+          <button class="btn-action highlight" onclick="autoSortAllD11()">一鍵全部分類</button>
+          <button class="btn-action" onclick="resetD11()">重設散落形狀</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* =========================================================
+       01. N-1-1 位值盒邏輯
+       ========================================================= */
+    let onesCount = 0;
+    let tensCount = 0;
+
+    function updateN11UI() {
+      const sTens = document.getElementById('shelf-tens');
+      const sOnes = document.getElementById('shelf-ones');
+      sTens.innerHTML = '';
+      sOnes.innerHTML = '';
+
+      for (let i = 0; i < tensCount; i++) {
+        const t = document.createElement('div');
+        t.className = 'block-ten';
+        for(let j=0; j<10; j++) {
+          const c = document.createElement('div');
+          c.className = 'block-ten-cell';
+          t.appendChild(c);
+        }
+        sTens.appendChild(t);
+      }
+
+      for (let i = 0; i < onesCount; i++) {
+        const o = document.createElement('div');
+        o.className = 'block-one';
+        sOnes.appendChild(o);
+      }
+
+      const total = tensCount * 10 + onesCount;
+      document.getElementById('val-n11').innerText = total;
+      document.getElementById('desc-n11').innerHTML = `當前：<b>${tensCount} 個十 ＋ ${onesCount} 個一 ＝ ${total}</b>`;
+    }
+
+    function addOneBlock() {
+      if (onesCount < 9) {
+        onesCount++;
+        updateN11UI();
+      } else {
+        // 滿10顆觸發聚合
+        onesCount = 10;
+        updateN11UI();
+        document.getElementById('desc-n11').innerHTML = `<b style="color:var(--accent-yellow)">⚡ 滿 10 個一！正在磁吸聚合為 1 根十條...</b>`;
+        setTimeout(() => {
+          onesCount = 0;
+          tensCount++;
+          updateN11UI();
+        }, 500);
+      }
+    }
+
+    function demo60plus20() {
+      tensCount = 6;
+      onesCount = 0;
+      updateN11UI();
+      document.getElementById('desc-n11').innerHTML = `先放 <b>6 個十 (60)</b>... 準備加入 <b>2 個十 (20)</b>`;
+      setTimeout(() => {
+        tensCount = 8;
+        updateN11UI();
+        document.getElementById('desc-n11').innerHTML = `💡 <b>6 個十 ＋ 2 個十 ＝ 8 個十 (80)</b>！不用數 80 顆碎塊！`;
+      }, 1000);
+    }
+
+    function resetN11() {
+      onesCount = 0;
+      tensCount = 0;
+      updateN11UI();
+    }
+
+    /* =========================================================
+       02. N-1-2 雙軌差值探照
+       ========================================================= */
+    function renderN12(a, b) {
+      const svg = document.getElementById('svg-n12');
+      svg.innerHTML = '';
+      const startX = 30;
+      const step = 32;
+
+      // 上軌道 A (紅)
+      for (let i = 0; i < a; i++) {
+        const cx = startX + i * step;
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', cx);
+        c.setAttribute('cy', 50);
+        c.setAttribute('r', 12);
+        c.setAttribute('fill', '#EF4444');
+        svg.appendChild(c);
+      }
+
+      // 下軌道 B (藍)
+      for (let i = 0; i < b; i++) {
+        const cx = startX + i * step;
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', cx);
+        c.setAttribute('cy', 110);
+        c.setAttribute('r', 12);
+        c.setAttribute('fill', '#3B82F6');
+        svg.appendChild(c);
+
+        // 對齊虛線
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', cx);
+        line.setAttribute('y1', 65);
+        line.setAttribute('x2', cx);
+        line.setAttribute('y2', 95);
+        line.setAttribute('stroke', '#4ADE80');
+        line.setAttribute('stroke-dasharray', '3,3');
+        line.setAttribute('stroke-width', '2');
+        svg.appendChild(line);
+      }
+
+      // 金色框選凸出的差值部分
+      const diff = a - b;
+      if (diff > 0) {
+        const diffStartX = startX + b * step - 16;
+        const diffWidth = diff * step;
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', diffStartX);
+        rect.setAttribute('y', 30);
+        rect.setAttribute('width', diffWidth);
+        rect.setAttribute('height', 40);
+        rect.setAttribute('rx', 6);
+        rect.setAttribute('fill', 'none');
+        rect.setAttribute('stroke', '#FACC15');
+        rect.setAttribute('stroke-width', '2.5');
+        svg.appendChild(rect);
+
+        // 標籤文字
+        const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        txt.setAttribute('x', diffStartX + diffWidth / 2);
+        txt.setAttribute('y', 20);
+        txt.setAttribute('fill', '#FACC15');
+        txt.setAttribute('font-size', '12');
+        txt.setAttribute('font-weight', 'bold');
+        txt.setAttribute('text-anchor', 'middle');
+        txt.textContent = `多出 ${diff} 顆 (差值)`;
+        svg.appendChild(txt);
+      }
+
+      // 算式聯動
+      const formula = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      formula.setAttribute('x', 160);
+      formula.setAttribute('y', 170);
+      formula.setAttribute('fill', '#F8FAFC');
+      formula.setAttribute('font-size', '16');
+      formula.setAttribute('font-weight', 'bold');
+      formula.setAttribute('text-anchor', 'middle');
+      formula.textContent = `${a} － ${b} ＝ ${diff}`;
+      svg.appendChild(formula);
+    }
+
+    /* =========================================================
+       03. N-1-3 雙排十格陣
+       ========================================================= */
+    function renderTenFrame(containerId, count, isBlue=false) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'ten-cell';
+        if (i < count) {
+          const chip = document.createElement('div');
+          chip.className = isBlue ? 'dot-chip blue' : 'dot-chip';
+          cell.appendChild(chip);
+        }
+        el.appendChild(cell);
+      }
+    }
+
+    function initN13() {
+      renderTenFrame('box-left', 9);
+      renderTenFrame('box-right', 4, true);
+      document.getElementById('status-n13').innerText = '左盒 9 格 ＋ 右盒 4 格';
+    }
+
+    function animateMakeTen() {
+      // 飛補1顆
+      renderTenFrame('box-left', 10);
+      renderTenFrame('box-right', 3, true);
+      document.getElementById('box-left').style.borderColor = '#FACC15';
+      document.getElementById('status-n13').innerText = '✨ 滿 10 (左盒) ＋ 3 (右盒) ＝ 13';
+      document.getElementById('desc-n13').innerHTML = `算理解析：把 4 拆成 1 和 3，9 拿 1 湊成 10，10+3=13！`;
+    }
+
+    function resetN13() {
+      document.getElementById('box-left').style.borderColor = '#475569';
+      initN13();
+      document.getElementById('desc-n13').innerText = '湊十算理：點擊「湊十」看右盒 1 顆飛補進左盒滿十。';
+    }
+
+    /* =========================================================
+       04. N-1-4 數線反推
+       ========================================================= */
+    let isRevealedN14 = false;
+    function renderN14(revealed=false) {
+      const svg = document.getElementById('svg-n14');
+      svg.innerHTML = '';
+
+      // 數線主軸
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', 20); line.setAttribute('y1', 100);
+      line.setAttribute('x2', 320); line.setAttribute('y2', 100);
+      line.setAttribute('stroke', '#64748B'); line.setAttribute('stroke-width', '2');
+      svg.appendChild(line);
+
+      // 刻度 0~15
+      for (let i = 0; i <= 15; i++) {
+        const x = 30 + i * 18;
+        const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        tick.setAttribute('x1', x); tick.setAttribute('y1', 95);
+        tick.setAttribute('x2', x); tick.setAttribute('y2', 105);
+        tick.setAttribute('stroke', i % 5 === 0 ? '#38BDF8' : '#475569');
+        tick.setAttribute('stroke-width', i % 5 === 0 ? '2' : '1');
+        svg.appendChild(tick);
+
+        if (i % 5 === 0 || i === 7 || i === 12) {
+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          label.setAttribute('x', x); label.setAttribute('y', 125);
+          label.setAttribute('fill', (i === 7 && revealed) ? '#4ADE80' : '#94A3B8');
+          label.setAttribute('font-size', '10');
+          label.setAttribute('text-anchor', 'middle');
+          label.textContent = i;
+          svg.appendChild(label);
+        }
+      }
+
+      // 箭頭弧線 (從 7 跨到 12)
+      const x7 = 30 + 7 * 18;
+      const x12 = 30 + 12 * 18;
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${x7} 90 Q ${(x7+x12)/2} 40 ${x12} 90`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#FB923C');
+      path.setAttribute('stroke-width', '2');
+      svg.appendChild(path);
+
+      const arrowTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      arrowTxt.setAttribute('x', (x7+x12)/2); arrowTxt.setAttribute('y', 55);
+      arrowTxt.setAttribute('fill', '#FB923C');
+      arrowTxt.setAttribute('font-size', '12'); arrowTxt.setAttribute('font-weight', 'bold');
+      arrowTxt.setAttribute('text-anchor', 'middle');
+      arrowTxt.textContent = '+5';
+      svg.appendChild(arrowTxt);
+
+      // 起點遮罩盒
+      if (!revealed) {
+        const mask = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        mask.setAttribute('x', x7 - 14); mask.setAttribute('y', 75);
+        mask.setAttribute('width', 28); mask.setAttribute('height', 28);
+        mask.setAttribute('rx', 4);
+        mask.setAttribute('fill', '#F43F5E');
+        svg.appendChild(mask);
+
+        const qTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        qTxt.setAttribute('x', x7); qTxt.setAttribute('y', 94);
+        qTxt.setAttribute('fill', '#FFF');
+        qTxt.setAttribute('font-size', '14'); qTxt.setAttribute('font-weight', 'bold');
+        qTxt.setAttribute('text-anchor', 'middle');
+        qTxt.textContent = '?';
+        svg.appendChild(qTxt);
+      }
+
+      // 算式看板
+      const board = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      board.setAttribute('x', 170); board.setAttribute('y', 160);
+      board.setAttribute('fill', '#F8FAFC'); board.setAttribute('font-size', '14');
+      board.setAttribute('font-weight', 'bold'); board.setAttribute('text-anchor', 'middle');
+      board.textContent = revealed ? '反推：12 － 5 ＝ 7  (原式：7 ＋ 5 ＝ 12)' : '( ? ) ＋ 5 ＝ 12';
+      svg.appendChild(board);
+    }
+
+    function revealN14() { renderN14(true); }
+    function resetN14() { renderN14(false); }
+
+    /* =========================================================
+       05. N-1-5 碰壁對齊量測
+       ========================================================= */
+    function renderN15(aligned=false) {
+      const svg = document.getElementById('svg-n15');
+      svg.innerHTML = '';
+
+      // 紅色碰壁基準牆
+      const wall = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      wall.setAttribute('x1', 40); wall.setAttribute('y1', 20);
+      wall.setAttribute('x2', 40); wall.setAttribute('y2', 170);
+      wall.setAttribute('stroke', '#EF4444'); wall.setAttribute('stroke-width', '4');
+      svg.appendChild(wall);
+
+      const wallTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      wallTxt.setAttribute('x', 40); wallTxt.setAttribute('y', 190);
+      wallTxt.setAttribute('fill', '#EF4444'); wallTxt.setAttribute('font-size', '11');
+      wallTxt.setAttribute('text-anchor', 'middle'); wallTxt.textContent = '碰壁基準線';
+      svg.appendChild(wallTxt);
+
+      // 鉛筆 (長度 180)
+      const px = aligned ? 40 : 80;
+      const pencil = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      pencil.setAttribute('x', px); pencil.setAttribute('y', 50);
+      pencil.setAttribute('width', 180); pencil.setAttribute('height', 16);
+      pencil.setAttribute('rx', 2); pencil.setAttribute('fill', '#F59E0B');
+      svg.appendChild(pencil);
+
+      // 迴紋針鏈 (每個 45px, 剛好 4 個 = 180)
+      if (aligned) {
+        for (let i = 0; i < 4; i++) {
+          const cx = 40 + i * 45;
+          const clip = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          clip.setAttribute('x', cx + 2); clip.setAttribute('y', 80);
+          clip.setAttribute('width', 41); clip.setAttribute('height', 12);
+          clip.setAttribute('rx', 6); clip.setAttribute('fill', 'none');
+          clip.setAttribute('stroke', '#94A3B8'); clip.setAttribute('stroke-width', '2.5');
+          svg.appendChild(clip);
+        }
+
+        const resTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        resTxt.setAttribute('x', 130); resTxt.setAttribute('y', 130);
+        resTxt.setAttribute('fill', '#4ADE80'); resTxt.setAttribute('font-size', '14');
+        resTxt.setAttribute('font-weight', 'bold'); resTxt.setAttribute('text-anchor', 'middle');
+        resTxt.textContent = '✓ 基準對齊！長度剛好等於 4 根迴紋針長';
+        svg.appendChild(resTxt);
+      } else {
+        const warnTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        warnTxt.setAttribute('x', 170); warnTxt.setAttribute('y', 110);
+        warnTxt.setAttribute('fill', '#F87171'); warnTxt.setAttribute('font-size', '12');
+        warnTxt.setAttribute('text-anchor', 'middle');
+        warnTxt.textContent = '⚠️ 鉛筆未靠齊基準紅線，無法準確量測！';
+        svg.appendChild(warnTxt);
+      }
+    }
+
+    function alignAndMeasureN15() { renderN15(true); }
+    function resetN15() { renderN15(false); }
+
+    /* =========================================================
+       06. S-1-1 034 向量旋轉正方形
+       ========================================================= */
+    function rotateSquare(deg) {
+      document.getElementById('ang-s11').innerText = deg + '°';
+      const svg = document.getElementById('svg-s11');
+      svg.innerHTML = '';
+
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('transform', `rotate(${deg})`);
+
+      // 正方形本體
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', -45); rect.setAttribute('y', -45);
+      rect.setAttribute('width', 90); rect.setAttribute('height', 90);
+      rect.setAttribute('rx', 4);
+      rect.setAttribute('fill', 'rgba(56, 189, 248, 0.25)');
+      rect.setAttribute('stroke', '#38BDF8');
+      rect.setAttribute('stroke-width', '2.5');
+      g.appendChild(rect);
+
+      // 直角標記 (四個角)
+      const angles = [[-45,-45], [45-12,-45], [45-12, 45-12], [-45, 45-12]];
+      angles.forEach(([x, y]) => {
+        const sq = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        sq.setAttribute('x', x); sq.setAttribute('y', y);
+        sq.setAttribute('width', 12); sq.setAttribute('height', 12);
+        sq.setAttribute('fill', 'none'); sq.setAttribute('stroke', '#FACC15');
+        sq.setAttribute('stroke-width', '1.5');
+        g.appendChild(sq);
+      });
+
+      svg.appendChild(g);
+    }
+
+    /* =========================================================
+       07. S-1-2 堆疊與滾動
+       ========================================================= */
+    function renderS12(mode='cubes') {
+      const svg = document.getElementById('svg-s12');
+      svg.innerHTML = '';
+      const desc = document.getElementById('desc-s12');
+
+      // 地面
+      const ground = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      ground.setAttribute('x1', 20); ground.setAttribute('y1', 160);
+      ground.setAttribute('x2', 300); ground.setAttribute('y2', 160);
+      ground.setAttribute('stroke', '#475569'); ground.setAttribute('stroke-width', '3');
+      svg.appendChild(ground);
+
+      if (mode === 'cubes') {
+        desc.innerHTML = '<b style="color:var(--accent-green)">✓ 正方體有平坦平面，接觸面平穩，可以穩固往上堆高！</b>';
+        // 堆三層立方體
+        for(let i=0; i<3; i++) {
+          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          rect.setAttribute('x', 135); rect.setAttribute('y', 160 - (i+1)*36);
+          rect.setAttribute('width', 50); rect.setAttribute('height', 34);
+          rect.setAttribute('rx', 3);
+          rect.setAttribute('fill', '#38BDF8'); rect.setAttribute('stroke', '#0284C7');
+          rect.setAttribute('stroke-width', '2');
+          svg.appendChild(rect);
+        }
+      } else {
+        desc.innerHTML = '<b style="color:var(--accent-red)">✕ 球體只有彎曲面，無法堆疊！一顆疊在另一顆上面會滾落滑開！</b>';
+        // 底下一顆球
+        const c1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c1.setAttribute('cx', 160); c1.setAttribute('cy', 135); c1.setAttribute('r', 25);
+        c1.setAttribute('fill', 'radial-gradient(circle at 35% 35%, #F87171, #991B1B)');
+        c1.setAttribute('stroke', '#DC2626');
+        svg.appendChild(c1);
+
+        // 滾落的球
+        const c2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c2.setAttribute('cx', 230); c2.setAttribute('cy', 135); c2.setAttribute('r', 25);
+        c2.setAttribute('fill', 'radial-gradient(circle at 35% 35%, #FCA5A5, #B91C1C)');
+        svg.appendChild(c2);
+
+        // 滾動虛線箭頭
+        const rollPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        rollPath.setAttribute('d', 'M 160 100 Q 195 90 230 130');
+        rollPath.setAttribute('fill', 'none'); rollPath.setAttribute('stroke', '#F87171');
+        rollPath.setAttribute('stroke-width', '2'); rollPath.setAttribute('stroke-dasharray', '4,4');
+        svg.appendChild(rollPath);
+      }
+    }
+    function stackCubes() { renderS12('cubes'); }
+    function stackSpheres() { renderS12('spheres'); }
+
+    /* =========================================================
+       08. R-1-1 034 向量天平
+       ========================================================= */
+    function renderR11(wLeft, wRight) {
+      const svg = document.getElementById('svg-r11');
+      svg.innerHTML = '';
+      const isBalanced = wLeft === wRight;
+      const angle = isBalanced ? 0 : (wLeft > wRight ? -12 : 12);
+
+      // 底座與支點
+      const base = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      base.setAttribute('points', '170,90 150,160 190,160');
+      base.setAttribute('fill', '#475569');
+      svg.appendChild(base);
+
+      // 旋轉槓桿群組
+      const gBeam = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      gBeam.setAttribute('transform', `rotate(${angle}, 170, 90)`);
+
+      // 槓桿木條
+      const beam = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      beam.setAttribute('x', 50); beam.setAttribute('y', 86);
+      beam.setAttribute('width', 240); beam.setAttribute('height', 8);
+      beam.setAttribute('rx', 3); beam.setAttribute('fill', '#94A3B8');
+      gBeam.appendChild(beam);
+
+      // 左吊盤
+      const lineL = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      lineL.setAttribute('x1', 70); lineL.setAttribute('y1', 94);
+      lineL.setAttribute('x2', 70); lineL.setAttribute('y2', 125);
+      lineL.setAttribute('stroke', '#64748B'); lineL.setAttribute('stroke-width', '1.5');
+      gBeam.appendChild(lineL);
+
+      const panL = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      panL.setAttribute('x', 45); panL.setAttribute('y', 125);
+      panL.setAttribute('width', 50); panL.setAttribute('height', 6);
+      panL.setAttribute('rx', 2); panL.setAttribute('fill', '#CBD5E1');
+      gBeam.appendChild(panL);
+
+      // 右吊盤
+      const lineR = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      lineR.setAttribute('x1', 270); lineR.setAttribute('y1', 94);
+      lineR.setAttribute('x2', 270); lineR.setAttribute('y2', 125);
+      lineR.setAttribute('stroke', '#64748B'); lineR.setAttribute('stroke-width', '1.5');
+      gBeam.appendChild(lineR);
+
+      const panR = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      panR.setAttribute('x', 245); panR.setAttribute('y', 125);
+      panR.setAttribute('width', 50); panR.setAttribute('height', 6);
+      panR.setAttribute('rx', 2); panR.setAttribute('fill', '#CBD5E1');
+      gBeam.appendChild(panR);
+
+      // 盤中砝碼個數文字
+      const txtL = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txtL.setAttribute('x', 70); txtL.setAttribute('y', 120);
+      txtL.setAttribute('fill', '#FB923C'); txtL.setAttribute('font-size', '14');
+      txtL.setAttribute('font-weight', 'bold'); txtL.setAttribute('text-anchor', 'middle');
+      txtL.textContent = `${wLeft}顆`;
+      gBeam.appendChild(txtL);
+
+      const txtR = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txtR.setAttribute('x', 270); txtR.setAttribute('y', 120);
+      txtR.setAttribute('fill', '#38BDF8'); txtR.setAttribute('font-size', '14');
+      txtR.setAttribute('font-weight', 'bold'); txtR.setAttribute('text-anchor', 'middle');
+      txtR.textContent = `${wRight}顆`;
+      gBeam.appendChild(txtR);
+
+      svg.appendChild(gBeam);
+
+      // 中央等號符號看板
+      const signTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      signTxt.setAttribute('x', 170); signTxt.setAttribute('y', 55);
+      signTxt.setAttribute('font-size', '28'); signTxt.setAttribute('font-weight', '900');
+      signTxt.setAttribute('text-anchor', 'middle');
+      if (isBalanced) {
+        signTxt.setAttribute('fill', '#4ADE80');
+        signTxt.textContent = '＝';
+      } else {
+        signTxt.setAttribute('fill', '#EF4444');
+        signTxt.textContent = '≠';
+      }
+      svg.appendChild(signTxt);
+
+      // 算理解析
+      const desc = document.getElementById('desc-r11');
+      if (isBalanced) {
+        desc.innerHTML = `<b style="color:var(--accent-green)">✓ 天平回正平衡！等號成立： 5 ＝ 2 ＋ 3 （兩邊重量相等）</b>`;
+      } else {
+        desc.innerHTML = `<b style="color:var(--accent-red)">✕ 左重右輕，天平傾斜！5 ≠ 2 （等號不成立）</b>`;
+      }
+    }
+    function setBalance(l, r) { renderR11(l, r); }
+
+    /* =========================================================
+       09. D-1-1 正字劃記抽屜
+       ========================================================= */
+    const shapes = [
+      { id:1, type:'circle', color:'#EF4444' },
+      { id:2, type:'triangle', color:'#38BDF8' },
+      { id:3, type:'square', color:'#F59E0B' },
+      { id:4, type:'circle', color:'#EF4444' },
+      { id:5, type:'triangle', color:'#38BDF8' },
+      { id:6, type:'circle', color:'#EF4444' },
+    ];
+    let classified = { circle:0, triangle:0, square:0 };
+
+    function renderD11() {
+      const scatter = document.getElementById('scatter-area');
+      const drawer = document.getElementById('drawer-area');
+      scatter.innerHTML = '';
+      drawer.innerHTML = '';
+
+      // 散落區未分類物件
+      shapes.forEach(s => {
+        const item = document.createElement('div');
+        item.style.width = '24px'; item.style.height = '24px';
+        item.style.backgroundColor = s.color;
+        item.style.borderRadius = s.type === 'circle' ? '50%' : (s.type === 'square' ? '4px' : '0');
+        if (s.type === 'triangle') {
+          item.style.width = '0'; item.style.height = '0';
+          item.style.backgroundColor = 'transparent';
+          item.style.borderLeft = '12px solid transparent';
+          item.style.borderRight = '12px solid transparent';
+          item.style.borderBottom = `24px solid ${s.color}`;
+        }
+        scatter.appendChild(item);
+      });
+
+      // 三個抽屜
+      const types = [
+        { k:'circle', name:'圓形', tally: getTally(classified.circle) },
+        { k:'triangle', name:'三角形', tally: getTally(classified.triangle) },
+        { k:'square', name:'正方形', tally: getTally(classified.square) },
+      ];
+
+      types.forEach(t => {
+        const d = document.createElement('div');
+        d.style.flex = '1'; d.style.background = '#1E293B';
+        d.style.border = '1px solid #475569'; d.style.borderRadius = '6px';
+        d.style.padding = '6px'; d.style.textAlign = 'center';
+        d.innerHTML = `
+          <div style="font-size:11px; color:var(--text-sub);">${t.name}</div>
+          <div style="font-size:16px; font-weight:bold; color:var(--accent-yellow); margin-top:4px;">${t.tally || '-'}</div>
+        `;
+        drawer.appendChild(d);
+      });
+    }
+
+    function getTally(count) {
+      const strokes = ['一', '丅', '丄', '正'];
+      if (count === 0) return '';
+      if (count <= 4) return strokes[count-1] || '正';
+      return `正 ＋ ${count - 5}`;
+    }
+
+    function autoSortAllD11() {
+      classified.circle = 3;
+      classified.triangle = 2;
+      classified.square = 1;
+      document.getElementById('scatter-area').innerHTML = '<span style="color:#4ADE80; font-size:12px;">✓ 已全部收納進對應分類抽屜</span>';
+      renderD11();
+    }
+
+    function resetD11() {
+      classified = { circle:0, triangle:0, square:0 };
+      renderD11();
+    }
+
+    // 初始化所有樣品
+    window.onload = () => {
+      updateN11UI();
+      renderN12(8, 5);
+      initN13();
+      renderN14(false);
+      renderN15(false);
+      rotateSquare(0);
+      renderS12('cubes');
+      renderR11(5, 2);
+      renderD11();
+    };
+  </script>
+</body>
+</html>

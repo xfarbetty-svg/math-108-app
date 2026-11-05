@@ -1,28 +1,34 @@
-# Handoff - 028-1_國小數學APP
+# Handoff - 028_1 國小數學APP
 
 ## ⏯️ 目前做到哪
-- **【專案正式立項 Genesis】**：
-  - 徹底跳脫 028 歷史包袱，於 `D:\ANTIGRAVITY\028-1_國小數學APP` 乾淨開展。
-  - 完成標準 L1 四件套（`AGENTS.md`、`handoff.md`、`PROGRESS.md`、`INDEX.md`、`VERSION`）。
-  - 將 028 通過驗收之 V3 資產完整遷入：
-    1. [`app/index.html`](app/index.html)：三端自適應展演台（支援手機 390px、平板 768px、電腦 960px，具備 5 大課綱教具與深度通分算理演示）。
-    2. [`docs/108課綱規格書_全學年視覺教具對照表.md`](docs/108課綱規格書_全學年視覺教具對照表.md)：G1~G6 官方代碼與法定教具對照。
-    3. [`docs/R0_AGY_BLUEPRINT.md`](docs/R0_AGY_BLUEPRINT.md)：Given-When-Then AC 藍圖。
-    4. [`課綱/curriculum_108_math.json`](課綱/curriculum_108_math.json)：教育部官方手冊結構化資料。
+- **【一年級 9 大單元視覺教具打樣全量完成】**：
+  - 徹底糾正 108 課綱條目「過度濃縮偷工」問題，補齊一年級法定全量 9 大條目（N-1-1 至 D-1-1）。
+  - 落實「樣品驅動開發 (SDD)」，拒絕純文字口號與長篇故事考題，產出規格藍圖：
+    [`reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md`](reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md)
+  - 產出實體可互動之打樣單檔：
+    [`reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`](reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html)
+    （含十進位位值盒、滿十磁吸十條、比較型減法雙軌探照、湊十雙排十格陣、數線反推、碰壁長度量測、034 等角正方旋轉、034 堆疊與滾動、034 向量天平、正字劃記抽屜）。
 
 ## 🚦 目前狀態
-- **當前版本**：`v3.0.0`
-- **健康狀態**：🟢 PRISTINE (極致純淨，零歷史包袱)
-- **Git 狀態**：初始化完畢
-- **雲端額度消耗**：$0.00
+- **當前版本**：`v3.1.0` (G1 Visual Samples Prototype Ready)
+- **健康狀態**：🟢 PRISTINE (樣品全量可用，純前端 SVG 零外部依賴)
+- **Git 狀態**：本地已 Commit
+- **雲端額度消耗**：$0.00 (純前端向量樣品)
 
 ## ➡️ 下一步（開工首要任務）
-1. 由指揮官拍板第一站單元：
-   - **選項 A**：一年級 G1 單元一 `N-1-3` 基本加減法（雙色十格陣 ＋ 荷葉跳步數線）。
-   - **選項 B**：二年級 G2 單元一 `N-2-2` 兩位數減法退位直式（格線位值表 ＋ 借位劃斜線退10）。
-2. 開發該單元專屬獨立教具元件。
-3. 精選 10 題真題錄入，由指揮官實機盲審 10 題，全通過才寫入 `data/curriculum_v3/`。
+1. **人類實機把玩驗收**：
+   - 用瀏覽器打開 `reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`。
+   - 在 390px (手機) 與 768px (平板) 上檢驗觸控點擊與算理動態。
+2. **選定首批工業級封裝元件**：
+   - 挑選經人類驗收認可的樣品，由 P0 OpenCode 封裝為標準 Web Component。
+3. **對齊其他學年藍圖**：
+   - 依同樣標準檢討 G2~G6，杜絕濃縮偷工。
+
+## ⚠️ 注意事項
+- 專案內部一律統稱為 `028_1`。若需將目錄名由 `028-1_國小數學APP` 改為 `028_1`，可在關閉 IDE 佔用時直接於檔案總管重命名。
+- 本機未配置 `git remote` 遠端倉儲，備份目前保留於本機 Git 版控。
 
 ## 🕐 最後更新
-- 時間：2026-11-05T20:16:30+08:00
-- 更新者：Gemini 3.8 Flash
+- 時間：2026-11-05T21:02:40+08:00
+- 更新者：Gemini 3.8 Flash @ DESKTOP-6ELKIRH
+- Git push 狀態：本地已 commit（無配置 GitHub 遠端 remote）
