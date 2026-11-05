@@ -98,6 +98,38 @@
     rec('AC-03-6', cancelled.length >= 1 && after === 0,
       'cancelAnimationFrameCalls=' + cancelled.length + ' eventsAfterRemove=' + after);
 
+    // AC-03-7 / TCK-07：120Hz(dt=8) 與 60Hz(dt=16.667) 收斂時間差 ≤15%
+    var h1 = mk({ 'left-weight': '5', 'right-weight': '2' });
+    var h2 = mk({ 'left-weight': '5', 'right-weight': '2' });
+    await wait(30);
+    function untilSettled(el, dt) {
+      for (var i = 0; i < 2000; i++) { if (el.step(dt)) return (i + 1) * dt; }
+      return -1;
+    }
+    var t60 = untilSettled(h1, 16.6667);
+    var t120 = untilSettled(h2, 8);
+    var diffPct = t60 > 0 ? Math.abs(t120 - t60) / t60 * 100 : 999;
+    rec('AC-03-7', t60 > 0 && t120 > 0 && diffPct <= 15,
+      't60=' + t60.toFixed(1) + 'ms t120=' + t120.toFixed(1) + 'ms diff=' +
+      diffPct.toFixed(1) + '% (<=15%)');
+    h1.remove(); h2.remove();
+
+    // AC-03-8 / TCK-04：append→remove→append 不得疊出第二層 svg/style
+    var g = mk({ 'left-weight': '5', 'right-weight': '5' });
+    await wait(30);
+    function nodes(el) {
+      return el.shadowRoot.querySelectorAll('svg').length + '/' +
+        el.shadowRoot.querySelectorAll('style').length + '/' +
+        el.shadowRoot.querySelectorAll('.weight').length;
+    }
+    var n0 = nodes(g);
+    g.remove();
+    document.getElementById('stage').appendChild(g);
+    await wait(40);
+    var n1 = nodes(g);
+    rec('AC-03-8', n0 === '1/1/10' && n1 === n0, 'before=' + n0 + ' afterReconnect=' + n1 + ' (expect 1/1/10)');
+    g.remove();
+
     document.getElementById('result').textContent = 'RESULT_BEGIN\n' + out.join('\n') + '\nRESULT_END';
   })().catch(function (err) {
     document.getElementById('result').textContent =

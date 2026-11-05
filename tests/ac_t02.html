@@ -13,6 +13,7 @@
 (function () {
   var out = [];
   function rec(id, pass, info) { out.push((pass ? 'PASS ' : 'FAIL ') + id + ' :: ' + info); }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function mk(attrs) {
     var e = document.createElement('dual-track-diff');
     Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
@@ -20,50 +21,64 @@
     return e;
   }
   function q(e, sel) { return e.shadowRoot.querySelectorAll(sel); }
-  function step(e) {
-    var c = q(e, '.coin.top');
-    return Number(c[1].getAttribute('cx')) - Number(c[0].getAttribute('cx'));
-  }
+  function near(a, b, tol) { return Math.abs(a - b) <= tol; }
+
+  // TCK-06：外部獨立計算，不用實作量到的值自我參照
+  var STEP = (320 - 2 * 28) / (10 - 1);        // 29.3333
+  var R = Math.min(16, Math.max(10, STEP / 2 - 2)); // 12.6667
 
   (async function run() {
-    // AC-02-1
+    // AC-02-1 / TCK-06：金框寬 = 3×STEP，且 STEP、r 符合解析公式
     var a = mk({ 'top-count': '8', 'bottom-count': '5' });
-    var s = step(a);
+    var coins = q(a, '.coin.top');
+    var s = Number(coins[1].getAttribute('cx')) - Number(coins[0].getAttribute('cx'));
+    var rr = Number(coins[0].getAttribute('r'));
     var box = q(a, '.diff-box')[0];
-    var w = box.getBBox().width;
-    rec('AC-02-1', Math.abs(w - 3 * s) <= 1,
-      'boxW=' + w.toFixed(2) + ' 3*step=' + (3 * s).toFixed(2) + ' step=' + s.toFixed(2));
+    var bb = box.getBBox();
+    rec('AC-02-1',
+      near(s, STEP, 0.01) && near(rr, R, 0.01) &&
+      near(bb.width, 3 * STEP, 0.5) && near(bb.height, 2 * R + 8, 0.1) &&
+      near(bb.y, 60 - R - 4, 0.1),
+      'step=' + s.toFixed(3) + '(expect ' + STEP.toFixed(3) + ') r=' + rr.toFixed(3) +
+      '(expect ' + R.toFixed(3) + ') boxW=' + bb.width.toFixed(2) + '(expect ' +
+      (3 * STEP).toFixed(2) + ') boxH=' + bb.height.toFixed(2) + ' boxY=' + bb.y.toFixed(2));
 
-    // AC-02-4
-    rec('AC-02-4', q(a, '.link').length === 5, 'links=' + q(a, '.link').length + ' (expect 5)');
+    // AC-02-4 / TCK-06：對齊虛線邊到邊，不得穿入圓片
+    var links = q(a, '.link');
+    var l0 = links[0];
+    var y1 = Number(l0.getAttribute('y1')), y2 = Number(l0.getAttribute('y2'));
+    rec('AC-02-4',
+      links.length === 5 && near(y1, 60 + R, 0.01) && near(y2, 110 - R, 0.01) &&
+      y1 > 60 && y2 < 110,
+      'links=' + links.length + ' y1=' + y1.toFixed(2) + '(expect ' + (60 + R).toFixed(2) +
+      ') y2=' + y2.toFixed(2) + '(expect ' + (110 - R).toFixed(2) + ')');
 
-    // AC-02-2
+    // AC-02-2 相等態
     var b = mk({ 'top-count': '5', 'bottom-count': '5' });
     var sameTxt = (q(b, '.same-label')[0] || {}).textContent || '';
     var f2 = (q(b, '.formula')[0] || {}).textContent || '';
     rec('AC-02-2', q(b, '.diff-box').length === 0 && sameTxt === '一樣多' && f2 === '5 ＝ 5',
       'diffBox=' + q(b, '.diff-box').length + ' label=' + sameTxt + ' formula=' + f2);
 
-    // AC-02-3
+    // AC-02-3 越界夾值
     var c = mk({ 'top-count': '8', 'bottom-count': '5' });
     var invalid = 0, lastDetail = null;
     c.addEventListener('diff:invalid', function (e) { invalid++; lastDetail = e.detail; });
     c.setAttribute('top-count', '11');
-    var coins = q(c, '.coin');
+    var all = q(c, '.coin');
     var inside = true;
-    for (var i = 0; i < coins.length; i++) {
-      var cx = Number(coins[i].getAttribute('cx')), r = Number(coins[i].getAttribute('r'));
+    for (var i = 0; i < all.length; i++) {
+      var cx = Number(all[i].getAttribute('cx')), r = Number(all[i].getAttribute('r'));
       if (cx - r < 0 || cx + r > 320) inside = false;
     }
     rec('AC-02-3', c.top === 10 && invalid === 1 && inside,
       'clampedTop=' + c.top + ' invalid=' + invalid + ' attempted=' + (lastDetail && lastDetail.attempted) +
       ' insideViewBox=' + inside);
 
-    // AC-02-5
+    // AC-02-5 減動態
     var d = mk({ 'top-count': '8', 'bottom-count': '5' });
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var flow = q(d, '.diff-box')[0];
-    var animName = getComputedStyle(flow).animationName;
+    var animName = getComputedStyle(q(d, '.diff-box')[0]).animationName;
     var ruleFound = false;
     var ss = d.shadowRoot.querySelector('style').sheet;
     for (var k = 0; k < ss.cssRules.length; k++) {
@@ -72,6 +87,29 @@
     }
     rec('AC-02-5', ruleFound && (reduced ? animName === 'none' : animName === 'dtd-flow'),
       'reducedMode=' + reduced + ' animationName=' + animName + ' rule=' + ruleFound);
+
+    // AC-02-6 / TCK-04 對稱：append→remove→append 不得疊出第二層 svg
+    var e = mk({ 'top-count': '8', 'bottom-count': '5' });
+    await wait(20);
+    var n0 = q(e, 'svg').length + '/' + q(e, 'style').length + '/' + q(e, '.coin').length;
+    e.remove();
+    document.getElementById('stage').appendChild(e);
+    await wait(20);
+    var n1 = q(e, 'svg').length + '/' + q(e, 'style').length + '/' + q(e, '.coin').length;
+    rec('AC-02-6', n0 === '1/1/13' && n1 === n0, 'before=' + n0 + ' afterReconnect=' + n1 + ' (expect 1/1/13)');
+
+    // AC-02-7 / TCK-06：金框完整包住多出的圓片
+    var g = q(a, '.diff-box')[0].getBBox();
+    var extra = [];
+    for (var j = 5; j < 8; j++) extra.push(Number(coins[j].getAttribute('cx')));
+    var leftMost = Math.min.apply(null, extra) - R;
+    var rightMost = Math.max.apply(null, extra) + R;
+    var encloses = g.x <= leftMost + 0.01 && g.x + g.width >= rightMost - 0.01 &&
+      g.y <= 60 - R + 0.01 && g.y + g.height >= 60 + R - 0.01;
+    rec('AC-02-7', encloses,
+      'box=[' + g.x.toFixed(1) + ',' + g.y.toFixed(1) + ' ' + g.width.toFixed(1) + 'x' +
+      g.height.toFixed(1) + '] coins=[' + leftMost.toFixed(1) + ',' + (60 - R).toFixed(1) +
+      '..' + rightMost.toFixed(1) + ',' + (60 + R).toFixed(1) + ']');
 
     document.getElementById('result').textContent = 'RESULT_BEGIN\n' + out.join('\n') + '\nRESULT_END';
   })().catch(function (err) {

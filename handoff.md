@@ -1,43 +1,43 @@
 # Handoff - 028_1 國小數學APP
 
 ## ⏯️ 目前做到哪
-- **【人類三端實機驗收通過】**：人類專家審核 `reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html` 9 大樣品手感 OK。
-- **【026 AutoFlow v2.6.3 三層閉環拓撲 100% 對齊驗真】**：
-  - 徹底查明並實測通過三大法定免費算力通道：
-    - **通道 1 (本地 OpenCode CLI)**：`opencode run --auto` (v2.2.5 帶真實工具手腳施工)，本機 Exit Code 0。
-    - **通道 2 (A-SERVER SSH)**：`100.64.178.56` 在線，遠端 OpenCode CLI (已同步對齊升級至 v2.2.5) 備援 Exit Code 0。
-    - **通道 3 (035 Key Pool)**：`127.0.0.1:4000` 在線，7 把 Google API Key 全部 ACTIVE，0-Token 攔截非 Gemini。
-    - **備用網關 (本地 Magpie)**：`127.0.0.1:3425` 在線，僅作為純文字盲測開票備援 (Fallback Only，無手腳無工具執行能力)。
-  - **解鎖本地 Windows OpenCode CLI 假死 (BUG-AF-WIN-STDIN-HANG-001)**：
-    子進程注入 `stdin=subprocess.DEVNULL`、`shell=True`、`encoding="utf-8", errors="replace"`，本機 OpenCode CLI 秒級回傳 Exit Code 0！
-  - **確認法定調用順序**：
-    `AGY (大腦 R0)` ➔ `BP (現場指揮官拆卡)` ➔ `GLM (帶手腳施工)` ➔ `BP (親自審查比對代碼)` ➔ `AGY (終審交付)`。
+- **【Stage 3.5 工單重工完成，待 BP 盲審】**：依 `R1_CHALLENGER_TICKETS.md`（8 張）＋ `R1_BP_TICKET_RULING.md`（全部 ACCEPTED）重工 T-01~T-04，全部以機械化閘門 exit code 驗收。
+  - `app/components/ten-frame-grid.js`（277 行 / 10,642 B）：30px 格 + 33px 不重疊熱區 + padding 4（單盒 177px，兩盒 354px 並排）；`blocked{value,reason}` 事件；漸層雙變數 `--tfg-hi/--tfg-fill`；重連不炸。AC-01-1~8 全 PASS。
+  - `app/components/dual-track-diff.js`（169 行 / 7,377 B）：單一幾何公式 `STEP=29.333`、`r=12.667`，虛線 `72.667→97.333` 不穿圓片，金框 `88.00×33.33` 完整包住多出圓片。AC-02-1~7 全 PASS（含 reduced-motion）。
+  - `app/components/balance-beam.js`（285 行 / 12,260 B）：明訂 deg、半隱式 Euler、`scale=dt/16.667`，收斂 `|θ_target-θ|<0.1°` 且 `|θ'|<8°/s` 連續 2 幀。AC-03-1~8 全 PASS（120Hz vs 60Hz 差 4.0%）。
+  - `app/playground.html`（419 行 / 17,928 B）：新增分解樹（`9＋4`→`1`/`3`、`9＋1＝10`、`10＋3＝13`，由 `ten-frame:full` 驅動）與 300ms 拋物線（控制點 -60px）；390px 緊湊排版讓兩盒同列。390/768/960 三輪全綠。
+- **【新增驗收基礎設施】**：
+  - `tools/ac_gate.js`：機械化閘門，一次跑 G-1 語法 / G-4 外部資源 / G-5 體積 / T-01~T-03 全量 AC，**只認 process exit code**。
+  - `tools/ac_run.js`：CDP 驅動器，直開真實 `file://` 頁面跑互動 AC、攔截 console error/warning、可 `--shot=` 截圖。
+  - `tests/ac_t01.html`(8) / `ac_t02.html`(7) / `ac_t03.html`(8) / `ac_t04_body.js` / `ac_geometry_body.js`(7)。
+- **【交付報告】**：`reports/20261105_2035_g1_visual_spec/R3_WORKER_BUILD_REPORT.md`（五欄交付 + TCK 對照矩陣 + D-01~D-13 + TCK-09）。
+- **【規格回寫】**：`R1_BP_EXECUTION_PLAN.md` 末尾新增「附錄 R1.1」，把 TCK-06/07 的公式與量綱、T-04 分解樹座標、驗收機械化寫回規格（原文未刪，保留盲審軌跡）。
 
 ## 🚦 目前狀態
-- **當前版本**：`v3.2.0` (AutoFlow v2.6.3 Dispatch Pipeline Aligned)
-- **健康狀態**：🟢 PRISTINE (工作區乾淨，三大算力通道全部 Exit Code 0)
-- **Git 狀態**：本地即將 Commit
-- **雲端額度消耗**：$0.00 (地端全實測通過)
+- **當前版本**：`v3.5.0` (AutoFlow Stage 3.5 Rework Delivered)
+- **健康狀態**：🟢 `node tools/ac_gate.js` → `GATE_GREEN (12 checks, 0 failed)`，Exit Code 0
+- **體積**：10,642 / 7,377 / 12,260 B，合計 **30,279** B（上限 30,720）
+- **Git 狀態**：本輪已 commit（無遠端 remote）
+- **雲端額度消耗**：$0.00（全地端 Chrome/CDP 驗證）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **啟動 AutoFlow Stage 1 (BP 派工)**：
-   - 派發 R0 打樣規格書給 Big Pickle，拆解原子任務卡：
-     - `T-01`: `<ten-frame-grid>` (十進位十格陣與位值盒)
-     - `T-02`: `<dual-track-diff>` (雙軌差值探照燈)
-     - `T-03`: `<balance-beam>` (向量等號天平)
-2. **OpenCode GLM 帶手腳施工**：
-   - 依任務卡物理寫入 `app/components/`，產出 `app/playground.html` 調試台。
-3. **BP 親自審查比對**：
-   - BP 對照 R0 藍圖比對代碼，出具初驗報告，回報 AGY。
+1. **BP 盲審**：`git diff` 對照 R1 + 附錄 R1.1，逐條標 PASS/FAIL；重點覆核 D-01~D-13。
+2. **裁決 TCK-09（新開，阻擋 G-8）**：R1 AC-01-4 要求 44px 熱區，但 TCK-02「30px 格 + 3px 間距」+ TCK-05(d)「熱區不得重疊」使三者不可同時成立（44px pitch × 5 格 → 單盒 ≥232px → 兩盒 ≥464px > 390px）。本輪取 33px 熱區，需 BP 三選一：
+   - (A) 接受 33px 並改 AC-01-4；(B) 390px 改上下堆疊換回 44px（需改寫 `playground.html` 手機排版與 `AC-04-6`）；(C) 放寬「不得重疊」。
+3. **裁決 D-12 / D-13**：為體積閘門移除滿十角標 `.badge`；調試台暴露 `window.__t04` 量測鉤子。
+4. **裁決 D-11**：`tools/run_worker_tasks.py` 提示詞寫 `grid:change`/`theme`/`top`/`bottom`，與 R1 正本衝突，建議廢棄。
+5. **G-8 人類手感驗收**：手機 390px 實機把玩 33px 熱區、天平阻尼手感、分解樹三步節奏（工兵不得自評）。
 
 ## ⚠️ 注意事項
-- **AGY WRITE-FILE LOCKED**：AGY 決策大腦嚴禁親自動手寫業務組件代碼，代碼 100% 由本地 OpenCode Worker 帶手腳落地。
+- **無頭 Chrome 的 rAF 只跳 1 幀**（無 BeginFrame，實測 `RAF n=1`）：動畫/物理驗收一律用元件公開的 `step(dtMs)` 鉤子確定性驅動，或改用 CDP 真實視口。
+- **`Number(null)` = 0 的陷阱**：讀 attribute 數值前先判 `getAttribute(...) === null`，否則預設值會被吃掉（T-03 damping 曾因此靜默變無阻尼）。
+- **`balance-beam.js` 只剩 28 B 餘裕**：下一輪任何新增都要先壓縮，否則 G-5 直接紅燈。
+- **AGY WRITE-FILE LOCKED**：AGY 決策大腦嚴禁親自動手寫業務組件代碼。
 - **Windows CLI 子進程必須注入 DEVNULL**：呼叫 `opencode` 必須 `stdin=subprocess.DEVNULL` 且 `shell=True`，否則卡死。
-- **DeepSeek 拔除思維鏈**：調用 DeepSeek 時嚴格只取 `content`，將 `reasoning_content` 思考雜訊過濾。
 - 本機未配置 GitHub 遠端 remote，備份保留於本機 Git 版控。
 - 本次收工電腦無 Obsidian MCP 工具，L3 筆記暫未同步。
 
 ## 🕐 最後更新
-- 時間：2026-11-06T03:23:45+08:00
-- 更新者：Gemini 3.8 Flash (AGY) @ DESKTOP-6ELKIRH
+- 時間：2026-11-06T05:10:00+08:00
+- 更新者：Worker（AutoFlow 施工工兵，通道 1 本地 CLI）
 - Git push 狀態：本地已 commit（無遠端 remote）

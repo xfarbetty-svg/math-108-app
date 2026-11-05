@@ -6,6 +6,7 @@
 <style>
   body { margin: 0; font: 14px/1.5 monospace; }
   #stage { width: 390px; }
+  .pair { display: flex; gap: 6px; }
 </style>
 </head>
 <body>
@@ -25,10 +26,10 @@
     console[k] = function () { consoleNoise++; return orig.apply(console, arguments); };
   });
 
-  function mk(attrs) {
+  function mk(attrs, parent) {
     var el = document.createElement('ten-frame-grid');
     Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
-    document.getElementById('stage').appendChild(el);
+    (parent || document.getElementById('stage')).appendChild(el);
     return el;
   }
   function dots(el) { return el.shadowRoot.querySelectorAll('.dot').length; }
@@ -39,23 +40,26 @@
     for (var i = 0; i < cs.length; i++) {
       if (!cs[i].disabled) { cs[i].click(); return true; }
     }
-    cs[0].click();
     return false;
   }
 
   (async function run() {
-    // AC-01-1
+    // AC-01-1 / TCK-08(4)：改驗事件總和，不再硬編 overflow=15
     var a = mk({ label: '左盒' });
-    var overflow = 0;
-    a.addEventListener('ten-frame:overflow', function () { overflow++; });
+    var counts = { fill: 0, overflow: 0, blocked: 0 };
+    ['fill', 'overflow', 'blocked'].forEach(function (k) {
+      a.addEventListener('ten-frame:' + k, function () { counts[k]++; });
+    });
     var maxDots = 0;
     for (var i = 0; i < 25; i++) { clickNext(a); maxDots = Math.max(maxDots, dots(a)); }
     await wait(400);
-    rec('AC-01-1', maxDots <= 10 && dots(a) === 10 && overflow === 15,
-      'maxDots=' + maxDots + ' dotsAfter=' + dots(a) + ' overflow=' + overflow + ' (expect 15)');
+    var rejected = counts.overflow + counts.blocked;
+    rec('AC-01-1', maxDots <= 10 && dots(a) === 10 && counts.fill === 10 && rejected >= 15,
+      'maxDots=' + maxDots + ' dots=' + dots(a) + ' fill=' + counts.fill +
+      ' overflow+blocked=' + rejected + ' (>=15)');
     a.remove();
 
-    // AC-01-2
+    // AC-01-2 融合 300ms
     var b = mk({ value: '9' });
     var tFill = 0, tFull = 0;
     b.addEventListener('ten-frame:fill', function (e) { if (e.detail.value === 10) tFill = performance.now(); });
@@ -67,21 +71,32 @@
     rec('AC-01-2', gap >= 270 && gap <= 330, 'fill->full=' + gap.toFixed(1) + 'ms (expect 270~330)');
     b.remove();
 
-    // AC-01-3
+    // AC-01-3 滿十金色閉鎖框
     var c = mk({ value: '10' });
     await wait(600);
     var bc = getComputedStyle(frame(c)).borderColor.replace(/\s/g, '');
     rec('AC-01-3', bc === 'rgb(250,204,21)', 'borderColor=' + bc);
     c.remove();
 
-    // AC-01-4
+    // AC-01-4 / TCK-02+05(d)：30px 視覺格、33px 不重疊熱區
     var d = mk({});
-    var r = cells(d)[0].getBoundingClientRect();
-    rec('AC-01-4', r.width >= 44 && r.height >= 44,
-      'cell=' + r.width.toFixed(1) + 'x' + r.height.toFixed(1) + ' viewport=' + window.innerWidth);
+    var cs = cells(d);
+    var r0 = cs[0].getBoundingClientRect();
+    var r1 = cs[1].getBoundingClientRect();
+    var r5 = cs[5].getBoundingClientRect();
+    var slot0 = cs[0].querySelector('.slot').getBoundingClientRect();
+    var noOverlapX = r1.left >= r0.right - 0.01;
+    var noOverlapY = r5.top >= r0.bottom - 0.01;
+    rec('AC-01-4',
+      Math.abs(slot0.width - 30) < 0.6 && Math.abs(slot0.height - 30) < 0.6 &&
+      Math.abs(r0.width - 33) < 0.6 && noOverlapX && noOverlapY,
+      'slot=' + slot0.width.toFixed(1) + 'x' + slot0.height.toFixed(1) +
+      ' hit=' + r0.width.toFixed(1) + 'x' + r0.height.toFixed(1) +
+      ' gapX=' + (r1.left - r0.right).toFixed(1) + ' gapY=' + (r5.top - r0.bottom).toFixed(1) +
+      ' noOverlap=' + (noOverlapX && noOverlapY));
     d.remove();
 
-    // AC-01-5
+    // AC-01-5 / TCK-04+08(3)：remove 後 500ms 零事件，且重連行為等價
     var e = mk({ value: '9' });
     var after = 0;
     e.addEventListener('ten-frame:full', function () { after++; });
@@ -89,8 +104,62 @@
     e.remove();
     var noiseBefore = consoleNoise;
     await wait(500);
-    rec('AC-01-5', after === 0 && consoleNoise === noiseBefore,
-      'eventsAfterRemove=' + after + ' consoleNoiseDelta=' + (consoleNoise - noiseBefore));
+    var quietOk = after === 0 && consoleNoise === noiseBefore;
+    var dotsBefore = dots(e);
+    document.getElementById('stage').appendChild(e);       // 重連
+    var dotsAfterReconnect = dots(e);
+    e.setAttribute('value', '5');                          // 走 reset 路徑
+    await wait(200);
+    var grew = 0;
+    e.addEventListener('ten-frame:fill', function () { grew++; });
+    var throwFree = true, msg = '', clicked = false;
+    try { clicked = clickNext(e); } catch (err) { throwFree = false; msg = String(err && err.message); }
+    await wait(50);
+    rec('AC-01-5',
+      quietOk && throwFree && dotsAfterReconnect === dotsBefore && clicked && grew === 1,
+      'quiet500ms=' + quietOk + ' dotsBefore=' + dotsBefore + ' dotsAfterReconnect=' +
+      dotsAfterReconnect + ' clicked=' + clicked + ' grew=' + grew + ' throwFree=' + throwFree + msg);
+    e.remove();
+
+    // AC-01-6 / TCK-05(b)：鎖定與唯讀走 blocked，detail 帶 reason
+    var f = mk({ value: '5', locked: '' });
+    var blocked = [];
+    f.addEventListener('ten-frame:blocked', function (ev) { blocked.push(ev.detail); });
+    clickNext(f);
+    var g = mk({ value: '5', interactive: 'false' });
+    g.addEventListener('ten-frame:blocked', function (ev) { blocked.push(ev.detail); });
+    clickNext(g);
+    rec('AC-01-6',
+      blocked.length === 2 && blocked[0].reason === 'locked' &&
+      blocked[0].value === 5 && blocked[1].reason === 'readonly',
+      'n=' + blocked.length + ' reasons=' + blocked.map(function (x) { return x.reason; }).join(','));
+    f.remove(); g.remove();
+
+    // AC-01-7 / TCK-05(c)：漸層內圈必須跟著 fill-color 走（藍版不得見鮭紅）
+    var h = mk({ value: '3', 'fill-color': '#2563EB' });
+    await wait(30);
+    var hi = getComputedStyle(h).getPropertyValue('--tfg-hi').trim();
+    var fillVar = getComputedStyle(h).getPropertyValue('--tfg-fill').trim();
+    var m = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(hi);
+    var blueish = !!m && Number(m[3]) > 200 && Number(m[1]) < 160;
+    rec('AC-01-7', fillVar === '#2563EB' && blueish,
+      'fill=' + fillVar + ' hi=' + hi + ' blueish=' + blueish);
+    h.remove();
+
+    // AC-01-8 / TCK-02：390px 下兩盒並排不產生橫向捲動
+    var pair = document.createElement('div');
+    pair.className = 'pair';
+    document.getElementById('stage').appendChild(pair);
+    var p1 = mk({ value: '10' }, pair);
+    var p2 = mk({ value: '3' }, pair);
+    await wait(60);
+    var w1 = frame(p1).getBoundingClientRect().width;
+    var w2 = frame(p2).getBoundingClientRect().width;
+    var fits = document.getElementById('stage').scrollWidth <= 390;
+    rec('AC-01-8', fits && w1 <= 186 && w2 <= 186,
+      'box1=' + w1.toFixed(1) + ' box2=' + w2.toFixed(1) + ' stageScrollWidth=' +
+      document.getElementById('stage').scrollWidth + ' (<=390)');
+    pair.remove();
 
     document.getElementById('result').textContent =
       'RESULT_BEGIN\n' + out.join('\n') + '\nRESULT_END';

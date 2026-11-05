@@ -19,13 +19,15 @@ const CHROME_CANDIDATES = [
 ];
 
 function parseArgs(argv) {
-  const args = { positional: [], viewport: null, port: 9333 };
+  const args = { positional: [], viewport: null, port: 9333, shot: null };
   for (const a of argv) {
     if (a.startsWith('--viewport=')) {
       const m = /^(\d+)x(\d+)$/.exec(a.split('=')[1]);
       if (m) args.viewport = { width: Number(m[1]), height: Number(m[2]) };
     } else if (a.startsWith('--port=')) {
       args.port = Number(a.split('=')[1]);
+    } else if (a.startsWith('--shot=')) {
+      args.shot = a.split('=')[1];
     } else {
       args.positional.push(a);
     }
@@ -150,6 +152,14 @@ async function main() {
     }
     const results = res.result.value || [];
     for (const line of results) console.log(line);
+    if (args.shot) {
+      await sleep(250);
+      const shot = await ws.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+      const outPath = path.resolve(args.shot);
+      fs.mkdirSync(path.dirname(outPath), { recursive: true });
+      fs.writeFileSync(outPath, Buffer.from(shot.data, 'base64'));
+      console.log('SCREENSHOT=' + outPath + ' (' + fs.statSync(outPath).size + ' bytes)');
+    }
     console.log('CONSOLE_NOISE_COUNT=' + consoleNoise.length);
     for (const n of consoleNoise.slice(0, 10)) console.log('  ' + n);
     const failed = results.filter((l) => String(l).startsWith('FAIL'));

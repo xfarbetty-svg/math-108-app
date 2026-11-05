@@ -41,7 +41,10 @@
 - [x] 產出一年級 9 大單元可操作視覺打樣 Showcase (`reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`)
 - [x] 人類三端實機驗收打樣手感 (手機 390px / 平板 768px / 電腦 960px)
 - [x] 算力通道驗真與 026 AutoFlow v2.6.3 三層閉環拓撲對齊 (通道1 Magpie 3425 / 通道2 A-SERVER SSH / 通道3 035 7把 Key Pool)
-- [ ] 啟動 AutoFlow Stage 1：派工 BP 拆解 T-01~T-03 任務卡，由 OpenCode GLM 帶手腳施工首批元件 (<ten-frame-grid>, <dual-track-diff>, <balance-beam>)
+- [x] 啟動 AutoFlow Stage 1：派工 BP 拆解 T-01~T-03 任務卡，由 OpenCode GLM 帶手腳施工首批元件 (<ten-frame-grid>, <dual-track-diff>, <balance-beam>)
+- [x] Stage 3 工兵施工：T-01~T-04 全量落盤並逐條 AC 實測通過 (`app/components/*.js` + `app/playground.html` + `tools/ac_run.js`)
+- [x] Stage 3.5 工單重工：TCK-01~TCK-08 全數落地（30px 格/33px 熱區、生命週期對稱、單一幾何公式、deg 量綱、分解樹+拋物線、`tools/ac_gate.js` 機械化閘門 exit 0）
+- [ ] BP 盲審 `R3_WORKER_BUILD_REPORT.md` 的 D-01~D-13 偏離裁決 + 新開 **TCK-09**（44px 熱區 vs 兩盒並排矛盾）→ 通過後排 G-8 人類實機手感驗收
 
 ---
 

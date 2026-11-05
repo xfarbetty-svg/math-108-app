@@ -52,6 +52,22 @@
     background: #0F172A; overflow: hidden;
   }
   .card.frame-only .view { background: #F1F5F9; }
+  .pair { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .tree { display: block; width: 100%; max-width: 320px; height: auto; margin: 0 auto;
+    background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; }
+  .tree .node, .tree .branch { opacity: .16; transition: opacity 180ms ease-out; }
+  .tree .node { fill: #334155; font-size: 13px; font-weight: 700; text-anchor: middle; }
+  .tree .branch { stroke: #94A3B8; stroke-width: 2; }
+  .tree.step1 .s1, .tree.step2 .s2, .tree.step3 .s3 { opacity: 1; }
+  .tree.step2 .s2, .tree.step3 .s3 { fill: #1D4ED8; }
+  @media (max-width: 560px) {
+    body { padding: 12px 6px 200px; }
+    .toolbar { margin: -12px -6px 10px; }
+    .stage { padding: 2px; }
+    .card { padding: 4px; }
+    .card.frame-only .view { padding: 0; }
+    .pair { gap: 4px; }
+  }
   .panel { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; }
   .panel label { display: flex; align-items: center; gap: 6px; color: #334155; font-weight: 700; }
   .panel input[type=range] { width: 96px; accent-color: #1D4ED8; }
@@ -105,11 +121,20 @@
     <section class="card frame-only" id="cardTen">
       <h2>T-01 &lt;ten-frame-grid&gt; <small>N-1-3 湊十法</small></h2>
       <div class="view">
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <div class="pair">
           <ten-frame-grid id="tfLeft" label="左盒" value="9"></ten-frame-grid>
           <ten-frame-grid id="tfRight" label="右盒" value="4" fill-color="#2563EB"></ten-frame-grid>
         </div>
       </div>
+      <svg id="treeSvg" class="tree" viewBox="0 0 300 130" role="img" aria-label="9 加 4 分解樹">
+        <line class="branch s1" x1="150" y1="30" x2="108" y2="64"></line>
+        <line class="branch s1" x1="150" y1="30" x2="192" y2="64"></line>
+        <text class="node s1" id="tnA" x="150" y="24">9 ＋ 4</text>
+        <text class="node s1" id="tnB1" x="108" y="84">1</text>
+        <text class="node s1" id="tnB2" x="192" y="84">3</text>
+        <text class="node s2" id="tnC" x="108" y="118">9 ＋ 1 ＝ 10</text>
+        <text class="node s3" id="tnD" x="228" y="118">10 ＋ 3 ＝ 13</text>
+      </svg>
       <div class="panel">
         <label>左盒 <input type="range" id="tfRange" min="0" max="10" step="1" value="9"></label>
         <button type="button" id="tfPlus">+1</button>
@@ -181,6 +206,16 @@
   var log = $('log');
   var MAX_LOG = 20;
 
+  /* TCK-03：分解樹步進（1=拆 4→1+3，2=9+1=10，3=10+3=13）與拋物線量測鉤子 */
+  window.__t04 = { flightMs: 0, flightDy: 0, flightCount: 0, treeStep: 0 };
+  function setTreeStep(n) {
+    var svg = $('treeSvg');
+    svg.classList.toggle('step1', n >= 1);
+    svg.classList.toggle('step2', n >= 2);
+    svg.classList.toggle('step3', n >= 3);
+    window.__t04.treeStep = n;
+  }
+
   function stamp() {
     var d = new Date();
     function p(n, w) { return String(n).padStart(w, '0'); }
@@ -201,7 +236,14 @@
 
   var lastChange = 0;
   stage.addEventListener('ten-frame:fill', function (e) { pushLog(e.type, e.detail); syncTen(); });
-  stage.addEventListener('ten-frame:full', function (e) { pushLog(e.type, e.detail); syncTen(); });
+  stage.addEventListener('ten-frame:full', function (e) {
+    pushLog(e.type, e.detail); syncTen();
+    /* TCK-03：滿十事件驅動分解樹第二步，300ms 後補第三步 */
+    if (e.target === tfLeft) {
+      setTreeStep(2);
+      setTimeout(function () { setTreeStep(3); }, 300);
+    }
+  });
   stage.addEventListener('ten-frame:overflow', function (e) { pushLog(e.type, e.detail); syncTen(); });
   stage.addEventListener('ten-frame:reset', function (e) { pushLog(e.type, e.detail); syncTen(); });
   stage.addEventListener('diff:change', function (e) {
@@ -306,6 +348,9 @@
     fly.style.display = 'block';
     fly.style.left = sx + 'px';
     fly.style.top = sy + 'px';
+    window.__t04.flightMs = 300;
+    window.__t04.flightDy = -60;
+    window.__t04.flightCount++;
     if (fly.animate) {
       fly.animate([
         { transform: 'translate(0,0) scale(1)' },
@@ -321,6 +366,7 @@
   }
 
   function sceneTen() {
+    setTreeStep(1);
     tfRight.value = 4;
     tfLeft.value = 9;
     setTimeout(function () {
@@ -350,6 +396,9 @@
   });
 
   $('resetAll').addEventListener('click', function () {
+    log.innerHTML = '';
+    $('logCount').textContent = '0 / ' + MAX_LOG;
+    setTreeStep(0);
     tfLeft.reset();
     tfRight.reset();
     tfRight.setAttribute('value', '4');
@@ -360,8 +409,6 @@
     $('beamLeft').value = 5;
     $('beamRight').value = 2;
     $('beamDamping').value = 0.18;
-    log.innerHTML = '';
-    $('logCount').textContent = '0 / ' + MAX_LOG;
     syncTen();
   });
 

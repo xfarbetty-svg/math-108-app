@@ -1,6 +1,6 @@
-/* ten-frame-grid.js — T-01 十格陣與滿十閉鎖 (N-1-3 湊十法 / 拆十法)
- * 契約正本：reports/20261105_2035_g1_visual_spec/R1_BP_EXECUTION_PLAN.md §T-01
- * 傳統 script 全域 IIFE，禁 ES Module（file:// 離線直開）
+/* ten-frame-grid.js — T-01 十格陣與滿十閉鎖 (N-1-3 湊十法)
+ * TCK-02 30px 格 / 33px 不重疊熱區 / padding 4（單盒 177px，兩盒 354 < 390）
+ * TCK-04 重連不清 _cells；TCK-05 移除 ten-frame:tap、鎖定走 blocked、漸層雙變數。IIFE。
  */
 (function () {
   'use strict';
@@ -11,29 +11,28 @@
 
   var CSS = [
     ':host{display:inline-block;',
-    '--tfg-cell:36px;--tfg-gap:4px;--tfg-dot:24px;',
-    '--tfg-fill:#DC2626;--tfg-full:#FACC15;--tfg-border:#CBD5E1;',
+    '--tfg-cell:30px;--tfg-pitch:33px;--tfg-dot:24px;',
+    '--tfg-fill:#DC2626;--tfg-hi:#F87171;--tfg-full:#FACC15;--tfg-border:#CBD5E1;',
     '--tfg-bg:#F8FAFC;--tfg-shadow:rgba(250,204,21,.8);',
     'font-family:system-ui,"Microsoft JhengHei","PingFang TC",sans-serif;}',
-    '.frame{position:relative;display:inline-block;padding:6px;',
+    '.frame{position:relative;display:inline-block;padding:4px;',
     'border:2px solid var(--tfg-border);border-radius:8px;background:var(--tfg-bg);',
     'transition:border-color 160ms ease-out,box-shadow 160ms ease-out;}',
     '.frame.is-locked{border-color:var(--tfg-full);border-width:2.5px;',
     'box-shadow:0 0 12px var(--tfg-shadow);}',
-    '.grid{display:grid;grid-template-columns:repeat(5,var(--tfg-cell));',
-    'grid-template-rows:repeat(2,var(--tfg-cell));gap:var(--tfg-gap);}',
-    '.cell{width:44px;height:44px;margin:-4px;padding:0;border:0;background:none;',
+    '.grid{display:grid;grid-template-columns:repeat(5,var(--tfg-pitch));',
+    'grid-template-rows:repeat(2,var(--tfg-pitch));gap:0;}',
+    '.cell{width:var(--tfg-pitch);height:var(--tfg-pitch);padding:0;border:0;background:none;',
     'display:flex;align-items:center;justify-content:center;cursor:pointer;',
     'touch-action:manipulation;-webkit-tap-highlight-color:transparent;}',
-    '.cell:focus-visible{outline:2px solid #2563EB;outline-offset:1px;border-radius:8px;}',
+    '.cell:focus-visible{outline:2px solid #2563EB;outline-offset:-2px;border-radius:6px;}',
     '.cell[disabled]{cursor:default;}',
     '.slot{width:var(--tfg-cell);height:var(--tfg-cell);border:1px dashed var(--tfg-border);',
     'border-radius:4px;display:flex;align-items:center;justify-content:center;',
     'box-sizing:border-box;transition:border-color 160ms ease-out;}',
     '.dot{width:var(--tfg-dot);height:var(--tfg-dot);border-radius:50%;',
-    'background:radial-gradient(circle at 30% 30%,#F87171,var(--tfg-fill));',
-    'box-shadow:inset 0 -2px 3px rgba(0,0,0,.18);',
-    'animation:tfg-pop 160ms ease-out both;}',
+    'background:radial-gradient(circle at 30% 30%,var(--tfg-hi),var(--tfg-fill));',
+    'box-shadow:inset 0 -2px 3px rgba(0,0,0,.18);animation:tfg-pop 160ms ease-out both;}',
     '.dot.is-fusing{animation:tfg-shake 300ms ease-in-out both;}',
     '.dot.is-leaving{animation:tfg-fade 120ms ease-in both;}',
     '@keyframes tfg-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}',
@@ -42,14 +41,9 @@
     '25%{transform:translateX(-2px);box-shadow:0 0 10px 3px rgba(245,158,11,.9)}',
     '75%{transform:translateX(2px);box-shadow:0 0 10px 3px rgba(245,158,11,.9)}}',
     '@keyframes tfg-fade{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.4)}}',
-    '.badge{position:absolute;top:-10px;right:-10px;min-width:22px;height:22px;',
-    'padding:0 5px;box-sizing:border-box;border-radius:11px;background:var(--tfg-full);',
-    'color:#78350F;font-size:12px;font-weight:800;line-height:22px;text-align:center;',
-    'opacity:0;transform:scale(.6);transition:opacity 160ms,transform 160ms;}',
-    '.frame.is-locked .badge{opacity:1;transform:scale(1);}',
     '@media (prefers-reduced-motion:reduce){',
     '.dot,.dot.is-fusing,.dot.is-leaving{animation:none!important;}',
-    '.frame,.slot,.badge{transition:none!important;}}'
+    '.frame,.slot{transition:none!important;}}'
   ].join('');
 
   function num(el, name, fallback) {
@@ -57,6 +51,16 @@
     if (raw === null || raw === '') return fallback;
     var v = Number(raw);
     return Number.isFinite(v) ? v : fallback;
+  }
+
+  /* 以白混 35% 產生高光色，避免藍版內圈仍為鮭紅（TCK-05c） */
+  function lighten(hex) {
+    var m = /^#([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+    if (!m) return null;
+    var n = parseInt(m[1], 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    function mix(c) { return Math.round(c + (255 - c) * 0.35); }
+    return 'rgb(' + mix(r) + ',' + mix(g) + ',' + mix(b) + ')';
   }
 
   class TenFrameGrid extends HTMLElement {
@@ -77,7 +81,8 @@
     }
 
     connectedCallback() {
-      if (!this._built) this._build();
+      /* TCK-04：DOM 仍在但 _cells 遺失時必須重建，否則重連後點擊必 TypeError */
+      if (!this._built || this._cells.length !== CELLS) this._build();
       this._applyValue(true);
     }
 
@@ -86,8 +91,8 @@
       clearTimeout(this._resetTimer);
       this._fusionTimer = 0;
       this._resetTimer = 0;
-      this._cells = [];
       this._state = 'EMPTY_OR_PARTIAL';
+      /* 刻意不清 _cells：DOM 未銷毀，清空會讓重連後取不到格子 */
     }
 
     attributeChangedCallback(name) {
@@ -100,13 +105,9 @@
       }
     }
 
-    get value() {
-      return this._value;
-    }
-
-    set value(v) {
-      this.setAttribute('value', String(v));
-    }
+    get value() { return this._value; }
+    set value(v) { this.setAttribute('value', String(v)); }
+    get state() { return this._state; }
 
     reset() {
       this._quiet = true;
@@ -116,13 +117,14 @@
     }
 
     _build() {
+      this._root.replaceChildren();
+      this._cells = [];
       var style = document.createElement('style');
       style.textContent = CSS;
 
       var frame = document.createElement('div');
       frame.className = 'frame';
       frame.setAttribute('part', 'frame');
-
       var grid = document.createElement('div');
       grid.className = 'grid';
       grid.setAttribute('role', 'grid');
@@ -141,13 +143,7 @@
         this._cells.push(btn);
       }
 
-      var badge = document.createElement('span');
-      badge.className = 'badge';
-      badge.textContent = String(CELLS);
-      badge.setAttribute('aria-hidden', 'true');
-
       frame.appendChild(grid);
-      frame.appendChild(badge);
       this._root.appendChild(style);
       this._root.appendChild(frame);
       this._frame = frame;
@@ -159,16 +155,19 @@
       var interactive = this.getAttribute('interactive');
       var locked = this.hasAttribute('locked');
       var cur = this._value;
+      /* TCK-08(4)：融合 300ms 內的點擊必須派 blocked，不可靜默 return */
+      if (this._state === 'FUSION_TRIGGER') {
+        this._emit('ten-frame:blocked', { value: cur, reason: 'fusion' });
+        return;
+      }
+      if (locked || interactive === 'false') {
+        this._emit('ten-frame:blocked', { value: cur, reason: locked ? 'locked' : 'readonly' });
+        return;
+      }
       if (cur >= CELLS) {
         this._emit('ten-frame:overflow', { value: CELLS, attempted: CELLS + 1 });
         return;
       }
-      if (this._state === 'FUSION_TRIGGER') return;
-      if (interactive === 'false' || locked) {
-        this._emit('ten-frame:overflow', { value: cur, attempted: cur + 1 });
-        return;
-      }
-      this._emit('ten-frame:tap', { index: index, value: cur });
       this._quiet = true;
       this.setAttribute('value', String(cur + 1));
       this._quiet = false;
@@ -176,8 +175,7 @@
     }
 
     _applyValue(silent) {
-      var raw = num(this, 'value', 0);
-      var target = Math.round(raw);
+      var target = Math.round(num(this, 'value', 0));
       var clamped = Math.min(CELLS, Math.max(0, target));
 
       if (clamped !== target) {
@@ -200,9 +198,11 @@
       clearTimeout(this._resetTimer);
       for (var i = prev; i < to; i++) {
         var slot = this._cells[i].querySelector('.slot');
-        var dot = document.createElement('span');
-        dot.className = 'dot';
-        slot.appendChild(dot);
+        if (!slot.querySelector('.dot')) {
+          var dot = document.createElement('span');
+          dot.className = 'dot';
+          slot.appendChild(dot);
+        }
       }
       this._value = to;
       this._state = to === CELLS ? 'FUSION_TRIGGER' : 'EMPTY_OR_PARTIAL';
@@ -222,7 +222,7 @@
       var dots = this._root.querySelectorAll('.dot');
       for (var i = 0; i < dots.length; i++) dots[i].classList.remove('is-fusing');
       this._state = 'FULL_LOCKED';
-      this._frame.classList.add('is-locked');
+      if (this._frame) this._frame.classList.add('is-locked');
       this._emit('ten-frame:full', { value: CELLS });
     }
 
@@ -237,7 +237,7 @@
         drop.push(dots[i]);
       }
       this._state = 'RESET';
-      this._frame.classList.remove('is-locked');
+      if (this._frame) this._frame.classList.remove('is-locked');
       this._value = to;
       this._emit('ten-frame:reset', { previous: prev });
       this._resetTimer = setTimeout(function () {
@@ -253,15 +253,18 @@
     _syncTheme() {
       if (!this._frame) return;
       var fill = this.getAttribute('fill-color');
-      this.style.setProperty('--tfg-fill', fill && fill.trim() ? fill.trim() : '#DC2626');
+      var color = fill && fill.trim() ? fill.trim() : '#DC2626';
+      this.style.setProperty('--tfg-fill', color);
+      var hi = lighten(color);
+      this.style.setProperty('--tfg-hi', hi || color);
       var locked = this.hasAttribute('locked') || this._state === 'FULL_LOCKED';
       this._frame.classList.toggle('is-locked', locked);
       var label = this.getAttribute('label') || '十格陣';
       this._root.querySelector('.grid').setAttribute('aria-label', label + '，已填 ' + this._value + ' 格');
       for (var i = 0; i < this._cells.length; i++) {
-        var filled = i < this._value;
-        this._cells[i].setAttribute('aria-label', label + ' 第 ' + (i + 1) + ' 格，' + (filled ? '已填' : '空格'));
-        this._cells[i].disabled = filled || this._state === 'FUSION_TRIGGER' || this._value >= CELLS;
+        this._cells[i].setAttribute('aria-label',
+          label + ' 第 ' + (i + 1) + ' 格，' + (i < this._value ? '已填' : '空格'));
+        this._cells[i].disabled = i < this._value || this._value >= CELLS;
       }
     }
 

@@ -16,3 +16,21 @@
 - [x] **OpenCode CLI Windows 假死根因解鎖**：依 026 處方注入 `stdin=DEVNULL` 與 `shell=True`，實測本機 CLI 帶手腳秒回 (Exit Code 0)。
 - [x] **三層閉環認知 100% 對齊**：確認 AGY (大腦規格) -> BP (現場指揮) -> GLM (帶手腳施工) -> BP (代碼盲審比對) -> AGY (回報終驗) 鋼鐵閉環。
 - [ ] **下一目標**：開新框啟動 AutoFlow Stage 1，由 BP 拆解 T-01~T-03 任務卡交由 OpenCode GLM 施工。
+
+## 📌 2026-11-06 (Session 04) - Stage 3 工兵施工：T-01 ~ T-04 全量落盤
+- [x] **T-01 `<ten-frame-grid>`**：`app/components/ten-frame-grid.js`（274 行 / 10,168 B）四態狀態機、滿十 300ms 光暈→金色閉鎖、44px 熱區。AC-01-1~5 全 PASS。
+- [x] **T-02 `<dual-track-diff>`**：`app/components/dual-track-diff.js`（213 行 / 7,610 B）純 SVG 雙軌、金框寬 = diff×step（實測 88.00 = 3×29.33）、EQUAL_EDGE「一樣多」。AC-02-1~5 全 PASS（含 reduced-motion）。
+- [x] **T-03 `<balance-beam>`**：`app/components/balance-beam.js`（278 行 / 12,265 B）真力矩 Σm·d + 彈簧阻尼積分，收斂 41 幀、`balance:balanced` 恰 1 次。AC-03-1~6 全 PASS。
+- [x] **T-04 調試台**：`app/playground.html`（372 行）三端切換 + 事件日誌 20 筆上限 + 三情境按鈕（湊十含拋物線飛補）。390/768/960 三輪 `ALL_PASS (9 checks)`、console 雜訊 0。
+- [x] **新增驗收基礎設施**：`tools/ac_run.js`（CDP 驅動真實 file:// 頁面跑 AC + 截圖）、`tests/ac_t01~t03.html`、`tests/ac_t04_body.js`、`tests/ac_geometry_body.js`。
+- [x] **G1 硬閘門**：G-1 語法 3/3 Exit 0、G-2 console 0 雜訊、G-4 僅 w3.org 命名空間、G-5 三檔 30,043 B ≤ 30KB、G-7 計時器零洩漏。G-8 人類手感待驗。
+- [ ] **下一步**：BP 盲審 `R3_WORKER_BUILD_REPORT.md`（D-01~D-11 偏離裁決），通過後排 G-8 人類實機手感驗收。
+
+## 📌 2026-11-06 (Session 05) - Stage 3.5 工單重工：TCK-01 ~ TCK-08 全數落地
+- [x] **TCK-02 + TCK-05（T-01）**：30px 格 / 33px 不重疊熱區 / padding 4，單盒 177px、兩盒 354px 並排（`AC-01-8`、`AC-04-6` 實測同列）；刪 `ten-frame:tap`、鎖定改派 `blocked{value,reason}`、漸層雙變數 `--tfg-hi/--tfg-fill`。8/8 PASS。
+- [x] **TCK-04（生命週期）**：T-01 重連不清 `_cells`（`AC-01-5` throwFree=true）；T-03 `_build()` 先 `replaceChildren()`、`disconnectedCallback` 保留 `_built`（`AC-03-8` 1/1/10）；T-02 同步修正（`AC-02-6` 1/1/13）。
+- [x] **TCK-06（T-02 幾何）**：收斂單一公式 `STEP=(320-56)/9=29.333`、`r=clamp(STEP/2-2,10,16)=12.667`，虛線 `72.667→97.333` 不穿圓片，金框 `88.00×33.33` 完整包住多出圓片。7/7 PASS。
+- [x] **TCK-07（T-03 量綱）**：明訂 deg、半隱式 Euler、`scale=dt/16.667`，收斂改 `|θ_target-θ|<0.1°` 且 `|θ'|<8°/s` 連續 2 幀；`AC-03-7` 120Hz vs 60Hz 收斂時間差 **4.0%**（≤15%）。8/8 PASS。
+- [x] **TCK-03 + TCK-08（T-04 + 閘門）**：調試台新增分解樹（`9＋4`→`1`/`3`、`9＋1＝10`、`10＋3＝13`，由 `ten-frame:full` 驅動）與 300ms 拋物線（控制點 -60px）；新增 `tools/ac_gate.js` 機械化閘門。
+- [x] **G-9 機械化閘門**：`node tools/ac_gate.js` → `GATE_GREEN (12 checks, 0 failed)`，Exit Code **0**。G-5 體積 10,642 / 7,377 / 12,260 B，合計 **30,279** B。
+- [ ] **下一步**：BP 盲審 R3（新增 **TCK-09**：44px 熱區與「兩盒並排 + 不重疊」三角矛盾需裁決）→ G-8 人類實機手感。
