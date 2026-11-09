@@ -55,3 +55,10 @@
 - [x] **三端自適應題卡落地**：`app/unit_n12.html`（掛載 `<dual-track-diff>` 雙軌差值教具，一對一虛線連線對齊、超量金色高亮框選）。
 - [x] **CDP 實機驗真全綠**：`tests/ac_unit_n12.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (5 checks)`，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n12_960.png`。
 - [x] **Git 版控鋼印**：Commit `295a2d0`，本地工作區完全乾淨。
+
+## 📌 2026-11-09 (Session 09) - 第三正式單元落地：R-1-1 算式與符號 10 題真題題卡 ＋ 首頁入口門戶打通
+- [x] **SSOT 扁平題庫收斂**：完成 `data/curriculum_v3/g1_r11_balance_equal.json`，嚴格精選 10 題各縣市段考等號真義與天平平衡真題。
+- [x] **三端自適應題卡落地**：`app/unit_r11.html`（掛載 `<balance-beam>` 幾何真力矩天平，即時重力鉛垂與平衡聯動）。
+- [x] **CDP 實機驗真全綠**：`tests/ac_unit_r11.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (5 checks)`，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_r11_768.png`。
+- [x] **統一首頁入口整合**：`app/index.html` 頂部新增 108 課綱一年級正式題卡快速入口卡片，直連 N-1-3、N-1-2、R-1-1 與調試展台。
+- [x] **Git 版控鋼印**：Commit `6724f5d`，本地工作區完全乾淨。
