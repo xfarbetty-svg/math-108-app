@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>百數表互動樣品 (Prototype 100-Chart) - 108課綱 G1 核心教具</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: #F1F5F9; color: #0F172A;
+    padding: 12px 12px 80px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 頂部操作區 */
+  .toolbar {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
+    padding: 10px 14px; margin: -12px -12px 16px;
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid #CBD5E1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .toolbar-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .toolbar-title { font-size: 14px; font-weight: 700; color: #1E293B; display: flex; align-items: center; gap: 6px; }
+  .badge-tag { font-size: 11px; background: #E0E7FF; color: #3730A3; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+
+  button {
+    font: inherit; font-size: 13px; font-weight: 500; padding: 6px 12px; min-height: 34px;
+    border: 1px solid #CBD5E1; border-radius: 8px; background: #fff; color: #1E293B;
+    cursor: pointer; touch-action: manipulation; transition: all 150ms ease;
+  }
+  button:hover { border-color: #94A3B8; background: #F8FAFC; }
+  button:active { transform: translateY(1px); }
+  button.active { background: #2563EB; border-color: #2563EB; color: #fff; font-weight: 600; }
+  button.accent { background: #F59E0B; border-color: #D97706; color: #fff; }
+  button.accent:hover { background: #D97706; }
+
+  /* 畫布舞台 (自適應模擬框) */
+  .stage-container {
+    display: flex; justify-content: center; width: 100%;
+  }
+  .stage {
+    width: 100%; max-width: 390px;
+    background: #FFFFFF; border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #E2E8F0;
+    padding: 14px; display: flex; flex-direction: column; gap: 12px;
+    transition: max-width 200ms ease;
+  }
+
+  /* 說明與題目提示卡片 */
+  .info-card {
+    background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px;
+    padding: 10px 12px; font-size: 13px; line-height: 1.5; color: #1E3A8A;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .info-title { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .info-desc { color: #3B82F6; font-size: 12px; }
+
+  /* 百數表核心容器 */
+  .grid-wrapper {
+    position: relative; width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #F8FAFC; border-radius: 12px;
+    padding: 6px; border: 2px solid #E2E8F0;
+    user-select: none;
+  }
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 2px; width: 100%; height: 100%;
+  }
+
+  /* 單個數字方格 */
+  .cell {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: #334155;
+    background: #FFFFFF; border-radius: 4px;
+    border: 1px solid #E2E8F0; cursor: pointer;
+    position: relative; transition: all 120ms ease;
+  }
+  .cell:hover { background: #F1F5F9; border-color: #94A3B8; }
+  
+  /* 逢 10 整十數特化（突顯進位邊界） */
+  .cell.tens-col {
+    background: #FFFBEB; border-color: #FDE68A; color: #B45309; font-weight: 700;
+  }
+
+  /* 高亮與選中狀態 */
+  .cell.selected {
+    background: #3B82F6 !important; color: #FFFFFF !important;
+    border-color: #1D4ED8 !important; transform: scale(1.08); z-index: 2;
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+  }
+  .cell.path-highlight {
+    background: #DBEAFE !important; color: #1D4ED8 !important;
+    border-color: #93C5FD !important;
+  }
+  .cell.target-step {
+    background: #10B981 !important; color: #FFFFFF !important;
+    border-color: #059669 !important; transform: scale(1.08); z-index: 2;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+  }
+
+  /* 遮罩狀態 (課綱防錯：猜數字) */
+  .cell.masked {
+    background: #E2E8F0 !important; border-color: #CBD5E1 !important;
+    color: transparent !important; cursor: pointer;
+  }
+  .cell.masked::after {
+    content: '?';
+    position: absolute; font-size: 13px; font-weight: 700;
+    color: #64748B;
+  }
+  .cell.masked.revealed {
+    background: #FEF3C7 !important; color: #D97706 !important;
+    border-color: #FCD34D !important;
+    animation: popIn 200ms ease;
+  }
+  .cell.masked.revealed::after { display: none; }
+
+  @keyframes popIn {
+    0% { transform: scale(0.8); }
+    100% { transform: scale(1); }
+  }
+
+  /* SVG 軌跡層 */
+  .svg-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 5;
+  }
+
+  /* 底部互動解題控制板 */
+  .controls-panel {
+    display: flex; flex-direction: column; gap: 8px;
+    background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .panel-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .status-text { font-size: 13px; font-weight: 600; color: #0F172A; }
+  .formula-box {
+    font-size: 15px; font-weight: 700; color: #1D4ED8;
+    background: #EFF6FF; border: 1px dashed #3B82F6; border-radius: 6px;
+    padding: 4px 10px; display: inline-block;
+  }
+
+  /* 十位與個位積木拆解微型視圖 (連結 N-1-1 白色1與橘色10) */
+  .blocks-preview {
+    display: flex; align-items: center; gap: 12px; padding: 6px 10px;
+    background: #FFFFFF; border-radius: 8px; border: 1px solid #E2E8F0;
+    font-size: 12px; color: #475569;
+  }
+  .block-group { display: flex; align-items: center; gap: 4px; }
+  .orange-bar { width: 6px; height: 20px; background: #F97316; border-radius: 2px; }
+  .white-cube { width: 6px; height: 6px; background: #94A3B8; border-radius: 1px; }
+
+</style>
+</head>
+<body>
+
+<header class="toolbar">
+  <div class="toolbar-group">
+    <div class="toolbar-title">
+      <span>百數表 100-Chart</span>
+      <span class="badge-tag">G1 N-1-1 樣品規格</span>
+    </div>
+  </div>
+
+  <div class="toolbar-group">
+    <button class="view-btn active" data-w="390px">📱 手機 390px</button>
+    <button class="view-btn" data-w="768px">📱 平板 768px</button>
+    <button class="view-btn" data-w="960px">💻 寬版 960px</button>
+  </div>
+</header>
+
+<div class="stage-container">
+  <main class="stage" id="stage">
+    
+    <!-- 模式選擇籤頁 -->
+    <div class="toolbar-group" style="justify-content: center;">
+      <button class="mode-btn active" id="btnModeExplore">🔍 自由探索</button>
+      <button class="mode-btn" id="btnModeMask">🎭 遮罩猜數 (防迷思)</button>
+      <button class="mode-btn" id="btnModeStep">🎯 題型引導 (+10/-10)</button>
+    </div>
+
+    <!-- 狀態與題目卡 -->
+    <div class="info-card" id="infoCard">
+      <div class="info-title" id="infoTitle">👉 點擊任意數字方格</div>
+      <div class="info-desc" id="infoDesc">觀察每行「右移+1、左移-1」，垂直「下移+10、上移-10」的十進位規律。</div>
+    </div>
+
+    <!-- 百數表主體 -->
+    <div class="grid-wrapper">
+      <div class="board-grid" id="boardGrid"></div>
+      <svg class="svg-overlay" id="svgOverlay" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+    </div>
+
+    <!-- 位值積木對應 (橘色十條 + 白色顆粒) -->
+    <div class="blocks-preview" id="blocksPreview">
+      <span style="font-weight:700;">位值模型：</span>
+      <div class="block-group" id="tensGroup">
+        <span id="tensCount">2</span> 條十 (<span style="color:#F97316;">20</span>)
+      </div>
+      <div class="block-group" id="onesGroup">
+        <span id="onesCount">4</span> 個一 (<span style="color:#64748B;">4</span>)
+      </div>
+    </div>
+
+    <!-- 底部控制按鈕列 -->
+    <div class="controls-panel" id="controlsPanel">
+      <div class="panel-row" id="exploreControls">
+        <span class="status-text">跳步測試：</span>
+        <button id="btnJumpDown">⬇️ 往下 +10</button>
+        <button id="btnJumpUp">⬆️ 往上 -10</button>
+        <button id="btnJumpRight">➡️ 往右 +1</button>
+        <button id="btnJumpLeft">⬅️ 往左 -1</button>
+      </div>
+
+      <div class="panel-row" id="maskControls" style="display: none;">
+        <button class="accent" id="btnRandomMask">🎲 隨機遮蔽關鍵拐角</button>
+        <button id="btnResetMask">🔄 重置遮罩</button>
+        <span style="font-size:12px; color:#64748B;">點擊「？」即可翻開驗證</span>
+      </div>
+
+      <div class="panel-row" id="stepControls" style="display: none;">
+        <span class="status-text">範例情境：</span>
+        <button class="accent" id="btnDemoQ1">題1: 28 + 10 (往下跳)</button>
+        <button id="btnDemoQ2">題2: 45 - 20 (連跳兩步)</button>
+        <button id="btnDemoQ3">題3: 29 + 1 (跨十拐角)</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const gridEl = document.getElementById('boardGrid');
+  const svgEl = document.getElementById('svgOverlay');
+  const stageEl = document.getElementById('stage');
+  const infoTitle = document.getElementById('infoTitle');
+  const infoDesc = document.getElementById('infoDesc');
+  const tensCount = document.getElementById('tensCount');
+  const onesCount = document.getElementById('onesCount');
+
+  let currentMode = 'explore'; // 'explore' | 'mask' | 'step'
+  let selectedNum = 24;
+  let cells = [];
+
+  // 1. 初始化 1~100 網格
+  function initGrid() {
+    gridEl.innerHTML = '';
+    cells = [];
+    for (let i = 1; i <= 100; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.textContent = i;
+      cell.dataset.num = i;
+      if (i % 10 === 0) cell.classList.add('tens-col');
+
+      cell.addEventListener('click', () => onCellClick(i, cell));
+      gridEl.appendChild(cell);
+      cells[i] = cell;
+    }
+    selectCell(selectedNum);
+  }
+
+  // 選中特定數字
+  function selectCell(num) {
+    if (num < 1 || num > 100) return;
+    selectedNum = num;
+    cells.forEach(c => c && c.classList.remove('selected', 'path-highlight', 'target-step'));
+    clearSvg();
+
+    const targetCell = cells[num];
+    if (targetCell) targetCell.classList.add('selected');
+
+    updateBlocks(num);
+
+    if (currentMode === 'explore') {
+      const row = Math.ceil(num / 10);
+      const col = num % 10 === 0 ? 10 : num % 10;
+      infoTitle.innerHTML = `當前選中：<span class="formula-box">${num}</span>`;
+      infoDesc.innerHTML = `第 <b>${row}</b> 行、第 <b>${col}</b> 列。下移一格是 <b>${num + 10 <= 100 ? num + 10 : '無'}</b>，右移一格是 <b>${num + 1 <= 100 ? num + 1 : '無'}</b>。`;
+    }
+  }
+
+  // 點擊儲存格事件
+  function onCellClick(num, cell) {
+    if (currentMode === 'mask') {
+      if (cell.classList.contains('masked')) {
+        cell.classList.remove('masked');
+        cell.classList.add('revealed');
+        infoTitle.innerHTML = `🎉 答對了！這是數字 <b>${num}</b>`;
+        infoDesc.innerHTML = `依規律：十位是 ${Math.floor((num-1)/10)}，個位是 ${num%10===0?10:num%10}。`;
+        updateBlocks(num);
+      } else {
+        selectCell(num);
+      }
+    } else {
+      selectCell(num);
+    }
+  }
+
+  // 更新十位/個位積木
+  function updateBlocks(num) {
+    const tens = Math.floor(num / 10);
+    const ones = num % 10;
+    tensCount.textContent = tens;
+    onesCount.textContent = ones;
+  }
+
+  // 清除 SVG 軌跡
+  function clearSvg() {
+    svgEl.innerHTML = '';
+  }
+
+  // 繪製跳步箭頭軌跡
+  function drawJumpArrow(fromNum, toNum) {
+    clearSvg();
+    const fromR = Math.floor((fromNum - 1) / 10);
+    const fromC = (fromNum - 1) % 10;
+    const toR = Math.floor((toNum - 1) / 10);
+    const toC = (toNum - 1) % 10;
+
+    const x1 = fromC * 10 + 5;
+    const y1 = fromR * 10 + 5;
+    const x2 = toC * 10 + 5;
+    const y2 = toR * 10 + 5;
+
+    svgEl.innerHTML = `
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#1D4ED8" />
+        </marker>
+      </defs>
+      <path d="M ${x1} ${y1} Q ${(x1+x2)/2 + (y1===y2?0:4)} ${(y1+y2)/2 + (x1===x2?0:-4)} ${x2} ${y2}"
+            fill="none" stroke="#1D4ED8" stroke-width="2.5" stroke-dasharray="3,3"
+            marker-end="url(#arrow)" />
+    `;
+  }
+
+  // 跳步按鈕
+  document.getElementById('btnJumpDown').onclick = () => {
+    if (selectedNum + 10 <= 100) {
+      const from = selectedNum;
+      const to = selectedNum + 10;
+      selectCell(to);
+      cells[from].classList.add('path-highlight');
+      drawJumpArrow(from, to);
+    }
+  };
+  document.getElementById('btnJumpUp').onclick = () => {
+    if (selectedNum - 10 >= 1) {
+      const from = selectedNum;
+      const to = selectedNum - 10;
+      selectCell(to);
+      cells[from].classList.add('path-highlight');
+      drawJumpArrow(from, to);
+    }
+  };
+  document.getElementById('btnJumpRight').onclick = () => {
+    if (selectedNum + 1 <= 100 && selectedNum % 10 !== 0) {
+      const from = selectedNum;
+      const to = selectedNum + 1;
+      selectCell(to);
+      cells[from].classList.add('path-highlight');
+      drawJumpArrow(from, to);
+    }
+  };
+  document.getElementById('btnJumpLeft').onclick = () => {
+    if (selectedNum - 1 >= 1 && selectedNum % 10 !== 1) {
+      const from = selectedNum;
+      const to = selectedNum - 1;
+      selectCell(to);
+      cells[from].classList.add('path-highlight');
+      drawJumpArrow(from, to);
+    }
+  };
+
+  // 模式切換邏輯
+  const btnExplore = document.getElementById('btnModeExplore');
+  const btnMask = document.getElementById('btnModeMask');
+  const btnStep = document.getElementById('btnModeStep');
+
+  const exploreControls = document.getElementById('exploreControls');
+  const maskControls = document.getElementById('maskControls');
+  const stepControls = document.getElementById('stepControls');
+
+  function setMode(mode) {
+    currentMode = mode;
+    [btnExplore, btnMask, btnStep].forEach(b => b.classList.remove('active'));
+    exploreControls.style.display = 'none';
+    maskControls.style.display = 'none';
+    stepControls.style.display = 'none';
+    clearSvg();
+    resetMask();
+
+    if (mode === 'explore') {
+      btnExplore.classList.add('active');
+      exploreControls.style.display = 'flex';
+      selectCell(selectedNum);
+    } else if (mode === 'mask') {
+      btnMask.classList.add('active');
+      maskControls.style.display = 'flex';
+      setupDefaultMask();
+    } else if (mode === 'step') {
+      btnStep.classList.add('active');
+      stepControls.style.display = 'flex';
+      runDemoQ1();
+    }
+  }
+
+  btnExplore.onclick = () => setMode('explore');
+  btnMask.onclick = () => setMode('mask');
+  btnStep.onclick = () => setMode('step');
+
+  // 遮罩防錯模式 (N-1-1 官方手冊常見錯誤：19接20、29接30數錯)
+  function setupDefaultMask() {
+    resetMask();
+    const traps = [19, 20, 29, 30, 55];
+    traps.forEach(n => cells[n].classList.add('masked'));
+    infoTitle.innerHTML = `🎭 猜數字挑戰（防進位數錯）`;
+    infoDesc.innerHTML = `官方課綱重點：小一生最常在 19 接 20、29 接 30 處卡關！請點擊問號嘗試推理。`;
+  }
+
+  function resetMask() {
+    cells.forEach(c => c && c.classList.remove('masked', 'revealed'));
+  }
+
+  document.getElementById('btnRandomMask').onclick = () => {
+    resetMask();
+    const count = 5;
+    for (let i = 0; i < count; i++) {
+      const rand = Math.floor(Math.random() * 98) + 2;
+      cells[rand].classList.add('masked');
+    }
+    infoTitle.innerHTML = `🎲 隨機遮蔽了 5 個格子`;
+    infoDesc.innerHTML = `請利用上、下、左、右鄰近數字的十進位規律猜出隱藏的數字！`;
+  };
+
+  document.getElementById('btnResetMask').onclick = setupDefaultMask;
+
+  // 示範情境：題目與教具一體成型 (Schema-Driven)
+  function runDemoQ1() {
+    selectCell(28);
+    cells[38].classList.add('target-step');
+    drawJumpArrow(28, 38);
+    infoTitle.innerHTML = `題目演示：<span class="formula-box">28 + 10 = ?</span>`;
+    infoDesc.innerHTML = `<b>教具動態圖解：</b>「加 10」就是個位數不變，十位數多 1，在百數表上剛好是<b>垂直向下跳 1 格</b>，直接落在 <b>38</b>！`;
+  }
+  document.getElementById('btnDemoQ1').onclick = runDemoQ1;
+
+  document.getElementById('btnDemoQ2').onclick = () => {
+    selectCell(45);
+    cells[25].classList.add('target-step');
+    drawJumpArrow(45, 25);
+    infoTitle.innerHTML = `題目演示：<span class="formula-box">45 - 20 = ?</span>`;
+    infoDesc.innerHTML = `<b>教具動態圖解：</b>「減 20」就是減去 2 個十，在百數表上<b>連續向上跳 2 格</b>，到達 <b>25</b>！`;
+  };
+
+  document.getElementById('btnDemoQ3').onclick = () => {
+    selectCell(29);
+    cells[30].classList.add('target-step');
+    drawJumpArrow(29, 30);
+    infoTitle.innerHTML = `題目演示：<span class="formula-box">29 + 1 = ?</span> (換行拐角)`;
+    infoDesc.innerHTML = `<b>教具動態圖解：</b>29 加 1 滿十進位，從第 9 列跨越到第 10 列整十數 <b>30</b>。下一個數字 31 則折返換到下一行開頭！`;
+  };
+
+  // 畫面寬度切換 (RWD 預覽)
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      stageEl.style.maxWidth = btn.dataset.w;
+    };
+  });
+
+  // 啟動
+  initGrid();
+</script>
+
+</body>
+</html>
