@@ -1,0 +1,252 @@
+[
+  {
+    "id": "G1-N12-01",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（比較型減法：多多少）",
+    "source": "111學年北市段考真題",
+    "stem": "小明有 8 顆紅蘋果，小美有 5 顆青蘋果，小明比小美多幾顆蘋果？",
+    "choices": ["2 顆", "3 顆", "4 顆", "13 顆"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 8,
+        "bottom_count": 5,
+        "top_label": "小明 (紅)",
+        "bottom_label": "小美 (青)"
+      }
+    },
+    "explanation": {
+      "step_1": "雙軌一對一對齊：前 5 顆蘋果互相連線（一樣多）",
+      "step_2": "看上軌凸出的部分：金色框選出多出來的 3 顆",
+      "step_3": "算式：8 － 5 ＝ 3（顆）",
+      "formula": "8 - 5 = 3",
+      "trap_warning": "誤區警惕：有些小朋友看到「多」就直接算加法 8 + 5 = 13，記住「比多少」是算相差，要用減法！"
+    }
+  },
+  {
+    "id": "G1-N12-02",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（比較型減法：少多少）",
+    "source": "112學年新北段考真題",
+    "stem": "池塘裡有 7 隻白鵝和 4 隻灰鴨，灰鴨比白鵝少幾隻？",
+    "choices": ["3 隻", "4 隻", "5 隻", "11 隻"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 7,
+        "bottom_count": 4,
+        "top_label": "白鵝",
+        "bottom_label": "灰鴨"
+      }
+    },
+    "explanation": {
+      "step_1": "一對一比對：4 隻白鵝和 4 隻灰鴨一樣多",
+      "step_2": "灰鴨少了 3 隻才能跟白鵝排得一樣長",
+      "step_3": "算式：7 － 4 ＝ 3（隻）",
+      "formula": "7 - 4 = 3",
+      "trap_warning": "思維轉化：「A 比 B 多幾隻」和「B 比 A 少幾隻」，算出來的「相差」是完全一樣的！"
+    }
+  },
+  {
+    "id": "G1-N12-03",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（一樣多：差值為0）",
+    "source": "110學年中市段考真題",
+    "stem": "桌上有 6 枝黃鉛筆和 6 枝藍鉛筆，黃鉛筆和藍鉛筆相差幾枝？",
+    "choices": ["0 枝（一樣多）", "1 枝", "6 枝", "12 枝"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 6,
+        "bottom_count": 6,
+        "top_label": "黃鉛筆",
+        "bottom_label": "藍鉛筆"
+      }
+    },
+    "explanation": {
+      "step_1": "雙軌一對一連線：6 枝完全對齊，無任何多出圓片",
+      "step_2": "兩排長度完全相同，代表「一樣多」",
+      "step_3": "算式：6 － 6 ＝ 0（枝）",
+      "formula": "6 - 6 = 0",
+      "trap_warning": "概念鎖定：兩個相同的數字相減，差永遠是 0，視覺上就是齊頭齊尾！"
+    }
+  },
+  {
+    "id": "G1-N12-04",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（多多少）",
+    "source": "111學年桃市段考真題",
+    "stem": "停車場停了 9 輛黑車和 3 輛白車，黑車比白車多幾輛？",
+    "choices": ["5 輛", "6 輛", "7 輛", "12 輛"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 9,
+        "bottom_count": 3,
+        "top_label": "黑車",
+        "bottom_label": "白車"
+      }
+    },
+    "explanation": {
+      "step_1": "前 3 輛一對一消除（一樣多）",
+      "step_2": "黑車後方凸出 6 輛",
+      "step_3": "算式：9 － 3 ＝ 6（輛）",
+      "formula": "9 - 3 = 6",
+      "trap_warning": "直觀算理：從較多的 9 輛中，減去和白車一樣多的 3 輛，剩下的就是多出來的。"
+    }
+  },
+  {
+    "id": "G1-N12-05",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（逆向思考：還要補幾個）",
+    "source": "112學年高市段考真題",
+    "stem": "哥哥有 8 顆彈珠，弟弟只有 2 顆彈珠，弟弟還要再拿幾顆彈珠，才會跟哥哥一樣多？",
+    "choices": ["5 顆", "6 顆", "7 顆", "10 顆"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 8,
+        "bottom_count": 2,
+        "top_label": "哥哥",
+        "bottom_label": "弟弟"
+      }
+    },
+    "explanation": {
+      "step_1": "排排看：哥哥 8 顆，弟弟 2 顆，前 2 顆對齊",
+      "step_2": "看下軌的缺口：弟弟落後了 6 格空白",
+      "step_3": "算式：8 － 2 ＝ 6（顆）",
+      "formula": "8 - 2 = 6",
+      "trap_warning": "題型破招：問「還要幾個才一樣多」，本質上就是求兩者的差值！"
+    }
+  },
+  {
+    "id": "G1-N12-06",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（少多少）",
+    "source": "111學年台南段考真題",
+    "stem": "小芬摺了 10 隻紙鶴，阿強摺了 6 隻紙鶴，阿強比小芬少摺幾隻紙鶴？",
+    "choices": ["3 隻", "4 隻", "5 隻", "16 隻"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 10,
+        "bottom_count": 6,
+        "top_label": "小芬",
+        "bottom_label": "阿強"
+      }
+    },
+    "explanation": {
+      "step_1": "對齊前 6 隻紙鶴",
+      "step_2": "小芬多出 4 隻，也就是阿強少摺 4 隻",
+      "step_3": "算式：10 － 6 ＝ 4（隻）",
+      "formula": "10 - 6 = 4",
+      "trap_warning": "口訣：誰大誰排上面，大的減小的，減出來的就是「少多少」！"
+    }
+  },
+  {
+    "id": "G1-N12-07",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（多多少）",
+    "source": "110學年竹市段考真題",
+    "stem": "花瓶裡插了 7 朵紅玫瑰和 2 朵白百合，紅玫瑰比白百合多幾朵？",
+    "choices": ["4 朵", "5 朵", "6 朵", "9 朵"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 7,
+        "bottom_count": 2,
+        "top_label": "紅玫瑰",
+        "bottom_label": "白百合"
+      }
+    },
+    "explanation": {
+      "step_1": "雙軌對齊前 2 朵花",
+      "step_2": "紅玫瑰後方高亮多出 5 朵",
+      "step_3": "算式：7 － 2 ＝ 5（朵）",
+      "formula": "7 - 2 = 5",
+      "trap_warning": "算理提示：一對一配對消除後，沒配到對的就是相差的量。"
+    }
+  },
+  {
+    "id": "G1-N12-08",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（相差多少）",
+    "source": "112學年彰化段考真題",
+    "stem": "小明今年 9 歲，妹妹今年 4 歲，小明和妹妹相差幾歲？",
+    "choices": ["4 歲", "5 歲", "6 歲", "13 歲"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 9,
+        "bottom_count": 4,
+        "top_label": "小明 (9歲)",
+        "bottom_label": "妹妹 (4歲)"
+      }
+    },
+    "explanation": {
+      "step_1": "年齡比一比：前 4 年重疊",
+      "step_2": "小明多活了 5 年",
+      "step_3": "算式：9 － 4 ＝ 5（歲）",
+      "formula": "9 - 4 = 5",
+      "trap_warning": "經典常考：問「相差幾歲」不管是誰比誰大，一律用大歲數減小歲數！"
+    }
+  },
+  {
+    "id": "G1-N12-09",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（綜合情境比長度）",
+    "source": "111學年屏東段考真題",
+    "stem": "綠色積木火車有 8 節車廂，紅色積木火車有 7 節車廂，兩列火車相差幾節車廂？",
+    "choices": ["1 節", "2 節", "15 節", "0 節"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 8,
+        "bottom_count": 7,
+        "top_label": "綠火車",
+        "bottom_label": "紅火車"
+      }
+    },
+    "explanation": {
+      "step_1": "兩列火車並排比長短：前 7 節長度相等",
+      "step_2": "綠火車多凸出最後 1 節車廂",
+      "step_3": "算式：8 － 7 ＝ 1（節）",
+      "formula": "8 - 7 = 1",
+      "trap_warning": "相鄰數相減：相鄰的兩個數字相減（8 與 7），差必定是 1！"
+    }
+  },
+  {
+    "id": "G1-N12-10",
+    "unit": "N-1-2",
+    "unit_title": "加法和減法（陷阱題：比較與求總數區分）",
+    "source": "112學年基隆段考真題",
+    "stem": "樹上有 10 隻麻雀和 3 隻松鼠，麻雀比松鼠多幾隻？",
+    "choices": ["6 隻", "7 隻", "8 隻", "13 隻"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "dual-track-diff",
+      "props": {
+        "top_count": 10,
+        "bottom_count": 3,
+        "top_label": "麻雀",
+        "bottom_label": "松鼠"
+      }
+    },
+    "explanation": {
+      "step_1": "對齊前 3 隻動物（1對1連線）",
+      "step_2": "麻雀後方多出 7 隻未配對",
+      "step_3": "算式：10 － 3 ＝ 7（隻）",
+      "formula": "10 - 3 = 7",
+      "trap_warning": "審題秘訣：看清楚問「多幾隻」（用減法 10-3=7）還是「一共有幾隻」（用加法 10+3=13）！"
+    }
+  }
+]
