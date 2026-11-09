@@ -44,7 +44,9 @@
 - [x] 啟動 AutoFlow Stage 1：派工 BP 拆解 T-01~T-03 任務卡，由 OpenCode GLM 帶手腳施工首批元件 (<ten-frame-grid>, <dual-track-diff>, <balance-beam>)
 - [x] Stage 3 工兵施工：T-01~T-04 全量落盤並逐條 AC 實測通過 (`app/components/*.js` + `app/playground.html` + `tools/ac_run.js`)
 - [x] Stage 3.5 工單重工：TCK-01~TCK-08 全數落地（30px 格/33px 熱區、生命週期對稱、單一幾何公式、deg 量綱、分解樹+拋物線、`tools/ac_gate.js` 機械化閘門 exit 0）
-- [ ] BP 盲審 `R3_WORKER_BUILD_REPORT.md` 的 D-01~D-13 偏離裁決 + 新開 **TCK-09**（44px 熱區 vs 兩盒並排矛盾）→ 通過後排 G-8 人類實機手感驗收
+- [x] BP 盲審 `R3_WORKER_BUILD_REPORT.md` 的 D-01~D-13 偏離裁決 + 新開 **TCK-09**（44px 熱區 vs 兩盒並排矛盾）
+- [x] 一年級 108 課綱官方 9 大條目全量 100% 落地 (N-1-1 ~ D-1-1，90 題真題/8大獨立教具/28項閘門全綠)
+- [ ] 啟動二年級 108 課綱官方條目規劃（九九乘法陣列、三位數位值、長度公尺量尺）
 
 ---
 
