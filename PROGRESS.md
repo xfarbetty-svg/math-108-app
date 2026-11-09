@@ -49,3 +49,9 @@
 - [x] **三端自適應題卡落地**：`app/unit_n13.html`（頂部狀態列 <40px、11px 幽靈題源字、2x2 拇指按鈕、抽屜式破招分解樹）。
 - [x] **CDP 實機驗真全綠**：`tests/ac_unit_n13.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (6 checks)`，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n13_390.png`。
 - [x] **Git 版控鋼印**：Commit `aa15ae0`，本地工作區完全乾淨。
+
+## 📌 2026-11-09 (Session 08) - 第二正式單元落地：N-1-2 比較型減法 10 題真題題卡
+- [x] **SSOT 扁平題庫收斂**：完成 `data/curriculum_v3/g1_n12_diff_compare.json`，嚴格精選 10 題各縣市段考比較型減法真題（多多少、少多少、相差多少、一樣多）。
+- [x] **三端自適應題卡落地**：`app/unit_n12.html`（掛載 `<dual-track-diff>` 雙軌差值教具，一對一虛線連線對齊、超量金色高亮框選）。
+- [x] **CDP 實機驗真全綠**：`tests/ac_unit_n12.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (5 checks)`，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n12_960.png`。
+- [x] **Git 版控鋼印**：Commit `295a2d0`，本地工作區完全乾淨。
