@@ -87,21 +87,29 @@
   - 頂部狀態列精簡為「第 N / 6 題」，右側來源增加省略號防溢出，徹底杜絕折行。
 - **【CDP 實機驗真全綠】**：`node tools/ac_run.js app/quick_trial.html tests/ac_quick_trial.js --viewport=360x780` 實測 7/7 checks 全部 PASS，無任何水平滾動溢出（scrollWidth=360），CONSOLE_NOISE_COUNT=0。
 
+## 🚨 額度過量消耗事故覆盤紀錄 (2026-11-10 Session 18)
+- **事件通報**：肇事對話框 `3c6ef165` 因使用者詢問「傳動軸在哪裡？」，誤判為啟動整條流水線，陷入 Reactive Wakeup 喚醒死迴圈狂跑 6 小時（4,234 步），直耗雲端付費 Usage 至 20%。
+- **核心根因**：混淆「通道三 035 Key Pool 免費 API」與「AGY 對話框付費大腦」；且 026 handoff 第 13 行誤載「優先調用 Flash 分流」，導致 Agent 未打通道三而是在對話框自問自答狂燒付費 Usage。
+- **產出覆盤報告**：詳細紀錄已落盤至 `reports/20261110_0440_usage_incident_postmortem/INCIDENT_REPORT.md`。
+- **防禦狀態**：已確認所有背景進程（`task`、`subagent`、`schedule`）100% 徹底終止，即刻啟動額度保溫戒嚴。
+
 ## 🚦 目前狀態
-- **當前版本**：`v14.1.0` (Mobile Quick Trial Delivered, 360px Guardrail Verified, Gate Green 28/28)
+- **當前版本**：`v14.1.1` (Incident Postmortem Recorded, Background Process Fully Terminated, System Idle)
 - **健康狀態**：🟢 18 個單元 180 題真實段考題全量通過 ＋ 6 題極速體驗台，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
-- **Git 狀態**：本地工作區完全乾淨（Commit `278562e`）
-- **雲端額度消耗**：$0.00（全本地邊緣實測）
+- **Git 狀態**：本地工作區完全乾淨
+- **工作區處置**：本專案靜止待命，待 026 修正分流邏輯後再行接續。
 
 ## ➡️ 下一步（開新框首要任務）
-1. **實機體驗 6 題極速體驗台**：開啟 `app/quick_trial.html`，以手機體驗十格陣、雙軌差值、力矩天平 6 題手感。
-2. **啟動 G2-T10: N-2-13 鐘面的認識（幾點幾分與經過時間）**：派工 A-SERVER 開發 `<clock-time-explorer>` 原生組件與 10 題真題。
+1. **026 調度器修復確認**：確認 026 已廢除雲端 Flash 偷跑通道，貫徹通道 1/2 本地帶手腳施工。
+2. **實機體驗 6 題極速體驗台**：開啟 `app/quick_trial.html`，以手機體驗十格陣、雙軌差值、力矩天平 6 題手感。
+3. **啟動 G2-T10: N-2-13 鐘面的認識**：由 A-SERVER 帶手腳施工 `<clock-time-explorer>` 與 10 題真題。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。
 - **嚴格 10 題憲法**：每單元嚴格只做 10 題真實段考題，杜絕隨機刷題。
+- **戒嚴防燒乾**：Usage < 30% 嚴禁任何雲端測試或探索性執行。
 
 ## 🕐 最後更新
-- 時間：2026-11-10T03:55:00+08:00
-- 更新者：AGY & Worker (AutoFlow 協同流水線 @ DESKTOP-6ELKIRH)
+- 時間：2026-11-10T04:38:00+08:00
+- 更新者：AGY (Session 18 收工歸檔)
 - Git push 狀態：本地已 commit（Commit 278562e，無遠端 remote）
