@@ -1,0 +1,132 @@
+[
+  {
+    "stem": "哪一張圖是把披薩「平分」了？（平分＝每份一樣大）",
+    "choices": [
+      "切成 2 塊，一大一小",
+      "切成 4 塊，每塊都一樣大",
+      "切成 2 塊，一塊特別大",
+      "切成 3 塊，大小都不一樣"
+    ],
+    "answer_index": 1,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 4, "fair": "true" },
+    "explanation": "平分就是每一份都一樣大。切成 4 塊且每塊大小相同，才叫做平分，每一份是這個披薩的四分之一。"
+  },
+  {
+    "stem": "把一個披薩平分成 4 份，其中的 1 份叫做多少？",
+    "choices": [
+      "四分之一",
+      "二分之一",
+      "三分之一",
+      "八分之一"
+    ],
+    "answer_index": 0,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 4, "selected-slices": 1, "fair": "true" },
+    "explanation": "平分成 4 份，分母（下面）就是 4；取其中 1 份，分子（上面）就是 1，讀作「四分之一」。"
+  },
+  {
+    "stem": "把一條緞帶平分成 2 段，其中的 1 段是這條緞帶的多少？",
+    "choices": [
+      "三分之一",
+      "四分之一",
+      "二分之一",
+      "一半的一半"
+    ],
+    "answer_index": 2,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 2, "selected-slices": 1, "fair": "true" },
+    "explanation": "平分成 2 段，每一段就是這條緞帶的「二分之一」，記作 1/2。"
+  },
+  {
+    "stem": "「1/4」要怎麼讀？",
+    "choices": [
+      "一除以四",
+      "四分之一",
+      "四個一",
+      "一和四"
+    ],
+    "answer_index": 1,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 4, "selected-slices": 1, "fair": "true" },
+    "explanation": "1/4 表示把整體平分成 4 份取 1 份，讀作「四分之一」。分母 4 在下面，分子 1 在上面。"
+  },
+  {
+    "stem": "同一個披薩，比較 1/2 和 1/4 哪一塊比較大？",
+    "choices": [
+      "1/4 比較大",
+      "一樣大",
+      "1/2 比較大",
+      "不能比較"
+    ],
+    "answer_index": 2,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 2, "selected-slices": 1, "fair": "true" },
+    "explanation": "平分的份數越多，每一份反而越小。平分成 2 份的每一份（1/2）比平分成 4 份的每一份（1/4）大，所以 1/2 ＞ 1/4。"
+  },
+  {
+    "stem": "把一個蛋糕平分成 8 份，其中的 1 份是整個蛋糕的多少？",
+    "choices": [
+      "八分之一",
+      "四分之一",
+      "六分之一",
+      "三分之一"
+    ],
+    "answer_index": 0,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 8, "selected-slices": 1, "fair": "true" },
+    "explanation": "平分成 8 份，每一份就是八分之一（1/8）。分母 8 代表總共的份數。"
+  },
+  {
+    "stem": "下面哪一種切法「不是」平分？",
+    "choices": [
+      "披薩切成 6 塊，每塊一樣大",
+      "蛋糕切成 8 塊，每塊一樣大",
+      "餅乾掰成 2 半，一半大一半小",
+      "巧克力磚分成 4 格，每格一樣大"
+    ],
+    "answer_index": 2,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 2, "fair": "false" },
+    "explanation": "一半大一半小表示每份不一樣大，不是平分，不能用分數表示。分數一定要「平分」（每份一樣大）才能使用！"
+  },
+  {
+    "stem": "把一條土司平分成 6 段，1 段是幾分之幾條土司？",
+    "choices": [
+      "1/2 條",
+      "1/4 條",
+      "1/8 條",
+      "1/6 條"
+    ],
+    "answer_index": 3,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 6, "selected-slices": 1, "fair": "true" },
+    "explanation": "平分成 6 段，每段就是 1/6 條。分母（下面）寫總份數 6，分子（上面）寫取的份數 1。"
+  },
+  {
+    "stem": "妹妹把一個披薩平分成 3 份，她吃了其中的 1 份。請問 1/3 和 1/2 比較，哪一個大？",
+    "choices": [
+      "1/2 比較大",
+      "1/3 比較大",
+      "一樣大",
+      "無法比較"
+    ],
+    "answer_index": 0,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 3, "selected-slices": 1, "fair": "true" },
+    "explanation": "平分的份數越多，每一份越小。2 份中的 1 份（1/2）比 3 份中的 1 份（1/3）大，所以 1/2 ＞ 1/3。"
+  },
+  {
+    "stem": "小明說：「我把我這塊餅干平分成 4 份，吃掉 1 份，我吃了四分之一塊。」他的說法對嗎？",
+    "choices": [
+      "不對，應該說吃了四片",
+      "不對，應該說吃了 4/1 塊",
+      "不對，平分不能說分數",
+      "對！平分成 4 份的 1 份就是四分之一"
+    ],
+    "answer_index": 3,
+    "visual_engine": "fraction-pizza-slice",
+    "visual_props": { "denominator": 4, "selected-slices": 1, "fair": "true" },
+    "explanation": "只要是有「平分」，其中的 1 份就可以用分數表示。平分成 4 份取 1 份，就是四分之一（1/4）塊。"
+  }
+]

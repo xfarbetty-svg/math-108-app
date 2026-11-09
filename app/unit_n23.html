@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N-2-3 分數之初步認識｜單位分數・平分的意義</title>
+<script defer src="components/fraction-pizza-slice.js"></script>
+<style>
+:root{
+  --bg:#fffbeb;--card:#ffffff;--ink:#78350f;--ink2:#92400e;
+  --cheese:#f59e0b;--crust:#d97706;--ok:#16a34a;--bad:#dc2626;
+  --line:#fcd34d;--radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Microsoft JhengHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 12px 48px}
+header.hero{background:linear-gradient(135deg,#fde68a,#fbbf24);border-radius:var(--radius);padding:18px 16px;margin-bottom:16px;border:2px solid var(--line)}
+header.hero h1{font-size:22px;color:#7c2d12}
+header.hero p{font-size:14px;color:#78350f}
+.tag{display:inline-block;background:#7c2d12;color:#fef3c7;border-radius:999px;padding:2px 10px;font-size:12px;margin-bottom:6px}
+/* 結構切換 */
+.layout{display:grid;gap:16px}
+@media(min-width:768px){.layout{grid-template-columns:1fr 340px;align-items:start}}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:16px}
+.section-title{font-size:18px;font-weight:800;color:#7c2d12;margin-bottom:10px}
+.demo{display:grid;gap:12px}
+@media(min-width:768px){.demo{grid-template-columns:1fr 1fr}}
+.demo figure{margin:0}
+figcaption{font-size:13px;text-align:center;color:var(--ink2);margin-top:4px}
+/* 測驗卡 */
+.qcard{background:var(--card);border:2px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+.qnum{font-weight:800;color:#a16207;font-size:13px;margin-bottom:4px}
+.qstem{font-size:16px;font-weight:700;margin-bottom:10px}
+.qvis{margin:0 auto 10px;max-width:300px}
+.choice{display:block;width:100%;text-align:left;border:2px solid #fde68a;background:#fffdf5;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:15px;cursor:pointer;transition:.15s;font-family:inherit}
+.choice:hover{border-color:var(--cheese);background:#fff7e0}
+.choice.correct{border-color:var(--ok);background:#f0fdf4;font-weight:800}
+.choice.wrong{border-color:var(--bad);background:#fef2f2}
+.choice:disabled{cursor:default}
+/* 解析抽屜 */
+.drawer{border-left:5px solid var(--cheese);background:#fffaf0;border-radius:0 12px 12px 0;padding:10px 12px;font-size:14px;color:var(--ink2);max-height:0;overflow:hidden;opacity:0;transition:max-height .35s,opacity .35s,margin .35s;margin-top:0}
+.drawer.open{max-height:400px;opacity:1;margin-top:10px}
+.drawer b{color:#7c2d12}
+/* 側欄 */
+.trap-box{background:#fef2f2;border:2px solid #fecaca;border-radius:var(--radius);padding:14px;margin-bottom:16px}
+.trap-box h3{color:#b91c1c;font-size:16px;margin-bottom:6px}
+.trap-box p{font-size:14px;color:#7f1d1d}
+.know li{font-size:14px;margin:6px 0 6px 18px}
+/* 分數模型切換按鈕 */
+.dials{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.dials button{border:2px solid var(--line);background:#fffdf5;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;font-family:inherit;color:var(--ink2)}
+.dials button.on{background:var(--cheese);border-color:var(--crust);color:#fff;font-weight:800}
+.fairtoggle{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.fairtoggle button{flex:1;border:2px solid var(--line);background:#fffdf5;border-radius:10px;padding:8px;font-size:14px;cursor:pointer;font-family:inherit;color:var(--ink2)}
+.fairtoggle button.on{background:var(--crust);border-color:#92400e;color:#fff;font-weight:800}
+.scorebox{position:sticky;top:8px;background:#7c2d12;color:#fde68a;border-radius:var(--radius);padding:12px 14px;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.scorebox button{background:#fde68a;color:#7c2d12;border:0;border-radius:999px;padding:6px 14px;font-weight:800;font-family:inherit;font-size:14px;cursor:pointer}
+.err{background:#fee2e2;color:#991b1b;padding:10px;border-radius:10px;font-size:14px}
+.alert-ok{color:var(--ok)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="tag">N-2-3</span>
+    <span class="tag">二年級數學</span>
+    <h1>🍕 分數之初步認識</h1>
+    <p>單位分數・平分的意義・幾分之一・生活情境中的平分</p>
+  </header>
+
+  <div class="layout">
+    <main>
+      <!-- 動手玩 -->
+      <section class="panel" style="margin-bottom:16px">
+        <div class="section-title">🎮 動手玩：切披薩看分數</div>
+        <div class="dials" id="dials" aria-label="選擇平分的份數"></div>
+        <div class="demo">
+          <figure>
+            <fraction-pizza-slice id="pizza-fair" denominator="4" selected-slices="1" fair="true"></fraction-pizza-slice>
+            <figcaption>✅ 平分：每份一樣大 → 可以用分數！</figcaption>
+            <div class="fairtoggle">
+              <button id="btn-fair" class="on" type="button">平分模式</button>
+              <button id="btn-unfair" type="button">陷阱模式（不平分）</button>
+            </div>
+          </figure>
+          <figure>
+            <fraction-pizza-slice id="pizza-trap" denominator="4" fair="false"></fraction-pizza-slice>
+            <figcaption>⚠️ 不平分：每份不一樣大 → 不能用分數！</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 測驗 -->
+      <div class="scorebox">
+        <span id="score-view">答對 0 / 10</span>
+        <button id="reset" type="button">重新作答</button>
+      </div>
+      <section id="quiz" aria-label="單元測驗"></section>
+      <div id="dataload-err" class="err" hidden></div>
+    </main>
+
+    <aside>
+      <div class="trap-box">
+        <h3>🚨 考試陷阱解密</h3>
+        <p>「不平分」不能用分數！看到每份大小不一樣的圖，千萬別寫二分之一，要先檢查是不是<strong>平分</strong>。</p>
+      </div>
+      <div class="panel know">
+        <div class="section-title">📌 重點整理</div>
+        <ul>
+          <li><b>平分</b>：每一份都要一樣大。</li>
+          <li>平分成 4 份，1 份就是「四分之一」，記作 <b>1/4</b>。</li>
+          <li>下面的數（分母）＝總共幾份；上面的數（分子）＝取幾份。</li>
+          <li>平分越多份，每一份<b>越小</b>：1/2 ＞ 1/3 ＞ 1/4 ＞ 1/8。</li>
+          <li>生活例子：披薩、蛋糕、緞帶、土司平分。</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- file:// fallback data（與 data/curriculum_v3/g2_n23_fraction_intro.json 同步） -->
+<script>
+const EMBEDDED_FALLBACK = false; /*Hosted fetch is the single source of truth; file:// needs override*/
+</script>
+<script>
+/* 若 fetch 失敗（file:// CORS），注入警示；題目由 fetch 載入 */
+</script>
+<script id="loader" src="../data/curriculum_v3/g2_n23_fraction_intro.json"></script>
+<noscript>需要啟用 JavaScript 才能使用本單元。</noscript>
+</body>
+</html>
