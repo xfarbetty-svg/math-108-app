@@ -46,6 +46,13 @@ if (fs.existsSync(absS11)) {
   rec('G-1 isometric-rotator.js', r.status === 0, 'node --check exit=' + r.status);
 }
 
+// S-1-2 獨立語法閘門
+const absS12 = path.join(ROOT, 'app', 'components', 'stack-physics-bench.js');
+if (fs.existsSync(absS12)) {
+  const r = spawnSync(process.execPath, ['--check', absS12], { encoding: 'utf8' });
+  rec('G-1 stack-physics-bench.js', r.status === 0, 'node --check exit=' + r.status);
+}
+
 /* G-5 體積（每檔 ≤12KB、合計 ≤30KB） */
 let total = 0;
 for (const f of COMPONENTS) {
@@ -59,6 +66,12 @@ rec('G-5 total', total <= LIMIT_TOTAL, total + ' B (<= ' + LIMIT_TOTAL + ')');
 if (fs.existsSync(absS11)) {
   const sizeS11 = fs.statSync(absS11).size;
   rec('G-5 isometric-rotator.js', sizeS11 <= LIMIT_EACH, sizeS11 + ' B (<= ' + LIMIT_EACH + ')');
+}
+
+// S-1-2 獨立體積閘門 (單檔 <= 12,288 B)
+if (fs.existsSync(absS12)) {
+  const sizeS12 = fs.statSync(absS12).size;
+  rec('G-5 stack-physics-bench.js', sizeS12 <= LIMIT_EACH, sizeS12 + ' B (<= ' + LIMIT_EACH + ')');
 }
 
 /* G-4 零外部資源：僅允許 SVG 命名空間 */

@@ -1,0 +1,232 @@
+[
+  {
+    "id": "G1-S12-01",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（堆疊的平坦面條件）",
+    "source": "111學年北市段考真題",
+    "stem": "小宇想要把積木一層一層往上疊高，請問哪一種形狀互相堆疊時最穩定、最不容易倒？",
+    "choices": ["正方體", "球體", "橫躺的圓柱體", "圓錐頂端"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "cube_stack",
+        "shapes": ["cube", "cube"]
+      }
+    },
+    "explanation": {
+      "step_1": "正方體的每一個面都是平平的面（平坦面）",
+      "step_2": "平平的面與平平的面緊密貼合，接觸面積大，重心平穩",
+      "step_3": "正方體與長方體最容易穩固向上堆疊",
+      "formula": "平面 ＋ 平面 ＝ 穩固堆疊 (STACK_STABLE)",
+      "trap_warning": "球體或彎曲面接觸時支撐點極小，極易滾落倒塌！"
+    }
+  },
+  {
+    "id": "G1-S12-02",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（底座穩定性與球體限制）",
+    "source": "112學年新北段考真題",
+    "stem": "在桌上放了一顆球體，如果想要在球體上面再疊放一個正方體，會發生什麼情況？",
+    "choices": ["正方體吸附在球上", "穩穩立在球頂", "正方體滑動傾斜並滾落", "球體被壓成扁平"],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "sphere_base_collapse",
+        "shapes": ["sphere", "cube"]
+      }
+    },
+    "explanation": {
+      "step_1": "球體的表面是完全彎曲的曲面，沒有任何平坦的面",
+      "step_2": "在曲面上放置任何物體，接觸點只有極小一點，無法支撐平衡",
+      "step_3": "物體會沿著弧面滑落滾下，無法向上疊加",
+      "formula": "曲面為底 ➔ 無法承載 ➔ 滾落倒塌 (ROLL_COLLAPSE)",
+      "trap_warning": "不能用球體當底座疊積木，球體只能滾動！"
+    }
+  },
+  {
+    "id": "G1-S12-03",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（圓柱體的兩種擺法）",
+    "source": "111學年桃市段考真題",
+    "stem": "小明發現圓柱體有兩種擺法。如果想要在它上面繼續疊別的積木，應該怎麼放？",
+    "choices": ["橫躺著放", "直直立著放（圓形平坦面朝上下）", "斜靠在牆邊", "切成兩半放"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "cylinder_upright_stable",
+        "shapes": ["cylinder:upright", "cube"]
+      }
+    },
+    "explanation": {
+      "step_1": "圓柱體上下有兩個平平的圓形面，側面則是彎曲的曲面",
+      "step_2": "直立放時，上下是平坦面，可以用來向上疊加其他積木",
+      "step_3": "橫躺放時，上方是彎曲面，物體放上去會滾落，且圓柱自己也會滾動",
+      "formula": "圓柱立放 ➔ 平面向上 ➔ 可堆疊；圓柱橫躺 ➔ 曲面向上 ➔ 會滾動",
+      "trap_warning": "直立時是柱子可承重，橫躺時是滾輪會滑走！"
+    }
+  },
+  {
+    "id": "G1-S12-04",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（斜坡滾動與滑動區分）",
+    "source": "112學年中市段考真題",
+    "stem": "把下列四個形體放在斜坡上輕輕放手，哪一個「只能滑動，完全不會滾動」？",
+    "choices": ["球體", "橫躺圓柱體", "圓滾溜溜的彈珠", "正方體木塊"],
+    "answer_index": 3,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "slope_slide",
+        "shapes": ["cube"]
+      }
+    },
+    "explanation": {
+      "step_1": "滾動需要形體具備圓弧或彎曲的面（如球、圓柱的側面）",
+      "step_2": "正方體六個面全都是平平的平面，沒有任何彎曲面",
+      "step_3": "正方體在斜坡上只會整塊平平地滑下去，不會滾動",
+      "formula": "曲面 ➔ 會滾動；平面 ➔ 只能滑動",
+      "trap_warning": "正方體不會滾動，它是滑動前進！"
+    }
+  },
+  {
+    "id": "G1-S12-05",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（城堡底座的最優選擇）",
+    "source": "110學年高市段考真題",
+    "stem": "幼兒園舉辦疊高大賽，如果想蓋一座又高又穩的 5 層城堡，第一層最適合用什麼？",
+    "choices": ["大大的長方體平躺", "兩顆大球體", "橫躺的圓柱滾筒", "倒立的圓錐"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "large_box_base",
+        "shapes": ["box", "cube", "cube"]
+      }
+    },
+    "explanation": {
+      "step_1": "底座要穩定，需要「接觸地面面積大」且「上方為大平坦面」",
+      "step_2": "長方體面積最大的面平放時，重心最低且提供最穩固的平台",
+      "step_3": "上方可以輕鬆疊上正方體、立放圓柱等形體",
+      "formula": "大平面在下 ➔ 重心低 ➔ 穩定城堡底座",
+      "trap_warning": "蓋高樓一定要「下大上小、下平上穩」！"
+    }
+  },
+  {
+    "id": "G1-S12-06",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（又會滾又會疊的形體）",
+    "source": "111學年南市段考真題",
+    "stem": "老師拿出一種積木，說：「它既可以像輪子一樣滾動，又可以像積木一樣疊高高。」這是什麼形狀？",
+    "choices": ["球體", "圓柱體", "長方體", "正方體"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "cylinder_dual_nature",
+        "shapes": ["cylinder:upright", "cylinder:side"]
+      }
+    },
+    "explanation": {
+      "step_1": "球體只能滾動，不能堆疊；正方體和長方體只能堆疊，不會滾動",
+      "step_2": "圓柱體同時擁有「平平的圓面」與「彎曲的側面」",
+      "step_3": "橫躺利用曲面可以滾動，直立利用平面可以堆疊",
+      "formula": "圓柱體 ＝ 平面（可堆疊） ＋ 曲面（可滾動）",
+      "trap_warning": "只有兼具平面與曲面的圓柱體才能同時具備兩種特徵！"
+    }
+  },
+  {
+    "id": "G1-S12-07",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（全向滾動的球體）",
+    "source": "112學年竹市段考真題",
+    "stem": "不管朝哪個方向輕輕推它，它都能順暢滾動，而且每一面看起來都一樣的形體是？",
+    "choices": ["正方體", "圓柱體", "球體", "長方體"],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "sphere_all_direction",
+        "shapes": ["sphere"]
+      }
+    },
+    "explanation": {
+      "step_1": "圓柱體只有橫躺時朝前後滾動，立著時無法滾動",
+      "step_2": "球體任何一個方向都是一樣的圓弧曲面",
+      "step_3": "因此球體朝東、南、西、北任何角度推，都能順暢滾動",
+      "formula": "全曲面無稜角 ➔ 四面八方皆可滾動 ➔ 球體",
+      "trap_warning": "圓柱體只能朝一個方向滾，球體能向四面八方滾！"
+    }
+  },
+  {
+    "id": "G1-S12-08",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（長方體有幾個面可以疊）",
+    "source": "111學年彰化段考真題",
+    "stem": "拿一個長方體面紙盒，隨便換一個面放在桌上，上面都還能穩固放東西。長方體共有幾個面可以這樣疊？",
+    "choices": ["2 個", "4 個", "5 個", "6 個"],
+    "answer_index": 3,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "box_all_faces",
+        "shapes": ["box"]
+      }
+    },
+    "explanation": {
+      "step_1": "長方體有 6 個面（包含前面、後面、上面、下面、左面、右面）",
+      "step_2": "這 6 個面全都是平平的長方形或正方形",
+      "step_3": "每一個面都是平面的特性，讓它換哪一面朝下都能穩定支撐",
+      "formula": "長方體 ＝ 6 個平面，每個面都可以堆疊",
+      "trap_warning": "長方體與正方體一樣，6 個面全都是平坦面！"
+    }
+  },
+  {
+    "id": "G1-S12-09",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（多層堆疊連鎖坍塌）",
+    "source": "112學年屏東段考真題",
+    "stem": "底層放正方體，中層放「橫躺的圓柱體」，頂層再放一顆球。放手後頂層的球會怎樣？",
+    "choices": ["穩穩浮在空中", "順著橫躺圓柱的弧面滾落到地上", "融入圓柱體裡面", "把圓柱壓碎"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "chain_collapse",
+        "shapes": ["cube", "cylinder:side", "sphere"]
+      }
+    },
+    "explanation": {
+      "step_1": "中層的圓柱橫躺時，接觸面是彎曲的弧面",
+      "step_2": "頂層的球體也是曲面，曲面碰曲面完全沒有支撐點",
+      "step_3": "頂層的球體會立刻失去平衡滾落掉至地面",
+      "formula": "曲面 ＋ 曲面 ＝ 必然滾落 (ROLL_COLLAPSE)",
+      "trap_warning": "中間只要有一層是橫躺圓柱或球，上方就絕對疊不住！"
+    }
+  },
+  {
+    "id": "G1-S12-10",
+    "unit": "S-1-2",
+    "unit_title": "形體操作（混合堆疊成功法）",
+    "source": "110學年宜蘭段考真題",
+    "stem": "小芬手上有：正方體 1 個、立放圓柱 1 個、球體 1 個。如果要全部疊在一起且不倒塌，球體必須放在？",
+    "choices": ["最上面（頂端）", "最下面（底層）", "夾在正方體和圓柱中間", "放在任何位置都可以"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "stack-physics-bench",
+      "props": {
+        "preset": "sphere_on_top_stable",
+        "shapes": ["cube", "cylinder:upright", "sphere"]
+      }
+    },
+    "explanation": {
+      "step_1": "球體上面不能再放任何東西，因為曲面無法支撐其他物體",
+      "step_2": "但平坦面的上面可以放球體（只要球不被外力推動就不會掉）",
+      "step_3": "因此球體只能放在最頂端，底下必須全由平坦面積木支撐",
+      "formula": "底層平面 ➔ 中層平面 ➔ 頂端球體（唯一可能穩定的排列）",
+      "trap_warning": "球體如果放底層或中層一定倒，只有放頂端才有可能站得住！"
+    }
+  }
+]

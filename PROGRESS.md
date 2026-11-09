@@ -83,4 +83,18 @@
 - [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_s11_shape_identify.json`（嚴選 10 題各縣市段考幾何真題，含旋轉破招、圓柱展開長方形、上下底圓拓印、四邊等長正方形定義）。
 - [x] **三端自適應題卡落地**：`app/unit_s11.html`（掛載 `<isometric-rotator>`，390px/768px/960px 跑 `tests/ac_unit_s11.js` 實測 6/6 PASS，Exit Code 0，截圖存入 `evidence/unit_s11_390.png` 等）。
 - [x] **首頁門戶更新**：`app/index.html` 正式收錄 S-1-1 入口卡片，一年級五大正式落地單元全部直達！
-- [ ] **下一步**：推進樣品 07：S-1-2 形體操作（`<stack-physics-bench>` 堆疊穩固 vs 曲面滾動）。
+- [x] **下一步**：推進樣品 07：S-1-2 形體操作（`<stack-physics-bench>` 堆疊穩固 vs 曲面滾動）。
+
+## 📌 2026-11-09 (Session 12) - S-1-2 形體操作：<stack-physics-bench> 物理堆疊與滾動台落地
+- [x] **026 AutoFlow 傳動軸全速運轉**：
+  - Stage 0：AGY 決策大腦落盤 `reports/20261109_2305_g1_s12_spec/R0_AGY_BLUEPRINT.md`，定義平面穩固堆疊與曲面滾落拋物線 Given-When-Then AC。
+  - Stage 1：通道 2（A-SERVER SSH 備援）OpenCode BP 現場指揮官完成任務卡拆票，落盤 `R1_BP_EXECUTION_PLAN.md`（13,742 B）。
+  - Stage 2：AGY 簽署放行書 `R2_AGY_PLAN_REVIEW.md` 批准獨立體積預算 $\le 12,288$ B 與 `MUTUAL_CONSENT_APPROVED`。
+  - Stage 3：通道 2 OpenCode Worker（`iceman-free`）實體帶手腳施工（$0.00 成本），秒級產出組件與獨立驗收頁。
+- [x] **新增教具元件**：`app/components/stack-physics-bench.js`（3,336 B $\le 12,288$ B，純原生 Web Component，零外部依賴，支援四大幾何形體正方體、長方體、圓柱立放/橫躺、球體之堆疊狀態機 `STACK_STABLE` 與拋物線滾落 `ROLL_COLLAPSE`）。
+- [x] **獨立 AC 驗收頁落地**：`tests/ac_stack_physics_bench.html`（15 項檢驗全 PASS，`ALL_AC_PASSED`）。
+- [x] **G-9 機械化閘門擴充升級**：`tools/ac_gate.js` 擴充至 22 checks，實測全綠 `GATE_GREEN (22 checks, 0 failed)`，Exit Code 0。
+- [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_s12_stack_roll.json`（嚴選 10 題各縣市段考形體操作真題，含平面堆疊、球體曲面滾落、圓柱直立可堆橫躺會滾等思維陷阱題）。
+- [x] **三端自適應題卡落地**：`app/unit_s12.html`（掛載 `<stack-physics-bench>`，390px/768px/960px 跑 `tests/ac_unit_s12.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_s12_390.png`、`768.png`、`960.png`）。
+- [x] **首頁門戶更新**：`app/index.html` 正式收錄 S-1-2 入口卡片，一年級正式落地單元達到 6 個（N-1-1, N-1-2, N-1-3, R-1-1, S-1-1, S-1-2，共 60 題段考真題）！
+- [ ] **下一目標**：推進下一批課綱單元（例如 N-1-4 錢幣操作或 S-1-3 長度比較）。

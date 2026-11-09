@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AC - stack-physics-bench</title>
+<style>
+body{font-family:system-ui,Segoe UI,sans-serif;margin:16px;background:#fafafa}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;color:#fff;font-size:12px;margin-right:6px}
+.pass{background:#1b8f3a}.fail{background:#c62828}
+li{margin:6px 0}#ac-summary{margin:12px 0;padding:10px;border:1px solid #ccc;background:#fff;font-weight:700}
+</style>
+<h1>S-1-2 stack-physics-bench 驗收 (15)</h1>
+<stack-physics-bench id="b"></stack-physics-bench>
+<div id="ac-summary">RUNNING</div>
+<ol id="out"></ol>
+<script type="module">
+import '../app/components/stack-physics-bench.js';
+const out=document.getElementById('out'), sum=document.getElementById('ac-summary'), b=document.getElementById('b');
+const results=[]; let ev=null;
+b.addEventListener('stack-event',e=>ev=e.detail);
+function t(name,fn){let ok=false,msg='';try{const r=fn();ok=r===true;msg=r===true?'':String(r)}catch(e){ok=false;msg=e.message}results.push({name,ok,msg});
+const li=document.createElement('li');li.innerHTML=`<span class="badge ${ok?'pass':'fail'}">${ok?'PASS':'FAIL'}</span><b>${name}</b>${msg?` <small>${msg.replace(/</g,'&lt;')}</small>`:''}`;out.appendChild(li);return ok}
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+await wait(0);
+t('T01 customElements 定義 <stack-physics-bench>',()=>!!customElements.get('stack-physics-bench')||'not defined');
+t('T02 具備 reset()',()=>typeof b.reset==='function'||'missing');
+t('T03 具備 addShape(shapeType,orientation)',()=>typeof b.addShape==='function'||'missing');
+t('T04 具備 getState()',()=>typeof b.getState==='function'||'missing');
+b.reset();
+t('T05 reset 後 stack 為空且 STACK_STABLE',()=>{const s=b.getState();return (s.stack.length===0&&s.status==='STACK_STABLE')||JSON.stringify(s)});
+ev=null;b.reset();
+t('T06 reset 觸發 stack-event {type,status,count,history}',()=>ev&&ev.type==='reset'&&ev.status==='STACK_STABLE'&&ev.count===0&&Array.isArray(ev.history)||JSON.stringify(ev));
+b.reset();b.addShape('cube');b.addShape('box');b.addShape('cylinder','upright');
+t('AC-06-1 平面接觸 cube/box/cylinder-upright 堆疊 -> STACK_STABLE',()=>{const s=b.getState();return (s.status==='STACK_STABLE'&&s.stack.length===3&&s.stack.every(x=>x.stable))||JSON.stringify(s)});
+b.reset();b.addShape('cube');b.addShape('sphere');
+t('AC-06-2 球體放在物體上方 -> ROLL_COLLAPSE',()=>{const s=b.getState();return (s.status==='ROLL_COLLAPSE'&&s.stack[1].type==='sphere'&&s.stack[1].stable===false)||JSON.stringify(s)});
+b.reset();b.addShape('sphere');b.addShape('cube');
+t('AC-06-3 物體放在球體上方 -> ROLL_COLLAPSE',()=>{const s=b.getState();return (s.status==='ROLL_COLLAPSE'&&s.stack[1].stable===false)||JSON.stringify(s)});
+b.reset();b.addShape('cylinder','side');const base=b.getState();b.addShape('box');
+t('AC-06-4 圓柱橫躺底座平放但上方無法承載 -> 放上方觸發 ROLL_COLLAPSE',()=>{const s=b.getState();return (base.stack.length===1&&base.status==='STACK_STABLE'&&s.status==='ROLL_COLLAPSE'&&s.stack[1].stable===false)||JSON.stringify({base,s})});
+ev=null;b.reset();b.addShape('cube');
+t('T11 stack-event on add 含 type/status/count/history',()=>ev&&ev.type==='stack'&&ev.status==='STACK_STABLE'&&ev.count===1&&ev.history.length>=1||JSON.stringify(ev));
+ev=null;b.reset();b.addShape('cube');b.addShape('sphere');
+t('T12 collapse 時 stack-event type=collapse, status=ROLL_COLLAPSE',()=>ev&&ev.type==='collapse'&&ev.status==='ROLL_COLLAPSE'&&ev.count===2||JSON.stringify(ev));
+b.reset();b.addShape('cube');b.addShape('cube');
+const st=b.getState();
+t('T13 getState 回傳 stack 清單(含 type/orientation/stable) 與 status',()=>Array.isArray(st.stack)&&st.stack[0].type==='cube'&&'orientation'in st.stack[0]&&'stable'in st.stack[0]&&typeof st.status==='string'||JSON.stringify(st));
+b.reset();b.addShape('cylinder','side');
+t('T14 cylinder side 於底座可平放 (STACK_STABLE)',()=>{const s=b.getState();return (s.status==='STACK_STABLE'&&s.stack[0].type==='cylinder'&&s.stack[0].orientation==='side')||JSON.stringify(s)});
+t('T15 Shadow DOM 內有 SVG 與地面線',()=>{const svg=b.shadowRoot&&b.shadowRoot.querySelector('svg');const line=b.shadowRoot&&b.shadowRoot.querySelector('line');return !!(svg&&line)||'missing svg/line'});
+const pass=results.filter(r=>r.ok).length, total=results.length;
+sum.textContent=`${pass}/${total} PASSED`+(pass===total?' - ALL_AC_PASSED':' - FAILED');
+sum.style.color=pass===total?'#1b8f3a':'#c62828';
+if(pass===total) document.body.dataset.ac='ALL_AC_PASSED';
+</script>
+</html>
