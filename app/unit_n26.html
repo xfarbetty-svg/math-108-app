@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>N-2-6 乘法意義與陣列模型</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1f2937;--muted:#64748b;--brand:#4f46e5;--ok:#16a34a;--bad:#dc2626;--line:#e5e7eb}
+*{box-sizing:border-box} body{margin:0;font:16px/1.5 system-ui,"Noto Sans TC",sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding:12px 12px 28px}
+header{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;padding:16px;border-radius:14px;margin:8px 0 12px}
+h1{margin:0;font-size:1.25rem} .sub{margin:4px 0 0;opacity:.92;font-size:.95rem}
+.grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:860px){.grid{grid-template-columns:minmax(280px,390px) 1fr;align-items:start}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.panel h2{margin:0 0 8px;font-size:1rem}
+.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;font-size:.9rem;color:var(--muted)}
+.pill{background:#eef2ff;color:#3730a3;padding:2px 8px;border-radius:999px;font-weight:600}
+.bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.bar>i{display:block;height:100%;width:0;background:var(--brand);transition:width .2s}
+.qcard{border:1px solid var(--line);border-radius:12px;padding:12px}
+.stem{font-weight:600;margin:0 0 10px}
+.choices{display:grid;gap:8px}
+.choice{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;background:#fff}
+.choice:hover{border-color:#c7d2fe}
+.choice input{margin-top:3px}
+.choice.correct{border-color:#86efac;background:#f0fdf4}
+.choice.wrong{border-color:#fca5a5;background:#fef2f2}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+button{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:10px 12px;font:inherit;cursor:pointer}
+button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.result{margin-top:10px;font-weight:700}
+.result.ok{color:var(--ok)} .result.bad{color:var(--bad)}
+.drawer{margin-top:10px;border:1px solid #dbeafe;background:#eff6ff;border-radius:10px;overflow:hidden}
+.drawer summary{cursor:pointer;padding:10px 12px;font-weight:600;color:#1d4ed8;list-style:none}
+.drawer summary::-webkit-details-marker{display:none}
+.drawer .body{padding:0 12px 12px;color:#1e3a8a}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.small{font-size:.875rem;color:var(--muted)}
+.vis{margin-top:10px}
+@media(max-width:390px){body{font-size:15px}.wrap{padding:8px}.panel{padding:10px}button{flex:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>N-2-6 乘法意義與陣列模型</h1>
+    <p class="sub">用陣列觀察「幾個一數」、連加與乘法的關係，並體驗乘法交換律。</p>
+  </header>
+  <div class="grid">
+    <section class="panel" aria-labelledby="demo-title">
+      <h2 id="demo-title">互動陣列</h2>
+      <div id="demo-host"><multiplication-array id="demo" rows="3" cols="4" group="rows"></multiplication-array></div>
+      <p class="small" id="demo-note">可切換分組方式或旋轉陣列，觀察加法與乘法算式的變化。</p>
+    </section>
+    <section class="panel" aria-labelledby="quiz-title">
+      <h2 id="quiz-title">單元測驗</h2>
+      <div class="meta"><span class="pill" id="progress-pill">第 1 / 10 題</span><span id="score-pill">得分 0</span></div>
+      <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+      <div id="quiz"></div>
+      <div class="nav">
+        <button id="prev" type="button">上一題</button>
+        <button id="next" type="button">下一題</button>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="./components/multiplication-array.js"></script>
+<script>
+const FALLBACK=[
+  {"stem":"下圖是一個 3 列 4 行的陣列。若把每一列看成一組，哪一個算式可以表示全部的數量？","choices":["4 + 4 + 4 = 12","3 + 3 + 3 + 3 = 12","3 + 4 = 7","4 × 4 = 16"],"answer_index":0,"visual_engine":{"component":"multiplication-array","rows":3,"cols":4,"group":"rows"},"explanation":"3 列 4 行表示有 3 組，每組 4 個，所以連加算式是 4 + 4 + 4 = 12，也就是 4 × 3 = 12。"},
+  {"stem":"同樣是 3 列 4 行的陣列。若改成把每一行看成一組，哪一個乘法算式正確？","choices":["4 × 3 = 12","3 × 4 = 12","3 × 3 = 9","4 × 4 = 16"],"answer_index":1,"visual_engine":{"component":"multiplication-array","rows":3,"cols":4,"group":"cols"},"explanation":"每一行有 3 個，共有 4 行，所以是 3 個、3 個、3 個、3 個，算式為 3 × 4 = 12。"},
+  {"stem":"算式 5 + 5 + 5 可以改寫成下列哪一個乘法算式？","choices":["5 × 2 = 10","3 × 5 = 15","5 × 3 = 15","5 × 5 = 25"],"answer_index":2,"visual_engine":{"component":"multiplication-array","rows":3,"cols":5,"group":"rows"},"explanation":"5 + 5 + 5 表示 3 個 5 相加，也就是 5 的 3 倍，乘法算式寫成 5 × 3 = 15。"},
+  {"stem":"一個陣列有 2 列 6 行。全部共有幾個？","choices":["8","10","12","26"],"answer_index":2,"visual_engine":{"component":"multiplication-array","rows":2,"cols":6,"group":"rows"},"explanation":"2 列 6 行可看成 6 + 6 = 12，或 6 × 2 = 12，所以共有 12 個。"},
+  {"stem":"有 4 盤蘋果，每盤有 3 顆。用乘法算式表示全部蘋果數量，下列何者正確？","choices":["4 + 3 = 7","3 × 4 = 12","4 × 4 = 16","3 × 3 = 9"],"answer_index":1,"visual_engine":{"component":"multiplication-array","rows":4,"cols":3,"group":"rows"},"explanation":"每盤 3 顆，有 4 盤，就是 4 個 3，算式是 3 × 4 = 12（顆）。"},
+  {"stem":"2 × 5 和 5 × 2 的答案都是 10。這表示什麼？","choices":["乘法的答案一定比較大","交換兩個數的位置，積不變","加法和乘法一樣","只能用連加計算"],"answer_index":1,"visual_engine":{"component":"multiplication-array","rows":2,"cols":5,"group":"rows"},"explanation":"把 2 列 5 行的陣列轉置後變成 5 列 2 行，總數不變，這就是乘法交換律：交換被乘數和乘數的位置，積不變。"},
+  {"stem":"觀察 5 列 2 行的陣列。下列哪一個選項「不是」表示這個陣列的正確算式？","choices":["2 + 2 + 2 + 2 + 2 = 10","5 + 5 = 10","2 × 5 = 10","5 × 5 = 10"],"answer_index":3,"visual_engine":{"component":"multiplication-array","rows":5,"cols":2,"group":"rows"},"explanation":"5 列 2 行共有 10 個。依列看是 2+2+2+2+2 或 2×5；依行看是 5+5 或 5×2。5×5=25，不正確。"},
+  {"stem":"6 × 3 表示「3 的 6 倍」。下列哪一個連加算式和它相同？","choices":["6 + 6 + 6 = 18","3 + 3 + 3 + 3 + 3 + 3 = 18","6 + 3 = 9","3 + 6 + 3 = 12"],"answer_index":1,"visual_engine":{"component":"multiplication-array","rows":6,"cols":3,"group":"rows"},"explanation":"6 × 3 是 3 的 6 倍，表示 6 個 3 相加：3 + 3 + 3 + 3 + 3 + 3 = 18。"},
+  {"stem":"把 4 列 3 行的陣列旋轉轉置後，會變成幾列幾行？總數會改變嗎？","choices":["3 列 4 行，總數變成 7","3 列 4 行，總數不變","4 列 3 行，總數不變","4 列 4 行，總數變成 16"],"answer_index":1,"visual_engine":{"component":"multiplication-array","rows":4,"cols":3,"group":"rows"},"explanation":"轉置後列和行互換，4 列 3 行變成 3 列 4 行；物品數量沒有增減，所以總數仍是 12。"},
+  {"stem":"教室裡椅子排成 3 列，每列 7 張。老師想快速算出共有幾張椅子，哪一個方法最適合？","choices":["7 - 3 = 4","3 + 7 = 10","7 × 3 = 21","3 × 3 = 9"],"answer_index":2,"visual_engine":{"component":"multiplication-array","rows":3,"cols":7,"group":"rows"},"explanation":"每列 7 張，有 3 列，是 3 個 7 的連加，可以用乘法快速計算：7 × 3 = 21（張）。"}
+];
+const state={i:0,qs:FALLBACK,answers:Array(10).fill(null),checked:Array(10).fill(false),score:0};
+async function loadQs(){
+  try{
+    const r=await fetch('../data/curriculum_v3/g2_n26_multiplication.json',{cache:'no-store'});
+    if(!r.ok) throw 0;
+    const d=await r.json();
+    if(Array.isArray(d)&&d.length===10){state.qs=d;state.answers=Array(10).fill(null);state.checked=Array(10).fill(false);}
+  }catch(e){}
+}
+function renderVis(q){
+  const v=q&&q.visual_engine||{};
+  if(v.component!=='multiplication-array') return '';
+  const r=+v.rows||3,c=+v.cols||4,g=v.group==='cols'?'cols':'rows';
+  return `<div class="vis"><multiplication-array rows="${r}" cols="${c}" group="${g}"></multiplication-array></div>`;
+}
+function scoreNow(){state.score=state.answers.reduce((s,a,i)=>s+(state.checked[i]&&a===state.qs[i].answer_index?1:0),0);}
+function render(){
+  const q=state.qs[state.i], i=state.i, checked=state.checked[i], sel=state.answers[i];
+  document.getElementById('progress-pill').textContent=`第 ${i+1} / ${state.qs.length} 題`;
+  scoreNow(); document.getElementById('score-pill').textContent=`得分 ${state.score}`;
+  document.getElementById('bar').style.width=((i+1)/state.qs.length*100)+'%';
+  document.getElementById('prev').disabled=i===0; document.getElementById('next').disabled=i===state.qs.length-1;
+  const letters=['A','B','C','D'];
+  document.getElementById('quiz').innerHTML=`
+    <article class="qcard">
+      <p class="stem">${i+1}. ${q.stem}</p>
+      ${renderVis(q)}
+      <div class="choices" role="radiogroup" aria-label="選項">
+        ${q.choices.map((c,ci)=>{
+          let cls='choice';
+          if(checked){ if(ci===q.answer_index) cls+=' correct'; else if(sel===ci) cls+=' wrong'; }
+          return `<label class="${cls}"><input type="radio" name="q${i}" value="${ci}" ${sel===ci?'checked':''} ${checked?'disabled':''}/> <span><b>${letters[ci]}.</b> ${c}</span></label>`;
+        }).join('')}
+      </div>
+      <div class="actions"><button class="primary" id="check" type="button" ${checked||sel==null?'disabled':''}>檢查答案</button></div>
+      ${checked?`<div class="result ${sel===q.answer_index?'ok':'bad'}">${sel===q.answer_index?'答對了！':'答錯了，再看看解析。'}</div>`:''}
+      <details class="drawer" ${checked?'open':''}><summary>解析</summary><div class="body">${q.explanation}</div></details>
+    </article>`;
+  document.querySelectorAll('input[name="q'+i+'"]').forEach(el=>el.addEventListener('change',e=>{state.answers[i]=+e.target.value;render();}));
+  const cb=document.getElementById('check'); if(cb) cb.onclick=()=>{if(state.answers[i]!=null){state.checked[i]=true;render();}};
+}
+document.getElementById('prev').onclick=()=>{if(state.i>0){state.i--;render();}};
+document.getElementById('next').onclick=()=>{if(state.i<state.qs.length-1){state.i++;render();}};
+loadQs().then(render);
+</script>
+</body>
+</html>
