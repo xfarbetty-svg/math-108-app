@@ -71,17 +71,24 @@
   - 題庫：`data/curriculum_v3/g2_n24_volume_capacity.json` (嚴選 10 題段考真題，1公升=1000毫升換算、量杯刻度讀取、溢出比較與生活容量排序)
   - 門戶：`app/index.html` 首頁已同步掛載 N-2-4 單元導航。
   - Git Commit: `d94ab53`
+- **【G2-T09: N-2-12 重量的認識（公斤與公克）】**：
+  - 教具：`app/components/weight-balance-scale.js` (6,602 B <= 12 KB)
+  - 特色：圓盤指針式磅秤（0~1000g / 1kg）、動態指針指向 `weight-g + tare-offset`、**「未歸零倒扣計算陷阱」**警告（讀數 - 歸零誤差 = 實際重量）、公斤/公克即時切換。
+  - 頁面：`app/unit_n212.html`
+  - 題庫：`data/curriculum_v3/g2_n212_weight_mass.json` (嚴選 10 題段考真題，頂層 Array，平衡分佈 [2, 3, 3, 2])
+  - 門戶：`app/index.html` 首頁已同步掛載 N-2-12 單元導航。
+  - Git Commit: `46243a6`
 - **【算力消耗】**：$0.00 零消耗，全程透過通道 2（A-SERVER SSH OpenCode + `opencode/glm-5.3-flash-free`）實體施工。
 
 ## 🚦 目前狀態
-- **當前版本**：`v13.0.0` (Grade 1 All 9 Units + Grade 2 First 8 Units Delivered & Verified: 17 Units, 170 Real Exam Questions)
-- **健康狀態**：🟢 17 個單元 170 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
+- **當前版本**：`v14.0.0` (Grade 1 All 9 Units + Grade 2 First 9 Units Delivered & Verified: 18 Units, 180 Real Exam Questions)
+- **健康狀態**：🟢 18 個單元 180 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
 - **Git 狀態**：本地工作區乾淨
 - **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **實機體驗二年級八大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-3、N-2-4、N-2-6、N-2-7、N-2-11、S-2-1 共 80 題段考真題做題手感與破招詳解。
-2. **啟動 G2-T09: N-2-12 重量的認識（公斤與公克）**：派工 A-SERVER 開發 `<weight-balance-scale>` 原生組件與 10 題真題。
+1. **實機體驗二年級九大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-3、N-2-4、N-2-6、N-2-7、N-2-11、N-2-12、S-2-1 共 90 題段考真題做題手感與破招詳解。
+2. **啟動 G2-T10: N-2-13 鐘面的認識（幾點幾分與經過時間）**：派工 A-SERVER 開發 `<clock-time-explorer>` 原生組件與 10 題真題。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。

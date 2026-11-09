@@ -140,3 +140,13 @@
 - [x] **三端自適應題卡落地**：`app/unit_d11.html`（掛載 `<data-sorter-bench>`，390px/768px/960px 跑 `tests/ac_unit_d11.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_d11_390.png`、`768.png`、`960.png`）。
 - [x] **首頁門戶更新**：`app/index.html` 正式收錄 D-1-1 入口卡片，**一年級 108 課綱官方 9 大條目全部落地達成 100% 大滿貫（共 90 題真實段考考題）**！
 - [ ] **下一里程碑**：啟動二年級 108 課綱官方條目規劃（九九乘法、三位數、長度公尺等），或邀請人類實機把玩體驗 9 大單元手感。
+
+## 📌 2026-11-10 (Session 16) - 二年級 9 大核心條目全數落地：N-2-12 重量的認識落地
+- [x] **026 AutoFlow 傳動軸全速運轉**：
+  - 通道 2（A-SERVER SSH 備援）OpenCode Worker（`opencode/glm-5.3-flash-free`）實體施工（$0.00 成本）。
+  - 新增教具元件：`app/components/weight-balance-scale.js`（6,602 B $\le 12,288$ B，純原生 Web Component，圓盤指針式磅秤、未歸零指針倒扣校準防呆與單位即時換算）。
+  - 三端自適應題卡落地：`app/unit_n212.html`（手機 390px、平板 768px、電腦 960px）。
+  - SSOT 扁平題庫落地：`data/curriculum_v3/g2_n212_weight_mass.json`（10 題段考真題，頂層 Array，[2, 3, 3, 2] 答案均勻分佈）。
+  - 首頁更新：`app/index.html` 掛載 N-2-12 導航卡片。
+- [x] **累計成果**：全專案累計 18 大單元、180 題段考真題全量落地且通過 28/28 機械化硬閘門。
+- [ ] **下一目標**：推進二年級 N-2-13 鐘面的認識（幾點幾分與經過時間）。
