@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N-2-2 直式計算單元測驗｜二年級數學</title>
+<style>
+:root{--c1:#1565c0;--c2:#ff7043;--bg:#f4f7fb;--ink:#1a2b4c;--card:#fff;--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,"Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header{background:linear-gradient(135deg,#1565c0,#42a5f5);color:#fff;padding:20px 16px;text-align:center}
+header h1{font-size:1.25rem}
+header p{font-size:.85rem;opacity:.9;margin-top:4px}
+#meta{position:sticky;top:0;z-index:9;background:#fffdd8;border-bottom:1px solid #e6d98a;padding:8px 16px;font-size:.85rem;display:flex;justify-content:space-between}
+main{max-width:720px;margin:0 auto;padding:16px 12px 90px}
+@media(min-width:900px){main{max-width:960px}}
+.qcard{background:var(--card);border-radius:var(--radius);box-shadow:0 2px 8px rgba(20,40,80,.08);padding:16px;margin-bottom:16px}
+.qcard h2{font-size:1rem;margin-bottom:10px}
+.tag{display:inline-block;background:#e8f1ff;color:var(--c1);font-size:.75rem;border-radius:99px;padding:2px 10px;margin-bottom:8px}
+#demo{margin:10px 0;border:1px dashed #b9cbe8;border-radius:10px;padding:8px;text-align:center;display:none}
+#demo open{display:block}
+.demoBtn{background:#eef4ff;color:var(--c1);border:1px solid #9fc0ef;border-radius:8px;padding:4px 12px;font-size:.8rem;cursor:pointer}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media(max-width:390px){.choices{grid-template-columns:1fr}}
+.choice{border:2px solid #d5e1f5;background:#fff;border-radius:10px;padding:10px 12px;font-size:1rem;cursor:pointer;text-align:left;transition:.15s}
+.choice:hover{border-color:var(--c1);background:#f2f8ff}
+.choice.ok{border-color:#2e7d32;background:#e8f5e9}
+.choice.bad{border-color:#c62828;background:#ffebee}
+.choices.done .choice{pointer-events:none}
+.fb{margin-top:10px;font-size:.9rem;font-weight:bold;min-height:1.4em}
+.fb.right{color:#2e7d32}.fb.wrong{color:#c62828}
+.linkBtn{background:none;border:0;color:var(--c2);font-size:.85rem;cursor:pointer;text-decoration:underline;padding:0;margin-top:6px}
+#drawer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.2);padding:16px 18px 26px;transform:translateY(105%);transition:transform .28s ease;z-index:20;max-height:44vh;overflow:auto}
+#drawer.open{transform:translateY(0)}
+#drawer h3{color:var(--c1);font-size:1rem;margin-bottom:6px}
+#drawer .close{position:absolute;top:10px;right:12px;border:0;background:#eef;font-size:1rem;border-radius:50%;width:30px;height:30px;cursor:pointer}
+#backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:15;display:none}
+#backdrop.show{display:block}
+footer{text-align:center;font-size:.75rem;color:#8a97ad;padding-bottom:34px}
+</style>
+</head>
+<body>
+<header>
+  <h1>N-2-2 直式計算<br>二位數與三位數的加減、進位與退位</h1>
+  <p>看直式算架 → 點選項作答 → 錯了打開詳解抽屜</p>
+</header>
+<div id="meta"><span id="progress">題目 0 / 0</span><span id="score">得分 0</span></div>
+<main id="quiz"></main>
+<footer>年級：二年級｜單元 N-2-2｜直式計算（進位・退位）</footer>
+<div id="backdrop"></div>
+<div id="drawer">
+  <button class="close" id="closeDrawer" aria-label="關閉">✕</button>
+  <h3 id="dTitle"></h3>
+  <div id="dBody"></div>
+</div>
+<script src="components/vertical-math-grid.js"></script>
+<script>
+const drawer=document.getElementById("drawer"),backdrop=document.getElementById("backdrop");
+function openDrawer(title,body){document.getElementById("dTitle").textContent=title;document.getElementById("dBody").textContent=body;drawer.classList.add("open");backdrop.classList.add("show");}
+document.getElementById("closeDrawer").onclick=()=>{drawer.classList.remove("open");backdrop.classList.remove("show");};
+backdrop.onclick=document.getElementById("closeDrawer").onclick;
+let score=0,done=0,total=0;
+function upd(){document.getElementById("progress").textContent=`題目 ${done} / ${total}`;document.getElementById("score").textContent=`得分 ${score}`;}
+function build(q,i){
+  const card=document.createElement("section");card.className="qcard";
+  const v=q.visual_engine||{};
+  card.innerHTML=`<span class="tag">第 ${i+1} 題・直式計算</span><h2>${q.stem}</h2>
+  <div id="demo"><vertical-math-grid op="${v.op}" num1="${v.num1}" num2="${v.num2}"></vertical-math-grid></div>
+  <div class="choices"></div><p class="fb"></p><button class="linkBtn">📖 詳解抽屜</button>`;
+  const box=card.querySelector(".choices");
+  q.choices.forEach((c,j)=>{
+    const b=document.createElement("button");b.className="choice";b.textContent=String.fromCharCode(65+j)+". "+c;
+    b.onclick=()=>pick(card,b,j);box.appendChild(b);
+  });
+  gridToggle(card,v);
+  card.querySelector(".linkBtn").onclick=()=>openDrawer(`第 ${i+1} 題 詳解`,q.explanation);
+  return card;
+}
+function pick(card,btn,j){
+  const q=card._q,ok=j===q.answer_index;
+  card.querySelector(".choices").classList.add("done");
+  [...card.querySelectorAll(".choice")].forEach((b,idx)=>{if(idx===q.answer_index)b.classList.add("ok");});
+  if(!ok)btn.classList.add("bad");
+  const fb=card.querySelector(".fb");
+  fb.textContent=ok?"✅ 答對了！":"❌ 再想想，打開詳解看看算理。";
+  fb.className="fb "+(ok?"right":"wrong");
+  done++;if(ok)score++;upd();
+  openDrawer(ok?"答對！記住算理":`第 ${card._i+1} 題 詳解`,q.explanation);
+}
+function gridToggle(card,v){
+  const demo=card.querySelector("#demo"),btn=document.createElement("button");
+  btn.className="demoBtn";btn.textContent="▶ 看直式演示";
+  btn.onclick=()=>{
+    const show=demo.style.display!=="block";
+    demo.style.display=show?"block":"none";
+    btn.textContent=show?"▲ 收起演示":"▶ 看直式演示";
+  };
+  card.insertBefore(btn,demo);
+}
+fetch("../data/curriculum_v3/g2_n22_vertical_math.json").then(r=>r.json()).then(data=>{
+  const wrap=document.getElementById("quiz");
+  data.forEach((q,i)=>{const card=build(q,i);card._q=q;card._i=i;wrap.appendChild(card);});
+  total=data.length;upd();
+}).catch(e=>{document.getElementById("quiz").innerHTML="<p style='color:#c62828'>載入題目失敗："+e.message+"</p>";});
+</script>
+</body>
+</html>
