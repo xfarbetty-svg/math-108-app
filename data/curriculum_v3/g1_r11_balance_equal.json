@@ -1,0 +1,242 @@
+[
+  {
+    "id": "G1-R11-01",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（等號平衡概念）",
+    "source": "111學年北市段考真題",
+    "stem": "天平左邊放了 5 個 1 克的積木，右邊放了 2 個 1 克的積木，右邊還要再放幾個積木天平才會平衡？",
+    "choices": ["2 個", "3 個", "4 個", "7 個"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 5,
+        "right_weight": 2,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "天平傾斜：左邊 5 克較重向下傾斜，右邊 2 克較輕向上浮起",
+      "step_2": "想配平：兩邊重量必須完全相同（左邊 ＝ 右邊）",
+      "step_3": "算式：5 ＝ 2 ＋ 3，所以右邊還要放 3 個積木",
+      "formula": "5 = 2 + 3",
+      "trap_warning": "等號真義：「＝」不是「算出答案」，而是天平兩邊「一樣重、保持平衡」的意思！"
+    }
+  },
+  {
+    "id": "G1-R11-02",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（等號雙向性）",
+    "source": "112學年新北段考真題",
+    "stem": "觀察算式「4 ＋ 3 ＝ 7」，如果反過來寫成「7 ＝ 4 ＋ 3」，這個算式是對的嗎？",
+    "choices": ["對的，等號兩邊一樣多", "不對，答案必須寫在右邊", "不對，算式不能倒過來", "不一定，要看題目規定"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 7,
+        "right_weight": 7,
+        "interactive": false
+      }
+    },
+    "explanation": {
+      "step_1": "天平驗證：左邊放 7 克，右邊放 4 克加 3 克（共 7 克）",
+      "step_2": "指針垂直居中，天平兩側完全平衡",
+      "step_3": "算理：等號具備對稱性，「4 ＋ 3 ＝ 7」與「7 ＝ 4 ＋ 3」意思完全相同",
+      "formula": "4 + 3 = 7 ⟺ 7 = 4 + 3",
+      "trap_warning": "打破刻板印象：答案不一定要在等號右邊，等號是雙向平等的平衡木！"
+    }
+  },
+  {
+    "id": "G1-R11-03",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（兩側都有加法配平）",
+    "source": "110學年中市段考真題",
+    "stem": "天平左邊放了「3 ＋ 5」克的物品，天平右邊放了「4 ＋ （　）」克的物品，兩邊才會平衡？",
+    "choices": ["3 克", "4 克", "5 克", "8 克"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 8,
+        "right_weight": 4,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "先算左邊總重：3 ＋ 5 ＝ 8 克",
+      "step_2": "要讓右邊也是 8 克：4 加上多少會等於 8？",
+      "step_3": "算式：3 ＋ 5 ＝ 4 ＋ 4，所以括號填 4 克",
+      "formula": "3 + 5 = 4 + 4 = 8",
+      "trap_warning": "思維進階：兩邊算式各自計算，只要總數相同，天平就會平衡！"
+    }
+  },
+  {
+    "id": "G1-R11-04",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（不平衡傾斜判斷）",
+    "source": "111學年桃市段考真題",
+    "stem": "天平左邊放了 6 顆彈珠，右邊放了 8 顆同樣的彈珠，天平會往哪一邊傾斜？",
+    "choices": ["往左邊傾斜（左邊沉下去）", "往右邊傾斜（右邊沉下去）", "兩邊保持平衡", "無法判斷"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 6,
+        "right_weight": 8,
+        "interactive": false
+      }
+    },
+    "explanation": {
+      "step_1": "比大小：8 比 6 大（8 ＞ 6）",
+      "step_2": "右邊較重，右邊托盤往下沉，左邊托盤被抬高",
+      "step_3": "物理原理：重的一端下沉，輕的一端浮起",
+      "formula": "6 < 8 (右側下沉)",
+      "trap_warning": "生活直覺：跟玩翹翹板一樣，比較重的小朋友那一端會坐在地上！"
+    }
+  },
+  {
+    "id": "G1-R11-05",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（求未知數配平）",
+    "source": "112學年高市段考真題",
+    "stem": "算式「（　） ＋ 2 ＝ 9」中，要讓等號成立，括號裡應該填入多少？",
+    "choices": ["6", "7", "8", "11"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 2,
+        "right_weight": 9,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "天平模型：右邊已經有 9 克，左邊目前只有 2 克",
+      "step_2": "反推差值：9 － 2 ＝ 7",
+      "step_3": "驗算：7 ＋ 2 ＝ 9，天平完全平衡",
+      "formula": "7 + 2 = 9",
+      "trap_warning": "逆向運算：加法的未知數，可以利用減法（右邊減左邊）來反向找出！"
+    }
+  },
+  {
+    "id": "G1-R11-06",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（等號兩側相等連動）",
+    "source": "111學年台南段考真題",
+    "stem": "下列哪一個算式中的等號「＝」使用是正確的？",
+    "choices": ["5 ＋ 2 ＝ 8", "4 ＋ 4 ＝ 8", "6 ＋ 3 ＝ 10", "3 ＋ 3 ＝ 7"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 8,
+        "right_weight": 8,
+        "interactive": false
+      }
+    },
+    "explanation": {
+      "step_1": "只有兩邊數量真正「完全相等」時，才能用等號連接",
+      "step_2": "4 ＋ 4 算出來是 8，8 ＝ 8 完全平衡",
+      "step_3": "其他選項左邊加起來都不等於右邊，天平會傾斜",
+      "formula": "4 + 4 = 8 (平衡)",
+      "trap_warning": "嚴謹數學：「＝」具有嚴格真實性，不平衡的式子不能寫等號！"
+    }
+  },
+  {
+    "id": "G1-R11-07",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（同加同減等量原理）",
+    "source": "110學年竹市段考真題",
+    "stem": "天平原本兩邊各放 6 顆積木正處於平衡，如果兩邊同時拿走 2 顆積木，天平會怎麼樣？",
+    "choices": ["依然保持平衡", "往左邊傾斜", "往右邊傾斜", "會倒掉"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 4,
+        "right_weight": 4,
+        "interactive": false
+      }
+    },
+    "explanation": {
+      "step_1": "原本狀態：6 ＝ 6 平衡",
+      "step_2": "兩邊同時減 2：左邊 6 － 2 ＝ 4，右邊 6 － 2 ＝ 4",
+      "step_3": "兩邊依然都是 4 顆，維持 4 ＝ 4 平衡",
+      "formula": "6 - 2 = 6 - 2 ⟹ 4 = 4",
+      "trap_warning": "等量公理啟蒙：只要天平兩邊同時拿走一樣多的東西，平衡狀態絕不改變！"
+    }
+  },
+  {
+    "id": "G1-R11-08",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（三個數連加配平）",
+    "source": "112學年彰化段考真題",
+    "stem": "天平左邊放了「2 ＋ 3 ＋ 4」克的積木，右邊放了一個 9 克的砝碼，天平會平衡嗎？",
+    "choices": ["會平衡，因為 2＋3＋4 剛好等於 9", "不會，左邊比較重", "不會，右邊比較重", "無法計算"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 9,
+        "right_weight": 9,
+        "interactive": false
+      }
+    },
+    "explanation": {
+      "step_1": "計算左邊連加：2 ＋ 3 ＝ 5，5 ＋ 4 ＝ 9 克",
+      "step_2": "右邊砝碼剛好也是 9 克",
+      "step_3": "9 ＝ 9，天平水平配平",
+      "formula": "2 + 3 + 4 = 9",
+      "trap_warning": "分步連加：先將前面兩個數相加，再加上第三個數，核對總和是否等於右邊。"
+    }
+  },
+  {
+    "id": "G1-R11-09",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（比較符號轉化）",
+    "source": "111學年屏東段考真題",
+    "stem": "天平左邊有 7 顆蘋果，右邊有 5 顆蘋果，天平無法平衡。要讓它們平衡，最少需要移動幾顆蘋果？",
+    "choices": ["從左邊拿 1 顆移到右邊", "從左邊拿 2 顆移到右邊", "右邊拿 1 顆給左邊", "無法透過移動平衡"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 6,
+        "right_weight": 6,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "總共有 7 ＋ 5 ＝ 12 顆蘋果",
+      "step_2": "平分給兩邊：12 顆平分，每邊各 6 顆才會平衡",
+      "step_3": "左邊原本 7 顆，拿走 1 顆給右邊：7 － 1 ＝ 6，5 ＋ 1 ＝ 6",
+      "formula": "7 - 1 = 5 + 1 = 6",
+      "trap_warning": "陷阱注意：相差 2 顆時，只要把「差的一半（1顆）」移過去就平衡了，千萬別移 2 顆！"
+    }
+  },
+  {
+    "id": "G1-R11-10",
+    "unit": "R-1-1",
+    "unit_title": "算式與符號（綜合等式推理）",
+    "source": "112學年基隆段考真題",
+    "stem": "天平左邊放了 1 個大西瓜和 1 個 2 斤砝碼，右邊放了 1 個 8 斤砝碼時剛好平衡。請問大西瓜幾斤重？",
+    "choices": ["5 斤", "6 斤", "7 斤", "10 斤"],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "balance-beam",
+      "props": {
+        "left_weight": 8,
+        "right_weight": 8,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "列出天平平衡算式：西瓜 ＋ 2 ＝ 8",
+      "step_2": "想一想：多少加 2 等於 8？",
+      "step_3": "8 － 2 ＝ 6，大西瓜重 6 斤",
+      "formula": "西瓜 + 2 = 8 ⟹ 西瓜 = 6",
+      "trap_warning": "代數萌芽：利用生活中的天平，直觀理解未知數的等量替換！"
+    }
+  }
+]
