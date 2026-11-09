@@ -62,3 +62,11 @@
 - [x] **CDP 實機驗真全綠**：`tests/ac_unit_r11.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (5 checks)`，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_r11_768.png`。
 - [x] **統一首頁入口整合**：`app/index.html` 頂部新增 108 課綱一年級正式題卡快速入口卡片，直連 N-1-3、N-1-2、R-1-1 與調試展台。
 - [x] **Git 版控鋼印**：Commit `6724f5d`，本地工作區完全乾淨。
+
+## 📌 2026-11-09 (Session 10) - 第二批課綱教具首發落地：N-1-1 100以內的數 (位值盒)
+- [x] **新增教具元件**：`app/components/place-value-box.js`（8,261 B，純前端向量自足雙艙位值盒，支援 300ms 滿十震動光暈與聚合滑移）。
+- [x] **SSOT 扁平題庫收斂**：完成 `data/curriculum_v3/g1_n11_place_value.json`，嚴選 10 題各縣市段考位值化聚真題。
+- [x] **三端自適應題卡落地**：`app/unit_n11.html`（掛載 `<place-value-box>`，即時十進位化聚算理演繹）。
+- [x] **CDP 實機驗真全綠**：`tests/ac_unit_n11.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (6 checks)`，滿十聚合成功轉化為 1 根十條，截圖存入 `evidence/unit_n11_768.png`。
+- [x] **首頁門戶更新**：`app/index.html` 正式收錄 N-1-1 入口卡片，四大單元全部就緒。
+- [x] **Git 版控鋼印**：Commit `b4b1c68`，本地工作區完全乾淨。
