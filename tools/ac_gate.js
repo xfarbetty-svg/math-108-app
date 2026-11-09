@@ -39,6 +39,12 @@ for (const f of COMPONENTS) {
   const r = spawnSync(process.execPath, ['--check', abs], { encoding: 'utf8' });
   rec('G-1 ' + f, r.status === 0, 'node --check exit=' + r.status);
 }
+// S-1-1 獨立語法閘門 (BP 裁決 D-01)
+const absS11 = path.join(ROOT, 'app', 'components', 'isometric-rotator.js');
+if (fs.existsSync(absS11)) {
+  const r = spawnSync(process.execPath, ['--check', absS11], { encoding: 'utf8' });
+  rec('G-1 isometric-rotator.js', r.status === 0, 'node --check exit=' + r.status);
+}
 
 /* G-5 體積（每檔 ≤12KB、合計 ≤30KB） */
 let total = 0;
@@ -48,6 +54,12 @@ for (const f of COMPONENTS) {
   rec('G-5 ' + f, size <= LIMIT_EACH, size + ' B (<= ' + LIMIT_EACH + ')');
 }
 rec('G-5 total', total <= LIMIT_TOTAL, total + ' B (<= ' + LIMIT_TOTAL + ')');
+
+// S-1-1 獨立體積閘門 (BP 裁決 D-01: 單檔 <= 12,288 B，不稀釋舊四單元)
+if (fs.existsSync(absS11)) {
+  const sizeS11 = fs.statSync(absS11).size;
+  rec('G-5 isometric-rotator.js', sizeS11 <= LIMIT_EACH, sizeS11 + ' B (<= ' + LIMIT_EACH + ')');
+}
 
 /* G-4 零外部資源：僅允許 SVG 命名空間 */
 const files = COMPONENTS.map((f) => path.join(ROOT, 'app', 'components', f))
@@ -197,7 +209,8 @@ async function runPage(page) {
     { id: 'T-01', file: 'tests/ac_t01.html', args: ['--window-size=390,900'] },
     { id: 'T-02', file: 'tests/ac_t02.html', args: ['--window-size=390,900'] },
     { id: 'T-02-RM', file: 'tests/ac_t02.html', args: ['--window-size=390,900', '--force-prefers-reduced-motion'] },
-    { id: 'T-03', file: 'tests/ac_t03.html', args: ['--window-size=390,900'] }
+    { id: 'T-03', file: 'tests/ac_t03.html', args: ['--window-size=390,900'] },
+    { id: 'T-05', file: 'tests/ac_isometric_rotator.html', args: ['--window-size=390,900'] }
   ];
   for (const page of PAGES) await runPage(page);
 

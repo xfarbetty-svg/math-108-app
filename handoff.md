@@ -1,32 +1,39 @@
 # Handoff - 028_1 國小數學APP
 
 ## ⏯️ 目前做到哪
-- **【一年級四大核心課綱單元全數落地＋四大獨立教具完工】**：
-  1. **單元一：N-1-1 100以內的數 (位值盒與十條)**（`app/unit_n11.html` ＋ `data/curriculum_v3/g1_n11_place_value.json`）：10 題段考真題，掛載全新 `<place-value-box>` 雙艙位值盒，支援 300ms 滿十震動光暈與聚合滑移進位。
-  2. **單元二：N-1-3 湊十法與拆十法**（`app/unit_n13.html` ＋ `data/curriculum_v3/g1_n13_make_ten.json`）：10 題段考真題，十格陣拋物線飛補（324ms 實測耗時）與三步分解樹。
-  3. **單元三：N-1-2 比較型減法**（`app/unit_n12.html` ＋ `data/curriculum_v3/g1_n12_diff_compare.json`）：10 題段考真題，雙軌差值一對一虛線連線與金色超量框。
-  4. **單元四：R-1-1 算式與符號**（`app/unit_r11.html` ＋ `data/curriculum_v3/g1_r11_balance_equal.json`）：10 題段考真題，真力矩天平平衡配平與等號雙向真義。
-  5. **統一首頁導航門戶**：`app/index.html` 頂部直通四大正式落地單元與教具調試展台。
-- **【CDP 實機驗真全綠】**：四大單元題卡在 390px / 768px / 960px 視口全數通過（全部 Exit Code 0，CONSOLE_NOISE_COUNT=0），實測截圖全數落盤至 `evidence/`。
-- **【Git 版控鋼印】**：Commit `b4b1c68`，本地工作區完全乾淨。
+- **【一年級四大核心單元全數落地 ＋ 第五大核心教具 S-1-1 完工驗收】**：
+  1. **教具五：S-1-1 形體之辨認（034 向量等角旋轉投影儀）**（`app/components/isometric-rotator.js`，8,518 B）：
+     - 原生 Web Component `<isometric-rotator>`，單一 `<g transform="rotate(θ)">` 幾何變換。
+     - 破解小一孩子「轉了 45° 就不認得是正方形」思維陷阱：旋轉過程中 4 個直角黃色折線記號與 4 邊等長短斜線精準鎖定頂點同步旋轉，文字標籤反向旋轉保持直立可讀。
+     - 支援 5 種形體（正方形、長方形、三角形、圓形直徑線、圓柱 3D 到 2D 拓印展開）。
+     - 圓柱展開採教學示意比例 $k=0.55$，長方形側面滾出、上下底圓翻出，圖面附帶「示意圖，未按真實比例」警語。
+     - 獨立驗收頁 `tests/ac_isometric_rotator.html` 在 390px / 768px / 960px 視口全量通過（15/15 PASS，CONSOLE_NOISE_COUNT=0）。
+  2. **既有四大正式單元（共 40 題真題）維持 100% 綠燈**：
+     - N-1-1 100以內的數（位值盒與十條進位聚合）
+     - N-1-3 湊十法與拆十法（雙排十格陣拋物線飛補與分解樹）
+     - N-1-2 比較型減法（雙軌差值一對一虛線連線與金色超量框）
+     - R-1-1 算式與符號（真力矩天平平衡配平）
+- **【全量機械化硬閘門升級】**：`node tools/ac_gate.js` 擴充至 **20 項檢查全部通過 (`GATE_GREEN 20/20`)**，Exit Code **0**。
+- **【026 算力閉環實證】**：在 Zen Free 遇 429 限流時，自動切換至 **通道 2（A-SERVER SSH 備援）**，調用遠端 OpenCode CLI（`iceman-free`）秒級完成帶手腳施工並同步回本機，全流程雲端額度消耗 **$0.00**！
 
 ## 🚦 目前狀態
-- **當前版本**：`v5.4.0` (Quad Units N-1-1, N-1-2, N-1-3, R-1-1 All Delivered & Verified)
-- **健康狀態**：🟢 四大單元 40 題段考題全量 CDP 探針全綠，Exit Code 0
-- **Git 狀態**：本地工作區完全乾淨（Commit `b4b1c68`）
-- **雲端額度消耗**：$0.00（全本地 Chrome / CDP 驗真）
+- **當前版本**：`v5.5.0` (S-1-1 Core Component Verified & Integrated)
+- **健康狀態**：🟢 總閘門 20 項檢查全部 PASS，Exit Code 0
+- **Git 狀態**：本地即將提交鋼印
+- **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
 
-## ➡️ 下一步（開新框首要任務）
-1. **實機做做看四大單元**：直接開啟 `app/index.html`，以手機 390px 體驗四大單元（位值盒、湊十陣、雙軌差、力矩天平）共 40 題真題的做題流動手感。
-2. **推進一年級幾何單元**：
-   - 樣品 06：**S-1-1 形體辨認**（034 Anatomy 向量等角旋轉投影儀 `<isometric-rotator>`，360° 旋轉直角邊長高亮標籤，破除方位偏見）。
-   - 樣品 07：**S-1-2 形體操作**（堆疊穩固 vs 曲面滾動 `<stack-physics-bench>`）。
+## ➡️ 下一步
+1. **組裝 S-1-1 正式題卡**：
+   - 撰寫 `data/curriculum_v3/g1_s11_shape_identify.json`（嚴格 10 題各縣市段考幾何辨認真題，SSOT 扁平 schema）。
+   - 產出自適應題卡入口：`app/unit_s11.html`，並撰寫 `tests/ac_unit_s11.js` 跑三端 CDP 驗真。
+   - 將 S-1-1 加入 `app/index.html` 首頁入口看板。
+2. **推進樣品 07：S-1-2 形體操作**（堆疊穩固 vs 曲面滾動 `<stack-physics-bench>`）。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。
 - **嚴格 10 題憲法**：每單元嚴格只做 10 題真實段考題，杜絕隨機刷題。
 
 ## 🕐 最後更新
-- 時間：2026-11-09T22:15:00+08:00
+- 時間：2026-11-09T22:56:00+08:00
 - 更新者：AGY & Worker (AutoFlow 協同流水線)
-- Git push 狀態：本地已 commit（無遠端 remote）
+- Git push 狀態：本地準備 commit（無遠端 remote）

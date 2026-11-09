@@ -70,3 +70,14 @@
 - [x] **CDP 實機驗真全綠**：`tests/ac_unit_n11.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (6 checks)`，滿十聚合成功轉化為 1 根十條，截圖存入 `evidence/unit_n11_768.png`。
 - [x] **首頁門戶更新**：`app/index.html` 正式收錄 N-1-1 入口卡片，四大單元全部就緒。
 - [x] **Git 版控鋼印**：Commit `b4b1c68`，本地工作區完全乾淨。
+
+## 📌 2026-11-09 (Session 11) - S-1-1 形體之辨認：<isometric-rotator> 向量旋轉投影儀落地
+- [x] **026 AutoFlow 傳動軸全速運轉**：
+  - Stage 0：AGY 決策大腦落盤 `reports/20261109_2225_g1_s11_spec/R0_AGY_BLUEPRINT.md`，定義 Given-When-Then AC。
+  - Stage 1：本地 OpenCode BP 現場指揮官拆票（Exit 0），落盤 `R1_BP_EXECUTION_PLAN.md`（含 D-01~D-03 預先裁決）。
+  - Stage 2：AGY 雙簽放行書 `R2_AGY_PLAN_REVIEW.md` 批准獨立體積預算與展開示意比例。
+  - Stage 3：通道 2（A-SERVER SSH 備援）OpenCode Worker（`iceman-free`）實體帶手腳施工（$0.00 成本）。
+- [x] **新增教具元件**：`app/components/isometric-rotator.js`（8,518 B ≤ 12,288 B，純向量純前端，單一 `<g transform="rotate(θ)">` 幾何變換，支援正方形旋轉直角與等長記號鎖定、圓形旋轉直徑線、圓柱 3D 到 2D 拓印長方形與底圓展開）。
+- [x] **CDP 實機驗真全綠**：`tests/ac_isometric_rotator.html` 在 390px / 768px / 960px 視口全數通過（15/15 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0）。
+- [x] **G-9 機械化閘門擴充升級**：`node tools/ac_gate.js` 擴充至 20 checks，全部 PASS，`GATE_GREEN (20 checks, 0 failed)`，Exit Code 0。
+- [ ] **下一步**：編寫 `data/curriculum_v3/g1_s11_shape_identify.json`（10 題真題）＋落地 `app/unit_s11.html` 自適應題卡與首頁卡片。

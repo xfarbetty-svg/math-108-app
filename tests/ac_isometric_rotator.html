@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AC - isometric-rotator</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:12px;background:#f8fafc;color:#0f172a}
+#stage{width:390px;max-width:100%;border:1px solid #cbd5e1;padding:8px;background:#fff;box-sizing:border-box}
+#result{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;padding:10px;border-radius:8px;font:12px/1.4 ui-monospace,monospace}
+.pass{color:#22c55e}.fail{color:#f87171}
+</style>
+</head>
+<body>
+<h3>isometric-rotator AC</h3>
+<div id="stage"><isometric-rotator id="r" shape="square" angle="0" show-labels="true" progress="0"></isometric-rotator></div>
+<pre id="result">running...</pre>
+<script src="../app/components/isometric-rotator.js"></script>
+<script>
+(function(){
+  var out=[],pass=0,fail=0,consoleErr=0;
+  var oldE=console.error; console.error=function(){consoleErr++; return oldE.apply(console,arguments)};
+  window.addEventListener('error',function(){consoleErr++});
+  function ok(id,name,cond,detail){
+    var s=!!cond; if(s)pass++; else fail++;
+    out.push((s?'PASS ':'FAIL ') + id + ' ' + name + (detail?(' :: '+detail):''));
+    return s;
+  }
+  function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+  function rectOk(el){if(!el)return false;var b=el.getBoundingClientRect();return b.width>=44 && b.height>=44}
+  async function run(){
+    var el=document.getElementById('r');
+    await customElements.whenDefined('isometric-rotator');
+    await wait(30);
+    var sr=el.shadowRoot;
+    ok('AC-05-1a','element defined and shadow root',!!sr && el.tagName.toLowerCase()==='isometric-rotator');
+    // 1b attribute reflection
+    el.setAttribute('shape','rectangle'); await wait(10);
+    el.setAttribute('angle','45'); await wait(10);
+    el.setAttribute('show-labels','true'); await wait(10);
+    ok('AC-05-1b','attributes reflected',el.getAttribute('shape')==='rectangle' && el.getAttribute('angle')==='45' && el.getAttribute('show-labels')==='true');
+    // 1c event rotator:change
+    var ev=null, got=false;
+    function onC(e){if(!got){got=true;ev=e.detail}}
+    el.addEventListener('rotator:change',onC);
+    el.setAttribute('shape','square'); el.setAttribute('angle','90'); await wait(40);
+    el.removeEventListener('rotator:change',onC);
+    ok('AC-05-1c','rotator:change detail',ev && ev.shape && typeof ev.angle==='number' && Object.prototype.hasOwnProperty.call(ev,'isSquare') && ev.isSquare=== (ev.shape==='square'), ev?JSON.stringify(ev):'no event');
+    // 1d methods
+    var mOk=false;
+    try{ el.setAngle(30); el.setProgress(0.2); await wait(20); mOk=(el.getAttribute('angle')==='30'); }catch(e){ mOk=false; }
+    ok('AC-05-1d','setAngle/setProgress methods',mOk);
+
+    // AC-05-2 rotation and marks
+    el.setAttribute('shape','square');
+    var angles=[0,45,90,360], okA=true, det=[];
+    for(var i=0;i<angles.length;i++){
+      el.setAngle(angles[i]); await wait(15);
+      var rot=sr.getElementById('rot');
+      var tr=rot?rot.getAttribute('transform'):'';
+      var marks=sr.querySelectorAll('polyline[stroke="#facc15"], polyline[stroke="#facc15"]');
+      det.push(angles[i]+':'+(tr||'')+'/m'+marks.length);
+      if(!tr || tr.indexOf('rotate(')<0) okA=false;
+      if(marks.length<4) okA=false;
+    }
+    ok('AC-05-2a','rotation transform 0/45/90/360',okA,det.join(' | '));
+    // 2b 4 corner marks 12x12 intent (yellow polylines present)
+    el.setAngle(45); await wait(15);
+    var ym=sr.querySelectorAll('polyline[stroke="#facc15"]');
+    ok('AC-05-2b','4 直角記號(yellow)',ym.length>=4,'count='+ym.length);
+    // 2c ticks present and inside view
+    var tm=sr.querySelectorAll('line[stroke="#f59e0b"]');
+    ok('AC-05-2c','等長斜短線存在',tm.length>=4,'count='+tm.length);
+    // 2d labels upright counter-rotation
+    var txt=sr.querySelector('text.lb, text.sm');
+    var hasCR=txt && (txt.getAttribute('transform')||'').indexOf('rotate(')>=0;
+    ok('AC-05-2d','文字標籤反向旋轉保持直立',!!hasCR, txt?(txt.getAttribute('transform')||''): 'no text');
+
+    // AC-05-3 cylinder-unfold
+    el.setAttribute('shape','cylinder-unfold');
+    var unf=false;
+    el.addEventListener('rotator:unfolded',function(){unf=true},{once:true});
+    el.setProgress(0); await wait(20);
+    var p0=sr.querySelector('#side-rect');
+    ok('AC-05-3a','cylinder progress=0 side rect exists',!!p0);
+    el.setProgress(1); await wait(80);
+    var p1=sr.querySelector('#side-rect');
+    var w1=p1?parseFloat(p1.getAttribute('width')||'0'):0;
+    var bases=sr.querySelectorAll('#base-left,#base-right');
+    ok('AC-05-3b','progress=1 blue side grows',w1>20,'w='+w1);
+    ok('AC-05-3c','green base circles present',bases.length>=2,'count='+bases.length);
+    var allTxt=sr.querySelector('svg')?sr.innerHTML:'';
+    ok('AC-05-3d','示意圖標註存在',/示意圖，未按真實比例/.test(allTxt) && /側面展開是長方形/.test(allTxt));
+
+    // AC-05-4
+    el.setAttribute('shape','square'); el.setAngle(0); await wait(20);
+    var stage=document.getElementById('stage');
+    var sw=stage.getBoundingClientRect().width;
+    var btns=sr.querySelectorAll('button.b');
+    var rgWrap=sr.querySelector('.rg');
+    var allHit=true; btns.forEach(function(b){ if(!rectOk(b)) allHit=false; });
+    ok('AC-05-4a','控制熱區 >=44x44 (stage '+Math.round(sw)+'px)',allHit && rectOk(rgWrap),'buttons='+btns.length);
+    var aria=sr.querySelector('svg[aria-label]') && sr.querySelector('input[aria-label]');
+    ok('AC-05-4b','aria-label 存在',!!aria);
+    var hasCE=consoleErr>0;
+    ok('AC-05-4c','CONSOLE_NOISE_COUNT==0',!hasCE,'console.error count='+consoleErr);
+
+    window.__acReport={pass:pass,fail:fail,total:pass+fail,details:out,consoleNoise:consoleErr};
+    var pre=document.getElementById('result');
+    pre.textContent='RESULT_BEGIN\n'+out.join('\n')+'\n\n__AC_REPORT__ pass='+pass+' fail='+fail+' total='+ (pass+fail)+' consoleNoise='+consoleErr+'\nRESULT_END';
+    pre.innerHTML=pre.textContent.replace(/^PASS .*/gm,'<span class="pass">$&</span>').replace(/^FAIL .*/gm,'<span class="fail">$&</span>');
+  }
+  run().catch(function(e){
+    fail++; out.push('FAIL AC-RUN exception :: '+(e&&e.message||e));
+    window.__acReport={pass:pass,fail:fail,total:pass+fail,details:out,consoleNoise:consoleErr,error:String(e)};
+    document.getElementById('result').textContent='RESULT_BEGIN\n'+out.join('\n')+'\nRESULT_END';
+  });
+})();
+</script>
+</body>
+</html>
