@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N-2-11 長度：公尺與公分｜國小數學單元測驗</title>
+<script src="components/meter-scale-ruler.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;background:#eef2fb;color:#1f2937;line-height:1.6}
+header{background:linear-gradient(135deg,#4f86f7,#2563eb);color:#fff;padding:18px 16px;text-align:center}
+header h1{font-size:20px}
+header p{font-size:13px;opacity:.92;margin-top:4px}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 320px}}
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(30,64,175,.12);padding:16px;margin-bottom:16px}
+h2{font-size:17px;color:#1d4ed8;margin-bottom:10px}
+.demo-btns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.demo-btns button{border:1.5px solid #4f86f7;background:#fff;color:#1d4ed8;border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer}
+.demo-btns button.on{background:#4f86f7;color:#fff}
+.hint{font-size:13px;color:#6b7280;margin-top:10px}
+.q{border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:14px}
+.q .tag{display:inline-block;font-size:11px;background:#dbeafe;color:#1d4ed8;border-radius:6px;padding:2px 8px;margin-bottom:6px}
+.q p.stem{font-size:15px;font-weight:bold;margin-bottom:10px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1.5px solid #cbd5e1;border-radius:10px;background:#f8fafc;padding:10px 12px;font-size:14px;cursor:pointer;transition:.15s}
+.opt:hover{border-color:#4f86f7;background:#eff6ff}
+.opt.correct{border-color:#16a34a;background:#dcfce7;font-weight:bold}
+.opt.wrong{border-color:#dc2626;background:#fee2e2}
+.err{display:none;background:#fef2f2;border:1px solid #ef4444;color:#991b1b;border-radius:10px;padding:10px 12px;font-size:14px}
+.err.show{display:block}
+.drawer{position:fixed;inset:auto 0 0 0;max-height:45vh;overflow:auto;background:#0f172a;color:#e2e8f0;padding:16px 20px;border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.35);transform:translateY(105%);transition:transform .25s;z-index:50}
+.drawer.open{transform:translateY(0)}
+.drawer h3{font-size:15px;color:#93c5fd;margin-bottom:8px}
+.drawer .cls{float:right;background:#334155;border:none;color:#cbd5e1;border-radius:8px;padding:4px 12px;cursor:pointer}
+.score{font-size:14px}
+.score b{color:#1d4ed8;font-size:18px}
+#bar{height:8px;border-radius:4px;background:#e2e8f0;overflow:hidden;margin-top:8px}
+#barin{height:100%;width:0;background:#16a34a;transition:.3s}
+.reset{margin-top:10px;width:100%;border:none;border-radius:8px;background:#e2e8f0;padding:8px;font-weight:bold;cursor:pointer}
+footer{text-align:center;font-size:12px;color:#94a3b8;padding:10px 0 88px}
+@media(min-width:900px){.drawer{max-height:35vh}}
+</style>
+</head>
+<body>
+<header>
+  <h1>📏 N-2-11 長度：公尺與公分</h1>
+  <p>1 公尺 = 100 公分 ｜ 斷尺測量 ｜ 估測與換算</p>
+</header>
+<main>
+<div class="grid">
+  <section>
+    <div class="card">
+      <h2>互動教具：公尺刻度尺</h2>
+      <div class="demo-btns" id="demos"></div>
+      <meter-scale-ruler id="demo" start="0" end="38" target-name="彩色筆"></meter-scale-ruler>
+      <p class="hint">💡 提示：先估一估，再看刻度。斷尺（起點不是 0）時，記得用「終點 − 起點」算出真正長度，千萬不能只讀終點刻度！</p>
+    </div>
+
+    <div id="quiz">
+      <div class="card">
+        <h2>單元測驗（10 題）</h2>
+        <p class="hint" id="loading">載入題目中…</p>
+        <div class="err" id="err"></div>
+        <div id="cards"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="card score-card">
+      <h2>學習進度</h2>
+      <p class="score">已作答：<b id="done">0</b> / <b id="total">10</b> 題<br>答對：<b id="ok" style="color:#16a34a">0</b> 題</p>
+      <div id="bar"><div id="barin"></div></div>
+      <button class="reset" id="reset" type="button">重新練習</button>
+    </div>
+    <div class="card">
+      <h2>重點摘要</h2>
+      <ul style="font-size:14px;padding-left:18px">
+        <li>1 公尺 = 100 公分</li>
+        <li>公尺換公分：×100</li>
+        <li>公分量太長的東西，改用公尺</li>
+        <li>斷尺測量：<b>終點 − 起點 = 長度</b></li>
+        <li>先估測，再驗證！</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+</main>
+<div class="drawer" id="drawer">
+  <button class="cls" id="dcls" type="button">關閉 ✕</button>
+  <h3>📘 解題說明</h3>
+  <div id="dtext" style="font-size:14px"></div>
+</div>
+<footer>N-2-11 長度：「公尺」與「公分」｜ 小二數學自學測驗頁</footer>
+<script>
+(function(){
+'use strict';
+var DEMOS=[
+  {start:0,end:18,name:'彩色筆'},
+  {start:0,end:85,name:'球棒'},
+  {start:0,end:100,name:'跳繩'},
+  {start:12,end:38,name:'斷尺·彩色筆'},
+  {start:8,end:45,name:'斷尺·橡皮擦'}
+];
+var demo=document.getElementById('demo'),demos=document.getElementById('demos');
+DEMOS.forEach(function(d,i){
+  var b=document.createElement('button');
+  b.type='button';b.textContent=d.name;
+  if(i===3)b.classList.add('on');
+  b.addEventListener('click',function(){
+    demo.setAttribute('start',d.start);
+    demo.setAttribute('end',d.end);
+    demo.setAttribute('target-name',d.name);
+    demos.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+  });
+  demos.appendChild(b);
+});
+
+var DATA=[], ANSWERS={};
+var elDone=document.getElementById('done'),elOK=document.getElementById('ok'),
+    elBar=document.getElementById('barin'),drawer=document.getElementById('drawer'),
+    dtext=document.getElementById('dtext'),cards=document.getElementById('cards');
+document.getElementById('total').textContent='–';
+
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function showDrawer(t){dtext.innerHTML=t;drawer.classList.add('open');}
+document.getElementById('dcls').addEventListener('click',function(){drawer.classList.remove('open')});
+
+function renderCard(q,i){
+  var d=document.createElement('div');d.className='q';
+  var ve=q.visual_engine;
+  var html='<span class="tag">第 '+(i+1)+' 題 · '+esc(q.topic||'')+'</span>'+
+    '<p class="stem">'+esc(q.stem)+'</p>';
+  if(ve&&ve.engine==='meter-scale-ruler'){
+    html+='<meter-scale-ruler start="'+(ve.start||0)+'" end="'+ve.end+'" target-name="'+esc(ve['target-name']||'')+'"></meter-scale-ruler>';
+  }
+  html+='<div class="opts">';
+  q.choices.forEach(function(c,j){html+='<button class="opt" type="button" data-j="'+j+'" data-i="'+i+'">'+esc(c)+'</button>'});
+  d.innerHTML=html+'</div>';
+  return d;
+}
+function render(){
+  cards.textContent='';ANSWERS={};
+  elDone.textContent='0';elOK.textContent='0';elBar.style.width='0';
+  DATA.forEach(function(q,i){cards.appendChild(renderCard(q,i))});
+}
+cards.addEventListener('click',function(ev){
+  var b=ev.target.closest('button.opt');
+  if(!b)return;
+  var i=+b.dataset.i,j=+b.dataset.j,q=DATA[i];
+  if(ANSWERS[i]!==undefined)return;
+  ANSWERS[i]=j;
+  var ok=j===q.answer_index;
+  b.classList.add(ok?'correct':'wrong');
+  if(!ok)b.parentElement.querySelector('[data-j="'+q.answer_index+'"]').classList.add('correct');
+  b.parentElement.querySelectorAll('button.opt').forEach(function(x){x.disabled=true});
+  elDone.textContent=Object.keys(ANSWERS).length;
+  if(ok)elOK.textContent=+elOK.textContent+1;
+  elBar.style.width=(Object.keys(ANSWERS).length/DATA.length*100)+'%';
+  showDrawer('<b>第 '+(i+1)+' 題</b>｜'+(ok?'✅ 答對了！':'❌ 再想一次～')+'<br>'+esc(q.explanation));
+});
+document.getElementById('reset').addEventListener('click',render);
+
+fetch('../data/curriculum_v3/g2_n211_meter_length.json')
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+  .then(function(data){
+    if(!Array.isArray(data)||data.length!==10)throw new Error('題庫格式錯誤');
+    DATA=data;
+    document.getElementById('total').textContent=data.length;
+    document.getElementById('loading').remove();
+    render();
+  })
+  .catch(function(e){
+    var err=document.getElementById('err');
+    err.textContent='載入題庫失敗：'+e.message+'（請由 http 伺服器開啟本頁）';
+    err.classList.add('show');
+    document.getElementById('loading').remove();
+  });
+})();
+</script>
+</body>
+</html>

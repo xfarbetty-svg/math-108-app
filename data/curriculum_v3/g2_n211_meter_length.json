@@ -1,0 +1,92 @@
+[
+  {
+    "id": "N-2-11-01",
+    "topic": "1公尺=100公分換算",
+    "stem": "老師說跳繩的長度是 3 公尺。3 公尺是多少公分？",
+    "choices": ["30 公分", "300 公分", "103 公分", "3000 公分"],
+    "answer_index": 1,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 0, "end": 100, "target-name": "1公尺" },
+    "explanation": "1 公尺 = 100 公分，所以 3 公尺 = 100 + 100 + 100 = 300 公分。公尺換公分要乘 100。"
+  },
+  {
+    "id": "N-2-11-02",
+    "topic": "1公尺=100公分換算",
+    "stem": "一條絲帶長 135 公分，用「公尺」和「公分」說，應該是──",
+    "choices": ["13 公尺 5 公分", "1 公尺 3 公分", "135 公尺", "1 公尺 35 公分"],
+    "answer_index": 3,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 0, "end": 100, "target-name": "絲帶" },
+    "explanation": "135 公分 = 100 公分 + 35 公分 = 1 公尺 35 公分。每數滿 100 公分就換成 1 公尺。"
+  },
+  {
+    "id": "N-2-11-03",
+    "topic": "非0起點斷尺測量",
+    "stem": "尺的 0 刻度斷掉了，彩色筆從 12 公分的地方對齊，畫到 38 公分的地方。彩色筆實際長度是多少公分？",
+    "choices": ["38 公分", "50 公分", "26 公分", "24 公分"],
+    "answer_index": 2,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 12, "end": 38, "target-name": "彩色筆" },
+    "explanation": "起點不是 0，不能只讀終點刻度！要用終點減起點：38 − 12 = 26 公分。"
+  },
+  {
+    "id": "N-2-11-04",
+    "topic": "非0起點斷尺測量",
+    "stem": "橡皮擦靠在斷掉的尺上，從 8 公分到 45 公分。橡皮擦的長度是多少公分？",
+    "choices": ["37 公分", "45 公分", "53 公分", "8 公分"],
+    "answer_index": 0,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 8, "end": 45, "target-name": "橡皮擦" },
+    "explanation": "45 − 8 = 37 公分。記住口訣：終點 − 起點 = 長度。"
+  },
+  {
+    "id": "N-2-11-05",
+    "topic": "生活物品合理單位",
+    "stem": "量「操場一圈的長度」，用哪一個單位最合適？",
+    "choices": ["公分", "公尺", "斤", "公升"],
+    "answer_index": 1,
+    "visual_engine": "none",
+    "explanation": "操場很長，用公分量會寫出幾萬個數字，太麻煩了；量長長的東西用「公尺」最合適。"
+  },
+  {
+    "id": "N-2-11-06",
+    "topic": "生活物品合理單位",
+    "stem": "下面哪一個東西的長度大約是 1 公尺？",
+    "choices": ["一支原子筆", "一塊橡皮擦", "一張課桌的高度", "一棟大樓"],
+    "answer_index": 2,
+    "visual_engine": "none",
+    "explanation": "課桌的高度差不多 1 公尺。原子筆約 15 公分、橡皮擦約 5 公分，都太短；大樓遠遠超過 1 公尺。"
+  },
+  {
+    "id": "N-2-11-07",
+    "topic": "長度加減計算",
+    "stem": "一支球棒長 85 公分，另一支球棒比它長 10 公分。另一支球棒長多少公分？",
+    "choices": ["75 公分", "105 公分", "850 公分", "95 公分"],
+    "answer_index": 3,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 0, "end": 85, "target-name": "球棒" },
+    "explanation": "比 85 公分長 10 公分，就是 85 + 10 = 95 公分。"
+  },
+  {
+    "id": "N-2-11-08",
+    "topic": "長度加減計算",
+    "stem": "一條長繩 1 公尺 30 公分，剪掉 50 公分後，剩下的繩子長多少公分？",
+    "choices": ["70 公分", "80 公分", "90 公分", "180 公分"],
+    "answer_index": 1,
+    "visual_engine": "none",
+    "explanation": "1 公尺 30 公分 = 130 公分，130 − 50 = 80 公分。先把公尺換成公分再計算。"
+  },
+  {
+    "id": "N-2-11-09",
+    "topic": "非0起點斷尺測量",
+    "stem": "跳繩的一段從 12 公分對齊到 100 公分（尺的最後一刻）。這一段跳繩的長度正確說法是──",
+    "choices": ["88 公分，不是 1 公尺", "100 公分，就是 1 公尺", "112 公分", "12 公分"],
+    "answer_index": 0,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 12, "end": 100, "target-name": "跳繩" },
+    "explanation": "終點 100 − 起點 12 = 88 公分。88 公分不到 1 公尺，只讀終點刻度 100 就上了斷尺的當！"
+  },
+  {
+    "id": "N-2-11-10",
+    "topic": "1公尺=100公分換算",
+    "stem": "妹妹的身高量出來是 1 公尺 20 公分，等於多少公分？",
+    "choices": ["12 公分", "102 公分", "120 公分", "1200 公分"],
+    "answer_index": 2,
+    "visual_engine": { "engine": "meter-scale-ruler", "start": 0, "end": 100, "target-name": "身高" },
+    "explanation": "1 公尺 = 100 公分，再加 20 公分：100 + 20 = 120 公分。公尺先換成公分，再加剩下的公分數。"
+  }
+]
