@@ -1,0 +1,242 @@
+[
+  {
+    "id": "G1-N11-01",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（位值與化聚）",
+    "source": "111學年北市段考真題",
+    "stem": "小華數了 3 根橘色十條積木和 5 顆小白積木，合起來一共是多少？",
+    "choices": ["35", "53", "8", "305"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 3,
+        "ones": 5,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "十位艙有 3 根十條，代表「3 個十」，也就是 30",
+      "step_2": "個位艙有 5 顆小白塊，代表「5 個一」，也就是 5",
+      "step_3": "3 個十和 5 個一合起來是 35",
+      "formula": "30 + 5 = 35",
+      "trap_warning": "常見混淆：千萬不能把十位和個位寫反成 53，看清楚十條是 10 倍！"
+    }
+  },
+  {
+    "id": "G1-N11-02",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（滿十進位聚合）",
+    "source": "112學年新北段考真題",
+    "stem": "個位艙裡原本有 9 顆小白積木，再放進 1 顆，剛好湊滿 10 顆小白塊，會發生什麼事？",
+    "choices": ["自動聚合熔接成 1 根橘色十條進位到十位", "個位可以寫入數字 10", "積木會直接消失不見", "變成 100"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 0,
+        "ones": 9,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "十進位憲法：個位艙最多只能容納 9 顆獨立方塊",
+      "step_2": "當放入第 10 顆時，觸發滿十光暈震動",
+      "step_3": "10 個一聚合為 1 個十，移入左邊十位艙",
+      "formula": "10 個一 ＝ 1 個十",
+      "trap_warning": "十進位核心：滿十就進位，個位艙永遠不得出現雙位數！"
+    }
+  },
+  {
+    "id": "G1-N11-03",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（十進位整十加法）",
+    "source": "110學年中市段考真題",
+    "stem": "文具店有 6 根十條積木，老闆又拿來 2 根十條積木，現在一共有多少？",
+    "choices": ["80", "8", "62", "26"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 6,
+        "ones": 0,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "6 根十條是 6 個十（60）",
+      "step_2": "加上 2 根十條是 2 個十（20）",
+      "step_3": "6 個十 ＋ 2 個十 ＝ 8 個十，也就是 80",
+      "formula": "60 + 20 = 80",
+      "trap_warning": "單位意識：問的是「一共多少」而不是「幾根」，8 根十條是 80 不是 8！"
+    }
+  },
+  {
+    "id": "G1-N11-04",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（數位轉折點數數）",
+    "source": "111學年桃市段考真題",
+    "stem": "從 28、29 接著往下數一個數，下一個數應該是多少？",
+    "choices": ["30", "20", "210", "39"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 2,
+        "ones": 9,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "29 是 2 個十和 9 個一",
+      "step_2": "再加 1，9 個一湊成 10，進位成 1 個十",
+      "step_3": "2 個十加上新進位的 1 個十，變成 3 個十，也就是 30",
+      "formula": "29 + 1 = 30",
+      "trap_warning": "官方手冊盲點：孩子常在 19 接 20、29 接 30 處數錯，位值盒能看見進位動態！"
+    }
+  },
+  {
+    "id": "G1-N11-05",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（位值辨認）",
+    "source": "112學年高市段考真題",
+    "stem": "在數字「47」中，數字「4」表示多少？",
+    "choices": ["4 個十 (40)", "4 個一 (4)", "400", "7 個十"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 4,
+        "ones": 7,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "左邊是十位，右邊是個位",
+      "step_2": "4 在十位上，代表 4 根十條，也就是 40",
+      "step_3": "7 在個位上，代表 7 顆小白塊，也就是 7",
+      "formula": "47 = 40 + 7",
+      "trap_warning": "位置決定價值：同樣是數字 4，放在十位是 40，放在個位才是 4！"
+    }
+  },
+  {
+    "id": "G1-N11-06",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（十的化聚與分解）",
+    "source": "111學年台南段考真題",
+    "stem": "把 1 根橘色十條積木換成小白積木，可以換成幾顆小白積木？",
+    "choices": ["10 顆", "1 顆", "100 顆", "5 顆"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 1,
+        "ones": 0,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "1 根十條積木是由 10 個小方格連體組成的",
+      "step_2": "退位拆解時，1 個十剛好可以換成 10 個一",
+      "step_3": "化聚真理：1 個十 ＝ 10 個一",
+      "formula": "1 個十 ＝ 10 個一",
+      "trap_warning": "直式借位基礎：未來二年級減法退位時，就是把 1 個十拆成 10 個一來扣減！"
+    }
+  },
+  {
+    "id": "G1-N11-07",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（位值大小比較）",
+    "source": "110學年竹市段考真題",
+    "stem": "比較「52」和「25」這兩個數，哪一個數比較大？",
+    "choices": ["52 比較大", "25 比較大", "一樣大", "無法比較"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 5,
+        "ones": 2,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "先比高位（十位）：52 有 5 個十（50），25 只有 2 個十（20）",
+      "step_2": "5 個十比 2 個十多很多，所以 52 ＞ 25",
+      "step_3": "規則：兩位數比大小，先比十位，十位大的數就大",
+      "formula": "52 > 25",
+      "trap_warning": "比大小法寶：永遠先看十位！十位相同時才比個位！"
+    }
+  },
+  {
+    "id": "G1-N11-08",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（整十數的意義）",
+    "source": "112學年彰化段考真題",
+    "stem": "桌上有 5 根橘色十條積木，個位艙一顆小白塊也沒有，這個數要怎麼寫？",
+    "choices": ["50", "5", "500", "05"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 5,
+        "ones": 0,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "十位寫 5，代表 5 個十",
+      "step_2": "個位沒有積木，必須寫 0 來佔位",
+      "step_3": "合起來寫成 50",
+      "formula": "5 個十 ＋ 0 個一 ＝ 50",
+      "trap_warning": "0 的佔位作用：個位沒有東西不能空著不寫，必須補 0，否則 50 會變成 5！"
+    }
+  },
+  {
+    "id": "G1-N11-09",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（百的位值突破）",
+    "source": "111學年屏東段考真題",
+    "stem": "當十位艙收集滿 10 根橘色十條積木時，一共有多少個小積木？",
+    "choices": ["100 個", "10 個", "1000 個", "20 個"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 9,
+        "ones": 9,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "10 個一是 1 個十；10 個十就是 1 個百",
+      "step_2": "10 根十條積木合起來就是 100",
+      "step_3": "進位突破：滿十個十，進位到百位，成為三位數 100",
+      "formula": "10 個十 ＝ 100",
+      "trap_warning": "里程碑突破：一年級數數的終極目標，就是理解從 99 跨越到 100 的位值進位！"
+    }
+  },
+  {
+    "id": "G1-N11-10",
+    "unit": "N-1-1",
+    "unit_title": "100以內的數（生活情境化聚錢幣）",
+    "source": "112學年基隆段考真題",
+    "stem": "小明存了 4 個 10 元硬幣和 8 個 1 元硬幣，小明一共存了多少元？",
+    "choices": ["48 元", "84 元", "12 元", "408 元"],
+    "answer_index": 0,
+    "visual_engine": {
+      "type": "place-value-box",
+      "props": {
+        "tens": 4,
+        "ones": 8,
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "step_1": "4 個 10 元硬幣 ＝ 4 個十 ＝ 40 元",
+      "step_2": "8 個 1 元硬幣 ＝ 8 個一 ＝ 8 元",
+      "step_3": "40 ＋ 8 ＝ 48 元",
+      "formula": "40 + 8 = 48",
+      "trap_warning": "錢幣與位值：10 元硬幣就是十條，1 元硬幣就是個位小白塊，算理完全相通！"
+    }
+  }
+]

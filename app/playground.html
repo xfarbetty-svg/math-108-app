@@ -237,12 +237,16 @@
   var lastChange = 0;
   stage.addEventListener('ten-frame:fill', function (e) { pushLog(e.type, e.detail); syncTen(); });
   stage.addEventListener('ten-frame:full', function (e) {
-    pushLog(e.type, e.detail); syncTen();
+    pushLog(e.type, e.detail);
     /* TCK-03：滿十事件驅動分解樹第二步，300ms 後補第三步 */
     if (e.target === tfLeft) {
+      if (tfRight.value === 4) {
+        tfRight.value = 3;
+      }
       setTreeStep(2);
       setTimeout(function () { setTreeStep(3); }, 300);
     }
+    syncTen();
   });
   stage.addEventListener('ten-frame:overflow', function (e) { pushLog(e.type, e.detail); syncTen(); });
   stage.addEventListener('ten-frame:reset', function (e) { pushLog(e.type, e.detail); syncTen(); });
@@ -301,11 +305,44 @@
     $('tfState').textContent = tfLeft.value >= 10 ? 'FULL_LOCKED' : 'EMPTY_OR_PARTIAL';
   }
   $('tfRange').addEventListener('input', function () { tfLeft.value = this.value; });
-  $('tfPlus').addEventListener('click', function () { tfLeft.value = Math.min(10, tfLeft.value + 1); });
-  $('tfMinus').addEventListener('click', function () { tfLeft.value = Math.max(0, tfLeft.value - 1); });
-  $('tfNine').addEventListener('click', function () { tfLeft.value = 9; });
-  $('tfFull').addEventListener('click', function () { tfLeft.value = 10; });
-  $('tfReset').addEventListener('click', function () { tfLeft.reset(); tfRight.reset(); syncTen(); });
+  $('tfPlus').addEventListener('click', function () {
+    if (tfLeft.value === 9 && tfRight.value === 4) {
+      sceneTen();
+    } else {
+      tfLeft.value = Math.min(10, tfLeft.value + 1);
+    }
+  });
+  $('tfMinus').addEventListener('click', function () {
+    if (tfLeft.value === 10 && tfRight.value === 3) {
+      tfLeft.value = 9;
+      tfRight.value = 4;
+      setTreeStep(1);
+      syncTen();
+    } else {
+      tfLeft.value = Math.max(0, tfLeft.value - 1);
+    }
+  });
+  $('tfNine').addEventListener('click', function () {
+    tfLeft.value = 9;
+    tfRight.value = 4;
+    setTreeStep(1);
+    syncTen();
+  });
+  $('tfFull').addEventListener('click', function () {
+    if (tfLeft.value < 10) {
+      sceneTen();
+    } else {
+      tfLeft.value = 10;
+      if (tfRight.value === 4) tfRight.value = 3;
+      syncTen();
+    }
+  });
+  $('tfReset').addEventListener('click', function () {
+    tfLeft.value = 9;
+    tfRight.value = 4;
+    setTreeStep(0);
+    syncTen();
+  });
 
   /* ---- T-02 面板 ---- */
   var diff = $('diff');

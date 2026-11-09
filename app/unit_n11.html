@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>國小一年級數學 (G1) — N-1-1 100以內的數 (位值盒與滿十進位)</title>
+  <script src="components/place-value-box.js"></script>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #64748B;
+      --ghost: #94A3B8;
+      --border: #E2E8F0;
+      --accent: #EA580C;
+      --accent-hover: #C2410C;
+      --gold: #D97706;
+      --gold-bg: #FEF3C7;
+      --green: #16A34A;
+      --green-bg: #DCFCE7;
+      --red: #DC2626;
+      --red-bg: #FEE2E2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部狀態列 < 40px */
+    header.status-bar {
+      height: 38px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 13px;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .status-left { display: flex; align-items: center; gap: 8px; }
+    .badge-unit {
+      background: #FFF7ED;
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .progress-dots { display: flex; gap: 4px; }
+    .dot-item {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--border);
+      transition: background 0.2s;
+    }
+    .dot-item.active { background: var(--accent); transform: scale(1.2); }
+    .dot-item.done { background: var(--green); }
+
+    /* 主要容器響應式切分 (Mobile: 垂直, Tablet/Desktop: 雙欄) */
+    main.quiz-layout {
+      flex: 1;
+      max-width: 1024px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      main.quiz-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+        padding: 24px;
+        gap: 24px;
+      }
+    }
+
+    /* 左欄：題幹與教具 */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .stem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .question-no {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    /* 11px 幽靈字題源 */
+    .source-ghost {
+      font-size: 11px;
+      color: var(--ghost);
+      font-weight: 500;
+    }
+    .stem-text {
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* 位值盒展示艙 */
+    .visual-stage {
+      background: #F1F5F9;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    place-value-box {
+      width: 100%;
+    }
+
+    /* 右欄：選項與破招解析 */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 2x2 拇指熱區按鈕 (手機端高度 >= 48px) */
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .choice-btn {
+      min-height: 52px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      text-align: center;
+      transition: all 0.15s ease-out;
+      touch-action: manipulation;
+    }
+    .choice-btn:hover { border-color: var(--accent); background: #FFF7ED; }
+    .choice-btn.correct {
+      border-color: var(--green);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    .choice-btn.wrong {
+      border-color: var(--red);
+      background: var(--red-bg);
+      color: var(--red);
+    }
+    .choice-btn[disabled] { cursor: default; }
+
+    /* 抽屜式／內嵌破招詳解 */
+    .expl-drawer {
+      display: none;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      animation: slideDown 0.2s ease-out;
+    }
+    .expl-drawer.open { display: block; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .expl-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .breakdown-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .breakdown-step { color: var(--muted); margin-bottom: 4px; }
+    .breakdown-step strong { color: var(--ink); }
+    .formula-tag {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--gold);
+      background: var(--gold-bg);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+    .trap-alert {
+      font-size: 12px;
+      color: #991B1B;
+      background: #FEF2F2;
+      border-left: 3px solid var(--red);
+      padding: 8px 10px;
+      border-radius: 4px;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    /* 底部導航控制 */
+    .nav-bar {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .action-btn {
+      height: 44px;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-next { background: var(--accent); color: #FFF; }
+    .btn-next:hover { background: var(--accent-hover); }
+    .btn-action { background: #EEF2F6; color: var(--ink); border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部狀態列 < 40px -->
+  <header class="status-bar">
+    <div class="status-left">
+      <span class="badge-unit">N-1-1</span>
+      <span>100以內的數 (位值與化聚)</span>
+    </div>
+    <div class="progress-dots" id="dotsContainer"></div>
+  </header>
+
+  <!-- 主要互動題卡 -->
+  <main class="quiz-layout">
+    
+    <!-- 左欄：題幹與位值盒教具 -->
+    <section class="left-panel">
+      <div class="card">
+        <div class="stem-header">
+          <span class="question-no" id="questionIndexText">第 1 / 10 題</span>
+          <span class="source-ghost" id="questionSource">段考真題</span>
+        </div>
+        <div class="stem-text" id="questionStem">載入中...</div>
+      </div>
+
+      <div class="visual-stage">
+        <place-value-box id="pvbComponent" tens="3" ones="5"></place-value-box>
+      </div>
+    </section>
+
+    <!-- 右欄：選項與抽屜式算理詳解 -->
+    <section class="right-panel">
+      <div class="card">
+        <div class="choices-grid" id="choicesGrid"></div>
+      </div>
+
+      <!-- 抽屜式破招算理詳解 -->
+      <div class="expl-drawer" id="explDrawer">
+        <div class="expl-title">
+          <span>📦 位值化聚破招解析</span>
+        </div>
+        <div class="breakdown-box">
+          <div class="breakdown-step" id="step1"></div>
+          <div class="breakdown-step" id="step2"></div>
+          <div class="breakdown-step" id="step3"></div>
+          <div class="formula-tag" id="formulaTag"></div>
+        </div>
+        <div class="trap-alert" id="trapAlert"></div>
+      </div>
+
+      <!-- 下一題按鈕 -->
+      <div class="nav-bar">
+        <button class="action-btn btn-action" id="btnAddOne">＋放 1 顆小白塊</button>
+        <button class="action-btn btn-next" id="btnNext" style="display:none;">下一題 ➔</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    var currentIdx = 0;
+    var questions = [];
+    var answered = false;
+
+    // 載入題目
+    fetch('../data/curriculum_v3/g1_n11_place_value.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        questions = data;
+        initDots();
+        renderQuestion(0);
+      });
+
+    function initDots() {
+      var container = document.getElementById('dotsContainer');
+      container.innerHTML = '';
+      for (var i = 0; i < questions.length; i++) {
+        var dot = document.createElement('div');
+        dot.className = 'dot-item' + (i === 0 ? ' active' : '');
+        dot.id = 'dot-' + i;
+        container.appendChild(dot);
+      }
+    }
+
+    function renderQuestion(idx) {
+      answered = false;
+      var q = questions[idx];
+      document.getElementById('questionIndexText').textContent = '第 ' + (idx + 1) + ' / ' + questions.length + ' 題';
+      document.getElementById('questionSource').textContent = q.source;
+      document.getElementById('questionStem').textContent = q.stem;
+
+      // 更新頂部圓點
+      for (var i = 0; i < questions.length; i++) {
+        var d = document.getElementById('dot-' + i);
+        if (d) {
+          d.className = 'dot-item' + (i === idx ? ' active' : (i < idx ? ' done' : ''));
+        }
+      }
+
+      // 位值盒教具數值初始化
+      var pvb = document.getElementById('pvbComponent');
+      pvb.setValue(q.visual_engine.props.tens, q.visual_engine.props.ones);
+
+      // 渲染選項 (2x2)
+      var grid = document.getElementById('choicesGrid');
+      grid.innerHTML = '';
+      q.choices.forEach(function(c, i) {
+        var btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = c;
+        btn.onclick = function() { onSelectChoice(i); };
+        grid.appendChild(btn);
+      });
+
+      // 隱藏詳解與下一題
+      document.getElementById('explDrawer').classList.remove('open');
+      document.getElementById('btnNext').style.display = 'none';
+    }
+
+    function onSelectChoice(choiceIdx) {
+      if (answered) return;
+      answered = true;
+      var q = questions[currentIdx];
+      var btns = document.querySelectorAll('.choice-btn');
+      
+      btns.forEach(function(b, i) {
+        b.disabled = true;
+        if (i === q.answer_index) {
+          b.classList.add('correct');
+        } else if (i === choiceIdx) {
+          b.classList.add('wrong');
+        }
+      });
+
+      // 展開算理詳解
+      showExplanation(q);
+      document.getElementById('btnNext').style.display = 'inline-flex';
+    }
+
+    function showExplanation(q) {
+      var d = document.getElementById('explDrawer');
+      document.getElementById('step1').innerHTML = '① ' + q.explanation.step_1;
+      document.getElementById('step2').innerHTML = '② ' + q.explanation.step_2;
+      document.getElementById('step3').innerHTML = '③ <strong>' + q.explanation.step_3 + '</strong>';
+      document.getElementById('formulaTag').textContent = q.explanation.formula;
+      document.getElementById('trapAlert').textContent = '⚠️ ' + q.explanation.trap_warning;
+      d.classList.add('open');
+    }
+
+    document.getElementById('btnAddOne').onclick = function() {
+      var pvb = document.getElementById('pvbComponent');
+      pvb.addOne();
+    };
+
+    document.getElementById('btnNext').onclick = function() {
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        renderQuestion(currentIdx);
+      } else {
+        alert('恭喜完成 N-1-1 100以內的數全部 10 題段考考題！');
+      }
+    };
+  </script>
+</body>
+</html>
