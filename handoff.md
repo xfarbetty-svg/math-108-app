@@ -1,43 +1,37 @@
 # Handoff - 028_1 國小數學APP
 
 ## ⏯️ 目前做到哪
-- **【Stage 3.5 工單重工完成，待 BP 盲審】**：依 `R1_CHALLENGER_TICKETS.md`（8 張）＋ `R1_BP_TICKET_RULING.md`（全部 ACCEPTED）重工 T-01~T-04，全部以機械化閘門 exit code 驗收。
-  - `app/components/ten-frame-grid.js`（277 行 / 10,642 B）：30px 格 + 33px 不重疊熱區 + padding 4（單盒 177px，兩盒 354px 並排）；`blocked{value,reason}` 事件；漸層雙變數 `--tfg-hi/--tfg-fill`；重連不炸。AC-01-1~8 全 PASS。
-  - `app/components/dual-track-diff.js`（169 行 / 7,377 B）：單一幾何公式 `STEP=29.333`、`r=12.667`，虛線 `72.667→97.333` 不穿圓片，金框 `88.00×33.33` 完整包住多出圓片。AC-02-1~7 全 PASS（含 reduced-motion）。
-  - `app/components/balance-beam.js`（285 行 / 12,260 B）：明訂 deg、半隱式 Euler、`scale=dt/16.667`，收斂 `|θ_target-θ|<0.1°` 且 `|θ'|<8°/s` 連續 2 幀。AC-03-1~8 全 PASS（120Hz vs 60Hz 差 4.0%）。
-  - `app/playground.html`（419 行 / 17,928 B）：新增分解樹（`9＋4`→`1`/`3`、`9＋1＝10`、`10＋3＝13`，由 `ten-frame:full` 驅動）與 300ms 拋物線（控制點 -60px）；390px 緊湊排版讓兩盒同列。390/768/960 三輪全綠。
-- **【新增驗收基礎設施】**：
-  - `tools/ac_gate.js`：機械化閘門，一次跑 G-1 語法 / G-4 外部資源 / G-5 體積 / T-01~T-03 全量 AC，**只認 process exit code**。
-  - `tools/ac_run.js`：CDP 驅動器，直開真實 `file://` 頁面跑互動 AC、攔截 console error/warning、可 `--shot=` 截圖。
-  - `tests/ac_t01.html`(8) / `ac_t02.html`(7) / `ac_t03.html`(8) / `ac_t04_body.js` / `ac_geometry_body.js`(7)。
-- **【交付報告】**：`reports/20261105_2035_g1_visual_spec/R3_WORKER_BUILD_REPORT.md`（五欄交付 + TCK 對照矩陣 + D-01~D-13 + TCK-09）。
-- **【規格回寫】**：`R1_BP_EXECUTION_PLAN.md` 末尾新增「附錄 R1.1」，把 TCK-06/07 的公式與量綱、T-04 分解樹座標、驗收機械化寫回規格（原文未刪，保留盲審軌跡）。
+- **【Stage 4 BP 盲審裁決與 Stage 4.5 重工全數收斂】**：
+  - 透過 026 傳動軸調度本機 OpenCode CLI（Big Pickle 現場指揮官），掛載 CDP 實跑探針完成 Stage 4 盲審。
+  - **初驗嚴格拒絕假成功**：抓出 4 大缺陷（F-01 重連 TypeError、F-02 aria 狀態脫節、F-03 控制台閘門漏洞、F-04 拋物線假常數），並出具初驗 REJECT 駁回。
+  - **重大裁決落地**：
+    - TCK-09 正式採納方案 (A) 33×33px 熱區，修改 AC-01-4，優先保障一年級「兩盒並排橫向對齊」的視覺流動教學價值。
+    - D-01～D-13 全量裁決（D-01~10, 12 ACCEPTED；D-11 廢棄；D-13 改實測值）。
+    - 產出 `reports/20261105_2035_g1_visual_spec/R4_BP_INITIAL_REPORT.md` 與 `R5_REWORK_TICKETS.md`。
+  - **Stage 4.5 重工施工完成**：
+    - Worker 實體修改 `app/components/dual-track-diff.js`（重構生命週期解決重連崩潰）、`ten-frame-grid.js`（同步 aria-label 與 disabledCells）、`tests/ac_t02.html`（增加 no-throw 斷言）、`tools/ac_gate.js`（將控制台報錯連動 Exit Code）、`app/playground.html`（拋物線改量測實際耗時 324ms）。
+  - **機械化硬閘門升級全綠**：`node tools/ac_gate.js` 16 項全數通過，Exit Code 0！
 
 ## 🚦 目前狀態
-- **當前版本**：`v3.5.0` (AutoFlow Stage 3.5 Rework Delivered)
-- **健康狀態**：🟢 `node tools/ac_gate.js` → `GATE_GREEN (12 checks, 0 failed)`，Exit Code 0
-- **體積**：10,642 / 7,377 / 12,260 B，合計 **30,279** B（上限 30,720）
-- **Git 狀態**：本輪已 commit（無遠端 remote）
-- **雲端額度消耗**：$0.00（全地端 Chrome/CDP 驗證）
+- **當前版本**：`v4.5.0` (AutoFlow Stage 4.5 Rework Landed & Gate 16/16 Green)
+- **健康狀態**：🟢 `node tools/ac_gate.js` → `GATE_GREEN (16 checks, 0 failed)`，Exit Code 0
+- **體積**：10,940 / 7,498 / 12,260 B，合計 **30,698** B（上限 30,720 B）
+- **Git 狀態**：本地工作區有 5 處代碼與 2 份報告待提交 commit
+- **雲端額度消耗**：$0.00（全本地 OpenCode CLI 施工與 CDP 驗真）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **BP 盲審**：`git diff` 對照 R1 + 附錄 R1.1，逐條標 PASS/FAIL；重點覆核 D-01~D-13。
-2. **裁決 TCK-09（新開，阻擋 G-8）**：R1 AC-01-4 要求 44px 熱區，但 TCK-02「30px 格 + 3px 間距」+ TCK-05(d)「熱區不得重疊」使三者不可同時成立（44px pitch × 5 格 → 單盒 ≥232px → 兩盒 ≥464px > 390px）。本輪取 33px 熱區，需 BP 三選一：
-   - (A) 接受 33px 並改 AC-01-4；(B) 390px 改上下堆疊換回 44px（需改寫 `playground.html` 手機排版與 `AC-04-6`）；(C) 放寬「不得重疊」。
-3. **裁決 D-12 / D-13**：為體積閘門移除滿十角標 `.badge`；調試台暴露 `window.__t04` 量測鉤子。
-4. **裁決 D-11**：`tools/run_worker_tasks.py` 提示詞寫 `grid:change`/`theme`/`top`/`bottom`，與 R1 正本衝突，建議廢棄。
-5. **G-8 人類手感驗收**：手機 390px 實機把玩 33px 熱區、天平阻尼手感、分解樹三步節奏（工兵不得自評）。
+1. **Git Commit**：將本次 Stage 4 裁決報告與 Stage 4.5 重工產物提交 Git 存檔。
+2. **G-8 人類手感驗收**：開啟 `app/playground.html`，以手機 390px 實機把玩 33px 熱區點擊感、天平阻尼動態與分解樹 324ms 飛補手感。
+3. **推進下一階段**：
+   - 路線 A：將本批已全綠的 3 款教具組裝成 N-1-3（湊十拆十）正式 10 題真題題卡。
+   - 路線 B：啟動下一批課綱元件（如 N-1-1 位值盒、N-1-4 數線反推）。
 
 ## ⚠️ 注意事項
-- **無頭 Chrome 的 rAF 只跳 1 幀**（無 BeginFrame，實測 `RAF n=1`）：動畫/物理驗收一律用元件公開的 `step(dtMs)` 鉤子確定性驅動，或改用 CDP 真實視口。
-- **`Number(null)` = 0 的陷阱**：讀 attribute 數值前先判 `getAttribute(...) === null`，否則預設值會被吃掉（T-03 damping 曾因此靜默變無阻尼）。
-- **`balance-beam.js` 只剩 28 B 餘裕**：下一輪任何新增都要先壓縮，否則 G-5 直接紅燈。
-- **AGY WRITE-FILE LOCKED**：AGY 決策大腦嚴禁親自動手寫業務組件代碼。
-- **Windows CLI 子進程必須注入 DEVNULL**：呼叫 `opencode` 必須 `stdin=subprocess.DEVNULL` 且 `shell=True`，否則卡死。
-- 本機未配置 GitHub 遠端 remote，備份保留於本機 Git 版控。
-- 本次收工電腦無 Obsidian MCP 工具，L3 筆記暫未同步。
+- **體積紅線警戒**：三檔合計已達 30,698 B，距離 30,720 B 上限僅剩 22 B！下一批若有新改動必須優先壓縮或模組拆分。
+- **G-2 已硬性連動 Exit Code**：任何控制台 error/warning 現在都會導致 `ac_gate.js` 退出碼為 1，不可再引入任何 console 雜訊。
+- **Windows CLI 子進程必須注入 DEVNULL 或走 stdin piping**：長文本嚴禁塞進 cmd 參數，防止 Windows 命令行截斷。
 
 ## 🕐 最後更新
-- 時間：2026-11-06T05:10:00+08:00
-- 更新者：Worker（AutoFlow 施工工兵，通道 1 本地 CLI）
-- Git push 狀態：本地已 commit（無遠端 remote）
+- 時間：2026-11-09T21:45:00+08:00
+- 更新者：AGY & Big Pickle (AutoFlow 協同流水線)
+- Git push 狀態：本地已驗真（無遠端 remote）

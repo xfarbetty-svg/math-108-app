@@ -1,13 +1,14 @@
 /**
- * tools/ac_gate.js — 機械化驗收閘門（TCK-08）
- * 一次跑完 G-1 語法、G-4 零外部資源、G-5 體積與 T-01~T-03 全量 AC，
- * 以「真實 exit code」判定，任何人眼看 RESULT 區塊都不算數。
+ * tools/ac_gate.js — 機械化驗收閘門（TCK-08 / RK-04）
+ * 一次跑完 G-1 語法、G-4 零外部資源、G-5 體積、G-2 控制台雜訊與 T-01~T-03 全量 AC，
+ * 以「真實 exit code」判定；CDP 捕獲之 console error/warning 一律視為失敗。
  * 用法：node tools/ac_gate.js
  * 退出碼：0 = 全綠；1 = 有 FAIL；2 = 閘門本身執行失敗。
  */
 'use strict';
-const { spawnSync } = require('node:child_process');
+const { spawn, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
+const net = require('node:net');
 const os = require('node:os');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
@@ -30,6 +31,7 @@ function findChrome() {
   throw new Error('找不到 Chrome/Edge 執行檔');
 }
 const chrome = findChrome();
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* G-1 語法 */
 for (const f of COMPONENTS) {
@@ -61,40 +63,152 @@ rec('G-4 零外部依賴', external.length === 0,
   'url_hits=' + hits.length + ' external=' + external.length +
   (external.length ? ' [' + external.join(', ') + ']' : ''));
 
-/* AC 頁（自帶 RESULT_BEGIN/END） */
-const PAGES = [
-  { id: 'T-01', file: 'tests/ac_t01.html', args: ['--window-size=390,900'] },
-  { id: 'T-02', file: 'tests/ac_t02.html', args: ['--window-size=390,900'] },
-  { id: 'T-02-RM', file: 'tests/ac_t02.html', args: ['--window-size=390,900', '--force-prefers-reduced-motion'] },
-  { id: 'T-03', file: 'tests/ac_t03.html', args: ['--window-size=390,900'] }
-];
+/* ---- CDP 連線工具（Runtime/Log 事件用於攔截控制台雜訊） ---- */
+function freePort() {
+  return new Promise((resolve, reject) => {
+    const srv = net.createServer();
+    srv.once('error', reject);
+    srv.listen(0, '127.0.0.1', () => {
+      const { port } = srv.address();
+      srv.close(() => resolve(port));
+    });
+  });
+}
 
-for (const page of PAGES) {
+async function waitForTarget(port, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch('http://127.0.0.1:' + port + '/json/list');
+      const list = await res.json();
+      const page = list.find((t) => t.type === 'page' && t.webSocketDebuggerUrl);
+      if (page) return page;
+    } catch (e) { /* chrome 尚未就緒 */ }
+    await sleep(150);
+  }
+  throw new Error('等待 CDP target 逾時 (port ' + port + ')');
+}
+
+function connect(wsUrl) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(wsUrl);
+    let seq = 0;
+    const pending = new Map();
+    const listeners = [];
+    ws.addEventListener('open', () => resolve({ send, on }));
+    ws.addEventListener('error', () => reject(new Error('WebSocket 連線失敗')));
+    ws.addEventListener('message', (ev) => {
+      let msg;
+      try { msg = JSON.parse(ev.data); } catch (e) { return; }
+      if (msg.id && pending.has(msg.id)) {
+        const { res, rej } = pending.get(msg.id);
+        pending.delete(msg.id);
+        if (msg.error) rej(new Error(JSON.stringify(msg.error)));
+        else res(msg.result);
+      } else if (msg.method) {
+        for (const fn of listeners) fn(msg);
+      }
+    });
+    function send(method, params) {
+      const id = ++seq;
+      return new Promise((res, rej) => {
+        pending.set(id, { res, rej });
+        ws.send(JSON.stringify({ id, method, params: params || {} }));
+      });
+    }
+    function on(fn) { listeners.push(fn); }
+  });
+}
+
+/* 單頁：CDP 導航 → 等 RESULT_END → 同時收集 console 雜訊 */
+async function runPage(page) {
   const url = pathToFileURL(path.join(ROOT, page.file)).href;
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ac-gate-'));
-  const r = spawnSync(chrome, [
+  const port = await freePort();
+  const noise = [];
+  let text = '';
+  let ws = null;
+  const proc = spawn(chrome, [
     '--headless=new', '--disable-gpu', '--no-sandbox', '--no-first-run',
     '--allow-file-access-from-files', '--disable-extensions',
-    '--virtual-time-budget=25000', '--user-data-dir=' + profile,
-    ...page.args, '--dump-dom', url
-  ], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-  fs.rmSync(profile, { recursive: true, force: true });
+    '--remote-debugging-port=' + port, '--user-data-dir=' + profile,
+    ...page.args, 'about:blank'
+  ], { stdio: 'ignore' });
 
-  const stdout = r.stdout || '';
-  const lines = stdout.split(/\r?\n/).filter((l) => /^(PASS|FAIL) /.test(l));
+  try {
+    const target = await waitForTarget(port, 20000);
+    ws = await connect(target.webSocketDebuggerUrl);
+    ws.on((msg) => {
+      if (msg.method === 'Runtime.consoleAPICalled' &&
+        (msg.params.type === 'error' || msg.params.type === 'warning')) {
+        noise.push('[console.' + msg.params.type + '] ' +
+          msg.params.args.map((a) => (a.value !== undefined ? String(a.value) : (a.description || a.type))).join(' '));
+      }
+      if (msg.method === 'Log.entryAdded' &&
+        (msg.params.entry.level === 'error' || msg.params.entry.level === 'warning')) {
+        noise.push('[log.' + msg.params.entry.level + '] ' + msg.params.entry.text);
+      }
+      if (msg.method === 'Runtime.exceptionThrown') {
+        const d = msg.params.exceptionDetails;
+        noise.push('[exception] ' + (d.exception ? d.exception.description : d.text));
+      }
+    });
+    await ws.send('Runtime.enable');
+    await ws.send('Log.enable');
+    await ws.send('Page.enable');
+    await ws.send('Page.navigate', { url });
+
+    const deadline = Date.now() + 25000;
+    while (Date.now() < deadline) {
+      try {
+        const r = await ws.send('Runtime.evaluate', {
+          expression: '(function(){var e=document.getElementById("result");return e?e.textContent:"";})()',
+          returnByValue: true
+        });
+        text = (r.result && r.result.value) || '';
+      } catch (e) { /* 導航中 context 被銷毀，下一輪重試 */ }
+      if (text.indexOf('RESULT_END') >= 0) break;
+      await sleep(120);
+    }
+    await sleep(250); /* 收尾事件（例：未捕捉例外）落地 */
+  } catch (err) {
+    rec('AC ' + page.id + ' harness', false, 'CDP 執行失敗 :: ' + (err && err.message));
+  } finally {
+    try { if (ws) await ws.send('Browser.close'); } catch (e) { /* 已關閉 */ }
+    try { proc.kill(); } catch (e) { /* 已結束 */ }
+    await sleep(200);
+    try { fs.rmSync(profile, { recursive: true, force: true }); } catch (e) { /* 佔用中 */ }
+  }
+
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => /^(PASS|FAIL) /.test(l));
   const fails = lines.filter((l) => l.startsWith('FAIL'));
   const passes = lines.filter((l) => l.startsWith('PASS'));
-  const ok = r.status === 0 && fails.length === 0 && passes.length > 0;
-  rec('AC ' + page.id, ok,
-    'chrome_exit=' + r.status + ' pass=' + passes.length + ' fail=' + fails.length +
+  /* RK-04：CONSOLE_NOISE_COUNT > 0 → 該頁 FAIL（並隨總計 exitCode=1） */
+  rec('G-2 ' + page.id, noise.length === 0,
+    'CONSOLE_NOISE_COUNT=' + noise.length + (noise.length ? ' :: ' + noise.slice(0, 5).join(' | ') : ''));
+  rec('AC ' + page.id, fails.length === 0 && passes.length > 0 && noise.length === 0,
+    'pass=' + passes.length + ' fail=' + fails.length + ' noise=' + noise.length +
+    (text.indexOf('RESULT_END') < 0 ? ' [結果區塊未完成]' : '') +
     (fails.length ? ' :: ' + fails.join(' | ') : ''));
 }
 
-/* 輸出 */
-let failed = 0;
-for (const r of results) {
-  if (!r.pass) failed++;
-  console.log((r.pass ? 'PASS ' : 'FAIL ') + r.id + ' :: ' + r.info);
-}
-console.log('GATE_' + (failed === 0 ? 'GREEN' : 'RED') + ' (' + results.length + ' checks, ' + failed + ' failed)');
-process.exitCode = failed === 0 ? 0 : 1;
+(async function main() {
+  const PAGES = [
+    { id: 'T-01', file: 'tests/ac_t01.html', args: ['--window-size=390,900'] },
+    { id: 'T-02', file: 'tests/ac_t02.html', args: ['--window-size=390,900'] },
+    { id: 'T-02-RM', file: 'tests/ac_t02.html', args: ['--window-size=390,900', '--force-prefers-reduced-motion'] },
+    { id: 'T-03', file: 'tests/ac_t03.html', args: ['--window-size=390,900'] }
+  ];
+  for (const page of PAGES) await runPage(page);
+
+  let failed = 0;
+  for (const r of results) {
+    if (!r.pass) failed++;
+    console.log((r.pass ? 'PASS ' : 'FAIL ') + r.id + ' :: ' + r.info);
+  }
+  console.log('GATE_' + (failed === 0 ? 'GREEN' : 'RED') + ' (' + results.length + ' checks, ' + failed + ' failed)');
+  process.exitCode = failed === 0 ? 0 : 1;
+})().catch((err) => {
+  console.error('GATE_ERROR: ' + (err && err.message));
+  process.exit(2);
+});

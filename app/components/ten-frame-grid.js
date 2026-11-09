@@ -1,7 +1,4 @@
-/* ten-frame-grid.js — T-01 十格陣與滿十閉鎖 (N-1-3 湊十法)
- * TCK-02 30px 格 / 33px 不重疊熱區 / padding 4（單盒 177px，兩盒 354 < 390）
- * TCK-04 重連不清 _cells；TCK-05 移除 ten-frame:tap、鎖定走 blocked、漸層雙變數。IIFE。
- */
+/* ten-frame-grid.js — T-01 十格陣與滿十閉鎖 (N-1-3 湊十法)；TCK-02/04/05。IIFE。 */
 (function () {
   'use strict';
 
@@ -53,7 +50,7 @@
     return Number.isFinite(v) ? v : fallback;
   }
 
-  /* 以白混 35% 產生高光色，避免藍版內圈仍為鮭紅（TCK-05c） */
+  /* 白混 35% 高光（TCK-05c） */
   function lighten(hex) {
     var m = /^#([0-9a-f]{6})$/i.exec(String(hex || '').trim());
     if (!m) return null;
@@ -81,7 +78,7 @@
     }
 
     connectedCallback() {
-      /* TCK-04：DOM 仍在但 _cells 遺失時必須重建，否則重連後點擊必 TypeError */
+      /* TCK-04：_cells 遺失時必須重建，否則重連後點擊必 TypeError */
       if (!this._built || this._cells.length !== CELLS) this._build();
       this._applyValue(true);
     }
@@ -115,6 +112,9 @@
       this._quiet = false;
       this._applyValue(false);
     }
+
+    /* RK-02：公開填格 API，必須與點擊同一條 _syncTheme() 同步路徑 */
+    setCount(v) { this.value = v; }
 
     _build() {
       this._root.replaceChildren();
@@ -206,6 +206,8 @@
       }
       this._value = to;
       this._state = to === CELLS ? 'FUSION_TRIGGER' : 'EMPTY_OR_PARTIAL';
+      /* RK-02：填格後立刻同步 host aria-label、cell disabled/aria-pressed */
+      this._syncTheme();
       this._emit('ten-frame:fill', { value: to, previous: prev, index: to - 1 });
       if (to === CELLS) this._startFusion();
     }
@@ -239,6 +241,7 @@
       this._state = 'RESET';
       if (this._frame) this._frame.classList.remove('is-locked');
       this._value = to;
+      this._syncTheme();
       this._emit('ten-frame:reset', { previous: prev });
       this._resetTimer = setTimeout(function () {
         self._resetTimer = 0;
@@ -260,11 +263,16 @@
       var locked = this.hasAttribute('locked') || this._state === 'FULL_LOCKED';
       this._frame.classList.toggle('is-locked', locked);
       var label = this.getAttribute('label') || '十格陣';
-      this._root.querySelector('.grid').setAttribute('aria-label', label + '，已填 ' + this._value + ' 格');
+      var status = label + '，已填 ' + this._value + ' 格';
+      /* RK-02：host 與 grid 的 aria-label 必須跟隨 _value，不可停在初始 0 格 */
+      this.setAttribute('aria-label', status);
+      this._root.querySelector('.grid').setAttribute('aria-label', status);
       for (var i = 0; i < this._cells.length; i++) {
+        var filled = i < this._value;
         this._cells[i].setAttribute('aria-label',
-          label + ' 第 ' + (i + 1) + ' 格，' + (i < this._value ? '已填' : '空格'));
-        this._cells[i].disabled = i < this._value || this._value >= CELLS;
+          label + ' 第 ' + (i + 1) + ' 格，' + (filled ? '已填' : '空格'));
+        this._cells[i].setAttribute('aria-pressed', filled ? 'true' : 'false');
+        this._cells[i].disabled = filled || this._value >= CELLS;
       }
     }
 

@@ -34,3 +34,11 @@
 - [x] **TCK-03 + TCK-08（T-04 + 閘門）**：調試台新增分解樹（`9＋4`→`1`/`3`、`9＋1＝10`、`10＋3＝13`，由 `ten-frame:full` 驅動）與 300ms 拋物線（控制點 -60px）；新增 `tools/ac_gate.js` 機械化閘門。
 - [x] **G-9 機械化閘門**：`node tools/ac_gate.js` → `GATE_GREEN (12 checks, 0 failed)`，Exit Code **0**。G-5 體積 10,642 / 7,377 / 12,260 B，合計 **30,279** B。
 - [ ] **下一步**：BP 盲審 R3（新增 **TCK-09**：44px 熱區與「兩盒並排 + 不重疊」三角矛盾需裁決）→ G-8 人類實機手感。
+
+## 📌 2026-11-09 (Session 06) - Stage 4 BP 盲審裁決與 Stage 4.5 重工全綠
+- [x] **026 傳動軸調度**：調用本機 OpenCode CLI (Big Pickle 現場指揮官) 實跑 CDP 探針完成 Stage 4 盲審。
+- [x] **揪出 4 大缺陷**：拒絕假成功，精準捕獲 F-01 (T-02 重連 TypeError)、F-02 (T-01 aria 脫節)、F-03 (G-2 閘門空洞)、F-04 (拋物線假常數)。
+- [x] **重大裁決落地**：TCK-09 裁定方案 (A) 33px 熱區優先保障兩盒並排視覺流動；D-01~D-13 全數完成裁決 (D-11 廢棄)。產出 `R4_BP_INITIAL_REPORT.md` 與 `R5_REWORK_TICKETS.md`。
+- [x] **RK-01 ~ RK-05 全數修復**：Worker 實體修復 5 處代碼，T-04 拋物線實測耗時 324ms (250~350ms 區間)，G-2 控制台報錯正式連動 Exit Code。
+- [x] **全量硬閘門 G-9 驗真**：`node tools/ac_gate.js` → `GATE_GREEN (16 checks, 0 failed)`，Exit Code 0。G-5 體積 10,940 / 7,498 / 12,260 B，合計 30,698 B ≤ 30,720 B。
+- [ ] **下一步**：G-8 人類三端實機手感驗收，通過後啟動第一單元題目組裝或第二批課綱元件。

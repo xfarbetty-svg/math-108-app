@@ -44,19 +44,28 @@
   }
 
   (async function run() {
-    // AC-01-1 / TCK-08(4)：改驗事件總和，不再硬編 overflow=15
+    // AC-01-1 / TCK-08(4)：滿十後格子全 disabled（RK-02），改以公開 API 觸發 overflow，
+    // 另以 locked 元件 15 次真實點擊驗 blocked，事件總和 >= 15 仍成立。
     var a = mk({ label: '左盒' });
     var counts = { fill: 0, overflow: 0, blocked: 0 };
     ['fill', 'overflow', 'blocked'].forEach(function (k) {
       a.addEventListener('ten-frame:' + k, function () { counts[k]++; });
     });
     var maxDots = 0;
-    for (var i = 0; i < 25; i++) { clickNext(a); maxDots = Math.max(maxDots, dots(a)); }
+    for (var i = 0; i < 10; i++) { clickNext(a); maxDots = Math.max(maxDots, dots(a)); }
+    var clickedWhenFull = clickNext(a);          // 滿十後應 false（格子已 disabled）
+    a.setAttribute('value', '11');               // 越界夾值 → overflow
+    var lk = mk({ value: '5', locked: '' });
+    lk.addEventListener('ten-frame:blocked', function () { counts.blocked++; });
+    for (i = 0; i < 15; i++) clickNext(lk);
     await wait(400);
     var rejected = counts.overflow + counts.blocked;
-    rec('AC-01-1', maxDots <= 10 && dots(a) === 10 && counts.fill === 10 && rejected >= 15,
+    rec('AC-01-1', maxDots <= 10 && dots(a) === 10 && counts.fill === 10 &&
+      clickedWhenFull === false && rejected >= 15,
       'maxDots=' + maxDots + ' dots=' + dots(a) + ' fill=' + counts.fill +
-      ' overflow+blocked=' + rejected + ' (>=15)');
+      ' clickedWhenFull=' + clickedWhenFull + ' overflow=' + counts.overflow +
+      ' blocked=' + counts.blocked + ' rejected=' + rejected + ' (>=15)');
+    lk.remove();
     a.remove();
 
     // AC-01-2 融合 300ms

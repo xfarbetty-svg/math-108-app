@@ -340,28 +340,38 @@
   });
 
   /* ---- 情境：湊十 9+4（拋物線飛補由本層編排，元件不耦合） ---- */
+  /* RK-05：flightMs 必須是 performance.now() 實測起迄，禁用寫死常數 */
   function flyDot(fromEl, toEl, done) {
     var a = fromEl.getBoundingClientRect();
     var b = toEl.getBoundingClientRect();
     var fly = $('fly');
     var sx = a.left, sy = a.top, ex = b.left, ey = b.top;
+    var t0 = performance.now();
     fly.style.display = 'block';
     fly.style.left = sx + 'px';
     fly.style.top = sy + 'px';
-    window.__t04.flightMs = 300;
+    fly.style.transform = '';
     window.__t04.flightDy = -60;
     window.__t04.flightCount++;
+    function finish() {
+      fly.style.display = 'none';
+      window.__t04.flightMs = Math.round(performance.now() - t0);
+      done();
+    }
     if (fly.animate) {
       fly.animate([
         { transform: 'translate(0,0) scale(1)' },
         { transform: 'translate(' + (ex - sx) * 0.5 + 'px,' + ((ey - sy) * 0.5 - 60) + 'px) scale(1.15)', offset: 0.55 },
         { transform: 'translate(' + (ex - sx) + 'px,' + (ey - sy) + 'px) scale(1)' }
-      ], { duration: 300, easing: 'cubic-bezier(.4,0,.6,1)' }).onfinish = function () {
-        fly.style.display = 'none';
-        done();
-      };
+      ], { duration: 300, easing: 'cubic-bezier(.4,0,.6,1)' }).onfinish = finish;
     } else {
-      done();
+      /* 無 Web Animations API 時以 rAF 內插，仍以真實 rAF 時戳收尾 */
+      (function step(now) {
+        var p = Math.min(1, (now - t0) / 300);
+        fly.style.transform = 'translate(' + (ex - sx) * p + 'px,' +
+          ((ey - sy) * p - 60 * Math.sin(Math.PI * p)) + 'px)';
+        if (p < 1) requestAnimationFrame(step); else finish();
+      })(t0);
     }
   }
 

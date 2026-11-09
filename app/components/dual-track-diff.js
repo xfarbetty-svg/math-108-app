@@ -1,6 +1,5 @@
 /* dual-track-diff.js — T-02 雙軌差值探照燈 (N-1-2 比較型減法)
- * TCK-06 單一幾何：STEP=(W-2PAD)/(MAX-1)，r=clamp(STEP/2-2,10,16)；
- * 虛線 y1=TOP_Y+r / y2=BOTTOM_Y-r；金框 x=xAt(pair)-r-4，w=diff·STEP，h=2r+8。IIFE。
+ * TCK-06 單一幾何：STEP=(W-2PAD)/(MAX-1)，r=clamp(STEP/2-2,10,16)。IIFE。
  */
 (function () {
   'use strict';
@@ -59,13 +58,11 @@
       this._built = false;
     }
     connectedCallback() {
-      if (!this._built) this._build();
+      /* RK-01：_built 為真但容器遺失時必須重建 */
+      if (!this._built || !this._links || !this._svg) this._build();
       this._render();
     }
-    disconnectedCallback() {
-      /* TCK-04 對稱：保留 _built，DOM 未銷毀，重連不得疊層 */
-      this._top = this._bottom = this._links = this._diff = this._formula = this._label = null;
-    }
+    disconnectedCallback() { /* RK-01：保留容器參照，重連不疊層 */ }
     attributeChangedCallback(name, oldV, newV) {
       if (!this._built || oldV === newV) return;
       if (name === 'top-count') this._guard('top-count');
@@ -77,6 +74,11 @@
     get diff() { return Math.abs((this._topValue || 0) - (this._bottomValue || 0)); }
     set top(v) { this.setAttribute('top-count', String(v)); }
     set bottom(v) { this.setAttribute('bottom-count', String(v)); }
+    /* RK-03：批量設定，重連後呼叫必須 no-throw */
+    setCount(top, bottom) {
+      if (top !== undefined) this.setAttribute('top-count', String(top));
+      if (bottom !== undefined) this.setAttribute('bottom-count', String(bottom));
+    }
     reset() {
       this.setAttribute('top-count', '8');
       this.setAttribute('bottom-count', '5');
@@ -90,7 +92,7 @@
     }
 
     _build() {
-      this._root.replaceChildren();   /* TCK-04：重連前清空 */
+      this._root.replaceChildren(); /* 重連前清空 */
       var style = document.createElement('style');
       style.textContent = CSS;
       var svg = el('svg', { viewBox: '0 0 320 200', role: 'img', 'aria-label': '雙軌差值比較圖' });

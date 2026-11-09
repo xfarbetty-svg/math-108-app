@@ -96,7 +96,21 @@
     document.getElementById('stage').appendChild(e);
     await wait(20);
     var n1 = q(e, 'svg').length + '/' + q(e, 'style').length + '/' + q(e, '.coin').length;
-    rec('AC-02-6', n0 === '1/1/13' && n1 === n0, 'before=' + n0 + ' afterReconnect=' + n1 + ' (expect 1/1/13)');
+    /* RK-03：重連後再改屬性與批量設定必須 no-throw，且真的重繪（拒絕空洞比對） */
+    var noThrow = true, throwMsg = '';
+    try {
+      e.setAttribute('top-count', '7');
+      e.setCount(7, 4);
+    } catch (err) {
+      noThrow = false;
+      throwMsg = (err && err.message) || String(err);
+    }
+    var coinsAfter = q(e, '.coin').length;
+    rec('AC-02-6',
+      n0 === '1/1/13' && n1 === n0 && noThrow && e.top === 7 && e.bottom === 4 && coinsAfter === 11,
+      'before=' + n0 + ' afterReconnect=' + n1 + ' noThrow=' + noThrow +
+      (throwMsg ? '(' + throwMsg + ')' : '') + ' top=' + e.top + ' bottom=' + e.bottom +
+      ' coins=' + coinsAfter + ' (expect 1/1/13, noThrow, 7/4, 11)');
 
     // AC-02-7 / TCK-06：金框完整包住多出的圓片
     var g = q(a, '.diff-box')[0].getBBox();
