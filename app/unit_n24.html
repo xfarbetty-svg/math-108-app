@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N-2-4 容量之初步認識：公升與毫升｜我的量杯</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Noto Sans TC",system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+  header{background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff;padding:20px 16px;text-align:center}
+  header .unit{font-size:12px;opacity:.85;letter-spacing:2px}
+  header h1{font-size:22px;margin-top:4px}
+  header .sub{font-size:13px;margin-top:4px;opacity:.9}
+  main{max-width:820px;margin:0 auto;padding:16px 12px 80px}
+  section.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(15,23,42,.08)}
+  section.card h2{font-size:16px;color:#0c4a6e;border-left:4px solid #0284c7;padding-left:8px;margin-bottom:10px}
+  .demo-grid{display:grid;gap:14px;grid-template-columns:1fr}
+  .demo-ctl{display:flex;flex-direction:column;gap:10px;justify-content:center}
+  input[type=range]{width:100%;accent-color:#0284c7}
+  .hint{font-size:12px;color:#64748b}
+  .q-card{border-left:4px solid #e2e8f0;transition:border-color .2s}
+  .q-card.ok{border-color:#22c55e}.q-card.bad{border-color:#ef4444}
+  .q-stem{font-size:15px;font-weight:700;margin-bottom:10px;line-height:1.6}
+  .q-num{color:#0284c7;margin-right:6px}
+  .choices{display:grid;gap:8px;grid-template-columns:1fr}
+  .choice{font-size:14px;text-align:left;border:2px solid #cbd5e1;background:#fff;border-radius:10px;padding:10px 12px;cursor:pointer;font-family:inherit;transition:all .15s}
+  .choice:hover{border-color:#38bdf8;background:#f0f9ff}
+  .choice:disabled{cursor:default}
+  .choice.correct{border-color:#22c55e;background:#f0fdf4}
+  .choice.wrong{border-color:#ef4444;background:#fef2f2}
+  .q-visual{margin:10px 0}
+  .score{display:flex;gap:12px;font-size:14px;font-weight:700;margin-bottom:12px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{width:22px;height:22px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#94a3b8}
+  .chip.ok{background:#22c55e;color:#fff}.chip.bad{background:#ef4444;color:#fff}
+  .drawer{position:fixed;left:0;right:0;bottom:0;transform:translateY(100%);transition:transform .3s;background:#0c4a6e;color:#fff;max-height:52vh;overflow:auto;z-index:9;box-shadow:0 -4px 16px rgba(0,0,0,.25)}
+  .drawer.open{transform:translateY(0)}
+  .drawer-inner{max-width:820px;margin:0 auto;padding:16px}
+  .drawer h3{font-size:15px;display:flex;justify-content:space-between;align-items:center}
+  .drawer .body{font-size:14px;line-height:1.7;margin-top:10px;background:#075985;border-radius:10px;padding:12px}
+  .fab{position:fixed;right:16px;bottom:16px;z-index:10;background:#0284c7;color:#fff;border:none;border-radius:999px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(2,132,199,.4)}
+  @media(min-width:640px){ /* 平板／桌面 */
+    .demo-grid{grid-template-columns:auto 1fr;align-items:center}
+    .choices{grid-template-columns:1fr 1fr}
+    header h1{font-size:26px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="unit">二年級 · 數學 · N-2-4</div>
+  <h1>容量之初步認識：公升與毫升</h1>
+  <div class="sub">1 公升 = 1000 毫升 ｜ 量杯刻度讀取 ｜ 容器容量比較與生活估測</div>
+</header>
+<main>
+  <!-- 課本：互動量杯 -->
+  <section class="card">
+    <h2>🔬 我的量杯（可操作）</h2>
+    <div class="demo-grid">
+      <liquid-measuring-cup id="demoCup" volume-ml="500" liquid-name="水"></liquid-measuring-cup>
+      <div class="demo-ctl">
+        <label>倒入 <b id="vLabel">500</b> 毫升的水 <input type="range" id="slider" min="0" max="1000" step="50" value="500"></label>
+        <div class="hint">拖動滑桿倒入不同量的水。注意紅色虛線：眼睛要和凹液面「一樣高」才是正確讀法，太低或太高都會讀錯（視差）。</div>
+      </div>
+    </div>
+  </section>
+  <!-- 測驗 -->
+  <section class="card">
+    <h2>📝 隨堂測驗（10 題）</h2>
+    <div class="score">
+      <span id="soc"><span id="socN">0</span> / <span id="socT">0</span> 題正確</span>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="quiz"></div>
+  </section>
+</main>
+<div class="fab" id="fab">📖 說明</div>
+<div class="drawer" id="drawer">
+  <div class="drawer-inner">
+    <h3>概念說明 <button id="closeD" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer">✕</button></h3>
+    <div class="body">
+      <p><b>單位：</b>很少的水用<b>毫升（mL）</b>，很多的水用<b>公升（L）</b>。<b>1 公升 = 1000 毫升</b>。</p>
+      <p><b>讀量杯：</b>眼睛要<b>平視</b>凹液面（水面中間凹下去最低的地方），不能從上面斜看或從下面往上看，否則會讀錯刻度。</p>
+      <p><b>裝得下／裝不下：</b>倒進去的總量 ≤ 容器容量 → 裝得下；總量 ＞ 容量 → 裝不下。</p>
+      <p><b>生活中：</b>眼藥水約 10 毫升、寶特瓶飲料約 600 毫升（0.6 公升）、水塔是幾千公升。</p>
+    </div>
+  </div>
+</div>
+<script type="module" src="components/liquid-measuring-cup.js"></script>
+<script>
+  (function(){
+    const DATA_URL = '../data/curriculum_v3/g2_n24_volume_capacity.json';
+    const slider = document.getElementById('slider');
+    const cup = document.getElementById('demoCup');
+    const vLabel = document.getElementById('vLabel');
+    slider.addEventListener('input', function(){
+      cup.setAttribute('volume-ml', slider.value);
+      vLabel.textContent = slider.value;
+    });
+
+    fetch(DATA_URL).then(function(r){ return r.json(); }).then(function(questions){
+      const quiz = document.getElementById('quiz');
+      const chips = document.getElementById('chips');
+      const socN = document.getElementById('socN');
+      document.getElementById('socT').textContent = questions.length;
+      let okCount = 0, answered = 0;
+      questions.forEach(function(q, i){
+        const card = document.createElement('div');
+        card.className = 'card q-card';
+        card.style.marginBottom = '12px';
+        let visualHTML = '';
+        if(q.visual_engine && q.visual_engine.indexOf('liquid-measuring-cup:') === 0){
+          const attr = q.visual_engine.split(':')[1].split('=');
+          visualHTML = '<div class="q-visual"><liquid-measuring-cup volume-ml="' +
+            String(attr[1]).replace(/"/g,'') + '" liquid-name="水"></liquid-measuring-cup></div>';
+        }
+        let choicesHTML = '';
+        q.choices.forEach(function(c, j){
+          choicesHTML += '<button class="choice" data-j="' + j + '" type="button">' +
+            'ABCD'.charAt(j) + '. ' + String(c).replace(/</g,'&lt;') + '</button>';
+        });
+        card.innerHTML =
+          '<div class="q-stem"><span class="q-num">Q' + (i+1) + '</span>' +
+          String(q.stem).replace(/</g,'&lt;') + '</div>' + visualHTML +
+          '<div class="choices">' + choicesHTML + '</div>';
+        const chip = document.createElement('span');
+        chip.className = 'chip'; chip.textContent = i+1;
+        chips.appendChild(chip);
+        card.querySelectorAll('.choice').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            if(chip.classList.contains('ok') || chip.classList.contains('bad')) return;
+            const j = Number(btn.dataset.j), correct = (j === q.answer_index);
+            card.querySelectorAll('.choice').forEach(function(b, bi){
+              b.disabled = true;
+              if(bi === q.answer_index) b.classList.add('correct');
+            });
+            if(!correct) btn.classList.add('wrong'); else okCount++;
+            card.classList.add(correct ? 'ok' : 'bad');
+            chip.classList.add(correct ? 'ok' : 'bad');
+            answered++; socN.textContent = okCount;
+            openDrawer('第 ' + (i+1) + ' 題解析', q.explanation);
+          });
+        });
+        quiz.appendChild(card);
+      });
+    }).catch(function(e){ document.getElementById('quiz').textContent = '讀取題庫失敗：' + e; });
+
+    const drawer = document.getElementById('drawer');
+    const body = drawer.querySelector('.body');
+    document.getElementById('fab').addEventListener('click', function(){
+      body.innerHTML = '<p><b>單位：</b>1 公升 = 1000 毫升；很少的液體用毫升，很多用公升。</p>' +
+        '<p><b>讀量杯：</b>眼睛平視凹液面，才不會有視差。</p>' +
+        '<p><b>裝得下／裝不下：</b>總量 ≤ 容量才裝得下。</p>';
+      openDrawer('概念說明', body.innerHTML);
+    });
+    function openDrawer(title, html){
+      drawer.querySelector('h3').firstChild.textContent = title + ' ';
+      body.innerHTML = html;
+      drawer.classList.add('open');
+    }
+    document.getElementById('closeD').addEventListener('click', function(){ drawer.classList.remove('open'); });
+  })();
+</script>
+</body>
+</html>
