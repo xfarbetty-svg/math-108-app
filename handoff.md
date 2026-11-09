@@ -57,17 +57,24 @@
   - 題庫：`data/curriculum_v3/g2_n27_multiplication_formula.json` (嚴選 10 題段考真題，被乘數/乘數先後順序、幾的幾倍、0與1的乘法意義)
   - 門戶：`app/index.html` 首頁已同步掛載 N-2-7 單元導航。
   - Git Commit: `7a055cd`
+- **【G2-T07: N-2-3 分數之初步認識】**：
+  - 教具：`app/components/fraction-pizza-slice.js` (6,008 B <= 12 KB)
+  - 特色：圓形披薩幾何等分扇形、點擊高亮選片、**「平分 vs 不平分 陷阱解密」**脈衝警示「⚠️ 每份大小不同，不是平分！不能用分數表示！」。
+  - 頁面：`app/unit_n23.html`
+  - 題庫：`data/curriculum_v3/g2_n23_fraction_intro.json` (嚴選 10 題段考真題，平分判定、幾分之一記法/讀法、單位分數比較)
+  - 門戶：`app/index.html` 首頁已同步掛載 N-2-3 單元導航。
+  - Git Commit: `3de2c35`
 - **【算力消耗】**：$0.00 零消耗，全程透過通道 2（A-SERVER SSH OpenCode + `opencode/glm-5.3-flash-free`）實體施工。
 
 ## 🚦 目前狀態
-- **當前版本**：`v11.0.0` (Grade 1 All 9 Units + Grade 2 First 6 Units Delivered & Verified: 15 Units, 150 Real Exam Questions)
-- **健康狀態**：🟢 15 個單元 150 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
+- **當前版本**：`v12.0.0` (Grade 1 All 9 Units + Grade 2 First 7 Units Delivered & Verified: 16 Units, 160 Real Exam Questions)
+- **健康狀態**：🟢 16 個單元 160 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
 - **Git 狀態**：本地工作區乾淨
 - **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **實機體驗二年級六大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6、N-2-11、S-2-1、N-2-7 共 60 題段考真題做題手感與破招詳解。
-2. **啟動 G2-T07: N-2-3 分數之初步認識**：派工 A-SERVER 開發 `<fraction-pizza-slice>` 原生組件與 10 題真題。
+1. **實機體驗二年級七大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-3、N-2-6、N-2-7、N-2-11、S-2-1 共 70 題段考真題做題手感與破招詳解。
+2. **啟動 G2-T08: N-2-4 容量之初步認識（公升與毫升）**：派工 A-SERVER 開發 `<liquid-measuring-cup>` 原生組件與 10 題真題。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。
