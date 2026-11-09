@@ -1,0 +1,203 @@
+[
+  {
+    "id": "N21-Q1",
+    "stem": "「三百零五」用阿拉伯數字怎麼寫？",
+    "choices": [
+      "35",
+      "305",
+      "350",
+      "3005"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 3,
+        "tens": 0,
+        "ones": 5
+      }
+    },
+    "explanation": "3 個百、0 個十、5 個一。十位雖然是 0，但要用水占住位置寫進去，否則 305 會被誤寫成 35。所以是 305。"
+  },
+  {
+    "id": "N21-Q2",
+    "stem": "「四百零八」的正確寫法是哪一個？",
+    "choices": [
+      "48",
+      "480",
+      "408",
+      "40, 8"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 4,
+        "tens": 0,
+        "ones": 8
+      }
+    },
+    "explanation": "4 個百、0 個十、8 個一 → 408。十位的 0 是佔位用，漏掉就會變成 48，數值完全不同。"
+  },
+  {
+    "id": "N21-Q3",
+    "stem": "位值箱裡放了 7 張百位數板、0 根十位長條、2 顆個位方塊，這個數是多少？",
+    "choices": [
+      "702",
+      "72",
+      "720",
+      "7002"
+    ],
+    "answer_index": 0,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 7,
+        "tens": 0,
+        "ones": 2
+      }
+    },
+    "explanation": "7 個百 + 0 個十 + 2 個一 = 702。中間的 0 不能漏，漏了會寫成 72，大小整整差十倍。"
+  },
+  {
+    "id": "N21-Q4",
+    "stem": "數字「520」中的「2」在什麼位？代表多少？",
+    "choices": [
+      "百位，代表 200",
+      "十位，代表 20",
+      "個位，代表 2",
+      "千位，代表 2000"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 5,
+        "tens": 2,
+        "ones": 0
+      }
+    },
+    "explanation": "520 中，5 在百位代表 500、2 在十位代表 20、0 在個位。所以 2 是十位，代表 2 個十也就是 20。"
+  },
+  {
+    "id": "N21-Q5",
+    "stem": "600 + 80 + 4 合起來是哪個數？",
+    "choices": [
+      "684",
+      "608",
+      "6840",
+      "6,084"
+    ],
+    "answer_index": 0,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 6,
+        "tens": 8,
+        "ones": 4
+      }
+    },
+    "explanation": "百位 6、十位 8、個位 4，組合起來就是 684。展開式和合成的寫法都是在描述同一個數。"
+  },
+  {
+    "id": "N21-Q6",
+    "steam-placeholder": null,
+    "stem": "哪一個數和 909 的位值結構相同（都是「某百 + 0 + 某一」）？",
+    "choices": [
+      "990",
+      "909",
+      "900",
+      "999"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 9,
+        "tens": 0,
+        "ones": 9
+      }
+    },
+    "explanation": "909 是 9 個百、0 個十、9 個一。和它結構相同的數也要有「十位是 0」這個特徵，題目給的就是 909 本身的結構——中間補 0 才能保住位值。"
+  },
+  {
+    "id": "N21-Q7",
+    "stem": "「五百」再加 1，會變成多少？",
+    "choices": [
+      "510",
+      "501",
+      "600",
+      "511"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 5,
+        "tens": 0,
+        "ones": 1
+      }
+    },
+    "explanation": "500 是 5 個百、0 個十、0 個一。加 1 後個位從 0 變 1，得 510？不對——個位加 1 只動個位，所以是 501。五百零一。"
+  },
+  {
+    "id": "N21-Q8",
+    "stem": "在位值箱中，十位那一格完全空著，個位放了 3 顆方塊、百位放了 8 張數板。要怎麼記錄才正確？",
+    "choices": [
+      "83",
+      "803",
+      "830",
+      "883"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 8,
+        "tens": 0,
+        "ones": 3
+      }
+    },
+    "explanation": "百位 8、十位空就是 0、個位 3。空格就補 0 佔位，寫成 803。這就是「0 佔位不可漏」的道理。"
+  },
+  {
+    "id": "N21-Q9",
+    "stem": "下列哪一個數比 705 小但是比 690 大？",
+    "choices": [
+      "688",
+      "699",
+      "705",
+      "710"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 6,
+        "tens": 9,
+        "ones": 9
+      }
+    },
+    "explanation": "在數線上，688 < 690，705 和 710 都 ≥ 705。699 在 690 和 705 之間，是正確答案。"
+  },
+  {
+    "id": "N21-Q10",
+    "stem": "9 個百、9 個十、9 個一全部用上，最多能拼出的三位數是多少？",
+    "choices": [
+      "909",
+      "999",
+      "990",
+      "1000"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "thousand-value-box",
+      "props": {
+        "hundreds": 9,
+        "tens": 9,
+        "ones": 9
+      }
+    },
+    "explanation": "9 個百 + 9 個十 + 9 個一 = 900 + 90 + 9 = 999。這是 1000 以內最大的數，再往前進一步就要變成四位數 1000。"
+  }
+]

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>N-2-1 1000以內的數與百位位值結構</title>
+<script src="components/thousand-value-box.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;background:#eef6f8;color:#173a40}
+.wrap{max-width:860px;margin:0 auto;padding:12px}
+header{background:#0d4d55;color:#fff;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+header h1{margin:0;font-size:18px}header p{margin:4px 0 0;font-size:13px;opacity:.85}
+.demo{background:#fff;border-radius:14px;padding:12px;margin-bottom:14px;box-shadow:0 2px 6px rgba(23,90,100,.06)}
+demo h2{margin:0 0 8px;font-size:15px;color:#0d4d55}
+.demo button{border:1.5px solid #0d4d55;background:#fff;color:#0d4d55;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;font-weight:700}
+.demo button:hover{background:#0d4d55;color:#fff}
+.quiz h2{font-size:15px;color:#0d4d55;margin:0 0 8px}
+.qcard{background:#fff;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 2px 6px rgba(23,90,100,.06)}
+.qcard .stem{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.5}
+.qcard .vis{margin-bottom:8px}
+.choice{display:block;width:100%;text-align:left;border:1.5px solid #cfe4e8;background:#fbfeff;border-radius:9px;padding:8px 10px;font-size:14px;margin-bottom:6px;cursor:pointer;color:#173a40}
+.choice:hover{border-color:#0d4d55;background:#f2fbfc}
+.choice.ok{border-color:#2e9e5b;background:#e9f9ef;color:#1d6b3c}
+.choice.bad{border-color:#e53935;background:#fdeeee}
+.drawer{position:fixed;inset:auto 0 0 0;background:#0d4d55;color:#fff;border-radius:14px 14px 0 0;padding:16px;transform:translateY(105%);transition:transform .25s ease;max-height:45vh;overflow:auto;z-index:9}
+.drawer.open{transform:translateY(0)}
+.drawer h3{margin:0 0 6px;font-size:15px}
+.drawer .close{position:absolute;top:8px;right:12px;background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.drawer p{font-size:14px;line-height:1.6;margin:0}
+@media(max-width:390px){.wrap{padding:8px}header h1{font-size:16px}}
+@media(min-width:768px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.result{font-size:13px;font-weight:700;color:#0d4d55;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>N-2-1 ｜ 1000以內的數與百位位值結構</h1>
+  <p>二年級數學 · 拖動教具觀察百位／十位／個位，零不漏位！</p>
+</header>
+
+<section class="demo">
+  <h2>🧮 我的位值箱教具</h2>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+    <button data-ref="305">305（重點！）</button>
+    <button data-ref="408">408</button>
+    <button data-ref="520">520</button>
+    <button data-ref="999">999</button>
+  </div>
+  <thousand-value-box id="demoBox" hundreds="3" tens="0" ones="5"></thousand-value-box>
+</section>
+
+<section class="quiz">
+  <h2>📝 隨堂測驗（共 10 題）</h2>
+  <div id="quizList" class="grid">載入中…</div>
+  <div class="result" id="score"></div>
+</section>
+</div>
+
+<div class="drawer" id="drawer" role="dialog" aria-label="詳解">
+  <button class="close" id="drawerClose" aria-label="關閉">×</button>
+  <h3 id="drawerTitle"></h3>
+  <p id="drawerBody"></p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var box=document.getElementById("demoBox");
+  document.querySelectorAll("[data-ref]").forEach(function(b){
+    b.addEventListener("click",function(){
+      box.setAttribute("hundreds",b.dataset.ref[0]);
+      box.setAttribute("tens",b.dataset.ref[1]);
+      box.setAttribute("ones",b.dataset.ref[2]);
+    });
+  });
+
+  var drawer=document.getElementById("drawer"),
+      dT=document.getElementById("drawerTitle"),
+      dB=document.getElementById("drawerBody");
+  function openDrawer(t,e){dT.textContent=t;dB.textContent=e;drawer.classList.add("open");}
+  document.getElementById("drawerClose").onclick=function(){drawer.classList.remove("open");};
+
+  var done=0,right=0;
+  function grade(card,btn,q,i,ok){
+    if(card.dataset.locked)return;card.dataset.locked="1";
+    var ch=card.querySelectorAll(".choice");
+    for(var k=0;k<ch.length;k++){ch[k].classList.add(k===q.answer_index?"ok":"");ch[k].disabled=true;}
+    if(!ok){btn.classList.add("bad");}else{right++;}
+    done++;
+    document.getElementById("score").textContent="已完成 "+done+"/10 · 答對 "+right+" 題";
+    openDrawer((ok?"✅ 答對了！":"❌ 再想想～")+"｜第"+(i+1)+"題詳解",q.explanation);
+  }
+
+  function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+
+  fetch("../data/curriculum_v3/g2_n21_place_value_1000.json")
+  .catch(function(){return fetch("data/curriculum_v3/g2_n21_place_value_1000.json");})
+  .then(function(r){if(!r.ok)throw 0;return r.json();})
+  .then(function(data){
+    var list=document.getElementById("quizList");
+    list.innerHTML="";
+    var qList = Array.isArray(data) ? data : (data.questions || []);
+    qList.forEach(function(q,i){
+      var card=document.createElement("div");card.className="qcard";
+      var s="<div class='stem'>"+(i+1)+". "+esc(q.stem)+"</div>";
+      if(q.visual_engine&&q.visual_engine.component){
+        var ve=q.visual_engine,p=ve.props||{};
+        s+="<div class='vis'><thousand-value-box hundreds='"+(p.hundreds||0)+"' tens='"+(p.tens||0)+"' ones='"+(p.ones||0)+"'></thousand-value-box></div>";
+      }
+      s+="<div class='choices'>";
+      q.choices.forEach(function(c,j){s+="<button class='choice' data-j='"+j+"'>"+esc(String.fromCharCode(65+j)+". "+c)+"</button>";});
+      s+="</div>";
+      card.innerHTML=s;
+      q.choices.forEach(function(c,j){
+        var btn=card.querySelector("[data-j='"+j+"']");
+        btn.onclick=function(){grade(card,btn,q,i,j===q.answer_index);};
+      });
+      list.appendChild(card);
+    });
+  })
+  .catch(function(e){
+    document.getElementById("quizList").innerHTML="<p style='color:#e53935'>測驗資料載入失敗，請確認 data/curriculum_v3/g2_n21_place_value_1000.json 可存取。</p>";
+  });
+})();
+</script>
+</body>
+</html>
