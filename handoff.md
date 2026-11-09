@@ -50,17 +50,24 @@
   - 題庫：`data/curriculum_v3/g2_s21_shapes_angles.json` (嚴選 10 題段考真題，曲邊非角陷阱、形體特徵比較，選項完美平衡 2/3/3/2)
   - 門戶：`app/index.html` 首頁已同步掛載 S-2-1 單元導航。
   - Git Commit: `1941b03`
+- **【G2-T06: N-2-7 乘法算式與倍數關係】**：
+  - 教具：`app/components/multiple-relator.js` (4,915 B <= 12 KB)
+  - 特色：單位量（被乘數）與單位數（乘數）分組視覺模型、破招按鈕「6×4 vs 4×6 物理意義對照」。
+  - 頁面：`app/unit_n27.html`
+  - 題庫：`data/curriculum_v3/g2_n27_multiplication_formula.json` (嚴選 10 題段考真題，被乘數/乘數先後順序、幾的幾倍、0與1的乘法意義)
+  - 門戶：`app/index.html` 首頁已同步掛載 N-2-7 單元導航。
+  - Git Commit: `7a055cd`
 - **【算力消耗】**：$0.00 零消耗，全程透過通道 2（A-SERVER SSH OpenCode + `opencode/glm-5.3-flash-free`）實體施工。
 
 ## 🚦 目前狀態
-- **當前版本**：`v10.0.0` (Grade 1 All 9 Units + Grade 2 First 5 Units Delivered & Verified: 14 Units, 140 Real Exam Questions)
-- **健康狀態**：🟢 14 個單元 140 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
+- **當前版本**：`v11.0.0` (Grade 1 All 9 Units + Grade 2 First 6 Units Delivered & Verified: 15 Units, 150 Real Exam Questions)
+- **健康狀態**：🟢 15 個單元 150 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
 - **Git 狀態**：本地工作區乾淨
 - **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **實機體驗二年級五大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6、N-2-11、S-2-1 共 50 題段考真題做題手感與破招詳解。
-2. **啟動 G2-T06: N-2-7 乘法算式與倍數關係**：派工 A-SERVER 開發 `<multiple-relator>` 原生組件與 10 題真題。
+1. **實機體驗二年級六大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6、N-2-11、S-2-1、N-2-7 共 60 題段考真題做題手感與破招詳解。
+2. **啟動 G2-T07: N-2-3 分數之初步認識**：派工 A-SERVER 開發 `<fraction-pizza-slice>` 原生組件與 10 題真題。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。
