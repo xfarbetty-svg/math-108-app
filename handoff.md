@@ -36,17 +36,24 @@
   - 題庫：`data/curriculum_v3/g2_n22_vertical_math.json` (嚴選 10 題段考真題，選項隨機打亂，防猜題分佈)
   - 門戶：`app/index.html` 首頁已同步掛載 N-2-2 單元導航。
   - Git Commit: `021dadd`
+- **【G2-T04: N-2-11 長度公尺與量尺】**：
+  - 教具：`app/components/meter-scale-ruler.js` (5,156 B <= 12 KB)
+  - 特色：1公尺=100公分刻度、非0起點斷尺測量算理浮水印（終點－起點＝實際長度）、公尺/公分雙向切換鈕。
+  - 頁面：`app/unit_n211.html`
+  - 題庫：`data/curriculum_v3/g2_n211_meter_length.json` (嚴選 10 題段考真題，覆蓋斷尺陷阱、生活實物估測與單位換算)
+  - 門戶：`app/index.html` 首頁已同步掛載 N-2-11 單元導航。
+  - Git Commit: `b7cc90e`
 - **【算力消耗】**：$0.00 零消耗，全程透過通道 2（A-SERVER SSH OpenCode + `opencode/glm-5.3-flash-free`）實體施工。
 
 ## 🚦 目前狀態
-- **當前版本**：`v8.0.0` (Grade 1 All 9 Units + Grade 2 First 3 Units N-2-1, N-2-2 & N-2-6 Delivered & Verified)
-- **健康狀態**：🟢 12 個單元 120 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
+- **當前版本**：`v9.0.0` (Grade 1 All 9 Units + Grade 2 First 4 Units N-2-1, N-2-2, N-2-6 & N-2-11 Delivered & Verified)
+- **健康狀態**：🟢 13 個單元 130 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
 - **Git 狀態**：本地工作區乾淨
 - **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **啟動 G2-T04: N-2-11 長度公尺與量尺**：派工 A-SERVER 開發 `<meter-scale-ruler>` 原生組件與 10 題量尺真題。
-2. **實機體驗二年級三大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6 共 30 題段考真題做題手感與破招詳解。
+1. **實機體驗二年級四大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6、N-2-11 共 40 題段考真題做題手感與破招詳解。
+2. **啟動 G2-T05: S-2-1 物體之幾何特徵與角**：派工 A-SERVER 開發 `<angle-vertex-explorer>` 原生組件與 10 題真題。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。
