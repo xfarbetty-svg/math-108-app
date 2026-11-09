@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"/><title>AC data-sorter-bench</title>
+<style>body{font-family:sans-serif;padding:12px}.badge{display:inline-block;padding:2px 8px;border-radius:10px;color:#fff;margin-right:6px}.pass{background:#2a7}.fail{background:#c33}li{margin:4px 0}#ac-summary{font-weight:700;margin:10px 0}</style>
+</head><body>
+<h2>AC 驗收：data-sorter-bench (15項)</h2>
+<div id="ac-summary">RUNNING</div>
+<ol id="res"></ol>
+<data-sorter-bench id="b"></data-sorter-bench>
+<script src="../app/components/data-sorter-bench.js"></script>
+<script>
+const R=document.getElementById('res'),S=document.getElementById('ac-summary');
+let pass=0,fail=0,evs=[];
+function log(name,ok,detail=''){const li=document.createElement('li');li.innerHTML=`<span class="badge ${ok?'pass':'fail'}">${ok?'PASS':'FAIL'}</span>${name}${detail?' - '+detail:''}`;R.appendChild(li);ok?pass++:fail++;}
+function mk(){const o=document.getElementById('b');o.remove();const n=document.createElement('data-sorter-bench');n.id='b';n.addEventListener('sorter-event',e=>evs.push(e.detail.type));document.body.appendChild(n);return n;}
+function run(){
+evs=[]; // M01
+log('M01 元件註冊與掛載', !!customElements.get('data-sorter-bench') && !!document.createElement('data-sorter-bench'));
+let b=mk(); b.setData({categories:['蘋果','香蕉','橘子'],counts:[2,1,1]});
+let st=b.getState();
+log('M02 setData 初始散落計數', st.totalCount===4 && Object.values(st.totals).every(v=>v===0) && b.pool.length===4);
+b.sortItem('蘋果'); st=b.getState();
+log('M03 sortItem 單次守恆', st.totals['蘋果']===1 && b.pool.length===3 && (st.totals['蘋果']+st.totals['香蕉']+st.totals['橘子']+b.pool.length)===4);
+b.autoSort(); st=b.getState();
+log('M04 autoSort 完成不重不漏', b.pool.length===0 && st.totals['蘋果']===2 && st.totals['香蕉']===1 && st.totals['橘子']===1);
+log('M05 sorted 旗標與 sort 事件', st.sorted===true && evs.includes('sort'));
+// AC-09-2
+b=mk(); b.setData({categories:['A','B','C'],counts:[5,0,0]}); b.autoSort();
+let sr=b.shadowRoot; let lines5=sr.querySelectorAll('svg line').length;
+log('M06 k=5 完整正字', lines5>=5, 'lines='+lines5);
+b=mk(); b.setData({categories:['A','B','C'],counts:[7,0,0]}); b.autoSort();
+sr=b.shadowRoot; let lines7=sr.querySelectorAll('svg line').length;
+log('M07 k=7 筆劃總數', lines7>=7, 'lines='+lines7);
+// M08: 7 strokes = 1 full 正 (5) + 2 strokes of next; 6th=top horizontal, 7th=vertical
+let ls=[...sr.querySelectorAll('svg line')].slice(0,7).map(l=>({x1:+l.getAttribute('x1'),y1:+l.getAttribute('y1'),x2:+l.getAttribute('x2'),y2:+l.getAttribute('y2')}));
+let isH=l=>l.y1===l.y2 && l.x2>l.x1, isV=l=>l.x1===l.x2 && l.y2>l.y1;
+let ok8=ls.length>=7 && isH(ls[5]) && isV(ls[6]) && ls[5].y1===ls[0].y1;
+log('M08 k=7 筆劃順序(6=橫,7=豎)', ok8, `6th:${JSON.stringify(ls[5])} 7th:${JSON.stringify(ls[6])}`);
+log('M09 向量筆劃非純文字', sr.querySelectorAll('line,path').length>=7 && !/正下/.test(sr.textContent));
+// AC-09-3
+b=mk(); b.setData({categories:['蘋果','香蕉','橘子'],counts:[5,3,4]}); b.autoSort();
+let sum=b.getSummary?b.getSummary():null; st=b.getState();
+log('M10 getSummary 各類數量', sum && sum.totals.蘋果===5 && sum.totals.香蕉===3 && sum.totals.橘子===4);
+log('M11 getSummary 極值與總計', sum && sum.most==='蘋果' && sum.least==='香蕉' && sum.totalCount===12);
+log('M12 getState 欄位完整性', ['sorted','currentView','totals','most','least','totalCount'].every(k=>k in st));
+evs=[]; b.toggleBarView(true); st=b.getState();
+log('M13 bar 視圖切換與事件', st.currentView==='bar' && evs.includes('view'));
+let rects=[...b.shadowRoot.querySelectorAll('rect')].filter(r=>r.getAttribute('fill')==='#7aa2ff');
+let hs=rects.map(r=>+r.getAttribute('height')).sort((a,b)=>b-a);
+log('M14 bar 高度比例尺', hs.join(',')==='60,48,36', 'heights='+hs.join(','));
+let txt=b.shadowRoot.textContent; let hasNums=/5/.test(txt)&&/3/.test(txt)&&/4/.test(txt);
+b.reset(); let st2=b.getState();
+log('M15 數值標示 + reset 回歸', hasNums && st2.sorted===false && st2.currentView==='tally' && b.pool.length===12);
+S.textContent=`PASS ${pass}/15 FAIL ${fail}/15`;
+if(fail===0){S.textContent+=' ALL_AC_PASSED'; document.body.setAttribute('data-ac','ALL_AC_PASSED');}
+}
+window.addEventListener('load', run);
+</script>
+</body></html>

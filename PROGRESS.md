@@ -125,4 +125,18 @@
 - [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_n14_solve_problem.json`（嚴選 10 題各縣市段考加減解題真題，含未知起點反推、原本有多少公車/紙箱情境、吃糖果/買筆差額計算、見加就加直覺迷思剖析、剪掉長度還原加回）。
 - [x] **三端自適應題卡落地**：`app/unit_n14.html`（掛載 `<glass-number-line>`，390px/768px/960px 跑 `tests/ac_unit_n14.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n14_390.png`、`768.png`、`960.png`）。
 - [x] **首頁門戶更新**：`app/index.html` 正式收錄 N-1-4 入口卡片，一年級正式落地單元達到 8 個（N-1-1, N-1-2, N-1-3, N-1-4, N-1-5, R-1-1, S-1-1, S-1-2，共 80 題段考真題）！
-- [ ] **下一目標**：推進一年級最後一個課綱條目（D-1-1 統計與分類），達成全課綱 100% 大滿貫！
+- [x] **下一目標**：推進一年級最後一個課綱條目（D-1-1 統計與分類），達成全課綱 100% 大滿貫！
+
+## 📌 2026-11-10 (Session 15) - D-1-1 統計與分類：<data-sorter-bench> 分類抽屜與正字計數台 ＋ 一年級 100% 大滿貫
+- [x] **026 AutoFlow 傳動軸全速運轉**：
+  - Stage 0：AGY 決策大腦落盤 `reports/20261109_2350_g1_d11_spec/R0_AGY_BLUEPRINT.md`，定義分類入庫不重不漏、正字劃記 5 劃分解、五的倍數累加與一維長條統計圖切換 Given-When-Then AC。
+  - Stage 1：通道 2（A-SERVER SSH 備援）OpenCode BP 現場指揮官完成任務卡拆票，落盤 `R1_BP_EXECUTION_PLAN.md`（12,919 B）。
+  - Stage 2：AGY 簽署放行書 `R2_AGY_PLAN_REVIEW.md` 批准獨立體積預算 $\le 12,288$ B 與 `MUTUAL_CONSENT_APPROVED`。
+  - Stage 3：通道 2 OpenCode Worker（`iceman-free`）實體帶手腳施工（$0.00 成本），秒級產出組件與獨立驗收頁。
+- [x] **新增教具元件**：`app/components/data-sorter-bench.js`（4,732 B $\le 12,288$ B，純原生 Web Component，零外部依賴，支援待分類散落圖形區、3 槽分類抽屜、正字 5 劃向量筆劃繪製、五的倍數跳數累加、極值分析與直條統計長條圖平滑切換）。
+- [x] **獨立 AC 驗收頁落地**：`tests/ac_data_sorter_bench.html`（15 項檢驗全 PASS，`ALL_AC_PASSED`）。
+- [x] **G-9 機械化閘門擴充升級**：`tools/ac_gate.js` 擴充至 28 checks，實測全綠 `GATE_GREEN (28 checks, 0 failed)`，Exit Code 0。
+- [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_d11_data_sort.json`（嚴選 10 題各縣市段考統計分類真題，含分類入庫不重不漏、一個正字代表 5、零星筆劃解讀、直條圖高矮極值判斷、五個一數跳數口訣、空項目標記 0 與全班投票總人次驗算）。
+- [x] **三端自適應題卡落地**：`app/unit_d11.html`（掛載 `<data-sorter-bench>`，390px/768px/960px 跑 `tests/ac_unit_d11.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_d11_390.png`、`768.png`、`960.png`）。
+- [x] **首頁門戶更新**：`app/index.html` 正式收錄 D-1-1 入口卡片，**一年級 108 課綱官方 9 大條目全部落地達成 100% 大滿貫（共 90 題真實段考考題）**！
+- [ ] **下一里程碑**：啟動二年級 108 課綱官方條目規劃（九九乘法、三位數、長度公尺等），或邀請人類實機把玩體驗 9 大單元手感。

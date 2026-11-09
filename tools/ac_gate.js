@@ -67,6 +67,13 @@ if (fs.existsSync(absN14)) {
   rec('G-1 glass-number-line.js', r.status === 0, 'node --check exit=' + r.status);
 }
 
+// D-1-1 獨立語法閘門
+const absD11 = path.join(ROOT, 'app', 'components', 'data-sorter-bench.js');
+if (fs.existsSync(absD11)) {
+  const r = spawnSync(process.execPath, ['--check', absD11], { encoding: 'utf8' });
+  rec('G-1 data-sorter-bench.js', r.status === 0, 'node --check exit=' + r.status);
+}
+
 /* G-5 體積（每檔 ≤12KB、合計 ≤30KB） */
 let total = 0;
 for (const f of COMPONENTS) {
@@ -98,6 +105,12 @@ if (fs.existsSync(absN15)) {
 if (fs.existsSync(absN14)) {
   const sizeN14 = fs.statSync(absN14).size;
   rec('G-5 glass-number-line.js', sizeN14 <= LIMIT_EACH, sizeN14 + ' B (<= ' + LIMIT_EACH + ')');
+}
+
+// D-1-1 獨立體積閘門 (單檔 <= 12,288 B)
+if (fs.existsSync(absD11)) {
+  const sizeD11 = fs.statSync(absD11).size;
+  rec('G-5 data-sorter-bench.js', sizeD11 <= LIMIT_EACH, sizeD11 + ' B (<= ' + LIMIT_EACH + ')');
 }
 
 /* G-4 零外部資源：僅允許 SVG 命名空間 */
