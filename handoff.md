@@ -43,17 +43,24 @@
   - 題庫：`data/curriculum_v3/g2_n211_meter_length.json` (嚴選 10 題段考真題，覆蓋斷尺陷阱、生活實物估測與單位換算)
   - 門戶：`app/index.html` 首頁已同步掛載 N-2-11 單元導航。
   - Git Commit: `b7cc90e`
+- **【G2-T05: S-2-1 物體之幾何特徵與角】**：
+  - 教具：`app/components/angle-vertex-explorer.js` (6,792 B <= 12 KB)
+  - 特色：三角/正方/長方/角動態切換、邊/角/頂點三階計數標記、角要素「1頂點+2直線邊」算理徽章、正方形4等邊直角檢視。
+  - 頁面：`app/unit_s21.html`
+  - 題庫：`data/curriculum_v3/g2_s21_shapes_angles.json` (嚴選 10 題段考真題，曲邊非角陷阱、形體特徵比較，選項完美平衡 2/3/3/2)
+  - 門戶：`app/index.html` 首頁已同步掛載 S-2-1 單元導航。
+  - Git Commit: `1941b03`
 - **【算力消耗】**：$0.00 零消耗，全程透過通道 2（A-SERVER SSH OpenCode + `opencode/glm-5.3-flash-free`）實體施工。
 
 ## 🚦 目前狀態
-- **當前版本**：`v9.0.0` (Grade 1 All 9 Units + Grade 2 First 4 Units N-2-1, N-2-2, N-2-6 & N-2-11 Delivered & Verified)
-- **健康狀態**：🟢 13 個單元 130 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
+- **當前版本**：`v10.0.0` (Grade 1 All 9 Units + Grade 2 First 5 Units Delivered & Verified: 14 Units, 140 Real Exam Questions)
+- **健康狀態**：🟢 14 個單元 140 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
 - **Git 狀態**：本地工作區乾淨
 - **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **實機體驗二年級四大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6、N-2-11 共 40 題段考真題做題手感與破招詳解。
-2. **啟動 G2-T05: S-2-1 物體之幾何特徵與角**：派工 A-SERVER 開發 `<angle-vertex-explorer>` 原生組件與 10 題真題。
+1. **實機體驗二年級五大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-6、N-2-11、S-2-1 共 50 題段考真題做題手感與破招詳解。
+2. **啟動 G2-T06: N-2-7 乘法算式與倍數關係**：派工 A-SERVER 開發 `<multiple-relator>` 原生組件與 10 題真題。
 
 ## ⚠️ 注意事項
 - **純靜態自足**：全頁面 0 外部庫依賴，離線秒開。

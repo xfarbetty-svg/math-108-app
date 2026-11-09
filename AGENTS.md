@@ -46,8 +46,8 @@
 - [x] Stage 3.5 工單重工：TCK-01~TCK-08 全數落地（30px 格/33px 熱區、生命週期對稱、單一幾何公式、deg 量綱、分解樹+拋物線、`tools/ac_gate.js` 機械化閘門 exit 0）
 - [x] BP 盲審 `R3_WORKER_BUILD_REPORT.md` 的 D-01~D-13 偏離裁決 + 新開 **TCK-09**（44px 熱區 vs 兩盒並排矛盾）
 - [x] 一年級 108 課綱官方 9 大條目全量 100% 落地 (N-1-1 ~ D-1-1，90 題真題/8大獨立教具/28項閘門全綠)
-- [x] 二年級 108 課綱首批核心條目落地：N-2-6 乘法陣列 (`<multiplication-array>`)、N-2-1 三艙位值盒 (`<thousand-value-box>`)、N-2-2 加減直式計算 (`<vertical-math-grid>`)、N-2-11 長度公尺量尺 (`<meter-scale-ruler>`)，各 10 題真題題卡全綠落地
-- [ ] 啟動二年級後續官方條目：S-2-1 物體之幾何特徵與角 (`<angle-vertex-explorer>`)、N-2-7 乘法算式與倍數關係
+- [x] 二年級 108 課綱首批核心條目落地：N-2-6 乘法陣列 (`<multiplication-array>`)、N-2-1 三艙位值盒 (`<thousand-value-box>`)、N-2-2 加減直式計算 (`<vertical-math-grid>`)、N-2-11 長度公尺量尺 (`<meter-scale-ruler>`)、S-2-1 幾何特徵與角 (`<angle-vertex-explorer>`)，各 10 題真題題卡全綠落地
+- [ ] 啟動二年級後續官方條目：N-2-7 乘法算式與倍數關係、N-2-3 分數之初步認識
 
 ---
 
