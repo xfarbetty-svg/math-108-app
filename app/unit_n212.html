@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>N-2-12 重量的認識｜公斤與公克</title>
+  <script src="components/weight-balance-scale.js" defer></script>
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", system-ui, sans-serif;
+      background: #eef3f7;
+      color: #223;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 12px 60px
+    }
+
+    header {
+      text-align: center;
+      padding: 18px 0 8px
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #17324d
+    }
+
+    header p {
+      margin: 6px 0;
+      color: #5b7185
+    }
+
+    #score {
+      display: inline-block;
+      background: #17324d;
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-weight: 700
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 14px auto;
+      box-shadow: 0 2px 8px rgba(20, 50, 90, .08)
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      color: #17324d
+    }
+
+    .ctrl label {
+      display: block;
+      margin: 10px 0;
+      font-size: .95rem;
+      color: #37474f
+    }
+
+    .ctrl input[type=range] {
+      width: 100%;
+      accent-color: #2e7d32
+    }
+
+    .ctrl output {
+      font-weight: 800;
+      color: #c62828
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px
+    }
+
+    .chips button {
+      border: 2px solid #90a4ae;
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: .9rem
+    }
+
+    .chips button[aria-pressed=true] {
+      background: #2e7d32;
+      border-color: #2e7d32;
+      color: #fff
+    }
+
+    #quiz {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px
+    }
+
+    @media (min-width:640px) {
+      #quiz {
+        grid-template-columns: 1fr 1fr
+      }
+
+      footer p {
+        text-align: center
+      }
+    }
+
+    @media (min-width:1000px) {
+      #quiz {
+        grid-template-columns: 1fr 1fr 1fr
+      }
+    }
+
+    .q .stem {
+      font-weight: 700;
+      margin: 4px 0 10px;
+      line-height: 1.6
+    }
+
+    .qnum {
+      display: inline-block;
+      background: #1565c0;
+      color: #fff;
+      font-size: .8rem;
+      border-radius: 6px;
+      padding: 1px 8px
+    }
+
+    .ch {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 6px 0;
+      padding: 10px 12px;
+      border: 2px solid #cfd8dc;
+      border-radius: 10px;
+      background: #fafbfc;
+      font-size: .98rem;
+      cursor: pointer
+    }
+
+    .ch:hover {
+      border-color: #2e7d32
+    }
+
+    .q[data-done] .ch {
+      cursor: default
+    }
+
+    .ch.ok {
+      border-color: #2e7d32;
+      background: #e8f5e9;
+      font-weight: 800
+    }
+
+    .ch.no {
+      border-color: #e53935;
+      background: #fdecea
+    }
+
+    .exp {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #fff8e1;
+      border-radius: 10px;
+      font-size: .93rem;
+      line-height: 1.7
+    }
+
+    .q[data-done] .exp {
+      display: block
+    }
+
+    .verdict {
+      display: none;
+      font-weight: 800;
+      margin-top: 8px
+    }
+
+    .q[data-done] .verdict {
+      display: block
+    }
+
+    .v-ok {
+      color: #2e7d32
+    }
+
+    .v-no {
+      color: #e53935
+    }
+
+    #drawer {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 115%);
+      transition: transform .3s ease;
+      width: min(520px, 96vw);
+      background: #fff;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, .25);
+      padding: 14px 18px 22px;
+      z-index: 9
+    }
+
+    #drawer.open {
+      transform: translate(-50%, 0)
+    }
+
+    .dhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800
+    }
+
+    #dclose {
+      border: 0;
+      border-radius: 999px;
+      background: #17324d;
+      color: #fff;
+      padding: 6px 14px;
+      cursor: pointer
+    }
+
+    #dtext {
+      margin: 10px 0 0;
+      line-height: 1.8;
+      color: #37474f
+    }
+
+    .err {
+      background: #fdecea;
+      border: 2px solid #e53935;
+      border-radius: 12px;
+      padding: 12px;
+      color: #c62828
+    }
+
+    footer p {
+      text-align: center
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>⚖️ N-2-12 重量的認識</h1>
+    <p>公斤與公克 ｜ 1 公斤 ＝ 1000 公克 ｜ 指針式磅秤讀刻度</p>
+    <div id="score">已答 0/10 · 答對 0</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>🔬 互動磅秤：拖一拖，看指針動</h2>
+      <weight-balance-scale id="scale" weight-g="450" tare-offset="0" item-name="高麗菜"></weight-balance-scale>
+      <div class="ctrl">
+        <div class="chips" id="chips"></div>
+        <label>物體重量 <output id="ow">450</output> 公克
+          <input id="iw" type="range" min="0" max="1450" step="10" value="450">
+        </label>
+        <label>未歸零誤差 (tare) <output id="ot">0</output> 公克
+          <input id="it" type="range" min="0" max="200" step="10" value="0">
+        </label>
+      </div>
+    </section>
+
+    <section id="quiz" aria-live="polite"></section>
+  </main>
+
+  <div id="drawer" role="dialog" aria-label="解說抽屜">
+    <div class="dhead"><span id="dtitle"></span><button id="dclose" type="button">關閉 ✕</button></div>
+    <p id="dtext"></p>
+  </div>
+
+  <footer>
+    <p>N-2-12 二年級｜重量單位與磅秤 ｜ 資料：../data/curriculum_v3/g2_n212_weight_mass.json</p>
+  </footer>
+
+  <script>
+    const scale = document.getElementById('scale'), iw = document.getElementById('iw'),
+      it = document.getElementById('it'), ow = document.getElementById('ow'), ot = document.getElementById('ot');
+    iw.oninput = () => { ow.textContent = iw.value; scale.setAttribute('weight-g', iw.value); };
+    it.oninput = () => { ot.textContent = it.value; scale.setAttribute('tare-offset', it.value); };
+    const chips = document.getElementById('chips');
+    [['鉛筆', 5], ['蘋果', 150], ['高麗菜', 450], ['鳳梨', 800], ['白米 1 公斤', 1000]].forEach(([n, v]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = `${n} (${v}g)`; b.setAttribute('aria-pressed', 'false');
+      b.onclick = () => {
+        scale.setAttribute('weight-g', v); scale.setAttribute('item-name', n);
+        iw.value = v; ow.textContent = v;
+        chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+        b.setAttribute('aria-pressed', 'true');
+      };
+      chips.appendChild(b);
+    });
+
+    const quiz = document.getElementById('quiz'), scoreEl = document.getElementById('score'),
+      drawer = document.getElementById('drawer'), dtitle = document.getElementById('dtitle'),
+      dtext = document.getElementById('dtext');
+    document.getElementById('dclose').onclick = () => drawer.classList.remove('open');
+    let done = 0, correct = 0;
+    const upd = () => { scoreEl.textContent = `已答 ${done}/10 · 答對 ${correct}`; };
+    fetch('../data/curriculum_v3/g2_n212_weight_mass.json')
+      .then(r => { if (!r.ok) throw 0; return r.json(); })
+      .then(data => {
+        data.forEach((q, i) => {
+          const card = document.createElement('div');
+          card.className = 'card q'; card.dataset.ai = q.answer_index;
+          card.innerHTML = `
+            <span class="qnum">第 ${i + 1} 題</span>
+            <p class="stem">${q.stem}</p>
+            ${q.choices.map((c, j) => `<button type="button" class="ch" data-i="${j}">${'甲乙丙丁'[j]}. ${c}</button>`).join('')}
+            <p class="verdict"></p>
+            <div class="exp">💡 ${q.explanation}</div>`;
+          quiz.appendChild(card);
+        });
+      })
+      .catch(() => {
+        quiz.innerHTML = '<p class="err">無法載入題庫。請用本機網頁伺服器開啟本頁（例：<code>python -m http.server</code> 後連到 /app/unit_n212.html），直接雙擊檔案時瀏覽器會封鎖 fetch。</p>';
+      });
+
+    quiz.addEventListener('click', e => {
+      const b = e.target.closest('.ch'); if (!b) return;
+      const card = b.closest('.q'); if (!card || card.dataset.done) return;
+      card.dataset.done = '1';
+      const ai = +card.dataset.ai, ok = +b.dataset.i === ai;
+      b.classList.add(ok ? 'ok' : 'no');
+      card.querySelector(`[data-i="${ai}"]`).classList.add('ok');
+      card.querySelector('.verdict').innerHTML = ok
+        ? '<span class="v-ok">🎉 答對了！很棒！</span>' : `<span class="v-no">再想想～正確答案是「${card.querySelector(`[data-i="${ai}"]`).textContent}」。</span>`;
+      done++; if (ok) correct++; upd();
+      dtitle.textContent = ok ? '🎉 答對了！' : '📖 來看看解說';
+      dtext.textContent = card.querySelector('.exp').textContent;
+      drawer.classList.add('open');
+    });
+  </script>
+</body>
+
+</html>
