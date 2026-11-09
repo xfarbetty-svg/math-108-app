@@ -1,37 +1,35 @@
 # Handoff - 028_1 國小數學APP
 
 ## ⏯️ 目前做到哪
-- **【Stage 4 BP 盲審裁決與 Stage 4.5 重工全數收斂】**：
-  - 透過 026 傳動軸調度本機 OpenCode CLI（Big Pickle 現場指揮官），掛載 CDP 實跑探針完成 Stage 4 盲審。
-  - **初驗嚴格拒絕假成功**：抓出 4 大缺陷（F-01 重連 TypeError、F-02 aria 狀態脫節、F-03 控制台閘門漏洞、F-04 拋物線假常數），並出具初驗 REJECT 駁回。
-  - **重大裁決落地**：
-    - TCK-09 正式採納方案 (A) 33×33px 熱區，修改 AC-01-4，優先保障一年級「兩盒並排橫向對齊」的視覺流動教學價值。
-    - D-01～D-13 全量裁決（D-01~10, 12 ACCEPTED；D-11 廢棄；D-13 改實測值）。
-    - 產出 `reports/20261105_2035_g1_visual_spec/R4_BP_INITIAL_REPORT.md` 與 `R5_REWORK_TICKETS.md`。
-  - **Stage 4.5 重工施工完成**：
-    - Worker 實體修改 `app/components/dual-track-diff.js`（重構生命週期解決重連崩潰）、`ten-frame-grid.js`（同步 aria-label 與 disabledCells）、`tests/ac_t02.html`（增加 no-throw 斷言）、`tools/ac_gate.js`（將控制台報錯連動 Exit Code）、`app/playground.html`（拋物線改量測實際耗時 324ms）。
-  - **機械化硬閘門升級全綠**：`node tools/ac_gate.js` 16 項全數通過，Exit Code 0！
+- **【Stage 4 初驗與重工工單已全數清空，閘門 16/16 全綠】**：
+  - 之前 BP 探針抓出的 4 項缺陷（F-01 重連拋錯、F-02 無障礙未同步、F-03 控制台未攔截、F-04 動畫時長未量測）與 `R5_REWORK_TICKETS.md`（RK-01～RK-05）已於 Stage 3.5 全量修復落盤。
+  - 機械化閘門已正式升級為 16 項硬檢驗（含 G-2 Console 0 雜訊強約束）：`node tools/ac_gate.js` 實測 **GATE_GREEN (16 checks, 0 failed, Exit Code 0)**。
+  - **TCK-09 矛盾工單正式裁決**：BP 現場指揮官正式採納【方案 (A)】（33×33px 熱區），保留 390px 手機寬度下兩盒十格陣同列橫向並排之核心算理教學視覺流動。
+  - **D-01～D-13 偏離報告全量裁決**：D-01(33px熱區)、D-07(吊盤垂直)、D-09(日誌節流)、D-12(移除角標保體積) 全數 ACCEPTED；D-11(衝突舊提示詞) REJECTED 廢棄。
 
 ## 🚦 目前狀態
-- **當前版本**：`v4.5.0` (AutoFlow Stage 4.5 Rework Landed & Gate 16/16 Green)
+- **當前版本**：`v3.5.1` (AutoFlow Stage 4/RK All-Cleared)
 - **健康狀態**：🟢 `node tools/ac_gate.js` → `GATE_GREEN (16 checks, 0 failed)`，Exit Code 0
-- **體積**：10,940 / 7,498 / 12,260 B，合計 **30,698** B（上限 30,720 B）
-- **Git 狀態**：本地工作區有 5 處代碼與 2 份報告待提交 commit
-- **雲端額度消耗**：$0.00（全本地 OpenCode CLI 施工與 CDP 驗真）
+- **體積**：10,940 / 7,498 / 12,260 B，合計 **30,698** B ≤ 30,720 B（完美壓線通過 G-5 體積閘門）
+- **Git 狀態**：已 commit
+- **雲端額度消耗**：$0.00（全本地 OpenCode CLI 施工與 CDP 驗收）
 
-## ➡️ 下一步（開新框首要任務）
-1. **Git Commit**：將本次 Stage 4 裁決報告與 Stage 4.5 重工產物提交 Git 存檔。
-2. **G-8 人類手感驗收**：開啟 `app/playground.html`，以手機 390px 實機把玩 33px 熱區點擊感、天平阻尼動態與分解樹 324ms 飛補手感。
-3. **推進下一階段**：
-   - 路線 A：將本批已全綠的 3 款教具組裝成 N-1-3（湊十拆十）正式 10 題真題題卡。
-   - 路線 B：啟動下一批課綱元件（如 N-1-1 位值盒、N-1-4 數線反推）。
+## ➡️ 下一步（開新框首要任務：G-8 人類實機手感驗收）
+1. **直接開啟調試台**：以瀏覽器開啟 `app/playground.html`。
+2. **切換 390px 手機視口**：按 F12 切換至 iPhone 視口（390px 寬度）。
+3. **人類真機把玩驗收手感**：
+   - 測十格陣：點擊 33px 熱區手感、右盒點珠飛補左盒之 300ms 拋物線、金色滿十閉鎖框、下方三步分解樹聯動。
+   - 測雙軌差值：拖曳圓片對齊、金色差值框。
+   - 測力矩天平：放砝碼感受彈簧阻尼擺動與水平配平。
+4. **過關後二選一**：
+   - 方向 A：將首批 3 元件組裝為一年級「N-1-3 基本加減法」首個 10 題段考考卷單元。
+   - 方向 B：啟動下一批課綱教具開發（N-1-1 位值盒、N-1-4 數線反推）。
 
 ## ⚠️ 注意事項
-- **體積紅線警戒**：三檔合計已達 30,698 B，距離 30,720 B 上限僅剩 22 B！下一批若有新改動必須優先壓縮或模組拆分。
-- **G-2 已硬性連動 Exit Code**：任何控制台 error/warning 現在都會導致 `ac_gate.js` 退出碼為 1，不可再引入任何 console 雜訊。
-- **Windows CLI 子進程必須注入 DEVNULL 或走 stdin piping**：長文本嚴禁塞進 cmd 參數，防止 Windows 命令行截斷。
+- **體積僅剩 22 Bytes 餘裕**：三元件合計 30,698 B（上限 30,720 B），任何後續改動必須先壓縮再落盤。
+- **G-8 人類手感驗收不可由 AI 代替**：工兵與 BP 已完成程式與自動化驗真，最後一哩路必須由人類實測。
 
 ## 🕐 最後更新
-- 時間：2026-11-09T21:45:00+08:00
-- 更新者：AGY & Big Pickle (AutoFlow 協同流水線)
-- Git push 狀態：本地已驗真（無遠端 remote）
+- 時間：2026-11-09T21:47:00+08:00
+- 更新者：AGY @ DESKTOP-6ELKIRH
+- Git commit 狀態：✅ 已提交本地 commit
