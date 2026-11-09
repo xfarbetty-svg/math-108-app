@@ -111,4 +111,18 @@
 - [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_n15_length_compare.json`（嚴選 10 題各縣市段考長度真題，含起跑線對齊、個別單位無縫不留空隙、單位越大數量越少、繩子間接比較媒介、彎線拉直等思維陷阱題）。
 - [x] **三端自適應題卡落地**：`app/unit_n15.html`（掛載 `<snap-caliper-wall>`，390px/768px/960px 跑 `tests/ac_unit_n15.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n15_390.png`、`768.png`、`960.png`）。
 - [x] **首頁門戶更新**：`app/index.html` 正式收錄 N-1-5 入口卡片，一年級正式落地單元達到 7 個（N-1-1, N-1-2, N-1-3, N-1-5, R-1-1, S-1-1, S-1-2，共 70 題段考真題）！
-- [ ] **下一目標**：推進一年級最後兩個課綱條目（N-1-4 錢幣操作或 D-1-1 統計與分類）。
+- [x] **下一目標**：推進一年級 N-1-4 解題（數線反推）。
+
+## 📌 2026-11-09 (Session 14) - N-1-4 解題：<glass-number-line> 毛玻璃遮罩數線反推儀落地
+- [x] **026 AutoFlow 傳動軸全速運轉**：
+  - Stage 0：AGY 決策大腦落盤 `reports/20261109_2340_g1_n14_spec/R0_AGY_BLUEPRINT.md`，定義未知數起點遮罩、向左回溯拋物線（REVERSE_WALK）與揭曉破招（REVEAL_ANSWER）Given-When-Then AC。
+  - Stage 1：通道 2（A-SERVER SSH 備援）OpenCode BP 現場指揮官完成任務卡拆票，落盤 `R1_BP_EXECUTION_PLAN.md`（18,396 B）。
+  - Stage 2：AGY 簽署放行書 `R2_AGY_PLAN_REVIEW.md` 批准獨立體積預算 $\le 12,288$ B 與 `MUTUAL_CONSENT_APPROVED`。
+  - Stage 3：通道 2 OpenCode Worker（`iceman-free`）實體帶手腳施工（$0.00 成本），秒級產出組件與獨立驗收頁。
+- [x] **新增教具元件**：`app/components/glass-number-line.js`（6,999 B $\le 12,288$ B，純原生 Web Component，零外部依賴，支援 0~20 數線刻度磁吸、毛玻璃遮罩未知起點、自終點向左弧形回溯拋物線、遮罩漸變淡化顯露金色真實數字與浮出破招算式）。
+- [x] **獨立 AC 驗收頁落地**：`tests/ac_glass_number_line.html`（15 項檢驗全 PASS，`ALL_AC_PASSED`）。
+- [x] **G-9 機械化閘門擴充升級**：`tools/ac_gate.js` 擴充至 26 checks，實測全綠 `GATE_GREEN (26 checks, 0 failed)`，Exit Code 0。
+- [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_n14_solve_problem.json`（嚴選 10 題各縣市段考加減解題真題，含未知起點反推、原本有多少公車/紙箱情境、吃糖果/買筆差額計算、見加就加直覺迷思剖析、剪掉長度還原加回）。
+- [x] **三端自適應題卡落地**：`app/unit_n14.html`（掛載 `<glass-number-line>`，390px/768px/960px 跑 `tests/ac_unit_n14.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n14_390.png`、`768.png`、`960.png`）。
+- [x] **首頁門戶更新**：`app/index.html` 正式收錄 N-1-4 入口卡片，一年級正式落地單元達到 8 個（N-1-1, N-1-2, N-1-3, N-1-4, N-1-5, R-1-1, S-1-1, S-1-2，共 80 題段考真題）！
+- [ ] **下一目標**：推進一年級最後一個課綱條目（D-1-1 統計與分類），達成全課綱 100% 大滿貫！

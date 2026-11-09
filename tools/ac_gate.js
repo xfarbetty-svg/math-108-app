@@ -60,6 +60,13 @@ if (fs.existsSync(absN15)) {
   rec('G-1 snap-caliper-wall.js', r.status === 0, 'node --check exit=' + r.status);
 }
 
+// N-1-4 獨立語法閘門
+const absN14 = path.join(ROOT, 'app', 'components', 'glass-number-line.js');
+if (fs.existsSync(absN14)) {
+  const r = spawnSync(process.execPath, ['--check', absN14], { encoding: 'utf8' });
+  rec('G-1 glass-number-line.js', r.status === 0, 'node --check exit=' + r.status);
+}
+
 /* G-5 體積（每檔 ≤12KB、合計 ≤30KB） */
 let total = 0;
 for (const f of COMPONENTS) {
@@ -85,6 +92,12 @@ if (fs.existsSync(absS12)) {
 if (fs.existsSync(absN15)) {
   const sizeN15 = fs.statSync(absN15).size;
   rec('G-5 snap-caliper-wall.js', sizeN15 <= LIMIT_EACH, sizeN15 + ' B (<= ' + LIMIT_EACH + ')');
+}
+
+// N-1-4 獨立體積閘門 (單檔 <= 12,288 B)
+if (fs.existsSync(absN14)) {
+  const sizeN14 = fs.statSync(absN14).size;
+  rec('G-5 glass-number-line.js', sizeN14 <= LIMIT_EACH, sizeN14 + ' B (<= ' + LIMIT_EACH + ')');
 }
 
 /* G-4 零外部資源：僅允許 SVG 命名空間 */

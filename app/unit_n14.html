@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>國小一年級數學 (G1) — N-1-4 解題 (毛玻璃遮罩數線反推儀)</title>
+  <script src="components/glass-number-line.js"></script>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #64748B;
+      --ghost: #94A3B8;
+      --border: #E2E8F0;
+      --accent: #4F46E5;
+      --accent-hover: #4338CA;
+      --gold: #D97706;
+      --gold-bg: #FEF3C7;
+      --green: #16A34A;
+      --green-bg: #DCFCE7;
+      --red: #DC2626;
+      --red-bg: #FEE2E2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 頂部狀態列 < 40px */
+    header.status-bar {
+      height: 38px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 13px;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .status-left { display: flex; align-items: center; gap: 8px; }
+    .status-left a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    .status-title { color: var(--ink); font-weight: 800; }
+    .unit-badge {
+      background: #EEF2FF;
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .status-progress { color: var(--muted); font-size: 12px; }
+
+    /* 主容器：三端自適應 */
+    main.app-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 12px 16px 24px;
+      gap: 12px;
+    }
+
+    @media (min-width: 768px) {
+      main.app-shell {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 20px;
+      }
+      .col-left {
+        flex: 1.1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .col-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* 題幹資訊卡 */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      position: relative;
+    }
+    .meta-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .q-source {
+      font-size: 11px;
+      color: var(--ghost);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    .q-index-pill {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      background: #EEF2FF;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .q-stem {
+      font-size: 16px;
+      line-height: 1.5;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* 數線教具展示區 */
+    .numline-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      background: #F8FBFF;
+      border-radius: 10px;
+      border: 1px dashed #C7D2FE;
+      position: relative;
+    }
+    glass-number-line {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 互動按鈕群 */
+    .numline-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .numline-btn {
+      min-width: 44px;
+      min-height: 36px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .numline-btn:active { background: #EEF2FF; border-color: var(--accent); }
+    .numline-btn.reset-btn { color: var(--red); border-color: #FECACA; background: #FEF2F2; }
+
+    /* 選項網格：2x2 拇指熱區 */
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 480px) {
+      .choices-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .choice-btn {
+      min-height: 48px;
+      padding: 12px 14px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+    .choice-btn:active { border-color: var(--accent); }
+    .choice-btn .choice-prefix {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .choice-btn.correct {
+      border-color: var(--green);
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    .choice-btn.correct .choice-prefix {
+      background: var(--green);
+      color: #FFF;
+    }
+    .choice-btn.wrong {
+      border-color: var(--red);
+      background: var(--red-bg);
+      color: var(--red);
+    }
+    .choice-btn.wrong .choice-prefix {
+      background: var(--red);
+      color: #FFF;
+    }
+
+    /* 抽屜式破招詳解卡片 */
+    .explanation-card {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 12px;
+      padding: 16px;
+      display: none;
+      animation: slideDown 0.25s ease-out;
+    }
+    .explanation-card.active { display: block; }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .exp-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .exp-step {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #166534;
+      margin-bottom: 6px;
+      padding-left: 14px;
+      position: relative;
+    }
+    .exp-step::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      color: var(--green);
+      font-weight: bold;
+    }
+    .exp-formula {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #DCFCE7;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #14532D;
+      text-align: center;
+    }
+    .exp-trap {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #991B1B;
+      background: #FEE2E2;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* 導航按鈕列 */
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .nav-btn {
+      flex: 1;
+      height: 44px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .nav-btn:active { background: #F1F5F9; }
+    .nav-btn.primary {
+      background: var(--accent);
+      color: #FFF;
+      border-color: var(--accent);
+    }
+    .nav-btn.primary:active { background: var(--accent-hover); }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部狀態列 < 40px -->
+  <header class="status-bar">
+    <div class="status-left">
+      <a href="index.html">← 首頁</a>
+      <span class="unit-badge">N-1-4</span>
+      <span class="status-title">解題應用</span>
+    </div>
+    <div class="status-progress" id="progress-indicator">題 1 / 10</div>
+  </header>
+
+  <!-- 主容器 -->
+  <main class="app-shell">
+    <!-- 左欄：題幹與數線教具 -->
+    <div class="col-left">
+      <div class="card">
+        <div class="meta-line">
+          <span class="q-index-pill" id="q-pill">第 1 題</span>
+          <span class="q-source" id="q-source">111學年北市段考真題</span>
+        </div>
+        <div class="q-stem" id="q-stem">載入題目中...</div>
+      </div>
+
+      <!-- 毛玻璃數線反推儀 -->
+      <div class="numline-container">
+        <glass-number-line id="numline"></glass-number-line>
+        <div class="numline-controls">
+          <button class="numline-btn" id="btn-reverse">倒退反推</button>
+          <button class="numline-btn" id="btn-reveal">揭曉破招</button>
+          <button class="numline-btn reset-btn" id="btn-reset">重設</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右欄：選項與抽屜式破招詳解 -->
+    <div class="col-right">
+      <div class="card">
+        <div class="choices-grid" id="choices-container">
+          <!-- 選項按鈕由 JS 產生 -->
+        </div>
+      </div>
+
+      <!-- 破招詳解 -->
+      <div class="explanation-card" id="exp-card">
+        <div class="exp-title">
+          <span>💡 算理破招精析</span>
+        </div>
+        <div id="exp-steps"></div>
+        <div class="exp-formula" id="exp-formula"></div>
+        <div class="exp-trap" id="exp-trap"></div>
+      </div>
+
+      <!-- 題目切換按鈕 -->
+      <div class="nav-bar">
+        <button class="nav-btn" id="btn-prev">上一題</button>
+        <button class="nav-btn primary" id="btn-next">下一題</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let questions = [];
+    let currentIndex = 0;
+    let selectedChoice = null;
+
+    const stemEl = document.getElementById('q-stem');
+    const sourceEl = document.getElementById('q-source');
+    const pillEl = document.getElementById('q-pill');
+    const progressEl = document.getElementById('progress-indicator');
+    const choicesEl = document.getElementById('choices-container');
+    const expCard = document.getElementById('exp-card');
+    const expSteps = document.getElementById('exp-steps');
+    const expFormula = document.getElementById('exp-formula');
+    const expTrap = document.getElementById('exp-trap');
+    const numline = document.getElementById('numline');
+
+    // 互動按鈕綁定
+    document.getElementById('btn-reverse').addEventListener('click', () => numline.stepReverse());
+    document.getElementById('btn-reveal').addEventListener('click', () => numline.reveal());
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      const q = questions[currentIndex];
+      if (q && q.visual_engine) numline.setEquation(q.visual_engine.props);
+    });
+
+    async function loadData() {
+      try {
+        const res = await fetch('../data/curriculum_v3/g1_n14_solve_problem.json');
+        questions = await res.json();
+        renderQuestion(0);
+      } catch (e) {
+        stemEl.textContent = '題庫載入失敗：' + e.message;
+      }
+    }
+
+    function renderQuestion(index) {
+      if (!questions.length) return;
+      currentIndex = index;
+      selectedChoice = null;
+      const q = questions[index];
+
+      // 更新進度與題幹
+      pillEl.textContent = `第 ${index + 1} 題`;
+      progressEl.textContent = `題 ${index + 1} / ${questions.length}`;
+      sourceEl.textContent = q.source || '段考真題';
+      stemEl.textContent = q.stem;
+
+      // 載入該題預設數線狀態
+      if (q.visual_engine && q.visual_engine.props) {
+        numline.setEquation(q.visual_engine.props);
+      }
+
+      // 產生選項
+      choicesEl.innerHTML = '';
+      expCard.classList.remove('active');
+
+      const prefixes = ['A', 'B', 'C', 'D'];
+      q.choices.forEach((c, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.dataset.idx = idx;
+        btn.innerHTML = `<span class="choice-prefix">${prefixes[idx]}</span><span>${c}</span>`;
+        btn.addEventListener('click', () => handleChoice(idx, btn));
+        choicesEl.appendChild(btn);
+      });
+
+      // 詳解準備
+      expSteps.innerHTML = '';
+      if (q.explanation.step_1) addStep(q.explanation.step_1);
+      if (q.explanation.step_2) addStep(q.explanation.step_2);
+      if (q.explanation.step_3) addStep(q.explanation.step_3);
+      expFormula.textContent = q.explanation.formula || '';
+      expTrap.textContent = '⚠️ ' + (q.explanation.trap_warning || '');
+    }
+
+    function addStep(text) {
+      const d = document.createElement('div');
+      d.className = 'exp-step';
+      d.textContent = text;
+      expSteps.appendChild(d);
+    }
+
+    function handleChoice(idx, btn) {
+      if (selectedChoice !== null) return;
+      selectedChoice = idx;
+      const q = questions[currentIndex];
+      const isCorrect = (idx === q.answer_index);
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        // 自動執行逆算與揭曉
+        numline.stepReverse();
+        setTimeout(() => numline.reveal(), 400);
+      } else {
+        btn.classList.add('wrong');
+        const correctBtn = choicesEl.querySelector(`[data-idx="${q.answer_index}"]`);
+        if (correctBtn) correctBtn.classList.add('correct');
+      }
+
+      // 展開破招詳解
+      expCard.classList.add('active');
+    }
+
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      if (currentIndex > 0) renderQuestion(currentIndex - 1);
+    });
+
+    document.getElementById('btn-next').addEventListener('click', () => {
+      if (currentIndex < questions.length - 1) renderQuestion(currentIndex + 1);
+    });
+
+    // 啟動
+    loadData();
+  </script>
+</body>
+</html>

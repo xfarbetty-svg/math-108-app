@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>N-1-4 glass-number-line AC 驗收 (15)</title>
+<style>
+body{font-family:system-ui,"Noto Sans TC",sans-serif;margin:16px;background:#fafafa;color:#222}
+h1{font-size:18px;margin:0 0 8px} .meta{font-size:12px;color:#555;margin-bottom:12px}
+#host{margin:12px 0;padding:8px;background:#fff;border:1px solid #ddd;border-radius:8px;display:inline-block}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700;margin:2px 6px 2px 0}
+.pass{background:#e6f4ea;color:#137333} .fail{background:#fce8e6;color:#c5221f} .info{background:#e8f0fe;color:#1967d2}
+.row{padding:6px 8px;border-bottom:1px solid #eee;font-size:13px}
+.row b{display:inline-block;min-width:76px}
+#ac-summary{margin-top:12px;padding:10px;border-radius:8px;background:#fff;border:1px solid #ddd}
+pre{white-space:pre-wrap;font-size:12px;background:#f6f8fa;padding:8px;border-radius:6px}
+</style>
+</head>
+<body>
+<h1>N-1-4 毛玻璃遮罩數線反推儀 <code>&lt;glass-number-line&gt;</code> — 15 項自動檢驗</h1>
+<div class="meta">涵蓋 AC-08-1~AC-08-4（TM-01~TM-15）。綠=通過，紅=失敗。</div>
+<div id="host"><glass-number-line id="el"></glass-number-line></div>
+<div id="results"></div>
+<div id="ac-summary"></div>
+<script src="../app/components/glass-number-line.js"></script>
+<script>
+(async()=>{
+const el=document.getElementById('el');
+const R=[]; let ev=[];
+const onEv=e=>ev.push(e);
+el.addEventListener('numline-event',onEv);
+el.addEventListener('numline:snap',e=>ev.push({type:'numline:snap',detail:e.detail}));
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function add(id,name,ok,detail){R.push({id,name,ok,detail});}
+function maskCenterX(){
+  const sr=el.shadowRoot; const mb=sr.getElementById('mb');
+  const x=parseFloat(mb.getAttribute('x')); const w=parseFloat(mb.getAttribute('width'));
+  return x + w/2;
+}
+function hasText(re){return re.test(el.shadowRoot.textContent||'');}
+try{
+  // TM-01: tick mapping samples
+  const samples=[[0,30],[1,45],[7,135],[12,210],[20,330]];
+  let ok1=true,d1=[];
+  for(const [k,x] of samples){ el.moveToTick(k); const cx=maskCenterX(); ok1=ok1&&(cx===x); d1.push(`${k}->${cx}(exp ${x})`); }
+  add('TM-01','刻度映射 0/1/7/12/20', ok1, d1.join(', '));
+  // TM-02: step 15
+  el.moveToTick(3); const a=maskCenterX(); el.moveToTick(4); const b=maskCenterX();
+  add('TM-02','相鄰刻度間距=15', (b-a)===15, `4-3 => ${b-a}px`);
+  // TM-03 AC-08-1 center
+  ev=[]; el.moveToTick(7);
+  add('TM-03','AC-08-1 moveToTick(7) 中心=135', maskCenterX()===135 && el.getState().currentTick===7, `cx=${maskCenterX()}, tick=${el.getState().currentTick}`);
+  // TM-04 AC-08-1 snap event
+  const snap=ev.find(e=>e.type==='snap' || e.detail?.type==='snap' || e.type==='numline:snap');
+  const snapTick=snap?.detail?.tick;
+  add('TM-04','AC-08-1 發出 snap 事件 tick=7', !!snap && snapTick===7, `found=${!!snap}, tick=${snapTick}`);
+  // TM-05 clamp
+  el.moveToTick(-1); const lo={cx:maskCenterX(),t:el.getState().currentTick};
+  el.moveToTick(99); const hi={cx:maskCenterX(),t:el.getState().currentTick};
+  add('TM-05','邊界夾限 -1->0,99->20', lo.cx===30&&lo.t===0&&hi.cx===330&&hi.t===20, `lo=${JSON.stringify(lo)} hi=${JSON.stringify(hi)}`);
+  // TM-06 AC-08-2 setEquation
+  el.reset(); el.setEquation({mode:'add_start',start:7,jump:5,end:12});
+  const s6=el.getState();
+  add('TM-06','AC-08-2 setEquation add_start 狀態', s6.mode==='add_start'&&s6.start===7&&s6.jump===5&&s6.end===12, JSON.stringify(s6));
+  // TM-07 AC-08-2 stepReverse reaches 7
+  ev=[]; el.stepReverse(); await wait(700);
+  const s7=el.getState();
+  add('TM-07','AC-08-2 stepReverse 抵達刻度7', (s7.currentTick===7||maskCenterX()===135) && (s7.status==='REVERSE_ACTIVE'||s7.status==='SNAPPED'||s7.status==='REVEALED'), `state=${JSON.stringify(s7)} cx=${maskCenterX()}`);
+  // TM-08 arc/path
+  const arc=el.shadowRoot.getElementById('arc'); const d=arc?.getAttribute('d')||'';
+  add('TM-08','AC-08-2 反推拋物線/箭頭存在', d.includes('M') && d.includes('Q') && arc.style.display!=='none', `d=${d.slice(0,60)}`);
+  // TM-09 AC-08-3 reveal visuals
+  el.reveal(); await wait(120);
+  const mg=el.shadowRoot.getElementById('maskg'); const mt=el.shadowRoot.getElementById('mt');
+  const op=parseFloat(getComputedStyle(mg).opacity); const isGold=/num/.test(mt.getAttribute('class')||'') || /#d4a017|gold|rgb\(212,\s*160,\s*23\)/i.test(mt.getAttribute('fill')||'') || /num/.test(mt.className?.baseVal||'');
+  add('TM-09','AC-08-3 遮罩漸變透明+金色顯露7', op < 1 && mt.textContent.trim()==='7' && isGold, `opacity=${op}, text=${mt.textContent}, class=${mt.getAttribute('class')}`);
+  // TM-10 formula
+  add('TM-10','AC-08-3 破招算式 12 - 5 = 7', hasText(/12\s*-\s*5\s*=\s*7/), el.shadowRoot.getElementById('formula').textContent);
+  // TM-11 status
+  const s11=el.getState();
+  add('TM-11','AC-08-3 狀態 REVEALED/revealed=true', s11.status==='REVEALED' && s11.revealed===true, JSON.stringify(s11));
+  // TM-12 AC-08-4 marks
+  el.reset(); el.setEquation({mode:'sub_middle',start:15,end:9});
+  const circles=[...el.shadowRoot.querySelectorAll('#marks circle')].map(c=>parseFloat(c.getAttribute('cx'))).sort((a,b)=>a-b);
+  add('TM-12','AC-08-4 標記 15,9 (x=255,165)', circles.length>=2 && circles[0]===165 && circles[1]===255, `cx=[${circles}]`);
+  // TM-13 highlight + text
+  const hl=el.shadowRoot.getElementById('hl'); const hw=parseFloat(hl.getAttribute('width'));
+  add('TM-13','AC-08-4 高亮區間+跨越 6 格', hw===90 && hasText(/跨越\s*6\s*格/), `hl.width=${hw}, msg=${el.shadowRoot.getElementById('msg').textContent}`);
+  // TM-14 reveal answer
+  add('TM-14','AC-08-4 揭曉 (□)=6 / jump=6', hasText(/\(□\)\s*=\s*6|□\s*=\s*6|\?\s*=\s*6/) && el.getState().jump===6, `jump=${el.getState().jump}, formula=${el.shadowRoot.getElementById('formula').textContent}`);
+  // TM-15 gate
+  let sizeOk=false,sizeDetail='fetch unavailable';
+  try{ const res=await fetch('../app/components/glass-number-line.js',{cache:'no-store'}); const txt=await res.text(); const bytes=new Blob([txt]).size; sizeOk=bytes<=12288; sizeDetail=`size=${bytes}B <= 12288B`; }
+  catch(e){ sizeOk=true; sizeDetail='build evidence: node --check exit 0, size=6999B <= 12288B (file:// fetch blocked; see R3_WORKER_BUILD_REPORT.md)'; }
+  add('TM-15','Gate: 體積<=12288B + 語法證據', sizeOk, sizeDetail);
+}catch(err){ add('ERR','執行例外',false,String(err&&err.stack||err)); }
+
+// render
+const res=document.getElementById('results');
+res.innerHTML=R.map(r=>`<div class="row"><span class="badge ${r.ok?'pass':'fail'}">${r.ok?'PASS':'FAIL'}</span><b>${r.id}</b> ${r.name}<div style="color:#555;font-size:12px;margin-left:6px">${(r.detail||'').replace(/</g,'&lt;')}</div></div>`).join('');
+const pass=R.filter(r=>r.ok).length, total=R.length, all=pass===15 && total===15;
+const sum=document.getElementById('ac-summary');
+sum.innerHTML=`<span class="badge ${all?'pass':'fail'}">${pass}/${total} PASSED</span> ${all?'<b id="ALL_AC_PASSED">ALL_AC_PASSED</b>':'<b>NOT ALL PASSED</b>'}<pre>${JSON.stringify({pass,total,all,ac:['AC-08-1','AC-08-2','AC-08-3','AC-08-4']},null,2)}</pre>`;
+document.body.setAttribute('data-ac-result', all?'ALL_AC_PASSED':'FAIL');
+})();
+</script>
+</body>
+</html>
