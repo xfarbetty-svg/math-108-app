@@ -42,3 +42,4 @@
 - [x] **RK-01 ~ RK-05 全數修復**：Worker 實體修復 5 處代碼，T-04 拋物線實測耗時 324ms (250~350ms 區間)，G-2 控制台報錯正式連動 Exit Code。
 - [x] **全量硬閘門 G-9 驗真**：`node tools/ac_gate.js` → `GATE_GREEN (16 checks, 0 failed)`，Exit Code 0。G-5 體積 10,940 / 7,498 / 12,260 B，合計 30,698 B ≤ 30,720 B。
 - [ ] **下一步**：G-8 人類三端實機手感驗收，通過後啟動第一單元題目組裝或第二批課綱元件。
+- [x] **Stage 5 AGY PR 總驗收放行**：產出 `reports/20261105_2035_g1_visual_spec/R5_AGY_PR_DELIVERY.md`，Commit `f821132`，完成 Stage 0 至 Stage 5 鋼鐵閉環！
