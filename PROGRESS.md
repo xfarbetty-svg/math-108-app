@@ -80,4 +80,7 @@
 - [x] **新增教具元件**：`app/components/isometric-rotator.js`（8,518 B ≤ 12,288 B，純向量純前端，單一 `<g transform="rotate(θ)">` 幾何變換，支援正方形旋轉直角與等長記號鎖定、圓形旋轉直徑線、圓柱 3D 到 2D 拓印長方形與底圓展開）。
 - [x] **CDP 實機驗真全綠**：`tests/ac_isometric_rotator.html` 在 390px / 768px / 960px 視口全數通過（15/15 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0）。
 - [x] **G-9 機械化閘門擴充升級**：`node tools/ac_gate.js` 擴充至 20 checks，全部 PASS，`GATE_GREEN (20 checks, 0 failed)`，Exit Code 0。
-- [ ] **下一步**：編寫 `data/curriculum_v3/g1_s11_shape_identify.json`（10 題真題）＋落地 `app/unit_s11.html` 自適應題卡與首頁卡片。
+- [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_s11_shape_identify.json`（嚴選 10 題各縣市段考幾何真題，含旋轉破招、圓柱展開長方形、上下底圓拓印、四邊等長正方形定義）。
+- [x] **三端自適應題卡落地**：`app/unit_s11.html`（掛載 `<isometric-rotator>`，390px/768px/960px 跑 `tests/ac_unit_s11.js` 實測 6/6 PASS，Exit Code 0，截圖存入 `evidence/unit_s11_390.png` 等）。
+- [x] **首頁門戶更新**：`app/index.html` 正式收錄 S-1-1 入口卡片，一年級五大正式落地單元全部直達！
+- [ ] **下一步**：推進樣品 07：S-1-2 形體操作（`<stack-physics-bench>` 堆疊穩固 vs 曲面滾動）。
