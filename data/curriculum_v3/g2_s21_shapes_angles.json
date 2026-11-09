@@ -1,0 +1,152 @@
+[
+  {
+    "stem": "一個角是由什麼組成的？",
+    "choices": [
+      "1 個頂點和 2 條直線邊",
+      "1 個頂點和 2 條曲線邊",
+      "2 個頂點和 1 條直線邊",
+      "3 條曲線邊"
+    ],
+    "answer_index": 0,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "angle"
+    },
+    "explanation": "一個角 ＝ 1 個頂點 ＋ 2 條直線邊。按「點頂點」「數邊長」「標內角」按鈕，就會看到角只有 1 個頂點、2 條直線邊、1 個角。"
+  },
+  {
+    "stem": "小杰畫了一個圖形：1 條彎彎的曲線和 1 條直線相接在一起。這樣是一個角嗎？",
+    "choices": [
+      "是，只要有頂點就是角",
+      "不是，因為有一條邊是曲線，角必須兩條都是直線邊",
+      "是，只要有一條直線邊就是角",
+      "不是，因為沒有塗顏色"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "angle"
+    },
+    "explanation": "構成角的兩條邊都必須是「直線」。彎彎的曲線不能算角的邊，所以曲邊接直線不是角（這是非角陷阱）。"
+  },
+  {
+    "stem": "圖中的三角形有幾個頂點、幾條邊？",
+    "choices": [
+      "2 個頂點、2 條邊",
+      "3 個頂點、2 條邊",
+      "3 個頂點、3 條邊",
+      "2 個頂點、3 條邊"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "triangle"
+    },
+    "explanation": "三角形有 3 個尖尖的頂點、3 條直線邊，也有 3 個角。名稱裡的「三」就是 3 的意思。"
+  },
+  {
+    "stem": "關於正方形的特徵，哪一句是對的？",
+    "choices": [
+      "4 條邊一樣長，但是 4 個角大小不同",
+      "上下邊較長、左右邊較短，有 4 個直角",
+      "只有 3 個直角，另外 1 個是斜斜的角",
+      "4 條邊一樣長，4 個角都是直角"
+    ],
+    "answer_index": 3,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "square"
+    },
+    "explanation": "正方形的核心特徵：4 條邊一樣長 ＋ 4 個直角 ＋ 4 個頂點。按「標內角」可以看到 4 個直角小方塊。"
+  },
+  {
+    "stem": "正方形和長方形有哪些相同的地方？",
+    "choices": [
+      "都有 4 個直角、4 個頂點",
+      "兩種圖形的 4 條邊都一樣長",
+      "長方形有 5 個頂點",
+      "正方形沒有直角"
+    ],
+    "answer_index": 0,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "square"
+    },
+    "explanation": "正方形和長方形都有 4 個直角、4 個頂點、4 條邊，這是它們的相同點；不過正方形 4 條邊一樣長，長方形只有上下邊相等、左右邊相等。"
+  },
+  {
+    "stem": "正方形和長方形最大的不同是什麼？",
+    "choices": [
+      "長方形比較大，正方形比較小",
+      "正方形的 4 條邊一樣長；長方形只有上下邊相等、左右邊相等",
+      "正方形有曲線邊，長方形沒有",
+      "正方形有 3 個角，長方形有 4 個角"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "rectangle"
+    },
+    "explanation": "按「數邊長」看長方形的邊：上下兩條一樣長、左右兩條一樣長，但四條邊不是全部等長；正方形則是 4 條邊全部等長。圖形大小不影響名稱，邊的關係才是重點。"
+  },
+  {
+    "stem": "四邊形（像正方形、長方形）有幾個角、幾個頂點？",
+    "choices": [
+      "3 個角、3 個頂點",
+      "4 個角、3 個頂點",
+      "4 個角、4 個頂點",
+      "5 個角、5 個頂點"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "rectangle"
+    },
+    "explanation": "四邊形「四」是 4：有 4 條直線邊、4 個角、4 個頂點。正方形和長方形都是四邊形。"
+  },
+  {
+    "stem": "小美數一個圖形：有 3 個頂點、3 條邊、3 個角。這是哪一種圖形？",
+    "choices": [
+      "正方形",
+      "長方形",
+      "圓形",
+      "三角形"
+    ],
+    "answer_index": 3,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "triangle"
+    },
+    "explanation": "有 3 個頂點、3 條邊、3 個角的圖形就是三角形。正方形和長方形都是 4 個頂點、4 條邊；圓形沒有頂點也沒有角。"
+  },
+  {
+    "stem": "數數看，圖中的長方形有幾條邊？",
+    "choices": [
+      "2 條邊",
+      "4 條邊",
+      "6 條邊",
+      "8 條邊"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "rectangle"
+    },
+    "explanation": "長方形有 4 條邊：上下各 1 條（互相相等）、左右各 1 條（互相相等），共 4 條直線邊。"
+  },
+  {
+    "stem": "哪一句話正確描述了「角」？",
+    "choices": [
+      "沒有頂點、只有曲線的圖形",
+      "有 4 個頂點、4 條邊一樣長的圖形",
+      "有 1 個頂點和 2 條直線邊的圖形",
+      "有 3 條曲線邊圍成的圖形"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "component": "angle-vertex-explorer",
+      "shape": "angle"
+    },
+    "explanation": "角 · 1 個頂點 ＋ 2 條直線邊 ＝ 1 個角。直線邊才夾得出角，「從一點出發的兩條直線」中間張開的就是角。"
+  }
+]

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>單元 S-2-1｜物體之幾何特徵：邊、角、頂點</title>
+<script src="./components/angle-vertex-explorer.js"></script>
+<style>
+:root{--ink:#1e293b;--muted:#64748b;--indigo:#4f46e5;--line:#e2e8f0;--ok:#059669;--bad:#e11d48}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f1f5f9;color:var(--ink)}
+header{background:linear-gradient(135deg,#4338ca,#6366f1);color:#fff;padding:18px 16px}
+header .tag{display:inline-block;background:rgba(255,255,255,.2);border-radius:999px;font-size:12px;font-weight:700;padding:2px 10px;margin-bottom:6px}
+header h1{margin:0;font-size:19px;line-height:1.4}
+header p{margin:4px 0 0;font-size:13px;opacity:.85}
+main{max-width:1040px;margin:0 auto;padding:16px}
+.scorebar{position:sticky;top:0;z-index:5;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;font-weight:700;box-shadow:0 2px 8px rgba(15,23,42,.06)}
+.scorebar .pill{background:#eef2ff;color:#4338ca;border-radius:999px;padding:3px 10px}
+.scorebar .reset{margin-left:auto;border:1.5px solid var(--line);background:#f8fafc;border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:700;cursor:pointer}
+.explorer{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;margin:14px 0}
+.explorer h2{margin:0 0 4px;font-size:15px}
+.explorer .hint{margin:0 0 10px;font-size:12.5px;color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.chips button{border:2px solid var(--line);background:#f8fafc;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.chips button.act{background:var(--indigo);border-color:var(--indigo);color:#fff}
+section.quiz h2{font-size:16px;margin:22px 0 4px}
+section.quiz .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+.cards{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:820px){.cards{grid-template-columns:1fr 1fr}}
+@media(min-width:1100px){.cards{grid-template-columns:1fr 1fr 1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.card .no{background:#eef2ff;color:#4338ca;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;align-self:flex-start}
+.card .stem{font-size:14.5px;font-weight:700;line-height:1.55;margin:0}
+.card .opts{display:flex;flex-direction:column;gap:7px}
+.card .opts button{text-align:left;border:2px solid var(--line);background:#f8fafc;border-radius:12px;padding:9px 11px;font-size:13.5px;cursor:pointer;line-height:1.45;transition:.15s}
+.card .opts button:not(:disabled):hover{border-color:#a5b4fc;background:#eef2ff}
+.card .opts button.pick-ok{border-color:var(--ok);background:#ecfdf5;font-weight:700}
+.card .opts button.pick-bad{border-color:var(--bad);background:#fff1f2}
+.card .opts button.dim{opacity:.55}
+.card .fb{font-size:13px;font-weight:700;min-height:18px}
+.card .fb.ok{color:var(--ok)}.card .fb.bad{color:var(--bad)}
+.card .why{border:none;background:#f1f5f9;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;align-self:flex-start}
+.card.done{border-color:#a5b4fc}
+.drawer-mask{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;pointer-events:none;transition:.2s;z-index:9}
+.drawer{position:fixed;z-index:10;background:#fff;box-shadow:0 8px 30px rgba(15,23,42,.25);padding:16px;overflow:auto;transition:transform .25s;transform:translateX(105%)}
+.drawer.open{transform:none}
+@media(max-width:767px){.drawer{left:0;right:0;bottom:0;top:auto;max-height:78vh;border-radius:18px 18px 0 0;transform:translateY(105%)}
+.drawer-mask.on{opacity:1;pointer-events:auto}.drawer.open{transform:none}}
+@media(min-width:768px){.drawer{top:0;bottom:0;right:0;width:380px;transform:translateX(105%)}
+.drawer-mask.on{opacity:1;pointer-events:auto}.drawer.open{transform:none}}
+.drawer h3{margin:0 0 8px;font-size:15px}
+.drawer .q{font-size:14px;font-weight:700;line-height:1.5}
+.drawer .ans{font-size:13.5px;font-weight:700;color:var(--ok);margin:8px 0}
+.drawer .exp{font-size:13.5px;line-height:1.7;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:10px;margin-top:8px}
+.drawer .mini{margin-top:12px}
+.drawer .close{position:absolute;top:10px;right:12px;border:1.5px solid var(--line);background:#f8fafc;border-radius:999px;padding:4px 12px;font-weight:700;cursor:pointer}
+footer{text-align:center;font-size:12px;color:var(--muted);padding:18px}
+</style>
+</head>
+<body>
+<header>
+  <span class="tag">Grade 2 · Geometry</span>
+  <h1>單元 S-2-1｜物體之幾何特徵：邊、角、頂點</h1>
+  <p>認識正方形、長方形與三角形的邊、角、頂點，還有「角」是怎麼組成的。</p>
+</header>
+
+<main>
+  <div class="scorebar">
+    <span class="pill" id="done">已完成 0/10</span>
+    <span class="pill" id="right">答對 0</span>
+    <button class="reset" id="reset">重新測驗</button>
+  </div>
+
+  <div class="explorer">
+    <h2>🔍 幾何特徵探索器</h2>
+    <p class="hint">先選一個圖形，再按「點頂點／數邊長／標內角」把特徵一個一個找出來。</p>
+    <div class="chips" id="shape-chips">
+      <button data-shape="angle" class="act">角</button>
+      <button data-shape="triangle">三角形</button>
+      <button data-shape="square">正方形</button>
+      <button data-shape="rectangle">長方形</button>
+    </div>
+    <angle-vertex-explorer id="xp" shape="angle"></angle-vertex-explorer>
+  </div>
+
+  <section class="quiz">
+    <h2>📝 單元測驗（10 題）</h2>
+    <p class="sub">選出正確答案後，可按「看詳解」打開說明抽屜。</p>
+    <div class="cards" id="cards"></div>
+  </section>
+</main>
+
+<div class="drawer-mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <button class="close" id="close">關閉 ✕</button>
+  <h3 id="d-title">詳解</h3>
+  <p class="q" id="d-q"></p>
+  <p class="ans" id="d-ans"></p>
+  <div class="mini"><angle-vertex-explorer id="d-vis" shape="triangle"></angle-vertex-explorer></div>
+  <div class="exp" id="d-exp"></div>
+</aside>
+
+<footer>Zero-Redundancy Quiz Runner · S-2-1 · Vanilla Web Components</footer>
+
+<script>
+const DATA_URL='../data/curriculum_v3/g2_s21_shapes_angles.json';
+let DATA=[],state=[];
+const $=id=>document.getElementById(id);
+
+function render(){
+  const box=$('cards');box.innerHTML='';
+  DATA.forEach(function(q,i){
+    const card=document.createElement('div');card.className='card';card.id='card-'+i;
+    card.innerHTML='<span class="no">第 '+(i+1)+' 題</span>'+
+      '<p class="stem">'+q.stem+'</p><div class="opts" id="opts-'+i+'"></div>'+
+      '<div class="fb" id="fb-'+i+'"></div><button class="why" data-i="'+i+'">看詳解</button>';
+    box.appendChild(card);
+    const opts=card.querySelector('.opts');
+    q.choices.forEach(function(c,j){
+      const b=document.createElement('button');b.textContent=c;
+      b.addEventListener('click',function(){answer(i,j,b);});
+      opts.appendChild(b);
+    });
+  });
+  document.querySelectorAll('.why').forEach(function(b){
+    b.addEventListener('click',function(){openDrawer(+b.dataset.i);});
+  });
+}
+
+function answer(i,j,btn){
+  if(state[i])return;
+  state[i]=j;
+  const q=DATA[i],opts=$('opts-'+i),fb=$('fb-'+i),card=$('card-'+i);
+  const ok=j===q.answer_index;
+  [...opts.children].forEach(function(b,k){
+    b.disabled=true;
+    if(k===q.answer_index)b.classList.add('pick-ok');
+    else if(k===j)b.classList.add('pick-bad');
+    else if(ok)b.classList.add('dim');
+  });
+  fb.textContent=ok?'✅ 答對了！':'❌ 正確答案是：'+q.choices[q.answer_index];
+  fb.className='fb '+(ok?'ok':'bad');card.classList.add('done');
+  updScore();
+}
+
+function updScore(){
+  const done=state.filter(Boolean).length;
+  const right=state.filter(function(s,i){return s===DATA[i].answer_index;}).length;
+  $('done').textContent='已完成 '+done+'/'+DATA.length;
+  $('right').textContent='答對 '+right;
+}
+
+function openDrawer(i){
+  const q=DATA[i];
+  $('d-title').textContent='第 '+(i+1)+' 題詳解';
+  $('d-q').textContent=q.stem;
+  $('d-ans').textContent='正確答案：'+q.choices[q.answer_index];
+  $('d-exp').textContent=q.explanation;
+  $('d-vis').setAttribute('shape',q.visual_engine.shape||'triangle');
+  $('drawer').classList.add('open');$('mask').classList.add('on');
+}
+function closeDrawer(){$('drawer').classList.remove('open');$('mask').classList.remove('on');}
+$('close').addEventListener('click',closeDrawer);
+$('mask').addEventListener('click',closeDrawer);
+
+document.querySelectorAll('#shape-chips button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('#shape-chips button').forEach(function(x){x.classList.remove('act');});
+    b.classList.add('act');
+    $('xp').setAttribute('shape',b.dataset.shape);
+  });
+});
+
+$('reset').addEventListener('click',function(){state=[];updScore();render();});
+
+fetch(DATA_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(function(d){DATA=d;state=[];render();updScore();})
+  .catch(function(e){
+    $('cards').innerHTML='<div class="card"><p class="stem">⚠️ 測驗資料載入失敗：'+e.message+'<br>請確認 '+DATA_URL+' 存在。</p></div>';
+  });
+</script>
+</body>
+</html>
