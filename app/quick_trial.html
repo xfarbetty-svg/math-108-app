@@ -36,8 +36,8 @@
     .top-bar {
       width: 100%;
       max-width: 500px;
-      height: 42px;
-      padding: 0 16px;
+      height: 40px;
+      padding: 0 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -46,30 +46,34 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      white-space: nowrap;
     }
     .badge {
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 2px 8px;
       border-radius: 999px;
       background: var(--primary-light);
       color: var(--primary);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .dots-nav {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
+      flex-shrink: 0;
     }
     .nav-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--border);
       transition: all 0.25s ease;
     }
     .nav-dot.active {
       background: var(--primary);
-      transform: scale(1.3);
+      transform: scale(1.25);
     }
     .nav-dot.done {
       background: var(--success);
@@ -77,17 +81,23 @@
     .source-ghost {
       font-size: 11px;
       color: var(--muted);
-      opacity: 0.8;
+      opacity: 0.85;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+      text-align: right;
+      flex-shrink: 1;
     }
 
     /* 主舞台容器 */
     .container {
       width: 100%;
       max-width: 500px;
-      padding: 12px 16px 24px 16px;
+      padding: 10px 10px 24px 10px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* 題幹卡 */
@@ -95,7 +105,7 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
     .unit-label {
@@ -108,7 +118,7 @@
       gap: 6px;
     }
     .stem-text {
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.5;
       font-weight: 600;
       color: var(--ink);
@@ -119,24 +129,43 @@
       background: #FFFFFF;
       border: 1.5px solid var(--border);
       border-radius: 14px;
-      padding: 14px 8px;
+      padding: 12px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 140px;
+      min-height: 125px;
       position: relative;
       overflow: hidden;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
 
-    /* 十格陣雙盒佈局 */
+    /* 十格陣雙盒佈局（支援 360px ~ 390px 深度適配） */
     .tf-pair {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       justify-content: center;
       align-items: center;
       width: 100%;
+      max-width: 100%;
+    }
+
+    /* 核心修復：在螢幕寬度 <= 420px 時，自動等比縮放十格陣尺寸，杜絕破版切邊 */
+    @media (max-width: 420px) {
+      ten-frame-grid {
+        --tfg-pitch: 28px;
+        --tfg-cell: 25px;
+        --tfg-dot: 20px;
+      }
+    }
+    @media (max-width: 375px) {
+      ten-frame-grid {
+        --tfg-pitch: 26px;
+        --tfg-cell: 23px;
+        --tfg-dot: 18px;
+      }
+      .tf-pair { gap: 4px; }
+      .container { padding: 8px 6px 24px 6px; }
     }
 
     /* 拋物線飛補小球 */
@@ -495,8 +524,7 @@
       var q = TRIALS[idx];
 
       // 頂部進度更新
-      var toolNum = Math.floor(idx / 2) + 1;
-      unitBadge.textContent = '教具 ' + toolNum + '/3 (' + (idx + 1) + '/6)';
+      unitBadge.textContent = '第 ' + (idx + 1) + ' / ' + TRIALS.length + ' 題';
       sourceGhost.textContent = q.source;
       unitLabel.textContent = q.sub_title;
       stemText.textContent = q.stem;

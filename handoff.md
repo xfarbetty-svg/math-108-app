@@ -78,16 +78,23 @@
   - 題庫：`data/curriculum_v3/g2_n212_weight_mass.json` (嚴選 10 題段考真題，頂層 Array，平衡分佈 [2, 3, 3, 2])
   - 門戶：`app/index.html` 首頁已同步掛載 N-2-12 單元導航。
   - Git Commit: `46243a6`
-- **【算力消耗】**：$0.00 零消耗，全程透過通道 2（A-SERVER SSH OpenCode + `opencode/glm-5.3-flash-free`）實體施工。
+
+## 📱 人類真機盲審驗收與防破版交付 (2026-11-10 Session 17)
+- **【十格陣算理借位連動修復】**：針對調試台 T-01 面板湊滿 10 時「右盒 4 沒扣 1 變成 3」之算理視覺脫節，完成卡片面板操作項（`#tfFull`、`#tfPlus`、`#tfMinus`、`#tfNine`、`#tfReset`）與 `ten-frame:full` 全域監聽的借位扣減雙向閉環（右盒真確執行 $4 - 1 = 3$）。
+- **【三大教具手機速驗台落地】**：應使用者「每教具 2 題就好」需求，打造 `app/quick_trial.html`（十格陣、雙軌差值、力矩天平各 2 題段考真題，共 6 題）。
+- **【Android 360px 窄螢幕防破版深度修復】**：
+  - 十格陣在 `<= 420px` 與 `<= 375px` 下透過 CSS 變數動態縮放格距（33px $\rightarrow$ 26px），兩盒並排完全收斂在 288px 內，徹底根除左右兩側被裁切問題。
+  - 頂部狀態列精簡為「第 N / 6 題」，右側來源增加省略號防溢出，徹底杜絕折行。
+- **【CDP 實機驗真全綠】**：`node tools/ac_run.js app/quick_trial.html tests/ac_quick_trial.js --viewport=360x780` 實測 7/7 checks 全部 PASS，無任何水平滾動溢出（scrollWidth=360），CONSOLE_NOISE_COUNT=0。
 
 ## 🚦 目前狀態
-- **當前版本**：`v14.0.0` (Grade 1 All 9 Units + Grade 2 First 9 Units Delivered & Verified: 18 Units, 180 Real Exam Questions)
-- **健康狀態**：🟢 18 個單元 180 題真實段考題全量通過，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
-- **Git 狀態**：本地工作區乾淨
-- **雲端額度消耗**：$0.00（本機 + 通道 2 邊緣算力，零浪費）
+- **當前版本**：`v14.1.0` (Mobile Quick Trial Delivered, 360px Guardrail Verified, Gate Green 28/28)
+- **健康狀態**：🟢 18 個單元 180 題真實段考題全量通過 ＋ 6 題極速體驗台，`tools/ac_gate.js` 28/28 全綠 (Exit 0)
+- **Git 狀態**：本地工作區完全乾淨（Commit `278562e`）
+- **雲端額度消耗**：$0.00（全本地邊緣實測）
 
 ## ➡️ 下一步（開新框首要任務）
-1. **實機體驗二年級九大單元**：直接開啟 `app/index.html`，以手機 390px 體驗 N-2-1、N-2-2、N-2-3、N-2-4、N-2-6、N-2-7、N-2-11、N-2-12、S-2-1 共 90 題段考真題做題手感與破招詳解。
+1. **實機體驗 6 題極速體驗台**：開啟 `app/quick_trial.html`，以手機體驗十格陣、雙軌差值、力矩天平 6 題手感。
 2. **啟動 G2-T10: N-2-13 鐘面的認識（幾點幾分與經過時間）**：派工 A-SERVER 開發 `<clock-time-explorer>` 原生組件與 10 題真題。
 
 ## ⚠️ 注意事項
@@ -95,6 +102,6 @@
 - **嚴格 10 題憲法**：每單元嚴格只做 10 題真實段考題，杜絕隨機刷題。
 
 ## 🕐 最後更新
-- 時間：2026-11-10T00:00:00+08:00
-- 更新者：AGY & Worker (AutoFlow 協同流水線)
-- Git push 狀態：本地已 commit（無遠端 remote）
+- 時間：2026-11-10T03:55:00+08:00
+- 更新者：AGY & Worker (AutoFlow 協同流水線 @ DESKTOP-6ELKIRH)
+- Git push 狀態：本地已 commit（Commit 278562e，無遠端 remote）

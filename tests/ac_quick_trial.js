@@ -28,6 +28,11 @@ rec('QT-05', btnNext.style.display !== 'none', '下一題按鈕亮起');
 btnNext.click();
 await sleep(300);
 const curBadge = document.getElementById('unitBadge').textContent;
-rec('QT-06', curBadge.includes('2/6'), '順利進入第 2 題: ' + curBadge);
+rec('QT-06', curBadge.includes('2 / 6'), '順利進入第 2 題: ' + curBadge);
+
+// 驗證 360px 下無任何水平滾動溢出 (破版守門)
+const sw = document.documentElement.scrollWidth;
+const vw = window.innerWidth;
+rec('QT-07', sw <= vw, '視窗無水平滾動溢出 (scrollWidth=' + sw + ' <= ' + vw + ')');
 
 return out;
