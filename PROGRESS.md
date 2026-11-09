@@ -43,3 +43,9 @@
 - [x] **全量硬閘門 G-9 驗真**：`node tools/ac_gate.js` → `GATE_GREEN (16 checks, 0 failed)`，Exit Code 0。G-5 體積 10,940 / 7,498 / 12,260 B，合計 30,698 B ≤ 30,720 B。
 - [ ] **下一步**：G-8 人類三端實機手感驗收，通過後啟動第一單元題目組裝或第二批課綱元件。
 - [x] **Stage 5 AGY PR 總驗收放行**：產出 `reports/20261105_2035_g1_visual_spec/R5_AGY_PR_DELIVERY.md`，Commit `f821132`，完成 Stage 0 至 Stage 5 鋼鐵閉環！
+
+## 📌 2026-11-09 (Session 07) - 首個正式單元落地：N-1-3 湊十拆十 10 題真題題卡
+- [x] **SSOT 扁平題庫收斂**：完成 `data/curriculum_v3/g1_n13_make_ten.json`，嚴格精選 10 題段考考題（非生成水題）。
+- [x] **三端自適應題卡落地**：`app/unit_n13.html`（頂部狀態列 <40px、11px 幽靈題源字、2x2 拇指按鈕、抽屜式破招分解樹）。
+- [x] **CDP 實機驗真全綠**：`tests/ac_unit_n13.js` 在 390px / 768px / 960px 三端實測 `ALL_PASS (6 checks)`，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n13_390.png`。
+- [x] **Git 版控鋼印**：Commit `aa15ae0`，本地工作區完全乾淨。
