@@ -97,4 +97,18 @@
 - [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_s12_stack_roll.json`（嚴選 10 題各縣市段考形體操作真題，含平面堆疊、球體曲面滾落、圓柱直立可堆橫躺會滾等思維陷阱題）。
 - [x] **三端自適應題卡落地**：`app/unit_s12.html`（掛載 `<stack-physics-bench>`，390px/768px/960px 跑 `tests/ac_unit_s12.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_s12_390.png`、`768.png`、`960.png`）。
 - [x] **首頁門戶更新**：`app/index.html` 正式收錄 S-1-2 入口卡片，一年級正式落地單元達到 6 個（N-1-1, N-1-2, N-1-3, R-1-1, S-1-1, S-1-2，共 60 題段考真題）！
-- [ ] **下一目標**：推進下一批課綱單元（例如 N-1-4 錢幣操作或 S-1-3 長度比較）。
+- [x] **下一目標**：推進下一批課綱單元（N-1-5 長度比較）。
+
+## 📌 2026-11-09 (Session 13) - N-1-5 長度比較：<snap-caliper-wall> 碰壁基準牆與迴紋針卡尺鏈落地
+- [x] **026 AutoFlow 傳動軸全速運轉**：
+  - Stage 0：AGY 決策大腦落盤 `reports/20261109_2325_g1_n15_spec/R0_AGY_BLUEPRINT.md`，定義基準牆磁吸（WALL_ALIGN）、個別單位無縫相扣（CHAIN_SNAP）與長短直接比較 Given-When-Then AC。
+  - Stage 1：通道 2（A-SERVER SSH 備援）OpenCode BP 現場指揮官完成任務卡拆票，落盤 `R1_BP_EXECUTION_PLAN.md`（15,612 B）。
+  - Stage 2：AGY 簽署放行書 `R2_AGY_PLAN_REVIEW.md` 批准獨立體積預算 $\le 12,288$ B 與 `MUTUAL_CONSENT_APPROVED`。
+  - Stage 3：通道 2 OpenCode Worker（`iceman-free`）實體帶手腳施工（$0.00 成本），秒級產出組件與獨立驗收頁。
+- [x] **新增教具元件**：`app/components/snap-caliper-wall.js`（4,624 B $\le 12,288$ B，純原生 Web Component，零外部依賴，支援碰壁基準線 X=30 磁吸對齊、45px 迴紋針個別單位無縫卡扣成鏈、自動量測讀數徽章與雙物體直接比較模式）。
+- [x] **獨立 AC 驗收頁落地**：`tests/ac_snap_caliper_wall.html`（15 項檢驗全 PASS，`ALL_AC_PASSED`）。
+- [x] **G-9 機械化閘門擴充升級**：`tools/ac_gate.js` 擴充至 24 checks，實測全綠 `GATE_GREEN (24 checks, 0 failed)`，Exit Code 0。
+- [x] **SSOT 扁平題庫落地**：完成 `data/curriculum_v3/g1_n15_length_compare.json`（嚴選 10 題各縣市段考長度真題，含起跑線對齊、個別單位無縫不留空隙、單位越大數量越少、繩子間接比較媒介、彎線拉直等思維陷阱題）。
+- [x] **三端自適應題卡落地**：`app/unit_n15.html`（掛載 `<snap-caliper-wall>`，390px/768px/960px 跑 `tests/ac_unit_n15.js` 實測 6/6 PASS，Exit Code 0，CONSOLE_NOISE_COUNT=0，截圖存入 `evidence/unit_n15_390.png`、`768.png`、`960.png`）。
+- [x] **首頁門戶更新**：`app/index.html` 正式收錄 N-1-5 入口卡片，一年級正式落地單元達到 7 個（N-1-1, N-1-2, N-1-3, N-1-5, R-1-1, S-1-1, S-1-2，共 70 題段考真題）！
+- [ ] **下一目標**：推進一年級最後兩個課綱條目（N-1-4 錢幣操作或 D-1-1 統計與分類）。

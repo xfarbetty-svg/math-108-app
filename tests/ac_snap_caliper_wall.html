@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AC - snap-caliper-wall (N-1-5)</title>
+<style>
+body{font-family:system-ui,Segoe UI,Arial,sans-serif;margin:16px;background:#fff}
+h1{font-size:18px;margin:0 0 8px}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;color:#fff;margin-left:6px}
+.pass{background:#16a34a}.fail{background:#dc2626}
+li{margin:6px 0}
+#ac-summary{font-weight:700;margin:12px 0}
+pre{background:#f1f5f9;padding:8px;border-radius:6px;overflow:auto}
+</style>
+</head>
+<body>
+<h1>N-1-5 snap-caliper-wall AC 驗收</h1>
+<div id="host"></div>
+<div id="ac-summary"></div>
+<ol id="results"></ol>
+<script type="module">
+import '../app/components/snap-caliper-wall.js';
+
+function badge(ok){return `<span class="badge ${ok?'pass':'fail'}">${ok?'PASS':'FAIL'}</span>`}
+const results=[];
+function rec(name,ok,detail=''){results.push({name,ok,detail});
+  const li=document.createElement('li');li.innerHTML=`${name} ${badge(ok)}${detail?` <small>${detail}</small>`:''}`;document.getElementById('results').appendChild(li);}
+
+async function tick(){await new Promise(r=>setTimeout(r,0));}
+
+function fresh(){const h=document.getElementById('host');h.innerHTML='';const el=document.createElement('snap-caliper-wall');h.appendChild(el);return el;}
+
+(async function run(){
+  // TC1 AC-07-1 初始未對齊
+  let el=fresh(); await tick();
+  let st=el.getState();
+  rec('TC1 (AC-07-1) 初始未對齊狀態', st.aligned===false && st.status==='IDLE' && st.objectLength===180, JSON.stringify(st));
+
+  // TC2 alignWall 吸附
+  el=fresh(); await tick(); el.alignWall(); await tick();
+  st=el.getState();
+  rec('TC2 (AC-07-1) alignWall 吸附至已對齊', st.aligned===true && st.status==='WALL_ALIGNED', JSON.stringify(st));
+
+  // TC3 align 事件
+  el=fresh(); await tick();
+  let ev=null; el.addEventListener('caliper-event',e=>{ev=e.detail},{once:true});
+  el.alignWall(); await tick();
+  rec('TC3 (AC-07-1) 發出 align caliper-event', !!ev && ev.type==='align' && ev.unitCount===0, ev?JSON.stringify(ev):'no event');
+
+  // TC4 閾值內吸附 |44-30|<=15
+  el=fresh(); await tick(); el.moveTo(44); await tick();
+  st=el.getState();
+  rec('TC4 (AC-07-1) 閾值內 moveTo(44) 吸附', st.aligned===true && st.status==='WALL_ALIGNED', JSON.stringify(st));
+
+  // TC5 閾值外不吸附 |46-30|>15
+  el=fresh(); await tick(); el.moveTo(46); await tick();
+  st=el.getState();
+  rec('TC5 (AC-07-1) 閾值外 moveTo(46) 不吸附', st.aligned===false, JSON.stringify(st));
+
+  // TC6 首枚錨定 x=30
+  el=fresh(); await tick(); el.alignWall(); el.addUnit(); await tick();
+  let pos=el.getUnitPositions();
+  rec('TC6 (AC-07-2) 首枚迴紋針錨定 x=30', pos.length===1 && pos[0]===30, String(pos));
+
+  // TC7 位置公式 k=1..4
+  el=fresh(); await tick(); el.alignWall(); for(let i=0;i<4;i++)el.addUnit(); await tick();
+  pos=el.getUnitPositions();
+  const expect=[30,75,120,165];
+  rec('TC7 (AC-07-2) 位置公式 30+(k-1)*45', JSON.stringify(pos)===JSON.stringify(expect), `got ${pos} expect ${expect}`);
+
+  // TC8 無縫無重疊
+  let gapOk=true; for(let i=1;i<pos.length;i++){ if(pos[i]-(pos[i-1]+45)!==0) gapOk=false; }
+  rec('TC8 (AC-07-2/D-02) 相鄰邊界無縫無重疊', gapOk, `gaps checked`);
+
+  // TC9 add/remove 一致性
+  el=fresh(); await tick(); el.alignWall(); el.addUnit(); el.addUnit(); el.addUnit(); el.addUnit(); // 4
+  el.removeUnit(); await tick();
+  st=el.getState();
+  rec('TC9 (AC-07-2) removeUnit 後 unitCount/measuredLength 一致', st.unitCount===3 && st.measuredLength===135, JSON.stringify(st));
+
+  // TC10 snap 事件
+  el=fresh(); await tick(); el.alignWall(); await tick();
+  ev=null; el.addEventListener('caliper-event',e=>{ev=e.detail},{once:true});
+  el.addUnit(); await tick();
+  rec('TC10 (AC-07-2) addUnit 發出 snap 事件', !!ev && ev.type==='snap' && ev.unitCount===1, ev?JSON.stringify(ev):'no event');
+
+  // TC11 精確讀數狀態 READOUT_EXACT
+  el=fresh(); await tick(); el.setObject({name:'pencil-a',length:180}); el.alignWall(); for(let i=0;i<4;i++)el.addUnit(); await tick();
+  st=el.getState();
+  rec('TC11 (AC-07-3) 180px+4單位 => READOUT_EXACT', st.status==='READOUT_EXACT' && st.measuredLength===180, JSON.stringify(st));
+
+  // TC12 徽章文案
+  const svg=el.shadowRoot.querySelector('svg');
+  const txt=svg?svg.textContent:'';
+  rec('TC12 (AC-07-3) 徽章含「剛好 4 根迴紋針長」', txt.includes('剛好 4 根迴紋針長'), txt.slice(0,120));
+
+  // TC13 輔助虛線 x=210
+  let lineOk=false;
+  if(svg){ const lines=[...svg.querySelectorAll('line')]; lineOk=lines.some(l=>l.getAttribute('x1')==='210' && l.getAttribute('stroke-dasharray')); }
+  rec('TC13 (AC-07-3) 右端輔助虛線 x=210', lineOk, 'x1=210 dashed');
+
+  // TC14 compareMode 雙筆同基準並排
+  el=fresh(); await tick(); el.compareMode(180,135); await tick();
+  st=el.getState();
+  let both30=false;
+  if(el.shadowRoot.querySelector('svg')){
+    const rects=[...el.shadowRoot.querySelectorAll('svg rect')].filter(r=>r.getAttribute('stroke')==='#1d4ed8'||r.getAttribute('stroke')==='#047857');
+    both30=rects.length>=2 && rects.every(r=>r.getAttribute('x')==='30');
+  }
+  rec('TC14 (AC-07-4/D-03) compareMode 同基準 x=30 並排', st.status==='DUAL_COMPARE' && both30, JSON.stringify(st));
+
+  // TC15 差值金框與文案
+  let diffOk=false;
+  if(svg || el.shadowRoot.querySelector('svg')){
+    const s=el.shadowRoot.querySelector('svg'); const t=s?s.textContent:'';
+    const gold=[...s.querySelectorAll('rect')].some(r=>r.getAttribute('stroke')==='#f59e0b');
+    diffOk=gold && t.includes('長出 1 根迴紋針');
+  }
+  rec('TC15 (AC-07-4) 差值金框與「長出 1 根迴紋針」', diffOk, 'gold+text');
+
+  const pass=results.filter(r=>r.ok).length;
+  const all=results.length;
+  const sum=document.getElementById('ac-summary');
+  const allOk=pass===all;
+  sum.innerHTML=`結果: ${pass}/${all} ${badge(allOk)} ${allOk?'<span id="ALL_AC_PASSED">ALL_AC_PASSED</span>':''}`;
+  sum.dataset.status=allOk?'ALL_AC_PASSED':'FAILED';
+  document.body.setAttribute('data-ac', allOk?'ALL_AC_PASSED':'FAILED');
+})();
+</script>
+</body>
+</html>

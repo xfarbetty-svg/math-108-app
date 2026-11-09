@@ -53,6 +53,13 @@ if (fs.existsSync(absS12)) {
   rec('G-1 stack-physics-bench.js', r.status === 0, 'node --check exit=' + r.status);
 }
 
+// N-1-5 獨立語法閘門
+const absN15 = path.join(ROOT, 'app', 'components', 'snap-caliper-wall.js');
+if (fs.existsSync(absN15)) {
+  const r = spawnSync(process.execPath, ['--check', absN15], { encoding: 'utf8' });
+  rec('G-1 snap-caliper-wall.js', r.status === 0, 'node --check exit=' + r.status);
+}
+
 /* G-5 體積（每檔 ≤12KB、合計 ≤30KB） */
 let total = 0;
 for (const f of COMPONENTS) {
@@ -72,6 +79,12 @@ if (fs.existsSync(absS11)) {
 if (fs.existsSync(absS12)) {
   const sizeS12 = fs.statSync(absS12).size;
   rec('G-5 stack-physics-bench.js', sizeS12 <= LIMIT_EACH, sizeS12 + ' B (<= ' + LIMIT_EACH + ')');
+}
+
+// N-1-5 獨立體積閘門 (單檔 <= 12,288 B)
+if (fs.existsSync(absN15)) {
+  const sizeN15 = fs.statSync(absN15).size;
+  rec('G-5 snap-caliper-wall.js', sizeN15 <= LIMIT_EACH, sizeN15 + ' B (<= ' + LIMIT_EACH + ')');
 }
 
 /* G-4 零外部資源：僅允許 SVG 命名空間 */
