@@ -1,0 +1,72 @@
+[
+  {
+    "stem": "一包含餅乾有 8 片，媽媽買了 5 包，共有幾片？下列哪一個列式正確？",
+    "choices": ["5 × 8 ＝ 40 片", "8 × 5 ＝ 40 片", "5 ＋ 8 ＝ 13 片", "8 × 5 ＝ 13 片"],
+    "answer_index": 1,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 8, "multiplier": 5, "item-label": "片", "group-label": "包"}},
+    "explanation": "「每包 8 片」的 8 是每份個數＝被乘數，要放在前面；「5 包」的 5 是份數＝乘數，放在後面。所以一定要寫成 8 × 5 ＝ 40，不能寫成 5 × 8。"
+  },
+  {
+    "stem": "「7 的 4 倍」是多少？哪一個列式的語意完全正確？",
+    "choices": ["7 ＋ 4 ＝ 11", "4 × 7 ＝ 28", "7 × 4 ＝ 28", "7 × 7 ＝ 49"],
+    "answer_index": 2,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 7, "multiplier": 4, "item-label": "個", "group-label": "組"}},
+    "explanation": "「7 的 4 倍」意思是 4 個 7，也就是把 7 重複 4 次，所以列式是 7 × 4 ＝ 28。雖然 4 × 7 答案也是 28，但語意（誰是基準量）要用 7 × 4 表示。"
+  },
+  {
+    "stem": "弟弟有 3 元，哥哥的錢是弟弟的 6 倍，哥哥有多少元？",
+    "choices": ["3 × 6 ＝ 18 元", "3 ＋ 6 ＝ 9 元", "6 × 3 ＝ 18 元", "3 × 6 ＝ 9 元"],
+    "answer_index": 0,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 3, "multiplier": 6, "item-label": "元", "group-label": "份"}},
+    "explanation": "「是弟弟的 6 倍」就是把 3 元重複 6 次：基準量 3 在前當被乘數，倍數 6 在後當乘數，列式 3 × 6 ＝ 18 元。"
+  },
+  {
+    "stem": "一盒裝 9 枝筆，老師只買了 1 盒，最好的乘法列式是哪一個？",
+    "choices": ["9 × 1 ＝ 18 枝", "9 ＋ 1 ＝ 10 枝", "9 × 1 ＝ 9 枝", "1 × 9 ＝ 90 枝"],
+    "answer_index": 2,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 9, "multiplier": 1, "item-label": "枝", "group-label": "盒"}},
+    "explanation": "買 1 盒就只有 9 枝！乘數（份數）為 1 時代表「只有一份」，9 × 1 ＝ 9 枝。"
+  },
+  {
+    "stem": "0 × 5 代表「5 個 0 合起來」，答案是多少？",
+    "choices": ["不知道", "5", "25", "0"],
+    "answer_index": 3,
+    "visual_engine": {"component": "none"},
+    "explanation": "5 個 0 加起來還是 0：0 ＋ 0 ＋ 0 ＋ 0 ＋ 0 ＝ 0。所以 0 × 5 ＝ 0。"
+  },
+  {
+    "stem": "每盒裝 6 隻恐龍模型，小明買了 3 盒。列式「甲＝6 × 3」和「乙＝3 × 6」，哪一個符合題目情境？",
+    "choices": ["乙：3 × 6", "甲：6 × 3", "兩個都對", "兩個都錯"],
+    "answer_index": 1,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 6, "multiplier": 3, "item-label": "隻", "group-label": "盒"}},
+    "explanation": "雖然 6 × 3 和 3 × 6 都等於 18，但意義不同！「每盒裝 6 隻」代表被乘數是 6（每份個數放在前面），「買 3 盒」是乘數 3（份數放在後面），所以正確列式是甲：6 × 3。"
+  },
+  {
+    "stem": "小明寫了 4 × 7 ＝ 28，下列哪一個情境和他寫的算式語意相符？",
+    "choices": ["每盒 7 顆糖，買了 4 盒", "每盒 4 顆糖，買了 7 盒", "7 個 7 是多少", "4 加上 7 是多少"],
+    "answer_index": 0,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 7, "multiplier": 4, "item-label": "顆", "group-label": "盒"}},
+    "explanation": "4 × 7 表示「4 個 7」：份數 4 在後當乘數，每份個數 7 在前當被乘數，也就是 4 盒、每盒 7 顆，所以「每盒 7 顆糖，買了 4 盒」和它語意相符。"
+  },
+  {
+    "stem": "一包橡皮擦有 7 個，弟弟只買了 1 包，共有幾個？正確答案是哪一個？",
+    "choices": ["7 × 1 ＝ 14 個", "7 ＋ 1 ＝ 8 個", "1 × 7 ＝ 17 個", "7 × 1 ＝ 7 個"],
+    "answer_index": 3,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 7, "multiplier": 1, "item-label": "個", "group-label": "包"}},
+    "explanation": "買 1 包就是只有一份！乘數（份數）為 1 時，總數就等於每份個數本身：7 × 1 ＝ 7 個。"
+  },
+  {
+    "stem": "「8 個 3 是多少？」哪一個算式的寫法和語意都正確？",
+    "choices": ["8 ＋ 3 ＝ 11", "3 × 8 ＝ 24", "8 × 3 ＝ 24", "8 × 8 ＝ 64"],
+    "answer_index": 2,
+    "visual_engine": {"component": "multiple-relator", "attrs": {"base": 3, "multiplier": 8, "item-label": "個", "group-label": "份"}},
+    "explanation": "「8 個 3」指 8 份、每份 3 個：每份個數 3 當被乘數在前，份數 8 當乘數在後，列式 8 × 3 ＝ 24。3 × 8 雖然答案一樣，但語意是「3 個 8」，和題目不同。"
+  },
+  {
+    "stem": "關於「0」在乘法中的意義，下面哪一個敘述正確？",
+    "choices": ["9 × 0 ＝ 9", "0 × 9 ＝ 9", "0 × 9 沒有意義", "9 × 0 ＝ 0"],
+    "answer_index": 3,
+    "visual_engine": {"component": "none"},
+    "explanation": "9 × 0 表示「0 個 9」，一份也沒有，所以總數是 0，即 9 × 0 ＝ 0。0 × 9 ＝ 0 也成立，但 9 × 0 ＝ 9 和 0 × 9 ＝ 9 都錯了。"
+  }
+]
