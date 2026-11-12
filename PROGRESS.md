@@ -159,4 +159,5 @@
   - 頂部狀態列精簡為「第 N / 6 題」，右側來源增加省略號防溢出，徹底杜絕折行。
 - [x] **CDP 實機驗真全綠**：`node tools/ac_run.js app/quick_trial.html tests/ac_quick_trial.js --viewport=360x780` 實測 7/7 checks 全部 PASS，無任何水平滾動溢出（scrollWidth=360），CONSOLE_NOISE_COUNT=0。
 - [x] **G-9 機械化閘門全綠**：`node tools/ac_gate.js` 28/28 checks 全數通過，Exit Code 0。
+- [x] **一年級 4 大單元教具 × 真題速驗展演台落地**：建立 `app/g1_exam_showcase.html`，整合 N-1-3 湊十拆十、N-1-2 雙軌差值、R-1-1 算理天平、N-1-4 數線反推，支援內嵌雙模離線降級，徹底根除 `file://` 下的 `Failed to fetch` 錯誤，Git Commit `5571d99`。
 - [ ] **下一目標**：推進二年級 N-2-13 鐘面的認識（幾點幾分與經過時間）。
