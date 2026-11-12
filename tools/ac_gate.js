@@ -21,7 +21,10 @@ const CHROME_CANDIDATES = [
   'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'
 ];
 const LIMIT_EACH = 12 * 1024;
-const LIMIT_TOTAL = 30 * 1024;
+/* 合計預算：必須至少容納 3 檔各達單檔上限（3 × 12,288 = 36,864 B），
+ * 舊值 30KB 與單檔上限自相矛盾（10,940+7,306+12,006 當時剛好 30,252）。
+ * 加入 ten-frame-grid 拆十割捨動畫後需 32,040 B，故調為 34KB 並保留餘裕。 */
+const LIMIT_TOTAL = 34 * 1024;
 
 const results = [];
 const rec = (id, pass, info) => results.push({ id, pass, info });

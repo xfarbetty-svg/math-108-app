@@ -60,12 +60,12 @@ $.formula.textContent=`(□) = ${jump}`; this.S.status='SNAPPED'; this.S.reveale
 moveToTick(k){const t=Math.max(0,Math.min(20,Math.round(+k||0)));this.S.currentTick=t;const x=this.tx(t),$=this.$;$.maskg.style.display='';$.mb.setAttribute('x',x-12);$.mt.setAttribute('x',x);this._emit('snap',t);return this;}
 stepReverse(){const S=this.S;if(S.mode==='add_start'&&S.end!=null&&S.jump!=null){S.status='REVERSE_ACTIVE';this._emit('reverse',S.currentTick);
 const from=S.end,to=S.end-S.jump,x1=this.tx(from),x2=this.tx(to),mid=(x1+x2)/2,h=Math.max(25,Math.abs(x1-x2)*0.35);
-this.$.arc.setAttribute('d',`M${x1},145 Q${mid},${145-h} ${x2},145`);this.$.arc.style.display='';this.$.jtxt.setAttribute('x',mid);this.$.jtxt.setAttribute('y',145-h-6);this.$.jtxt.textContent=`-${S.jump}`;
+this.$.arc.setAttribute('d',`M${x1},145 Q${mid},${145-h} ${x2},145`);this.$.arc.style.display='';this.$.jtxt.setAttribute('x',mid);this.$.jtxt.setAttribute('y',145-h-6);this.$.jtxt.textContent=`🐸 倒退 ${S.jump} 格`;this.$.msg.textContent=`破招：小青蛙從終點往回跳 ${S.jump} 格`;
 this.$.maskg.style.display='';this.$.mb.setAttribute('x',x1-12);this.$.mt.setAttribute('x',x1);
 let t0=null,dur=450;const anim=ts=>{if(!t0)t0=ts;const p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,2);const cx=x1+(x2-x1)*e; this.$.mb.setAttribute('x',cx-12);this.$.mt.setAttribute('x',cx); if(p<1)requestAnimationFrame(anim); else{this.moveToTick(to);S.status='REVERSE_ACTIVE';S.currentTick=to;this._emit('snapped',to);} };requestAnimationFrame(anim);
 } else if(S.mode==='sub_middle'){S.status='SNAPPED';this._drawSubMiddle();this._emit('reverse',null);} return this;}
 reveal(){const S=this.S;if(S.mode==='add_start'){S.revealed=true;S.status='REVEALED';this.$.mt.textContent=String(S.start);this.$.mt.setAttribute('class','num');this.$.mb.setAttribute('style','fill:rgba(255,248,225,.25);stroke:#d4a017');this.$.maskg.style.opacity='.35';
-this.$.formula.textContent=`${S.end} - ${S.jump} = ${S.start}`;this.$.msg.textContent='破招：從終點往回倒退';this.moveToTick(S.start);}
+this.$.formula.textContent=`${S.end} - ${S.jump} = ${S.start}`;this.$.msg.textContent=`破招：小青蛙從終點往回跳 ${S.jump} 格`;this.moveToTick(S.start);}
 else if(S.mode==='sub_middle'){S.revealed=true;S.status='REVEALED';this._drawSubMiddle();this.$.formula.textContent=`${S.start} - ${S.end} = ${S.jump}`;}
 this._emit('reveal',S.currentTick);return this;}
 reset(){this._clearDraw();this.S={mode:null,start:null,jump:null,end:null,currentTick:null,status:'INIT',revealed:false};this._emit('reset',null);return this;}

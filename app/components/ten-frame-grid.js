@@ -5,43 +5,45 @@
   var CELLS = 10;
   var FUSION_MS = 300;
   var RESET_MS = 120;
+  var TAKEAWAY_MS = 800;
 
-  var CSS = [
-    ':host{display:inline-block;',
-    '--tfg-cell:30px;--tfg-pitch:33px;--tfg-dot:24px;',
-    '--tfg-fill:#DC2626;--tfg-hi:#F87171;--tfg-full:#FACC15;--tfg-border:#CBD5E1;',
-    '--tfg-bg:#F8FAFC;--tfg-shadow:rgba(250,204,21,.8);',
-    'font-family:system-ui,"Microsoft JhengHei","PingFang TC",sans-serif;}',
-    '.frame{position:relative;display:inline-block;padding:4px;',
-    'border:2px solid var(--tfg-border);border-radius:8px;background:var(--tfg-bg);',
-    'transition:border-color 160ms ease-out,box-shadow 160ms ease-out;}',
-    '.frame.is-locked{border-color:var(--tfg-full);border-width:2.5px;',
-    'box-shadow:0 0 12px var(--tfg-shadow);}',
-    '.grid{display:grid;grid-template-columns:repeat(5,var(--tfg-pitch));',
-    'grid-template-rows:repeat(2,var(--tfg-pitch));gap:0;}',
-    '.cell{width:var(--tfg-pitch);height:var(--tfg-pitch);padding:0;border:0;background:none;',
-    'display:flex;align-items:center;justify-content:center;cursor:pointer;',
-    'touch-action:manipulation;-webkit-tap-highlight-color:transparent;}',
-    '.cell:focus-visible{outline:2px solid #2563EB;outline-offset:-2px;border-radius:6px;}',
-    '.cell[disabled]{cursor:default;}',
-    '.slot{width:var(--tfg-cell);height:var(--tfg-cell);border:1px dashed var(--tfg-border);',
-    'border-radius:4px;display:flex;align-items:center;justify-content:center;',
-    'box-sizing:border-box;transition:border-color 160ms ease-out;}',
-    '.dot{width:var(--tfg-dot);height:var(--tfg-dot);border-radius:50%;',
-    'background:radial-gradient(circle at 30% 30%,var(--tfg-hi),var(--tfg-fill));',
-    'box-shadow:inset 0 -2px 3px rgba(0,0,0,.18);animation:tfg-pop 160ms ease-out both;}',
-    '.dot.is-fusing{animation:tfg-shake 300ms ease-in-out both;}',
-    '.dot.is-leaving{animation:tfg-fade 120ms ease-in both;}',
-    '@keyframes tfg-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}',
-    '@keyframes tfg-shake{',
-    '0%,100%{transform:translateX(0);box-shadow:0 0 0 0 rgba(245,158,11,0)}',
-    '25%{transform:translateX(-2px);box-shadow:0 0 10px 3px rgba(245,158,11,.9)}',
-    '75%{transform:translateX(2px);box-shadow:0 0 10px 3px rgba(245,158,11,.9)}}',
-    '@keyframes tfg-fade{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.4)}}',
-    '@media (prefers-reduced-motion:reduce){',
-    '.dot,.dot.is-fusing,.dot.is-leaving{animation:none!important;}',
-    '.frame,.slot{transition:none!important;}}'
-  ].join('');
+  var CSS = `:host{display:inline-block;
+--tfg-cell:30px;--tfg-pitch:33px;--tfg-dot:24px;
+--tfg-fill:#DC2626;--tfg-hi:#F87171;--tfg-full:#FACC15;--tfg-border:#CBD5E1;
+--tfg-bg:#F8FAFC;--tfg-shadow:rgba(250,204,21,.8);
+font-family:system-ui,"Microsoft JhengHei","PingFang TC",sans-serif;}
+.frame{position:relative;display:inline-block;padding:4px;
+border:2px solid var(--tfg-border);border-radius:8px;background:var(--tfg-bg);
+transition:border-color 160ms ease-out,box-shadow 160ms ease-out;}
+.frame.is-locked{border-color:var(--tfg-full);border-width:2.5px;
+box-shadow:0 0 12px var(--tfg-shadow);}
+.grid{display:grid;grid-template-columns:repeat(5,var(--tfg-pitch));
+grid-template-rows:repeat(2,var(--tfg-pitch));gap:0;}
+.cell{width:var(--tfg-pitch);height:var(--tfg-pitch);padding:0;border:0;background:none;
+display:flex;align-items:center;justify-content:center;cursor:pointer;
+touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.cell:focus-visible{outline:2px solid #2563EB;outline-offset:-2px;border-radius:6px;}
+.cell[disabled]{cursor:default;}
+.slot{width:var(--tfg-cell);height:var(--tfg-cell);border:1px dashed var(--tfg-border);
+border-radius:4px;display:flex;align-items:center;justify-content:center;
+box-sizing:border-box;transition:border-color 160ms ease-out;}
+.dot{width:var(--tfg-dot);height:var(--tfg-dot);border-radius:50%;
+background:radial-gradient(circle at 30% 30%,var(--tfg-hi),var(--tfg-fill));
+box-shadow:inset 0 -2px 3px rgba(0,0,0,.18);animation:tfg-pop 160ms ease-out both;}
+.dot.is-fusing{animation:tfg-shake 300ms ease-in-out both;}
+.dot.is-leaving{animation:tfg-fade 120ms ease-in both;}
+.dot.is-takeaway{animation:tfg-takeaway 800ms ease-in-out both;}
+@keyframes tfg-pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes tfg-takeaway{0%{opacity:1;transform:scale(1)}45%{opacity:.55;transform:scale(.82)}
+100%{opacity:0;transform:scale(.25)}}
+@keyframes tfg-shake{
+0%,100%{transform:translateX(0);box-shadow:0 0 0 0 rgba(245,158,11,0)}
+25%{transform:translateX(-2px);box-shadow:0 0 10px 3px rgba(245,158,11,.9)}
+75%{transform:translateX(2px);box-shadow:0 0 10px 3px rgba(245,158,11,.9)}}
+@keyframes tfg-fade{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.4)}}
+@media (prefers-reduced-motion:reduce){
+.dot,.dot.is-fusing,.dot.is-leaving,.dot.is-takeaway{animation:none!important;}
+.frame,.slot{transition:none!important;}}`;
 
   function num(el, name, fallback) {
     var raw = el.getAttribute(name);
@@ -115,6 +117,35 @@
 
     /* RK-02：公開填格 API，必須與點擊同一條 _syncTheme() 同步路徑 */
     setCount(v) { this.value = v; }
+
+    /* RK-05：拆十割捨 800ms → 扣除並派事件 */
+    takeAway(count, callback) {
+      var self = this, prev = this._value, n = Math.round(Number(count));
+      if (count == null || !Number.isFinite(n) || n <= 0 || n > prev) {
+        this._emit('ten-frame:takeaway', { ok: false, value: prev, requested: count,
+          reason: n > prev ? 'exceed' : 'invalid' });
+        return false;
+      }
+      clearTimeout(this._fusionTimer); this._fusionTimer = 0;
+      clearTimeout(this._resetTimer);
+      var drop = [].slice.call(this._root.querySelectorAll('.dot'), -n);
+      drop.forEach(function (d) { d.classList.remove('is-fusing'); d.classList.add('is-takeaway'); });
+      this._state = 'TAKEAWAY';
+      this._syncTheme();
+      this._resetTimer = setTimeout(function () {
+        var next = prev - n;
+        drop.forEach(function (d) { d.remove(); });
+        self._quiet = true;
+        self.setAttribute('value', String(next));
+        self._quiet = false;
+        self._value = next;
+        self._state = next === CELLS ? 'FULL_LOCKED' : 'EMPTY_OR_PARTIAL';
+        self._syncTheme();
+        self._emit('ten-frame:takeaway', { ok: true, value: next, previous: prev, count: n });
+        if (typeof callback === 'function') callback(next, n);
+      }, TAKEAWAY_MS);
+      return true;
+    }
 
     _build() {
       this._root.replaceChildren();
@@ -230,6 +261,7 @@
 
     _resetTo(to, prev) {
       clearTimeout(this._fusionTimer);
+      clearTimeout(this._resetTimer);
       this._fusionTimer = 0;
       var self = this;
       var dots = this._root.querySelectorAll('.dot');

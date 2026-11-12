@@ -482,7 +482,166 @@
 
     .solution-drawer.open { transform: translateY(0); }
     .drawer-handle { width: 36px; height: 4px; background: #475569; border-radius: 2px; margin: 0 auto 10px; }
+    /* ================= 20 題真題題庫實測模式 ================= */
+    .exam-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .exam-layout.is-hidden,
+    .main-content-layout.is-hidden { display: none !important; }
+
+    .exam-left,
+    .exam-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .viewport-wrapper.mode-tablet .exam-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      height: calc(100% - 50px);
+    }
+
+    .viewport-wrapper.mode-desktop .exam-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      height: calc(100% - 50px);
+    }
+
+    .exam-stem { white-space: pre-line; }
+
+    .exam-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    .exam-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exam-nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: #E2E8F0;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .exam-nav-btn:active { transform: scale(0.95); }
+    .exam-nav-btn:disabled { opacity: 0.35; cursor: default; }
+
+    .exam-progress {
+      flex: 1;
+      height: 6px;
+      background: #1E293B;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .exam-progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .exam-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+      white-space: nowrap;
+    }
+
+    .exam-visual {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 24px;
+    }
+
+    .exam-visual svg { max-width: 100%; }
+
+    .exam-fill-hint {
+      grid-column: 1 / -1;
+      background: #0F172A;
+      border: 1px dashed #475569;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-sub);
+    }
+
+    .exam-reveal-btn {
+      grid-column: 1 / -1;
+      background: #0284C7;
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .exam-reveal-btn:active { transform: scale(0.97); }
+
+    .exam-tool-status {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--success);
+      text-align: center;
+      min-height: 15px;
+    }
+
+    .exam-answer-line {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FACC15;
+      margin: 2px 0 8px;
+    }
+
+    .exam-coins { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+
+    .exam-coin {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #0F172A;
+      background: radial-gradient(circle at 32% 30%, #FDE68A, #F59E0B);
+      border: 2px solid #B45309;
+    }
+
+    .exam-coin.target { background: radial-gradient(circle at 32% 30%, #BAE6FD, #38BDF8); border-color: #0369A1; }
+    .exam-coin.q { background: #1E293B; color: #F8FAFC; border: 2px dashed #64748B; }
   </style>
+  <!-- 純前端原生教具組件（零外部依賴，file:// 直開可用） -->
+  <script src="components/glass-number-line.js"></script>
+  <script src="components/dual-track-diff.js"></script>
+  <script src="components/balance-beam.js"></script>
+  <script src="components/ten-frame-grid.js"></script>
 </head>
 <body>
 
@@ -606,6 +765,7 @@
       <button class="tab-btn" onclick="switchDemo('multiplication')">乘法分層直式 (N-3-3)</button>
       <button class="tab-btn" onclick="switchDemo('division')">除法長除法階梯 (N-3-4)</button>
       <button class="tab-btn" onclick="switchDemo('geometry')">周長拉直線段 (S-4-2)</button>
+      <button class="tab-btn" id="examTabBtn" onclick="switchExamMode()">🎯 20 題真題題庫實測 (G1)</button>
     </div>
   </div>
 
@@ -625,7 +785,7 @@
 
       <!-- 內容視窗 -->
       <div class="screen-content">
-        <div class="main-content-layout">
+        <div class="main-content-layout" id="classicLayout">
           
           <!-- 左區塊：題幹 + 核心教具 -->
           <div class="left-zone">
@@ -666,6 +826,42 @@
           </div>
 
         </div>
+
+        <!-- 20 題審定真題實測（與上方教具演示互斥） -->
+        <div class="exam-layout is-hidden" id="examLayout">
+          <div class="exam-left">
+            <div class="question-card">
+              <div class="curriculum-code-tag" id="examTag">G1 真題</div>
+              <div class="question-stem exam-stem" id="examStem"></div>
+              <div class="exam-meta" id="examMeta"></div>
+            </div>
+
+            <div class="visual-stage">
+              <div class="visual-toolbar">
+                <span class="visual-label" id="examStageLabel">教具</span>
+                <button class="visual-step-btn" id="examRevealBtn" onclick="examReveal()">🔍 看解答／演示算理</button>
+              </div>
+              <div class="exam-visual" id="examVisual"></div>
+            </div>
+
+            <div class="exam-tool-status" id="examToolStatus" aria-live="polite"></div>
+          </div>
+
+          <div class="exam-right">
+            <div class="exam-nav">
+              <button class="exam-nav-btn" id="examPrevBtn" onclick="examMove(-1)" aria-label="上一題">◀</button>
+              <div class="exam-progress"><span id="examProgressBar"></span></div>
+              <span class="exam-count" id="examCount">1 / 20</span>
+              <button class="exam-nav-btn" id="examNextBtn" onclick="examMove(1)" aria-label="下一題">▶</button>
+            </div>
+
+            <div class="options-grid" id="examOptions"></div>
+
+            <div class="solution-panel" id="examInlinePanel"><div id="examInlineContent"></div></div>
+
+            <div class="exam-meta" id="examScore" style="text-align:center;"></div>
+          </div>
+        </div>
       </div>
 
       <!-- 手機專用彈出抽屜 -->
@@ -678,6 +874,9 @@
 
     </div>
   </div>
+
+  <!-- 20 題審定真題題庫（離線內嵌；由 node tools/embed_exam_bank.js 從 data/g1_real_verified_exam_suite.json 同步生成，請勿手改） -->
+  <script id="examBank" type="application/json">[{"id":"G1-EXAM-001","exam_source":"高雄忠孝國小113-1期中試卷","section":"一、填一填","question_num":"2","status":"APPROVED","audit_comment":"符合小一數的順序教學目標，使用「按照順序」口吻，適合練習正數與倒數。","stem":"按照順序填入數字：\n(1) 5－6－( )－( )－9－( )\n(2) 10－9－( )－( )－6－( )","choices":[],"answer_index":0,"answer_raw":"(1) 7, 8, 10 (2) 8, 7, 5","curriculum_code":"N-1-1","component_tag":"glass-number-line","visual_engine":{"engine":"glass-number-line","params":{"range":[1,10]}},"explanation":"就像小青蛙跳格子一樣，往右跳一個數字就變大，往左跳一個數字就變小喔！"},{"id":"G1-EXAM-002","exam_source":"高雄忠孝國小113-1期中試卷","section":"一、填一填","question_num":"5","status":"APPROVED","audit_comment":"審核通過。此題測驗孩子對數字「讀法」與「寫法」的轉換，是小一上學期的核心重點。","stem":"寫出數字：\n讀法：二、四、五、七、八\n數字：2、( )、5、( )、( )","choices":[],"answer_index":0,"answer_raw":"4, 7, 8","curriculum_code":"N-1-1","component_tag":"glass-number-line","visual_engine":{"engine":"glass-number-line","params":{}},"explanation":"讀讀看國字，再把對應的數字寫在括號裡，就像我們數手指頭一樣。"},{"id":"G1-EXAM-003","exam_source":"高雄忠孝國小113-1期中試卷","section":"二、比比看","question_num":"1","status":"APPROVED","audit_comment":"符合長度比較邏輯。保留「圈圈看」的純真指令。","stem":"看一看，把最長的物品圈起來：","choices":["短鉛筆","中鉛筆","長鉛筆"],"answer_index":2,"answer_raw":"最長的那一個","curriculum_code":"S-1-1","component_tag":"dual-track-diff","visual_engine":{"engine":"dual-track-diff","params":{}},"explanation":"把東西的一邊對齊，看另外一邊誰伸得最遠，誰就是最長的喔！"},{"id":"G1-EXAM-004","exam_source":"高雄忠孝國小113-1期中試卷","section":"二、比比看","question_num":"2","status":"APPROVED","audit_comment":"幾何初步認知，區分直線與曲線，符合小一感官辨識階段。","stem":"是曲線的圈起來：","choices":["直線","波浪線","折線"],"answer_index":1,"answer_raw":"波浪線","curriculum_code":"S-1-1","component_tag":"shape-builder","visual_engine":{"engine":"shape-builder","params":{}},"explanation":"彎彎曲曲的線就是曲線，像小蛇在爬行一樣，把它圈起來吧！"},{"id":"G1-EXAM-005","exam_source":"高雄忠孝國小113-1期中試卷","section":"二、比比看","question_num":"3","status":"APPROVED","audit_comment":"高矮比較，使用小一常見的「打ˇ」與「畫○」符號，測驗多重指令執行能力。","stem":"看圖比一比，最高的打ˇ，最矮的畫○：","choices":["長頸鹿","小狗","大象"],"answer_index":0,"answer_raw":"最高打ˇ，最矮畫○","curriculum_code":"S-1-1","component_tag":"balance-beam","visual_engine":{"engine":"balance-beam","params":{"mode":"height"}},"explanation":"看誰長得最高，就在它下面的框框打勾；看誰最矮，就畫一個圓圈。"},{"id":"G1-EXAM-006","exam_source":"高雄忠孝國小113-1期中試卷","section":"二、比比看","question_num":"4","status":"APPROVED","audit_comment":"厚薄比較是長度比較的延伸，符合小一生活數學觀察。","stem":"看一看，最薄的書本打ˇ：","choices":["字典","繪本","筆記本"],"answer_index":2,"answer_raw":"最薄的打ˇ","curriculum_code":"S-1-1","component_tag":"balance-beam","visual_engine":{"engine":"balance-beam","params":{"mode":"thickness"}},"explanation":"薄薄的書就是側面看起來扁扁的，找找看哪一本最扁。"},{"id":"G1-EXAM-007","exam_source":"高雄忠孝國小113-1期中試卷","section":"二、比比看","question_num":"5","status":"APPROVED","audit_comment":"此題涉及「拉直比較」的邏輯，是小一長度單元的魔王題，審核通過。","stem":"哪一條繩子比較長？請在最長的打ˇ：","choices":["直直的繩子","彎彎的繩子"],"answer_index":1,"answer_raw":"彎彎的繩子(拉直後較長)","curriculum_code":"S-1-1","component_tag":"dual-track-diff","visual_engine":{"engine":"dual-track-diff","params":{}},"explanation":"彎彎的繩子拉直以後，會比原本看起來還要長喔！想像一下拉拉麵的樣子。"},{"id":"G1-EXAM-008","exam_source":"高雄忠孝國小113-1期中試卷","section":"二、比比看","question_num":"6","status":"APPROVED","audit_comment":"生活物件長度比較，符合小一教學情境。","stem":"比比看，最長的衣服打ˇ：","choices":["短袖","長裙","背心"],"answer_index":1,"answer_raw":"長裙","curriculum_code":"S-1-1","component_tag":"dual-track-diff","visual_engine":{"engine":"dual-track-diff","params":{}},"explanation":"從領口往下看，誰的下擺垂得最低，誰就是最長的衣服。"},{"id":"G1-EXAM-009","exam_source":"高雄忠孝國小113-1期中試卷","section":"四、看圖填代號","question_num":"1","status":"APPROVED","audit_comment":"測驗形體屬性（滾動），符合小一幾何初步認識。","stem":"哪些物品可以滾動？請填入代號：( )","choices":["ㄅ.皮球","ㄆ.積木","ㄇ.膠水罐","ㄈ.課本"],"answer_index":0,"answer_raw":"ㄅ、ㄇ","curriculum_code":"S-1-2","component_tag":"shape-builder","visual_engine":{"engine":"shape-builder","params":{"property":"rollable"}},"explanation":"圓圓的東西或是像罐子一樣有圓圓的邊，就可以在地上滾來滾去喔！"},{"id":"G1-EXAM-010","exam_source":"高雄忠孝國小113-1期中試卷","section":"四、看圖填代號","question_num":"2","status":"APPROVED","audit_comment":"測驗形體屬性（平平的面），區分球體與多面體。","stem":"哪些物品有平平的面？請填入代號：( )","choices":["ㄅ.皮球","ㄆ.積木","ㄇ.膠水罐","ㄈ.課本"],"answer_index":1,"answer_raw":"ㄆ、ㄇ、ㄈ","curriculum_code":"S-1-2","component_tag":"shape-builder","visual_engine":{"engine":"shape-builder","params":{"property":"flat_surface"}},"explanation":"摸摸看，如果可以穩穩地放在桌子上不會亂滾，就是有平平的面。"},{"id":"G1-EXAM-001","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"一、 填填看","question_num":"1","status":"APPROVED","audit_comment":"符合小一錢幣換算算理，使用具體的硬幣單位，無大人化代數思維。","stem":"2 個 50元硬幣可以換（ ）個 10元硬幣","choices":[],"answer_index":0,"answer_raw":"10","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"exchange","source_coin":50,"source_count":2,"target_coin":10}},"explanation":"小朋友，1 個 50 元可以換成 5 個 10 元，所以 2 個 50 元就是 5 加 5，等於 10 個 10 元喔！"},{"id":"G1-EXAM-002","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"一、 填填看","question_num":"2","status":"APPROVED","audit_comment":"錢幣進位與拆解是小一重點，此題口吻純真，符合教學現場。","stem":"3 個 10元硬幣可以換（ ）個 5元硬幣","choices":[],"answer_index":0,"answer_raw":"6","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"exchange","source_coin":10,"source_count":3,"target_coin":5}},"explanation":"1 個 10 元可以換 2 個 5 元，現在有 3 個 10 元，就是 2+2+2，總共可以換 6 個 5 元硬幣。"},{"id":"G1-EXAM-003","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"一、 填填看","question_num":"3","status":"APPROVED","audit_comment":"建立百位數初步概念，透過 10 個 10 的累積符合十進位結構。","stem":"10 個 10元硬幣可以換（ ）個 100元鈔票","choices":[],"answer_index":0,"answer_raw":"1","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"exchange","source_coin":10,"source_count":10,"target_coin":100}},"explanation":"我們來數數看：10、20、30...數到 100，剛好就是 10 個 10 元，可以換成 1 張紅色的 100 元鈔票。"},{"id":"G1-EXAM-004","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"1-(1)","status":"APPROVED","audit_comment":"保留「夠不夠」口語，這是小一判斷大小關係的經典生活情境。","stem":"飛飛想買一盒 78 元的彩色筆，他的錢有 85 元，請問夠不夠？飛飛的錢：（ 夠 ， 不夠 ）","choices":["夠","不夠"],"answer_index":0,"answer_raw":"夠","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"compare","price":78,"wallet":85}},"explanation":"飛飛有 85 元，彩色筆只要 78 元，85 比 78 還要大，所以錢是夠的喔！"},{"id":"G1-EXAM-005","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"1-(2)","status":"APPROVED","audit_comment":"對比前一題，強化「不夠」的邏輯判斷，符合小一生活數學。","stem":"米米想買一盒 78 元的彩色筆，他的錢只有 70 元，請問夠不夠？米米的錢：（ 夠 ， 不夠 ）","choices":["夠","不夠"],"answer_index":1,"answer_raw":"不夠","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"compare","price":78,"wallet":70}},"explanation":"米米只有 70 元，但是彩色筆要 78 元，70 比 78 還要小，所以錢不夠買。"},{"id":"G1-EXAM-006","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"1-(3)","status":"APPROVED","audit_comment":"嚴禁負號思維，使用「還要補多少錢」引導補數概念，符合小一算理。","stem":"香香也想買一盒 78 元的色筆，但是她只有 70 元，錢不夠，請問還要補多少錢才夠? 她還要補( )元","choices":[],"answer_index":0,"answer_raw":"8","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"add-to-target","current":70,"target":78}},"explanation":"香香已經有 70 元了，要到 78 元，我們接著往後數：71, 72, 73, 74, 75, 76, 77, 78，總共要再補 8 元。"},{"id":"G1-EXAM-007","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"2","status":"APPROVED","audit_comment":"「圈圈看」是小一特有的作答方式，測驗孩子對錢幣組合的掌握。","stem":"一個麵包 45 元，怎麼付錢才會剛好? 圈圈看。","choices":[],"answer_index":0,"answer_raw":"4個10元和5個1元(或其它組合)","curriculum_code":"N-1-4","component_tag":"money-counter","visual_engine":{"engine":"money-counter","params":{"mode":"selection","target":45,"available_coins":[10,10,10,10,10,5,5,1,1,1,1,1]}},"explanation":"要湊成 45 元，我們可以圈 4 個 10 元（就是 40 元），再圈 1 個 5 元，合起來就是 45 元。"},{"id":"G1-EXAM-008","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"3-(1)","status":"APPROVED","audit_comment":"日曆題型測驗時間序列，使用「昨天」與「星期」的對應，符合生活認知。","stem":"看日曆填一填：昨天是 5 月 21 日星期四，昨天是（ 星期四 ， 星期五 ）","choices":["星期四","星期五"],"answer_index":0,"answer_raw":"星期四","curriculum_code":"N-1-1","component_tag":"glass-number-line","visual_engine":{"engine":"glass-number-line","params":{"mode":"calendar-strip","highlight":21}},"explanation":"題目已經告訴我們昨天是 5 月 21 日星期四，所以我們要圈「星期四」喔！"},{"id":"G1-EXAM-009","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"3-(2)","status":"APPROVED","audit_comment":"測驗數的順序（21之後是22）以及星期的循環，完全符合小一課綱。","stem":"承上題，昨天是 5 月 21 日星期四，今天是 5 月 ( 20 ， 22 )日 ( 星期三 ， 星期五 ）","choices":["20","22","星期三","星期五"],"answer_index":1,"answer_raw":"22, 星期五","curriculum_code":"N-1-1","component_tag":"glass-number-line","visual_engine":{"engine":"glass-number-line","params":{"mode":"calendar-step","start":21,"step":1}},"explanation":"昨天是 21 日，今天就是往後數一天，是 22 日；星期四的隔天就是星期五。"},{"id":"G1-EXAM-010","exam_source":"臺北內湖國小113學年度下學期期末試卷","section":"二、 圈圈看，填填看","question_num":"4-(1)","status":"APPROVED","audit_comment":"比較算式大小而非單純計算，訓練孩子觀察被減數與差的關係，無負號思維。","stem":"將答案比較大的算式圈起來：( 38－6 ， 24－6 )","choices":["38－6","24－6"],"answer_index":0,"answer_raw":"38－6","curriculum_code":"N-1-6","component_tag":"ten-frame-grid","visual_engine":{"engine":"ten-frame-grid","params":{"mode":"comparison","set_a":[38,6],"set_b":[24,6]}},"explanation":"兩個算式都是「拿走 6 個」，但是 38 比 24 還要多，所以剩下的也會比較多喔！"}]</script>
 
   <script>
     // 裝置切換
@@ -694,6 +893,7 @@
 
       // 平板與電腦模式若已答題，直接在右側顯示解析
       updateSolutionView();
+      if (examState.active) examPlaceSolution();
     }
 
     // 5 大課綱領域資料 (重點深化：異分母通分包含擴分步驟算理)
@@ -1072,6 +1272,13 @@
     var lastAnswerState = null;
 
     function switchDemo(key) {
+      if (examState.active) {
+        examState.active = false;
+        examState.html = '';
+        document.getElementById("examLayout").classList.add("is-hidden");
+        document.getElementById("classicLayout").classList.remove("is-hidden");
+        closeDrawer();
+      }
       currentDemoKey = key;
       currentStepIndex = 0;
       lastAnswerState = null;
@@ -1189,6 +1396,393 @@
         b.classList.remove("selected-correct", "selected-wrong");
       });
       lastAnswerState = null;
+      examLockOptions();
+    }
+
+    /* ============================================================
+       20 題審定真題實測模式 (G1)
+       - 選擇題：2x2 大按鈕，答題後教具聯動 + 抽屜/內嵌算理詳解
+       - 填空題：看解答／演示算理，揭示 answer_raw 與算理解析
+       - 教具聯動：glass-number-line / dual-track-diff / balance-beam / ten-frame-grid
+       ============================================================ */
+    var EXAM_LIMIT = 20;
+    var examBankCache = null;
+    var examState = {
+      active: false, index: 0, answered: false, revealed: false,
+      html: "", results: [], after: null
+    };
+
+    /* 教具參數以「題序」為鍵（題庫內題號會重複，不可用 id 判斷） */
+    var EXAM_TOOL_CFG = {
+      0: { glass: { start: 6, jump: 1, end: 7 }, label: "數線：6 往前跳 1 格就是 7" },
+      1: { glass: { start: 2, jump: 2, end: 4 }, label: "數線：2 往前跳 2 格就是 4" },
+      2: { diff: [8, 5], label: "上軌＝長鉛筆 8 格、下軌＝短鉛筆 5 格" },
+      4: { beam: [8, 5], label: "天平左盤＝最高 8 分、右盤＝最矮 5 分" },
+      5: { beam: [3, 1], label: "天平左盤＝厚書 3 分、右盤＝薄書 1 分" },
+      6: { diff: [9, 6], label: "上軌＝拉直的繩子 9 格、下軌＝彎曲的繩子 6 格" },
+      7: { diff: [7, 4], label: "上軌＝長裙 7 格、下軌＝短裙 4 格" },
+      17: { glass: { start: 20, jump: 1, end: 21 }, label: "數線：21 日往回跳 1 天是 20 日" },
+      18: { glass: { start: 21, jump: 1, end: 22 }, label: "數線：21 日往前跳 1 天是 22 日" },
+      19: { frame: { value: 8, take: 6 }, label: "十格陣：8 個圓點，要拿走 6 個" }
+    };
+
+    function examQuestions() {
+      if (examBankCache) return examBankCache;
+      var node = document.getElementById("examBank");
+      var bank = [];
+      try {
+        bank = JSON.parse((node && node.textContent) || "[]");
+      } catch (err) {
+        bank = [];
+      }
+      if (!Array.isArray(bank) || bank.length !== EXAM_LIMIT) {
+        document.getElementById("examStem").textContent =
+          "[UNVERIFIED] 內嵌題庫異常（實得 " + (Array.isArray(bank) ? bank.length : 0) +
+          " 題），請執行 node tools/embed_exam_bank.js 重新內嵌。";
+        bank = [];
+      }
+      examBankCache = bank;
+      return bank;
+    }
+
+    function switchExamMode() {
+      if (!examQuestions().length) return;
+      examState.active = true;
+      document.getElementById("classicLayout").classList.add("is-hidden");
+      document.getElementById("examLayout").classList.remove("is-hidden");
+      document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
+      document.getElementById("examTabBtn").classList.add("active");
+      document.getElementById("inlineSolutionPanel").style.display = "none";
+      document.getElementById("demoGradeTag").textContent = "G1";
+      document.getElementById("demoTitle").textContent = "審定真題 20 題";
+      document.getElementById("demoCurriculumTag").textContent = "真題題庫";
+      examRender(0);
+    }
+
+    function examMove(delta) {
+      var bank = examQuestions();
+      var next = examState.index + delta;
+      if (next < 0 || next >= bank.length) return;
+      examRender(next);
+    }
+
+    function examRender(i) {
+      var bank = examQuestions();
+      if (!bank.length) return;
+      var q = bank[i];
+      examState.index = i;
+      examState.answered = false;
+      examState.revealed = false;
+      examState.html = "";
+      examState.after = null;
+      document.getElementById("examInlinePanel").style.display = "none";
+      closeDrawer();
+
+      document.getElementById("examTag").textContent =
+        q.curriculum_code + "｜" + (q.section || "真題") + " 第 " + q.question_num + " 題";
+      document.getElementById("examStem").textContent = q.stem;
+      document.getElementById("examMeta").textContent =
+        "出處：" + q.exam_source + "｜題型：" + ((q.choices || []).length ? "選擇題" : "填空題") +
+        "｜教具：" + (q.component_tag || q.visual_engine.engine);
+      document.getElementById("examPrevBtn").disabled = i === 0;
+      document.getElementById("examNextBtn").disabled = i === bank.length - 1;
+      document.getElementById("examCount").textContent = (i + 1) + " / " + bank.length;
+      document.getElementById("examProgressBar").style.width =
+        (((i + 1) / bank.length) * 100).toFixed(1) + "%";
+
+      var done = 0, right = 0;
+      for (var k = 0; k < examState.results.length; k++) {
+        if (typeof examState.results[k] === "boolean") {
+          done++;
+          if (examState.results[k]) right++;
+        }
+      }
+      document.getElementById("examScore").textContent = done
+        ? "已答 " + done + " 題，答對 " + right + " 題"
+        : "共 " + bank.length + " 題：選擇題點選答案；填空題按「看解答」";
+
+      examMountTool(q, i);
+      examRenderOptions(q);
+    }
+
+    function examRenderOptions(q) {
+      var box = document.getElementById("examOptions");
+      box.innerHTML = "";
+      if (!q.choices || q.choices.length === 0) {
+        var hint = document.createElement("div");
+        hint.className = "exam-fill-hint";
+        hint.textContent = "✍️ 填空題：先用上面的教具想一想，再按下面按鈕看正解與算理。";
+        box.appendChild(hint);
+        var btn = document.createElement("button");
+        btn.className = "exam-reveal-btn";
+        btn.textContent = "🔍 看解答／演示算理";
+        btn.onclick = function() { examReveal(); };
+        box.appendChild(btn);
+        return;
+      }
+      q.choices.forEach(function(text, idx) {
+        var b = document.createElement("button");
+        b.className = "option-btn";
+        b.innerHTML = '<span class="option-key">' + String.fromCharCode(65 + idx) +
+          '</span><span class="option-value">' + text + '</span>';
+        b.onclick = function() { examAnswer(idx); };
+        box.appendChild(b);
+      });
+    }
+
+    function examAnswer(idx) {
+      if (examState.answered) return;
+      var q = examQuestions()[examState.index];
+      var correct = idx === q.answer_index;
+      examState.answered = true;
+      examState.revealed = true;
+      examState.results[examState.index] = correct;
+      document.querySelectorAll("#examOptions .option-btn").forEach(function(b, i) {
+        b.disabled = true;
+        if (i === q.answer_index) b.classList.add("selected-correct");
+        else if (i === idx) b.classList.add("selected-wrong");
+      });
+      examRunToolLink();
+      examShowSolution(q, correct);
+      examRenderScore();
+    }
+
+    function examReveal() {
+      if (examState.revealed) return;
+      var q = examQuestions()[examState.index];
+      examState.revealed = true;
+      examRunToolLink();
+      examShowSolution(q, null);
+    }
+
+    function examRenderScore() {
+      var done = 0, right = 0;
+      for (var k = 0; k < examState.results.length; k++) {
+        if (typeof examState.results[k] === "boolean") {
+          done++;
+          if (examState.results[k]) right++;
+        }
+      }
+      document.getElementById("examScore").textContent =
+        "已答 " + done + " 題，答對 " + right + " 題";
+    }
+
+    function examLockOptions() {
+      if (!examState.active || !examState.answered) return;
+      var q = examQuestions()[examState.index];
+      if (!q || !q.choices || !q.choices.length) return;
+      document.querySelectorAll("#examOptions .option-btn").forEach(function(b, i) {
+        b.disabled = true;
+        b.classList.toggle("selected-correct", i === q.answer_index);
+      });
+    }
+
+    function examRunToolLink() {
+      if (typeof examState.after === "function") examState.after();
+    }
+
+    function examShowSolution(q, correct) {
+      var isChoice = q.choices && q.choices.length > 0;
+      var key = isChoice
+        ? String.fromCharCode(65 + q.answer_index) + "　" + q.choices[q.answer_index]
+        : q.answer_raw;
+      var color = correct === false ? "#F87171" : "#34D399";
+      var head = correct === null ? "📖 正解與算理" : (correct ? "🎯 答對了！" : "❌ 答錯了！看破招解析");
+      examState.html =
+        '<div style="font-size:14px; font-weight:800; color:' + color + '; margin-bottom:6px;">' + head + '</div>' +
+        '<div class="exam-answer-line">正解：' + key + '</div>' +
+        '<div class="solution-step"><div class="step-title">算理破招</div>' + q.explanation + '</div>' +
+        '<div class="solution-step"><div class="step-title">審定與出處</div>' +
+        q.exam_source + '｜' + q.curriculum_code + '<br>審查註記：' + (q.audit_comment || "—") + '</div>';
+      document.getElementById("examInlineContent").innerHTML = examState.html;
+      examPlaceSolution();
+    }
+
+    /* 手機（390px）走底部抽屜；平板/電腦（768/960px）走右欄內嵌 */
+    function examPlaceSolution() {
+      if (!examState.html) return;
+      var drawer = document.getElementById("solutionDrawer");
+      var overlay = document.getElementById("drawerOverlay");
+      var inline = document.getElementById("examInlinePanel");
+      if (currentDevice === "mobile") {
+        inline.style.display = "none";
+        document.getElementById("drawerContent").innerHTML = examState.html;
+        overlay.classList.add("active");
+        drawer.classList.add("open");
+      } else {
+        overlay.classList.remove("active");
+        drawer.classList.remove("open");
+        inline.style.display = "block";
+      }
+    }
+
+    function examSetStatus(text) {
+      document.getElementById("examToolStatus").textContent = text || "";
+    }
+
+    function examMountTool(q, index) {
+      var box = document.getElementById("examVisual");
+      box.innerHTML = "";
+      examSetStatus("");
+      var cfg = EXAM_TOOL_CFG[index] || {};
+      var engine = (q.visual_engine && q.visual_engine.engine) || q.component_tag;
+      var params = (q.visual_engine && q.visual_engine.params) || {};
+      var label = cfg.label || "教具演示";
+
+      if (engine === "glass-number-line") {
+        var eq = cfg.glass || { start: 5, jump: 3, end: 8 };
+        var line = document.createElement("glass-number-line");
+        box.appendChild(line);
+        label = cfg.label || ("數線反推：" + eq.end + " － " + eq.jump + " ＝ ？");
+        line.setEquation({ mode: "add_start", start: eq.start, jump: eq.jump, end: eq.end });
+        line.addEventListener("numline-event", function(ev) {
+          var t = ev.detail && ev.detail.type;
+          if (t === "reverse") examSetStatus("🐸 小青蛙從終點往回跳，正在倒推出發點");
+          if (t === "reveal") examSetStatus("🐸 往回跳 " + eq.jump + " 格，出發點就是 " + eq.start);
+        });
+        examState.after = function() {
+          line.stepReverse();
+          setTimeout(function() { line.reveal(); }, 520);
+        };
+      } else if (engine === "dual-track-diff") {
+        var pair = cfg.diff || [8, 5];
+        var diffEl = document.createElement("dual-track-diff");
+        diffEl.setAttribute("top-count", String(pair[0]));
+        diffEl.setAttribute("bottom-count", String(pair[1]));
+        box.appendChild(diffEl);
+        examState.after = function() {
+          var d = Math.abs(pair[0] - pair[1]);
+          examSetStatus("雙軌差值：多出 " + d + " 格 → " +
+            Math.max(pair[0], pair[1]) + " － " + Math.min(pair[0], pair[1]) + " ＝ " + d);
+        };
+      } else if (engine === "balance-beam") {
+        var w = cfg.beam || [5, 2];
+        var beamEl = document.createElement("balance-beam");
+        beamEl.setAttribute("left-weight", String(w[0]));
+        beamEl.setAttribute("right-weight", String(w[1]));
+        box.appendChild(beamEl);
+        examState.after = function() {
+          examSetStatus("天平：左盤 " + w[0] + "、右盤 " + w[1] + "，相差 " + Math.abs(w[0] - w[1]));
+        };
+      } else if (engine === "ten-frame-grid") {
+        var fr = cfg.frame || { value: 8, take: 3 };
+        var frameEl = document.createElement("ten-frame-grid");
+        frameEl.setAttribute("value", String(fr.value));
+        frameEl.setAttribute("fill-color", "#DC2626");
+        frameEl.setAttribute("label", "拆十格陣");
+        box.appendChild(frameEl);
+        examState.after = function() {
+          examSetStatus("拆十動畫：慢慢拿走 " + fr.take + " 個圓點…");
+          frameEl.takeAway(fr.take, function(left) {
+            examSetStatus("拆十完成：" + fr.value + " － " + fr.take + " ＝ " + left +
+              "（38 － 6 的個位算法）");
+          });
+        };
+      } else {
+        examMountFallback(params, engine, box);
+      }
+      document.getElementById("examStageLabel").textContent = label;
+    }
+
+    function examMountFallback(params, engine, box) {
+      if (engine === "money-counter") {
+        box.appendChild(examMoneyPanel(params));
+        examState.after = function() {
+          examSetStatus(params.mode === "exchange"
+            ? "錢幣教具：換成一樣多的錢，數一數就知道要幾個"
+            : "錢幣教具：比一比錢夠不夠、還要補多少");
+        };
+      } else {
+        box.appendChild(examShapePanel(params));
+        examSetStatus("此題非四大核心教具，改以圖示輔助觀察。");
+        examState.after = function() {
+          examSetStatus("形體觀察：圓圓的會滾，有平平的面才能穩穩放好");
+        };
+      }
+    }
+
+    function examCoin(value, cls) {
+      var c = document.createElement("div");
+      c.className = "exam-coin" + (cls ? " " + cls : "");
+      c.textContent = value;
+      return c;
+    }
+
+    function examCaption(text) {
+      var s = document.createElement("span");
+      s.style.cssText = "font-weight:800;color:#E2E8F0;";
+      s.textContent = text;
+      return s;
+    }
+
+    function examMoneyPanel(p) {
+      var wrap = document.createElement("div");
+      wrap.style.cssText = "display:flex;flex-direction:column;gap:10px;align-items:center;width:100%;";
+      var row = document.createElement("div");
+      row.className = "exam-coins";
+      var i;
+      if (p.mode === "exchange") {
+        row.appendChild(examCaption(p.source_count + " 個 " + p.source_coin + " 元 → "));
+        for (i = 0; i < p.source_count; i++) row.appendChild(examCoin(p.source_coin));
+        row.appendChild(examCaption("　要換成幾個 " + p.target_coin + " 元？"));
+        row.appendChild(examCoin("?", "q"));
+      } else if (p.mode === "add-to-target") {
+        row.appendChild(examCaption("現在 " + p.current + " 元　目標 " + p.target + " 元，還差多少？"));
+        row.appendChild(examCoin("?", "q"));
+      } else if (p.mode === "selection") {
+        row.appendChild(examCaption("要付剛好 " + p.target + " 元："));
+        (p.available_coins || []).forEach(function(v) { row.appendChild(examCoin(v)); });
+      } else {
+        row.appendChild(examCaption("錢包 " + p.wallet + " 元　要買 " + p.price + " 元"));
+        row.appendChild(examCoin("?", "q"));
+      }
+      wrap.appendChild(row);
+
+      if (p.mode === "compare") {
+        var bars = document.createElement("div");
+        bars.style.cssText = "display:flex;flex-direction:column;gap:6px;width:82%;";
+        [["錢包", p.wallet, "#38BDF8"], ["價格", p.price, "#F59E0B"]].forEach(function(it) {
+          var line = document.createElement("div");
+          line.style.cssText = "display:flex;align-items:center;gap:6px;";
+          var bar = document.createElement("div");
+          bar.style.cssText = "height:14px;border-radius:7px;background:" + it[2] +
+            ";width:" + Math.min(100, it[1]) + "%;opacity:.85;";
+          line.appendChild(examCaption(it[0]));
+          line.appendChild(bar);
+          bars.appendChild(line);
+        });
+        wrap.appendChild(bars);
+      }
+      return wrap;
+    }
+
+    function examShapePanel(p) {
+      var NS = "http://www.w3.org/2000/svg";
+      var wrap = document.createElement("div");
+      wrap.style.cssText = "display:flex;flex-direction:column;gap:8px;align-items:center;width:100%;";
+      var svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("viewBox", "0 0 300 130");
+      svg.setAttribute("width", "100%");
+      svg.setAttribute("style", "max-width:340px;");
+      function mk(tag, attrs) {
+        var n = document.createElementNS(NS, tag);
+        Object.keys(attrs).forEach(function(k) { n.setAttribute(k, attrs[k]); });
+        return n;
+      }
+      if (p.property === "rollable" || p.property === "flat_surface") {
+        svg.appendChild(mk("circle", { cx: 45, cy: 65, r: 27, fill: "#38BDF8", stroke: "#0284C7", "stroke-width": 2 }));
+        svg.appendChild(mk("rect", { x: 95, y: 38, width: 54, height: 54, rx: 6, fill: "#F59E0B", stroke: "#B45309", "stroke-width": 2 }));
+        svg.appendChild(mk("rect", { x: 175, y: 48, width: 36, height: 44, rx: 14, fill: "#10B981", stroke: "#047857", "stroke-width": 2 }));
+        svg.appendChild(mk("rect", { x: 235, y: 52, width: 46, height: 36, rx: 3, fill: "#A855F7", stroke: "#6D28D9", "stroke-width": 2 }));
+      } else {
+        svg.appendChild(mk("line", { x1: 30, y1: 32, x2: 270, y2: 32, stroke: "#38BDF8", "stroke-width": 5, "stroke-linecap": "round" }));
+        svg.appendChild(mk("path", { d: "M30,68 q15,-20 30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0",
+          fill: "none", stroke: "#F59E0B", "stroke-width": 5, "stroke-linecap": "round" }));
+        svg.appendChild(mk("path", { d: "M30,108 l30,-24 l30,24 l30,-24 l30,24 l30,-24 l30,24 l30,-24 l30,24",
+          fill: "none", stroke: "#10B981", "stroke-width": 5, "stroke-linejoin": "round" }));
+      }
+      wrap.appendChild(svg);
+      return wrap;
     }
 
     // 初始載入通分演示
