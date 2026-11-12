@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>G1 段考速驗台 — 四大教具 × 真題</title>
+  <script src="components/ten-frame-grid.js"></script>
+  <script src="components/dual-track-diff.js"></script>
+  <script src="components/balance-beam.js"></script>
+  <script src="components/glass-number-line.js"></script>
+  <!-- 內嵌題庫（file:// 直開的降級來源，40 題；內容 = data/curriculum_v3 同源題庫） -->
+  <script id="offlineBank" type="application/json">{"g1_n13_make_ten.json":[{"id":"G1-N13-01","unit":"N-1-3","unit_title":"基本加減法（湊十法）","source":"111學年北市段考真題","stem":"弟弟原來有 9 顆牛奶糖，姐姐又給他 4 顆，弟弟現在一共有幾顆牛奶糖？","choices":["12 顆","13 顆","14 顆","15 顆"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":9,"right_initial":4,"target":10,"operation":"add","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"看大數 9，想湊十還缺 1","step_2":"把小數 4 分解成 1 和 3","step_3":"9 ＋ 1 ＝ 10，10 ＋ 3 ＝ 13"},"formula":"9 + 4 = 13","trap_warning":"常見迷思：直接手指往後數 4 次容易數漏，利用湊十法秒殺進位！"}},{"id":"G1-N13-02","unit":"N-1-3","unit_title":"基本加減法（湊十法）","source":"112學年新北段考真題","stem":"公車上原本有 8 位乘客，到站後又有 5 位乘客上車，現在車上一共有幾位乘客？","choices":["11 位","12 位","13 位","14 位"],"answer_index":2,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":8,"right_initial":5,"target":10,"operation":"add","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"看大數 8，想湊十還缺 2","step_2":"把小數 5 分解成 2 和 3","step_3":"8 ＋ 2 ＝ 10，10 ＋ 3 ＝ 13"},"formula":"8 + 5 = 13","trap_warning":"算理關鍵：從 5 裡面借 2 給 8 湊成 10，剩下的 3 直接合起來。"}},{"id":"G1-N13-03","unit":"N-1-3","unit_title":"基本加減法（湊十法）","source":"110學年中市段考真題","stem":"花園裡開了 7 朵紅花和 6 朵黃花，花園裡一共有幾朵花？","choices":["13 朵","14 朵","12 朵","15 朵"],"answer_index":0,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":7,"right_initial":6,"target":10,"operation":"add","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"看大數 7，想湊十還缺 3","step_2":"把小數 6 分解成 3 和 3","step_3":"7 ＋ 3 ＝ 10，10 ＋ 3 ＝ 13"},"formula":"7 + 6 = 13","trap_warning":"雙胞胎拆數法：也可以想成 6 + 6 = 12，再加多出來的 1 等於 13！"}},{"id":"G1-N13-04","unit":"N-1-3","unit_title":"基本加減法（湊十法）","source":"111學年桃市段考真題","stem":"小明有 9 枝彩色筆，小華有 7 枝彩色筆，兩人合起來有幾枝彩色筆？","choices":["15 枝","16 枝","17 枝","18 枝"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":9,"right_initial":7,"target":10,"operation":"add","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"9 缺 1 變成 10","step_2":"把 7 分解成 1 和 6","step_3":"9 ＋ 1 ＝ 10，10 ＋ 6 ＝ 16"},"formula":"9 + 7 = 16","trap_warning":"口訣：見 9 想 1，7 借出 1 還剩 6，合起來就是 16！"}},{"id":"G1-N13-05","unit":"N-1-3","unit_title":"基本加減法（拆十法）","source":"112學年高市段考真題","stem":"籃子裡有 13 顆水蜜桃，媽媽拿走 4 顆，籃子裡還剩下幾顆水蜜桃？","choices":["8 顆","9 顆","10 顆","7 顆"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":10,"right_initial":3,"take_away":4,"operation":"subtract","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"個位的 3 顆不夠減 4 顆","step_2":"把整盒 10 顆拆開，10 減 4 剩下 6","step_3":"剩下的 6 和原來的 3 合起來：6 ＋ 3 ＝ 9"},"formula":"13 - 4 = 9","trap_warning":"常見陷阱：千萬不要倒過來算 4 - 3 = 1 然後猜 11，必須拆整十！"}},{"id":"G1-N13-06","unit":"N-1-3","unit_title":"基本加減法（拆十法）","source":"111學年台南段考真題","stem":"樹上有 12 隻小鳥，飛走了 5 隻，樹上還剩下幾隻小鳥？","choices":["6 隻","7 隻","8 隻","9 隻"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":10,"right_initial":2,"take_away":5,"operation":"subtract","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"個位 2 不夠減 5","step_2":"從 10 裡面減去 5 剩下 5","step_3":"5 再加上個位的 2 得到 7"},"formula":"12 - 5 = 7","trap_warning":"算理核心：12 分成 10 和 2；10 - 5 = 5；5 + 2 = 7。"}},{"id":"G1-N13-07","unit":"N-1-3","unit_title":"基本加減法（湊十法）","source":"110學年竹市段考真題","stem":"文具店有 8 盒蠟筆，老闆又進貨 6 盒，現在文具店一共有幾盒蠟筆？","choices":["13 盒","14 盒","15 盒","12 盒"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":8,"right_initial":6,"target":10,"operation":"add","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"8 缺 2 湊滿十","step_2":"6 分解成 2 和 4","step_3":"8 ＋ 2 ＝ 10，10 ＋ 4 ＝ 14"},"formula":"8 + 6 = 14","trap_warning":"思維提示：8 需要 2，記住 6 拿走 2 剩下 4，答案個位就是 4！"}},{"id":"G1-N13-08","unit":"N-1-3","unit_title":"基本加減法（拆十法）","source":"112學年彰化段考真題","stem":"小美摺了 15 顆紙星星，送給同學 8 顆，小美自己還剩下幾顆紙星星？","choices":["6 顆","7 顆","8 顆","9 顆"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":10,"right_initial":5,"take_away":8,"operation":"subtract","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"15 分成 10 和 5","step_2":"10 減 8 剩下 2","step_3":"2 加上原有的 5 等於 7"},"formula":"15 - 8 = 7","trap_warning":"拆十法口訣：拆十減八剩二，二五合成七！"}},{"id":"G1-N13-09","unit":"N-1-3","unit_title":"基本加減法（加法交換律）","source":"111學年屏東段考真題","stem":"桌上有 4 顆紅蘋果和 9 顆青蘋果，如果要湊十，把哪一種算式算成湊十最快速？","choices":["4 ＋ 9 ＝ 13","9 ＋ 4 ＝ 13","4 ＋ 4 ＋ 5 ＝ 13","9 － 4 ＝ 5"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":9,"right_initial":4,"target":10,"operation":"add","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"「看大數，拆小數」原則","step_2":"9 離 10 只有差 1，比 4 離 10 差 6 更容易湊十","step_3":"將 4 ＋ 9 想成 9 ＋ 4 ＝ 13 最聰明"},"formula":"4 + 9 = 9 + 4 = 13","trap_warning":"數學家思維：加法順序調換結果不變，永遠從接近 10 的大數開始湊！"}},{"id":"G1-N13-10","unit":"N-1-3","unit_title":"基本加減法（連減與退位思考）","source":"112學年基隆段考真題","stem":"停車場停了 11 輛車，先開走 1 輛，又開走 3 輛，現在停車場還剩下幾輛車？","choices":["6 輛","7 輛","8 輛","9 輛"],"answer_index":1,"visual_engine":{"type":"ten-frame-grid","props":{"left_initial":10,"right_initial":1,"take_away":4,"operation":"subtract","interactive":true}},"explanation":{"breakdown_tree":{"step_1":"先開走 1 輛：11 － 1 ＝ 10（剛好退回整十）","step_2":"再開走 3 輛：10 － 3 ＝ 7","step_3":"合起來總共開走 4 輛：11 － 4 ＝ 7"},"formula":"11 - 1 - 3 = 11 - 4 = 7","trap_warning":"兩步走算理：先減去個位退回滿十，再從整十扣除剩下的，這叫「連減拆十法」！"}}],"g1_n12_diff_compare.json":[{"id":"G1-N12-01","unit":"N-1-2","unit_title":"加法和減法（比較型減法：多多少）","source":"111學年北市段考真題","stem":"小明有 8 顆紅蘋果，小美有 5 顆青蘋果，小明比小美多幾顆蘋果？","choices":["2 顆","3 顆","4 顆","13 顆"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":8,"bottom_count":5,"top_label":"小明 (紅)","bottom_label":"小美 (青)"}},"explanation":{"step_1":"雙軌一對一對齊：前 5 顆蘋果互相連線（一樣多）","step_2":"看上軌凸出的部分：金色框選出多出來的 3 顆","step_3":"算式：8 － 5 ＝ 3（顆）","formula":"8 - 5 = 3","trap_warning":"誤區警惕：有些小朋友看到「多」就直接算加法 8 + 5 = 13，記住「比多少」是算相差，要用減法！"}},{"id":"G1-N12-02","unit":"N-1-2","unit_title":"加法和減法（比較型減法：少多少）","source":"112學年新北段考真題","stem":"池塘裡有 7 隻白鵝和 4 隻灰鴨，灰鴨比白鵝少幾隻？","choices":["3 隻","4 隻","5 隻","11 隻"],"answer_index":0,"visual_engine":{"type":"dual-track-diff","props":{"top_count":7,"bottom_count":4,"top_label":"白鵝","bottom_label":"灰鴨"}},"explanation":{"step_1":"一對一比對：4 隻白鵝和 4 隻灰鴨一樣多","step_2":"灰鴨少了 3 隻才能跟白鵝排得一樣長","step_3":"算式：7 － 4 ＝ 3（隻）","formula":"7 - 4 = 3","trap_warning":"思維轉化：「A 比 B 多幾隻」和「B 比 A 少幾隻」，算出來的「相差」是完全一樣的！"}},{"id":"G1-N12-03","unit":"N-1-2","unit_title":"加法和減法（一樣多：差值為0）","source":"110學年中市段考真題","stem":"桌上有 6 枝黃鉛筆和 6 枝藍鉛筆，黃鉛筆和藍鉛筆相差幾枝？","choices":["0 枝（一樣多）","1 枝","6 枝","12 枝"],"answer_index":0,"visual_engine":{"type":"dual-track-diff","props":{"top_count":6,"bottom_count":6,"top_label":"黃鉛筆","bottom_label":"藍鉛筆"}},"explanation":{"step_1":"雙軌一對一連線：6 枝完全對齊，無任何多出圓片","step_2":"兩排長度完全相同，代表「一樣多」","step_3":"算式：6 － 6 ＝ 0（枝）","formula":"6 - 6 = 0","trap_warning":"概念鎖定：兩個相同的數字相減，差永遠是 0，視覺上就是齊頭齊尾！"}},{"id":"G1-N12-04","unit":"N-1-2","unit_title":"加法和減法（多多少）","source":"111學年桃市段考真題","stem":"停車場停了 9 輛黑車和 3 輛白車，黑車比白車多幾輛？","choices":["5 輛","6 輛","7 輛","12 輛"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":9,"bottom_count":3,"top_label":"黑車","bottom_label":"白車"}},"explanation":{"step_1":"前 3 輛一對一消除（一樣多）","step_2":"黑車後方凸出 6 輛","step_3":"算式：9 － 3 ＝ 6（輛）","formula":"9 - 3 = 6","trap_warning":"直觀算理：從較多的 9 輛中，減去和白車一樣多的 3 輛，剩下的就是多出來的。"}},{"id":"G1-N12-05","unit":"N-1-2","unit_title":"加法和減法（逆向思考：還要補幾個）","source":"112學年高市段考真題","stem":"哥哥有 8 顆彈珠，弟弟只有 2 顆彈珠，弟弟還要再拿幾顆彈珠，才會跟哥哥一樣多？","choices":["5 顆","6 顆","7 顆","10 顆"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":8,"bottom_count":2,"top_label":"哥哥","bottom_label":"弟弟"}},"explanation":{"step_1":"排排看：哥哥 8 顆，弟弟 2 顆，前 2 顆對齊","step_2":"看下軌的缺口：弟弟落後了 6 格空白","step_3":"算式：8 － 2 ＝ 6（顆）","formula":"8 - 2 = 6","trap_warning":"題型破招：問「還要幾個才一樣多」，本質上就是求兩者的差值！"}},{"id":"G1-N12-06","unit":"N-1-2","unit_title":"加法和減法（少多少）","source":"111學年台南段考真題","stem":"小芬摺了 10 隻紙鶴，阿強摺了 6 隻紙鶴，阿強比小芬少摺幾隻紙鶴？","choices":["3 隻","4 隻","5 隻","16 隻"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":10,"bottom_count":6,"top_label":"小芬","bottom_label":"阿強"}},"explanation":{"step_1":"對齊前 6 隻紙鶴","step_2":"小芬多出 4 隻，也就是阿強少摺 4 隻","step_3":"算式：10 － 6 ＝ 4（隻）","formula":"10 - 6 = 4","trap_warning":"口訣：誰大誰排上面，大的減小的，減出來的就是「少多少」！"}},{"id":"G1-N12-07","unit":"N-1-2","unit_title":"加法和減法（多多少）","source":"110學年竹市段考真題","stem":"花瓶裡插了 7 朵紅玫瑰和 2 朵白百合，紅玫瑰比白百合多幾朵？","choices":["4 朵","5 朵","6 朵","9 朵"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":7,"bottom_count":2,"top_label":"紅玫瑰","bottom_label":"白百合"}},"explanation":{"step_1":"雙軌對齊前 2 朵花","step_2":"紅玫瑰後方高亮多出 5 朵","step_3":"算式：7 － 2 ＝ 5（朵）","formula":"7 - 2 = 5","trap_warning":"算理提示：一對一配對消除後，沒配到對的就是相差的量。"}},{"id":"G1-N12-08","unit":"N-1-2","unit_title":"加法和減法（相差多少）","source":"112學年彰化段考真題","stem":"小明今年 9 歲，妹妹今年 4 歲，小明和妹妹相差幾歲？","choices":["4 歲","5 歲","6 歲","13 歲"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":9,"bottom_count":4,"top_label":"小明 (9歲)","bottom_label":"妹妹 (4歲)"}},"explanation":{"step_1":"年齡比一比：前 4 年重疊","step_2":"小明多活了 5 年","step_3":"算式：9 － 4 ＝ 5（歲）","formula":"9 - 4 = 5","trap_warning":"經典常考：問「相差幾歲」不管是誰比誰大，一律用大歲數減小歲數！"}},{"id":"G1-N12-09","unit":"N-1-2","unit_title":"加法和減法（綜合情境比長度）","source":"111學年屏東段考真題","stem":"綠色積木火車有 8 節車廂，紅色積木火車有 7 節車廂，兩列火車相差幾節車廂？","choices":["1 節","2 節","15 節","0 節"],"answer_index":0,"visual_engine":{"type":"dual-track-diff","props":{"top_count":8,"bottom_count":7,"top_label":"綠火車","bottom_label":"紅火車"}},"explanation":{"step_1":"兩列火車並排比長短：前 7 節長度相等","step_2":"綠火車多凸出最後 1 節車廂","step_3":"算式：8 － 7 ＝ 1（節）","formula":"8 - 7 = 1","trap_warning":"相鄰數相減：相鄰的兩個數字相減（8 與 7），差必定是 1！"}},{"id":"G1-N12-10","unit":"N-1-2","unit_title":"加法和減法（陷阱題：比較與求總數區分）","source":"112學年基隆段考真題","stem":"樹上有 10 隻麻雀和 3 隻松鼠，麻雀比松鼠多幾隻？","choices":["6 隻","7 隻","8 隻","13 隻"],"answer_index":1,"visual_engine":{"type":"dual-track-diff","props":{"top_count":10,"bottom_count":3,"top_label":"麻雀","bottom_label":"松鼠"}},"explanation":{"step_1":"對齊前 3 隻動物（1對1連線）","step_2":"麻雀後方多出 7 隻未配對","step_3":"算式：10 － 3 ＝ 7（隻）","formula":"10 - 3 = 7","trap_warning":"審題秘訣：看清楚問「多幾隻」（用減法 10-3=7）還是「一共有幾隻」（用加法 10+3=13）！"}}],"g1_r11_balance_equal.json":[{"id":"G1-R11-01","unit":"R-1-1","unit_title":"算式與符號（等號平衡概念）","source":"111學年北市段考真題","stem":"天平左邊放了 5 個 1 克的積木，右邊放了 2 個 1 克的積木，右邊還要再放幾個積木天平才會平衡？","choices":["2 個","3 個","4 個","7 個"],"answer_index":1,"visual_engine":{"type":"balance-beam","props":{"left_weight":5,"right_weight":2,"interactive":true}},"explanation":{"step_1":"天平傾斜：左邊 5 克較重向下傾斜，右邊 2 克較輕向上浮起","step_2":"想配平：兩邊重量必須完全相同（左邊 ＝ 右邊）","step_3":"算式：5 ＝ 2 ＋ 3，所以右邊還要放 3 個積木","formula":"5 = 2 + 3","trap_warning":"等號真義：「＝」不是「算出答案」，而是天平兩邊「一樣重、保持平衡」的意思！"}},{"id":"G1-R11-02","unit":"R-1-1","unit_title":"算式與符號（等號雙向性）","source":"112學年新北段考真題","stem":"觀察算式「4 ＋ 3 ＝ 7」，如果反過來寫成「7 ＝ 4 ＋ 3」，這個算式是對的嗎？","choices":["對的，等號兩邊一樣多","不對，答案必須寫在右邊","不對，算式不能倒過來","不一定，要看題目規定"],"answer_index":0,"visual_engine":{"type":"balance-beam","props":{"left_weight":7,"right_weight":7,"interactive":false}},"explanation":{"step_1":"天平驗證：左邊放 7 克，右邊放 4 克加 3 克（共 7 克）","step_2":"指針垂直居中，天平兩側完全平衡","step_3":"算理：等號具備對稱性，「4 ＋ 3 ＝ 7」與「7 ＝ 4 ＋ 3」意思完全相同","formula":"4 + 3 = 7 ⟺ 7 = 4 + 3","trap_warning":"打破刻板印象：答案不一定要在等號右邊，等號是雙向平等的平衡木！"}},{"id":"G1-R11-03","unit":"R-1-1","unit_title":"算式與符號（兩側都有加法配平）","source":"110學年中市段考真題","stem":"天平左邊放了「3 ＋ 5」克的物品，天平右邊放了「4 ＋ （　）」克的物品，兩邊才會平衡？","choices":["3 克","4 克","5 克","8 克"],"answer_index":1,"visual_engine":{"type":"balance-beam","props":{"left_weight":8,"right_weight":4,"interactive":true}},"explanation":{"step_1":"先算左邊總重：3 ＋ 5 ＝ 8 克","step_2":"要讓右邊也是 8 克：4 加上多少會等於 8？","step_3":"算式：3 ＋ 5 ＝ 4 ＋ 4，所以括號填 4 克","formula":"3 + 5 = 4 + 4 = 8","trap_warning":"思維進階：兩邊算式各自計算，只要總數相同，天平就會平衡！"}},{"id":"G1-R11-04","unit":"R-1-1","unit_title":"算式與符號（不平衡傾斜判斷）","source":"111學年桃市段考真題","stem":"天平左邊放了 6 顆彈珠，右邊放了 8 顆同樣的彈珠，天平會往哪一邊傾斜？","choices":["往左邊傾斜（左邊沉下去）","往右邊傾斜（右邊沉下去）","兩邊保持平衡","無法判斷"],"answer_index":1,"visual_engine":{"type":"balance-beam","props":{"left_weight":6,"right_weight":8,"interactive":false}},"explanation":{"step_1":"比大小：8 比 6 大（8 ＞ 6）","step_2":"右邊較重，右邊托盤往下沉，左邊托盤被抬高","step_3":"物理原理：重的一端下沉，輕的一端浮起","formula":"6 \u003c 8 (右側下沉)","trap_warning":"生活直覺：跟玩翹翹板一樣，比較重的小朋友那一端會坐在地上！"}},{"id":"G1-R11-05","unit":"R-1-1","unit_title":"算式與符號（求未知數配平）","source":"112學年高市段考真題","stem":"算式「（　） ＋ 2 ＝ 9」中，要讓等號成立，括號裡應該填入多少？","choices":["6","7","8","11"],"answer_index":1,"visual_engine":{"type":"balance-beam","props":{"left_weight":2,"right_weight":9,"interactive":true}},"explanation":{"step_1":"天平模型：右邊已經有 9 克，左邊目前只有 2 克","step_2":"反推差值：9 － 2 ＝ 7","step_3":"驗算：7 ＋ 2 ＝ 9，天平完全平衡","formula":"7 + 2 = 9","trap_warning":"逆向運算：加法的未知數，可以利用減法（右邊減左邊）來反向找出！"}},{"id":"G1-R11-06","unit":"R-1-1","unit_title":"算式與符號（等號兩側相等連動）","source":"111學年台南段考真題","stem":"下列哪一個算式中的等號「＝」使用是正確的？","choices":["5 ＋ 2 ＝ 8","4 ＋ 4 ＝ 8","6 ＋ 3 ＝ 10","3 ＋ 3 ＝ 7"],"answer_index":1,"visual_engine":{"type":"balance-beam","props":{"left_weight":8,"right_weight":8,"interactive":false}},"explanation":{"step_1":"只有兩邊數量真正「完全相等」時，才能用等號連接","step_2":"4 ＋ 4 算出來是 8，8 ＝ 8 完全平衡","step_3":"其他選項左邊加起來都不等於右邊，天平會傾斜","formula":"4 + 4 = 8 (平衡)","trap_warning":"嚴謹數學：「＝」具有嚴格真實性，不平衡的式子不能寫等號！"}},{"id":"G1-R11-07","unit":"R-1-1","unit_title":"算式與符號（同加同減等量原理）","source":"110學年竹市段考真題","stem":"天平原本兩邊各放 6 顆積木正處於平衡，如果兩邊同時拿走 2 顆積木，天平會怎麼樣？","choices":["依然保持平衡","往左邊傾斜","往右邊傾斜","會倒掉"],"answer_index":0,"visual_engine":{"type":"balance-beam","props":{"left_weight":4,"right_weight":4,"interactive":false}},"explanation":{"step_1":"原本狀態：6 ＝ 6 平衡","step_2":"兩邊同時減 2：左邊 6 － 2 ＝ 4，右邊 6 － 2 ＝ 4","step_3":"兩邊依然都是 4 顆，維持 4 ＝ 4 平衡","formula":"6 - 2 = 6 - 2 ⟹ 4 = 4","trap_warning":"等量公理啟蒙：只要天平兩邊同時拿走一樣多的東西，平衡狀態絕不改變！"}},{"id":"G1-R11-08","unit":"R-1-1","unit_title":"算式與符號（三個數連加配平）","source":"112學年彰化段考真題","stem":"天平左邊放了「2 ＋ 3 ＋ 4」克的積木，右邊放了一個 9 克的砝碼，天平會平衡嗎？","choices":["會平衡，因為 2＋3＋4 剛好等於 9","不會，左邊比較重","不會，右邊比較重","無法計算"],"answer_index":0,"visual_engine":{"type":"balance-beam","props":{"left_weight":9,"right_weight":9,"interactive":false}},"explanation":{"step_1":"計算左邊連加：2 ＋ 3 ＝ 5，5 ＋ 4 ＝ 9 克","step_2":"右邊砝碼剛好也是 9 克","step_3":"9 ＝ 9，天平水平配平","formula":"2 + 3 + 4 = 9","trap_warning":"分步連加：先將前面兩個數相加，再加上第三個數，核對總和是否等於右邊。"}},{"id":"G1-R11-09","unit":"R-1-1","unit_title":"算式與符號（比較符號轉化）","source":"111學年屏東段考真題","stem":"天平左邊有 7 顆蘋果，右邊有 5 顆蘋果，天平無法平衡。要讓它們平衡，最少需要移動幾顆蘋果？","choices":["從左邊拿 1 顆移到右邊","從左邊拿 2 顆移到右邊","右邊拿 1 顆給左邊","無法透過移動平衡"],"answer_index":0,"visual_engine":{"type":"balance-beam","props":{"left_weight":6,"right_weight":6,"interactive":true}},"explanation":{"step_1":"總共有 7 ＋ 5 ＝ 12 顆蘋果","step_2":"平分給兩邊：12 顆平分，每邊各 6 顆才會平衡","step_3":"左邊原本 7 顆，拿走 1 顆給右邊：7 － 1 ＝ 6，5 ＋ 1 ＝ 6","formula":"7 - 1 = 5 + 1 = 6","trap_warning":"陷阱注意：相差 2 顆時，只要把「差的一半（1顆）」移過去就平衡了，千萬別移 2 顆！"}},{"id":"G1-R11-10","unit":"R-1-1","unit_title":"算式與符號（綜合等式推理）","source":"112學年基隆段考真題","stem":"天平左邊放了 1 個大西瓜和 1 個 2 斤砝碼，右邊放了 1 個 8 斤砝碼時剛好平衡。請問大西瓜幾斤重？","choices":["5 斤","6 斤","7 斤","10 斤"],"answer_index":1,"visual_engine":{"type":"balance-beam","props":{"left_weight":8,"right_weight":8,"interactive":true}},"explanation":{"step_1":"列出天平平衡算式：西瓜 ＋ 2 ＝ 8","step_2":"想一想：多少加 2 等於 8？","step_3":"8 － 2 ＝ 6，大西瓜重 6 斤","formula":"西瓜 + 2 = 8 ⟹ 西瓜 = 6","trap_warning":"代數萌芽：利用生活中的天平，直觀理解未知數的等量替換！"}}],"g1_n14_solve_problem.json":[{"id":"G1-N14-01","unit":"N-1-4","unit_title":"解題（未知起點加法反推）","source":"111學年北市段考真題","stem":"算式「(　) ＋ 5 ＝ 12」，想要知道括號裡的數是多少，應該用哪一個算式來逆向反推？","choices":["12 － 5 ＝ 7","12 ＋ 5 ＝ 17","5 ＋ 12 ＝ 17","5 － 2 ＝ 3"],"answer_index":0,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":7,"jump":5,"end":12}},"explanation":{"step_1":"題目意思是：某個數字加上 5 以後，最後結果到達了 12","step_2":"在數線上，就是從未知起點向右跨越 5 格抵達 12","step_3":"想要找出原本的起點，必須從終點 12 往左倒退 5 格，算式為 12 － 5 ＝ 7","formula":"終點 12 － 跨越 5 ＝ 起點 7","trap_warning":"常見直覺陷阱：看到題目有加號就去加成 17，忘記起點加了 5 絕不可能大於 12！"}},{"id":"G1-N14-02","unit":"N-1-4","unit_title":"解題（原本有多少之公車上車情境）","source":"112學年新北段考真題","stem":"公車上原本有一些乘客，靠站後上來了 4 個人，現在車上共有 11 個人。公車上原本有幾個人？","choices":["15 個人","7 個人","4 個人","11 個人"],"answer_index":1,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":7,"jump":4,"end":11}},"explanation":{"step_1":"設原本有 (　) 人，上來 4 人代表加上 4，現在有 11 人：(　) ＋ 4 ＝ 11","step_2":"要求原本的人數，要把後來上車的 4 個人扣除倒退回去","step_3":"計算算式：11 － 4 ＝ 7，所以公車上原本有 7 個人","formula":"現有人數 11 － 上車人數 4 ＝ 原本人數 7","trap_warning":"求「原本」的數量，要用現在的總數扣掉增加的部分！"}},{"id":"G1-N14-03","unit":"N-1-4","unit_title":"解題（減法未知減數之吃糖果情境）","source":"111學年桃市段考真題","stem":"小芳原本有 15 顆糖果，吃掉一些後剩下 9 顆。小芳吃掉了幾顆糖果？","choices":["24 顆","15 顆","6 顆","9 顆"],"answer_index":2,"visual_engine":{"type":"glass-number-line","props":{"mode":"sub_middle","start":15,"jump":6,"end":9}},"explanation":{"step_1":"原本有 15 顆，吃掉 (　) 顆後剩下 9 顆，算式為：15 － (　) ＝ 9","step_2":"在數線上，就是從 15 往左走到 9，想知道兩者之間相差了幾格","step_3":"計算算式：15 － 9 ＝ 6，代表小芳吃掉了 6 顆糖果","formula":"原本 15 － 剩下 9 ＝ 吃掉 6","trap_warning":"求「少了多少」，是用原本的總數減去最後剩下的數量！"}},{"id":"G1-N14-04","unit":"N-1-4","unit_title":"解題（被減數未知之還原加法）","source":"112學年中市段考真題","stem":"算式「(　) － 6 ＝ 8」，請問括號裡原本的數字是多少？","choices":["14","2","8","6"],"answer_index":0,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":14,"jump":6,"end":8}},"explanation":{"step_1":"題目意思是：原本有一大堆，拿走 6 個之後，還剩下 8 個","step_2":"要求原本總共有多少，必須把被拿走的 6 個再加回去還原","step_3":"計算算式：8 ＋ 6 ＝ 14，所以括號裡的數是 14","formula":"剩下 8 ＋ 拿走 6 ＝ 原本 14","trap_warning":"被減數（最前面的數）是一開始最大的總量，一定要用加法加回去！"}},{"id":"G1-N14-05","unit":"N-1-4","unit_title":"解題（加法未知加數之游來鴨子情境）","source":"110學年高市段考真題","stem":"池塘裡原本有 8 隻鴨子，又游來了幾隻後，現在共有 14 隻。又游來了幾隻鴨子？","choices":["22 隻","8 隻","14 隻","6 隻"],"answer_index":3,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":8,"jump":6,"end":14}},"explanation":{"step_1":"原本有 8 隻，游來 (　) 隻，總共變成 14 隻：8 ＋ (　) ＝ 14","step_2":"求增加了多少隻，用最後的總數減去原本的隻數","step_3":"計算算式：14 － 8 ＝ 6，代表又游來了 6 隻鴨子","formula":"最後總數 14 － 原有 8 ＝ 新增 6 隻","trap_warning":"千萬不要 8 ＋ 14 ＝ 22，池塘裡不可能憑空冒出比總數還多的鴨子！"}},{"id":"G1-N14-06","unit":"N-1-4","unit_title":"解題（數線方向性之反推本質）","source":"111學年南市段考真題","stem":"青蛙從未知荷葉向右跳了 5 格到達刻度 12。如果想找出青蛙一開始從哪裡起跳，數線該怎麼走？","choices":["繼續向右跳 5 格到 17","從 12 往左倒退走 5 格到 7","直接停在 12 不用動","跳回 0 刻度"],"answer_index":1,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":7,"jump":5,"end":12}},"explanation":{"step_1":"向右前進代表「數值增加（＋）」","step_2":"反推起點時，必須進行「逆向操作」，也就是向左倒退「數值減少（－）」","step_3":"從刻度 12 向左回溯 5 格：12 ➔ 11 ➔ 10 ➔ 9 ➔ 8 ➔ 7，起點就是 7","formula":"向右前進的逆運算 ＝ 向左倒退","trap_warning":"反推就像錄影帶倒帶，往哪裡來就往反方向倒回去！"}},{"id":"G1-N14-07","unit":"N-1-4","unit_title":"解題（放進蘋果之原本箱內數量）","source":"112學年竹市段考真題","stem":"紙箱裡原本有一些蘋果，媽媽再放進去 7 顆後，現在總共有 13 顆。紙箱裡原本有幾顆蘋果？","choices":["20 顆","13 顆","6 顆","7 顆"],"answer_index":2,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":6,"jump":7,"end":13}},"explanation":{"step_1":"設原本有 (　) 顆，放進 7 顆變成 13 顆：(　) ＋ 7 ＝ 13","step_2":"求原本的數量，用現在總共有的 13 顆減去媽媽放進去的 7 顆","step_3":"計算算式：13 － 7 ＝ 6，所以紙箱裡原本有 6 顆蘋果","formula":"現在 13 － 放進 7 ＝ 原本 6 顆","trap_warning":"看到「放進去」是加法，但題目問的是「原本」，所以要用減法反推！"}},{"id":"G1-N14-08","unit":"N-1-4","unit_title":"解題（花掉零用錢之差額計算）","source":"111學年彰化段考真題","stem":"小強錢包裡有 18 元，買了一枝筆花掉一些錢後，剩下 10 元。小強買筆花掉多少元？","choices":["28 元","18 元","10 元","8 元"],"answer_index":3,"visual_engine":{"type":"glass-number-line","props":{"mode":"sub_middle","start":18,"jump":8,"end":10}},"explanation":{"step_1":"原本有 18 元，買筆花掉 (　) 元後剩 10 元：18 － (　) ＝ 10","step_2":"在數線上，就是從 18 往左退到 10，看中間跨越了多少距離","step_3":"計算算式：18 － 10 ＝ 8，所以買筆花掉了 8 元","formula":"原有 18 － 剩下 10 ＝ 花掉 8 元","trap_warning":"花掉的錢不可能比原本的 18 元更多，千萬別算成 18 ＋ 10 ＝ 28！"}},{"id":"G1-N14-09","unit":"N-1-4","unit_title":"解題（見加就加之迷思剖析）","source":"112學年屏東段考真題","stem":"題目是「(　) ＋ 3 ＝ 10」，小明直接把數字加起來寫「10 ＋ 3 ＝ 13」。請問小明錯在哪裡？","choices":["小明沒有算錯，答案就是 13","他看見加號就去加，但起點加上 3 不可能大於最後的 10","他應該把 10 和 3 相乘","題目本身出錯了"],"answer_index":1,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":7,"jump":3,"end":10}},"explanation":{"step_1":"檢驗答案：如果括號填 13，算式變成 13 ＋ 3 ＝ 16，根本不等於 10","step_2":"加法運算中，加上一個正數後，數值一定會變大","step_3":"所以原本的起點必定比最後結果 10 還要小，必須用 10 － 3 ＝ 7 反推","formula":"反推檢驗：7 ＋ 3 ＝ 10 (正確！) vs 13 ＋ 3 ＝ 16 (錯誤！)","trap_warning":"做完題目把答案代回括號算算看，一秒就能發現有沒有犯錯！"}},{"id":"G1-N14-10","unit":"N-1-4","unit_title":"解題（剪掉繩子之原本長度加回）","source":"110學年宜蘭段考真題","stem":"一條長長的緞帶剪掉 5 公分做蝴蝶結後，還剩下 7 公分。這條緞帶原本有多長？","choices":["12 公分","2 公分","5 公分","7 公分"],"answer_index":0,"visual_engine":{"type":"glass-number-line","props":{"mode":"add_start","start":12,"jump":5,"end":7}},"explanation":{"step_1":"原本的長度被剪成兩段：一段是剪掉的 5 公分，另一段是剩下的 7 公分","step_2":"想要知道原本整條有多長，就是把這兩段重新拼接合起來","step_3":"計算算式：7 ＋ 5 ＝ 12，所以緞帶原本有 12 公分長","formula":"剩下的 7 ＋ 剪掉的 5 ＝ 原本整條 12 公分","trap_warning":"剪掉是減法，但求「原本的長度」要把剪掉的部分加回去！"}}]}</script>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #64748B;
+      --ghost: #94A3B8;
+      --border: #E2E8F0;
+      --accent: #EA580C;
+      --accent-hover: #C2410C;
+      --accent-bg: #FFF7ED;
+      --gold: #D97706;
+      --gold-bg: #FEF3C7;
+      --green: #16A34A;
+      --green-bg: #DCFCE7;
+      --red: #DC2626;
+      --red-bg: #FEE2E2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 頂部狀態列 (< 40px) ── */
+    header.status-bar {
+      height: 38px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .status-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .badge-unit {
+      background: var(--accent-bg);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .status-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .status-progress { font-size: 11px; color: var(--ghost); font-weight: 600; white-space: nowrap; }
+
+    /* ── 四教具切換列 ── */
+    nav.station-nav {
+      position: sticky;
+      top: 38px;
+      z-index: 99;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav.station-nav::-webkit-scrollbar { display: none; }
+    .station-chip {
+      flex: 0 0 auto;
+      min-height: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 1px;
+      padding: 4px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      background: var(--card-bg);
+      color: var(--ink);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all .15s ease-out;
+    }
+    .station-chip .chip-top { font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .station-chip .chip-sub { font-size: 10px; color: var(--ghost); font-weight: 600; white-space: nowrap; }
+    .station-chip.active {
+      border-color: var(--accent);
+      background: var(--accent-bg);
+    }
+    .station-chip.active .chip-top { color: var(--accent); }
+    .station-chip.active .chip-sub { color: var(--accent); opacity: .75; }
+    .station-chip.all-done .chip-sub { color: var(--green); }
+
+    /* ── 主容器 ── */
+    main.quiz-layout {
+      flex: 1;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    @media (min-width: 768px) {
+      main.quiz-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+        gap: 20px;
+        padding: 22px;
+      }
+      .left-panel, .right-panel { display: flex; flex-direction: column; gap: 14px; }
+    }
+    .left-panel, .right-panel { display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    /* ── 題幹 ── */
+    .stem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .question-no { font-size: 12px; font-weight: 800; color: var(--accent); white-space: nowrap; }
+    .source-ghost { font-size: 11px; color: var(--ghost); font-weight: 500; text-align: right; }
+    .stem-text { font-size: 16px; line-height: 1.65; font-weight: 600; color: var(--ink); }
+
+    /* ── 教具展示艙 ── */
+    .visual-stage {
+      background: #F1F5F9;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 14px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+    }
+    .visual-stage > * { max-width: 100%; }
+    .frames-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: nowrap;
+    }
+    ten-frame-grid { --tfg-pitch: 29px; --tfg-cell: 26px; --tfg-dot: 20px; }
+    @media (min-width: 420px) {
+      ten-frame-grid { --tfg-pitch: 33px; --tfg-cell: 30px; --tfg-dot: 24px; }
+    }
+    dual-track-diff { width: 100%; }
+    balance-beam { width: 100%; }
+    glass-number-line { display: block; }
+
+    .track-legend {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+
+    /* ── 教具操作列 ── */
+    .tool-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 30px;
+    }
+    .tool-btn {
+      min-height: 40px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .tool-btn:active { background: #EEF2F6; }
+    .tool-btn.primary { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+    .tool-hint { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+    /* ── 2x2 拇指熱區 ── */
+    .choices-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+    .choice-btn {
+      min-height: 52px;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      text-align: center;
+      line-height: 1.35;
+      transition: all 0.15s ease-out;
+      touch-action: manipulation;
+    }
+    .choice-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+    .choice-btn.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+    .choice-btn.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); }
+    .choice-btn[disabled] { cursor: default; }
+    .choice-btn[disabled]:not(.correct):not(.wrong):hover { border-color: var(--border); background: var(--card-bg); }
+
+    /* ── 詳解抽屜 ── */
+    .expl-drawer {
+      display: none;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      animation: slideDown 0.2s ease-out;
+    }
+    .expl-drawer.open { display: block; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .expl-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .breakdown-box {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .breakdown-step { color: var(--muted); margin-bottom: 3px; }
+    .breakdown-step strong { color: var(--ink); }
+    .formula-tag {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--gold);
+      background: var(--gold-bg);
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+    .trap-alert {
+      font-size: 12px;
+      color: #991B1B;
+      background: #FEF2F2;
+      border-left: 3px solid var(--red);
+      padding: 7px 10px;
+      border-radius: 4px;
+      line-height: 1.45;
+    }
+
+    /* ── 底部導航 ── */
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .action-btn {
+      min-height: 46px;
+      flex: 1;
+      padding: 0 16px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+      touch-action: manipulation;
+    }
+    .btn-next { background: var(--accent); color: #FFF; }
+    .btn-next:hover { background: var(--accent-hover); }
+    .btn-prev { background: #EEF2F6; color: var(--ink); border: 1px solid var(--border); flex: 0 0 auto; padding: 0 14px; }
+    .action-btn[disabled] { opacity: .4; cursor: default; }
+
+    /* ── 完成小結 ── */
+    .summary-card {
+      display: none;
+      background: var(--green-bg);
+      border: 1.5px solid #86EFAC;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #166534;
+      line-height: 1.5;
+    }
+    .summary-card.show { display: block; }
+
+    /* ── 載入失敗提示（不靜默吞錯） ── */
+    .load-error {
+      display: none;
+      background: #FEF2F2;
+      border: 1.5px solid #FCA5A5;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #991B1B;
+    }
+    .load-error.show { display: block; }
+    .load-error code { background: #FEE2E2; padding: 1px 5px; border-radius: 4px; }
+
+    /* ── 離線 / file:// 降級提示（中性灰，不是錯誤） ── */
+    .offline-note {
+      display: none;
+      background: #F1F5F9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .offline-note.show { display: block; }
+    .offline-note b { color: var(--ink); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .expl-drawer { animation: none; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部狀態列 < 40px -->
+  <header class="status-bar">
+    <div class="status-left">
+      <span class="badge-unit" id="unitBadge">G1 速驗</span>
+      <span class="status-title" id="unitTitle">四大教具 × 段考真題</span>
+    </div>
+    <span class="status-progress" id="statusProgress">0 / 40</span>
+  </header>
+
+  <!-- 四教具切換列 -->
+  <nav class="station-nav" id="stationNav" aria-label="教具單元切換"></nav>
+
+  <!-- 主體 -->
+  <main class="quiz-layout">
+    <div class="load-error" id="loadError" role="alert"></div>
+    <div class="offline-note" id="offlineNote" role="status"></div>
+
+    <!-- 左欄：題幹與教具 -->
+    <section class="left-panel">
+      <div class="card">
+        <div class="stem-header">
+          <span class="question-no" id="questionIndexText">第 1 / 10 題</span>
+          <span class="source-ghost" id="questionSource">段考真題</span>
+        </div>
+        <div class="stem-text" id="questionStem">載入中...</div>
+      </div>
+
+      <div class="visual-stage">
+        <div class="frames-container" id="visualStage"></div>
+        <div class="tool-bar" id="toolBar"></div>
+      </div>
+    </section>
+
+    <!-- 右欄：選項與詳解 -->
+    <section class="right-panel">
+      <div class="card">
+        <div class="choices-grid" id="choicesGrid"></div>
+      </div>
+
+      <div class="expl-drawer" id="explDrawer">
+        <div class="expl-title"><span>💡 破招算理分解</span></div>
+        <div class="breakdown-box">
+          <div class="breakdown-step" id="step1"></div>
+          <div class="breakdown-step" id="step2"></div>
+          <div class="breakdown-step" id="step3"></div>
+          <div class="formula-tag" id="formulaTag"></div>
+        </div>
+        <div class="trap-alert" id="trapAlert"></div>
+      </div>
+
+      <div class="summary-card" id="summaryCard"></div>
+
+      <div class="nav-bar">
+        <button class="action-btn btn-prev" id="btnPrev">← 上一題</button>
+        <button class="action-btn btn-next" id="btnNext">下一題 →</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /* 四教具 × 對應段考題庫（單一真相：沿用 data/curriculum_v3 題庫，不複製題目） */
+    var STATIONS = [
+      { unit: 'N-1-3', name: '湊十法', icon: '🔟', title: '湊十法與拆十法',
+        file: 'g1_n13_make_ten.json', engine: 'ten-frame-grid' },
+      { unit: 'N-1-2', name: '比多少', icon: '🔴', title: '比較型減法（多多少）',
+        file: 'g1_n12_diff_compare.json', engine: 'dual-track-diff' },
+      { unit: 'R-1-1', name: '等號天平', icon: '⚖️', title: '等號的平衡意義',
+        file: 'g1_r11_balance_equal.json', engine: 'balance-beam' },
+      { unit: 'N-1-4', name: '反推數線', icon: '📏', title: '加減逆算與解題',
+        file: 'g1_n14_solve_problem.json', engine: 'glass-number-line' }
+    ];
+
+    var currentStation = 0;
+    /* 每站狀態：{ idx, answers: {qid: choiceIdx} } */
+    var stationState = STATIONS.map(function () { return { idx: 0, answers: {} }; });
+    var answered = false;      /* 本題是否已作答（當前渲染） */
+    var loading = true;
+
+    /* 深連結：#N-1-3 直接開啟對應教具（速驗/截圖用） */
+    (function initStationFromHash() {
+      var key = (location.hash || '').replace('#', '');
+      for (var i = 0; i < STATIONS.length; i++) {
+        if (STATIONS[i].unit === key) { currentStation = i; break; }
+      }
+    })();
+
+    var visualStage = document.getElementById('visualStage');
+    var toolBar = document.getElementById('toolBar');
+    var choicesGrid = document.getElementById('choicesGrid');
+    var explDrawer = document.getElementById('explDrawer');
+    var summaryCard = document.getElementById('summaryCard');
+
+    /* ── 內嵌題庫（file:// 直開的無縫降級來源；內容與 data/curriculum_v3 同步） ── */
+    var OFFLINE_BANK = (function () {
+      var el = document.getElementById('offlineBank');
+      if (!el) return {};
+      try {
+        return JSON.parse(el.textContent || '{}') || {};
+      } catch (e) {
+        document.getElementById('loadError').innerHTML =
+          '⚠️ 內嵌題庫解析失敗：<code>' + escapeHtml(e.message) + '</code>';
+        document.getElementById('loadError').classList.add('show');
+        return {};
+      }
+    })();
+
+    function validateBank(data, label) {
+      if (!Array.isArray(data) || !data.length) throw new Error(label + ' 題庫為空');
+      for (var i = 0; i < data.length; i++) {
+        var q = data[i];
+        if (!q || !q.id || !q.stem || !Array.isArray(q.choices) || !q.choices.length) {
+          throw new Error(label + ' 第 ' + (i + 1) + ' 題欄位不完整');
+        }
+        if (typeof q.answer_index !== 'number' || q.answer_index < 0 || q.answer_index >= q.choices.length) {
+          throw new Error(label + ' 第 ' + (i + 1) + ' 題 answer_index 越界');
+        }
+      }
+      return data;
+    }
+
+    /* 單一單元載入：先試遠端 JSON，失敗或 file:// 則用內嵌資料（不丟錯給使用者） */
+    function loadStation(st) {
+      var offline = function (reason) {
+        var fb = OFFLINE_BANK[st.file];
+        if (!fb) throw new Error(st.file + ' 遠端取得失敗（' + reason + '），且無內嵌資料');
+        var data = validateBank(fb, st.file + '（內嵌）');
+        st.questions = data;
+        st.offline = true;
+        return data;
+      };
+
+      if (location.protocol === 'file:') {
+        /* file:// 下 fetch 必被瀏覽器封鎖，直接走內嵌，連 console 錯誤都不產生 */
+        try { return Promise.resolve(offline('file:// 不支援 fetch')); }
+        catch (e) { return Promise.reject(e); }
+      }
+
+      return fetch('../data/curriculum_v3/' + st.file).then(function (r) {
+        if (!r.ok) throw new Error(st.file + ' HTTP ' + r.status);
+        return r.json();
+      }).then(function (data) {
+        st.questions = validateBank(data, st.file);
+        st.offline = false;
+        return st.questions;
+      }).catch(function (err) {
+        return offline(err.message);
+      });
+    }
+
+    function loadAll() {
+      var tasks = STATIONS.map(loadStation);
+      return Promise.all(tasks).then(function () {
+        loading = false;
+        buildStationNav();
+        showOfflineNote();
+        render();
+      }).catch(function (err) {
+        loading = false;
+        var box = document.getElementById('loadError');
+        box.innerHTML = '⚠️ 題庫載入失敗：<code>' + escapeHtml(err.message) + '</code><br>' +
+          '請確認以本機 HTTP 伺服器開啟（例如在專案根目錄執行 <code>python -m http.server 8000</code>），' +
+          '再前往 <code>/app/g1_exam_showcase.html</code>。';
+        box.classList.add('show');
+        document.getElementById('questionStem').textContent = '無法載入題庫。';
+      });
+    }
+
+    /* 降級說明（中性提示，非錯誤） */
+    function showOfflineNote() {
+      var count = 0, total = 0;
+      STATIONS.forEach(function (st) {
+        if (!st.questions) return;
+        total += st.questions.length;
+        if (st.offline) count += 1;
+      });
+      if (!count) return;
+      var note = document.getElementById('offlineNote');
+      note.innerHTML = count === STATIONS.length
+        ? '📦 <b>離線模式</b>：以 file:// 直接開啟，已使用內嵌題庫，' + total + ' 題完整可用。'
+        : '📦 <b>部分離線</b>：' + count + ' 個單元改用內嵌題庫，' + total + ' 題完整可用。';
+      note.classList.add('show');
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    /* ── 站點切換列 ── */
+    function buildStationNav() {
+      var nav = document.getElementById('stationNav');
+      nav.innerHTML = '';
+      STATIONS.forEach(function (st, i) {
+        var b = document.createElement('button');
+        b.className = 'station-chip';
+        b.type = 'button';
+        b.setAttribute('data-station', String(i));
+        b.innerHTML = '<span class="chip-top">' + st.icon + ' ' + st.name + '</span>' +
+                      '<span class="chip-sub" id="chipSub-' + i + '"></span>';
+        b.onclick = function () {
+          if (currentStation === i) return;
+          currentStation = i;
+          if (history.replaceState) history.replaceState(null, '', '#' + st.unit);
+          render();
+        };
+        nav.appendChild(b);
+      });
+      updateNav();
+    }
+
+    function updateNav() {
+      var nav = document.getElementById('stationNav');
+      var chips = nav.querySelectorAll('.station-chip');
+      var totalDoneAll = 0;
+      STATIONS.forEach(function (st, i) {
+        var done = Object.keys(stationState[i].answers).length;
+        totalDoneAll += done;
+        var total = st.questions ? st.questions.length : 0;
+        var sub = document.getElementById('chipSub-' + i);
+        if (sub) sub.textContent = done + ' / ' + total + ' 題';
+        if (chips[i]) {
+          chips[i].classList.toggle('active', i === currentStation);
+          chips[i].classList.toggle('all-done', total > 0 && done === total);
+        }
+      });
+      document.getElementById('statusProgress').textContent = totalDoneAll + ' / 40';
+    }
+
+    /* ── 主渲染 ── */
+    function render() {
+      var st = STATIONS[currentStation];
+      if (!st.questions) return;
+      var state = stationState[currentStation];
+      if (state.idx >= st.questions.length) state.idx = st.questions.length - 1;
+
+      var q = st.questions[state.idx];
+      var prevAnswer = state.answers[q.id];
+      answered = prevAnswer !== undefined;
+
+      document.getElementById('unitBadge').textContent = st.unit;
+      document.getElementById('unitTitle').textContent = st.title;
+      document.getElementById('questionIndexText').textContent =
+        '第 ' + (state.idx + 1) + ' / ' + st.questions.length + ' 題';
+      document.getElementById('questionSource').textContent = q.source || '段考真題';
+      document.getElementById('questionStem').textContent = q.stem;
+
+      renderVisual(st, q);
+      renderChoices(q, prevAnswer);
+      renderNav(st, state);
+      renderSummary(st, state);
+      updateNav();
+
+      if (prevAnswer !== undefined) showExplanation(q);
+      else {
+        explDrawer.classList.remove('open');
+        document.getElementById('step1').textContent = '';
+        document.getElementById('step2').textContent = '';
+        document.getElementById('step3').textContent = '';
+        document.getElementById('formulaTag').textContent = '';
+        document.getElementById('trapAlert').textContent = '';
+      }
+    }
+
+    /* ── 教具渲染（每次重建，避免跨題殘留狀態） ── */
+    function renderVisual(st, q) {
+      visualStage.innerHTML = '';
+      toolBar.innerHTML = '';
+      var props = (q.visual_engine && q.visual_engine.props) || {};
+
+      if (st.engine === 'ten-frame-grid') {
+        var fL = document.createElement('ten-frame-grid');
+        fL.setAttribute('fill-color', '#DC2626');
+        fL.setCount(props.left_initial || 0);
+        var fR = document.createElement('ten-frame-grid');
+        fR.setAttribute('fill-color', '#2563EB');
+        fR.setCount(props.right_initial || 0);
+        visualStage.appendChild(fL);
+        visualStage.appendChild(fR);
+        var need = Math.max(0, (props.target || 10) - (props.left_initial || 0));
+        if (props.operation === 'add' && need > 0 && (props.right_initial || 0) >= need) {
+          toolBtn('▶ 演示湊十', 'primary', function () {
+            fL.setCount(props.target || 10);
+            fR.setCount((props.right_initial || 0) - need);
+            toolBar.innerHTML = '';
+            toolHint('紅框湊滿 ' + (props.target || 10) + '，藍框剩 ' +
+              ((props.right_initial || 0) - need) + ' 顆');
+          });
+          toolHint('紅框還差 ' + need + ' 顆才滿十');
+        }
+      } else if (st.engine === 'dual-track-diff') {
+        var dtd = document.createElement('dual-track-diff');
+        dtd.setAttribute('top-count', String(props.top_count != null ? props.top_count : 8));
+        dtd.setAttribute('bottom-count', String(props.bottom_count != null ? props.bottom_count : 5));
+        /* 未作答前不揭露差值算式；回看已作答題目則直接顯示 */
+        dtd.setAttribute('show-formula', answered ? 'true' : 'false');
+        visualStage.appendChild(dtd);
+        var legend = document.createElement('div');
+        legend.className = 'track-legend';
+        legend.innerHTML =
+          '<span class="legend-item"><span class="legend-dot" style="background:#EF4444"></span>' +
+            escapeHtml(props.top_label || '上軌') + '</span>' +
+          '<span class="legend-item"><span class="legend-dot" style="background:#3B82F6"></span>' +
+            escapeHtml(props.bottom_label || '下軌') + '</span>';
+        visualStage.appendChild(legend);
+        toolHint('綠虛線＝一對一一樣多；黃框＝多出來的部分');
+      } else if (st.engine === 'balance-beam') {
+        var beam = document.createElement('balance-beam');
+        beam.setAttribute('left-weight', String(props.left_weight != null ? props.left_weight : 5));
+        beam.setAttribute('right-weight', String(props.right_weight != null ? props.right_weight : 2));
+        beam.setAttribute('animate', 'true');
+        visualStage.appendChild(beam);
+        if (props.interactive) {
+          var right = props.right_weight != null ? props.right_weight : 2;
+          toolBtn('右邊 ＋1 克', 'primary', function () {
+            if (right >= 20) return;
+            right += 1;
+            beam.setAttribute('right-weight', String(right));
+            toolHint('右邊目前 ' + right + ' 克');
+          });
+          toolBtn('重設', '', function () {
+            right = props.right_weight != null ? props.right_weight : 2;
+            beam.setAttribute('right-weight', String(right));
+            toolHint('右邊目前 ' + right + ' 克');
+          });
+          toolHint('右邊目前 ' + right + ' 克');
+        } else {
+          toolHint('觀察天平：左邊 ＝ 右邊 才會平衡');
+        }
+      } else if (st.engine === 'glass-number-line') {
+        var line = document.createElement('glass-number-line');
+        visualStage.appendChild(line);
+        if (typeof line.setEquation === 'function') {
+          line.setEquation({
+            mode: props.mode,
+            start: props.start,
+            jump: props.jump,
+            end: props.end
+          });
+        }
+        toolBtn('倒退反推', 'primary', function () { line.stepReverse(); });
+        toolBtn('揭曉答案', '', function () { line.reveal(); });
+        toolBtn('重設', '', function () { line.setEquation(props); });
+      }
+    }
+
+    function toolBtn(label, cls, handler) {
+      var b = document.createElement('button');
+      b.className = 'tool-btn' + (cls ? ' ' + cls : '');
+      b.type = 'button';
+      b.textContent = label;
+      b.onclick = handler;
+      toolBar.appendChild(b);
+    }
+
+    function toolHint(text) {
+      var span = document.createElement('span');
+      span.className = 'tool-hint';
+      span.textContent = text;
+      toolBar.appendChild(span);
+    }
+
+    /* ── 選項 ── */
+    function renderChoices(q, prevAnswer) {
+      choicesGrid.innerHTML = '';
+      q.choices.forEach(function (text, i) {
+        var btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.type = 'button';
+        btn.textContent = text;
+        if (prevAnswer !== undefined) {
+          btn.disabled = true;
+          if (i === q.answer_index) btn.classList.add('correct');
+          else if (i === prevAnswer) btn.classList.add('wrong');
+        } else {
+          btn.onclick = function () { onSelectChoice(i); };
+        }
+        choicesGrid.appendChild(btn);
+      });
+    }
+
+    function onSelectChoice(choiceIdx) {
+      if (answered) return;
+      answered = true;
+      var st = STATIONS[currentStation];
+      var state = stationState[currentStation];
+      var q = st.questions[state.idx];
+      state.answers[q.id] = choiceIdx;
+
+      var btns = choicesGrid.querySelectorAll('.choice-btn');
+      btns.forEach(function (b, i) {
+        b.disabled = true;
+        if (i === q.answer_index) b.classList.add('correct');
+        else if (i === choiceIdx) b.classList.add('wrong');
+      });
+
+      /* 答題後才揭露雙軌差值算式 */
+      var dtd = visualStage.querySelector('dual-track-diff');
+      if (dtd) dtd.setAttribute('show-formula', 'true');
+
+      showExplanation(q);
+      renderSummary(st, state);
+      updateNav();
+    }
+
+    function showExplanation(q) {
+      var ex = q.explanation || {};
+      var tree = ex.breakdown_tree || ex;
+      document.getElementById('step1').textContent = '① ' + (tree.step_1 || '');
+      document.getElementById('step2').textContent = '② ' + (tree.step_2 || '');
+      document.getElementById('step3').textContent = '③ ' + (tree.step_3 || '');
+      document.getElementById('formulaTag').textContent = ex.formula || '';
+      document.getElementById('trapAlert').textContent = ex.trap_warning ? '⚠️ ' + ex.trap_warning : '';
+      explDrawer.classList.add('open');
+    }
+
+    /* ── 導航 ── */
+    function renderNav(st, state) {
+      var prev = document.getElementById('btnPrev');
+      var next = document.getElementById('btnNext');
+      prev.disabled = state.idx === 0;
+      next.disabled = state.idx >= st.questions.length - 1;
+      next.textContent = state.idx >= st.questions.length - 1 ? '已是本單元最後一題' : '下一題 →';
+    }
+
+    document.getElementById('btnPrev').onclick = function () {
+      var state = stationState[currentStation];
+      if (state.idx > 0) { state.idx -= 1; render(); }
+    };
+
+    document.getElementById('btnNext').onclick = function () {
+      var st = STATIONS[currentStation];
+      var state = stationState[currentStation];
+      if (state.idx < st.questions.length - 1) { state.idx += 1; render(); }
+    };
+
+    /* ── 小結 ── */
+    function renderSummary(st, state) {
+      var ids = Object.keys(state.answers);
+      if (!st.questions || ids.length < st.questions.length) {
+        summaryCard.classList.remove('show');
+        return;
+      }
+      var correct = st.questions.filter(function (q) {
+        return state.answers[q.id] === q.answer_index;
+      }).length;
+      summaryCard.textContent = '🎉 ' + st.unit + ' ' + st.name + '：' + st.questions.length +
+        ' 題全部作答完成，答對 ' + correct + ' 題' +
+        (correct === st.questions.length ? '，全對！' : '，可切回前面題號再看詳解。');
+      summaryCard.classList.add('show');
+    }
+
+    /* 鍵盤左右切題（桌機速驗） */
+    document.addEventListener('keydown', function (e) {
+      if (loading) return;
+      if (e.key === 'ArrowLeft') document.getElementById('btnPrev').click();
+      if (e.key === 'ArrowRight') document.getElementById('btnNext').click();
+    });
+
+    loadAll();
+  </script>
+</body>
+</html>
