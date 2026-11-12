@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>內湖國小真題教具：公車借十拆解演示</title>
+  <style>
+    :root {
+      --bg: #F0FDF4;
+      --card: #FFFFFF;
+      --text: #1E293B;
+      --primary: #F59E0B;
+      --primary-dark: #D97706;
+      --bus-yellow: #FCD34D;
+      --bus-border: #D97706;
+      --success: #10B981;
+      --coin10: #F59E0B;
+      --coin1: #0EA5E9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #F8FAFC; color: var(--text); padding: 16px 12px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    .container { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 14px; }
+    
+    /* 標頭考卷來源 */
+    .exam-tag { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #64748B; font-weight: 700; background: #E2E8F0; padding: 6px 12px; border-radius: 99px; }
+    .exam-tag span.badge { background: #3B82F6; color: white; padding: 2px 8px; border-radius: 99px; font-size: 11px; }
+
+    /* 題目題幹卡 */
+    .stem-card { background: white; border-radius: 16px; padding: 16px; border: 2px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .stem-title { font-size: 18px; font-weight: 800; color: #0F172A; line-height: 1.5; margin-bottom: 8px; }
+    .stem-sub { font-size: 13px; color: #E11D48; font-weight: 700; background: #FFE4E6; display: inline-block; padding: 3px 8px; border-radius: 6px; }
+
+    /* 公車舞台 */
+    .bus-stage { background: #FFFFFF; border-radius: 20px; border: 2px solid #CBD5E1; padding: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+    .bus-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .bus-title { font-size: 15px; font-weight: 800; color: #475569; display: flex; align-items: center; gap: 6px; }
+    
+    /* 公車外殼 */
+    .bus-body {
+      background: #FEF3C7;
+      border: 3px solid #F59E0B;
+      border-radius: 24px 32px 16px 16px;
+      padding: 16px 12px;
+      position: relative;
+      box-shadow: inset 0 2px 6px rgba(255,255,255,0.8), 0 6px 0 #D97706;
+    }
+    .bus-windows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .bus-compartment {
+      background: #FFFFFF;
+      border: 2px dashed #CBD5E1;
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .bus-compartment.highlight { border-color: #F59E0B; background: #FFFBEB; }
+    .compartment-label { font-size: 12px; font-weight: 800; color: #64748B; margin-bottom: 8px; }
+    
+    /* 硬幣積木 */
+    .coins-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; min-height: 50px; }
+    .coin-10 {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: linear-gradient(135deg, #FDE68A, #F59E0B);
+      border: 2px solid #D97706;
+      box-shadow: 0 4px 6px rgba(217, 119, 6, 0.3), inset 0 2px 2px rgba(255,255,255,0.7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 900; color: #78350F;
+      cursor: pointer; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .coin-10:hover { transform: scale(1.08); }
+    .coin-10.pulse { animation: coinGlow 0.8s infinite alternate; }
+
+    .coin-1 {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #BAE6FD, #0284C7);
+      border: 2px solid #0369A1;
+      box-shadow: 0 3px 5px rgba(2, 132, 199, 0.3), inset 0 2px 2px rgba(255,255,255,0.7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 900; color: white;
+      transition: all 0.4s ease;
+    }
+    .coin-1.leave { transform: translateY(40px) scale(0.3); opacity: 0; }
+    .coin-1.remain { animation: popRemain 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); border-color: #10B981; }
+
+    @keyframes coinGlow {
+      from { box-shadow: 0 0 6px #F59E0B; transform: scale(1); }
+      to { box-shadow: 0 0 16px #D97706; transform: scale(1.1); }
+    }
+    @keyframes popRemain {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* 算理步驟解說橫條 */
+    .math-step-banner {
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .formula-tag { font-family: monospace; font-size: 16px; font-weight: 900; color: #D97706; }
+
+    /* 控制按鈕組 */
+    .action-bar { display: flex; gap: 10px; }
+    .btn-action {
+      flex: 1; padding: 13px; border-radius: 14px; border: none; font-size: 15px; font-weight: 800; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .btn-main { background: #F59E0B; color: white; box-shadow: 0 4px 0 #D97706; }
+    .btn-main:active { transform: translateY(3px); box-shadow: 0 1px 0 #D97706; }
+    .btn-reset { background: #E2E8F0; color: #475569; box-shadow: 0 4px 0 #CBD5E1; max-width: 120px; }
+    .btn-reset:active { transform: translateY(3px); box-shadow: 0 1px 0 #CBD5E1; }
+
+    /* 2x2 選項答題區 */
+    .choices-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+    .choice-btn {
+      background: white; border: 2px solid #CBD5E1; padding: 14px; border-radius: 14px;
+      font-size: 17px; font-weight: 900; color: #1E293B; cursor: pointer;
+      box-shadow: 0 3px 0 #CBD5E1; transition: all 0.15s ease; text-align: center;
+    }
+    .choice-btn:hover { border-color: #F59E0B; background: #FFFBEB; }
+    .choice-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #CBD5E1; }
+    .choice-btn.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; box-shadow: 0 3px 0 #059669; }
+    .choice-btn.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; box-shadow: 0 3px 0 #DC2626; }
+
+    /* 輪子 */
+    .bus-wheels { display: flex; justify-content: space-around; padding: 0 40px; margin-top: -12px; }
+    .wheel { width: 34px; height: 34px; background: #334155; border-radius: 50%; border: 4px solid #64748B; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 考卷真題出處 -->
+  <div class="exam-tag">
+    <span>🏫 臺北市內湖國民小學 114 下學期期末試卷</span>
+    <span class="badge">七、大題第 1 題 (4分)</span>
+  </div>
+
+  <!-- 題幹卡片 -->
+  <div class="stem-card">
+    <div class="stem-title">公車裡原本有 21 個人，有 7 個人先下車，還有幾個人在車上？</div>
+    <div class="stem-sub">✏️ 官方題目指令：先畫 ⑩ 和 ①，再用算式記下來</div>
+  </div>
+
+  <!-- 公車與教具舞台 -->
+  <div class="bus-stage">
+    <div class="bus-header">
+      <div class="bus-title">🚌 幸福小學公車（位值積木模型）</div>
+      <div style="font-size: 13px; font-weight: 800; color: #0284C7;" id="statusSummary">車上共有：21 人</div>
+    </div>
+
+    <!-- 公車本體 -->
+    <div class="bus-body">
+      <div class="bus-windows">
+        <!-- 十位車廂 -->
+        <div class="bus-compartment" id="box10">
+          <div class="compartment-label">十位車廂（10人一綑）</div>
+          <div class="coins-row" id="row10">
+            <div class="coin-10" id="c10_1">⑩</div>
+            <div class="coin-10" id="c10_2">⑩</div>
+          </div>
+        </div>
+
+        <!-- 個位座位 -->
+        <div class="bus-compartment" id="box1">
+          <div class="compartment-label" id="label1">個位座位（散客）</div>
+          <div class="coins-row" id="row1">
+            <div class="coin-1">①</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 公車輪子 -->
+    <div class="bus-wheels">
+      <div class="wheel"></div>
+      <div class="wheel"></div>
+    </div>
+
+    <!-- 算理動態解說條 -->
+    <div class="math-step-banner" id="stepBanner">
+      <span id="stepText">💡 個位只有 1 個人，不夠下車 7 人，點擊按鈕借十！</span>
+      <span class="formula-tag" id="formulaText">21 － 7 ＝ ？</span>
+    </div>
+  </div>
+
+  <!-- 控制按鈕 -->
+  <div class="action-bar">
+    <button class="btn-action btn-main" id="btnPlay" onclick="runBorrowTenAnimation()">
+      <span>🚌 演示「借十拆開」與 7 人下車</span>
+    </button>
+    <button class="btn-action btn-reset" onclick="resetState()">
+      <span>🔄 重置</span>
+    </button>
+  </div>
+
+  <!-- 2x2 選項答題 -->
+  <div style="font-size: 13px; font-weight: 800; color: #64748B; margin-top: 4px;">小朋友，選選看車上還剩下幾個人？</div>
+  <div class="choices-grid" id="choicesGrid">
+    <button class="choice-btn" onclick="checkAnswer(12, this)">12 人</button>
+    <button class="choice-btn" onclick="checkAnswer(13, this)">13 人</button>
+    <button class="choice-btn" onclick="checkAnswer(14, this)">14 人</button>
+    <button class="choice-btn" onclick="checkAnswer(15, this)">15 人</button>
+  </div>
+</div>
+
+<script>
+  let step = 0;
+  let animating = false;
+
+  function resetState() {
+    animating = false;
+    step = 0;
+    document.getElementById("row10").innerHTML = `
+      <div class="coin-10" id="c10_1">⑩</div>
+      <div class="coin-10" id="c10_2">⑩</div>
+    `;
+    document.getElementById("row1").innerHTML = `
+      <div class="coin-1">①</div>
+    `;
+    document.getElementById("statusSummary").textContent = "車上共有：21 人";
+    document.getElementById("stepText").textContent = "💡 個位只有 1 個人，不夠下車 7 人，點擊按鈕借十！";
+    document.getElementById("formulaText").textContent = "21 － 7 ＝ ？";
+    document.getElementById("btnPlay").disabled = false;
+    document.getElementById("box10").classList.remove("highlight");
+    document.getElementById("box1").classList.remove("highlight");
+    document.querySelectorAll(".choice-btn").forEach(b => {
+      b.className = "choice-btn";
+      b.disabled = false;
+    });
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function runBorrowTenAnimation() {
+    if (animating) return;
+    animating = true;
+    document.getElementById("btnPlay").disabled = true;
+
+    // 步驟 1：高亮要被拆解的第二個 ⑩
+    document.getElementById("stepText").textContent = "步驟 ①：個位只有 1 人不夠減！把 1 個 ⑩ 拿來拆開…";
+    const c2 = document.getElementById("c10_2");
+    if (c2) c2.classList.add("pulse");
+    document.getElementById("box10").classList.add("highlight");
+    await sleep(900);
+
+    // 步驟 2：十拆成 10 個一
+    if (c2) c2.remove();
+    document.getElementById("box10").classList.remove("highlight");
+    document.getElementById("box1").classList.add("highlight");
+    document.getElementById("stepText").textContent = "步驟 ②：1 個 ⑩ 變成 10 個 ①，現在個位有 11 個人！";
+    document.getElementById("statusSummary").textContent = "十位剩 10 人，個位有 11 人";
+
+    let row1 = document.getElementById("row1");
+    // 保留原本的 1 顆，加 10 顆
+    let coinsHtml = `<div class="coin-1" style="background:#0284C7;">①</div>`;
+    for (let i = 0; i < 10; i++) {
+      coinsHtml += `<div class="coin-1 new-coin" id="nc_${i}">①</div>`;
+    }
+    row1.innerHTML = coinsHtml;
+    await sleep(1000);
+
+    // 步驟 3：下車 7 個人（從新增的 10 個人裡拿走 7 個）
+    document.getElementById("stepText").textContent = "步驟 ③：從 10 個人裡面，7 個人排隊刷卡下車…";
+    document.getElementById("formulaText").textContent = "10 － 7 ＝ 3";
+    for (let i = 0; i < 7; i++) {
+      const nc = document.getElementById(`nc_${i}`);
+      if (nc) {
+        nc.classList.add("leave");
+        await sleep(120);
+      }
+    }
+    await sleep(600);
+
+    // 步驟 4：算剩下的
+    document.getElementById("stepText").textContent = "步驟 ④：下車完畢！剩下 3 個散客＋原來的 1 個散客＝4 個 ①！";
+    document.getElementById("formulaText").textContent = "3 ＋ 1 ＝ 4 (個位)";
+    document.querySelectorAll(".coin-1:not(.leave)").forEach(c => c.classList.add("remain"));
+    await sleep(1000);
+
+    // 步驟 5：總結 14 人
+    document.getElementById("stepText").textContent = "🎉 破招成功：1 個 ⑩（10人）＋ 4 個 ①（4人）＝ 14 個人在車上！";
+    document.getElementById("formulaText").textContent = "21 － 7 ＝ 14";
+    document.getElementById("statusSummary").textContent = "車上剩下：14 人 ✅";
+    animating = false;
+  }
+
+  function checkAnswer(val, btn) {
+    if (val === 14) {
+      btn.classList.add("correct");
+      document.getElementById("stepText").textContent = "🎉 答對了！就是 14 個人！你太棒了！";
+      document.querySelectorAll(".choice-btn").forEach(b => b.disabled = true);
+      if (!animating) runBorrowTenAnimation();
+    } else {
+      btn.classList.add("wrong");
+      document.getElementById("stepText").textContent = `❌ 不對喔，不是 ${val} 人，快點擊上方「演示借十」看算理！`;
+    }
+  }
+</script>
+
+</body>
+</html>

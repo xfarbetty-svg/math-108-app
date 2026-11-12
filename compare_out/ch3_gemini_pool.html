@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小數學動態題具 - 21-7 退位減法</title>
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #4CAF50;
+            --accent-color: #FF5722;
+            --bus-color: #FFEB3B;
+            --coin-10: #FF9800;
+            --coin-1: #03A9F4;
+            --bg-color: #F0F8FF;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: 4px solid var(--secondary-color);
+        }
+
+        h1 { color: #2c3e50; margin: 0 0 10px 0; font-size: 1.5rem; }
+        .problem-text { font-size: 1.2rem; line-height: 1.6; color: #444; }
+
+        /* 公車容器 */
+        .bus-stage {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bus-svg {
+            width: 600px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+        }
+
+        /* 硬幣放置區 */
+        .coin-area {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 160px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .coin {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .coin-10 { background-color: var(--coin-10); border: 3px solid #E65100; }
+        .coin-1 { background-color: var(--coin-1); border: 3px solid #01579B; }
+
+        /* 借十法動畫效果 */
+        .splitting {
+            animation: pulse 0.5s infinite alternate;
+            box-shadow: 0 0 20px #FFEB3B;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: translateY(100px) rotate(20deg);
+            pointer-events: none;
+        }
+
+        /* 控制按鈕 */
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-primary { background: #FF9800; color: white; }
+        .btn-primary:hover { background: #F57C00; transform: scale(1.05); }
+        .btn-reset { background: #9E9E9E; color: white; }
+
+        /* 算式顯示 */
+        .equation-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d32f2f;
+            height: 50px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 測驗區 */
+        .quiz-section {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            font-size: 1.5rem;
+            background: #f8f9fa;
+            border: 3px solid #dee2e6;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover { background: #e9ecef; border-color: #adb5bd; }
+        .option-btn.correct { background: #C8E6C9; border-color: #4CAF50; color: #2E7D32; }
+        .option-btn.wrong { background: #FFCDD2; border-color: #F44336; color: #C62828; }
+
+        /* 讚許動畫 */
+        #feedback-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-size: 5rem;
+            flex-direction: column;
+        }
+
+        .hidden { display: none !important; }
+
+        /* 響應式調整 */
+        @media (max-width: 600px) {
+            .bus-svg { width: 100%; }
+            .coin-area { width: 80%; gap: 5px; }
+            .coin { width: 40px; height: 40px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🚌 臺北市內湖國小一年級數學</h1>
+        <div class="problem-text">
+            公車裡原本有 <strong>21</strong> 個人，有 <strong>7</strong> 個人先下車，還有幾個人在車上？
+        </div>
+    </div>
+
+    <div class="bus-stage">
+        <!-- 純 CSS/SVG 繪製的童趣公車 -->
+        <svg class="bus-svg" viewBox="0 0 600 300">
+            <!-- 車身 -->
+            <rect x="50" y="50" width="500" height="200" rx="40" fill="#FFEB3B" stroke="#FBC02D" stroke-width="8" />
+            <!-- 窗戶 -->
+            <rect x="80" y="80" width="100" height="80" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="4" />
+            <rect x="200" y="80" width="100" height="80" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="4" />
+            <rect x="320" y="80" width="100" height="80" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="4" />
+            <rect x="440" y="80" width="80" height="120" rx="10" fill="#E3F2FD" stroke="#1976D2" stroke-width="4" />
+            <!-- 輪胎 -->
+            <circle cx="150" cy="250" r="35" fill="#333" />
+            <circle cx="150" cy="250" r="15" fill="#999" />
+            <circle cx="450" cy="250" r="35" fill="#333" />
+            <circle cx="450" cy="250" r="15" fill="#999" />
+            <!-- 燈 -->
+            <circle cx="60" cy="200" r="10" fill="#FF5252" />
+            <rect x="540" y="180" width="15" height="40" rx="5" fill="#FF9800" />
+        </svg>
+
+        <div id="coin-container" class="coin-area">
+            <!-- 硬幣會由 JS 動態生成 -->
+        </div>
+    </div>
+
+    <div class="equation-display" id="equation">
+        <!-- 算式動態顯示 -->
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" id="start-btn" onclick="runAnimation()">🚌 7 個人下車 (演示借十法)</button>
+        <button class="btn btn-reset" onclick="resetApp()">重置</button>
+    </div>
+
+    <div class="quiz-section">
+        <h3>小朋友，算算看車上還剩幾個人？</h3>
+        <div class="options-grid">
+            <button class="option-btn" onclick="checkAnswer(this, 12)">12 人</button>
+            <button class="option-btn" onclick="checkAnswer(this, 13)">13 人</button>
+            <button class="option-btn" onclick="checkAnswer(this, 14)">14 人</button>
+            <button class="option-btn" onclick="checkAnswer(this, 15)">15 人</button>
+        </div>
+    </div>
+</div>
+
+<div id="feedback-overlay">
+    <div id="feedback-emoji">🌟</div>
+    <div id="feedback-text" style="font-size: 2rem; font-weight: bold; color: #4CAF50;">太棒了！</div>
+    <button class="btn btn-primary" style="margin-top: 20px;" onclick="closeFeedback()">再玩一次</button>
+</div>
+
+<script>
+    const coinContainer = document.getElementById('coin-container');
+    const equationDisplay = document.getElementById('equation');
+    const startBtn = document.getElementById('start-btn');
+    let isAnimating = false;
+
+    // 初始化狀態：2個10，1個1
+    function initCoins() {
+        coinContainer.innerHTML = '';
+        equationDisplay.innerHTML = '';
+        startBtn.disabled = false;
+        
+        // 建立 2 個 10
+        for (let i = 0; i < 2; i++) {
+            const c = document.createElement('div');
+            c.className = 'coin coin-10';
+            c.id = `coin-10-${i}`;
+            c.innerText = '10';
+            coinContainer.appendChild(c);
+        }
+        // 建立 1 個 1
+        const c1 = document.createElement('div');
+        c1.className = 'coin coin-1';
+        c1.id = 'coin-1-orig';
+        c1.innerText = '1';
+        coinContainer.appendChild(c1);
+    }
+
+    async function runAnimation() {
+        if (isAnimating) return;
+        isAnimating = true;
+        startBtn.disabled = true;
+
+        // Step 1: 顯示初始 21
+        equationDisplay.innerHTML = '21';
+        await sleep(800);
+
+        // Step 2: 借十法 - 選中一個 10 閃爍
+        const tenToSplit = document.getElementById('coin-10-1');
+        tenToSplit.classList.add('splitting');
+        equationDisplay.innerHTML = '21 - 7 = ?';
+        await sleep(1000);
+
+        // Step 3: 展開 10 個 1
+        tenToSplit.style.display = 'none';
+        const newCoins = [];
+        for (let i = 0; i < 10; i++) {
+            const c = document.createElement('div');
+            c.className = 'coin coin-1';
+            c.innerText = '1';
+            c.style.transform = 'scale(0)';
+            coinContainer.appendChild(c);
+            newCoins.push(c);
+        }
+
+        // 動態展開效果
+        for (let c of newCoins) {
+            await sleep(50);
+            c.style.transform = 'scale(1)';
+        }
+        await sleep(500);
+
+        // Step 4: 7 個人下車 (從展開的 10 個中扣除)
+        equationDisplay.innerHTML = '21 - 7 = <span style="color:#bbb">...</span>';
+        for (let i = 0; i < 7; i++) {
+            await sleep(300);
+            newCoins[i].classList.add('fade-out');
+            newCoins[i].style.backgroundColor = '#FFCDD2';
+        }
+
+        await sleep(800);
+
+        // Step 5: 顯示結果
+        const remaining10 = document.getElementById('coin-10-0');
+        remaining10.style.boxShadow = '0 0 20px #FFEB3B';
+        remaining10.style.transform = 'scale(1.2)';
+        
+        const remaining1s = document.querySelectorAll('.coin-1:not(.fade-out)');
+        remaining1s.forEach(c => {
+            c.style.boxShadow = '0 0 15px #FFF';
+            c.style.transform = 'scale(1.1)';
+        });
+
+        equationDisplay.innerHTML = '21 - 7 = 14';
+        isAnimating = false;
+    }
+
+    function checkAnswer(btn, val) {
+        // 清除其他按鈕狀態
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong');
+        });
+
+        if (val === 14) {
+            btn.classList.add('correct');
+            showFeedback(true);
+        } else {
+            btn.classList.add('wrong');
+            // 震動效果
+            btn.style.transform = 'translateX(10px)';
+            setTimeout(() => btn.style.transform = 'translateX(-10px)', 50);
+            setTimeout(() => btn.style.transform = 'translateX(0)', 100);
+        }
+    }
+
+    function showFeedback(isCorrect) {
+        if (isCorrect) {
+            const overlay = document.getElementById('feedback-overlay');
+            overlay.style.display = 'flex';
+            // 灑花效果 (簡單模擬)
+            confetti();
+        }
+    }
+
+    function closeFeedback() {
+        document.getElementById('feedback-overlay').style.display = 'none';
+        resetApp();
+    }
+
+    function resetApp() {
+        isAnimating = false;
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong');
+        });
+        initCoins();
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function confetti() {
+        // 簡單的表情符號噴發
+        for(let i=0; i<20; i++) {
+            const div = document.createElement('div');
+            div.innerText = ['🌸','✨','🎈','👏','⭐'][Math.floor(Math.random()*5)];
+            div.style.position = 'fixed';
+            div.style.left = Math.random() * 100 + 'vw';
+            div.style.top = '100vh';
+            div.style.fontSize = '2rem';
+            div.style.zIndex = '1000';
+            div.style.transition = `all ${1 + Math.random()*2}s ease-out`;
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                div.style.top = '-10vh';
+                div.style.left = (parseFloat(div.style.left) + (Math.random()-0.5)*20) + 'vw';
+                div.style.opacity = '0';
+            }, 10);
+            
+            setTimeout(() => div.remove(), 3000);
+        }
+    }
+
+    // 初始啟動
+    initCoins();
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小數學動態題具 - 21-7 退位減法</title>
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #4CAF50;
+            --accent-color: #FF5722;
+            --bus-color: #FFEB3B;
+            --coin-10: #FF9800;
+            --coin-1: #03A9F4;
+            --bg-color: #F0F8FF;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: 4px solid var(--secondary-color);
+        }
+
+        h1 { color: #2c3e50; margin: 0 0 10px 0; font-size: 1.5rem; }
+        .problem-text { font-size: 1.2rem; line-height: 1.6; color: #444; }
+
+        /* 公車容器 */
+        .bus-stage {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bus-svg {
+            width: 600px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+        }
+
+        /* 硬幣放置區 */
+        .coin-area {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 160px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .coin {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .coin-10 { background-color: var(--coin-10); border: 3px solid #E65100; }
+        .coin-1 { background-color: var(--coin-1); border: 3px solid #01579B; }
+
+        /* 借十法動畫效果 */
+        .splitting {
+            animation: pulse 0.5s infinite alternate;
+            box-shadow: 0 0 20px #FFEB3B;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: translateY(100px) rotate(20deg);
+            pointer-events: none;
+        }
+
+        /* 控制按鈕 */
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-primary { background: #FF9800; color: white; }
+        .btn-primary:hover { background: #F57C00; transform: scale(1.05); }
+        .btn-reset { background: #9E9E9E; color: white; }
+
+        /* 算式顯示 */
+        .equation-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d32f2f;
+            height: 50px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 測驗區 */
+        .quiz-section {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            font-size: 1.5rem;
+            background: #f8f9fa;
+            border: 3px solid #dee2e6;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover { background: #e9ecef; border-color: #adb5bd; }
+        .option-btn.correct { background: #C8E6C9; border-color: #4CAF50; color: #2E7D32; }
+        .option-btn.wrong { background: #FFCDD2; border-color: #F44336; color: #C62828; }
+
+        /* 讚許動畫 */
+        #feedback-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-size: 5rem;
+            flex-direction: column;
+        }
+
+        .hidden { display: none !important; }
+
+        /* 響應式調整 */
+        @media (max-width: 600px) {
+            .bus-svg { width: 100%; }
+            .coin-area { width: 80%; gap: 5px; }
+            .coin { width: 40px; height: 40px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🚌 臺北市內湖國小一年級數學</h1>
+        <div class="problem-text">
+            公車裡原本有 <strong>21</strong> 個人，有 <strong>7</strong> 個人先下車，還有幾個人在車上？
+        </div>
+    </div>
+
+    <div class="bus-stage">
+        <!-- 純 CSS/SVG 繪製的童趣公車 -->
+        <svg class="bus-svg" viewBox="0 0 600 300">
+            <!-- 車身 -->
+            <rect x="50" y="50" width="500" height="200" rx="40" fill="#FFEB3B" stroke="#FBC02D" stroke-width="8" />
+            <!-- 窗戶 -->
+            <rect x="80" y="80" width="100" height="80" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="4" />
+            <rect x="200" y="80" width="100" height="80" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="4" />
+            <rect x="320" y="80" width="100" height="80" rx="10" fill="#BBDEFB" stroke="#1976D2" stroke-width="4" />
+            <rect x="440" y="80" width="80" height="120" rx="10" fill="#E3F2FD" stroke="#1976D2" stroke-width="4" />
+            <!-- 輪胎 -->
+            <circle cx="150" cy="250" r="35" fill="#333" />
+            <circle cx="150" cy="250" r="15" fill="#999" />
+            <circle cx="450" cy="250" r="35" fill="#333" />
+            <circle cx="450" cy="250" r="15" fill="#999" />
+            <!-- 燈 -->
+            <circle cx="60" cy="200" r="10" fill="#FF5252" />
+            <rect x="540" y="180" width="15" height="40" rx="5" fill="#FF9800" />
+        </svg>
+
+        <div id="coin-container" class="coin-area">
+            <!-- 硬幣會由 JS 動態生成 -->
+        </div>
+    </div>
+
+    <div class="equation-display" id="equation">
+        <!-- 算式動態顯示 -->
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-primary" id="start-btn" onclick="runAnimation()">🚌 7 個人下車 (演示借十法)</button>
+        <button class="btn btn-reset" onclick="resetApp()">重置</button>
+    </div>
+
+    <div class="quiz-section">
+        <h3>小朋友，算算看車上還剩幾個人？</h3>
+        <div class="options-grid">
+            <button class="option-btn" onclick="checkAnswer(this, 12)">12 人</button>
+            <button class="option-btn" onclick="checkAnswer(this, 13)">13 人</button>
+            <button class="option-btn" onclick="checkAnswer(this, 14)">14 人</button>
+            <button class="option-btn" onclick="checkAnswer(this, 15)">15 人</button>
+        </div>
+    </div>
+</div>
+
+<div id="feedback-overlay">
+    <div id="feedback-emoji">🌟</div>
+    <div id="feedback-text" style="font-size: 2rem; font-weight: bold; color: #4CAF50;">太棒了！</div>
+    <button class="btn btn-primary" style="margin-top: 20px;" onclick="closeFeedback()">再玩一次</button

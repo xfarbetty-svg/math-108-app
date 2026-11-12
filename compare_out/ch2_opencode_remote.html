@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公車下車問題 — 借十法動態演示（一年級）</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: linear-gradient(160deg, #fdf3d8 0%, #ffe9c7 45%, #ffd9e8 100%);
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 18px 10px 40px;
+    overflow-x: hidden;
+  }
+  h1 { font-size: 26px; color: #7a4a12; margin-bottom: 6px; text-align: center; }
+  .question {
+    background: #fff; border: 3px dashed #ffb340; border-radius: 18px;
+    padding: 12px 20px; font-size: 19px; color: #5a3a10;
+    max-width: 720px; text-align: center; line-height: 1.7;
+    box-shadow: 0 4px 0 rgba(255,179,64,.35);
+  }
+  .hint { font-size: 14px; color: #b07030; margin-top: 4px; }
+
+  /* ===== 公車（CSS 繪製） ===== */
+  .scene { position: relative; width: 640px; max-width: 96vw; margin: 22px 0 10px; }
+  .road {
+    position: absolute; bottom: -6px; left: -4%; width: 108%; height: 26px;
+    background: repeating-linear-gradient(90deg,#9c7b4a 0 40px,#c9a86e 40px 80px);
+    border-radius: 13px;
+  }
+  .bus {
+    position: relative; width: 100%; height: 300px;
+    background: linear-gradient(180deg,#ffd34d 0%,#ffc21e 70%,#f0ad00 100%);
+    border: 5px solid #d98f00;
+    border-radius: 42px 42px 22px 22px;
+    box-shadow: 0 10px 0 #c07f00, inset 0 -14px 0 rgba(0,0,0,.06);
+    animation: bounce 2.6s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  .bus::before { /* 車頭燈 */
+    content:""; position: absolute; left: 8px; bottom: 30px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff, #ffe98a 60%, #e0b000);
+    border: 3px solid #d98f00;
+  }
+  .bus::after { /* 笑臉車頭 */
+    content:"🚌"; position: absolute; left: 4px; bottom: 62px; font-size: 30px; opacity:.9;
+  }
+  .wheel {
+    position: absolute; bottom: -24px; width: 56px; height: 56px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%, #666 0 28%, #333 29% 60%, #222 61%);
+    border: 5px solid #1a1a1a;
+    animation: spin 3s linear infinite;
+  }
+  .wheel::after { content:""; position:absolute; inset: 20px; border-radius:50%; background:#aaa; }
+  @keyframes spin { to { transform: rotate(360deg);} }
+  .wheel.w1 { left: 18%; } .wheel.w2 { right: 14%; }
+
+  .window {
+    position: absolute; top: 18px; left: 24px; right: 90px; height: 74px;
+    background: linear-gradient(180deg,#bfeaff,#8fd4f7);
+    border: 4px solid #fff; border-radius: 18px;
+    box-shadow: inset 0 4px 8px rgba(0,80,140,.25);
+  }
+  .window span { position:absolute; font-size: 22px; }
+  .signboard {
+    position: absolute; top: 6px; right: 96px;
+    background:#e0483e; color:#fff; font-size: 13px; padding: 3px 10px;
+    border-radius: 8px; font-weight: bold; letter-spacing: 1px;
+  }
+
+  /* 車廂內部（放硬幣積木） */
+  .interior {
+    position: absolute; top: 108px; left: 24px; right: 24px; height: 158px;
+    background: rgba(255,255,255,.55);
+    border: 3px solid rgba(255,255,255,.9);
+    border-radius: 16px;
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 26px; padding: 10px 14px 16px;
+    overflow: visible;
+  }
+  .interior-label {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background:#7a4a12; color:#ffe9b0; font-size: 13px; padding: 2px 14px;
+    border-radius: 10px; white-space: nowrap;
+  }
+
+  /* ===== 硬幣積木 ===== */
+  .coin {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border-radius: 50%; font-weight: bold; position: relative;
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .6s, box-shadow .4s, filter .4s;
+    flex: 0 0 auto;
+  }
+  .coin .num { line-height: 1; }
+  .coin .cap { font-size: 11px; margin-top: 1px; opacity: .75; }
+  .coin-ten {
+    width: 84px; height: 84px; background: radial-gradient(circle at 35% 30%, #ffe08a, #ffb61e 70%, #e89a00);
+    border: 4px solid #fff; box-shadow: 0 5px 0 #c98a00, 0 8px 12px rgba(0,0,0,.18);
+    color: #7a4a00; font-size: 30px; z-index: 2;
+  }
+  .coin-ten .num { font-size: 34px; }
+  .coin-one {
+    width: 40px; height: 40px; background: radial-gradient(circle at 35% 30%, #ff9d9d, #f45b5b 70%, #d13c3c);
+    border: 3px solid #fff; box-shadow: 0 4px 0 #b02f2f, 0 5px 8px rgba(0,0,0,.15);
+    color: #fff; font-size: 18px; z-index: 1;
+  }
+  .coin-one .num { font-size: 20px; }
+  .coin-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+  /* 十位積木：一顆 ⑩ + 底下一顆 ① */
+  .stack21 { display: flex; align-items: flex-end; gap: 10px; }
+
+  /* 閃爍發光 */
+  .glow {
+    animation: glowPulse .55s ease-in-out 4;
+    z-index: 5;
+  }
+  @keyframes glowPulse {
+    0%,100% { box-shadow: 0 5px 0 #c98a00, 0 8px 12px rgba(0,0,0,.18); }
+    50% { box-shadow: 0 0 0 6px rgba(255,235,120,.9), 0 0 26px 12px rgba(255,220,60,.8), 0 5px 0 #c98a00; filter: brightness(1.35); }
+  }
+  /* 分裂消失 */
+  .split-hide { transform: scale(0); opacity: 0; }
+  /* 剩餘高亮 */
+  .remain {
+    box-shadow: 0 0 0 5px #6fe36f, 0 0 20px 8px rgba(110,230,110,.7), 0 5px 0 rgba(0,0,0,.2);
+    filter: brightness(1.15);
+    animation: wiggle .5s ease-in-out 3;
+  }
+  @keyframes wiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-5deg) scale(1.06)} 75%{transform:rotate(5deg) scale(1.06)} }
+
+  /* 分裂出的 10 個 ① */
+  .split-ones {
+    display: flex; gap: 6px; align-items: flex-end; flex-wrap: nowrap;
+  }
+  .split-ones .coin-one { animation: popIn .4s cubic-bezier(.34,1.56,.64,1) backwards; }
+  @keyframes popIn { from { transform: scale(0) translateY(-24px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+  /* 下車：變淡並滑出公車 */
+  .leave {
+    opacity: .12 !important;
+    transform: translate(52px, -70px) scale(.7) rotate(22deg) !important;
+    transition: all .8s ease;
+  }
+  .leave-tag { position: absolute; font-size: 15px; opacity: 0; }
+  .leave-tag.show { animation: tagUp 1.4s ease forwards; }
+  @keyframes tagUp {
+    0% { opacity: 0; transform: translateY(6px); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-46px); }
+  }
+
+  /* ===== 算理浮現 ===== */
+  .solution {
+    margin-top: 16px; background: #fff; border-radius: 18px;
+    border: 4px solid #6fc26f; padding: 14px 22px; max-width: 700px; width: 96%;
+    box-shadow: 0 6px 0 rgba(111,194,111,.4);
+    opacity: 0; transform: translateY(24px); pointer-events: none;
+    transition: all .7s cubic-bezier(.34,1.56,.64,1);
+    text-align: center;
+  }
+  .solution.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .solution .steps { font-size: 16px; color: #4a6b1f; line-height: 2; }
+  .solution .steps b { color: #d14a00; }
+  .equation {
+    margin-top: 8px; font-size: 30px; font-weight: bold; color: #1f6fb5;
+    background: #eaf6ff; border-radius: 12px; padding: 8px 18px; display: inline-block;
+    border: 3px solid #8ec9f0;
+  }
+  .equation .ans { color: #e0483e; font-size: 36px; }
+
+  /* ===== 按鈕區 ===== */
+  .controls { display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    font-family: inherit; font-size: 19px; font-weight: bold;
+    padding: 12px 26px; border-radius: 999px; border: 3px solid #d98f00;
+    background: linear-gradient(180deg,#ffd34d,#ffb61e);
+    color: #6b3d00; cursor: pointer; box-shadow: 0 5px 0 #c98a00;
+    transition: transform .12s, box-shadow .12s;
+  }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #c98a00; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.magic { background: linear-gradient(180deg,#b78cff,#8f4bff); border-color: #7a35e0; color:#fff; box-shadow: 0 5px 0 #6a2bc0; }
+  .btn.magic:active { box-shadow: 0 1px 0 #6a2bc0; }
+
+  /* 2x2 選項 */
+  .answer-zone {
+    margin-top: 20px; text-align: center;
+  }
+  .answer-zone .az-title { font-size: 19px; color: #7a4a12; font-weight: bold; margin-bottom: 10px; }
+  .options {
+    display: grid; grid-template-columns: repeat(2, 150px); gap: 14px; justify-content: center;
+  }
+  .opt {
+    font-family: inherit; font-size: 26px; font-weight: bold; color: #14456e;
+    background: #fff; border: 3px solid #8ec9f0; border-radius: 18px;
+    padding: 14px 0; cursor: pointer; box-shadow: 0 5px 0 #b7d9f2;
+    transition: transform .12s, box-shadow .12s, background .3s;
+  }
+  .opt:hover { background: #eaf6ff; }
+  .opt:active { transform: translateY(3px); box-shadow: 0 2px 0 #b7d9f2; }
+  .opt.correct { background: #6fe36f; border-color: #35b035; box-shadow: 0 5px 0 #2c912c; color: #145a14; animation: winPop .6s cubic-bezier(.34,1.56,.64,1); }
+  .opt.wrong { background: #ffb3ab; border-color: #e0483e; animation: shake .4s; }
+  @keyframes winPop { 0%{transform:scale(1)} 40%{transform:scale(1.25) rotate(-4deg)} 70%{transform:scale(1.1) rotate(3deg)} 100%{transform:scale(1)} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
+  .feedback {
+    margin-top: 12px; font-size: 22px; font-weight: bold; color: #2c912c;
+    min-height: 34px;
+  }
+  .feedback .stars { display: inline-block; animation: starBurst .9s ease; }
+  @keyframes starBurst { 0%{transform:scale(0) rotate(0)} 50%{transform:scale(1.6) rotate(18deg)} 100%{transform:scale(1)} }
+
+  .confetti { position: fixed; top: -20px; font-size: 22px; pointer-events: none; z-index: 99; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .2; } }
+
+  .footnote { margin-top: 14px; font-size: 13px; color: #a5824e; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>🚌 公車下車問題（借十法）</h1>
+<div class="question">
+  臺北市內湖國小 一年級下學期期末考 七、1<br>
+  <b>公車裡原本有 21 個人，有 7 個人先下車，還有幾個人在車上？</b>
+  <div class="hint">官方要求：先畫 ⑩ 和 ①，再用算式記下來（21 － 7 ＝ 14，退位借十法）</div>
+</div>
+
+<div class="scene">
+  <div class="bus">
+    <div class="signboard">內湖國小 →</div>
+    <div class="window">
+      <span style="left:10px;top:20px;">🧑</span>
+      <span style="left:44%;top:20px;">🧒</span>
+      <span style="right:12px;top:22px;">👵</span>
+    </div>
+    <div class="interior">
+      <div class="interior-label">車上的人：先用 ⑩ 和 ① 畫出來（21 ＝ 2個⑩ ＋ 1個①）</div>
+      <div id="coinArea" class="stack21">
+        <div class="coin-group" id="gTen1">
+          <div class="coin coin-ten" id="ten1"><span class="num">⑩</span><span class="cap">10人</span></div>
+        </div>
+        <div class="coin-group" id="gTen2">
+          <div class="coin coin-ten" id="ten2"><span class="num">⑩</span><span class="cap">10人</span></div>
+          <div class="coin coin-one" id="one1"><span class="num">①</span><span class="cap">1人</span></div>
+        </div>
+      </div>
+      <div class="leave-tag" id="leaveTag" style="right:30px; top:20px;">👋 下車囉～</div>
+    </div>
+    <div class="wheel w1"></div>
+    <div class="wheel w2"></div>
+  </div>
+  <div class="road"></div>
+</div>
+
+<div class="solution" id="solution">
+  <div class="steps">
+    🔍 <b>借十算理</b>：個位 1 不夠減 7 → 向十位<b>借一個 ⑩</b>，把 1 個 ⑩ 展開成 <b>10 個 ①</b><br>
+    → 21 變成 <b>1 個 ⑩ ＋ 11 個 ①</b> → 從 11 個 ① 裡<b>拿走 7 個 ①</b>（下車）<br>
+    → 車上剩下 <b>1 個 ⑩ ＋ 4 個 ① ＝ 14</b>
+  </div>
+  <div class="equation">21 － 7 ＝ <span class="ans">14</span>（人）</div>
+</div>
+
+<div class="controls">
+  <button class="btn magic" id="btnDemo" onclick="runDemo()">✨ 演示借十算理（7 個人下車）</button>
+  <button class="btn" id="btnReplay" onclick="resetAndRun()">🔁 重播一次</button>
+</div>
+
+<div class="answer-zone">
+  <div class="az-title">✏️ 算算看：還有幾個人在車上？</div>
+  <div class="options" id="options">
+    <button class="opt" data-v="12" onclick="answer(this)">12 人</button>
+    <button class="opt" data-v="13" onclick="answer(this)">13 人</button>
+    <button class="opt" data-v="14" onclick="answer(this)">14 人</button>
+    <button class="opt" data-v="15" onclick="answer(this)">15 人</button>
+  </div>
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<div class="footnote">純前端離線單檔｜通道二：A-SERVER 遠端 OpenCode GLM ｜一年級「退位借十法」教具</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var coinArea = document.getElementById("coinArea");
+  var solution = document.getElementById("solution");
+  var btnDemo  = document.getElementById("btnDemo");
+  var btnReplay= document.getElementById("btnReplay");
+  var leaveTag = document.getElementById("leaveTag");
+  var feedback = document.getElementById("feedback");
+  var timers = [];
+  var running = false;
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  /* 把原本的 2 個 ⑩ + 1 個 ① 建構回初始狀態 */
+  function buildInitial() {
+    coinArea.innerHTML =
+      '<div class="coin-group" id="gTen1">' +
+        '<div class="coin coin-ten" id="ten1"><span class="num">⑩</span><span class="cap">10人</span></div>' +
+      '</div>' +
+      '<div class="coin-group" id="gTen2">' +
+        '<div class="coin coin-ten" id="ten2"><span class="num">⑩</span><span class="cap">10人</span></div>' +
+        '<div class="coin coin-one" id="one1"><span class="num">①</span><span class="cap">1人</span></div>' +
+      '</div>';
+  }
+
+  function reset() {
+    clearTimers();
+    running = false;
+    buildInitial();
+    solution.classList.remove("show");
+    leaveTag.classList.remove("show");
+    btnDemo.disabled = false;
+    feedback.innerHTML = "";
+    document.querySelectorAll(".opt").forEach(function (b) {
+      b.classList.remove("correct", "wrong"); b.disabled = false;
+    });
+  }
+
+  function resetAndRun() { reset(); later(runDemo, 250); }
+
+  /* 動態演示：借十 → 拿走 7 個 ① → 剩 1⑩+4① */
+  function runDemo() {
+    if (running) return;
+    running = true;
+    btnDemo.disabled = true;
+
+    var ten2 = document.getElementById("ten2");
+    var one1 = document.getElementById("one1");
+    var gTen1 = document.getElementById("gTen1");
+    var gTen2 = document.getElementById("gTen2");
+
+    /* 步驟 1：第二個 ⑩ 閃爍發光 */
+    later(function () { ten2.classList.add("glow"); }, 300);
+
+    /* 步驟 2：分裂 — ⑩ 消失，原位置展開成 10 個 ①（與原本 ① 合計 11 個） */
+    later(function () {
+      ten2.classList.remove("glow");
+      ten2.classList.add("split-hide");
+      one1.classList.add("split-hide"); /* 原 ① 一起重排 */
+
+      var row = document.createElement("div");
+      row.className = "split-ones";
+      for (var i = 0; i < 11; i++) {
+        var c = document.createElement("div");
+        c.className = "coin coin-one";
+        c.innerHTML = '<span class="num">①</span><span class="cap">1人</span>';
+        c.style.animationDelay = (i * 0.07) + "s";
+        row.appendChild(c);
+      }
+      gTen2.innerHTML = "";
+      gTen2.appendChild(row);
+    }, 2300);
+
+    /* 步驟 3：其中 7 個 ① 逐一亮起並「下車」（變淡滑出） */
+    later(function () {
+      leaveTag.classList.add("show");
+      var ones = gTen2.querySelectorAll(".coin-one");
+      for (var i = 0; i < 7; i++) {
+        (function (idx) {
+          later(function () {
+            ones[idx].style.filter = "brightness(1.6)";
+            ones[idx].classList.add("leave");
+          }, idx * 260);
+        })(i);
+      }
+    }, 3400);
+
+    /* 步驟 4：剩餘 1 個 ⑩ + 4 個 ① 高亮組合，算理與算式浮現 */
+    later(function () {
+      var ones = gTen2.querySelectorAll(".coin-one");
+      for (var i = 7; i < 11; i++) ones[i].classList.add("remain");
+      gTen1.querySelector(".coin-ten").classList.add("remain");
+      solution.classList.add("show");
+      btnReplay.disabled = false;
+      running = false;
+    }, 3400 + 7 * 260 + 700);
+  }
+
+  /* ===== 作答 ===== */
+  function confetti() {
+    var emojis = ["🌟","🎉","🎈","⭐","🎊","💛"];
+    for (var i = 0; i < 18; i++) {
+      var s = document.createElement("div");
+      s.className = "confetti";
+      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.style.left = (Math.random() * 96) + "vw";
+      s.style.animationDuration = (1.4 + Math.random() * 1.6) + "s";
+      s.style.animationDelay = (Math.random() * .5) + "s";
+      document.body.appendChild(s);
+      setTimeout(function (n) { return function () { n.remove(); }; }(s), 3400);
+    }
+  }
+
+  window.answer = function (btn) {
+    var v = btn.getAttribute("data-v");
+    document.querySelectorAll(".opt").forEach(function (b) { b.disabled = true; });
+    if (v === "14") {
+      btn.classList.add("correct");
+      feedback.innerHTML = '<span class="stars">🌟 太棒了！你答對了：21 － 7 ＝ 14（人）🌟</span>';
+      confetti();
+    } else {
+      btn.classList.remove("wrong");
+      void btn.offsetWidth; /* 重觸發動畫 */
+      btn.classList.add("wrong");
+      feedback.innerHTML = '<span style="color:#d14a00">再想想看喔～先數數車上剩下的 ⑩ 和 ①！</span>';
+      later(function () {
+        btn.classList.remove("wrong");
+        document.querySelectorAll(".opt").forEach(function (b) { b.disabled = false; });
+        feedback.innerHTML = "";
+      }, 1300);
+    }
+  };
+
+  window.runDemo = runDemo;
+  window.resetAndRun = resetAndRun;
+})();
+</script>
+</body>
+</html>
