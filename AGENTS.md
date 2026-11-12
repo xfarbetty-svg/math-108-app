@@ -47,6 +47,9 @@
 - [x] BP 盲審 `R3_WORKER_BUILD_REPORT.md` 的 D-01~D-13 偏離裁決 + 新開 **TCK-09**（44px 熱區 vs 兩盒並排矛盾）
 - [x] 一年級 108 課綱官方 9 大條目全量 100% 落地 (N-1-1 ~ D-1-1，90 題真題/8大獨立教具/28項閘門全綠)
 - [x] 二年級 108 課綱首批核心條目落地：N-2-6 乘法陣列 (`<multiplication-array>`)、N-2-1 三艙位值盒 (`<thousand-value-box>`)、N-2-2 加減直式計算 (`<vertical-math-grid>`)、N-2-11 長度公尺量尺 (`<meter-scale-ruler>`)、S-2-1 幾何特徵與角 (`<angle-vertex-explorer>`)、N-2-7 乘法算式與倍數關係 (`<multiple-relator>`)、N-2-3 分數之初步認識 (`<fraction-pizza-slice>`)、N-2-4 容量之初步認識 (`<liquid-measuring-cup>`)、N-2-12 重量的認識 (`<weight-balance-scale>`)，各 10 題真題題卡全綠落地
+- [x] 真題三級流水線跑通（$0 額度）：雙工兵平行解析 + Diff 比對 + 035 教育盲審首批 20 題真題落盤 (`data/g1_real_verified_exam_suite.json`)
+- [x] A-SERVER 通道三（Gemini 8把Key池）100% 驗真秒通，確立遠端自治閉環
+- [ ] 開新框將 20 題真題題庫掛接至 `app/index.html` 展演台，優化拆十動畫與青蛙倒退跳
 - [ ] 啟動二年級後續官方條目：N-2-13 鐘面的認識（幾點幾分與經過時間）
 
 ---

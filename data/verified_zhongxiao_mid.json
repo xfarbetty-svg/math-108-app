@@ -1,0 +1,238 @@
+[
+  {
+    "id": "G1-EXAM-001",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "一、填一填",
+    "question_num": "2",
+    "status": "APPROVED",
+    "audit_comment": "符合小一數的順序教學目標，使用「按照順序」口吻，適合練習正數與倒數。",
+    "stem": "按照順序填入數字：\n(1) 5－6－( )－( )－9－( )\n(2) 10－9－( )－( )－6－( )",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "(1) 7, 8, 10 (2) 8, 7, 5",
+    "curriculum_code": "N-1-1",
+    "component_tag": "glass-number-line",
+    "visual_engine": {
+      "engine": "glass-number-line",
+      "params": {
+        "range": [
+          1,
+          10
+        ]
+      }
+    },
+    "explanation": "就像小青蛙跳格子一樣，往右跳一個數字就變大，往左跳一個數字就變小喔！"
+  },
+  {
+    "id": "G1-EXAM-002",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "一、填一填",
+    "question_num": "5",
+    "status": "APPROVED",
+    "audit_comment": "審核通過。此題測驗孩子對數字「讀法」與「寫法」的轉換，是小一上學期的核心重點。",
+    "stem": "寫出數字：\n讀法：二、四、五、七、八\n數字：2、( )、5、( )、( )",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "4, 7, 8",
+    "curriculum_code": "N-1-1",
+    "component_tag": "glass-number-line",
+    "visual_engine": {
+      "engine": "glass-number-line",
+      "params": {}
+    },
+    "explanation": "讀讀看國字，再把對應的數字寫在括號裡，就像我們數手指頭一樣。"
+  },
+  {
+    "id": "G1-EXAM-003",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "二、比比看",
+    "question_num": "1",
+    "status": "APPROVED",
+    "audit_comment": "符合長度比較邏輯。保留「圈圈看」的純真指令。",
+    "stem": "看一看，把最長的物品圈起來：",
+    "choices": [
+      "短鉛筆",
+      "中鉛筆",
+      "長鉛筆"
+    ],
+    "answer_index": 2,
+    "answer_raw": "最長的那一個",
+    "curriculum_code": "S-1-1",
+    "component_tag": "dual-track-diff",
+    "visual_engine": {
+      "engine": "dual-track-diff",
+      "params": {}
+    },
+    "explanation": "把東西的一邊對齊，看另外一邊誰伸得最遠，誰就是最長的喔！"
+  },
+  {
+    "id": "G1-EXAM-004",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "二、比比看",
+    "question_num": "2",
+    "status": "APPROVED",
+    "audit_comment": "幾何初步認知，區分直線與曲線，符合小一感官辨識階段。",
+    "stem": "是曲線的圈起來：",
+    "choices": [
+      "直線",
+      "波浪線",
+      "折線"
+    ],
+    "answer_index": 1,
+    "answer_raw": "波浪線",
+    "curriculum_code": "S-1-1",
+    "component_tag": "shape-builder",
+    "visual_engine": {
+      "engine": "shape-builder",
+      "params": {}
+    },
+    "explanation": "彎彎曲曲的線就是曲線，像小蛇在爬行一樣，把它圈起來吧！"
+  },
+  {
+    "id": "G1-EXAM-005",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "二、比比看",
+    "question_num": "3",
+    "status": "APPROVED",
+    "audit_comment": "高矮比較，使用小一常見的「打ˇ」與「畫○」符號，測驗多重指令執行能力。",
+    "stem": "看圖比一比，最高的打ˇ，最矮的畫○：",
+    "choices": [
+      "長頸鹿",
+      "小狗",
+      "大象"
+    ],
+    "answer_index": 0,
+    "answer_raw": "最高打ˇ，最矮畫○",
+    "curriculum_code": "S-1-1",
+    "component_tag": "balance-beam",
+    "visual_engine": {
+      "engine": "balance-beam",
+      "params": {
+        "mode": "height"
+      }
+    },
+    "explanation": "看誰長得最高，就在它下面的框框打勾；看誰最矮，就畫一個圓圈。"
+  },
+  {
+    "id": "G1-EXAM-006",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "二、比比看",
+    "question_num": "4",
+    "status": "APPROVED",
+    "audit_comment": "厚薄比較是長度比較的延伸，符合小一生活數學觀察。",
+    "stem": "看一看，最薄的書本打ˇ：",
+    "choices": [
+      "字典",
+      "繪本",
+      "筆記本"
+    ],
+    "answer_index": 2,
+    "answer_raw": "最薄的打ˇ",
+    "curriculum_code": "S-1-1",
+    "component_tag": "balance-beam",
+    "visual_engine": {
+      "engine": "balance-beam",
+      "params": {
+        "mode": "thickness"
+      }
+    },
+    "explanation": "薄薄的書就是側面看起來扁扁的，找找看哪一本最扁。"
+  },
+  {
+    "id": "G1-EXAM-007",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "二、比比看",
+    "question_num": "5",
+    "status": "APPROVED",
+    "audit_comment": "此題涉及「拉直比較」的邏輯，是小一長度單元的魔王題，審核通過。",
+    "stem": "哪一條繩子比較長？請在最長的打ˇ：",
+    "choices": [
+      "直直的繩子",
+      "彎彎的繩子"
+    ],
+    "answer_index": 1,
+    "answer_raw": "彎彎的繩子(拉直後較長)",
+    "curriculum_code": "S-1-1",
+    "component_tag": "dual-track-diff",
+    "visual_engine": {
+      "engine": "dual-track-diff",
+      "params": {}
+    },
+    "explanation": "彎彎的繩子拉直以後，會比原本看起來還要長喔！想像一下拉拉麵的樣子。"
+  },
+  {
+    "id": "G1-EXAM-008",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "二、比比看",
+    "question_num": "6",
+    "status": "APPROVED",
+    "audit_comment": "生活物件長度比較，符合小一教學情境。",
+    "stem": "比比看，最長的衣服打ˇ：",
+    "choices": [
+      "短袖",
+      "長裙",
+      "背心"
+    ],
+    "answer_index": 1,
+    "answer_raw": "長裙",
+    "curriculum_code": "S-1-1",
+    "component_tag": "dual-track-diff",
+    "visual_engine": {
+      "engine": "dual-track-diff",
+      "params": {}
+    },
+    "explanation": "從領口往下看，誰的下擺垂得最低，誰就是最長的衣服。"
+  },
+  {
+    "id": "G1-EXAM-009",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "四、看圖填代號",
+    "question_num": "1",
+    "status": "APPROVED",
+    "audit_comment": "測驗形體屬性（滾動），符合小一幾何初步認識。",
+    "stem": "哪些物品可以滾動？請填入代號：( )",
+    "choices": [
+      "ㄅ.皮球",
+      "ㄆ.積木",
+      "ㄇ.膠水罐",
+      "ㄈ.課本"
+    ],
+    "answer_index": 0,
+    "answer_raw": "ㄅ、ㄇ",
+    "curriculum_code": "S-1-2",
+    "component_tag": "shape-builder",
+    "visual_engine": {
+      "engine": "shape-builder",
+      "params": {
+        "property": "rollable"
+      }
+    },
+    "explanation": "圓圓的東西或是像罐子一樣有圓圓的邊，就可以在地上滾來滾去喔！"
+  },
+  {
+    "id": "G1-EXAM-010",
+    "exam_source": "高雄忠孝國小113-1期中試卷",
+    "section": "四、看圖填代號",
+    "question_num": "2",
+    "status": "APPROVED",
+    "audit_comment": "測驗形體屬性（平平的面），區分球體與多面體。",
+    "stem": "哪些物品有平平的面？請填入代號：( )",
+    "choices": [
+      "ㄅ.皮球",
+      "ㄆ.積木",
+      "ㄇ.膠水罐",
+      "ㄈ.課本"
+    ],
+    "answer_index": 1,
+    "answer_raw": "ㄆ、ㄇ、ㄈ",
+    "curriculum_code": "S-1-2",
+    "component_tag": "shape-builder",
+    "visual_engine": {
+      "engine": "shape-builder",
+      "params": {
+        "property": "flat_surface"
+      }
+    },
+    "explanation": "摸摸看，如果可以穩穩地放在桌子上不會亂滾，就是有平平的面。"
+  }
+]

@@ -1,0 +1,270 @@
+[
+  {
+    "id": "G1-EXAM-001",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "一、 填填看",
+    "question_num": "1",
+    "status": "APPROVED",
+    "audit_comment": "符合小一錢幣換算算理，使用具體的硬幣單位，無大人化代數思維。",
+    "stem": "2 個 50元硬幣可以換（ ）個 10元硬幣",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "10",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "exchange",
+        "source_coin": 50,
+        "source_count": 2,
+        "target_coin": 10
+      }
+    },
+    "explanation": "小朋友，1 個 50 元可以換成 5 個 10 元，所以 2 個 50 元就是 5 加 5，等於 10 個 10 元喔！"
+  },
+  {
+    "id": "G1-EXAM-002",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "一、 填填看",
+    "question_num": "2",
+    "status": "APPROVED",
+    "audit_comment": "錢幣進位與拆解是小一重點，此題口吻純真，符合教學現場。",
+    "stem": "3 個 10元硬幣可以換（ ）個 5元硬幣",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "6",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "exchange",
+        "source_coin": 10,
+        "source_count": 3,
+        "target_coin": 5
+      }
+    },
+    "explanation": "1 個 10 元可以換 2 個 5 元，現在有 3 個 10 元，就是 2+2+2，總共可以換 6 個 5 元硬幣。"
+  },
+  {
+    "id": "G1-EXAM-003",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "一、 填填看",
+    "question_num": "3",
+    "status": "APPROVED",
+    "audit_comment": "建立百位數初步概念，透過 10 個 10 的累積符合十進位結構。",
+    "stem": "10 個 10元硬幣可以換（ ）個 100元鈔票",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "1",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "exchange",
+        "source_coin": 10,
+        "source_count": 10,
+        "target_coin": 100
+      }
+    },
+    "explanation": "我們來數數看：10、20、30...數到 100，剛好就是 10 個 10 元，可以換成 1 張紅色的 100 元鈔票。"
+  },
+  {
+    "id": "G1-EXAM-004",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "1-(1)",
+    "status": "APPROVED",
+    "audit_comment": "保留「夠不夠」口語，這是小一判斷大小關係的經典生活情境。",
+    "stem": "飛飛想買一盒 78 元的彩色筆，他的錢有 85 元，請問夠不夠？飛飛的錢：（ 夠 ， 不夠 ）",
+    "choices": [
+      "夠",
+      "不夠"
+    ],
+    "answer_index": 0,
+    "answer_raw": "夠",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "compare",
+        "price": 78,
+        "wallet": 85
+      }
+    },
+    "explanation": "飛飛有 85 元，彩色筆只要 78 元，85 比 78 還要大，所以錢是夠的喔！"
+  },
+  {
+    "id": "G1-EXAM-005",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "1-(2)",
+    "status": "APPROVED",
+    "audit_comment": "對比前一題，強化「不夠」的邏輯判斷，符合小一生活數學。",
+    "stem": "米米想買一盒 78 元的彩色筆，他的錢只有 70 元，請問夠不夠？米米的錢：（ 夠 ， 不夠 ）",
+    "choices": [
+      "夠",
+      "不夠"
+    ],
+    "answer_index": 1,
+    "answer_raw": "不夠",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "compare",
+        "price": 78,
+        "wallet": 70
+      }
+    },
+    "explanation": "米米只有 70 元，但是彩色筆要 78 元，70 比 78 還要小，所以錢不夠買。"
+  },
+  {
+    "id": "G1-EXAM-006",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "1-(3)",
+    "status": "APPROVED",
+    "audit_comment": "嚴禁負號思維，使用「還要補多少錢」引導補數概念，符合小一算理。",
+    "stem": "香香也想買一盒 78 元的色筆，但是她只有 70 元，錢不夠，請問還要補多少錢才夠? 她還要補( )元",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "8",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "add-to-target",
+        "current": 70,
+        "target": 78
+      }
+    },
+    "explanation": "香香已經有 70 元了，要到 78 元，我們接著往後數：71, 72, 73, 74, 75, 76, 77, 78，總共要再補 8 元。"
+  },
+  {
+    "id": "G1-EXAM-007",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "2",
+    "status": "APPROVED",
+    "audit_comment": "「圈圈看」是小一特有的作答方式，測驗孩子對錢幣組合的掌握。",
+    "stem": "一個麵包 45 元，怎麼付錢才會剛好? 圈圈看。",
+    "choices": [],
+    "answer_index": 0,
+    "answer_raw": "4個10元和5個1元(或其它組合)",
+    "curriculum_code": "N-1-4",
+    "component_tag": "money-counter",
+    "visual_engine": {
+      "engine": "money-counter",
+      "params": {
+        "mode": "selection",
+        "target": 45,
+        "available_coins": [
+          10,
+          10,
+          10,
+          10,
+          10,
+          5,
+          5,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    "explanation": "要湊成 45 元，我們可以圈 4 個 10 元（就是 40 元），再圈 1 個 5 元，合起來就是 45 元。"
+  },
+  {
+    "id": "G1-EXAM-008",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "3-(1)",
+    "status": "APPROVED",
+    "audit_comment": "日曆題型測驗時間序列，使用「昨天」與「星期」的對應，符合生活認知。",
+    "stem": "看日曆填一填：昨天是 5 月 21 日星期四，昨天是（ 星期四 ， 星期五 ）",
+    "choices": [
+      "星期四",
+      "星期五"
+    ],
+    "answer_index": 0,
+    "answer_raw": "星期四",
+    "curriculum_code": "N-1-1",
+    "component_tag": "glass-number-line",
+    "visual_engine": {
+      "engine": "glass-number-line",
+      "params": {
+        "mode": "calendar-strip",
+        "highlight": 21
+      }
+    },
+    "explanation": "題目已經告訴我們昨天是 5 月 21 日星期四，所以我們要圈「星期四」喔！"
+  },
+  {
+    "id": "G1-EXAM-009",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "3-(2)",
+    "status": "APPROVED",
+    "audit_comment": "測驗數的順序（21之後是22）以及星期的循環，完全符合小一課綱。",
+    "stem": "承上題，昨天是 5 月 21 日星期四，今天是 5 月 ( 20 ， 22 )日 ( 星期三 ， 星期五 ）",
+    "choices": [
+      "20",
+      "22",
+      "星期三",
+      "星期五"
+    ],
+    "answer_index": 1,
+    "answer_raw": "22, 星期五",
+    "curriculum_code": "N-1-1",
+    "component_tag": "glass-number-line",
+    "visual_engine": {
+      "engine": "glass-number-line",
+      "params": {
+        "mode": "calendar-step",
+        "start": 21,
+        "step": 1
+      }
+    },
+    "explanation": "昨天是 21 日，今天就是往後數一天，是 22 日；星期四的隔天就是星期五。"
+  },
+  {
+    "id": "G1-EXAM-010",
+    "exam_source": "臺北內湖國小113學年度下學期期末試卷",
+    "section": "二、 圈圈看，填填看",
+    "question_num": "4-(1)",
+    "status": "APPROVED",
+    "audit_comment": "比較算式大小而非單純計算，訓練孩子觀察被減數與差的關係，無負號思維。",
+    "stem": "將答案比較大的算式圈起來：( 38－6 ， 24－6 )",
+    "choices": [
+      "38－6",
+      "24－6"
+    ],
+    "answer_index": 0,
+    "answer_raw": "38－6",
+    "curriculum_code": "N-1-6",
+    "component_tag": "ten-frame-grid",
+    "visual_engine": {
+      "engine": "ten-frame-grid",
+      "params": {
+        "mode": "comparison",
+        "set_a": [
+          38,
+          6
+        ],
+        "set_b": [
+          24,
+          6
+        ]
+      }
+    },
+    "explanation": "兩個算式都是「拿走 6 個」，但是 38 比 24 還要多，所以剩下的也會比較多喔！"
+  }
+]
