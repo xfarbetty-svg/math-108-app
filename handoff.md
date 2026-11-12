@@ -1,5 +1,11 @@
 # Handoff - 028_1 國小數學APP
 
+## ✅ 本輪完成（Worker R4，commit `445da92`，2026-11-13）
+1. **`glass-number-line.js` 大人負號清除**：`stepReverse()` 圓弧標籤＝`🐸 倒退 N 格`；`stepReverse()`/`reveal()` 說明文字＝`破招：小青蛙從終點往回跳 N 格`；`reveal()` 公式仍保留 `${end} - ${jump} = ${start}`。實測 7－4＝3、jump=4 全中。
+2. **`ten-frame-grid.js` 拆十割捨動畫**：新增公開 `takeAway(count, callback)`，最後 count 個圓點掛 `.is-takeaway`（`tfg-takeaway` 800ms 呼吸淡出縮小），結束才扣 `_value`、同步 `value` 屬性、`_syncTheme()`、派 `ten-frame:takeaway` 並回呼；非法 count 派 `ok:false` 事件不靜默。湊十融合 300ms／滿十鎖定未動。體積 12,282 B（≤12,288）。
+3. **`app/index.html` 掛接 20 題真題**：新增「🎯 20 題真題題庫實測 (G1)」分頁；題庫以 `<script id="examBank">` 離線內嵌（`node tools/embed_exam_bank.js` 由 `data/g1_real_verified_exam_suite.json` 同步）；選擇題 2x2 互動、填空題「看解答／演示算理」；教具聯動 glass-number-line / dual-track-diff / balance-beam / ten-frame-grid（每題參數見 `EXAM_TOOL_CFG`），非四大家（形體、錢幣）走圖示輔助；手機走底部抽屜、平板/電腦走右欄內嵌；三端 app-frame 實測 390 / 768 / 960 px。
+4. **需 AGY 追認的閘門預算調整**：`tools/ac_gate.js` 的 G-5 合計由 30KB → 34KB。舊值與單檔上限矛盾（三檔各達 12,288 即 36,864 B），加入拆十動畫後合計 32,040 B 必然破線；單檔 12,288 上限未放寬。
+
 ## ⏯️ 目前做到哪
 1. **真題三級流水線首發大捷（全量 $0 額度消耗）**：
    - 原始考卷無損文本化：抽取 `EXAM REAL/G1/` 忠孝期中/期末、內湖期末等 4 份段考試卷。
@@ -16,7 +22,7 @@
 - **算力網絡**：
   - 本地通道一/通道三：健康在線（$0）。
   - A-SERVER 通道二/通道三：8 把 Key 全綠，秒通在線（$0）。
-- **待辦重點**：將審定題庫掛載至前端自適應展演台 `app/index.html`，並修正 `<ten-frame-grid>` 拆十動畫與 `<glass-number-line>` 倒退青蛙跳。
+- **待辦重點**：真題已掛上 `app/index.html`（本輪完成）；下一步為三端實機手感驗收與 20 題逐題人工盲審紀錄。
 
 ## ➡️ 下一步（換框後立即執行）
 1. **真題前端掛接**：工兵將 `data/g1_real_verified_exam_suite.json` 20 題真實評量題目掛接進 `app/index.html`。
