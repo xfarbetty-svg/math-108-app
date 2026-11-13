@@ -35,25 +35,25 @@
           "code": "N-1-4",
           "title": "解題（1 元、5 元、10 元、50）",
           "full_text": "解題：1 元、5 元、10 元、50 元、100 元。以操作活動為主。數錢、換錢、找錢。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "忠孝 114-2 期末（買蛋糕最少幾個 10 元／早餐 46 元剛好付款）＋ 永安 114-1 期末（小光小日比錢多／珍珠補錢）＋ 內湖 114-2 期末（50元換10元）——任務卡 task_g1_n14_coins.md 5 套互動教具"
         },
         {
           "code": "N-1-5",
           "title": "長度（同S-1-1）",
           "full_text": "長度（同S-1-1）：以操作活動為主。初步認識、直接比較、間接比較（含個別單位）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "忠孝 114-1 期中（基準線對齊比鉛筆／彎曲緞帶拉直比長短）＋ 獅湖 114-2 期中（等長繩剩餘推論腰圍／迴紋針個別單位量文具／方格積木拼合）——任務卡 task_g1_n15_length.md 5 套互動教具"
         },
         {
           "code": "N-1-6",
           "title": "日常時間用語",
           "full_text": "日常時間用語：以操作活動為主。簡單日期報讀「幾月幾日」；「明天」、「今天」、「昨天」；「上午」、「中午」、「下午」、「晚上」。簡單時刻報讀「整點」與「半點」。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "獅湖 114-1 期末（整點報讀／半點算理破招／經過 2 小時）＋ 忠孝 114-1 期末（長針走一圈齒輪連動）＋ 忠孝 114-2 期末（昨天今天明天日曆翻頁）——任務卡 task_g1_n16_clock.md 5 套互動教具"
         },
         {
           "code": "S-1-1",

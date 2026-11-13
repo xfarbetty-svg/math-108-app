@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-1-6 時間：經過 2 小時（8 點再過 2 小時）</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            background: #eff6ff;
+            color: #0f172a;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #bfdbfe;
+        }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .source-tag { font-size: 11px; color: #94a3b8; }
+        .stem { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
+        .playground {
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            background: #fefce8;
+            padding: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .playground svg { display: block; width: 100%; max-width: 300px; height: auto; }
+        .formula-line {
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #64748b;
+            min-height: 1.6em;
+            margin-bottom: 10px;
+        }
+        .formula-line.lit { color: #15803d; }
+        .pair-note { text-align: center; font-size: 1rem; font-weight: 800; color: #1d4ed8; min-height: 1.5em; margin-bottom: 10px; }
+        .action-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+        .step-btn {
+            min-height: 44px;
+            background: #0d9488;
+            color: #fff;
+            font-size: .98rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            cursor: pointer;
+        }
+        .step-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .reset-btn {
+            min-height: 44px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .opt-btn {
+            min-height: 44px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #334155;
+            padding: 8px 14px;
+        }
+        .opt-btn.active { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+        .footer-action { display: flex; justify-content: center; margin-top: 10px; }
+        .check-btn {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .result-banner {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: none;
+        }
+        .result-banner.success { display: block; background: #dcfce7; color: #166534; }
+        .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+        @media (max-width: 640px) {
+            body { padding: 4px 6px; }
+            .container { padding: 8px 10px; max-width: 480px; }
+            .stem { font-size: 14.5px; margin-bottom: 8px; line-height: 1.35; }
+            .playground { margin-bottom: 5px; padding: 4px; border-radius: 12px; }
+            .formula-line { font-size: 14px; margin-bottom: 4px; }
+            .pair-note { font-size: 12.5px; min-height: 1.2em; margin-bottom: 5px; }
+            .action-row { margin-bottom: 6px; gap: 6px; }
+            .step-btn, .reset-btn { min-height: 36px; padding: 6px 12px; font-size: 12.5px; border-radius: 10px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; }
+            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+            .footer-action { margin-top: 6px; }
+            .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
+            .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-row">
+        <span class="source-tag">獅湖 114-1 期末 · 日常時間用語</span>
+    </div>
+
+    <div class="stem">現在是上午 8 點鐘，再過 2 小時是上午幾點鐘？</div>
+
+    <div class="playground">
+        <svg id="clockSvg" viewBox="0 0 300 260" role="img" aria-label="經過時間教具"></svg>
+    </div>
+
+    <div class="formula-line" id="formulaLine">8 點 → 還沒出發</div>
+    <div class="pair-note" id="pairNote">按「▶ 經過 1 小時」：長針會轉一整圈，短針走一大格！</div>
+
+    <div class="action-row">
+        <button class="step-btn" id="step1Btn" onclick="step1()">▶ 經過 1 小時</button>
+        <button class="step-btn" id="step2Btn" onclick="step2()" disabled>▶ 再過 1 小時</button>
+        <button class="reset-btn" id="resetBtn" onclick="resetAll()">重來</button>
+    </div>
+
+    <div class="opt-group" id="opts"></div>
+
+    <div class="footer-action">
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+    <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+    // 鐘面幾何：8 點 = 240°；每經過 1 小時，長針 +360°、短針 +30°
+    const CX = 150, CY = 136;
+    const START_ANGLE = 240;
+    let minuteTotal = 0, hourAngle = START_ANGLE, busy = false, step = 0, userAnswer = null;
+    const ANSWER_INDEX = 0;
+
+    function clockPt(r, deg) {
+        const rad = deg * Math.PI / 180;
+        return [CX + r * Math.sin(rad), CY - r * Math.cos(rad)];
+    }
+
+    function buildClock() {
+        let s = `<circle cx="${CX}" cy="${CY}" r="104" fill="#ffffff" stroke="#cbd5e1" stroke-width="4"/>
+                 <circle cx="${CX}" cy="${CY}" r="96" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>`;
+        for (let n = 1; n <= 12; n++) {
+            const [tx, ty] = clockPt(92, n * 30);
+            s += `<line x1="${CX + (tx - CX) * 0.94}" y1="${CY + (ty - CY) * 0.94}" x2="${tx}" y2="${ty}" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>`;
+            const [nx, ny] = clockPt(72, n * 30);
+            s += `<text x="${nx}" y="${ny + 5.5}" text-anchor="middle" font-size="15" font-weight="800" fill="#334155">${n}</text>`;
+        }
+        s += `<g id="hourWrap" transform="rotate(${START_ANGLE} ${CX} ${CY})">
+                  <line id="hourHand" x1="${CX}" y1="${CY + 10}" x2="${CX}" y2="${CY - 50}" stroke="#dc2626" stroke-width="9" stroke-linecap="round"/>
+              </g>
+              <g id="minuteWrap" transform="rotate(0 ${CX} ${CY})">
+                  <line id="minuteHand" x1="${CX}" y1="${CY + 10}" x2="${CX}" y2="${CY - 72}" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+              </g>
+              <circle cx="${CX}" cy="${CY}" r="7" fill="#334155"/>
+              <text x="${CX}" y="${CY - 100}" text-anchor="middle" font-size="11" font-weight="700" fill="#94a3b8">長針轉一圈 ＝ 短針走一大格</text>`;
+        document.getElementById('clockSvg').innerHTML = s;
+    }
+
+    function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+    // 平滑動畫：長針轉 360°、短針走 30°，兩針齒輪連動
+    function animateHour() {
+        return new Promise((resolve) => {
+            const m0 = minuteTotal, m1 = minuteTotal + 360;
+            const h0 = hourAngle, h1 = hourAngle + 30;
+            const t0 = performance.now(), DUR = 900;
+            function frame(now) {
+                const p = easeInOut(Math.min(1, (now - t0) / DUR));
+                document.getElementById('minuteWrap').setAttribute('transform', `rotate(${m0 + (m1 - m0) * p} ${CX} ${CY})`);
+                document.getElementById('hourWrap').setAttribute('transform', `rotate(${h0 + (h1 - h0) * p} ${CX} ${CY})`);
+                if (p < 1) requestAnimationFrame(frame);
+                else { minuteTotal = m1; hourAngle = h1; resolve(); }
+            }
+            requestAnimationFrame(frame);
+        });
+    }
+
+    async function step1() {
+        if (busy || step !== 0) return;
+        busy = true;
+        document.getElementById('step1Btn').disabled = true;
+        setFormula('長針開始轉一圈……');
+        await animateHour();
+        step = 1;
+        document.getElementById('step2Btn').disabled = false;
+        setFormula('8 ＋ 1 ＝ 9，上午 9 點鐘');
+        setNote('長針轉完一圈，短針從 8 走到 9！再按一次，就是「再過 1 小時」。');
+        busy = false;
+    }
+
+    async function step2() {
+        if (busy || step !== 1) return;
+        busy = true;
+        document.getElementById('step2Btn').disabled = true;
+        setFormula('長針再轉一圈……');
+        await animateHour();
+        step = 2;
+        setFormula('8 ＋ 2 ＝ 10，上午 10 點鐘！');
+        document.getElementById('formulaLine').classList.add('lit');
+        setNote('兩圈轉完！短針從 8 走了兩大格到 10 —— 上午 10 點鐘！');
+        busy = false;
+    }
+
+    function setFormula(t) { document.getElementById('formulaLine').innerText = t; }
+    function setNote(html) { document.getElementById('pairNote').innerHTML = html; }
+
+    function resetAll() {
+        busy = false; step = 0;
+        minuteTotal = 0; hourAngle = START_ANGLE;
+        document.getElementById('hourWrap').setAttribute('transform', `rotate(${START_ANGLE} ${CX} ${CY})`);
+        document.getElementById('minuteWrap').setAttribute('transform', `rotate(0 ${CX} ${CY})`);
+        document.getElementById('step1Btn').disabled = false;
+        document.getElementById('step2Btn').disabled = true;
+        document.getElementById('formulaLine').classList.remove('lit');
+        setFormula('8 點 → 還沒出發');
+        setNote('按「▶ 經過 1 小時」：長針會轉一整圈，短針走一大格！');
+    }
+
+    function buildOpts() {
+        const group = document.getElementById('opts');
+        ['上午 10 點鐘', '上午 9 點鐘', '中午 12 點鐘'].forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = function () {
+                group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                userAnswer = idx;
+            };
+            group.appendChild(btn);
+        });
+    }
+
+    function check() {
+        const banner = document.getElementById('resultBanner');
+        if (userAnswer === null) {
+            banner.className = 'result-banner fail';
+            banner.innerText = '先選一個答案再檢查喔！';
+            return;
+        }
+        if (userAnswer === ANSWER_INDEX) {
+            banner.className = 'result-banner success';
+            banner.innerText = '🎉 答對！8 ＋ 2 ＝ 10 —— 上午 10 點鐘！';
+        } else {
+            banner.className = 'result-banner fail';
+            banner.innerText = '再想想：過 1 小時是 9 點，再過 1 小時就是 10 點 —— 8 ＋ 2 ＝ 10！';
+        }
+    }
+
+    buildClock();
+    buildOpts();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-1-5 長度：迴紋針個別單位量文具</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            background: #eff6ff;
+            color: #0f172a;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #bfdbfe;
+        }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .source-tag { font-size: 11px; color: #94a3b8; }
+        .stem { font-size: 1.2rem; font-weight: 700; margin-bottom: 14px; color: #1e293b; line-height: 1.4; }
+        .playground {
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            background: #f8fafc;
+            padding: 6px;
+            margin-bottom: 12px;
+        }
+        .playground svg { display: block; width: 100%; height: auto; }
+        .clip-item { cursor: pointer; }
+        .clip-item:hover .clip-body { stroke: #2563eb; }
+        .badge-g { display: none; }
+        .clip-item.counted .badge-g { display: block; }
+        .clip-item.counted .clip-body { fill: #bfdbfe; stroke: #1d4ed8; }
+        .tally-line { text-align: center; font-size: 1.05rem; font-weight: 800; color: #1d4ed8; min-height: 1.6em; margin-bottom: 10px; line-height: 1.45; }
+        .action-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+        .reset-btn {
+            min-height: 44px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .hint-btn {
+            min-height: 44px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .hint-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 12px; }
+        .opt-btn {
+            min-height: 44px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #334155;
+            padding: 8px 14px;
+        }
+        .opt-btn.active { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+        .footer-action { display: flex; justify-content: center; margin-top: 8px; }
+        .check-btn {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .result-banner {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.02rem;
+            display: none;
+        }
+        .result-banner.success { display: block; background: #dcfce7; color: #166534; }
+        .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+        @media (max-width: 640px) {
+            body { padding: 4px 6px; }
+            .container { padding: 8px 10px; max-width: 480px; }
+            .stem { font-size: 14px; margin-bottom: 8px; line-height: 1.35; }
+            .playground { margin-bottom: 6px; padding: 4px; border-radius: 12px; }
+            .tally-line { font-size: 13px; min-height: 2.4em; margin-bottom: 6px; }
+            .action-row { margin-bottom: 6px; gap: 6px; }
+            .hint-btn, .reset-btn { min-height: 36px; padding: 6px 14px; font-size: 13px; border-radius: 10px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; }
+            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+            .footer-action { margin-top: 4px; }
+            .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
+            .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-row">
+        <span class="source-tag">獅湖 114-2 期中 · 個別單位比較</span>
+    </div>
+
+    <div class="stem">毛筆和剪刀各和幾個迴紋針一樣長？<br>毛筆比剪刀長幾個迴紋針？<span style="font-size:0.8em;color:#64748b">（點迴紋針一個一個數！）</span></div>
+
+    <div class="playground">
+        <svg id="deskSvg" viewBox="0 0 450 235" role="img" aria-label="迴紋針量文具教具"></svg>
+    </div>
+
+    <div class="tally-line" id="tallyLine">點迴紋針幫毛筆和剪刀「量」長度：毛筆已數 0 個、剪刀已數 0 個。</div>
+
+    <div class="action-row">
+        <button class="hint-btn" id="autoBtn" onclick="autoCountAll()">🔢 自動全部點數</button>
+        <button class="reset-btn" onclick="resetAll()">重來</button>
+    </div>
+
+    <div class="opt-group" id="opts"></div>
+
+    <div class="footer-action">
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+    <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+    const SVGNS = 'http://www.w3.org/2000/svg';
+    const BRUSH_CLIPS = 6, SCISSOR_CLIPS = 4;
+    const PITCH = 50, CLIP_X0 = 96;
+    let userAnswer = null;
+    const ANSWER_INDEX = 0;
+    let brushCount = 0, scissorCount = 0;
+
+    // 迴紋針純向量：雙圈金屬線框
+    function clipArt() {
+        return `
+        <g class="clip-inner">
+            <g class="badge-g" transform="translate(0 -26)">
+                <circle r="9" fill="#2563eb" stroke="#ffffff" stroke-width="1.5"/>
+                <text class="badge-num" y="3.5" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff"></text>
+            </g>
+            <rect class="clip-body" x="-19" y="-11" width="38" height="22" rx="10" fill="#e2e8f0" stroke="#475569" stroke-width="2.4"/>
+            <path d="M -12 -5 h 16 a 4.5 4.5 0 0 1 0 9 h -11" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+        </g>`;
+    }
+
+    function brushArt() {
+        return `
+        <g>
+            <rect x="12" y="-8" width="210" height="16" rx="3" fill="#b45309" stroke="#0f172a" stroke-width="1.5"/>
+            <rect x="222" y="-9" width="24" height="18" rx="2" fill="#94a3b8" stroke="#0f172a" stroke-width="1.5"/>
+            <polygon points="246,-9 246,9 282,-4 282,4" fill="none"/>
+            <path d="M 246 -9 Q 290 0 246 9 Z" fill="#0f172a"/>
+            <path d="M 246 -9 Q 268 -2 246 9" fill="#0f172a"/>
+        </g>`;
+    }
+
+    function scissorArt() {
+        return `
+        <g>
+            <circle cx="30" cy="0" r="11" fill="none" stroke="#334155" stroke-width="4"/>
+            <circle cx="30" cy="0" r="11" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+            <circle cx="30" cy="0" r="4.5" fill="#e2e8f0" stroke="#334155" stroke-width="1.5"/>
+            <line x1="40" y1="-3" x2="176" y2="-6" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+            <line x1="40" y1="3" x2="176" y2="6" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+            <polygon points="176,-10 196,-3 176,-2" fill="#64748b" stroke="#0f172a" stroke-width="1"/>
+            <polygon points="176,10 196,3 176,2" fill="#64748b" stroke="#0f172a" stroke-width="1"/>
+        </g>`;
+    }
+
+    function makeClip(x, y, rowKey, seq) {
+        const wrap = document.createElementNS(SVGNS, 'g');
+        wrap.setAttribute('transform', `translate(${x} ${y})`);
+        wrap.innerHTML = clipArt();
+        const clip = wrap.firstElementChild;
+        clip.classList.add('clip-item');
+        clip.dataset.row = rowKey;
+        clip.dataset.seq = seq;
+        clip.addEventListener('click', () => {
+            if (clip.classList.contains('counted')) return;
+            const n = (rowKey === 'brush' ? brushCount : scissorCount) + 1;
+            if (n !== seq) return;   // 只能依序點數：第 n 個號碼必須點在第 n 個迴紋針上
+            clip.classList.add('counted');
+            clip.querySelector('.badge-num').textContent = n;
+            if (rowKey === 'brush') brushCount = n; else scissorCount = n;
+            updateTally();
+        });
+        return wrap;
+    }
+
+    function updateTally() {
+        const line = document.getElementById('tallyLine');
+        line.innerHTML = `毛筆已數 <b>${brushCount}</b> 個迴紋針、剪刀已數 <b>${scissorCount}</b> 個迴紋針。`;
+        if (brushCount === BRUSH_CLIPS && scissorCount === SCISSOR_CLIPS) {
+            line.innerHTML = `毛筆＝<b>6</b> 個迴紋針，剪刀＝<b>4</b> 個迴紋針，<span style="color:#dc2626">6－4＝2</span>，毛筆比剪刀長 <span style="color:#dc2626">2 個迴紋針</span>！✂️`;
+        }
+    }
+
+    function autoCountAll() {
+        document.querySelectorAll('#deskSvg .clip-item:not(.counted)').forEach((c) => c.click());
+        document.getElementById('autoBtn').disabled = true;
+    }
+
+    function resetAll() {
+        brushCount = 0; scissorCount = 0;
+        document.querySelectorAll('#deskSvg .clip-item').forEach((c) => {
+            c.classList.remove('counted');
+            c.querySelector('.badge-num').textContent = '';
+        });
+        document.getElementById('autoBtn').disabled = false;
+        document.getElementById('tallyLine').innerHTML = '點迴紋針幫毛筆和剪刀「量」長度：毛筆已數 0 個、剪刀已數 0 個。';
+    }
+
+    function build() {
+        const svg = document.getElementById('deskSvg');
+        svg.innerHTML = `
+            <g pointer-events="none">
+                <rect x="0" y="0" width="450" height="235" fill="#f8fafc"/>
+                <rect x="8" y="18" width="56" height="18" rx="6" fill="#fef3c7"/>
+                <text x="36" y="31" text-anchor="middle" font-size="11" font-weight="800" fill="#b45309">毛筆</text>
+                <rect x="8" y="128" width="56" height="18" rx="6" fill="#e2e8f0"/>
+                <text x="36" y="141" text-anchor="middle" font-size="11" font-weight="800" fill="#475569">剪刀</text>
+                <line x1="96" y1="4" x2="96" y2="66" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 3"/>
+            </g>`;
+        // 毛筆本體：長度正好 6 個迴紋針（x 96 → 346）
+        const brush = document.createElementNS(SVGNS, 'g');
+        brush.setAttribute('transform', 'translate(96 38)');
+        brush.innerHTML = brushArt();
+        svg.appendChild(brush);
+        for (let i = 0; i < BRUSH_CLIPS; i++) svg.appendChild(makeClip(CLIP_X0 + i * PITCH, 86, 'brush', i + 1));
+        // 剪刀本體：長度正好 4 個迴紋針（x 96 → 246）
+        const scissor = document.createElementNS(SVGNS, 'g');
+        scissor.setAttribute('transform', 'translate(96 148)');
+        scissor.innerHTML = scissorArt();
+        svg.appendChild(scissor);
+        for (let i = 0; i < SCISSOR_CLIPS; i++) svg.appendChild(makeClip(CLIP_X0 + i * PITCH, 196, 'scissor', i + 1));
+
+        const group = document.getElementById('opts');
+        ['長 2 個迴紋針', '長 1 個迴紋針', '長 3 個迴紋針', '一樣長'].forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = function () {
+                group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                userAnswer = idx;
+            };
+            group.appendChild(btn);
+        });
+    }
+
+    function check() {
+        const banner = document.getElementById('resultBanner');
+        if (userAnswer === null) {
+            banner.className = 'result-banner fail';
+            banner.innerText = '先選一個答案再檢查喔！';
+            return;
+        }
+        if (userAnswer === ANSWER_INDEX) {
+            banner.className = 'result-banner success';
+            banner.innerText = '🎉 答對！6－4＝2，毛筆比剪刀長 2 個迴紋針（用同一種單位才能公平比較長度）！';
+        } else {
+            banner.className = 'result-banner fail';
+            banner.innerText = '再想想：毛筆 6 個迴紋針、剪刀 4 個迴紋針，先點滿迴紋針再算 6－4 喔！';
+        }
+    }
+
+    build();
+</script>
+
+</body>
+</html>

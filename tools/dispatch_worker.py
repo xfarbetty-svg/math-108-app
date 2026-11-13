@@ -10,27 +10,38 @@ import subprocess
 import sys
 import time
 
-OPENCODE_DEFAULT_MODEL = "opencode/deepseek-v4.1-flash-free"
+OPENCODE_DEFAULT_MODEL = "opencode/glm-5.3-flash-free"
 
-def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT_MODEL, timeout: int = 180) -> int:
+def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT_MODEL, timeout: int = 300, channel: int = 1) -> int:
     """
     依據 026 規範以標準子進程呼叫 OpenCode CLI：
-    1. --format json: 避免管道阻塞
-    2. --auto: 自動執行工具
-    3. --standalone: 獨立進程，不走 TUI
-    4. stdin=subprocess.DEVNULL: 徹底避免 Windows 主控台假死 2 小時
-    5. encoding="utf-8": 杜絕 Windows CP950 解碼崩潰
+    Channel 1: 本地 OpenCode CLI
+    Channel 2: A-SERVER SSH 遠端 OpenCode CLI
     """
-    cmd = ["opencode", "run", "--format", "json", "--auto", "--standalone", "-m", model]
+    if channel == 2:
+        # A-SERVER SSH 通道
+        # 若有 task_file，讀取其內容並合併到 prompt 中傳送
+        full_prompt = prompt
+        if task_file and os.path.isfile(task_file):
+            try:
+                with open(task_file, "r", encoding="utf-8") as f:
+                    file_content = f.read()
+                full_prompt = f"【任務卡內容】\n{file_content}\n\n【執行指令】\n{prompt}"
+            except Exception as e:
+                print(f"[Worker Dispatch CH2] 讀取任務卡失敗: {e}", file=sys.stderr)
+        
+        # 轉義單引號供 bash/ssh 使用
+        escaped_prompt = full_prompt.replace("'", "'\\''")
+        cmd = ["ssh", "-n", "a-server", f"opencode run -m {model} --format json --auto --standalone '{escaped_prompt}'"]
+        print(f"[Worker Dispatch CH2] 正在派工至 A-SERVER OpenCode (Model: {model})...")
+    else:
+        cmd = ["opencode", "run", "--format", "json", "--auto", "--standalone", "-m", model]
+        if task_file and os.path.isfile(task_file):
+            cmd.extend(["-f", task_file])
+        cmd.append(prompt)
+        print(f"[Worker Dispatch CH1] 正在派工至本地 OpenCode (Model: {model})...")
     
-    if task_file and os.path.isfile(task_file):
-        cmd.extend(["-f", task_file])
-    
-    cmd.append(prompt)
-    
-    print(f"[Worker Dispatch] 正在派工至 OpenCode (Model: {model})...")
     t0 = time.time()
-    
     try:
         proc = subprocess.run(
             cmd,
@@ -39,11 +50,11 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
             text=True,
             encoding="utf-8",
             errors="replace",
-            shell=True,
+            shell=(channel == 1), # 本地 Windows 需要 shell=True，SSH 則直接執行
             timeout=timeout
         )
         elapsed = time.time() - t0
-        print(f"[Worker Dispatch] 完成，耗時 {elapsed:.2f}s，Exit Code: {proc.returncode}")
+        print(f"[Worker Dispatch CH{channel}] 完成，耗時 {elapsed:.2f}s，Exit Code: {proc.returncode}")
         
         if proc.returncode != 0:
             print(f"[Worker Dispatch ERROR] 工兵執行失敗 (Exit Code {proc.returncode})", file=sys.stderr)
@@ -75,20 +86,21 @@ def main():
             pass
 
     parser = argparse.ArgumentParser(description="028-1 OpenCode 派工標準工具")
-    parser.add_argument("prompt", nargs="?", default="健康檢查：請回覆「通道一正常」", help="派工提示詞或簡述")
+    parser.add_argument("prompt", nargs="?", default="健康檢查：請回覆「通道正常」", help="派工提示詞或簡述")
     parser.add_argument("--file", "-f", help="任務卡檔案路徑 (.md)")
+    parser.add_argument("--channel", "-c", type=int, choices=[1, 2], default=1, help="通道選擇 (1=本地 OpenCode, 2=A-SERVER OpenCode)")
     parser.add_argument("--model", "-m", default=OPENCODE_DEFAULT_MODEL, help="模型名稱")
-    parser.add_argument("--timeout", "-t", type=int, default=180, help="逾時秒數 (預設 180s)")
+    parser.add_argument("--timeout", "-t", type=int, default=300, help="逾時秒數 (預設 300s)")
     parser.add_argument("--test", action="store_true", help="執行快速自我檢查")
     
     args = parser.parse_args()
     
     if args.test:
-        print("[Dispatch Self-Test] 開始執行通道自我檢測...")
-        code = run_worker("自我檢測：請簡短回覆「通道一連線正常」即可，不要操作任何檔案。", timeout=30)
+        print(f"[Dispatch Self-Test] 開始執行通道 {args.channel} 自我檢測...")
+        code = run_worker(f"自我檢測：請簡短回覆「通道{args.channel}連線正常」即可，不要操作任何檔案。", timeout=30, channel=args.channel)
         sys.exit(code)
         
-    code = run_worker(prompt=args.prompt, task_file=args.file, model=args.model, timeout=args.timeout)
+    code = run_worker(prompt=args.prompt, task_file=args.file, model=args.model, timeout=args.timeout, channel=args.channel)
     sys.exit(code)
 
 if __name__ == "__main__":

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-1-5 長度：基準線對齊破招比長短</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            background: #eff6ff;
+            color: #0f172a;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #bfdbfe;
+        }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .source-tag { font-size: 11px; color: #94a3b8; }
+        .stem { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
+        .playground {
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            background: #fdf9f3;
+            padding: 6px;
+            margin-bottom: 14px;
+        }
+        .playground svg { display: block; width: 100%; height: auto; }
+        .pencil { cursor: pointer; transition: transform 0.8s cubic-bezier(0.34, 1.3, 0.5, 1); }
+        .baseline { opacity: 0.25; transition: opacity 0.4s ease; }
+        svg.aligned .baseline { opacity: 1; }
+        .baseline-label { opacity: 0; transition: opacity 0.4s ease; }
+        svg.aligned .baseline-label { opacity: 1; }
+        .pair-note { text-align: center; font-size: 1.1rem; font-weight: 800; color: #1d4ed8; min-height: 1.6em; margin-bottom: 10px; }
+        .action-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+        .align-btn {
+            min-height: 44px;
+            background: #dc2626;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 26px;
+            cursor: pointer;
+        }
+        .align-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .reset-btn {
+            min-height: 44px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .opt-btn {
+            min-height: 44px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #334155;
+            padding: 8px 14px;
+        }
+        .opt-btn.active { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+        .footer-action { display: flex; justify-content: center; margin-top: 10px; }
+        .check-btn {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .result-banner {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: none;
+        }
+        .result-banner.success { display: block; background: #dcfce7; color: #166534; }
+        .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+        @media (max-width: 640px) {
+            body { padding: 4px 6px; }
+            .container { padding: 8px 10px; max-width: 480px; }
+            .stem { font-size: 14.5px; margin-bottom: 8px; line-height: 1.35; }
+            .playground { margin-bottom: 6px; padding: 4px; border-radius: 12px; }
+            .pair-note { font-size: 13px; min-height: 1.2em; margin-bottom: 6px; }
+            .action-row { margin-bottom: 6px; gap: 6px; }
+            .align-btn, .reset-btn { min-height: 36px; padding: 6px 14px; font-size: 13px; border-radius: 10px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; }
+            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+            .footer-action { margin-top: 6px; }
+            .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
+            .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-row">
+        <span class="source-tag">忠孝 114-1 期中 · 長度比一比</span>
+    </div>
+
+    <div class="stem">桌上有紅鉛筆和綠鉛筆，哪一枝比較長？<br><span style="font-size:0.8em;color:#64748b">小心！兩枝筆的起點沒有對齊，眼睛會被騙喔！</span></div>
+
+    <div class="playground">
+        <svg id="deskSvg" viewBox="0 0 450 190" role="img" aria-label="基準線對齊比長短教具"></svg>
+    </div>
+
+    <div class="pair-note" id="pairNote">兩枝筆的起點沒對齊，直接看右端不可靠！先按「對齊基準線」破招。</div>
+
+    <div class="action-row">
+        <button class="align-btn" id="alignBtn" onclick="alignBaseline()">📏 對齊基準線</button>
+        <button class="reset-btn" onclick="resetAll()">重來</button>
+    </div>
+
+    <div class="opt-group" id="opts"></div>
+
+    <div class="footer-action">
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+    <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+    const SVGNS = 'http://www.w3.org/2000/svg';
+
+    // 橫式鉛筆：筆尖朝右。左端為群組原點，eraser 在 x=-10
+    function pencilArt(bodyColor, L) {
+        return `
+        <g>
+            <rect x="-11" y="-9" width="11" height="18" rx="4" fill="#f9a8d4" stroke="#0f172a" stroke-width="1.6"/>
+            <rect x="0" y="-9" width="${L - 34}" height="18" fill="${bodyColor}" stroke="#0f172a" stroke-width="1.6"/>
+            <rect x="${L - 34}" y="-9" width="8" height="18" fill="#d9a066" stroke="#0f172a" stroke-width="1.2"/>
+            <polygon points="${L - 26},-9 ${L},0 ${L - 26},9" fill="#fde68a" stroke="#0f172a" stroke-width="1.6"/>
+            <polygon points="${L - 7},-2.6 ${L},0 ${L - 7},2.6" fill="#0f172a"/>
+            <line x1="6" y1="-9" x2="6" y2="9" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+        </g>`;
+    }
+
+    const RED_LEN = 230, GREEN_LEN = 190;   // 對齊後：紅 70→300，綠 70→260，紅明顯較長
+    const ALIGNED_X = 70;
+    const RED_X0 = 40, GREEN_X0 = 150;      // 初始未對齊：綠筆右端 340 > 紅筆右端 270，視覺陷阱
+    let userAnswer = null;
+    const ANSWER_INDEX = 0;
+
+    function makePencil(art, x, y, key) {
+        const wrap = document.createElementNS(SVGNS, 'g');
+        wrap.setAttribute('transform', `translate(${x} ${y})`);
+        wrap.innerHTML = art;
+        const pen = wrap.firstElementChild;
+        pen.classList.add('pencil');
+        pen.dataset.key = key;
+        pen.addEventListener('click', () => {
+            pen.style.transform = 'translateY(-4px)';
+            setTimeout(() => { pen.style.transform = ''; }, 250);
+        });
+        return wrap;
+    }
+
+    function alignBaseline() {
+        const svg = document.getElementById('deskSvg');
+        svg.classList.add('aligned');
+        document.getElementById('redWrap').setAttribute('transform', `translate(${ALIGNED_X} 70)`);
+        document.getElementById('greenWrap').setAttribute('transform', `translate(${ALIGNED_X} 150)`);
+        document.getElementById('alignBtn').disabled = true;
+        document.getElementById('pairNote').innerHTML =
+            '對齊基準線後，<span style="color:#dc2626">紅鉛筆比綠鉛筆長</span>！右端凸出不代表比較長，起點要對齊才公平。📏';
+    }
+
+    function resetAll() {
+        const svg = document.getElementById('deskSvg');
+        svg.classList.remove('aligned');
+        document.getElementById('redWrap').setAttribute('transform', `translate(${RED_X0} 70)`);
+        document.getElementById('greenWrap').setAttribute('transform', `translate(${GREEN_X0} 150)`);
+        document.getElementById('alignBtn').disabled = false;
+        document.getElementById('pairNote').innerHTML = '兩枝筆的起點沒對齊，直接看右端不可靠！先按「對齊基準線」破招。';
+    }
+
+    function build() {
+        const svg = document.getElementById('deskSvg');
+        svg.innerHTML = `
+            <g pointer-events="none">
+                <rect x="0" y="0" width="450" height="190" fill="#fdf9f3"/>
+                <line x1="70" y1="10" x2="70" y2="180" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7 5" class="baseline"/>
+                <text x="70" y="184" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626" class="baseline-label">基準線</text>
+                <rect x="8" y="8" width="58" height="18" rx="6" fill="#fee2e2"/>
+                <text x="37" y="21" text-anchor="middle" font-size="11" font-weight="800" fill="#dc2626">紅鉛筆</text>
+                <rect x="8" y="128" width="58" height="18" rx="6" fill="#dcfce7"/>
+                <text x="37" y="141" text-anchor="middle" font-size="11" font-weight="800" fill="#16a34a">綠鉛筆</text>
+            </g>`;
+        svg.appendChild(makePencil(pencilArt('#ef4444', RED_LEN), RED_X0, 70, 'red'));
+        svg.lastChild.id = 'redWrap';
+        svg.appendChild(makePencil(pencilArt('#22c55e', GREEN_LEN), GREEN_X0, 150, 'green'));
+        svg.lastChild.id = 'greenWrap';
+
+        const group = document.getElementById('opts');
+        ['紅鉛筆比較長', '綠鉛筆比較長', '一樣長'].forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = function () {
+                group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                userAnswer = idx;
+            };
+            group.appendChild(btn);
+        });
+    }
+
+    function check() {
+        const banner = document.getElementById('resultBanner');
+        if (userAnswer === null) {
+            banner.className = 'result-banner fail';
+            banner.innerText = '先選一個答案再檢查喔！';
+            return;
+        }
+        if (userAnswer === ANSWER_INDEX) {
+            banner.className = 'result-banner success';
+            banner.innerText = '🎉 答對！把起點對齊同一條基準線，紅鉛筆的右端延伸得更遠 → 紅鉛筆比較長！';
+        } else {
+            banner.className = 'result-banner fail';
+            banner.innerText = '再想想：起點沒對齊時，右端凸出是假的！按「對齊基準線」再比一次。';
+        }
+    }
+
+    build();
+</script>
+
+</body>
+</html>

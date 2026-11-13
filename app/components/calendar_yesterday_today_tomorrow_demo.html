@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-1-6 時間：日曆報讀（今天、昨天、明天）</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            background: #eff6ff;
+            color: #0f172a;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #bfdbfe;
+        }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .source-tag { font-size: 11px; color: #94a3b8; }
+        .stem { font-size: 1.2rem; font-weight: 700; margin-bottom: 14px; color: #1e293b; line-height: 1.4; }
+        .playground {
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            background: #fefce8;
+            padding: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .playground svg { display: block; width: 100%; max-width: 340px; height: auto; }
+        #pageInner { transition: none; }
+        .pair-note { text-align: center; font-size: 1.05rem; font-weight: 800; color: #1d4ed8; min-height: 1.6em; margin-bottom: 10px; }
+        .action-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+        .nav-btn {
+            min-height: 44px;
+            background: #0d9488;
+            color: #fff;
+            font-size: .98rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            cursor: pointer;
+        }
+        .nav-btn.today { background: #64748b; }
+        .nav-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .opt-group { display: flex; flex-direction: column; gap: 8px; justify-content: center; align-items: center; margin-bottom: 14px; }
+        .opt-btn {
+            min-height: 44px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #334155;
+            padding: 8px 14px;
+            width: 100%;
+            max-width: 460px;
+        }
+        .opt-btn.active { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+        .footer-action { display: flex; justify-content: center; margin-top: 10px; }
+        .check-btn {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .result-banner {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: none;
+        }
+        .result-banner.success { display: block; background: #dcfce7; color: #166534; }
+        .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+        @media (max-width: 640px) {
+            body { padding: 4px 6px; }
+            .container { padding: 8px 10px; max-width: 480px; }
+            .stem { font-size: 14px; margin-bottom: 7px; line-height: 1.35; }
+            .playground { margin-bottom: 5px; padding: 4px; border-radius: 12px; }
+            .pair-note { font-size: 13px; min-height: 1.2em; margin-bottom: 6px; }
+            .action-row { margin-bottom: 6px; gap: 6px; }
+            .nav-btn { min-height: 36px; padding: 6px 12px; font-size: 12.5px; border-radius: 10px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; }
+            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 12.5px; }
+            .footer-action { margin-top: 6px; }
+            .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
+            .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-row">
+        <span class="source-tag">忠孝 114-2 期末 · 日常時間用語</span>
+    </div>
+
+    <div class="stem">今天是 5 月 20 日星期三。昨天是（　）月（　）日星期（　），明天是（　）月（　）日星期（　）。</div>
+
+    <div class="playground">
+        <svg id="calSvg" viewBox="0 0 360 250" role="img" aria-label="桌上日曆教具"></svg>
+    </div>
+
+    <div class="pair-note" id="pairNote">今天：5 月 20 日 星期三。按左右按鈕翻頁，找出昨天和明天！</div>
+
+    <div class="action-row">
+        <button class="nav-btn" id="yesterdayBtn" onclick="goDay(19)">👈 看看昨天</button>
+        <button class="nav-btn today" id="todayBtn" onclick="goToday()">🏠 回到今天</button>
+        <button class="nav-btn" id="tomorrowBtn" onclick="goDay(21)">👉 看看明天</button>
+    </div>
+
+    <div class="opt-group" id="opts"></div>
+
+    <div class="footer-action">
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+    <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+    // 桌上立體日曆：翻頁動畫（頁面繞上緣裝訂線壓扁再彈回，於中點換頁內容）
+    const DAYS = {
+        19: { date: '19', week: '星期二', tag: '昨天' },
+        20: { date: '20', week: '星期三', tag: '今天' },
+        21: { date: '21', week: '星期四', tag: '明天' }
+    };
+    let curDay = 20, busy = false, userAnswer = null;
+    const ANSWER_INDEX = 0;
+
+    function buildCalendar() {
+        document.getElementById('calSvg').innerHTML = `
+            <g pointer-events="none">
+                <path d="M 92 218 L 112 196 L 248 196 L 268 218 Z" fill="#a16207"/>
+                <rect x="100" y="192" width="160" height="10" rx="4" fill="#ca8a04"/>
+                <rect x="72" y="52" width="216" height="146" rx="14" fill="#e2e8f0"/>
+                <rect x="68" y="48" width="216" height="146" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                <path d="M 68 62 Q 68 48 82 48 L 270 48 Q 284 48 284 62 L 284 86 L 68 86 Z" fill="#e11d48"/>
+                <text x="176" y="73" text-anchor="middle" font-size="17" font-weight="800" fill="#ffffff">5 月 · MAY</text>
+                <circle cx="96" cy="48" r="5" fill="#94a3b8"/>
+                <circle cx="256" cy="48" r="5" fill="#94a3b8"/>
+            </g>
+            <g id="pageInner" transform="translate(0 86) scale(1 1) translate(0 -86)">
+                <rect x="70" y="88" width="212" height="104" rx="6" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5"/>
+                <text id="calDate" x="176" y="146" text-anchor="middle" font-size="52" font-weight="800" fill="#0f172a">20</text>
+                <text id="calWeek" x="176" y="172" text-anchor="middle" font-size="19" font-weight="800" fill="#1d4ed8">星期三</text>
+                <rect id="calTagBg" x="140" y="178" width="72" height="0" rx="8" fill="#dcfce7"/>
+                <text id="calTag" x="176" y="188" text-anchor="middle" font-size="13" font-weight="800" fill="#15803d">（今天）</text>
+            </g>`;
+    }
+
+    function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+    // 翻頁：頁面繞裝訂線（y=86）壓扁 → 換內容 → 彈回
+    function flipPage(newDay) {
+        return new Promise((resolve) => {
+            const t0 = performance.now(), DUR = 700;
+            let swapped = false;
+            function frame(now) {
+                const p = Math.min(1, (now - t0) / DUR);
+                const sy = Math.max(0.06, Math.abs(Math.cos(Math.PI * p)));
+                document.getElementById('pageInner').setAttribute('transform',
+                    `translate(0 86) scale(1 ${sy.toFixed(3)}) translate(0 -86)`);
+                if (!swapped && p >= 0.5) {
+                    swapped = true;
+                    applyDayContent(newDay);
+                }
+                if (p < 1) requestAnimationFrame(frame);
+                else { document.getElementById('pageInner').setAttribute('transform', 'translate(0 86) scale(1 1) translate(0 -86)'); resolve(); }
+            }
+            requestAnimationFrame(frame);
+        });
+    }
+
+    function applyDayContent(day) {
+        const d = DAYS[day];
+        document.getElementById('calDate').textContent = d.date;
+        document.getElementById('calWeek').textContent = d.week;
+        document.getElementById('calTag').textContent = '（' + d.tag + '）';
+        const colors = { 昨天: ['#dbeafe', '#1d4ed8'], 今天: ['#dcfce7', '#15803d'], 明天: ['#fef9c3', '#a16207'] };
+        document.getElementById('calWeek').setAttribute('fill', colors[d.tag][1]);
+    }
+
+    async function goDay(day) {
+        if (busy || day === curDay) return;
+        if (day !== 19 && day !== 21) return;
+        busy = true;
+        await flipPage(day);
+        curDay = day;
+        if (curDay === 19) setNote('往前翻一頁 → 昨天是 <span style="color:#0d9488">5 月 19 日 星期二</span>！');
+        else setNote('往後翻一頁 → 明天是 <span style="color:#a16207">5 月 21 日 星期四</span>！');
+        busy = false;
+    }
+
+    async function goToday() {
+        if (busy || curDay === 20) return;
+        busy = true;
+        await flipPage(20);
+        curDay = 20;
+        setNote('翻回今天：5 月 20 日 星期三。');
+        busy = false;
+    }
+
+    function setNote(html) { document.getElementById('pairNote').innerHTML = html; }
+
+    function buildOpts() {
+        const group = document.getElementById('opts');
+        [
+            '昨天 5 月 19 日星期二、明天 5 月 21 日星期四',
+            '昨天 5 月 19 日星期一、明天 5 月 21 日星期五',
+            '昨天 5 月 21 日星期四、明天 5 月 19 日星期二'
+        ].forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = function () {
+                group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                userAnswer = idx;
+            };
+            group.appendChild(btn);
+        });
+    }
+
+    function check() {
+        const banner = document.getElementById('resultBanner');
+        if (userAnswer === null) {
+            banner.className = 'result-banner fail';
+            banner.innerText = '先選一個答案再檢查喔！';
+            return;
+        }
+        if (userAnswer === ANSWER_INDEX) {
+            banner.className = 'result-banner success';
+            banner.innerText = '🎉 答對！今天 20 日（星期三）往前退一天是 19 日星期二，往後加一天是 21 日星期四！';
+        } else {
+            banner.className = 'result-banner fail';
+            banner.innerText = '再想想：昨天在日曆上「往前翻一頁」（日期減 1、星期也往前），明天「往後翻一頁」（日期加 1、星期也往後），前後不要倒置！';
+        }
+    }
+
+    buildCalendar();
+    buildOpts();
+</script>
+
+</body>
+</html>

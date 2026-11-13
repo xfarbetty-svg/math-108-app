@@ -46,16 +46,23 @@ data.grades.forEach((g) => g.units.forEach((u) => {
 }));
 if (fieldOk) check(true, '131 條目全部具備 6 個必要欄位（code/title/full_text/status/question_count/verified_source）');
 
-// 3. status 分佈：N-1-1 ready，其餘 130 條 upcoming；question_count / verified_source 一致
+// 3. status 分佈：N-1-1 ~ N-1-6 共 6 條 ready，其餘 125 條 upcoming；question_count / verified_source 一致
 const all = data.grades.flatMap((g) => g.units);
-check(all.filter((u) => u.status === 'ready').length === 1, 'ready 條目恰 1 個');
-const ready = all.find((u) => u.status === 'ready');
-check(!!ready && ready.code === 'N-1-1', 'ready 條目為 N-1-1');
-check(!!ready && ready.question_count === 4, 'N-1-1 question_count = 4');
-check(!!ready && typeof ready.verified_source === 'string' && ready.verified_source.includes('忠孝國小'), 'N-1-1 verified_source 為忠孝國小實體試卷');
-check(all.filter((u) => u.status === 'upcoming').length === 130, 'upcoming 條目 = 130');
+const EXPECTED_READY_CODES = ['N-1-1', 'N-1-2', 'N-1-3', 'N-1-4', 'N-1-5', 'N-1-6'];
+const readyUnits = all.filter((u) => u.status === 'ready');
+check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);
+
+EXPECTED_READY_CODES.forEach((code) => {
+  const r = readyUnits.find((u) => u.code === code);
+  check(!!r, `ready 條目包含 ${code}`);
+  check(!!r && r.question_count > 0, `${code} question_count > 0（實際 ${r ? r.question_count : 0}）`);
+  check(!!r && typeof r.verified_source === 'string' && r.verified_source.length > 5, `${code} verified_source 為有效試卷來源`);
+});
+
+const upcomingCount = 131 - EXPECTED_READY_CODES.length;
+check(all.filter((u) => u.status === 'upcoming').length === upcomingCount, `upcoming 條目 = ${upcomingCount}`);
 const upBad = all.filter((u) => u.status === 'upcoming' && (u.question_count !== 0 || u.verified_source !== null));
-check(upBad.length === 0, '130 條 upcoming 的 question_count=0 且 verified_source=null' + (upBad.length ? '（異常: ' + upBad.map((u) => u.code).join(',') + '）' : ''));
+check(upBad.length === 0, `${upcomingCount} 條 upcoming 的 question_count=0 且 verified_source=null` + (upBad.length ? '（異常: ' + upBad.map((u) => u.code).join(',') + '）' : ''));
 
 // 4. code 唯一性
 const codes = new Set(all.map((u) => u.code));
