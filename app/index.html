@@ -156,17 +156,70 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   overflow: hidden;
 }
 .stage-frame iframe { display: block; width: 100%; border: 0; }
-.stage-nav { display: flex; gap: 10px; margin-top: 16px; }
+.stage-nav { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
 .stage-nav button {
-  flex: 1; min-height: 52px; border-radius: 16px;
-  font-size: 15px; font-weight: 800;
+  min-height: 44px; border-radius: 14px;
+  font-size: 14px; font-weight: 800;
   transition: transform 0.15s, box-shadow 0.15s;
 }
 .stage-nav button:active { transform: scale(0.96); }
-.btn-prev { background: var(--card); color: var(--ink-soft); border: 2px solid var(--line); }
-.btn-next { background: linear-gradient(135deg, var(--coral), var(--coral-deep)); color: #fff; box-shadow: 0 8px 18px rgba(244, 105, 75, 0.3); }
-.btn-finish { background: linear-gradient(135deg, var(--mint), #4fa88e); color: #fff; box-shadow: 0 8px 18px rgba(79, 168, 142, 0.3); flex: 1.4 !important; }
-.stage-nav button:disabled { opacity: 0.4; }
+.btn-prev { flex: 1; background: var(--card); color: var(--ink-soft); border: 2px solid var(--line); }
+.btn-check-main {
+  flex: 1.8; min-height: 46px !important;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  color: #fff; box-shadow: 0 6px 14px rgba(15, 23, 42, 0.25);
+}
+.btn-next { flex: 1; background: linear-gradient(135deg, var(--coral), var(--coral-deep)); color: #fff; box-shadow: 0 6px 14px rgba(244, 105, 75, 0.25); }
+.btn-finish-mini {
+  flex: 0 0 auto; padding: 0 10px; min-height: 44px;
+  background: #f0fdf4; border: 1.5px solid var(--mint); color: #166534; font-size: 12px;
+}
+.stage-nav button:disabled { opacity: 0.35; cursor: default; }
+
+/* 🔊 朗讀按鈕 & 📝 草稿板浮動按鈕 */
+.btn-speak {
+  background: #fff0f3; border: 1.5px solid #ffccd5; color: #d6336c;
+  border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 800;
+  display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+  transition: transform 0.15s;
+}
+.btn-speak:active { transform: scale(0.94); }
+.btn-speak.speaking { background: #ffccd5; color: #c2255c; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { transform: scale(1.05); } }
+
+.scratchpad-fab {
+  position: fixed; right: 14px; bottom: 74px; z-index: 100;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff; border: 2px solid #fde68a; border-radius: 999px;
+  padding: 8px 14px; font-size: 13px; font-weight: 900;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35); cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+.scratchpad-fab:active { transform: scale(0.94); }
+
+/* 📝 全螢幕手寫草稿板 Modal */
+.sp-modal {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(15, 23, 42, 0.96);
+  display: none; flex-direction: column;
+}
+.sp-modal.active { display: flex; }
+.sp-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 14px; background: #0f172a; border-bottom: 1px solid #334155;
+  color: #fff;
+}
+.sp-title { font-weight: 800; font-size: 14px; color: #fde68a; }
+.sp-tools { display: flex; gap: 6px; align-items: center; padding: 6px 14px; background: #1e293b; flex-wrap: wrap; }
+.sp-btn {
+  padding: 5px 10px; font-size: 12px; font-weight: 800; border-radius: 8px;
+  background: #334155; color: #f1f5f9; cursor: pointer; border: none;
+}
+.sp-btn.active { background: #f59e0b; color: #fff; }
+.sp-btn-clear { background: #ef4444; color: #fff; margin-left: auto; }
+.sp-btn-close { background: #64748b; color: #fff; }
+.sp-body { flex: 1; position: relative; overflow: hidden; background: #0b1120; }
+#spCanvas { width: 100%; height: 100%; display: block; touch-action: none; }
 
 /* ===== 交卷結算 ===== */
 .result-wrap { display: none; }
@@ -198,17 +251,19 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   .grade-btn { padding: 4px 12px; font-size: 13px; }
   
   /* Stage View Mobile Optimization */
-  #stageView .stage-head { align-items: center; justify-content: space-between; margin-bottom: 4px; min-height: 36px; padding: 0 8px; }
-  #stageView .btn-back { padding: 3px 8px; font-size: 12px; border-radius: 999px; }
-  #stageView .progress-box { display: flex; align-items: baseline; gap: 6px; }
-  #stageView .progress-num { font-size: 13px; }
-  #stageView .progress-source { font-size: 10px; }
+  #stageView .stage-head { align-items: center; justify-content: space-between; margin-bottom: 4px; min-height: 36px; padding: 0 4px; gap: 4px; }
+  #stageView .btn-back { padding: 3px 6px; font-size: 11.5px; border-radius: 999px; }
+  #stageView .btn-speak { padding: 3px 6px; font-size: 11.5px; }
+  #stageView .progress-box { display: flex; align-items: baseline; gap: 4px; }
+  #stageView .progress-num { font-size: 12px; }
+  #stageView .progress-source { display: none; } /* 手機端隱藏冗長試卷文字，騰出給按鈕空間 */
   #stageView .dots { gap: 4px; margin-bottom: 4px; }
   #stageView .dot { width: 6px; height: 6px; }
   #stageView .stage-title { display: none; }
-  main { padding: 6px 8px 10px; }
-  #stageView .stage-nav { min-height: 40px; margin-top: 6px; }
-  #stageView .stage-nav button { font-size: 13px; }
+  main { padding: 4px 6px 6px; }
+  #stageView .stage-nav { min-height: 40px; margin-top: 6px; gap: 6px; }
+  #stageView .stage-nav button { font-size: 12.5px; }
+  #stageView .btn-check-main { font-size: 14px; min-height: 42px !important; }
 }
 @media (min-width: 700px) {
   .unit-list { grid-template-columns: 1fr 1fr; }
@@ -235,6 +290,7 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   <section id="stageView" class="stage-wrap">
     <div class="stage-head">
       <button class="btn-back" id="btnBack">← 回單元列表</button>
+      <button class="btn-speak" id="btnSpeak">🔊 聽題目</button>
       <div class="progress-box">
         <div class="progress-num" id="progressNum"></div>
         <div class="progress-source" id="progressSource"></div>
@@ -244,11 +300,31 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
     <div class="stage-title" id="stageTitle"></div>
     <div class="stage-frame"><iframe id="stageFrame" title="具象考題教具"></iframe></div>
     <div class="stage-nav">
-      <button class="btn-prev" id="btnPrev">上一題</button>
+      <button class="btn-prev" id="btnPrev">← 上一題</button>
+      <button class="btn-check-main" id="btnCheckMain">✔ 檢查答案</button>
       <button class="btn-next" id="btnNext">下一題 →</button>
-      <button class="btn-finish" id="btnFinish">交卷結算</button>
+      <button class="btn-finish-mini" id="btnFinish">交卷</button>
     </div>
   </section>
+
+  <!-- 📝 手寫草稿紙浮動按鈕與彈窗 -->
+  <button class="scratchpad-fab" id="btnOpenScratchpad" style="display:none;">📝 算草稿</button>
+  <div class="sp-modal" id="scratchpadModal">
+    <div class="sp-head">
+      <span class="sp-title">📝 手寫計算草稿板</span>
+      <button class="sp-btn sp-btn-close" id="btnCloseScratchpad">✕ 關閉</button>
+    </div>
+    <div class="sp-tools">
+      <button class="sp-btn active" id="spToolPen">✏️ 亮黃筆</button>
+      <button class="sp-btn" id="spToolPink">🌸 粉紅筆</button>
+      <button class="sp-btn" id="spToolCyan">🌊 青藍筆</button>
+      <button class="sp-btn" id="spToolEraser">🧹 橡皮擦</button>
+      <button class="sp-btn sp-btn-clear" id="spToolClear">🗑️ 清空</button>
+    </div>
+    <div class="sp-body">
+      <canvas id="spCanvas"></canvas>
+    </div>
+  </div>
 
   <section id="resultView" class="result-wrap"></section>
 

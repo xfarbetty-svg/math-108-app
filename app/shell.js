@@ -21,6 +21,8 @@ const views = ["gradeView", "stageView", "resultView"];
 /* ---------- 視圖切換 ---------- */
 function showView(name) {
   views.forEach((v) => { $(v).style.display = (v === name) ? "block" : "none"; });
+  const fab = $("btnOpenScratchpad");
+  if (fab) fab.style.display = (name === "stageView") ? "flex" : "none";
   window.scrollTo({ top: 0 });
 }
 
@@ -186,6 +188,223 @@ function showDegraded(markup) {
   console.warn(markup);
 }
 
+/* ---------- 臺灣腔 TTS 語音朗讀系統（028 世代推進防假死） ---------- */
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🎨✏️🍓🕊️🕊🎉🍕🍪🐟🍉蓮霧杨桃檸檬⭐]/g, "")
+             .replace(/[\(\)（）\-\_\~·]/g, " ")
+             .trim();
+}
+
+function speakCurrentProblem() {
+  if (!("speechSynthesis" in window)) {
+    alert("您的瀏覽器暫不支援語音朗讀功能");
+    return;
+  }
+  const q = state.unit ? state.unit.questions[state.qIndex] : null;
+  if (!q) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+  window.speechSynthesis.cancel();
+
+  if (isSpeaking) {
+    isSpeaking = false;
+    updateSpeakBtn(false);
+    return;
+  }
+
+  const rawText = (q.stem || q.title || "") + "。" + (q.subtitle || "");
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.lang = "zh-TW";
+  utter.rate = 0.95;
+  utter.pitch = 1.05;
+
+  const voices = window.speechSynthesis.getVoices() || [];
+  const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Mei-Jia") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                  voices.find(v => v.lang === "zh-TW" || v.lang === "zh_TW");
+  if (twVoice) utter.voice = twVoice;
+
+  utter.onstart = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateSpeakBtn(true);
+    }
+  };
+  utter.onend = utter.onerror = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateSpeakBtn(false);
+    }
+  };
+
+  window.speechSynthesis.speak(utter);
+}
+
+function updateSpeakBtn(active) {
+  const btn = $("btnSpeak");
+  if (!btn) return;
+  if (active) {
+    btn.classList.add("speaking");
+    btn.innerHTML = "⏹ 停止朗讀";
+  } else {
+    btn.classList.remove("speaking");
+    btn.innerHTML = "🔊 聽題目";
+  }
+}
+
+function stopSpeech() {
+  speechEpoch++;
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateSpeakBtn(false);
+}
+
+/* ---------- 手機手寫計算草稿板（028 Scratchpad Canvas 移植） ---------- */
+let spCanvas = null;
+let spCtx = null;
+let spIsDrawing = false;
+let spColor = "#fbbf24";
+let spSize = 5;
+let spTool = "pen";
+let spLastX = 0;
+let spLastY = 0;
+
+function initScratchpad() {
+  spCanvas = $("spCanvas");
+  if (!spCanvas) return;
+  spCtx = spCanvas.getContext("2d");
+
+  const onDown = (e) => {
+    spIsDrawing = true;
+    const rect = spCanvas.getBoundingClientRect();
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    const dpr = window.devicePixelRatio || 1;
+    spLastX = (clientX - rect.left) * dpr;
+    spLastY = (clientY - rect.top) * dpr;
+  };
+
+  const onMove = (e) => {
+    if (!spIsDrawing || !spCtx) return;
+    const rect = spCanvas.getBoundingClientRect();
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    const dpr = window.devicePixelRatio || 1;
+    const curX = (clientX - rect.left) * dpr;
+    const curY = (clientY - rect.top) * dpr;
+
+    spCtx.beginPath();
+    spCtx.moveTo(spLastX, spLastY);
+    spCtx.lineTo(curX, curY);
+    spCtx.strokeStyle = (spTool === "eraser") ? "#0b1120" : spColor;
+    spCtx.lineWidth = ((spTool === "eraser") ? spSize * 4 : spSize) * dpr;
+    spCtx.lineCap = "round";
+    spCtx.lineJoin = "round";
+    spCtx.stroke();
+
+    spLastX = curX;
+    spLastY = curY;
+  };
+
+  const onUp = () => { spIsDrawing = false; };
+
+  if (window.PointerEvent) {
+    spCanvas.addEventListener("pointerdown", (e) => { e.preventDefault(); onDown(e); }, { passive: false });
+    spCanvas.addEventListener("pointermove", (e) => { e.preventDefault(); onMove(e); }, { passive: false });
+    spCanvas.addEventListener("pointerup", onUp);
+    spCanvas.addEventListener("pointercancel", onUp);
+  } else {
+    spCanvas.addEventListener("touchstart", (e) => { e.preventDefault(); onDown(e); }, { passive: false });
+    spCanvas.addEventListener("touchmove", (e) => { e.preventDefault(); onMove(e); }, { passive: false });
+    spCanvas.addEventListener("touchend", onUp);
+  }
+
+  // 工具列綁定
+  $("btnOpenScratchpad").addEventListener("click", openScratchpad);
+  $("btnCloseScratchpad").addEventListener("click", closeScratchpad);
+  $("spToolPen").addEventListener("click", () => setSpColor("#fbbf24", "pen", $("spToolPen")));
+  $("spToolPink").addEventListener("click", () => setSpColor("#f472b6", "pen", $("spToolPink")));
+  $("spToolCyan").addEventListener("click", () => setSpColor("#38bdf8", "pen", $("spToolCyan")));
+  $("spToolEraser").addEventListener("click", () => setSpColor(null, "eraser", $("spToolEraser")));
+  $("spToolClear").addEventListener("click", clearScratchpad);
+}
+
+function openScratchpad() {
+  const modal = $("scratchpadModal");
+  modal.classList.add("active");
+  setTimeout(resizeScratchpad, 40);
+}
+
+function closeScratchpad() {
+  $("scratchpadModal").classList.remove("active");
+}
+
+function setSpColor(color, tool, btn) {
+  if (color) spColor = color;
+  spTool = tool;
+  document.querySelectorAll(".sp-tools .sp-btn").forEach(b => {
+    if (b !== $("spToolClear") && b !== $("btnCloseScratchpad")) b.classList.remove("active");
+  });
+  if (btn) btn.classList.add("active");
+}
+
+function clearScratchpad() {
+  if (!spCtx || !spCanvas) return;
+  spCtx.clearRect(0, 0, spCanvas.width, spCanvas.height);
+}
+
+function resizeScratchpad() {
+  if (!spCanvas || !spCtx) return;
+  const rect = spCanvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const targetW = Math.round(rect.width * dpr);
+  const targetH = Math.round(rect.height * dpr);
+  if (spCanvas.width === targetW && spCanvas.height === targetH) return;
+
+  // 暫存已有手寫筆跡
+  let temp = null;
+  if (spCanvas.width > 0 && spCanvas.height > 0) {
+    temp = document.createElement("canvas");
+    temp.width = spCanvas.width;
+    temp.height = spCanvas.height;
+    temp.getContext("2d").drawImage(spCanvas, 0, 0);
+  }
+
+  spCanvas.width = targetW;
+  spCanvas.height = targetH;
+  if (temp) {
+    spCtx.drawImage(temp, 0, 0, targetW, targetH);
+  }
+}
+
+/* ---------- 點擊中央檢查答案按鈕（代理至 iframe 內部的 check()） ---------- */
+function triggerCheckAnswer() {
+  const frame = $("stageFrame");
+  if (!frame || !frame.contentDocument) return;
+  try {
+    const doc = frame.contentDocument;
+    // 優先點擊教具內部的 check-btn
+    const btn = doc.querySelector(".check-btn, .btn-ok, #btnCheck, .btn.good, .btn.primary");
+    if (btn) {
+      btn.click();
+    } else if (frame.contentWindow && typeof frame.contentWindow.check === "function") {
+      frame.contentWindow.check();
+    }
+  } catch (err) {
+    console.warn("無法代理觸發 iframe check:", err);
+  }
+}
+
 /* ---------- 初始化 ---------- */
 async function init() {
   try {
@@ -199,14 +418,18 @@ async function init() {
   renderNav();
   renderGrade();
 
-  $("btnBack").addEventListener("click", () => { clearInterval(heightTimer); renderGrade(); });
+  $("btnBack").addEventListener("click", () => { clearInterval(heightTimer); stopSpeech(); renderGrade(); });
   $("btnPrev").addEventListener("click", () => {
-    if (state.qIndex > 0) { state.qIndex--; renderQuestion(); }
+    if (state.qIndex > 0) { state.qIndex--; stopSpeech(); renderQuestion(); }
   });
   $("btnNext").addEventListener("click", () => {
-    if (state.qIndex < state.unit.questions.length - 1) { state.qIndex++; renderQuestion(); }
+    if (state.qIndex < state.unit.questions.length - 1) { state.qIndex++; stopSpeech(); renderQuestion(); }
   });
-  $("btnFinish").addEventListener("click", renderResult);
+  $("btnCheckMain").addEventListener("click", triggerCheckAnswer);
+  $("btnSpeak").addEventListener("click", speakCurrentProblem);
+  $("btnFinish").addEventListener("click", () => { stopSpeech(); renderResult(); });
+
+  initScratchpad();
 }
 
 init();
