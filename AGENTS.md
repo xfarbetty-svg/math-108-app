@@ -98,7 +98,11 @@
   4. 單元六（G1-N-1-6 日常時間，5 題真題 ＋ 5 套純向量教具）：整點鐘報讀、半點鐘扇形破招、時鐘齒輪連動過2小時、長針旋轉一圈短針進位、立體桌上日曆今天昨天明天，CDP 自動化閘門 `tools/verify_n16.js` ALL PASS。
   5. 盲審修復：修復迴紋針題目選項按鈕 flex 寬度不一歪斜問題，重構為 2x2 等寬 Grid 佈局。
   6. 課綱條目同步：`data/curriculum.json` 一年級已開放 6/11 單元（合計 28 題真實試卷題），全域閘門全數 Exit Code 0。
-- [ ] 下一步：開新對話框接續推進一年級後續條目（S-1-2 形體操作、R-1-1 算式符號、R-1-2 加法交換律、D-1-1 簡單分類）。
+- [x] Session 22 一年級 108 課綱官方 11 大條目 100% 全量落地閉環（已開放 11/11，合計 50 題真題 ＋ 4 套通用核心教具 ＋ 全域 CDP 綠燈）：
+  1. 四套通用核心教具落地：`solid_shape_lab.html`（S-1-2 形體操作台）、`math_balance_scale.html`（R-1-1 等量天平）、`commutative_bead_bar.html`（R-1-2 雙色珠串翻轉板）、`tally_sorting_board.html`（D-1-1 正字計數分類板）。
+  2. 單元題庫 SSOT 全數落盤：`S-1-2.json` (5題)、`R-1-1.json` (5題)、`R-1-2.json` (3題)、`D-1-1.json` (4題)、`S-1-1.json` (5題鏡像對齊 N-1-5)。
+  3. 全量守門員測試全綠：`verify_s12.js`、`verify_r11_r12.js`、`verify_d11.js`、`verify_curriculum_131.js`、`verify_app_shell.js`、`ac_gate.js` 全部 Exit Code 0！
+- [ ] 下一步：開新對話框開啟二年級課綱條目推進（N-2-1 一千以內的數、N-2-2 二位數直式計算）。
 
 
 ---

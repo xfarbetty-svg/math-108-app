@@ -1,37 +1,49 @@
 # Handoff - 028_1 國小數學APP
 
-## ⏯️ 目前做到哪（Session 21 一年級單元四、五、六 100% 落地與盲審修復）
-1. **雙算力通道標準化**：
-   - 升級 `tools/dispatch_worker.py`，支援 `--channel 1`（本地 OpenCode CLI）與 `--channel 2`（A-SERVER SSH 備援）。
-   - 依指令指定預設模型為 `opencode/glm-5.3-flash-free`，實測響應順暢（Exit Code 0）。
-2. **一年級單元四、五、六 全量 15 題真題與 15 套純向量具象教具完工落盤**：
-   - **單元四（G1-N-1-4 錢幣解題，5 題）**：杯子蛋糕投幣付錢、早餐剛好46元托盤累加、小光小日雙皮夾點數比大小、珍珠補錢湊整、50元換10元動態展開。CDP 自動化閘門 `tools/verify_n14.js` ALL PASS。
-   - **單元五（G1-N-1-5 長度比較，5 題）**：基準線對齊破招、彎曲緞帶動態拉直、等長繩量腰圍展開、迴紋針個別單位標號測量、方格積木平移對接拼合。CDP 自動化閘門 `tools/verify_n15.js` ALL PASS。
-   - **單元六（G1-N-1-6 日常時間用語，5 題）**：整點鐘時針分針識別、半點鐘扇形破招、時鐘齒輪連動過2小時、長針旋轉一圈短針進位、立體桌上日曆今天昨天明天翻頁。CDP 自動化閘門 `tools/verify_n16.js` ALL PASS。
-3. **人類真機盲審即時修復**：
-   - 解決使用者於實機操作 G1-N-1-5 Q4 迴紋針題時發現的「選項按鈕文字未對齊、歪斜」問題：將原本的 `display: flex; justify-content: center` 徹底重構為 `display: grid; grid-template-columns: repeat(2, 1fr)` 嚴格雙欄等寬九宮格，徹底消滅因「一樣長」字數較少引起的歪斜與參差。
-4. **課綱總表與微核心架構同步**：
-   - `data/curriculum.json`：一年級 N-1-1 ~ N-1-6 全部標記為 `ready`（已開放 6/11，合計 28 題真實試卷題）。
-   - 全量守門員測試（`verify_curriculum_131.js`, `verify_app_shell.js`, `verify_n14.js`, `verify_n15.js`, `verify_n16.js`, `ac_gate.js` 28 checks）全部 Exit Code 0 綠燈！
+## 🏆 Session 22（一年級 108 課綱官方 11 大單元 100% 完工大圓滿）
+1. **四套通用核心教具極致減法收斂（通道一 GLM-5.3-flash-free 施工）**：
+   - 拒絕 17 套散裝膨脹代碼，精煉為 4 套高複用價值、純向量 SVG、三端單屏免滑動之核心通用教具：
+     1. `solid_shape_lab.html`（S-1-2 形體操作台：五模式，滾動/堆高/底面印章/等角透視積木點數/幾何火車）
+     2. `math_balance_scale.html`（R-1-1 算式符號等量天平：五模式，等號平衡/未知數神秘箱/算式比拼/松鼠加法/比大小）
+     3. `commutative_bead_bar.html`（R-1-2 雙色珠串雙向翻轉板：三模式，180° 翻轉對稱/雙盤天平/湊十交換）
+     4. `tally_sorting_board.html`（D-1-1 簡單分類與「正」字計數板：四模式，四月天氣正字畫記/自製玩具長條圖/動物票選/蔬果文具分類）
+2. **單元題庫 SSOT 全數落盤（合計 50 題實打實真題）**：
+   - `data/units/G1/S-1-2.json`（5 題真題，忠孝 114-1 期中 ＋ 獅湖 114-1 期末 ＋ 獅湖 114-2 期中 ＋ 內湖 114-2 期末）
+   - `data/units/G1/R-1-1.json`（5 題真題，忠孝 114-1 期末 ＋ 獅湖 114-2 期中 ＋ 內湖 114-2 期末）
+   - `data/units/G1/R-1-2.json`（3 題真題，忠孝 114-1 期末 ＋ 課綱官方核心演示）
+   - `data/units/G1/D-1-1.json`（4 題真題，永安 114-1 期末 ＋ 內湖 114-2 期末 ＋ 忠孝 114-1 期中）
+   - `data/units/G1/S-1-1.json`（5 題真題，依課綱「同 N-1-5」官方規格完成鏡像對齊）
+3. **課綱總表與微核心架構同步**：
+   - `data/curriculum.json`：一年級 11 大單元（N-1-1 ~ D-1-1）全部標記為 `ready`（已開放 11/11，100% 達成！）。
+4. **全量 CDP 機械化守門員全數綠燈（Exit Code 0）**：
+   - `tools/verify_s12.js`：5 題實機互動、單屏 428~444px ALL PASS。
+   - `tools/verify_r11_r12.js`：8 題實機互動、單屏 407~428px ALL PASS。
+   - `tools/verify_d11.js`：4 題實機互動、單屏 397~444px ALL PASS。
+   - `tools/verify_curriculum_131.js`：一年級 11/11 全部 ready，ALL PASS。
+   - `tools/verify_app_shell.js`：G1 Hero 顯示「已開放 11/11」，upcoming = 0，ALL PASS。
+   - `tools/verify_n14.js` / `tools/verify_n15.js` / `tools/verify_n16.js` / `tools/ac_gate.js` 全數綠燈。
+
+---
 
 ## 🚦 目前狀態
 - **Web 服務監聽**：Port 3001（背景運行中）
   - 🌟 **總入口網址**：`http://100.91.241.21:3001/app/index.html`
-- **Git 狀態**：乾淨無未追蹤或未提交變動（Commit `3eb723c` 及收工 commit）。
+- **一年級總進度**：**11 / 11 單元（100% 完工，合計 50 題真題 ＋ 32 套向量可互動教具）**
+- **Git 狀態**：待提交 Session 22 成果鋼印。
+
+---
 
 ## ➡️ 下一個對話框接續任務（冷啟動開工）
-1. **推進一年級後續單元**：
-   - `S-1-2`（形體的操作：描繪、複製、拼貼、堆疊）
-   - `R-1-1`（算式與符號）
-   - `R-1-2`（兩數相加的順序不影響其和：加法交換律）
-   - `D-1-1`（簡單分類）
-2. **二年級新單元與進階題型規劃**。
+1. **正式邁入二年級（Grade 2）108 課綱官方單元推進**：
+   - `N-2-1`（一千以內的數：含位值積木操作活動、位值表、位值單位「百」）
+   - `N-2-2`（加減直式計算：二位數加減直式計算與驗算）
+   - `N-2-3`（解題：兩步驟應用問題）
+   - `N-2-6`（乘法：乘法的意義與應用，九九乘法）
+2. **二年級實體真題試卷萃取與核心通用教具打樣**。
 
-## ⚠️ 注意事項
-- **選項排版鐵律**：後續所有多選按鈕群組（`.opt-group`），若為 4 個選項一律優先採用 `display: grid; grid-template-columns: repeat(2, 1fr)` 2x2 等寬佈局，嚴禁使用 `flex` 居中浮動以避免字數不一導致排版歪斜。
-- **派工唯一通道**：所有組件與題庫撰寫一律維持使用 `python tools/dispatch_worker.py --file <task_card.md>` 派工給 OpenCode，嚴禁 AGY 親自寫業務邏輯代碼。
+---
 
 ## 🕐 最後更新
-- **時間**：2026-11-13 17:55
+- **時間**：2026-11-13 19:02
 - **更新者**：Antigravity (AGY) @ DESKTOP-6ELKIRH
-- **Git push 狀態**：無遠端 remote（純本機 git commit 鋼印保護，已確認本機版控完整）
+- **收工鋼印**：ALL G1 UNITS 100% READY (11/11)

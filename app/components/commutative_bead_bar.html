@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>雙色珠串翻轉板 · G1-R-1-2（加法交換律 a＋b＝b＋a）</title>
+<style>
+  :root{
+    --wood-1:#d9a066; --wood-2:#b57b45; --wood-dark:#8a5a2e;
+    --cream:#fdf6e9; --ink:#4e342e;
+    --red:#e53935; --green:#43a047; --gold:#ffb300; --blue:#1e88e5;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(circle at 15% 12%, #e8f4fd 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, #f3e3c3 0%, transparent 50%),
+      var(--cream);
+    color:var(--ink);
+    font-family:"YuanTi TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  }
+  #app{ max-width:960px; margin:0 auto; padding:2px 6px 3px; }
+
+  .tabs{ display:flex; gap:3px; margin-top:0; }
+  .tab{
+    flex:1 1 0; min-height:42px; border:2.5px solid var(--wood-dark); border-radius:10px; cursor:pointer;
+    background:linear-gradient(180deg,#fff3d6,#ffe1a8); color:var(--ink);
+    font-weight:700; font-size:10.5px; line-height:1.12; padding:1px 1px;
+    box-shadow:0 2px 0 var(--wood-dark); transition:transform .12s;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .tab b{ font-size:11.5px; }
+  .tab:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 var(--wood-dark); }
+  .tab.active{ background:linear-gradient(180deg,#ffdf6b,#ffc233); }
+
+  .q-banner{
+    margin:2px 0 0; background:#fff; border:2.5px dashed var(--wood-2);
+    border-radius:10px; padding:2px 8px; position:relative;
+    font-size:10.5px; font-weight:700; line-height:1.25;
+  }
+  .q-banner .badge{
+    display:inline-block; background:#ffe082; border:1.5px solid var(--gold);
+    border-radius:6px; font-size:10.5px; padding:0 5px; margin-right:4px; vertical-align:1px; white-space:nowrap;
+  }
+  .q-banner .source-tag{
+    position:absolute; top:2px; right:6px; font-size:10.5px; color:#b9a58a; font-weight:400; letter-spacing:.3px;
+  }
+  .key-phrase{ color:var(--red); text-decoration:underline wavy var(--red) 1.5px; text-underline-offset:2px; }
+
+  .mode{ display:none; }
+  .mode.on{ display:block; }
+
+  .btn-row{ display:flex; gap:4px; margin-top:2px; }
+  .chip, .act{
+    flex:1 1 0; min-height:44px; border-radius:10px; cursor:pointer; font-family:inherit;
+    font-weight:700; font-size:11px; line-height:1.15; padding:1px 2px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transition:transform .12s;
+  }
+  .chip{
+    background:linear-gradient(180deg,#fff,#f3ead8); border:2px solid #c8a06a; color:var(--ink);
+    box-shadow:0 2px 0 #a5814e;
+  }
+  .act{
+    background:linear-gradient(180deg,#66bb6a,#43a047); border:2px solid #2e7d32; color:#fff;
+    text-shadow:0 1px 0 rgba(0,0,0,.25); box-shadow:0 2px 0 #2e7d32;
+  }
+  .chip:active,.act:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 #a5814e; }
+  .chip:disabled,.act:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+
+  .stage-box{
+    margin-top:2px; border:2.5px solid var(--wood-dark); border-radius:11px;
+    background:linear-gradient(180deg,#fffdf4,#fdf3dc);
+    box-shadow:0 2px 0 var(--wood-dark); overflow:hidden;
+  }
+  .stage-box svg{ display:block; width:100%; height:auto; max-height:132px; }
+  .stage-box.good{ border-color:var(--green); box-shadow:0 0 0 3px rgba(67,160,71,.45), 0 2px 0 var(--green); }
+  .stage-box svg .itm{ pointer-events:none; }
+  .stage-box svg .itm.clickable{ pointer-events:auto; cursor:pointer; }
+  .stage-box svg .itm.clickable:hover .hit{ fill:rgba(255,179,0,.18); }
+  .pop-in{ animation:popin .38s ease; transform-box:fill-box; transform-origin:center; }
+  @keyframes popin{ 0%{ transform:scale(.2); opacity:0; } 70%{ transform:scale(1.12); opacity:1; } 100%{ transform:scale(1); } }
+  .glow{ animation:glowp 1s ease 2; }
+  @keyframes glowp{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+
+  .note{
+    margin-top:2px; min-height:0; background:#fff; border:2px dashed var(--wood-2); border-radius:9px;
+    padding:1px 8px; font-size:10.5px; font-weight:700; line-height:1.25;
+    display:flex; align-items:center; gap:6px;
+  }
+  .note .note-text{ flex:1 1 auto; }
+  .note .zz{ color:var(--red); }
+  .note.good{ background:#e8f5e9; border-color:var(--green); color:#1b5e20; }
+  .note.warn{ background:#fff3e0; border-color:var(--gold); color:#8d5b00; }
+
+  .opt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
+  .opt-btn{
+    min-height:44px; border:2px solid #c8a06a; border-radius:9px; background:#fff; color:var(--ink);
+    font-family:inherit; font-weight:700; font-size:11.5px; line-height:1.22; padding:1px 7px; cursor:pointer;
+    box-shadow:0 2px 0 #a5814e; display:flex; align-items:center; justify-content:center;
+  }
+  .opt-btn:active{ transform:translateY(1.5px); }
+  .opt-btn.active{ background:#1e88e5; border-color:#0d47a1; color:#fff; box-shadow:0 2px 0 #0d47a1; }
+  .check-row{ display:flex; align-items:center; gap:8px; margin-top:2px; min-height:30px; }
+  .check-btn{
+    flex:0 0 auto; min-height:30px; padding:1px 20px; border:none; border-radius:9px; cursor:pointer;
+    background:#263238; color:#fff; font-family:inherit; font-size:12px; font-weight:800;
+    box-shadow:0 2px 0 #10171a;
+  }
+  .check-btn:active{ transform:translateY(1.5px); }
+  .result{ flex:1 1 auto; font-size:11.5px; font-weight:700; line-height:1.3; }
+  .result.success{ color:#1b5e20; }
+  .result.fail{ color:#b71c1c; }
+
+  @media (min-width:640px){
+    #app{ padding:10px 16px 16px; }
+    .q-banner{ font-size:15px; }
+    .chip,.act,.opt-btn{ font-size:13px; }
+    .note{ font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="tabs" id="tabs"></div>
+
+  <div class="q-banner">
+    <span class="badge" id="qBadge">第 1 題</span><span id="qStem"></span>
+    <span class="source-tag" id="qSource"></span>
+  </div>
+
+  <!-- ════════ Q1 雙色積木翻轉 3＋5 vs 5＋3 ════════ -->
+  <section class="mode" id="mode1">
+    <div class="stage-box" id="box1"><svg viewBox="0 0 360 168" id="bar1Svg" aria-label="雙色珠串翻轉板"></svg></div>
+    <div class="btn-row">
+      <button class="act" id="flipBtn">🔄 180° 翻轉<small>整條珠串轉過去</small></button>
+      <button class="chip" id="reset1">🔄 重來</button>
+    </div>
+    <div class="note" id="noteBox1"><span class="note-text" id="note1"></span></div>
+    <div class="opt-grid" id="opts1"></div>
+    <div class="check-row"><button class="check-btn" id="check1">檢查答案</button><span class="result" id="result1"></span></div>
+  </section>
+
+  <!-- ════════ Q2 雙盤天平交換律 4＋6＝6＋4 ════════ -->
+  <section class="mode" id="mode2">
+    <div class="stage-box" id="box2"><svg viewBox="0 0 360 140" id="bal2" aria-label="交換律天平"></svg></div>
+    <div class="btn-row">
+      <button class="act" id="swapBtn">🔁 左右交換<small>兩盤砝碼對調</small></button>
+      <button class="chip" id="reset2">🔄 重來</button>
+    </div>
+    <div class="note" id="noteBox2"><span class="note-text" id="note2"></span></div>
+    <div class="opt-grid" id="opts2"></div>
+    <div class="check-row"><button class="check-btn" id="check2">檢查答案</button><span class="result" id="result2"></span></div>
+  </section>
+
+  <!-- ════════ Q3 好朋友湊十交換法 2＋9＝9＋2 ════════ -->
+  <section class="mode" id="mode3">
+    <div class="stage-box" id="box3"><svg viewBox="0 0 360 120" id="bar3Svg" aria-label="湊十交換珠串"></svg></div>
+    <div class="btn-row">
+      <button class="act" id="swap3Btn">🔁 交換成 9＋2<small>好算的秘密</small></button>
+      <button class="chip" id="count3Btn" disabled>➕ 從 9 往上數 2 個<small>10、11！</small></button>
+      <button class="chip" id="reset3">🔄 重來</button>
+    </div>
+    <div class="note" id="noteBox3"><span class="note-text" id="note3"></span></div>
+    <div class="opt-grid" id="opts3"></div>
+    <div class="check-row"><button class="check-btn" id="check3">檢查答案</button><span class="result" id="result3"></span></div>
+  </section>
+</div>
+
+<script>
+'use strict';
+/* ════════ 共用工具 ════════ */
+const $ = (id) => document.getElementById(id);
+let snd = null;
+function thump(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return; /* DEGRADED:環境無 AudioContext 時略過音效（互動回饋仍有動畫） */
+    if(!snd && !(navigator.userActivation && navigator.userActivation.hasBeenActive)) return;
+    snd = snd || new AC();
+    const o = snd.createOscillator(), g = snd.createGain();
+    o.type = 'sine'; o.frequency.value = 150;
+    g.gain.setValueAtTime(.35, snd.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, snd.currentTime + .18);
+    o.connect(g); g.connect(snd.destination);
+    o.start(); o.stop(snd.currentTime + .2);
+  }catch(e){ /* DEGRADED:音效播放失敗不影響操作流程 */ }
+}
+
+/* ════════ 三題模式資料（SSOT 題幹／選項與 data/units/G1/R-1-2.json 同步） ════════ */
+const QS = [
+  { q:1, tab:'翻轉珠串', title:'3＋5 翻轉變 5＋3',
+    stem:'上排珠串是 <span class="key-phrase">3 顆紅珠 ＋ 5 顆藍珠</span>。按「180° 翻轉」把整條珠串轉過去——順序換了，總數會變嗎？先點珠串數數看！',
+    source:'忠孝 114-1 期末 ＋ 108 課綱核心演示',
+    hint:'<span class="zz">破招：</span>翻轉後變成 5 顆藍珠 ＋ 3 顆紅珠，點珠數數看還是 8 顆——下面兩把尺長度完全一樣！相加順序不影響總數。',
+    opts:['不變：3＋5 ＝ 5＋3 ＝ 8','會變少','會變多','珠串不能翻轉'],
+    ok:'答對了！翻轉只是順序對調：3＋5 ＝ 5＋3 ＝ 8，兩把尺一樣長，總數完全不變！' },
+  { q:2, tab:'天平交換', title:'4＋6 換 6＋4 一樣重',
+    stem:'左盤放 <span class="key-phrase">4＋6</span>、右盤放 <span class="key-phrase">6＋4</span>。按「左右交換」把兩盤砝碼對調，天平還會平衡嗎？',
+    source:'108 課綱核心演示 ＋ 忠孝 114-1 期末',
+    hint:'<span class="zz">破招：</span>交換順序，兩邊都是 10 顆砝碼——天平照樣水平！4＋6 ＝ 6＋4。',
+    opts:['一樣重：4＋6 ＝ 6＋4','左盤變重','右盤變重','天平會壞掉'],
+    ok:'答對了！交換完兩邊還是 10 顆，天平穩穩水平——4＋6 ＝ 6＋4，交換律！' },
+  { q:3, tab:'湊十交換', title:'2＋9 換 9＋2 好算',
+    stem:'<span class="key-phrase">2＋9</span> 有點難算？先點「交換成 9＋2」，再從 9 <span class="key-phrase">往上數 2 個</span>（10、11），秒算！',
+    source:'忠孝 114-1 期末 ＋ 108 課綱核心演示',
+    hint:'<span class="zz">破招：</span>2＋9 ＝ 9＋2。從 9 往上數 2 個：10、11——所以答案就是 11！',
+    opts:['11','10','12','9'],
+    ok:'答對了！交換成 9＋2，從 9 往上數：10、11——9 ＋ 2 ＝ 11！' }
+];
+
+/* ════════ 分頁與題目橫幅 ════════ */
+function buildTabs(){
+  const box = $('tabs');
+  QS.forEach((d) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (d.q === 1 ? ' active' : '');
+    b.dataset.q = d.q;
+    b.innerHTML = '<b>Q' + d.q + '</b>' + d.tab;
+    b.onclick = () => showQ(d.q);
+    box.appendChild(b);
+  });
+}
+function showQ(q){
+  document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', +t.dataset.q === q));
+  QS.forEach((d) => $('mode' + d.q).classList.toggle('on', d.q === q));
+  const d = QS[q - 1];
+  $('qBadge').textContent = '第 ' + q + ' 題';
+  $('qStem').innerHTML = d.title + '：' + d.stem;
+  $('qSource').textContent = d.source;
+  setNote(q, d.hint, '');
+}
+function setNote(q, html, cls){
+  $('note' + q).innerHTML = html;
+  $('noteBox' + q).className = 'note' + (cls ? ' ' + cls : '');
+}
+
+/* ════════ 答題 UI（每題 2×2 選項＋檢查） ════════ */
+const picks = { 1:null, 2:null, 3:null };
+function initOpts(){
+  QS.forEach((d) => {
+    const box = $('opts' + d.q);
+    d.opts.forEach((txt, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.textContent = txt;
+      b.onclick = () => {
+        box.querySelectorAll('.opt-btn').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        picks[d.q] = i;
+        const r = $('result' + d.q);
+        r.className = 'result'; r.textContent = '';
+      };
+      box.appendChild(b);
+    });
+    $('check' + d.q).onclick = () => {
+      const r = $('result' + d.q);
+      if(picks[d.q] === null){
+        r.className = 'result fail'; r.textContent = '先點一個答案，再按檢查喔！'; return;
+      }
+      if(picks[d.q] === 0){ r.className = 'result success'; r.textContent = '🎉 ' + d.ok; thump(); }
+      else{ r.className = 'result fail'; r.textContent = '再想想看～提示就在上面的破招裡！'; }
+    };
+  });
+}
+
+/* ════════ 純向量珠子／砝碼小圖案 ════════ */
+function bead(x, y, color, dark, cls){
+  return '<g class="itm' + (cls ? ' ' + cls : '') + '" transform="translate(' + x + ' ' + y + ')">' +
+    (cls && cls.includes('clickable') ? '<circle class="hit" r="22" fill="transparent"/>' : '') +
+    '<circle r="14" fill="' + color + '" stroke="' + dark + '" stroke-width="2"/>' +
+    '<circle cx="-4" cy="-4" r="3.5" fill="#ffffff" opacity=".55"/>' +
+    '<text class="bnum" y="4.5" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" opacity="0"></text></g>';
+}
+function chipW(x, y, color, dark, label){
+  return '<g class="itm" transform="translate(' + x + ' ' + y + ')">' +
+    '<circle r="8" fill="' + color + '" stroke="' + dark + '" stroke-width="1.5"/>' +
+    '<text y="3" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">' + label + '</text></g>';
+}
+
+/* ════════ Q1：雙色珠串 180° 翻轉（3＋5 ↔ 5＋3）＋ 雙向等長標尺 ════════ */
+const SP = 40, BX0 = 46, BCY = 58, BAR_CX = 170, BAR_CY = 58;
+let bar1flipped = false, bar1busy = false, countSeq = 0, bar1Angle = 0;
+function bar1Build(){
+  const svg = $('bar1Svg');
+  svg.innerHTML =
+    '<text id="bar1Eq" x="180" y="14" text-anchor="middle" font-size="14.5" font-weight="800" fill="#4e342e">3 ＋ 5 ＝ 8</text>' +
+    '<text id="segL" x="86" y="32" text-anchor="middle" font-size="11.5" font-weight="800" fill="#c62828">紅珠 3 顆</text>' +
+    '<text id="segR" x="230" y="32" text-anchor="middle" font-size="11.5" font-weight="800" fill="#1565c0">藍珠 5 顆</text>' +
+    '<g id="bar1G" transform="rotate(0 ' + BAR_CX + ' ' + BAR_CY + ')">' +
+      '<rect x="' + (BX0 - 24) + '" y="' + (BCY - 10) + '" width="' + (7 * SP + 48) + '" height="20" rx="10" fill="#b57b45" stroke="#8a5a2e" stroke-width="2"/>' +
+    '</g>' +
+    '<g id="rulers"></g>';
+  bar1Paint();
+  bar1Rulers();
+}
+function bar1Paint(){
+  const g = $('bar1G');
+  const barRect = g.querySelector('rect').outerHTML;
+  let html = barRect;
+  for(let i = 0; i < 8; i++){
+    const isRed = bar1flipped ? i >= 5 : i < 3;
+    html += bead(BX0 + i * SP, BCY, isRed ? '#ef5350' : '#42a5f5', isRed ? '#b71c1c' : '#1565c0', 'clickable cb');
+  }
+  g.innerHTML = html;
+  g.querySelectorAll('.cb').forEach((b, i) => {
+    b.addEventListener('click', () => {
+      if(b.querySelector('.bnum').getAttribute('opacity') !== '0') return;
+      countSeq++;
+      const t = b.querySelector('.bnum');
+      t.textContent = countSeq;
+      t.setAttribute('opacity', '1');
+      setNote(1, '點著數：第 <b>' + countSeq + '</b> 顆…' + (countSeq === 8 ? '<span class="zz">數完了，一共 8 顆！翻轉前後都是 8 顆！</span>' : '繼續數！'), countSeq === 8 ? 'good' : 'warn');
+      if(countSeq === 8) thump();
+    });
+  });
+}
+function bar1Rulers(){
+  const u = 26, x0 = 60, yA = 112, yB = 138;
+  let html = '<g id="rulerA"><text x="44" y="' + (yA + 4) + '" text-anchor="end" font-size="10.5" font-weight="800" fill="#4e342e">3＋5</text>' +
+    '<rect x="' + x0 + '" y="' + yA + '" width="' + (3 * u) + '" height="12" rx="3" fill="#ef5350"/>' +
+    '<rect x="' + (x0 + 3 * u) + '" y="' + yA + '" width="' + (5 * u) + '" height="12" rx="3" fill="#42a5f5"/></g>' +
+    '<g id="rulerB"><text x="44" y="' + (yB + 4) + '" text-anchor="end" font-size="10.5" font-weight="800" fill="#4e342e">5＋3</text>' +
+    '<rect x="' + x0 + '" y="' + yB + '" width="' + (5 * u) + '" height="12" rx="3" fill="#42a5f5"/>' +
+    '<rect x="' + (x0 + 5 * u) + '" y="' + yB + '" width="' + (3 * u) + '" height="12" rx="3" fill="#ef5350"/></g>';
+  const xe = x0 + 8 * u;
+  html += '<line x1="' + x0 + '" y1="106" x2="' + x0 + '" y2="152" stroke="#8a5a2e" stroke-width="2" stroke-dasharray="4 3"/>' +
+    '<line x1="' + xe + '" y1="106" x2="' + xe + '" y2="152" stroke="#8a5a2e" stroke-width="2" stroke-dasharray="4 3"/>' +
+    '<text x="' + ((x0 + xe) / 2) + '" y="164" text-anchor="middle" font-size="11" font-weight="800" fill="#2e7d32">兩把尺一樣長：都是 8 顆！</text>';
+  $('rulers').innerHTML = html;
+}
+function bar1Flip(){
+  if(bar1busy) return;
+  bar1busy = true;
+  $('flipBtn').disabled = true;
+  countSeq = 0;
+  const from = bar1Angle, to = bar1flipped ? 0 : 180, t0 = performance.now(), DUR = 950;
+  (function step(now){
+    const p = Math.min(1, (now - t0) / DUR);
+    const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    bar1Angle = from + (to - from) * e;
+    $('bar1G').setAttribute('transform', 'rotate(' + bar1Angle.toFixed(2) + ' ' + BAR_CX + ' ' + BAR_CY + ')');
+    if(p < 1){ requestAnimationFrame(step); return; }
+    bar1flipped = !bar1flipped;
+    bar1Angle = to % 360;
+    $('bar1G').setAttribute('transform', 'rotate(0 ' + BAR_CX + ' ' + BAR_CY + ')');
+    bar1Paint();
+    if(bar1flipped){
+      $('segL').textContent = '藍珠 5 顆'; $('segL').setAttribute('x', '104'); $('segL').setAttribute('fill', '#1565c0');
+      $('segR').textContent = '紅珠 3 顆'; $('segR').setAttribute('x', '254'); $('segR').setAttribute('fill', '#c62828');
+      $('bar1Eq').textContent = '5 ＋ 3 ＝ 8 ✅ 一樣多！';
+      $('rulers').classList.add('glow');
+      setNote(1, '翻過來了！變成 <span class="zz">5 顆藍珠在前、3 顆紅珠在後</span>——點珠數數看，還是 8 顆！下面兩把尺長度完全一樣。', 'good');
+    }else{
+      $('segL').textContent = '紅珠 3 顆'; $('segL').setAttribute('x', '86'); $('segL').setAttribute('fill', '#c62828');
+      $('segR').textContent = '藍珠 5 顆'; $('segR').setAttribute('x', '230'); $('segR').setAttribute('fill', '#1565c0');
+      $('bar1Eq').textContent = '3 ＋ 5 ＝ 8';
+      $('rulers').classList.remove('glow');
+      setNote(1, QS[0].hint, '');
+    }
+    thump();
+    bar1busy = false;
+    $('flipBtn').disabled = false;
+  })(t0);
+}
+$('flipBtn').onclick = bar1Flip;
+$('reset1').onclick = () => {
+  bar1busy = false; countSeq = 0;
+  $('flipBtn').disabled = false;
+  $('rulers').classList.remove('glow');
+  if(bar1flipped) bar1Flip(); else { bar1Paint(); setNote(1, QS[0].hint, ''); }
+  $('bar1Eq').textContent = '3 ＋ 5 ＝ 8';
+};
+
+/* ════════ Q2：雙盤天平交換律（4＋6 ＝ 6＋4） ════════ */
+function makeBalance2(){
+  const svg = $('bal2');
+  svg.innerHTML =
+    '<rect x="0" y="0" width="360" height="140" fill="#fbf7ee"/>' +
+    '<line x1="26" y1="126" x2="334" y2="126" stroke="#c8a06a" stroke-width="3" stroke-linecap="round"/>' +
+    '<polygon points="180,66 168,126 192,126" fill="#d9a066" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<rect x="148" y="126" width="64" height="5" rx="2.5" fill="#8a5a2e"/>' +
+    '<text id="bal2Eq" x="180" y="17" text-anchor="middle" font-size="15" font-weight="800" fill="#4e342e">4 ＋ 6 ＝ 6 ＋ 4</text>' +
+    '<g id="bal2Beam" transform="rotate(0 180 64)">' +
+      '<rect x="88" y="61" width="184" height="6" rx="3" fill="#b57b45" stroke="#8a5a2e" stroke-width="1.5"/>' +
+      '<polygon points="180,60 176.5,45 183.5,45" fill="#e53935"/>' +
+      '<circle cx="180" cy="64" r="4" fill="#8a5a2e"/>' +
+      '<g id="bal2PanL" transform="rotate(0 88 64)" data-count="0"></g>' +
+      '<g id="bal2PanR" transform="rotate(0 272 64)" data-count="0"></g>' +
+    '</g>';
+  return { panL: $('bal2PanL'), panR: $('bal2PanR') };
+}
+const B2 = makeBalance2();
+function panContent(rx, reds, blues, label){
+  const list = [];
+  for(let i = 0; i < reds; i++) list.push('r');
+  for(let i = 0; i < blues; i++) list.push('b');
+  const cols = Math.min(list.length, 5), gap = 18;
+  let html =
+    '<line x1="' + rx + '" y1="64" x2="' + rx + '" y2="92" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<path d="M' + (rx - 50) + ',96 Q' + rx + ',118 ' + (rx + 50) + ',96" fill="#d9a066" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<ellipse cx="' + rx + '" cy="96" rx="50" ry="6" fill="#e3b578" stroke="#8a5a2e" stroke-width="2"/>';
+  for(let r = 0, i = 0; i < list.length; r++){
+    const cnt = Math.min(cols, list.length - i);
+    const x0 = rx - ((cnt - 1) * gap) / 2;
+    for(let c = 0; c < cnt; c++, i++){
+      const isRed = list[i] === 'r';
+      html += chipW(x0 + c * gap, 82 - r * 17, isRed ? '#ef5350' : '#42a5f5', isRed ? '#b71c1c' : '#1565c0', isRed ? '紅' : '藍');
+    }
+  }
+  html += '<text x="' + rx + '" y="30" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a5a2e">' + label + '</text>';
+  return html;
+}
+function m2Render(swapped){
+  const L = swapped ? panContent(88, 6, 4, '6 ＋ 4') : panContent(88, 4, 6, '4 ＋ 6');
+  const R = swapped ? panContent(272, 4, 6, '4 ＋ 6') : panContent(272, 6, 4, '6 ＋ 4');
+  B2.panL.innerHTML = L; B2.panL.dataset.count = '10';
+  B2.panR.innerHTML = R; B2.panR.dataset.count = '10';
+  $('bal2Beam').setAttribute('transform', 'rotate(0 180 64)');
+  B2.panL.setAttribute('transform', 'rotate(0 88 64)');
+  B2.panR.setAttribute('transform', 'rotate(0 272 64)');
+  $('bal2Eq').textContent = swapped ? '4 ＋ 6 ＝ 6 ＋ 4 ✅ 還是一樣重！' : '4 ＋ 6 ＝ 6 ＋ 4';
+  $('box2').classList.toggle('good', !!swapped);
+}
+let m2swapped = false;
+$('swapBtn').onclick = () => {
+  m2swapped = !m2swapped;
+  m2Render(m2swapped);
+  if(m2swapped){
+    thump();
+    setNote(2, '🔁 對調完成！左盤 6＋4、右盤 4＋6——<span class="zz">兩邊都還是 10 顆，天平穩穩水平</span>：4＋6 ＝ 6＋4！', 'good');
+  }else{
+    setNote(2, QS[1].hint, '');
+  }
+};
+$('reset2').onclick = () => { m2swapped = false; m2Render(false); setNote(2, QS[1].hint, ''); };
+
+/* ════════ Q3：好朋友湊十交換法（2＋9 ↔ 9＋2） ════════ */
+const SP3 = 32, BX3 = 26, CY3 = 46;
+let m3swapped = false, m3counted = false;
+function bar3Render(){
+  const svg = $('bar3Svg');
+  let html = '<text id="bar3Eq" x="180" y="16" text-anchor="middle" font-size="15" font-weight="800" fill="#4e342e">' +
+    (m3swapped ? '9 ＋ 2 ＝ ？' : '2 ＋ 9 ＝ ？') + '</text>' +
+    '<rect x="' + (BX3 - 18) + '" y="' + (CY3 - 9) + '" width="' + (10 * SP3 + 36) + '" height="18" rx="9" fill="#b57b45" stroke="#8a5a2e" stroke-width="2"/>';
+  for(let i = 0; i < 11; i++){
+    const isRed = m3swapped ? i >= 9 : i < 2;
+    const b = bead(BX3 + i * SP3, CY3, isRed ? '#ef5350' : '#42a5f5', isRed ? '#b71c1c' : '#1565c0');
+    html += b;
+  }
+  html += '<text x="180" y="' + (CY3 + 30) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#8a5a2e">' +
+    (m3swapped ? '9 顆藍珠在前，2 顆紅珠在後' : '2 顆紅珠在前，9 顆藍珠在後') + '</text>';
+  svg.innerHTML = html;
+}
+function bar3Count(){
+  if(!m3swapped || m3counted) return;
+  m3counted = true;
+  $('count3Btn').disabled = true;
+  const svg = $('bar3Svg');
+  const mark = (idx, label, color) => {
+    const x = BX3 + idx * SP3, y = CY3 - 9;
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'pop-in');
+    g.innerHTML = '<circle cx="' + x + '" cy="' + (y - 13) + '" r="10.5" fill="' + color + '" stroke="#fff" stroke-width="2"/>' +
+      '<text x="' + x + '" y="' + (y - 9) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">' + label + '</text>';
+    svg.appendChild(g);
+  };
+  mark(8, '9', '#8a5a2e');
+  setTimeout(() => { mark(9, '10', '#ffb300'); thump(); }, 550);
+  setTimeout(() => { mark(10, '11', '#43a047'); thump(); }, 1150);
+  setTimeout(() => {
+    $('bar3Eq').textContent = '9 ＋ 2 ＝ 11 ✅';
+    $('box3').classList.add('good');
+    setNote(3, '🎉 從 9 往上數 2 個：<span class="zz">10、11</span>——所以 9 ＋ 2 ＝ 11，2＋9 也是 11！交換順序真好算。', 'good');
+  }, 1700);
+}
+$('count3Btn').onclick = bar3Count;
+$('swap3Btn').onclick = () => {
+  if(m3swapped) return;
+  m3swapped = true;
+  $('swap3Btn').disabled = true;
+  $('count3Btn').disabled = false;
+  bar3Render();
+  thump();
+  setNote(3, '🔁 交換好了：9 顆藍珠在前、2 顆紅珠在後。按「<span class="zz">從 9 往上數 2 個</span>」——10、11，馬上算出來！', 'warn');
+};
+$('reset3').onclick = () => {
+  m3swapped = false; m3counted = false;
+  $('swap3Btn').disabled = false;
+  $('count3Btn').disabled = true;
+  $('box3').classList.remove('good');
+  bar3Render();
+  setNote(3, QS[2].hint, '');
+};
+
+/* ════════ 啟動 ════════ */
+buildTabs();
+initOpts();
+bar1Build();
+m2Render(false);
+bar3Render();
+const urlQ = parseInt(new URLSearchParams(location.search).get('q'), 10);
+showQ(QS.some((d) => d.q === urlQ) ? urlQ : 1);
+</script>
+</body>
+</html>

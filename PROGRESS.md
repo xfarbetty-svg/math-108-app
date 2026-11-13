@@ -1,5 +1,27 @@
 # 028_1 國小數學APP - 里程碑推進紀錄 (PROGRESS)
 
+## 📌 2026-11-13 (Session 22) - 一年級 108 課綱官方 11 大單元 100% 完工大圓滿（已開放 11/11，合計 50 題真題 ＋ 4 套通用核心教具 ＋ 全域 CDP 閘門全綠）
+- [x] **四套通用核心教具極致減法收斂**：
+  - 徹底拒絕 17 套散裝膨脹代碼，由通道一實作 4 套高複用價值、純向量 SVG、三端單屏免滑動之核心通用教具：
+    1. `solid_shape_lab.html`（S-1-2 形體操作台：滾動/堆高/底面印章/等角透視/幾何火車）
+    2. `math_balance_scale.html`（R-1-1 算式符號等量天平：等號/神秘箱未知數/相同算式/松鼠加法/比大小）
+    3. `commutative_bead_bar.html`（R-1-2 雙色珠串雙向翻轉板：180° 翻轉對稱/雙盤天平/湊十交換）
+    4. `tally_sorting_board.html`（D-1-1 簡單分類與「正」字計數板：天氣正字畫記/自製玩具長條圖/動物票選/蔬果文具分類）
+- [x] **單元題庫 SSOT 全數落盤（合計 50 題實打實真題）**：
+  - `data/units/G1/S-1-2.json`（5 題真題，忠孝 114-1 期中 ＋ 獅湖 114-1 期末 ＋ 獅湖 114-2 期中 ＋ 內湖 114-2 期末）
+  - `data/units/G1/R-1-1.json`（5 題真題，忠孝 114-1 期末 ＋ 獅湖 114-2 期中 ＋ 內湖 114-2 期末）
+  - `data/units/G1/R-1-2.json`（3 題真題，忠孝 114-1 期末 ＋ 課綱官方核心演示）
+  - `data/units/G1/D-1-1.json`（4 題真題，永安 114-1 期末 ＋ 內湖 114-2 期末 ＋ 忠孝 114-1 期中）
+  - `data/units/G1/S-1-1.json`（5 題真題，依課綱「同 N-1-5」官方規格完成鏡像對齊）
+- [x] **全域 CDP 機械化守門員全綠（Exit Code 0）**：
+  - `tools/verify_s12.js`：5 題實機互動、單屏 428~444px ALL PASS。
+  - `tools/verify_r11_r12.js`：8 題實機互動、單屏 407~428px ALL PASS。
+  - `tools/verify_d11.js`：4 題實機互動、單屏 397~444px ALL PASS。
+  - `tools/verify_curriculum_131.js`：一年級 11/11 全部 ready，ALL PASS。
+  - `tools/verify_app_shell.js`：G1 Hero 顯示「已開放 11/11」，upcoming = 0，ALL PASS。
+  - `tools/ac_gate.js`：28 項基礎架構閘門全綠。
+- [ ] **下一目標**：開新對話框開啟二年級課綱條目推進（N-2-1 一千以內的數、N-2-2 二位數直式計算）。
+
 ## 📌 2026-11-13 (Session 21) - 一年級單元四、五、六 100% 落地（GLM-5.3 派工 ＋ 15套純向量互動教具 ＋ CDP全綠驗真）
 - [x] **雙算力通道標準化**：
   - 升級 `tools/dispatch_worker.py`，支援 `--channel 1` (本地 OpenCode) 與 `--channel 2` (A-SERVER SSH 備援)，預設模型指定 `opencode/glm-5.3-flash-free`。

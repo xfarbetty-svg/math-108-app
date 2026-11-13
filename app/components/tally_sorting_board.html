@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>「正」字分類統計板 · G1-D-1-1（簡單分類：畫記、報讀、分籃）</title>
+<style>
+  :root{
+    --wood-1:#d9a066; --wood-2:#b57b45; --wood-dark:#8a5a2e;
+    --cream:#fdf6e9; --ink:#4e342e;
+    --red:#e53935; --green:#43a047; --gold:#ffb300; --blue:#1e88e5;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(circle at 15% 12%, #fff7e0 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, #f3e3c3 0%, transparent 50%),
+      var(--cream);
+    color:var(--ink);
+    font-family:"YuanTi TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  }
+  #app{ max-width:960px; margin:0 auto; padding:2px 6px 3px; }
+
+  .tabs{ display:flex; gap:3px; margin-top:0; }
+  .tab{
+    flex:1 1 0; min-height:38px; border:2.5px solid var(--wood-dark); border-radius:10px; cursor:pointer;
+    background:linear-gradient(180deg,#fff3d6,#ffe1a8); color:var(--ink);
+    font-weight:700; font-size:10px; line-height:1.1; padding:1px 1px;
+    box-shadow:0 2px 0 var(--wood-dark); transition:transform .12s;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .tab b{ font-size:11px; }
+  .tab:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 var(--wood-dark); }
+  .tab.active{ background:linear-gradient(180deg,#ffdf6b,#ffc233); }
+
+  .q-banner{
+    margin:2px 0 0; background:#fff; border:2.5px dashed var(--wood-2);
+    border-radius:10px; padding:1px 8px; position:relative;
+    font-size:10.5px; font-weight:700; line-height:1.28;
+  }
+  .q-banner .badge{
+    display:inline-block; background:#ffe082; border:1.5px solid var(--gold);
+    border-radius:6px; font-size:10.5px; padding:0 5px; margin-right:4px; vertical-align:1px; white-space:nowrap;
+  }
+  .q-banner .source-tag{
+    position:absolute; top:1px; right:6px; font-size:9.5px; color:#b9a58a; font-weight:400; letter-spacing:.3px;
+  }
+  .key-phrase{ color:var(--red); text-decoration:underline wavy var(--red) 1.5px; text-underline-offset:2px; }
+
+  .mode{ display:none; }
+  .mode.on{ display:block; }
+
+  .stage-box{
+    margin-top:2px; border:2.5px solid var(--wood-dark); border-radius:11px;
+    background:linear-gradient(180deg,#fffdf4,#fdf3dc);
+    box-shadow:0 2px 0 var(--wood-dark); overflow:hidden;
+  }
+  .stage-box svg{ display:block; }
+  .stage-box.good{ border-color:var(--green); box-shadow:0 0 0 3px rgba(67,160,71,.45), 0 2px 0 var(--green); }
+  #skySvg{ width:100%; height:auto; max-height:92px; }
+  #skySvg .itm{ pointer-events:none; }
+  #skySvg .itm.clickable{ pointer-events:auto; cursor:pointer; }
+  #skySvg .itm.clickable:hover .hit{ fill:rgba(255,179,0,.18); }
+  #skySvg .w-ico .body{ transition:opacity .25s, filter .25s; }
+  #skySvg .w-ico.used .body{ opacity:.3; filter:grayscale(1); }
+  #skySvg .w-ico .chk{ opacity:0; transition:opacity .2s; }
+  #skySvg .w-ico.used .chk{ opacity:1; }
+
+  /* ── Q1 「正」字畫記表 ── */
+  .tally-table{ padding:1px 6px 4px; border-top:2px dashed #e0c9a0; }
+  .tally-row{ display:flex; align-items:center; gap:6px; height:24px; }
+  .t-label{ flex:0 0 62px; font-size:11px; font-weight:800; }
+  .tally{ flex:0 0 42px; height:22px; }
+  .tally .ts{ stroke:#d33b2f; stroke-width:3.4; stroke-linecap:round; fill:none; opacity:0; }
+  .tally .ts.on{ opacity:1; }
+  .t-count{ margin-left:auto; font-size:11px; font-weight:800; color:var(--blue); }
+  .tally-row.full .t-count{ color:var(--green); }
+
+  .btn-row{ display:flex; gap:4px; margin-top:2px; }
+  .chip, .act{
+    flex:1 1 0; min-height:38px; border-radius:10px; cursor:pointer; font-family:inherit;
+    font-weight:700; font-size:11px; line-height:1.12; padding:1px 2px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transition:transform .12s;
+  }
+  .chip{
+    background:linear-gradient(180deg,#fff,#f3ead8); border:2px solid #c8a06a; color:var(--ink);
+    box-shadow:0 2px 0 #a5814e;
+  }
+  .act{
+    background:linear-gradient(180deg,#66bb6a,#43a047); border:2px solid #2e7d32; color:#fff;
+    text-shadow:0 1px 0 rgba(0,0,0,.25); box-shadow:0 2px 0 #2e7d32;
+  }
+  .chip:active,.act:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 #a5814e; }
+  .chip.sel{ background:linear-gradient(180deg,#ffe082,#ffc233); border-color:var(--gold); box-shadow:0 2px 0 var(--gold); }
+  .chip:disabled,.act:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+  .chip small,.act small{ font-size:9px; font-weight:600; }
+
+  .note{
+    margin-top:2px; background:#fff; border:2px dashed var(--wood-2); border-radius:9px;
+    padding:1px 8px; font-size:10.5px; font-weight:700; line-height:1.25;
+    display:flex; align-items:center; gap:6px;
+  }
+  .note .note-text{ flex:1 1 auto; }
+  .note .zz{ color:var(--red); }
+  .note.good{ background:#e8f5e9; border-color:var(--green); color:#1b5e20; }
+  .note.warn{ background:#fff3e0; border-color:var(--gold); color:#8d5b00; }
+
+  .opt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
+  .opt-btn{
+    min-height:40px; border:2px solid #c8a06a; border-radius:9px; background:#fff; color:var(--ink);
+    font-family:inherit; font-weight:700; font-size:11.5px; line-height:1.2; padding:1px 7px; cursor:pointer;
+    box-shadow:0 2px 0 #a5814e; display:flex; align-items:center; justify-content:center;
+  }
+  .opt-btn:active{ transform:translateY(1.5px); }
+  .opt-btn.active{ background:var(--blue); border-color:#0d47a1; color:#fff; box-shadow:0 2px 0 #0d47a1; }
+  .check-row{ display:flex; align-items:center; gap:8px; margin-top:2px; min-height:26px; }
+  .check-btn{
+    flex:0 0 auto; min-height:26px; padding:1px 20px; border:none; border-radius:9px; cursor:pointer;
+    background:#263238; color:#fff; font-family:inherit; font-size:12px; font-weight:800;
+    box-shadow:0 2px 0 #10171a;
+  }
+  .check-btn:active{ transform:translateY(1.5px); }
+  .result{ flex:1 1 auto; font-size:11px; font-weight:700; line-height:1.25; }
+  .result.success{ color:#1b5e20; }
+  .result.fail{ color:#b71c1c; }
+
+  /* ── Q2 長條圖 ── */
+  .chart-wrap{ padding:3px 6px 2px; }
+  .bar-area{ position:relative; height:92px; display:flex; align-items:flex-end; gap:8px; padding:0 4px; }
+  .bcol{ flex:1 1 0; position:relative; height:100%; display:flex; align-items:flex-end; }
+  .bfill{ width:100%; border-radius:5px 5px 0 0; background:linear-gradient(180deg,#4fc3f7,#1e88e5); border:2px solid #1565c0; border-bottom:none; transition:height .35s; }
+  .bcol.crowned .bfill{ background:linear-gradient(180deg,#ffe082,#ffb300); border-color:#f57f17; }
+  .crown-slot{ position:absolute; top:-1px; left:50%; transform:translate(-50%,-100%); opacity:0; transition:opacity .3s; pointer-events:none; }
+  .bcol.crowned .crown-slot{ opacity:1; }
+  .bextra{ position:absolute; left:-1px; right:-1px; bottom:36px; height:48px; background:rgba(255,179,0,.42); border:2px dashed #f57f17; border-bottom:none; border-radius:6px 6px 0 0; opacity:0; pointer-events:none; transition:opacity .3s; }
+  .bar-area.compare .bextra{ opacity:1; }
+  .diff-line{ position:absolute; left:2px; right:2px; bottom:36px; border-top:2.5px dashed var(--red); opacity:0; pointer-events:none; transition:opacity .3s; }
+  .bar-area.compare .diff-line{ opacity:1; }
+  .name-row{ display:flex; gap:8px; padding:0 4px; border-top:2.5px solid #8a5a2e; }
+  .nname{ flex:1 1 0; text-align:center; font-size:9.5px; font-weight:700; line-height:1.15; padding-top:1px; }
+  .nname b{ display:block; font-size:10.5px; color:var(--blue); }
+
+  /* ── Q3 動物票選卡 ── */
+  .animal-row{ display:flex; gap:5px; padding:6px; }
+  .animal-card{
+    flex:1 1 0; min-height:92px; border:2px solid #c8a06a; border-radius:10px; background:#fff; cursor:pointer;
+    font-family:inherit; color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:1px; padding:3px 1px; box-shadow:0 2px 0 #a5814e; transition:transform .12s;
+  }
+  .animal-card:active{ transform:translateY(1.5px); }
+  .animal-card svg{ width:38px; height:44px; }
+  .animal-card b{ font-size:10.5px; }
+  .animal-card .v{ font-size:11px; font-weight:800; color:var(--blue); }
+  .animal-card.sel{ background:#fff8e1; border-color:#f57f17; box-shadow:0 0 0 3px rgba(255,179,0,.4), 0 2px 0 #f57f17; }
+
+  /* ── Q4 分類籃 ── */
+  .shelf{ display:flex; gap:4px; padding:4px 5px 2px; }
+  .shelf-item{
+    flex:1 1 0; min-height:54px; border:2px solid #c8a06a; border-radius:9px; background:#fff; cursor:pointer;
+    font-family:inherit; color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:2px 0 1px; box-shadow:0 2px 0 #a5814e; transition:transform .45s, opacity .45s;
+  }
+  .shelf-item svg{ width:25px; height:25px; }
+  .shelf-item small{ font-size:9px; font-weight:700; }
+  .shelf-item.done{ opacity:0; transform:scale(.3) translateY(30px); pointer-events:none; }
+  .baskets{ display:flex; gap:6px; padding:1px 6px 6px; }
+  .basket{ flex:1 1 0; border:2.5px dashed #8d6e63; border-radius:10px; background:#fff8e1; padding:1px 4px 3px; display:flex; flex-direction:column; align-items:center; min-height:66px; }
+  .b-title{ font-size:10.5px; font-weight:800; }
+  .b-slot{ display:flex; flex-wrap:wrap; gap:1px; justify-content:center; min-height:22px; align-content:flex-start; }
+  .b-slot .mini svg{ width:20px; height:20px; display:block; }
+  .pop-in{ animation:popin .38s ease; }
+  @keyframes popin{ 0%{ transform:scale(.2); opacity:0; } 70%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); } }
+  .b-count{ font-size:11px; font-weight:800; color:var(--red); }
+
+  @media (min-width:640px){
+    #app{ padding:10px 16px 16px; }
+    .q-banner{ font-size:15px; }
+    .chip,.act,.opt-btn{ font-size:13px; }
+    .note{ font-size:13px; }
+    .t-label,.t-count{ font-size:13px; }
+    .nname{ font-size:11px; }
+    .b-title,.b-count{ font-size:13px; }
+    .animal-card b{ font-size:12.5px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="tabs" id="tabs"></div>
+
+  <div class="q-banner">
+    <span class="badge" id="qBadge">第 1 題</span><span id="qStem"></span>
+    <span class="source-tag" id="qSource"></span>
+  </div>
+
+  <!-- ════════ Q1 四月天氣「正」字畫記 ════════ -->
+  <section class="mode" id="mode1">
+    <div class="stage-box" id="box1">
+      <svg id="skySvg" viewBox="0 0 360 92" aria-label="四月天氣圖示，點一個畫一劃"></svg>
+      <div class="tally-table">
+        <div class="tally-row" id="row-sun">
+          <span class="t-label">☀ 晴天</span>
+          <svg class="tally" id="tallySunSvg" viewBox="0 0 64 44" aria-label="晴天正字畫記">
+            <path class="ts" d="M10,7 L54,7"/><path class="ts" d="M14,7 L14,38"/>
+            <path class="ts" d="M14,22 L36,22"/><path class="ts" d="M42,22 L42,38"/>
+            <path class="ts" d="M10,38 L54,38"/>
+          </svg>
+          <span class="t-count" id="cnt-sun">0 天</span>
+        </div>
+        <div class="tally-row" id="row-cloud">
+          <span class="t-label">☁ 陰天</span>
+          <svg class="tally" id="tallyCloudSvg" viewBox="0 0 64 44" aria-label="陰天正字畫記">
+            <path class="ts" d="M10,7 L54,7"/><path class="ts" d="M14,7 L14,38"/>
+            <path class="ts" d="M14,22 L36,22"/><path class="ts" d="M42,22 L42,38"/>
+            <path class="ts" d="M10,38 L54,38"/>
+          </svg>
+          <span class="t-count" id="cnt-cloud">0 天</span>
+        </div>
+        <div class="tally-row" id="row-rain">
+          <span class="t-label">☂ 雨天</span>
+          <svg class="tally" id="tallyRainSvg" viewBox="0 0 64 44" aria-label="雨天正字畫記">
+            <path class="ts" d="M10,7 L54,7"/><path class="ts" d="M14,7 L14,38"/>
+            <path class="ts" d="M14,22 L36,22"/><path class="ts" d="M42,22 L42,38"/>
+            <path class="ts" d="M10,38 L54,38"/>
+          </svg>
+          <span class="t-count" id="cnt-rain">0 天</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="act" id="tip1">👆 點天氣圖示畫記<small>點一個畫一劃</small></button>
+      <button class="chip" id="reset1" style="flex:0 0 84px">🔄 重來<small>清空畫記</small></button>
+    </div>
+    <div class="note" id="noteBox1"><span class="note-text" id="note1"></span></div>
+    <div class="opt-grid" id="opts1"></div>
+    <div class="check-row"><button class="check-btn" id="check1">檢查答案</button><span class="result" id="result1"></span></div>
+  </section>
+
+  <!-- ════════ Q2 自製玩具票選長條圖 ════════ -->
+  <section class="mode" id="mode2">
+    <div class="stage-box" id="box2">
+      <div class="chart-wrap">
+        <div class="bar-area" id="barArea"><div class="diff-line"></div></div>
+        <div class="name-row" id="nameRow"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="act" id="crownBtn"><span id="crownIco">👑</span>最受歡迎<small>幫它戴皇冠</small></button>
+      <button class="chip" id="vsBtn">紙飛機 vs 龍捲風<small>虛線比一比</small></button>
+      <button class="chip" id="reset2" style="flex:0 0 60px">🔄<small>重來</small></button>
+    </div>
+    <div class="note" id="noteBox2"><span class="note-text" id="note2"></span></div>
+    <div class="opt-grid" id="opts2"></div>
+    <div class="check-row"><button class="check-btn" id="check2">檢查答案</button><span class="result" id="result2"></span></div>
+  </section>
+
+  <!-- ════════ Q3 小動物票選大會 ════════ -->
+  <section class="mode" id="mode3">
+    <div class="stage-box" id="box3">
+      <div class="animal-row" id="animalRow"></div>
+    </div>
+    <div class="btn-row">
+      <button class="chip" id="reset3" style="flex:0 0 96px">🔄 重來<small>取消選擇</small></button>
+    </div>
+    <div class="note" id="noteBox3"><span class="note-text" id="note3"></span></div>
+    <div class="opt-grid" id="opts3"></div>
+    <div class="check-row"><button class="check-btn" id="check3">檢查答案</button><span class="result" id="result3"></span></div>
+  </section>
+
+  <!-- ════════ Q4 水果與文具分類籃 ════════ -->
+  <section class="mode" id="mode4">
+    <div class="stage-box" id="box4">
+      <div class="shelf" id="shelf"></div>
+      <div class="baskets">
+        <div class="basket">
+          <span class="b-title">🍎 水果籃</span>
+          <div class="b-slot" id="slotFruit"></div>
+          <span class="b-count" id="fruitCount">0 個</span>
+        </div>
+        <div class="basket">
+          <span class="b-title">✏ 文具盒</span>
+          <div class="b-slot" id="slotTool"></div>
+          <span class="b-count" id="toolCount">0 個</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="act" id="tip4">👇 點物品分類<small>自動飛進籃子</small></button>
+      <button class="chip" id="reset4" style="flex:0 0 84px">🔄 重來<small>全部倒回桌上</small></button>
+    </div>
+    <div class="note" id="noteBox4"><span class="note-text" id="note4"></span></div>
+    <div class="opt-grid" id="opts4"></div>
+    <div class="check-row"><button class="check-btn" id="check4">檢查答案</button><span class="result" id="result4"></span></div>
+  </section>
+</div>
+
+<script>
+'use strict';
+/* ════════ 共用工具 ════════ */
+const $ = (id) => document.getElementById(id);
+const URL_Q = Math.min(4, Math.max(1, Number(new URLSearchParams(location.search).get('q')) || 1));
+
+/* ════════ 四題模式資料（SSOT 題幹／選項與 data/units/G1/D-1-1.json 同步） ════════ */
+const QS = [
+  { q:1, tab:'天氣正字畫記', title:'四月天氣畫記',
+    stem:'這是 <span class="key-phrase">4 月的天氣記錄</span>。數數看晴天、陰天、雨天各有幾天？<span class="key-phrase">點一個圖示</span>，就在表格用「正」字畫一劃。',
+    source:'永安國小 114-1 期末 第五大題',
+    hint:'<span class="zz">破招：</span>一個「正」字有 <b>5 劃</b>，剛好數 5 個！點同一種天氣的圖示，它的格子就一劃一劃長出「正」字。',
+    opts:['晴天 5 天、陰天 3 天、雨天 2 天','晴天 4 天、陰天 4 天、雨天 2 天','晴天 5 天、陰天 2 天、雨天 3 天','晴天 3 天、陰天 5 天、雨天 2 天'],
+    ok:'答對了！晴天 5 天（剛好一個「正」）、陰天 3 天、雨天 2 天，共 10 天！' },
+  { q:2, tab:'玩具票選圖', title:'最受歡迎的玩具',
+    stem:'一年甲班每人一票票選自製玩具：風陀螺 3 票、紙蜻蜓 4 票、彈跳杯 2 票、龍捲風 3 票、<span class="key-phrase">紙飛機 7 票</span>。哪種最受歡迎？紙飛機比龍捲風多幾人？',
+    source:'內湖國小 114-2 期末 第五大題(1)',
+    hint:'<span class="zz">破招：</span>看長條圖：<b>紙飛機 7 票最高</b>最受歡迎；比龍捲風多 7 － 3 ＝ 4 人。',
+    opts:['紙飛機最受歡迎，多 4 人','紙蜻蜓最受歡迎，多 1 人','紙飛機最受歡迎，多 7 人','風陀螺最受歡迎，多 0 人'],
+    ok:'答對了！紙飛機 7 票最多最受歡迎；7 － 3 ＝ 4，比龍捲風多 4 人！' },
+  { q:3, tab:'動物票選差', title:'最多票與最少票差幾票',
+    stem:'班上票選最喜歡的動物：浣熊 4 票、企鵝 6 票、<span class="key-phrase">小狗 8 票</span>、<span class="key-phrase">兔子 3 票</span>。點卡片比一比：得最多票和得最少票的動物相差幾票？',
+    source:'永安國小 114-1 期末 第四大題',
+    hint:'<span class="zz">破招：</span>先找最多票的小狗 8 票，再找最少票的兔子 3 票：8 － 3 ＝ 5，相差 5 票。',
+    opts:['相差 5 票','相差 11 票','相差 2 票','相差 6 票'],
+    ok:'答對了！最多票小狗 8 票 － 最少票兔子 3 票 ＝ 相差 5 票！' },
+  { q:4, tab:'水果文具分籃', title:'水果與文具分一分',
+    stem:'桌上有蘋果、香蕉、鉛筆、橡皮擦、西瓜、尺。把它們<span class="key-phrase">分一分</span>：哪些是水果？哪些是文具？點物品，放進正確的籃子裡。',
+    source:'忠孝國小 114-1 期中',
+    hint:'<span class="zz">破招：</span>能吃的 是水果（蘋果、香蕉、西瓜），寫字用的 是文具（鉛筆、橡皮擦、尺）。',
+    opts:['水果 3 個：蘋果、香蕉、西瓜；文具 3 個：鉛筆、橡皮擦、尺','水果 4 個：蘋果、香蕉、西瓜、尺；文具 2 個','水果 2 個：蘋果、香蕉；文具 4 個','全部都是水果，共 6 個'],
+    ok:'答對了！水果 3 個（蘋果、香蕉、西瓜）、文具 3 個（鉛筆、橡皮擦、尺），分好了！' }
+];
+
+/* ════════ 分頁與題目橫幅 ════════ */
+function buildTabs(){
+  const box = $('tabs');
+  QS.forEach((d) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (d.q === URL_Q ? ' active' : '');
+    b.dataset.q = d.q;
+    b.innerHTML = '<b>Q' + d.q + '</b>' + d.tab;
+    b.onclick = () => showQ(d.q);
+    box.appendChild(b);
+  });
+}
+function showQ(q){
+  document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', +t.dataset.q === q));
+  QS.forEach((d) => $('mode' + d.q).classList.toggle('on', d.q === q));
+  const d = QS[q - 1];
+  $('qBadge').textContent = '第 ' + q + ' 題';
+  $('qStem').innerHTML = d.title + '：' + d.stem;
+  $('qSource').textContent = d.source;
+  setNote(q, d.hint, '');
+}
+function setNote(q, html, cls){
+  $('note' + q).innerHTML = html;
+  $('noteBox' + q).className = 'note' + (cls ? ' ' + cls : '');
+}
+
+/* ════════ 答題 UI（每題 2×2 選項＋檢查） ════════ */
+const picks = { 1:null, 2:null, 3:null, 4:null };
+function initOpts(){
+  QS.forEach((d) => {
+    const box = $('opts' + d.q);
+    d.opts.forEach((txt, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.textContent = txt;
+      b.onclick = () => {
+        box.querySelectorAll('.opt-btn').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        picks[d.q] = i;
+        const r = $('result' + d.q);
+        r.className = 'result'; r.textContent = '';
+      };
+      box.appendChild(b);
+    });
+    $('check' + d.q).onclick = () => {
+      const r = $('result' + d.q);
+      if(picks[d.q] === null){
+        r.className = 'result fail'; r.textContent = '先點一個答案，再按檢查喔！'; return;
+      }
+      if(picks[d.q] === 0){ r.className = 'result success'; r.textContent = '🎉 ' + d.ok; }
+      else{ r.className = 'result fail'; r.textContent = '再想想看～提示就在上面的破招裡！'; }
+    };
+  });
+}
+
+/* ════════ 純向量小圖案：天氣 ════════ */
+function svgSun(){
+  let rays = '';
+  for(let i = 0; i < 8; i++){
+    const a = i * Math.PI / 4;
+    rays += '<line x1="' + (Math.cos(a) * 11).toFixed(1) + '" y1="' + (Math.sin(a) * 11).toFixed(1) +
+      '" x2="' + (Math.cos(a) * 15).toFixed(1) + '" y2="' + (Math.sin(a) * 15).toFixed(1) +
+      '" stroke="#f5a623" stroke-width="2" stroke-linecap="round"/>';
+  }
+  return '<circle r="9" fill="#ffde59" stroke="#f5a623" stroke-width="1.5"/>' + rays +
+    '<circle cx="-3" cy="-1.5" r="1.2" fill="#8d5b00"/><circle cx="3" cy="-1.5" r="1.2" fill="#8d5b00"/>' +
+    '<path d="M-3,3.2 q3,2.6 6,0" stroke="#8d5b00" stroke-width="1.3" fill="none" stroke-linecap="round"/>';
+}
+function svgCloud(){
+  return '<path d="M-15,6 Q-21,6 -21,0 Q-21,-6 -14,-6 Q-13,-13 -5,-13 Q3,-13 4,-6 Q11,-7 11,0 Q11,6 5,6 Z" fill="#e3f0f7" stroke="#7ea8b8" stroke-width="1.6" stroke-linejoin="round"/>';
+}
+function svgRain(){
+  return '<path d="M-13,2 Q-18,2 -18,-3 Q-18,-8 -12,-8 Q-11,-14 -4,-14 Q4,-14 4,-8 Q10,-9 10,-3 Q10,2 4,2 Z" fill="#b0c8d8" stroke="#6d94a8" stroke-width="1.5" stroke-linejoin="round"/>' +
+    '<line x1="-7" y1="5" x2="-9" y2="12" stroke="#3ba7e0" stroke-width="2.2" stroke-linecap="round"/>' +
+    '<line x1="0" y1="6" x2="-2" y2="13" stroke="#3ba7e0" stroke-width="2.2" stroke-linecap="round"/>' +
+    '<line x1="7" y1="5" x2="5" y2="12" stroke="#3ba7e0" stroke-width="2.2" stroke-linecap="round"/>';
+}
+const ICO = { sun: svgSun, cloud: svgCloud, rain: svgRain };
+/* 10 個天氣圖示：晴天 5、陰天 3、雨天 2（打亂排列，練習分類點數） */
+const SKY = [
+  { k:'sun',   x:36,  y:24 }, { k:'cloud', x:106, y:24 }, { k:'sun',   x:176, y:24 },
+  { k:'rain',  x:246, y:24 }, { k:'sun',   x:316, y:24 },
+  { k:'sun',   x:71,  y:68 }, { k:'cloud', x:141, y:68 }, { k:'sun',   x:211, y:68 },
+  { k:'cloud', x:281, y:68 }, { k:'rain',  x:330, y:68 }
+];
+const tallyState = { sun:0, cloud:0, rain:0 };
+function buildSky(){
+  $('skySvg').innerHTML = SKY.map((s) =>
+    '<g class="itm w-ico ' + s.k + ' clickable" data-k="' + s.k + '" transform="translate(' + s.x + ' ' + s.y + ')">' +
+    '<circle class="hit" r="22" fill="transparent"/>' +
+    '<g class="body">' + ICO[s.k]() + '</g>' +
+    '<path class="chk" d="M-7,2 L-1,9 L10,-6" stroke="#2e7d32" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '</g>').join('');
+  $('skySvg').querySelectorAll('.w-ico').forEach((g) => {
+    g.addEventListener('click', () => {
+      if(g.classList.contains('used')) return;
+      const k = g.dataset.k;
+      g.classList.add('used');
+      tallyState[k] += 1;
+      const n = tallyState[k];
+      $('tally' + k.charAt(0).toUpperCase() + k.slice(1) + 'Svg').querySelectorAll('.ts')[n - 1].classList.add('on');
+      $('cnt-' + k).textContent = n + ' 天';
+      if(n === 5){ $('row-' + k).classList.add('full'); }
+      if(n < 5){
+        setNote(1, '<span class="zz">畫記：</span>' + KN[k] + '第 ' + n + ' 劃！再點一個' + KN[k] + '，就多一劃。', 'warn');
+      }
+      const total = tallyState.sun + tallyState.cloud + tallyState.rain;
+      if(total === 10){
+        setNote(1, '<b>全部畫完！</b>晴天 <b>5 天</b>（剛好一個完整的「正」）、陰天 <b>3 天</b>、雨天 <b>2 天</b>，4 月共 10 天。', 'good');
+        $('box1').classList.add('good');
+      }else if(total < 10){
+        setNote(1, '<span class="zz">畫記：</span>已記 ' + total + ' 天，還有 ' + (10 - total) + ' 個圖示沒點到，繼續！', 'warn');
+      }
+    });
+  });
+}
+const KN = { sun:'☀ 晴天', cloud:'☁ 陰天', rain:'☂ 雨天' };
+function resetQ1(){
+  tallyState.sun = 0; tallyState.cloud = 0; tallyState.rain = 0;
+  $('skySvg').querySelectorAll('.w-ico').forEach((g) => g.classList.remove('used'));
+  ['Sun','Cloud','Rain'].forEach((k) => $('tally' + k + 'Svg').querySelectorAll('.ts').forEach((p) => p.classList.remove('on')));
+  ['sun','cloud','rain'].forEach((k) => { $('cnt-' + k).textContent = '0 天'; $('row-' + k).classList.remove('full'); });
+  $('box1').classList.remove('good');
+  setNote(1, QS[0].hint, '');
+}
+
+/* ════════ Q2 長條圖 ════════ */
+const TOYS = [
+  { n:'風陀螺', v:3 }, { n:'紙蜻蜓', v:4 }, { n:'彈跳杯', v:2 }, { n:'龍捲風', v:3 }, { n:'紙飛機', v:7 }
+];
+const UNIT = 12; /* 1 票 = 12px */
+function buildChart(){
+  const area = $('barArea');
+  area.innerHTML = '<div class="diff-line"></div>' + TOYS.map((t, i) => {
+    const hot = (t.n === '紙飛機') ? ' hot' : '';
+    const crown = (t.n === '紙飛機') ?
+      '<div class="crown-slot"><svg viewBox="0 0 24 14" width="26" height="15"><path d="M2,12 L2,4 L7,8 L12,1 L17,8 L22,4 L22,12 Z" fill="#ffd600" stroke="#f57f17" stroke-width="1.5" stroke-linejoin="round"/></svg></div>' : '';
+    return '<div class="bcol' + hot + '" id="col' + i + '">' + crown +
+      '<div class="bextra"></div><div class="bfill" style="height:' + (t.v * UNIT) + 'px"></div></div>';
+  }).join('');
+  $('nameRow').innerHTML = TOYS.map((t) => '<span class="nname">' + t.n + '<b>' + t.v + ' 票</b></span>').join('');
+}
+function resetQ2(){
+  $('barArea').classList.remove('compare');
+  TOYS.forEach((t, i) => $('col' + i).classList.remove('crowned'));
+  setNote(2, QS[1].hint, '');
+}
+
+/* ════════ Q3 動物票選卡 ════════ */
+function svgRaccoon(){
+  return '<ellipse cx="-7" cy="-9" rx="4.5" ry="5" fill="#90a4ae"/><ellipse cx="7" cy="-9" rx="4.5" ry="5" fill="#90a4ae"/>' +
+    '<circle r="11" fill="#b0bec5" stroke="#78909c" stroke-width="1.4"/>' +
+    '<path d="M-11,-2 Q0,-7 11,-2 Q6,4 0,3 Q-6,4 -11,-2 Z" fill="#455a64"/>' +
+    '<circle cx="-5" cy="-2.5" r="1.8" fill="#fff"/><circle cx="5" cy="-2.5" r="1.8" fill="#fff"/>' +
+    '<circle cx="-5" cy="-2" r="0.9" fill="#263238"/><circle cx="5" cy="-2" r="0.9" fill="#263238"/>' +
+    '<path d="M-3,4.5 h6 l-3,3.2 z" fill="#37474f"/>' +
+    '<path d="M-2,9.5 q2,1.6 4,0" stroke="#5d4037" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
+}
+function svgPenguin(){
+  return '<circle r="11" fill="#37474f" stroke="#263238" stroke-width="1.4"/>' +
+    '<ellipse cx="0" cy="3.5" rx="7.5" ry="6" fill="#fff"/>' +
+    '<circle cx="-4" cy="-3" r="2" fill="#fff"/><circle cx="4" cy="-3" r="2" fill="#fff"/>' +
+    '<circle cx="-4" cy="-2.6" r="1" fill="#111"/><circle cx="4" cy="-2.6" r="1" fill="#111"/>' +
+    '<path d="M-3,1.5 h6 l-3,4 z" fill="#fb8c00"/>';
+}
+function svgDog(){
+  return '<ellipse cx="-10" cy="1" rx="4" ry="7" fill="#8d6e63" transform="rotate(-16 -10 1)"/>' +
+    '<ellipse cx="10" cy="1" rx="4" ry="7" fill="#8d6e63" transform="rotate(16 10 1)"/>' +
+    '<circle r="10" fill="#d7a86e" stroke="#a1887f" stroke-width="1.4"/>' +
+    '<circle cx="-4" cy="-2.5" r="1.7" fill="#3e2723"/><circle cx="4" cy="-2.5" r="1.7" fill="#3e2723"/>' +
+    '<ellipse cx="0" cy="4" rx="2.6" ry="2" fill="#4e342e"/>' +
+    '<path d="M-3.5,7 q3.5,2.6 7,0" stroke="#5d4037" stroke-width="1.3" fill="none" stroke-linecap="round"/>';
+}
+function svgRabbit(){
+  return '<ellipse cx="-5" cy="-11" rx="3" ry="7.5" fill="#fafafa" stroke="#bdbdbd" stroke-width="1.2"/>' +
+    '<ellipse cx="5" cy="-11" rx="3" ry="7.5" fill="#fafafa" stroke="#bdbdbd" stroke-width="1.2"/>' +
+    '<ellipse cx="-5" cy="-10" rx="1.4" ry="4.6" fill="#ffcdd2"/><ellipse cx="5" cy="-10" rx="1.4" ry="4.6" fill="#ffcdd2"/>' +
+    '<circle cy="2" r="10" fill="#fafafa" stroke="#bdbdbd" stroke-width="1.4"/>' +
+    '<circle cx="-4" cy="0" r="1.6" fill="#4e342e"/><circle cx="4" cy="0" r="1.6" fill="#4e342e"/>' +
+    '<path d="M-2,4 h4 l-2,2.4 z" fill="#f48fb1"/>' +
+    '<path d="M-3,7.5 q3,2.2 6,0" stroke="#a1887f" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
+}
+const ANIMALS = [
+  { id:'Raccoon', n:'浣熊', v:4, svg:svgRaccoon },
+  { id:'Penguin', n:'企鵝', v:6, svg:svgPenguin },
+  { id:'Dog',     n:'小狗', v:8, svg:svgDog },
+  { id:'Rabbit',  n:'兔子', v:3, svg:svgRabbit }
+];
+const picked3 = [];
+function buildAnimals(){
+  $('animalRow').innerHTML = ANIMALS.map((a) =>
+    '<button class="animal-card" id="card' + a.id + '" data-v="' + a.v + '" data-n="' + a.n + '">' +
+    '<svg viewBox="-16 -20 32 36" aria-label="' + a.n + '">' + a.svg() + '</svg>' +
+    '<b>' + a.n + '</b><span class="v">' + a.v + ' 票</span></button>').join('');
+  $('animalRow').querySelectorAll('.animal-card').forEach((c) => {
+    c.addEventListener('click', () => {
+      const idx = picked3.indexOf(c);
+      if(idx >= 0){ picked3.splice(idx, 1); c.classList.remove('sel'); }
+      else if(picked3.length < 2){ picked3.push(c); c.classList.add('sel'); }
+      if(picked3.length === 2){
+        const a = +picked3[0].dataset.v, b = +picked3[1].dataset.v;
+        const hi = Math.max(a, b), lo = Math.min(a, b);
+        const hiN = picked3.find((x) => +x.dataset.v === hi).dataset.n;
+        const loN = picked3.find((x) => +x.dataset.v === lo).dataset.n;
+        setNote(3, '<b>' + hiN + ' ' + hi + ' 票</b> － <b>' + loN + ' ' + lo + ' 票</b>：' + hi + ' － ' + lo + ' ＝ ' + (hi - lo) + '，相差 <b>' + (hi - lo) + ' 票</b>！', 'good');
+        $('box3').classList.add('good');
+      }else{
+        setNote(3, '<span class="zz">破招：</span>先找最多票的小狗 8 票，再找最少票的兔子 3 票：8 － 3 ＝ 5，相差 5 票。', '');
+        $('box3').classList.remove('good');
+      }
+    });
+  });
+}
+function resetQ3(){
+  picked3.length = 0;
+  $('animalRow').querySelectorAll('.animal-card').forEach((c) => c.classList.remove('sel'));
+  $('box3').classList.remove('good');
+  setNote(3, QS[2].hint, '');
+}
+
+/* ════════ Q4 分類籃 ════════ */
+function svgApple(){
+  return '<path d="M0,-5 Q1,-10 4,-11" stroke="#6d4c41" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<path d="M2,-8 q5,-4 8,0 q-4,3 -8,0z" fill="#66bb6a"/>' +
+    '<circle r="8" cy="2" fill="#ef5350" stroke="#b71c1c" stroke-width="1.5"/>' +
+    '<circle cx="-2.5" cy="0" r="2" fill="#ffcdd2" opacity=".85"/>';
+}
+function svgBanana(){
+  return '<path d="M-11,-2 Q-4,12 11,2 Q3,14 -8,8 Q-12,4 -11,-2 Z" fill="#ffe135" stroke="#f9a825" stroke-width="1.4" stroke-linejoin="round"/>' +
+    '<rect x="-12.5" y="-4" width="3" height="3" rx="1" fill="#8d5b00"/>';
+}
+function svgPencil(){
+  return '<g transform="rotate(-38)">' +
+    '<rect x="-12" y="-3" width="20" height="6" rx="1" fill="#ffb300" stroke="#8d5b00" stroke-width="1.2"/>' +
+    '<path d="M8,-3 L14,0 L8,3 Z" fill="#ffe0b2" stroke="#8d5b00" stroke-width="1.2"/>' +
+    '<path d="M12.5,-0.9 L14,0 L12.5,0.9 Z" fill="#37474f"/></g>';
+}
+function svgEraser(){
+  return '<g transform="rotate(-14)">' +
+    '<rect x="-10" y="-6" width="20" height="12" rx="3" fill="#ef9a9a" stroke="#c66161" stroke-width="1.3"/>' +
+    '<rect x="4" y="-6" width="6" height="12" rx="2" fill="#90caf9" stroke="#5b97c9" stroke-width="1.2"/></g>';
+}
+function svgMelon(){
+  return '<path d="M-12,5 A12,12 0 0 1 12,5 Z" fill="#66bb6a" stroke="#388e3c" stroke-width="1.4"/>' +
+    '<path d="M-10,5 A10,10 0 0 1 10,5 Z" fill="#ef5350"/>' +
+    '<circle cx="-4.5" cy="0.5" r="1" fill="#33691e"/><circle cx="0" cy="-2.5" r="1" fill="#33691e"/>' +
+    '<circle cx="4.5" cy="0.5" r="1" fill="#33691e"/><line x1="-12" y1="5" x2="12" y2="5" stroke="#388e3c" stroke-width="1.4"/>';
+}
+function svgRuler(){
+  return '<g transform="rotate(8)"><rect x="-13" y="-5" width="26" height="10" rx="2" fill="#ffe0b2" stroke="#a1887f" stroke-width="1.3"/>' +
+    '<line x1="-8" y1="-5" x2="-8" y2="-1" stroke="#8d5b00" stroke-width="1.1"/>' +
+    '<line x1="-3" y1="-5" x2="-3" y2="-2.5" stroke="#8d5b00" stroke-width="1.1"/>' +
+    '<line x1="2" y1="-5" x2="2" y2="-1" stroke="#8d5b00" stroke-width="1.1"/>' +
+    '<line x1="7" y1="-5" x2="7" y2="-2.5" stroke="#8d5b00" stroke-width="1.1"/></g>';
+}
+const ITEMS = [
+  { id:'apple',  n:'蘋果',   k:'fruit', svg:svgApple },
+  { id:'banana', n:'香蕉',   k:'fruit', svg:svgBanana },
+  { id:'pencil', n:'鉛筆',   k:'tool',  svg:svgPencil },
+  { id:'eraser', n:'橡皮擦', k:'tool',  svg:svgEraser },
+  { id:'melon',  n:'西瓜',   k:'fruit', svg:svgMelon },
+  { id:'ruler',  n:'尺',     k:'tool',  svg:svgRuler }
+];
+const basketCnt = { fruit:0, tool:0 };
+function buildShelf(){
+  $('shelf').innerHTML = ITEMS.map((it) =>
+    '<button class="shelf-item" id="it-' + it.id + '" data-k="' + it.k + '" data-n="' + it.n + '">' +
+    '<svg viewBox="-16 -16 32 32" aria-label="' + it.n + '">' + it.svg() + '</svg>' +
+    '<small>' + it.n + '</small></button>').join('');
+  $('shelf').querySelectorAll('.shelf-item').forEach((b) => {
+    b.addEventListener('click', () => {
+      if(b.classList.contains('done')) return;
+      const k = b.dataset.k;
+      b.classList.add('done');
+      basketCnt[k] += 1;
+      const slot = $('slot' + (k === 'fruit' ? 'Fruit' : 'Tool'));
+      const it = ITEMS.find((x) => x.id === b.id.slice(3));
+      const mini = document.createElement('span');
+      mini.className = 'mini pop-in';
+      mini.innerHTML = '<svg viewBox="-16 -16 32 32">' + it.svg() + '</svg>';
+      slot.appendChild(mini);
+      (k === 'fruit' ? $('fruitCount') : $('toolCount')).textContent = basketCnt[k] + ' 個';
+      const total = basketCnt.fruit + basketCnt.tool;
+      if(total === 6){
+        setNote(4, '<b>分好了！</b>🍎 水果 <b>3 個</b>（蘋果、香蕉、西瓜）、✏ 文具 <b>3 個</b>（鉛筆、橡皮擦、尺）。', 'good');
+        $('box4').classList.add('good');
+      }else{
+        setNote(4, '<span class="zz">分類：</span>已放 ' + total + ' 個，水果 ' + basketCnt.fruit + ' 個、文具 ' + basketCnt.tool + ' 個，還有 ' + (6 - total) + ' 個在桌上。', 'warn');
+      }
+    });
+  });
+}
+function resetQ4(){
+  basketCnt.fruit = 0; basketCnt.tool = 0;
+  $('shelf').querySelectorAll('.shelf-item').forEach((b) => b.classList.remove('done'));
+  $('slotFruit').innerHTML = ''; $('slotTool').innerHTML = '';
+  $('fruitCount').textContent = '0 個'; $('toolCount').textContent = '0 個';
+  $('box4').classList.remove('good');
+  setNote(4, QS[3].hint, '');
+}
+
+/* ════════ 事件綁定與啟動 ════════ */
+$('tip1').onclick = () => setNote(1, QS[0].hint, '');
+$('tip4').onclick = () => setNote(4, QS[3].hint, '');
+$('reset1').onclick = resetQ1;
+$('reset2').onclick = resetQ2;
+$('reset3').onclick = resetQ3;
+$('reset4').onclick = resetQ4;
+$('crownBtn').onclick = () => {
+  TOYS.forEach((t, i) => { if(t.n === '紙飛機') $('col' + i).classList.add('crowned'); });
+  setNote(2, '<span class="zz">破招：</span>紙飛機 <b>7 票</b>是長條圖<b>最高</b>的，最受歡迎！', 'warn');
+};
+$('vsBtn').onclick = () => {
+  $('barArea').classList.add('compare');
+  setNote(2, '虛線對齊龍捲風 3 票的高度：紙飛機高出 <b>4 格</b>——<b>7 － 3 ＝ 4</b>，紙飛機比龍捲風多 <b>4 人</b>！', 'good');
+};
+buildTabs();
+showQ(URL_Q);
+initOpts();
+buildSky();
+buildChart();
+buildAnimals();
+buildShelf();
+</script>
+</body>
+</html>

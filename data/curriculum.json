@@ -59,41 +59,41 @@
           "code": "S-1-1",
           "title": "長度（同N-1-5）",
           "full_text": "長度（同N-1-5）：以操作活動為主。初步認識、直接比較、間接比較（含個別單位）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "課綱官方「同 N-1-5」對齊（忠孝 114-1 期中 ＋ 獅湖 114-2 期中，5 套長度互動教具）"
         },
         {
           "code": "S-1-2",
           "title": "形體的操作",
           "full_text": "形體的操作：以操作活動為主。描繪、複製、拼貼、堆疊。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "忠孝 114-1 期中 ＋ 獅湖 114-1 期末 ＋ 獅湖 114-2 期中 ＋ 內湖 114-2 期末（solid_shape_lab.html 五模式教具）"
         },
         {
           "code": "R-1-1",
           "title": "算式與符號",
           "full_text": "算式與符號：含加減算式中的數、加號、減號、等號。以說、讀、聽、寫、做檢驗學生的理解。適用於後續階段。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "忠孝 114-1 期末 ＋ 獅湖 114-2 期中 ＋ 內湖 114-2 期末（math_balance_scale.html 等量天平五模式教具）"
         },
         {
           "code": "R-1-2",
           "title": "兩數相加的順序不影響其和",
           "full_text": "兩數相加的順序不影響其和：加法交換律。可併入其他教學活動。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 3,
+          "verified_source": "忠孝 114-1 期末 ＋ 108 課綱官方核心演示（commutative_bead_bar.html 雙色珠串三模式教具）"
         },
         {
           "code": "D-1-1",
           "title": "簡單分類",
           "full_text": "簡單分類：以操作活動為主。能蒐集、分類、記錄、呈現日常生活物品，報讀、說明已處理好之分類。觀察分類的模式，知道同一組資料可有不同的分類方式。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 4,
+          "verified_source": "永安 114-1 期末（四月天氣「正」字畫記／動物票選差幾票）＋ 內湖 114-2 期末（自製玩具票選長條圖）＋ 忠孝 114-1 期中（水果文具分類籃）——任務卡 task_g1_d11_data.md tally_sorting_board.html 四模式教具"
         }
       ]
     },

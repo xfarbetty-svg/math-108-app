@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>形體操作實驗室 · G1-S-1-2（描繪、複製、拼貼、堆疊）</title>
+<style>
+  :root{
+    --wood-1:#d9a066; --wood-2:#b57b45; --wood-dark:#8a5a2e;
+    --cream:#fdf6e9; --ink:#4e342e;
+    --red:#e53935; --green:#43a047; --gold:#ffb300; --pink:#ff2d95; --blue:#1e88e5;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(circle at 15% 12%, #fff7e0 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, #f3e3c3 0%, transparent 50%),
+      var(--cream);
+    color:var(--ink);
+    font-family:"YuanTi TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  }
+  #app{ max-width:960px; margin:0 auto; padding:3px 8px 6px; }
+
+  /* ── 頂部迷你木牌 ── */
+  header{
+    background:linear-gradient(180deg,var(--wood-1),var(--wood-2));
+    border:2.5px solid var(--wood-dark); border-radius:11px;
+    box-shadow:0 2px 0 var(--wood-dark);
+    padding:2px 10px; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.25);
+    display:flex; align-items:center; gap:7px; height:24px;
+  }
+  header h1{ margin:0; font-size:13.5px; letter-spacing:.5px; white-space:nowrap; }
+  header .code{
+    font-size:10px; background:rgba(255,255,255,.22); border:1px solid rgba(255,255,255,.55);
+    border-radius:7px; padding:0 6px; white-space:nowrap;
+  }
+
+  /* ── 五題模式分頁 ── */
+  .tabs{ display:flex; gap:3px; margin-top:3px; }
+  .tab{
+    flex:1 1 0; min-height:44px; border:2.5px solid var(--wood-dark); border-radius:10px; cursor:pointer;
+    background:linear-gradient(180deg,#fff3d6,#ffe1a8); color:var(--ink); text-shadow:none;
+    font-weight:700; font-size:10.5px; line-height:1.12; padding:1px 1px;
+    box-shadow:0 2px 0 var(--wood-dark); transition:transform .12s;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+  }
+  .tab b{ font-size:11.5px; }
+  .tab:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 var(--wood-dark); }
+  .tab.active{ background:linear-gradient(180deg,#ffdf6b,#ffc233); }
+
+  /* ── 題目橫幅 ── */
+  .q-banner{
+    margin:3px 0 0; background:#fff; border:2.5px dashed var(--wood-2);
+    border-radius:10px; padding:3px 9px; position:relative;
+    font-size:12.5px; font-weight:700; line-height:1.35;
+  }
+  .q-banner .badge{
+    display:inline-block; background:#ffe082; border:1.5px solid var(--gold);
+    border-radius:6px; font-size:10.5px; padding:0 5px; margin-right:4px; vertical-align:1px; white-space:nowrap;
+  }
+  .q-banner .source{
+    position:absolute; top:2px; right:6px; font-size:10.5px; color:#b9a58a; font-weight:400; letter-spacing:.3px;
+  }
+  .key-phrase{ color:var(--red); text-decoration:underline wavy var(--red) 1.5px; text-underline-offset:2px; }
+
+  .mode{ display:none; }
+  .mode.on{ display:block; }
+
+  /* ── 共用按鈕列（熱區 ≥44px）── */
+  .btn-row{ display:flex; gap:4px; margin-top:3px; }
+  .chip, .act{
+    flex:1 1 0; min-height:44px; border-radius:10px; cursor:pointer; font-family:inherit;
+    font-weight:700; font-size:11px; line-height:1.15; padding:1px 2px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+    transition:transform .12s;
+  }
+  .chip{
+    background:linear-gradient(180deg,#fff,#f3ead8); border:2px solid #c8a06a; color:var(--ink);
+    box-shadow:0 2px 0 #a5814e;
+  }
+  .act{
+    background:linear-gradient(180deg,#66bb6a,#43a047); border:2px solid #2e7d32; color:#fff;
+    text-shadow:0 1px 0 rgba(0,0,0,.25); box-shadow:0 2px 0 #2e7d32;
+  }
+  .chip:active,.act:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 #a5814e; }
+  .chip.sel{ background:linear-gradient(180deg,#ffe082,#ffc233); border-color:var(--gold); box-shadow:0 2px 0 var(--gold); }
+  .chip.pressing{ animation:press .3s ease; }
+  @keyframes press{ 0%{transform:scale(1);} 45%{transform:scale(.88) translateY(2px);} 100%{transform:scale(1);} }
+
+  .stage-box{
+    margin-top:3px; border:2.5px solid var(--wood-dark); border-radius:11px;
+    background:linear-gradient(180deg,#fffdf4,#fdf3dc);
+    box-shadow:0 2px 0 var(--wood-dark); overflow:hidden;
+  }
+  .stage-box svg{ display:block; width:100%; height:auto; }
+
+  /* ── 動態破招提示列 ── */
+  .note{
+    margin-top:3px; min-height:24px; background:#fff; border:2px dashed var(--wood-2); border-radius:9px;
+    padding:1px 9px; font-size:11.5px; font-weight:700; line-height:1.3;
+    display:flex; align-items:center; gap:6px;
+  }
+  .note .note-text{ flex:1 1 auto; }
+  .note .zz{ color:var(--red); }
+  .note .mini-btn{
+    flex:0 0 auto; min-height:28px; border:2px solid var(--wood-dark); border-radius:8px; background:#fff3d6;
+    font-weight:700; font-size:11px; padding:1px 9px; cursor:pointer; font-family:inherit; color:var(--ink);
+  }
+  .note.good{ background:#e8f5e9; border-color:var(--green); color:#1b5e20; }
+  .note.warn{ background:#fff3e0; border-color:var(--gold); color:#8d5b00; }
+
+  /* ── 答題區（2×2 等寬 Grid + 檢查）── */
+  .opt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-top:3px; }
+  .opt-btn{
+    min-height:32px; border:2px solid #c8a06a; border-radius:9px; background:#fff; color:var(--ink);
+    font-family:inherit; font-weight:700; font-size:11.5px; line-height:1.22; padding:1px 7px; cursor:pointer;
+    box-shadow:0 2px 0 #a5814e; display:flex; align-items:center; justify-content:center;
+  }
+  .opt-btn:active{ transform:translateY(1.5px); }
+  .opt-btn.active{ background:#1e88e5; border-color:#0d47a1; color:#fff; box-shadow:0 2px 0 #0d47a1; }
+  .check-row{ display:flex; align-items:center; gap:8px; margin-top:3px; min-height:30px; }
+  .check-btn{
+    flex:0 0 auto; min-height:32px; padding:2px 22px; border:none; border-radius:9px; cursor:pointer;
+    background:#263238; color:#fff; font-family:inherit; font-size:13px; font-weight:800;
+    box-shadow:0 2px 0 #10171a;
+  }
+  .check-btn:active{ transform:translateY(1.5px); }
+  .result{ flex:1 1 auto; font-size:11.5px; font-weight:700; line-height:1.3; }
+  .result.success{ color:#1b5e20; }
+  .result.fail{ color:#b71c1c; }
+
+  /* ════ Q1 滾動與堆高 ════ */
+  #stage1 .slope-face{ fill:#e3b578; stroke:var(--wood-dark); stroke-width:2; }
+  #stage1 .ground{ stroke:var(--wood-dark); stroke-width:2.5; stroke-linecap:round; }
+  #stage1 .platform{ fill:#c68b4f; stroke:var(--wood-dark); stroke-width:2; }
+  #stage1 .lane-tag{ font-size:10px; font-weight:800; fill:var(--wood-dark); }
+  .obj{ transition:transform .8s ease; }
+  .wobble{ animation:wob .7s ease-in-out 2; transform-origin:50% 100%; }
+  @keyframes wob{ 0%,100%{ transform:rotate(0deg);} 25%{ transform:rotate(-7deg);} 75%{ transform:rotate(7deg);} }
+
+  /* ════ Q2 描描看 ════ */
+  #paperSvg .paper{ fill:#ffffff; stroke:#c9b28a; stroke-width:2; }
+  #paperSvg .slot{ fill:#fbf9f3; stroke:#e4d9c2; stroke-width:1.2; stroke-dasharray:4 3; }
+  #paperSvg .stamped{ fill:none; stroke:var(--red); stroke-width:2.8; stroke-linejoin:round; stroke-linecap:round; }
+  #paperSvg .stamp-pop{ animation:spop .3s ease; transform-box:fill-box; transform-origin:center; }
+  @keyframes spop{ 0%{ transform:scale(1.6); opacity:0;} 60%{ transform:scale(.92); opacity:1;} 100%{ transform:scale(1);} }
+
+  /* ════ Q3 等角積木 ════ */
+  .blk{ cursor:pointer; }
+  .blk .f-top{ fill:#f7f2e4; stroke:#6b4a26; stroke-width:1.4; }
+  .blk .f-l{ fill:#d8b57c; stroke:#6b4a26; stroke-width:1.4; }
+  .blk .f-r{ fill:#b98a4e; stroke:#6b4a26; stroke-width:1.4; }
+  .blk.lit .f-top{ fill:#ffe9a8; }
+  .blk.lit .f-l{ fill:#f0c568; }
+  .blk.lit .f-r{ fill:#e0a93e; }
+  .blk.lit{ filter:drop-shadow(0 0 4px rgba(255,179,0,.9)); }
+  .blk .num{ font-size:13px; font-weight:800; fill:#7a4b00; opacity:0; pointer-events:none; }
+  .blk.lit .num{ opacity:1; }
+  #hiddenFace{ opacity:0; transition:opacity .3s; pointer-events:none; }
+  #hiddenFace path{ fill:rgba(229,57,53,.10); stroke:var(--red); stroke-width:1.6; stroke-dasharray:4 3; }
+  #isoSvg.xray #hiddenFace{ opacity:1; }
+  #isoSvg.xray .blk.top-block{ opacity:.55; }
+
+  /* ════ Q4 拼圖卡 ════ */
+  #stage4 .card-tri{ transition:transform .8s cubic-bezier(.35,1.15,.5,1); }
+  #stage4 .card-tri polygon{ stroke:#7a4b00; stroke-width:2; stroke-linejoin:round; }
+  #cardA polygon{ fill:#7ec8f7; } #cardB polygon{ fill:#ffb3d9; }
+  #cardA.done polygon,#cardB.done polygon{ fill:#ffd54f; }
+  #targetRect{ fill:rgba(255,213,79,0); stroke:#a5814e; stroke-width:2; stroke-dasharray:6 4; }
+  #targetRect.done{ fill:rgba(255,213,79,.5); stroke:var(--gold); }
+  #stage4 .goal-tag{ font-size:10px; font-weight:800; fill:#a5814e; }
+  #stage4 .card-tag{ font-size:12px; font-weight:800; }
+
+  /* ════ Q5 幾何火車 ════ */
+  #stage5 .tag{ font-size:11px; font-weight:800; fill:#7a0033; opacity:0; }
+  #stage5 svg .hl{ animation:hlpulse .9s ease 3; }
+  #stage5 svg .hl .body-el{ stroke:var(--pink); stroke-width:3.2; }
+  #stage5 svg .hl .tag{ opacity:1; }
+  @keyframes hlpulse{ 0%,100%{ filter:none; } 50%{ filter:drop-shadow(0 0 5px rgba(255,45,149,.95)); } }
+
+  @media (min-width:640px){
+    #app{ padding:10px 16px 16px; }
+    .q-banner{ font-size:15px; }
+    .chip,.act,.opt-btn{ font-size:13px; }
+    .note{ font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>形體操作實驗室</h1>
+    <span class="code">108 課綱 G1 · S-1-2</span>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="q-banner">
+    <span class="badge" id="qBadge">第 1 題</span><span id="qStem"></span>
+    <span class="source" id="qSource"></span>
+  </div>
+
+  <!-- ════════ Q1 滾動與堆高 ════════ -->
+  <section class="mode" id="mode1">
+    <div class="stage-box" id="stage1">
+      <svg viewBox="0 0 360 112" id="rollSvg" aria-label="滾動與堆高測試台">
+        <!-- 左：斜坡滾動測試區 -->
+        <text class="lane-tag" x="12" y="12">① 滾動測試（斜坡）</text>
+        <polygon class="slope-face" points="12,100 88,44 88,100"></polygon>
+        <line class="ground" x1="4" y1="100" x2="168" y2="100"></line>
+        <!-- 皮球（球體） -->
+        <g id="obBall">
+          <circle r="11" fill="#e53935" stroke="#a02723" stroke-width="2"></circle>
+          <path d="M -7,-6 Q 0,-1 -7,7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"></path>
+          <circle cx="-3" cy="-4" r="2" fill="#fff" opacity=".8"></circle>
+        </g>
+        <!-- 木積木（正方體） -->
+        <g id="obCube">
+          <rect x="-10" y="-10" width="20" height="20" rx="2" fill="#d99a4e" stroke="#8a5a2e" stroke-width="2"></rect>
+          <rect x="-10" y="-10" width="20" height="6" rx="2" fill="#ecc389" stroke="#8a5a2e" stroke-width="1.2"></rect>
+          <circle cx="0" cy="2" r="2.8" fill="#8a5a2e" opacity=".55"></circle>
+        </g>
+        <!-- 茶葉罐（圓柱）橫放 -->
+        <g id="obCylL">
+          <rect x="-14" y="-10" width="28" height="20" rx="3" fill="#4fb3bf" stroke="#22707a" stroke-width="2"></rect>
+          <ellipse cx="14" cy="0" rx="4.5" ry="10" fill="#a7e0e6" stroke="#22707a" stroke-width="1.8"></ellipse>
+          <rect x="-9" y="-5" width="12" height="10" rx="2" fill="#fff" opacity=".85"></rect>
+        </g>
+        <!-- 茶葉罐立放 -->
+        <g id="obCylS" style="display:none">
+          <rect x="-10" y="-18" width="20" height="36" rx="3" fill="#4fb3bf" stroke="#22707a" stroke-width="2"></rect>
+          <ellipse cx="0" cy="-18" rx="10" ry="4" fill="#a7e0e6" stroke="#22707a" stroke-width="1.8"></ellipse>
+          <rect x="-6" y="-10" width="12" height="10" rx="2" fill="#fff" opacity=".85"></rect>
+        </g>
+        <!-- 右：堆高測試平台 -->
+        <text class="lane-tag" x="196" y="12">② 堆高測試（平台）</text>
+        <line class="ground" x1="188" y1="104" x2="356" y2="104"></line>
+        <rect class="platform" x="234" y="92" width="112" height="12" rx="2"></rect>
+        <!-- 堆高測試用副本 -->
+        <g id="stCube" class="obj" opacity="0">
+          <rect x="-10" y="-10" width="20" height="20" rx="2" fill="#d99a4e" stroke="#8a5a2e" stroke-width="2"></rect>
+          <rect x="-10" y="-10" width="20" height="6" rx="2" fill="#ecc389" stroke="#8a5a2e" stroke-width="1.2"></rect>
+        </g>
+        <g id="stCylL" class="obj" opacity="0">
+          <rect x="-14" y="-10" width="28" height="20" rx="3" fill="#4fb3bf" stroke="#22707a" stroke-width="2"></rect>
+          <ellipse cx="14" cy="0" rx="4.5" ry="10" fill="#a7e0e6" stroke="#22707a" stroke-width="1.8"></ellipse>
+        </g>
+        <g id="stCylS" class="obj" opacity="0">
+          <rect x="-10" y="-18" width="20" height="36" rx="3" fill="#4fb3bf" stroke="#22707a" stroke-width="2"></rect>
+          <ellipse cx="0" cy="-18" rx="10" ry="4" fill="#a7e0e6" stroke="#22707a" stroke-width="1.8"></ellipse>
+        </g>
+        <g id="stBall" class="obj" opacity="0">
+          <circle r="11" fill="#e53935" stroke="#a02723" stroke-width="2"></circle>
+          <path d="M -7,-6 Q 0,-1 -7,7" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"></path>
+        </g>
+      </svg>
+    </div>
+    <div class="btn-row">
+      <button class="act" id="btnRoll">▶ 滾動測試<small>溜下斜坡</small></button>
+      <button class="act" id="btnStack">▦ 堆高測試<small>疊上平台</small></button>
+      <button class="chip sel" id="chipBall" data-obj="ball">🔴 皮球<small>球體</small></button>
+      <button class="chip" id="chipCube" data-obj="cube">🧊 木積木<small>正方體</small></button>
+      <button class="chip" id="chipCyl" data-obj="cyl">🛢 茶葉罐<small>圓柱</small></button>
+    </div>
+    <div class="note"><span class="note-text" id="note1"></span><span class="note-tools" id="tools1"></span></div>
+    <div class="opt-grid" id="opts1"></div>
+    <div class="check-row"><button class="check-btn" id="check1">檢查答案</button><span class="result" id="result1"></span></div>
+  </section>
+
+  <!-- ════════ Q2 物品底面描描看 ════════ -->
+  <section class="mode" id="mode2">
+    <div class="stage-box" id="stage2">
+      <svg viewBox="0 0 360 112" id="paperSvg" aria-label="白紙蓋印描繪區">
+        <rect class="paper" x="24" y="4" width="312" height="104" rx="6"></rect>
+        <text x="36" y="18" font-size="10" font-weight="800" fill="#b9a58a">白紙 · 把物品平平的底面蓋下來描一描</text>
+        <g id="slots">
+          <rect class="slot" x="44" y="24" width="128" height="36" rx="4"></rect>
+          <rect class="slot" x="188" y="24" width="128" height="36" rx="4"></rect>
+          <rect class="slot" x="44" y="66" width="128" height="36" rx="4"></rect>
+          <rect class="slot" x="188" y="66" width="128" height="36" rx="4"></rect>
+        </g>
+        <g id="stamps"></g>
+      </svg>
+    </div>
+    <div class="btn-row" id="stampRow">
+      <button class="chip" data-kind="cyl">🛢 圓柱<small>→ 圓形</small></button>
+      <button class="chip" data-kind="cube">🧊 正方體<small>→ 正方形</small></button>
+      <button class="chip" data-kind="tissue">📦 面紙盒<small>→ 長方形</small></button>
+      <button class="chip" data-kind="tri">🔺 三角柱<small>→ 三角形</small></button>
+      <button class="chip" id="btnClear">🧽 擦乾淨<small>重蓋</small></button>
+    </div>
+    <div class="note"><span class="note-text" id="note2"></span><span class="note-tools" id="tools2"></span></div>
+    <div class="opt-grid" id="opts2"></div>
+    <div class="check-row"><button class="check-btn" id="check2">檢查答案</button><span class="result" id="result2"></span></div>
+  </section>
+
+  <!-- ════════ Q3 等角透視積木點數 ════════ -->
+  <section class="mode" id="mode3">
+    <div class="stage-box" id="stage3">
+      <svg viewBox="0 0 360 114" id="isoSvg" aria-label="等角透視立體城堡">
+        <line x1="120" y1="92" x2="240" y2="92" stroke="#c8b28a" stroke-width="2" stroke-dasharray="8 6"></line>
+        <!-- 底層 (0,0,0) -->
+        <g class="blk" id="blkBottom">
+          <polygon class="f-top" points="170,31 192,44 170,57 148,44"></polygon>
+          <polygon class="f-l" points="170,31 148,44 148,71 170,58"></polygon>
+          <polygon class="f-r" points="170,31 192,44 192,71 170,58"></polygon>
+          <text class="num" x="163" y="64">①</text>
+        </g>
+        <!-- X-Ray 透視：被上層壓住看不見的底面 -->
+        <g id="hiddenFace"><path d="M170,31 L192,44 L170,57 L148,44 Z"></path></g>
+        <!-- 上層 (0,0,1) -->
+        <g class="blk top-block" id="blkTop">
+          <polygon class="f-top" points="170,4 192,17 170,30 148,17"></polygon>
+          <polygon class="f-l" points="170,4 148,17 148,44 170,31"></polygon>
+          <polygon class="f-r" points="170,4 192,17 192,44 170,31"></polygon>
+          <text class="num" x="163" y="34">②</text>
+        </g>
+        <!-- 底層右 (1,0,0) -->
+        <g class="blk" id="blkRight">
+          <polygon class="f-top" points="192,44 214,57 192,70 170,57"></polygon>
+          <polygon class="f-l" points="192,44 170,57 170,84 192,71"></polygon>
+          <polygon class="f-r" points="192,44 214,57 214,84 192,71"></polygon>
+          <text class="num" x="192" y="81">③</text>
+        </g>
+        <!-- 底層左 (0,1,0) -->
+        <g class="blk" id="blkLeft">
+          <polygon class="f-top" points="148,44 170,57 148,70 126,57"></polygon>
+          <polygon class="f-l" points="148,44 126,57 126,84 148,71"></polygon>
+          <polygon class="f-r" points="148,44 170,57 170,84 148,71"></polygon>
+          <text class="num" x="135" y="81">④</text>
+        </g>
+      </svg>
+    </div>
+    <div class="btn-row">
+      <button class="act" id="btnXray">🔦 X-Ray 光透<small>看穿看不見的積木</small></button>
+      <button class="chip" id="countChip">👀 已點數：0 / 4 個積木<small>點積木亮金光</small></button>
+    </div>
+    <div class="note"><span class="note-text" id="note3"></span><span class="note-tools" id="tools3"></span></div>
+    <div class="opt-grid" id="opts3"></div>
+    <div class="check-row"><button class="check-btn" id="check3">檢查答案</button><span class="result" id="result3"></span></div>
+  </section>
+
+  <!-- ════════ Q4 三角形圖卡拼拼看 ════════ -->
+  <section class="mode" id="mode4">
+    <div class="stage-box" id="stage4">
+      <svg viewBox="0 0 360 112" aria-label="三角形拼長方形">
+        <text x="10" y="13" class="goal-tag">← 操作區：轉一轉、翻一翻</text>
+        <text x="216" y="13" class="goal-tag">目標：拼成長方形 →</text>
+        <rect id="targetRect" x="222" y="26" width="104" height="60" rx="3"></rect>
+        <!-- 圖卡 ㄅ -->
+        <g class="card-tri" id="cardA">
+          <polygon points="-26,-15 26,-15 -26,15"></polygon>
+          <text class="card-tag" x="-19" y="5" fill="#0d47a1">ㄅ</text>
+        </g>
+        <!-- 圖卡 ㄆ -->
+        <g class="card-tri" id="cardB">
+          <polygon points="-26,-15 26,-15 -26,15"></polygon>
+          <text class="card-tag" x="-19" y="5" fill="#a3004f">ㄆ</text>
+        </g>
+      </svg>
+    </div>
+    <div class="btn-row">
+      <button class="chip" id="btnRotA">↻ ㄅ 旋轉</button>
+      <button class="chip" id="btnFlipA">⇄ ㄅ 翻面</button>
+      <button class="chip" id="btnRotB">↻ ㄆ 旋轉</button>
+      <button class="chip" id="btnFlipB">⇄ ㄆ 翻面</button>
+    </div>
+    <div class="note"><span class="note-text" id="note4"></span><span class="note-tools" id="tools4"></span></div>
+    <div class="opt-grid" id="opts4"></div>
+    <div class="check-row"><button class="check-btn" id="check4">檢查答案</button><span class="result" id="result4"></span></div>
+  </section>
+
+  <!-- ════════ Q5 幾何圖形火車數數看 ════════ -->
+  <section class="mode" id="mode5">
+    <div class="stage-box" id="stage5">
+      <svg viewBox="0 4 360 100" id="trainSvg" aria-label="幾何圖形小火車">
+        <text x="10" y="12" font-size="10" font-weight="800" fill="#8a5a2e">歡樂小火車：點下面的形狀鈕，同款圖形會一起亮起來！</text>
+        <!-- 蒸汽（非計數圖形：波浪線） -->
+        <path d="M104,28 q5,-6 0,-11 q-5,-5 2,-9" fill="none" stroke="#b0bec5" stroke-width="2.5" stroke-linecap="round" opacity=".8"></path>
+        <path d="M112,25 q6,-6 1,-11" fill="none" stroke="#cfd8dc" stroke-width="2.5" stroke-linecap="round" opacity=".7"></path>
+        <!-- 車頭（長方形 1） -->
+        <g class="sh" data-shape="rect"><rect class="body-el" x="30" y="52" width="100" height="42" rx="4" fill="#7ec8f7" stroke="#22707a" stroke-width="2.2"></rect><text class="tag" x="70" y="106">1</text></g>
+        <!-- 車廂（長方形 2） -->
+        <g class="sh" data-shape="rect"><rect class="body-el" x="196" y="46" width="104" height="44" rx="4" fill="#a5d6a7" stroke="#33691e" stroke-width="2.2"></rect><text class="tag" x="244" y="106">2</text></g>
+        <!-- 聯結器（線，不是圖形卡） -->
+        <line x1="130" y1="80" x2="196" y2="80" stroke="#8a5a2e" stroke-width="4" stroke-linecap="round"></line>
+        <!-- 車頭煙囪（三角形 1） -->
+        <g class="sh" data-shape="tri"><polygon class="body-el" points="98,52 114,52 106,30" fill="#ffcc80" stroke="#e65100" stroke-width="2.2"></polygon><text class="tag" x="116" y="44">1</text></g>
+        <!-- 車頭前鏟（三角形 2） -->
+        <g class="sh" data-shape="tri"><polygon class="body-el" points="30,94 46,94 30,78" fill="#ffcc80" stroke="#e65100" stroke-width="2.2"></polygon><text class="tag" x="13" y="90">2</text></g>
+        <!-- 車窗（正方形 1~3） -->
+        <g class="sh" data-shape="sq"><rect class="body-el" x="48" y="62" width="15" height="15" rx="2" fill="#fffde7" stroke="#f9a825" stroke-width="2.2"></rect><text class="tag" x="51" y="60">1</text></g>
+        <g class="sh" data-shape="sq"><rect class="body-el" x="74" y="62" width="15" height="15" rx="2" fill="#fffde7" stroke="#f9a825" stroke-width="2.2"></rect><text class="tag" x="77" y="60">2</text></g>
+        <g class="sh" data-shape="sq"><rect class="body-el" x="238" y="56" width="15" height="15" rx="2" fill="#fffde7" stroke="#f9a825" stroke-width="2.2"></rect><text class="tag" x="241" y="54">3</text></g>
+        <!-- 車輪（圓形 1~4） -->
+        <g class="sh" data-shape="circle"><circle class="body-el" cx="55" cy="94" r="10" fill="#6d4c41" stroke="#3e2723" stroke-width="2.2"></circle><circle cx="55" cy="94" r="3.5" fill="#d7ccc8"></circle><text class="tag" x="49" y="82">1</text></g>
+        <g class="sh" data-shape="circle"><circle class="body-el" cx="95" cy="94" r="10" fill="#6d4c41" stroke="#3e2723" stroke-width="2.2"></circle><circle cx="95" cy="94" r="3.5" fill="#d7ccc8"></circle><text class="tag" x="89" y="82">2</text></g>
+        <g class="sh" data-shape="circle"><circle class="body-el" cx="219" cy="90" r="10" fill="#6d4c41" stroke="#3e2723" stroke-width="2.2"></circle><circle cx="219" cy="90" r="3.5" fill="#d7ccc8"></circle><text class="tag" x="213" y="78">3</text></g>
+        <g class="sh" data-shape="circle"><circle class="body-el" cx="276" cy="90" r="10" fill="#6d4c41" stroke="#3e2723" stroke-width="2.2"></circle><circle cx="276" cy="90" r="3.5" fill="#d7ccc8"></circle><text class="tag" x="270" y="78">4</text></g>
+        <!-- 鐵軌 -->
+        <line x1="8" y1="98" x2="352" y2="98" stroke="#8a5a2e" stroke-width="3" stroke-linecap="round"></line>
+      </svg>
+    </div>
+    <div class="btn-row" id="shapeRow">
+      <button class="chip shape-btn" data-shape="circle">⭕ 圓形<small>共 4 個</small></button>
+      <button class="chip shape-btn" data-shape="rect">▭ 長方形<small>共 2 個</small></button>
+      <button class="chip shape-btn" data-shape="sq">⏹ 正方形<small>共 3 個</small></button>
+      <button class="chip shape-btn" data-shape="tri">🔺 三角形<small>共 2 個</small></button>
+    </div>
+    <div class="note"><span class="note-text" id="note5"></span><span class="note-tools" id="tools5"></span></div>
+    <div class="opt-grid" id="opts5"></div>
+    <div class="check-row"><button class="check-btn" id="check5">檢查答案</button><span class="result" id="result5"></span></div>
+  </section>
+</div>
+
+<script>
+'use strict';
+/* ════════ 共用工具 ════════ */
+const $ = (id) => document.getElementById(id);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let snd = null;
+function thump(){ /* 蓋印／點數音效：WebAudio 純合成，無外部檔案 */
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return; /* DEGRADED:環境無 AudioContext 時略過音效（互動回饋仍有動畫） */
+    /* 只在真實使用者手勢後啟用，避免未授權自動播放；機器人/無手勢環境靜默略過 */
+    if(!snd && !(navigator.userActivation && navigator.userActivation.hasBeenActive)) return;
+    snd = snd || new AC();
+    const o = snd.createOscillator(), g = snd.createGain();
+    o.type = 'sine'; o.frequency.value = 150;
+    g.gain.setValueAtTime(.35, snd.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, snd.currentTime + .18);
+    o.connect(g); g.connect(snd.destination);
+    o.start(); o.stop(snd.currentTime + .2);
+  }catch(e){ /* DEGRADED:音效播放失敗不影響操作流程 */ }
+}
+async function anim(el, transform, dur, ease){
+  el.style.transition = 'transform ' + dur + 'ms ' + (ease || 'ease');
+  el.style.transform = transform;
+  await sleep(dur + 30);
+}
+
+/* ════════ 五題模式資料（SSOT 題幹／選項與 data/units/G1/S-1-2.json 同步） ════════ */
+const QS = [
+  { q:1, tab:'滾動堆高', title:'滾動與堆高大考驗', badge:'第 1 題',
+    stem:'觀察 <span class="key-phrase">球體</span>、<span class="key-phrase">正方體</span> 和 <span class="key-phrase">圓柱</span>：哪種「可以滾動」？哪種「容易堆高」？動手測試看看！',
+    source:'忠孝 114-1 期中 ＋ 獅湖 114-1 期末',
+    hint:'<span class="zz">破招：</span>球體只有彎彎的曲面 → 會滾動；正方體有平平的面 → 容易堆高；圓柱立著可堆高、橫放會滾動！',
+    opts:['球體最會滾動；正方體最容易堆高','正方體最會滾動；球體最容易堆高','三種形體都很容易堆高','三種形體都一定會滾動'],
+    ok:'答對了！球體會滾動、正方體最容易堆高，圓柱立著能堆、橫放會滾！' },
+  { q:2, tab:'描描看', title:'物品底面描描看', badge:'第 2 題',
+    stem:'把物品的<span class="key-phrase">平平的底面</span>放在紙上，沿著邊緣描下來，會是什麼形狀？點印章蓋蓋看！',
+    source:'忠孝 114-1 期中九大題 2',
+    hint:'<span class="zz">破招：</span>圓柱底面→圓形；正方體→正方形；面紙盒→長方形；三角柱→三角形。立體的面對應平面圖形！',
+    opts:['圓形、正方形、長方形、三角形','正方形、圓形、三角形、長方形','圓形、長方形、正方形、三角形','三角形、正方形、圓形、長方形'],
+    ok:'答對了！圓柱底面是圓形、正方體是正方形、面紙盒是長方形、三角柱是三角形！' },
+  { q:3, tab:'數積木', title:'等角透視積木點數', badge:'第 3 題',
+    stem:'數數看，這座立體城堡是用<span class="key-phrase">幾個正方體積木</span>組成的？小心藏在下面看不到的積木！',
+    source:'獅湖 114-2 期中四大題(2)',
+    hint:'<span class="zz">破招：</span>別漏了被壓在下面的積木！點亮每一塊數數看，再用 X-Ray 光透看看有沒有藏起來的。',
+    opts:['4 個','3 個','5 個','6 個'],
+    ok:'答對了！底層 3 塊 ＋ 上層 1 塊 ＝ 4 個正方體積木，被壓住的也不能漏！' },
+  { q:4, tab:'拼圖卡', title:'三角形圖卡拼拼看', badge:'第 4 題',
+    stem:'旋轉或翻面這兩片三角形圖卡 ㄅ、ㄆ，把它們<span class="key-phrase">拼成右邊的長方形</span>！',
+    source:'獅湖 114-2 期中第一大題 4',
+    hint:'<span class="zz">破招：</span>兩個完全一樣的直角三角形，<b>斜邊對斜邊</b>拼在一起，就是一個長方形！',
+    opts:['兩片旋轉到斜邊對斜邊，就能拼成長方形','兩片都不用動，直接放上去就可以','一定要兩片都翻面才拼得起來','怎麼轉都拼不成長方形'],
+    ok:'答對了！兩個完全相同的直角三角形，斜邊對斜邊拼合就是長方形！' },
+  { q:5, tab:'火車數數', title:'幾何圖形火車數數看', badge:'第 5 題',
+    stem:'這列歡樂小火車是用幾何圖形拼成的。數數看<span class="key-phrase">圓形、長方形、正方形、三角形</span>各有幾個？',
+    source:'內湖 114-2 期末五大題 3',
+    hint:'<span class="zz">破招：</span>點形狀鈕，同款圖形會一起發亮並標號，一個一個對著數就不會數錯囉！',
+    opts:['圓 4 個、長方 2 個、正方 3 個、三角 2 個','圓 3 個、長方 2 個、正方 3 個、三角 2 個','圓 4 個、長方 3 個、正方 2 個、三角 2 個','圓 4 個、長方 2 個、正方 3 個、三角 3 個'],
+    ok:'答對了！圓形 4 個、長方形 2 個、正方形 3 個、三角形 2 個！' }
+];
+
+/* ════════ 分頁與題目橫幅 ════════ */
+function buildTabs(){
+  const box = $('tabs');
+  QS.forEach((d) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (d.q === 1 ? ' active' : '');
+    b.dataset.q = d.q;
+    b.innerHTML = '<b>Q' + d.q + '</b>' + d.tab;
+    b.onclick = () => showQ(d.q);
+    box.appendChild(b);
+  });
+}
+function showQ(q){
+  curQ = q;
+  document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', +t.dataset.q === q));
+  QS.forEach((d) => $('mode' + d.q).classList.toggle('on', d.q === q));
+  const d = QS[q - 1];
+  $('qBadge').textContent = d.badge;
+  $('qStem').innerHTML = d.title + '：' + d.stem;
+  $('qSource').textContent = d.source;
+  setNote(q, d.hint, '');
+}
+function setNote(q, html, cls){
+  const n = $('note' + q);
+  n.innerHTML = html;
+  n.className = 'note-text' + (cls ? ' ' + cls : '');
+}
+
+/* ════════ 答題 UI（每題 2×2 選項＋檢查） ════════ */
+const picks = { 1:null, 2:null, 3:null, 4:null, 5:null };
+function initOpts(){
+  QS.forEach((d) => {
+    const box = $('opts' + d.q);
+    d.opts.forEach((txt, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.textContent = txt;
+      b.onclick = () => {
+        box.querySelectorAll('.opt-btn').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        picks[d.q] = i;
+        $('result' + d.q).className = 'result';
+        $('result' + d.q).textContent = '';
+      };
+      box.appendChild(b);
+    });
+    $('check' + d.q).onclick = () => {
+      const r = $('result' + d.q);
+      if(picks[d.q] === null){
+        r.className = 'result fail'; r.textContent = '先點一個答案，再按檢查喔！'; return;
+      }
+      if(picks[d.q] === 0){ r.className = 'result success'; r.textContent = '🎉 ' + d.ok; thump(); }
+      else{ r.className = 'result fail'; r.textContent = '再想想看～提示就在上面的破招裡！'; }
+    };
+  });
+}
+
+/* ════════ Q1：滾動與堆高 ════════ */
+const q1 = { obj:'ball', cylLying:true, busy:false };
+function q1Reset(){
+  ['obBall','obCube','obCylL','obCylS'].forEach((id) => {
+    const el = $(id);
+    el.style.transition = 'none'; el.classList.remove('wobble');
+  });
+  $('obBall').style.transform = 'translate(88px,33px)';
+  $('obCube').style.transform = 'translate(82px,34px)';
+  $('obCylL').style.transform = 'translate(88px,34px)';
+  $('obCylS').style.transform = 'translate(88px,26px)';
+}
+function q1ResetStack(){
+  ['stCube','stCylL','stCylS','stBall'].forEach((id) => {
+    const el = $(id);
+    el.style.transition = 'none'; el.style.opacity = 0;
+  });
+  $('stCube').style.transform = 'translate(300px,60px)';
+  $('stCylL').style.transform = 'translate(300px,60px)';
+  $('stCylS').style.transform = 'translate(300px,52px)';
+  $('stBall').style.transform = 'translate(300px,59px)';
+}
+async function q1Roll(){
+  if(q1.busy) return; q1.busy = true;
+  q1Reset(); await sleep(50);
+  if(q1.obj === 'ball'){
+    await anim($('obBall'), 'translate(26px,89px) rotate(210deg)', 850, 'ease-in');
+    anim($('obBall'), 'translate(12px,89px) rotate(430deg)', 700, 'ease-out');
+    setNote(1, '皮球：咕嚕咕嚕一口氣滾下坡！<span class="zz">球體全身彎彎的曲面，最會滾動～</span>', 'warn');
+  }else if(q1.obj === 'cube'){
+    await anim($('obCube'), 'translate(48px,59px)', 850, 'ease-in');
+    setNote(1, '木積木：只滑一小段就卡住了！<span class="zz">正方體有平平的面，滾不動。</span>', 'warn');
+  }else{
+    if(q1.cylLying){
+      await anim($('obCylL'), 'translate(30px,89px)', 900, 'ease-in');
+      anim($('obCylL'), 'translate(12px,89px)', 650, 'ease-out');
+      setNote(1, '茶葉罐橫放：咕嚕咕嚕滾得順！<span class="zz">橫放的圓柱有彎彎的曲面可以滾。</span>', 'warn');
+    }else{
+      const c = $('obCylS');
+      c.classList.add('wobble');
+      setNote(1, '茶葉罐立著：搖搖晃晃站在原地，<span class="zz">立著的圓柱滾不動！</span>', 'warn');
+      await sleep(1500); c.classList.remove('wobble');
+    }
+  }
+  q1.busy = false;
+}
+async function q1Stack(){
+  if(q1.busy) return; q1.busy = true;
+  q1ResetStack(); await sleep(50);
+  const show = (el) => { el.style.transition = 'none'; el.style.opacity = 1; };
+  if(q1.obj === 'cube'){
+    const el = $('stCube'); show(el); await sleep(30);
+    await anim(el, 'translate(300px,82px)', 500, 'cubic-bezier(.3,1.35,.6,1)');
+    setNote(1, '木積木堆上去：平平的面緊緊貼住，<span class="zz">穩！正方體最容易堆高。</span>', 'good');
+  }else if(q1.obj === 'cyl' && q1.cylLying){
+    const el = $('stCylL'); show(el); await sleep(30);
+    await anim(el, 'translate(300px,82px)', 500, 'cubic-bezier(.3,1.35,.6,1)');
+    await sleep(150);
+    el.style.transition = 'transform .55s cubic-bezier(.55,0,.9,.6)';
+    el.style.transformOrigin = '50% 100%';
+    el.style.transform = 'translate(306px,82px) rotate(76deg)';
+    setNote(1, '茶葉罐橫著堆：咻隆～<span class="zz">倒下來了！橫放的圓柱會滾會倒。</span>', 'warn');
+  }else if(q1.obj === 'cyl'){
+    const el = $('stCylS'); show(el); await sleep(30);
+    await anim(el, 'translate(300px,74px)', 500, 'cubic-bezier(.3,1.35,.6,1)');
+    setNote(1, '茶葉罐立著疊：底面平平的，<span class="zz">可以穩穩疊一層！</span>', 'good');
+  }else{
+    const el = $('stBall'); show(el); await sleep(30);
+    await anim(el, 'translate(300px,81px)', 500, 'cubic-bezier(.3,1.35,.6,1)');
+    await sleep(150);
+    await anim(el, 'translate(330px,81px) rotate(210deg)', 400, 'ease-in');
+    anim(el, 'translate(346px,93px) rotate(400deg)', 430, 'ease-in');
+    setNote(1, '皮球放上去：咻～滑走了！<span class="zz">球體沒有平平的面，不能堆高。</span>', 'warn');
+  }
+  q1.busy = false;
+}
+function q1Init(){
+  document.querySelectorAll('.btn-row .chip[data-obj]').forEach((c) => {
+    c.onclick = () => {
+      document.querySelectorAll('.btn-row .chip[data-obj]').forEach((x) => x.classList.remove('sel'));
+      c.classList.add('sel'); q1.obj = c.dataset.obj; q1Reset();
+      $('tools1').innerHTML = (q1.obj === 'cyl')
+        ? '<button class="mini-btn" id="btnCylFlip">🔄 圓柱：橫放</button>' : '';
+      const f = $('btnCylFlip');
+      if(f) f.onclick = () => {
+        q1.cylLying = !q1.cylLying;
+        $('obCylL').style.display = q1.cylLying ? '' : 'none';
+        $('obCylS').style.display = q1.cylLying ? 'none' : '';
+        f.textContent = q1.cylLying ? '🔄 圓柱：橫放' : '🔄 圓柱：立放';
+        q1Reset();
+      };
+      setNote(1, '選好了！現在點「滾動測試」或「堆高測試」試試看。', '');
+    };
+  });
+  $('btnRoll').onclick = q1Roll;
+  $('btnStack').onclick = q1Stack;
+  q1Reset(); q1ResetStack();
+}
+
+/* ════════ Q2：物品底面描描看 ════════ */
+const q2 = { count:0, kinds:[] };
+const Q2_SHAPE = {
+  cyl:   { label:'圓形',   svg:'<ellipse cx="0" cy="0" rx="46" ry="14"></ellipse>' },
+  cube:  { label:'正方形', svg:'<rect x="-15" y="-15" width="30" height="30" rx="1.5"></rect>' },
+  tissue:{ label:'長方形', svg:'<rect x="-37" y="-12" width="74" height="24" rx="1.5"></rect>' },
+  tri:   { label:'三角形', svg:'<polygon points="0,-14 56,14 -56,14"></polygon>' }
+};
+const Q2_SLOT = [[108,46],[252,46],[108,88],[252,88]];
+function q2Stamp(kind){
+  const chip = document.querySelector('#stampRow .chip[data-kind="' + kind + '"]');
+  if(chip){ chip.classList.remove('pressing'); void chip.offsetWidth; chip.classList.add('pressing'); }
+  thump();
+  const idx = q2.count % 4;
+  q2.count++; q2.kinds.push(kind);
+  const [cx, cy] = Q2_SLOT[idx];
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.setAttribute('class', 'stamped stamp-pop');
+  g.setAttribute('transform', 'translate(' + cx + ',' + cy + ') rotate(' + ((q2.count * 47) % 9 - 4) + ')');
+  g.innerHTML = Q2_SHAPE[kind].svg;
+  $('stamps').appendChild(g);
+  const names = q2.kinds.slice(-4).map((k) => Q2_SHAPE[k].label).join('、');
+  setNote(2, '蓋好了！紙上出現<b>' + Q2_SHAPE[kind].label + '</b>（已蓋 ' + q2.count + ' 個印：' + names + '）。<span class="zz">立體的平底 = 平面圖形！</span>', 'good');
+}
+function q2Init(){
+  document.querySelectorAll('#stampRow .chip[data-kind]').forEach((c) => { c.onclick = () => q2Stamp(c.dataset.kind); });
+  $('btnClear').onclick = () => {
+    $('stamps').innerHTML = ''; q2.count = 0; q2.kinds = [];
+    setNote(2, '紙擦乾淨了！再蓋一次看看，每次蓋出來的形狀都一樣喔。', '');
+  };
+}
+
+/* ════════ Q3：等角透視積木點數 ════════ */
+const q3 = { lit:new Set() };
+const Q3_NAME = { blkBottom:'底層後面那塊', blkTop:'上面那塊', blkRight:'底層右邊那塊', blkLeft:'底層左邊那塊' };
+function q3Init(){
+  document.querySelectorAll('#stage3 .blk').forEach((b) => {
+    b.onclick = () => {
+      const id = b.id;
+      if(q3.lit.has(id)){ q3.lit.delete(id); b.classList.remove('lit'); }
+      else{ q3.lit.add(id); b.classList.add('lit'); thump(); }
+      $('countChip').innerHTML = '👀 已點數：' + q3.lit.size + ' / 4 個積木<small>點積木亮金光</small>';
+      if(q3.lit.size === 4){
+        setNote(3, '全部點亮了！<span class="zz">城堡一共用了 4 個正方體積木</span>：底層 3 塊 ＋ 上層 1 塊。', 'good');
+      }else{
+        setNote(3, '點亮了' + Q3_NAME[id] + '！已點數 ' + q3.lit.size + ' 個。想一想：還有沒有被壓住看不到的？', '');
+      }
+    };
+  });
+  $('btnXray').onclick = () => {
+    const on = $('isoSvg').classList.toggle('xray');
+    $('btnXray').innerHTML = on ? '🔦 關閉光透<small>恢復正常視線</small>' : '🔦 X-Ray 光透<small>看穿看不見的積木</small>';
+    setNote(3, on
+      ? '光透開啟！<span class="zz">看到了嗎？上層積木底下還壓著 1 塊</span>，虛線紅框就是它被藏住的底面，千萬不能漏數！'
+      : '光透關閉。記住喔：看起來 3 塊，其實上層底下還藏著 1 塊，一共是 4 塊！', 'warn');
+  };
+}
+
+/* ════════ Q4：三角形圖卡拼拼看 ════════ */
+const q4 = {
+  A:{ rot:1, flip:false, cx:52, cy:48 },
+  B:{ rot:2, flip:false, cx:116, cy:84 },
+  done:false
+};
+function q4Apply(){
+  ['A','B'].forEach((k) => {
+    const s = q4[k];
+    $('card' + k).style.transform =
+      'translate(' + s.cx + 'px,' + s.cy + 'px) rotate(' + (s.rot * 90) + 'deg) scale(' + (s.flip ? -1 : 1) + ',1) translate(-26px,-15px)';
+  });
+}
+function q4Check(){
+  if(q4.done) return;
+  if(q4.A.rot === 2 && !q4.A.flip && q4.B.rot === 0 && !q4.B.flip){
+    q4.done = true;
+    $('cardA').classList.add('done'); $('cardB').classList.add('done');
+    $('targetRect').classList.add('done');
+    $('cardA').style.transform = 'translate(274px,56px) rotate(180deg) scale(2)';
+    $('cardB').style.transform = 'translate(274px,56px) scale(2)';
+    thump();
+    setNote(4, '拼出長方形了！🎉 <span class="zz">兩個完全一樣的直角三角形，斜邊對斜邊，就是一個長方形！</span>', 'good');
+  }else{
+    setNote(4, '還沒拼起來～<span class="zz">提示：斜邊（最長的那一邊）要對斜邊</span>，把圖卡轉到剛剛好再試試！', '');
+  }
+}
+function q4Init(){
+  $('btnRotA').onclick = () => { if(q4.done) return; q4.A.rot = (q4.A.rot + 1) % 4; q4Apply(); q4Check(); };
+  $('btnRotB').onclick = () => { if(q4.done) return; q4.B.rot = (q4.B.rot + 1) % 4; q4Apply(); q4Check(); };
+  $('btnFlipA').onclick = () => { if(q4.done) return; q4.A.flip = !q4.A.flip; q4Apply(); q4Check(); };
+  $('btnFlipB').onclick = () => { if(q4.done) return; q4.B.flip = !q4.B.flip; q4Apply(); q4Check(); };
+  const rb = document.createElement('button');
+  rb.className = 'mini-btn'; rb.textContent = '🔄 重來';
+  rb.onclick = () => {
+    q4.A.rot = 1; q4.A.flip = false; q4.B.rot = 2; q4.B.flip = false; q4.done = false;
+    $('cardA').classList.remove('done'); $('cardB').classList.remove('done');
+    $('targetRect').classList.remove('done');
+    q4Apply();
+    setNote(4, QS[3].hint, '');
+  };
+  $('tools4').appendChild(rb);
+  q4Apply();
+}
+
+/* ════════ Q5：幾何圖形火車數數看 ════════ */
+const Q5_COUNT = { circle:4, rect:2, sq:3, tri:2 };
+const Q5_LABEL = { circle:'圓形', rect:'長方形', sq:'正方形', tri:'三角形' };
+function q5Init(){
+  document.querySelectorAll('.shape-btn').forEach((b) => {
+    b.onclick = () => {
+      const shape = b.dataset.shape;
+      const active = b.classList.contains('sel');
+      document.querySelectorAll('.shape-btn').forEach((x) => x.classList.remove('sel'));
+      document.querySelectorAll('#stage5 .sh').forEach((g) => g.classList.remove('hl'));
+      if(!active){
+        b.classList.add('sel');
+        document.querySelectorAll('#stage5 .sh[data-shape="' + shape + '"]').forEach((g) => g.classList.add('hl'));
+        setNote(5, Q5_LABEL[shape] + '亮起來了，即時統計：<b>' + Q5_COUNT[shape] + ' 個</b>！照著編號 1、2、3… 指著數一遍。', 'good');
+      }else{
+        setNote(5, QS[4].hint, '');
+      }
+    };
+  });
+}
+
+/* ════════ 啟動 ════════ */
+let curQ = 1;
+buildTabs();
+initOpts();
+q1Init(); q2Init(); q3Init(); q4Init(); q5Init();
+const urlQ = parseInt(new URLSearchParams(location.search).get('q'), 10);
+showQ(QS.some((d) => d.q === urlQ) ? urlQ : 1);
+</script>
+</body>
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>算式符號等量天平 · G1-R-1-1（加號、減號、等號、未知數□）</title>
+<style>
+  :root{
+    --wood-1:#d9a066; --wood-2:#b57b45; --wood-dark:#8a5a2e;
+    --cream:#fdf6e9; --ink:#4e342e;
+    --red:#e53935; --green:#43a047; --gold:#ffb300; --blue:#1e88e5;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(circle at 15% 12%, #fff7e0 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, #f3e3c3 0%, transparent 50%),
+      var(--cream);
+    color:var(--ink);
+    font-family:"YuanTi TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+  }
+  #app{ max-width:960px; margin:0 auto; padding:2px 6px 3px; }
+
+  .tabs{ display:flex; gap:3px; margin-top:0; }
+  .tab{
+    flex:1 1 0; min-height:42px; border:2.5px solid var(--wood-dark); border-radius:10px; cursor:pointer;
+    background:linear-gradient(180deg,#fff3d6,#ffe1a8); color:var(--ink); text-shadow:none;
+    font-weight:700; font-size:10.5px; line-height:1.12; padding:1px 1px;
+    box-shadow:0 2px 0 var(--wood-dark); transition:transform .12s;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .tab b{ font-size:11.5px; }
+  .tab:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 var(--wood-dark); }
+  .tab.active{ background:linear-gradient(180deg,#ffdf6b,#ffc233); }
+
+  .q-banner{
+    margin:2px 0 0; background:#fff; border:2.5px dashed var(--wood-2);
+    border-radius:10px; padding:2px 8px; position:relative;
+    font-size:10.5px; font-weight:700; line-height:1.25;
+  }
+  .q-banner .badge{
+    display:inline-block; background:#ffe082; border:1.5px solid var(--gold);
+    border-radius:6px; font-size:10.5px; padding:0 5px; margin-right:4px; vertical-align:1px; white-space:nowrap;
+  }
+  .q-banner .source-tag{
+    position:absolute; top:2px; right:6px; font-size:10.5px; color:#b9a58a; font-weight:400; letter-spacing:.3px;
+  }
+  .key-phrase{ color:var(--red); text-decoration:underline wavy var(--red) 1.5px; text-underline-offset:2px; }
+
+  .mode{ display:none; }
+  .mode.on{ display:block; }
+
+  .btn-row{ display:flex; gap:4px; margin-top:2px; }
+  .chip, .act{
+    flex:1 1 0; min-height:44px; border-radius:10px; cursor:pointer; font-family:inherit;
+    font-weight:700; font-size:11px; line-height:1.15; padding:1px 2px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transition:transform .12s;
+  }
+  .chip{
+    background:linear-gradient(180deg,#fff,#f3ead8); border:2px solid #c8a06a; color:var(--ink);
+    box-shadow:0 2px 0 #a5814e;
+  }
+  .act{
+    background:linear-gradient(180deg,#66bb6a,#43a047); border:2px solid #2e7d32; color:#fff;
+    text-shadow:0 1px 0 rgba(0,0,0,.25); box-shadow:0 2px 0 #2e7d32;
+  }
+  .chip:active,.act:active{ transform:translateY(1.5px); box-shadow:0 .5px 0 #a5814e; }
+  .chip.sel{ background:linear-gradient(180deg,#ffe082,#ffc233); border-color:var(--gold); box-shadow:0 2px 0 var(--gold); }
+  .chip:disabled,.act:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+
+  .stage-box{
+    margin-top:2px; border:2.5px solid var(--wood-dark); border-radius:11px;
+    background:linear-gradient(180deg,#fffdf4,#fdf3dc);
+    box-shadow:0 2px 0 var(--wood-dark); overflow:hidden;
+  }
+  .stage-box svg{ display:block; width:100%; height:auto; max-height:132px; }
+  .stage-box.good{ border-color:var(--green); box-shadow:0 0 0 3px rgba(67,160,71,.45), 0 2px 0 var(--green); }
+  .stage-box svg .itm{ pointer-events:none; }
+  .stage-box svg .itm.clickable{ pointer-events:auto; cursor:pointer; }
+  .stage-box svg .itm.clickable:hover .hit{ fill:rgba(255,179,0,.18); }
+  .fade{ animation:fadeout .4s ease forwards; }
+  @keyframes fadeout{ to{ opacity:0; } }
+  .pop-in{ animation:popin .38s ease; transform-box:fill-box; transform-origin:center; }
+  @keyframes popin{ 0%{ transform:scale(.2); opacity:0; } 70%{ transform:scale(1.12); opacity:1; } 100%{ transform:scale(1); } }
+
+  .note{
+    margin-top:2px; min-height:0; background:#fff; border:2px dashed var(--wood-2); border-radius:9px;
+    padding:1px 8px; font-size:10.5px; font-weight:700; line-height:1.25;
+    display:flex; align-items:center; gap:6px;
+  }
+  .note .note-text{ flex:1 1 auto; }
+  .note .zz{ color:var(--red); }
+  .note.good{ background:#e8f5e9; border-color:var(--green); color:#1b5e20; }
+  .note.warn{ background:#fff3e0; border-color:var(--gold); color:#8d5b00; }
+
+  .opt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
+  .opt-btn{
+    min-height:44px; border:2px solid #c8a06a; border-radius:9px; background:#fff; color:var(--ink);
+    font-family:inherit; font-weight:700; font-size:11.5px; line-height:1.22; padding:1px 7px; cursor:pointer;
+    box-shadow:0 2px 0 #a5814e; display:flex; align-items:center; justify-content:center;
+  }
+  .opt-btn:active{ transform:translateY(1.5px); }
+  .opt-btn.active{ background:#1e88e5; border-color:#0d47a1; color:#fff; box-shadow:0 2px 0 #0d47a1; }
+  .check-row{ display:flex; align-items:center; gap:8px; margin-top:2px; min-height:30px; }
+  .check-btn{
+    flex:0 0 auto; min-height:30px; padding:1px 20px; border:none; border-radius:9px; cursor:pointer;
+    background:#263238; color:#fff; font-family:inherit; font-size:12px; font-weight:800;
+    box-shadow:0 2px 0 #10171a;
+  }
+  .check-btn:active{ transform:translateY(1.5px); }
+  .result{ flex:1 1 auto; font-size:11.5px; font-weight:700; line-height:1.3; }
+  .result.success{ color:#1b5e20; }
+  .result.fail{ color:#b71c1c; }
+
+  @media (min-width:640px){
+    #app{ padding:10px 16px 16px; }
+    .q-banner{ font-size:15px; }
+    .chip,.act,.opt-btn{ font-size:13px; }
+    .note{ font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="tabs" id="tabs"></div>
+
+  <div class="q-banner">
+    <span class="badge" id="qBadge">第 1 題</span><span id="qStem"></span>
+    <span class="source-tag" id="qSource"></span>
+  </div>
+
+  <!-- ════════ Q1 認識等號平衡 ════════ -->
+  <section class="mode" id="mode1">
+    <div class="stage-box" id="box1"><svg viewBox="0 0 360 140" id="bal1" aria-label="等號平衡天平"></svg></div>
+    <div class="btn-row">
+      <button class="act" id="act1">🍎 右盤拿走 1 顆<small>看看等號還成立嗎</small></button>
+      <button class="chip" id="reset1">🔄 重來<small>放回蘋果</small></button>
+    </div>
+    <div class="note" id="noteBox1"><span class="note-text" id="note1"></span></div>
+    <div class="opt-grid" id="opts1"></div>
+    <div class="check-row"><button class="check-btn" id="check1">檢查答案</button><span class="result" id="result1"></span></div>
+  </section>
+
+  <!-- ════════ Q2 未知數框框 □＋3＝8 ════════ -->
+  <section class="mode" id="mode2">
+    <div class="stage-box" id="box2"><svg viewBox="0 0 360 140" id="bal2" aria-label="神秘箱未知數天平"></svg></div>
+    <div class="btn-row">
+      <button class="chip" id="hint2" style="flex:0 0 44px">💡<small>提示</small></button>
+      <button class="chip" id="reset2">🔄 重來<small>砝碼放回去</small></button>
+    </div>
+    <div class="note" id="noteBox2"><span class="note-text" id="note2"></span></div>
+    <div class="opt-grid" id="opts2"></div>
+    <div class="check-row"><button class="check-btn" id="check2">檢查答案</button><span class="result" id="result2"></span></div>
+  </section>
+
+  <!-- ════════ Q3 哪一個算式答案相同 ════════ -->
+  <section class="mode" id="mode3">
+    <div class="stage-box" id="box3"><svg viewBox="0 0 360 140" id="bal3" aria-label="算式天平比一比"></svg></div>
+    <div class="btn-row">
+      <button class="chip exp-chip" data-exp="12 － 7" data-v="5">12 － 7<small>放上右盤</small></button>
+      <button class="chip exp-chip" data-exp="13 － 9" data-v="4">13 － 9<small>放上右盤</small></button>
+      <button class="chip exp-chip" data-exp="15 － 8" data-v="7">15 － 8<small>放上右盤</small></button>
+      <button class="chip" id="reset3">🔄 重來</button>
+    </div>
+    <div class="note" id="noteBox3"><span class="note-text" id="note3"></span></div>
+    <div class="opt-grid" id="opts3"></div>
+    <div class="check-row"><button class="check-btn" id="check3">檢查答案</button><span class="result" id="result3"></span></div>
+  </section>
+
+  <!-- ════════ Q4 看圖情境選算式 ════════ -->
+  <section class="mode" id="mode4">
+    <div class="stage-box" id="box4"><svg viewBox="0 0 360 140" id="bal4" aria-label="松鼠合起來天平"></svg></div>
+    <div class="btn-row">
+      <button class="act" id="act4a">🐿 又跑來 4 隻<small>松鼠跳上左盤</small></button>
+      <button class="chip" id="act4b" disabled>⚖ 合起來比一比<small>右盤放 9 顆蘋果</small></button>
+      <button class="chip" id="reset4">🔄 重來</button>
+    </div>
+    <div class="note" id="noteBox4"><span class="note-text" id="note4"></span></div>
+    <div class="opt-grid" id="opts4"></div>
+    <div class="check-row"><button class="check-btn" id="check4">檢查答案</button><span class="result" id="result4"></span></div>
+  </section>
+
+  <!-- ════════ Q5 算式比大小 8＋4 ○ 7＋6 ════════ -->
+  <section class="mode" id="mode5">
+    <div class="stage-box" id="box5"><svg viewBox="0 0 360 140" id="bal5" aria-label="算式比大小天平"></svg></div>
+    <div class="btn-row">
+      <button class="chip" id="hint5" style="flex:0 0 44px">💡<small>提示</small></button>
+      <button class="chip" id="reset5">🔄 重來</button>
+    </div>
+    <div class="note" id="noteBox5"><span class="note-text" id="note5"></span></div>
+    <div class="opt-grid" id="opts5"></div>
+    <div class="check-row"><button class="check-btn" id="check5">檢查答案</button><span class="result" id="result5"></span></div>
+  </section>
+</div>
+
+<script>
+'use strict';
+/* ════════ 共用工具 ════════ */
+const $ = (id) => document.getElementById(id);
+let snd = null;
+function thump(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return; /* DEGRADED:環境無 AudioContext 時略過音效（互動回饋仍有動畫） */
+    if(!snd && !(navigator.userActivation && navigator.userActivation.hasBeenActive)) return;
+    snd = snd || new AC();
+    const o = snd.createOscillator(), g = snd.createGain();
+    o.type = 'sine'; o.frequency.value = 150;
+    g.gain.setValueAtTime(.35, snd.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, snd.currentTime + .18);
+    o.connect(g); g.connect(snd.destination);
+    o.start(); o.stop(snd.currentTime + .2);
+  }catch(e){ /* DEGRADED:音效播放失敗不影響操作流程 */ }
+}
+
+/* ════════ 五題模式資料（SSOT 題幹／選項與 data/units/G1/R-1-1.json 同步） ════════ */
+const QS = [
+  { q:1, tab:'等號平衡', title:'等號＝的秘密',
+    stem:'天平左盤 <span class="key-phrase">5 顆蘋果</span>、右盤 <span class="key-phrase">5 顆蘋果</span>，正好水平。等號「＝」是什麼意思？從右盤拿走 1 顆會怎樣？',
+    source:'忠孝 114-1 期末 ＋ 獅湖 114-2 期中',
+    hint:'<span class="zz">破招：</span>「＝」表示天平兩邊<b>一樣重</b>。兩邊一樣多才能畫 ＝；拿走 1 顆，天平就歪了、等號就不成立了！',
+    opts:['＝ 表示兩邊一樣多，拿走 1 顆後兩邊不相等','＝ 表示答案要寫在後面','拿走 1 顆天平還是平衡的','蘋果變輕和等號沒有關係'],
+    ok:'答對了！＝就是「兩邊一樣多」：5 ＝ 5 平衡，拿走 1 顆變成 5 ≠ 4，天平立刻向左傾斜！' },
+  { q:2, tab:'神秘箱□', title:'□＋3＝8，□是幾？',
+    stem:'神秘箱（<span class="key-phrase">□</span>）和 3 顆砝碼，正好與右盤 8 顆砝碼平衡。<span class="key-phrase">兩邊同時拿走 3 顆</span>砝碼，猜猜神箱裡有幾顆？',
+    source:'獅湖 114-2 期中',
+    hint:'<span class="zz">破招：</span>天平平衡時，兩邊做「一樣的事」還是平衡！兩邊各拿走 3 顆：□ ＝ 8 － 3 ＝ 5。',
+    opts:['5 顆','3 顆','8 顆','11 顆'],
+    ok:'答對了！兩邊同時拿走 3 顆，神秘箱打開——□ ＝ 8 － 3 ＝ 5 顆！' },
+  { q:3, tab:'同答案算式', title:'哪一個算式答案相同？',
+    stem:'11 － 7 的答案，和右邊哪一個<span class="key-phrase">算式答案相同</span>？把算式卡放上右盤，看天平會不會平衡！',
+    source:'內湖 114-2 期末',
+    hint:'<span class="zz">破招：</span>11 － 7 ＝ 4。逐一試放：12－7＝5 太重、15－8＝7 太重，只有 13－9＝4 剛剛好平衡！',
+    opts:['13 － 9','12 － 7','15 － 8','三個都一樣'],
+    ok:'答對了！11 － 7 ＝ 4，13 － 9 ＝ 4，天平亮綠光水平——兩個算式答案相同！' },
+  { q:4, tab:'看圖列算式', title:'松鼠合起來（看圖選算式）',
+    stem:'樹上原本有 <span class="key-phrase">5 隻松鼠</span>，又跑來 <span class="key-phrase">4 隻</span>。把松鼠放上左盤、蘋果放上右盤比一比，合起來要用哪個算式？',
+    source:'忠孝 114-1 期末',
+    hint:'<span class="zz">破招：</span>「原本有…又跑來…」是<b>合起來</b>，用加法：5 ＋ 4 ＝ 9，天平兩邊一樣重！',
+    opts:['5 ＋ 4 ＝ 9，共 9 隻','5 ＋ 4 ＝ 10，共 10 隻','5 － 4 ＝ 1，共 1 隻','9 － 4 ＝ 5，共 5 隻'],
+    ok:'答對了！合起來用加法：5 ＋ 4 ＝ 9，左盤 9 隻松鼠 ＝ 右盤 9 顆蘋果，天平水平！' },
+  { q:5, tab:'算式比大小', title:'8＋4 ○ 7＋6',
+    stem:'左盤放 <span class="key-phrase">8＋4</span>、右盤放 <span class="key-phrase">7＋6</span>。看天平往哪邊沉，在 ○ 裡填上 ＜、＝ 或 ＞。',
+    source:'內湖 114-2 期末',
+    hint:'<span class="zz">破招：</span>天平向右沉 → 右盤比較重 → 7＋6 比較大 → 12 ＜ 13。',
+    opts:['＜','＝','＞','？'],
+    ok:'答對了！8＋4＝12、7＋6＝13，天平向右沉：12 ＜ 13！' }
+];
+
+/* ════════ 分頁與題目橫幅 ════════ */
+function buildTabs(){
+  const box = $('tabs');
+  QS.forEach((d) => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (d.q === 1 ? ' active' : '');
+    b.dataset.q = d.q;
+    b.innerHTML = '<b>Q' + d.q + '</b>' + d.tab;
+    b.onclick = () => showQ(d.q);
+    box.appendChild(b);
+  });
+}
+function showQ(q){
+  document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', +t.dataset.q === q));
+  QS.forEach((d) => $('mode' + d.q).classList.toggle('on', d.q === q));
+  const d = QS[q - 1];
+  $('qBadge').textContent = '第 ' + q + ' 題';
+  $('qStem').innerHTML = d.title + '：' + d.stem;
+  $('qSource').textContent = d.source;
+  setNote(q, d.hint, '');
+}
+function setNote(q, html, cls){
+  $('note' + q).innerHTML = html;
+  $('noteBox' + q).className = 'note' + (cls ? ' ' + cls : '');
+}
+
+/* ════════ 答題 UI（每題 2×2 選項＋檢查） ════════ */
+const picks = { 1:null, 2:null, 3:null, 4:null, 5:null };
+function initOpts(){
+  QS.forEach((d) => {
+    const box = $('opts' + d.q);
+    d.opts.forEach((txt, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.textContent = txt;
+      b.onclick = () => {
+        box.querySelectorAll('.opt-btn').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        picks[d.q] = i;
+        const r = $('result' + d.q);
+        r.className = 'result'; r.textContent = '';
+      };
+      box.appendChild(b);
+    });
+    $('check' + d.q).onclick = () => {
+      const r = $('result' + d.q);
+      if(picks[d.q] === null){
+        r.className = 'result fail'; r.textContent = '先點一個答案，再按檢查喔！'; return;
+      }
+      if(picks[d.q] === 0){ r.className = 'result success'; r.textContent = '🎉 ' + d.ok; thump(); }
+      else{ r.className = 'result fail'; r.textContent = '再想想看～提示就在上面的破招裡！'; }
+    };
+  });
+}
+
+/* ════════ 純向量小圖案（蘋果／砝碼／神秘箱／松鼠） ════════ */
+const A = {
+  apple: (x, y, cls) => '<g class="itm' + (cls ? ' ' + cls : '') + '" transform="translate(' + x + ' ' + y + ')">' +
+    '<path d="M0,-5 Q1,-10 4,-11" stroke="#6d4c41" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<path d="M2,-8 q5,-4 8,0 q-4,3 -8,0z" fill="#66bb6a"/>' +
+    '<circle r="8" cy="2" fill="#ef5350" stroke="#b71c1c" stroke-width="1.5"/>' +
+    '<circle cx="-2.5" cy="0" r="2" fill="#ffcdd2" opacity=".85"/></g>',
+  w: (x, y, cls) => '<g class="itm' + (cls ? ' ' + cls : '') + '" transform="translate(' + x + ' ' + y + ')">' +
+    (cls && cls.includes('clickable') ? '<circle class="hit" r="22" fill="transparent"/>' : '') +
+    '<path d="M-3,-5 a3,4.5 0 0 1 6,0" fill="none" stroke="#f9a825" stroke-width="2.4"/>' +
+    '<rect x="-7" y="-5" width="14" height="12" rx="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1.5"/></g>',
+  boxC: (x, y, cls) => '<g class="itm' + (cls ? ' ' + cls : '') + '" transform="translate(' + x + ' ' + y + ')">' +
+    '<rect x="-17" y="-12" width="34" height="26" rx="4" fill="#b57b45" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<rect x="-17" y="-12" width="34" height="7" rx="3" fill="#d9a066" stroke="#8a5a2e" stroke-width="1.5"/>' +
+    '<text y="9" text-anchor="middle" font-size="13" font-weight="800" fill="#fff8e1">?</text></g>',
+  boxO: (x, y, cls) => '<g class="itm' + (cls ? ' ' + cls : '') + ' pop-in" transform="translate(' + x + ' ' + y + ')">' +
+    '<rect x="-17" y="-6" width="34" height="20" rx="3" fill="#b57b45" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<path d="M-17,-6 l-5,-9 l9,2z" fill="#d9a066" stroke="#8a5a2e" stroke-width="1.5"/>' +
+    '<path d="M17,-6 l5,-9 l-9,2z" fill="#d9a066" stroke="#8a5a2e" stroke-width="1.5"/>' +
+    '<circle cx="-12" cy="1" r="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1.2"/>' +
+    '<circle cx="-6" cy="1" r="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1.2"/>' +
+    '<circle cx="0" cy="1" r="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1.2"/>' +
+    '<circle cx="6" cy="1" r="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1.2"/>' +
+    '<circle cx="12" cy="1" r="3" fill="#ffd54f" stroke="#f9a825" stroke-width="1.2"/></g>',
+  sq: (x, y, cls) => '<g class="itm' + (cls ? ' ' + cls : '') + '" transform="translate(' + x + ' ' + y + ')">' +
+    '<path d="M5,3 q10,-2 9,-10 q-1,-4 -5,-3" fill="none" stroke="#8d6e63" stroke-width="3" stroke-linecap="round"/>' +
+    '<ellipse rx="7" ry="8.5" cy="1" fill="#a1887f" stroke="#6d4c41" stroke-width="1.4"/>' +
+    '<circle cy="-9" r="5" fill="#a1887f" stroke="#6d4c41" stroke-width="1.4"/>' +
+    '<path d="M-4,-12 l-1.5,-4.5 4,1.6z" fill="#8d6e63"/>' +
+    '<path d="M1,-13.5 l1.5,-4 2.8,3z" fill="#8d6e63"/>' +
+    '<circle cx="-2" cy="-9.5" r="1.1" fill="#3e2723"/>' +
+    '<circle cx="1.8" cy="-9.5" r="1.1" fill="#3e2723"/>' +
+    '<path d="M-5,8.5 l-1,3.5 M0,9 l0,3.5 M5,8.5 l1,3.5" stroke="#6d4c41" stroke-width="1.6" stroke-linecap="round"/></g>'
+};
+
+/* ════════ 等量天平渲染器（單一幾何公式：樑旋轉 θ、雙盤反向旋轉保持水平） ════════ */
+function stack(list, cx, gap){
+  const n = list.length;
+  if(!n) return '';
+  const cols = Math.min(n, 5);
+  let out = '', i = 0;
+  for(let r = 0; i < n; r++){
+    const cnt = Math.min(cols, n - i);
+    const x0 = cx - ((cnt - 1) * gap) / 2;
+    for(let c = 0; c < cnt; c++, i++) out += list[i](x0 + c * gap, 84 - r * 16, list.cls);
+  }
+  return out;
+}
+function makeBalance(svgId){
+  const svg = $(svgId);
+  svg.innerHTML =
+    '<rect x="0" y="0" width="360" height="140" fill="#fbf7ee"/>' +
+    '<line x1="26" y1="126" x2="334" y2="126" stroke="#c8a06a" stroke-width="3" stroke-linecap="round"/>' +
+    '<polygon points="180,66 168,126 192,126" fill="#d9a066" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<rect x="148" y="126" width="64" height="5" rx="2.5" fill="#8a5a2e"/>' +
+    '<path d="M158.8,42.8 A30,30 0 0 1 201.2,42.8" fill="none" stroke="#b9a58a" stroke-width="2" stroke-dasharray="5 4"/>' +
+    '<line x1="180" y1="30" x2="180" y2="38" stroke="#e53935" stroke-width="2.5" stroke-linecap="round"/>' +
+    '<text id="' + svgId + 'Eq" x="180" y="17" text-anchor="middle" font-size="15" font-weight="800" fill="#4e342e"></text>' +
+    '<g id="' + svgId + 'Beam" transform="rotate(0 180 64)">' +
+      '<rect x="88" y="61" width="184" height="6" rx="3" fill="#b57b45" stroke="#8a5a2e" stroke-width="1.5"/>' +
+      '<polygon points="180,60 176.5,45 183.5,45" fill="#e53935"/>' +
+      '<circle cx="180" cy="64" r="4" fill="#8a5a2e"/>' +
+      '<g id="' + svgId + 'PanL" transform="rotate(0 88 64)" data-count="0"></g>' +
+      '<g id="' + svgId + 'PanR" transform="rotate(0 272 64)" data-count="0"></g>' +
+    '</g>';
+  const beam = $(svgId + 'Beam'), panL = $(svgId + 'PanL'), panR = $(svgId + 'PanR'), eq = $(svgId + 'Eq');
+  let cur = 0, raf = null;
+  function apply(a){
+    beam.setAttribute('transform', 'rotate(' + a.toFixed(2) + ' 180 64)');
+    panL.setAttribute('transform', 'rotate(' + (-a).toFixed(2) + ' 88 64)');
+    panR.setAttribute('transform', 'rotate(' + (-a).toFixed(2) + ' 272 64)');
+  }
+  function tiltTo(target){
+    if(raf) cancelAnimationFrame(raf);
+    const from = cur, t0 = performance.now(), DUR = 520;
+    (function step(now){
+      const p = Math.min(1, (now - t0) / DUR);
+      const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      cur = from + (target - from) * e;
+      apply(cur);
+      if(p < 1) raf = requestAnimationFrame(step);
+    })(t0);
+  }
+  function setPan(side, list, gap, label){
+    const pan = side === 'L' ? panL : panR;
+    const cx = side === 'L' ? 88 : 272;
+    let html =
+      '<line x1="' + cx + '" y1="64" x2="' + cx + '" y2="92" stroke="#8a5a2e" stroke-width="2"/>' +
+      '<path d="M' + (cx - 50) + ',96 Q' + cx + ',118 ' + (cx + 50) + ',96" fill="#d9a066" stroke="#8a5a2e" stroke-width="2"/>' +
+      '<ellipse cx="' + cx + '" cy="96" rx="50" ry="6" fill="#e3b578" stroke="#8a5a2e" stroke-width="2"/>';
+    if(list && list.length) html += stack(list, cx, gap || 20);
+    if(label) html += '<text x="' + cx + '" y="30" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a5a2e">' + label + '</text>';
+    pan.innerHTML = html;
+    pan.dataset.count = list ? list.length : 0;
+  }
+  return { svg, beam, panL, panR, eq, tiltTo, setPan, setEq: (t) => { eq.textContent = t; } };
+}
+
+/* ════════ Q1：認識等號平衡 ════════ */
+const B1 = makeBalance('bal1');
+let m1done = false;
+function m1Render(removed){
+  B1.setPan('L', Array(5).fill(A.apple), 20);
+  B1.setPan('R', Array(removed ? 4 : 5).fill(A.apple), 20);
+  B1.setEq(removed ? '5 ≠ 4' : '5 ＝ 5');
+  B1.tiltTo(removed ? -9 : 0);
+  $('box1').classList.toggle('good', false);
+}
+$('act1').onclick = () => {
+  if(m1done) return;
+  m1done = true;
+  $('act1').disabled = true;
+  m1Render(true);
+  setNote(1, '右盤拿走 1 顆後：左邊 5 顆、右邊 4 顆，<span class="zz">天平向左傾斜 → 兩邊不一樣多，不能再寫 ＝ 了（5 ≠ 4）</span>！', 'warn');
+};
+$('reset1').onclick = () => { m1done = false; $('act1').disabled = false; m1Render(false); setNote(1, QS[0].hint, ''); };
+
+/* ════════ Q2：未知數框框 □＋3＝8（兩邊同時拿走 3 顆） ════════ */
+const B2 = makeBalance('bal2');
+const m2 = { removed: 0, done: false };
+function m2Render(){
+  const leftW = 3 - m2.removed, rightW = 8 - m2.removed;
+  const cx = 88;
+  let html =
+    '<line x1="' + cx + '" y1="64" x2="' + cx + '" y2="92" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<path d="M' + (cx - 50) + ',96 Q' + cx + ',118 ' + (cx + 50) + ',96" fill="#d9a066" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<ellipse cx="' + cx + '" cy="96" rx="50" ry="6" fill="#e3b578" stroke="#8a5a2e" stroke-width="2"/>';
+  if(m2.done){
+    html += A.boxO(72, 78) + '<text x="72" y="30" text-anchor="middle" font-size="11.5" font-weight="800" fill="#2e7d32">□ 裡有 5 顆！</text>';
+  }else{
+    html += A.boxC(72, 78);
+    const wx = [104, 120, 136];
+    for(let i = 0; i < leftW; i++) html += A.w(wx[i], 80);
+  }
+  html += '<text x="' + cx + '" y="30" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a5a2e">□ ＋ 3</text>';
+  B2.panL.innerHTML = html;
+  B2.panL.dataset.count = String(leftW);
+  const rx = 272;
+  /* 右盤自行排版：最多 5 顆一排 */
+  let rHtml =
+    '<line x1="' + rx + '" y1="64" x2="' + rx + '" y2="92" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<path d="M' + (rx - 50) + ',96 Q' + rx + ',118 ' + (rx + 50) + ',96" fill="#d9a066" stroke="#8a5a2e" stroke-width="2"/>' +
+    '<ellipse cx="' + rx + '" cy="96" rx="50" ry="6" fill="#e3b578" stroke="#8a5a2e" stroke-width="2"/>';
+  const cols = Math.min(rightW, 5);
+  for(let r = 0, i = 0; i < rightW; r++){
+    const cnt = Math.min(cols, rightW - i);
+    const x0 = rx - ((cnt - 1) * 20) / 2;
+    for(let c = 0; c < cnt; c++, i++) rHtml += A.w(x0 + c * 20, 84 - r * 16, 'clickable take');
+  }
+  rHtml += '<text x="' + rx + '" y="30" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a5a2e">8 顆砝碼</text>';
+  B2.panR.innerHTML = rHtml;
+  B2.panR.dataset.count = String(rightW);
+  B2.setEq(m2.done ? '□ ＝ 8 － 3 ＝ 5 ✅' : (m2.removed === 0 ? '□ ＋ 3 ＝ 8' : '□ ＋ ' + leftW + ' ＝ ' + rightW));
+  B2.tiltTo(0);
+  $('box2').classList.toggle('good', m2.done);
+  B2.panR.querySelectorAll('.take').forEach((g) => {
+    g.addEventListener('click', () => {
+      if(m2.done || m2.removed >= 3) return;
+      g.classList.add('fade');
+      m2.removed++;
+      setTimeout(m2Render, 380);
+      if(m2.removed < 3){
+        setNote(2, '兩邊同時拿走 ' + m2.removed + ' 顆，天平還是水平的！繼續拿——左邊剩 □＋' + (3 - m2.removed) + '、右邊剩 ' + (8 - m2.removed) + ' 顆。', 'warn');
+      }else{
+        m2.done = true;
+        thump();
+        setTimeout(() => {
+          m2Render();
+          setNote(2, '🎉 神秘箱打開了！<span class="zz">兩邊同時拿走 3 顆 → □ ＝ 8 － 3 ＝ 5</span>，箱裡有 5 顆砝碼，天平依然平衡！', 'good');
+        }, 420);
+      }
+    });
+  });
+}
+$('hint2').onclick = () => setNote(2, QS[1].hint, '');
+$('reset2').onclick = () => { m2.removed = 0; m2.done = false; m2Render(); setNote(2, QS[1].hint, ''); };
+
+/* ════════ Q3：哪一個算式答案相同（11－7＝4） ════════ */
+const B3 = makeBalance('bal3');
+let m3sel = null;
+function m3Render(){
+  B3.setPan('L', Array(4).fill(A.apple), 20, '11 － 7');
+  if(m3sel){
+    B3.setPan('R', Array(m3sel.v).fill(A.apple), 13, m3sel.txt);
+    const balanced = m3sel.v === 4;
+    B3.setEq('11 － 7 ＝ 4 ↔ ' + m3sel.txt + ' ＝ ' + m3sel.v + (balanced ? ' ✅' : ''));
+    B3.tiltTo(balanced ? 0 : (m3sel.v > 4 ? 9 : -9));
+    $('box3').classList.toggle('good', balanced);
+    if(balanced){
+      setNote(3, '⚖ 咔噠！<span class="zz">13 － 9 ＝ 4，和 11 － 7 一樣都是 4</span>，天平亮綠光水平——答案相同的就是它！', 'good');
+    }else{
+      setNote(3, m3sel.txt + ' ＝ ' + m3sel.v + '，比 4 <span class="zz">重了 ' + (m3sel.v - 4) + '</span>，天平向右沉——不是它，再試試別張卡！', 'warn');
+    }
+  }else{
+    B3.setPan('R', [], 13, '？');
+    B3.setEq('11 － 7 ＝ 4 ↔ ？');
+    B3.tiltTo(-6);
+    $('box3').classList.toggle('good', false);
+  }
+}
+document.querySelectorAll('#mode3 .exp-chip').forEach((b) => {
+  b.onclick = () => {
+    document.querySelectorAll('#mode3 .exp-chip').forEach((x) => x.classList.remove('sel'));
+    b.classList.add('sel');
+    m3sel = { txt: b.dataset.exp, v: Number(b.dataset.v) };
+    m3Render();
+  };
+});
+$('reset3').onclick = () => {
+  m3sel = null;
+  document.querySelectorAll('#mode3 .exp-chip').forEach((x) => x.classList.remove('sel'));
+  m3Render();
+  setNote(3, QS[2].hint, '');
+};
+
+/* ════════ Q4：看圖情境選算式（5＋4＝9） ════════ */
+const B4 = makeBalance('bal4');
+const m4 = { added: false, merged: false };
+function m4Render(){
+  const left = Array(5).fill(A.apple);
+  if(m4.added){
+    for(let i = 0; i < 4; i++) left.push(A.apple);
+  }
+  B4.setPan('L', left, 14, m4.added ? '5 ＋ 4 隻松鼠' : '5 隻松鼠');
+  if(m4.merged){
+    B4.setPan('R', Array(9).fill(A.apple), 14, '9 顆蘋果');
+    B4.setEq('5 ＋ 4 ＝ 9 ✅');
+    B4.tiltTo(0);
+    $('box4').classList.toggle('good', true);
+  }else{
+    B4.setPan('R', [], 14, '？隻');
+    B4.setEq(m4.added ? '5 ＋ 4 ＝ ？' : '5 ＝ ？');
+    B4.tiltTo(m4.added ? -9 : -7);
+    $('box4').classList.toggle('good', false);
+  }
+}
+$('act4a').onclick = () => {
+  if(m4.added) return;
+  m4.added = true;
+  $('act4a').disabled = true;
+  $('act4b').disabled = false;
+  m4Render();
+  setNote(4, '又跑來 4 隻，左盤變成 <span class="zz">5 ＋ 4 隻松鼠</span>！按「合起來比一比」放上 9 顆蘋果看看平不平衡。', 'warn');
+};
+$('act4b').onclick = () => {
+  if(m4.merged || !m4.added) return;
+  m4.merged = true;
+  $('act4b').disabled = true;
+  m4Render();
+  thump();
+  setNote(4, '⚖ 左盤 9 隻松鼠 ＝ 右盤 9 顆蘋果，水平！<span class="zz">「合起來」用加法：5 ＋ 4 ＝ 9 隻</span>。', 'good');
+};
+$('reset4').onclick = () => {
+  m4.added = false; m4.merged = false;
+  $('act4a').disabled = false; $('act4b').disabled = true;
+  m4Render();
+  setNote(4, QS[3].hint, '');
+};
+
+/* ════════ Q5：算式比大小 8＋4 ○ 7＋6 ════════ */
+const B5 = makeBalance('bal5');
+function m5Render(){
+  B5.setPan('L', Array(12).fill(A.apple), 18, '8 ＋ 4');
+  B5.setPan('R', Array(13).fill(A.apple), 18, '7 ＋ 6');
+  B5.setEq('8 ＋ 4 ○ 7 ＋ 6');
+  B5.tiltTo(9);
+  $('box5').classList.toggle('good', false);
+}
+$('hint5').onclick = () => setNote(5, QS[4].hint, 'warn');
+$('reset5').onclick = () => { m5Render(); setNote(5, QS[4].hint, ''); };
+
+/* ════════ 啟動 ════════ */
+buildTabs();
+initOpts();
+m1Render(false);
+m2Render();
+m3Render();
+m4Render();
+m5Render();
+const urlQ = parseInt(new URLSearchParams(location.search).get('q'), 10);
+showQ(QS.some((d) => d.q === urlQ) ? urlQ : 1);
+</script>
+</body>
+</html>
