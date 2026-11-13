@@ -1,787 +1,590 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>水果排一列圈圈看 · 忠孝國小 114-1 期中 第三大題第 2 題</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>水果排一列圈圈看 · 第幾個 vs 幾個 (v12.2)</title>
 <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
-        background: #fdf6ec;
-        background-image: radial-gradient(#f3e4c8 1.2px, transparent 1.2px);
-        background-size: 26px 26px;
-        color: #4a2c12;
-        padding: 16px 10px;
-        display: flex;
-        justify-content: center;
-        min-height: 100vh;
-    }
-    .app {
-        width: 100%;
-        max-width: 960px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .meta-row { display: flex; justify-content: flex-end; }
-    .source-tag { font-size: 11px; color: #b0a08c; }
-    .title {
-        font-size: 1.35rem; font-weight: 800; color: #6b3f1d;
-        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    }
-    .title .chip {
-        font-size: 0.7rem; font-weight: 700; color: #fff;
-        background: #e76f51; border-radius: 999px; padding: 3px 10px;
-    }
-    .subtitle { font-size: 0.85rem; color: #9c7a4e; }
+  :root{
+    --fs: clamp(34px, 8vw, 60px);        /* 水果格子尺寸 */
+    --wood-1:#d9a066; --wood-2:#b57b45; --wood-dark:#8a5a2e;
+    --cream:#fdf6e9; --ink:#4e342e;
+    --red:#e53935; --green:#43a047; --gold:#ffb300;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(circle at 15% 12%, #fff7e0 0%, transparent 45%),
+      radial-gradient(circle at 85% 90%, #f3e3c3 0%, transparent 50%),
+      var(--cream);
+    color:var(--ink);
+    font-family:"YuanTi TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+    min-height:100vh;
+  }
+  #app{ max-width:960px; margin:0 auto; padding:10px 10px 28px; }
 
-    /* ===== 關卡切換 ===== */
-    .level-bar { display: flex; gap: 8px; flex-wrap: wrap; }
-    .lv-btn {
-        flex: 1 1 0; min-width: 72px;
-        border: 3px solid #8b5a2b; border-radius: 14px;
-        background: linear-gradient(#fff8ec, #fdeed3);
-        color: #6b3f1d; font-weight: 800; font-size: 0.85rem;
-        padding: 8px 4px; cursor: pointer;
-        box-shadow: 0 3px 0 #8b5a2b;
-        transition: transform .12s;
-    }
-    .lv-btn .em { font-size: 1.2rem; display: block; }
-    .lv-btn:hover { transform: translateY(-2px); }
-    .lv-btn.active { background: linear-gradient(#ffe9b8, #ffd58a); box-shadow: 0 1px 0 #8b5a2b; transform: translateY(2px); }
-    .lv-btn.done::after { content: " ✓"; color: #2a9d3f; }
+  /* ── 頂部木牌標題 ── */
+  header{
+    background:linear-gradient(180deg,var(--wood-1),var(--wood-2));
+    border:4px solid var(--wood-dark); border-radius:16px;
+    box-shadow:0 4px 0 var(--wood-dark), 0 8px 14px rgba(90,55,20,.25);
+    padding:10px 14px 12px; position:relative; color:#fff;
+    text-shadow:0 2px 0 rgba(0,0,0,.25);
+  }
+  header::before{ /* 木紋 */
+    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
+    background:repeating-linear-gradient(90deg, transparent 0 46px, rgba(255,255,255,.08) 46px 48px);
+  }
+  header h1{ margin:0; font-size:clamp(18px,4.6vw,26px); letter-spacing:1px; }
+  header .sub{ font-size:12px; opacity:.92; margin-top:2px; }
+  .tabs{ display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .tab{
+    border:2.5px solid var(--wood-dark); border-radius:12px; cursor:pointer;
+    background:linear-gradient(180deg,#fff3d6,#ffe1a8); color:var(--ink);
+    text-shadow:none; font-weight:700; font-size:13px; padding:5px 9px;
+    box-shadow:0 3px 0 var(--wood-dark); transition:transform .12s;
+    display:flex; align-items:center; gap:4px;
+  }
+  .tab .dot{ width:8px; height:8px; border-radius:50%; background:#c8b28a; }
+  .tab:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--wood-dark); }
+  .tab.active{ background:linear-gradient(180deg,#ffdf6b,#ffc233); }
+  .tab.active .dot{ background:var(--green); }
+  .tab.done .dot{ background:var(--red); }
 
-    /* ===== 題目卡 ===== */
-    .question-card {
-        background: #fffdf6; border: 3px dashed #d8a44c; border-radius: 16px;
-        padding: 12px 16px; font-size: 1.1rem; line-height: 1.7; font-weight: 700;
-        position: relative;
-    }
-    .question-card .q-num {
-        position: absolute; top: -12px; left: 14px;
-        background: #e76f51; color: #fff; font-size: 0.72rem; font-weight: 800;
-        border-radius: 999px; padding: 2px 10px;
-    }
-    .crayon-word {
-        color: #d62828; font-weight: 900;
-        background: linear-gradient(transparent 60%, #ffe08a 60%);
-        border-radius: 4px; padding: 0 2px;
-    }
+  /* ── 題目橫幅 ── */
+  .q-banner{
+    margin:12px 2px 0; background:#fff; border:3px dashed var(--wood-2);
+    border-radius:14px; padding:10px 12px; position:relative;
+    font-size:clamp(15px,4vw,19px); font-weight:700; line-height:1.5;
+  }
+  .q-banner .badge{
+    display:inline-block; background:#ffe082; border:2px solid var(--gold);
+    border-radius:8px; font-size:12px; padding:1px 7px; margin-right:6px;
+    vertical-align:2px; white-space:nowrap;
+  }
+  .q-banner .source{
+    position:absolute; top:4px; right:8px; font-size:11px; color:#b9a58a;
+    font-weight:400; letter-spacing:.5px;
+  }
+  .key-phrase{ color:var(--red); text-decoration:underline wavy var(--red) 2px; text-underline-offset:3px; }
 
-    /* ===== 果園木架 ===== */
-    .shelf {
-        position: relative;
-        border-radius: 20px;
-        border: 6px solid #8b5a2b;
-        background:
-            repeating-linear-gradient(90deg, rgba(0,0,0,.045) 0 2px, transparent 2px 46px),
-            repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 12px),
-            linear-gradient(180deg, #c98d4e 0%, #b97b3f 55%, #a96a32 100%);
-        box-shadow: inset 0 3px 8px rgba(255,255,255,.25), inset 0 -6px 12px rgba(0,0,0,.18), 0 8px 18px rgba(107,63,29,.25);
-        padding: 12px 8px 16px;
-        overflow: hidden;
-    }
-    .shelf-top-row {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 6px; margin-bottom: 4px;
-    }
-    .sign {
-        flex: 0 0 auto;
-        background: linear-gradient(#a9713f, #8a5527);
-        border: 3px solid #6e4218; border-radius: 10px;
-        color: #fff8ec; font-weight: 900; font-size: 0.95rem;
-        padding: 6px 10px; white-space: nowrap;
-        box-shadow: 0 3px 0 #5d3714, inset 0 1px 3px rgba(255,255,255,.3);
-        position: relative;
-    }
-    .sign::before, .sign::after {
-        content: ""; position: absolute; width: 6px; height: 6px; border-radius: 50%;
-        background: #5d3714; box-shadow: inset 0 1px 1px rgba(0,0,0,.6);
-        top: 4px;
-    }
-    .sign::before { left: 5px; }
-    .sign::after { right: 5px; }
-    .sign.left { transform: rotate(-3deg); }
-    .sign.right { transform: rotate(3deg); }
-    .shelf-label {
-        font-size: 0.8rem; color: #fff3dd; font-weight: 800;
-        text-shadow: 0 1px 2px rgba(0,0,0,.35);
-        text-align: center; flex: 1 1 auto;
-    }
+  /* ── 果園木檯 ── */
+  .board{
+    margin-top:12px; position:relative;
+    background:linear-gradient(180deg,var(--wood-1) 0%,var(--wood-2) 100%);
+    border:4px solid var(--wood-dark); border-radius:18px;
+    box-shadow:0 5px 0 var(--wood-dark), 0 10px 18px rgba(90,55,20,.3);
+    padding:12px 8px 14px; overflow:hidden;
+  }
+  .board::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(90deg, transparent 0 52px, rgba(0,0,0,.07) 52px 55px);
+  }
+  .strip{ display:flex; align-items:stretch; gap:4px; position:relative; }
+  .sign{
+    flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:2px; background:#fff6df; border:2.5px solid var(--wood-dark); border-radius:10px;
+    font-weight:800; color:var(--wood-dark); padding:6px 3px; min-width:26px;
+    box-shadow:0 2px 0 var(--wood-dark); align-self:center;
+  }
+  .sign .emo{ font-size:16px; }
+  .sign .txt{ font-size:11px; writing-mode:vertical-rl; letter-spacing:2px; }
+  @media (min-width:640px){
+    .sign{ flex-direction:row; gap:6px; padding:8px 12px; min-width:0; }
+    .sign .txt{ writing-mode:horizontal-tb; font-size:14px; letter-spacing:1px; }
+    .sign .emo{ font-size:18px; }
+  }
 
-    .scroll-area { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
-    .row-wrap { position: relative; display: inline-block; min-width: 100%; }
-    .fruit-row {
-        display: flex; gap: 6px; align-items: flex-end;
-        padding: 30px 6px 10px;
-    }
-    .lasso-layer { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+  .fruit-row{
+    flex:1 1 auto; display:flex; gap:2px; overflow-x:auto; overflow-y:hidden;
+    padding:30px 6px 12px; scroll-snap-type:x proximity; position:relative;
+    scrollbar-width:thin;
+  }
+  .fruit-row::-webkit-scrollbar{ height:6px; }
+  .fruit-row::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.5); border-radius:3px; }
 
-    /* ===== 水果 ===== */
-    .fruit {
-        position: relative; flex: 0 0 auto;
-        width: clamp(56px, 15vw, 86px);
-        cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
-        border: none; background: none; padding: 0;
-        transition: transform .15s;
-    }
-    .fruit svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 4px 3px rgba(0,0,0,.25)); }
-    .fruit:active { transform: scale(.92); }
-    .fruit.sel { transform: translateY(-8px) scale(1.08); }
-    .fruit.sel svg { filter: drop-shadow(0 8px 6px rgba(214,40,40,.35)); }
-    .fruit.pop { animation: popBounce .45s cubic-bezier(.34,1.56,.64,1); }
-    @keyframes popBounce {
-        0% { transform: scale(1); }
-        35% { transform: scale(1.28) rotate(-6deg); }
-        65% { transform: scale(.92) rotate(4deg); }
-        100% { transform: translateY(-8px) scale(1.08); }
-    }
-    .fruit.demo-glow svg { filter: drop-shadow(0 0 8px #ffd166) drop-shadow(0 4px 3px rgba(0,0,0,.25)); }
+  .cell{
+    position:relative; flex:0 0 auto; width:var(--fs); height:var(--fs);
+    background:none; border:none; padding:0; margin:0; cursor:pointer;
+    scroll-snap-align:center; border-radius:50%;
+  }
+  .cell svg.fruit{ width:100%; height:100%; display:block; filter:drop-shadow(0 2px 1px rgba(60,30,0,.25)); transition:transform .15s; }
+  .cell:hover svg.fruit{ transform:translateY(-3px); }
+  .cell.pressed svg.fruit{ animation:pop .45s ease; }
+  @keyframes pop{
+    0%{ transform:scale(1); } 35%{ transform:scale(1.28) rotate(-6deg); }
+    65%{ transform:scale(.92) rotate(4deg); } 100%{ transform:scale(1); }
+  }
+  .cell.sel svg.fruit{ transform:translateY(-4px) scale(1.06); }
+  .cell.demo svg.fruit{ animation:pop .45s ease; transform:translateY(-5px) scale(1.1); }
 
-    .bubble {
-        position: absolute; top: -26px; left: 50%;
-        transform: translateX(-50%) scale(0);
-        width: 32px; height: 32px; border-radius: 50%;
-        background: #fffdf6; border: 3px solid #d62828;
-        color: #d62828; font-weight: 900; font-size: 1rem;
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,.2);
-        transition: transform .25s cubic-bezier(.34,1.56,.64,1);
-        z-index: 3;
-    }
-    .bubble.show { transform: translateX(-50%) scale(1); }
-    .bubble.demo { background: #ffd166; border-color: #b36b00; color: #7a4b00; }
-    .bubble::after {
-        content: ""; position: absolute; bottom: -7px; left: 50%;
-        transform: translateX(-50%);
-        border: 6px solid transparent; border-top-color: #d62828; border-bottom: none;
-    }
+  /* 手繪紅蠟筆套索 */
+  svg.lasso{
+    position:absolute; inset:-4%; width:108%; height:108%;
+    pointer-events:none; opacity:0; transform:scale(.4) rotate(-12deg);
+    transition:opacity .18s, transform .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  .cell.sel svg.lasso, .cell.demo svg.lasso{ opacity:1; transform:scale(1) rotate(-4deg); }
+  .big-lasso{
+    position:absolute; pointer-events:none; opacity:0; z-index:3;
+    transition:opacity .25s, transform .35s cubic-bezier(.34,1.56,.64,1);
+    transform:scale(.7);
+  }
+  .big-lasso.show{ opacity:1; transform:scale(1); }
 
-    /* ===== 控制列 ===== */
-    .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .hud {
-        font-weight: 800; font-size: 0.95rem; color: #6b3f1d;
-        background: #fff3dd; border: 2px solid #e0c08a; border-radius: 999px;
-        padding: 6px 14px;
-    }
-    .hud b { color: #d62828; font-size: 1.15rem; }
-    .btn {
-        border: 3px solid #6b3f1d; border-radius: 14px;
-        font-weight: 900; font-size: 1rem; cursor: pointer;
-        padding: 10px 20px; box-shadow: 0 4px 0 #6b3f1d;
-        transition: transform .12s;
-    }
-    .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #6b3f1d; }
-    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
-    .btn-check { background: linear-gradient(#ffcf7d, #f5a623); color: #5d3714; }
-    .btn-reset { background: linear-gradient(#eef3f8, #d8e4ee); color: #3a5a78; }
-    .btn-next { background: linear-gradient(#9be89b, #4caf50); color: #123d14; border-color: #2a6e2d; box-shadow: 0 4px 0 #2a6e2d; }
+  /* 順序數字氣泡 */
+  .bubble{
+    position:absolute; top:0; left:50%; transform:translateX(-50%) scale(0);
+    background:#fff; border:2px solid var(--red); color:var(--red);
+    font-weight:900; font-size:12px; min-width:20px; height:20px; line-height:16px;
+    border-radius:10px; padding:0 3px; text-align:center; z-index:4;
+    transition:transform .25s cubic-bezier(.34,1.8,.64,1);
+    box-shadow:0 2px 0 rgba(180,40,40,.3); pointer-events:none;
+  }
+  .bubble.show{ transform:translateX(-50%) scale(1); }
+  .cell.final svg.lasso{ stroke-width:5; }
 
-    /* ===== 回饋面板 ===== */
-    .feedback {
-        border-radius: 16px; padding: 14px 16px; font-weight: 700;
-        line-height: 1.7; display: none; position: relative;
-    }
-    .feedback.show { display: block; animation: slideUp .35s ease; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-    .feedback.good {
-        background: linear-gradient(#e8f8e4, #d2f0cc);
-        border: 3px solid #4caf50; color: #1d5c20;
-    }
-    .feedback.bad {
-        background: linear-gradient(#fdeceb, #fbd9d6);
-        border: 3px solid #e76f51; color: #8a2313;
-        animation: slideUp .35s ease, shake .5s ease .35s;
-    }
-    @keyframes shake {
-        0%,100% { transform: translateX(0); }
-        20% { transform: translateX(-8px); } 40% { transform: translateX(8px); }
-        60% { transform: translateX(-5px); } 80% { transform: translateX(5px); }
-    }
-    .feedback .fb-title { font-size: 1.15rem; font-weight: 900; }
-    .feedback .fb-sub { font-size: 0.95rem; margin-top: 6px; }
-    .feedback .fb-explain {
-        margin-top: 10px; background: rgba(255,255,255,.7);
-        border-radius: 10px; padding: 10px 12px; font-size: 0.92rem;
-        border: 2px dashed currentColor;
-    }
-    .feedback .fb-actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .fb-actions .btn { font-size: 0.9rem; padding: 8px 16px; }
-    .key-point { color: #d62828; font-weight: 900; }
+  /* ── 提示與控制 ── */
+  .hint{
+    margin:10px 2px 0; background:#fffbe8; border:2.5px solid var(--gold);
+    border-radius:12px; padding:8px 12px; font-size:clamp(13px,3.6vw,15px); line-height:1.55;
+  }
+  .hint b{ color:var(--red); }
+  .controls{ display:flex; gap:10px; margin-top:12px; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    font-family:inherit; font-size:clamp(15px,4.2vw,18px); font-weight:800; cursor:pointer;
+    border-radius:14px; padding:10px 22px; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.2);
+    border:3px solid; box-shadow:0 4px 0; transition:transform .1s;
+    min-height:44px; min-width:44px;
+  }
+  .btn:active{ transform:translateY(3px); box-shadow:0 1px 0; }
+  .btn-ok{ background:linear-gradient(180deg,#66bb6a,#2e7d32); border-color:#1b5e20; box-shadow-color:#1b5e20; box-shadow:0 4px 0 #1b5e20; }
+  .btn-re{ background:linear-gradient(180deg,#ffee58,#f9a825); border-color:#f57f17; box-shadow:0 4px 0 #f57f17; color:#5d4037; text-shadow:none; }
 
-    /* ===== 撒花 ===== */
-    .confetti { position: fixed; top: -20px; font-size: 1.4rem; pointer-events: none; z-index: 99; animation: fall linear forwards; }
-    @keyframes fall {
-        to { transform: translateY(105vh) rotate(540deg); opacity: .6; }
-    }
+  .feedback{
+    margin-top:12px; border-radius:14px; padding:12px 14px; line-height:1.65;
+    font-size:clamp(14px,3.9vw,16.5px); font-weight:600; display:none; position:relative;
+    border:3px solid;
+  }
+  .feedback.show{ display:block; animation:rise .3s ease; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none;} }
+  .feedback.good{ background:#e8f5e9; border-color:#66bb6a; color:#1b5e20; }
+  .feedback.bad{ background:#ffebee; border-color:#ef9a9a; color:#b71c1c; }
+  .feedback.think{ background:#fff8e1; border-color:#ffb300; color:#7a4f01; }
+  .feedback .big-emo{ font-size:30px; margin-right:6px; vertical-align:-4px; }
+  .feedback .why{ display:block; margin-top:6px; font-size:.92em; font-weight:500; }
 
-    .final-banner {
-        display: none; text-align: center; font-weight: 900;
-        background: linear-gradient(#fff3dd, #ffe3b0);
-        border: 3px solid #f5a623; border-radius: 16px;
-        padding: 14px; font-size: 1.15rem; color: #7a4b00;
-    }
-    .final-banner.show { display: block; animation: slideUp .4s ease; }
+  /* 慶祝星星 */
+  .star{ position:fixed; z-index:99; pointer-events:none; font-size:22px; animation:fly .95s ease-out forwards; }
+  @keyframes fly{
+    from{ transform:translate(0,0) scale(.6) rotate(0deg); opacity:1; }
+    to{ transform:translate(var(--dx),var(--dy)) scale(1.25) rotate(var(--rot)); opacity:0; }
+  }
 
-    /* ===== 手機 390px ===== */
-    @media (max-width: 480px) {
-        .title { font-size: 1.1rem; }
-        .question-card { font-size: 1rem; padding: 14px 12px 10px; }
-        .sign { font-size: 0.72rem; padding: 4px 6px; }
-        .shelf-label { font-size: 0.68rem; }
-        .fruit-row { gap: 4px; padding: 28px 4px 10px; }
-        .controls .btn { flex: 1 1 auto; }
-        .hud { width: 100%; text-align: center; }
-    }
+  footer{ text-align:center; margin-top:14px; font-size:11px; color:#b9a58a; }
 </style>
 </head>
 <body>
-<div class="app">
-    <div class="meta-row"><span class="source-tag">真题來源：高雄市忠孝國小 114-1 期中 · 第三大題第 2 題</span></div>
-    <div class="title">🍉 水果排一列，圈圈看！<span class="chip">序數 vs 基數 大陷阱</span></div>
-    <div class="subtitle">「第 N 顆」只有 1 顆｜「前面 N 顆」共有 N 顆 —— 全台一年級失分率最高的經典題！</div>
+<div id="app">
+  <header>
+    <h1>🍓 水果排一列圈圈看</h1>
+    <div class="sub">「第幾個」vs「幾個」大陷阱 · 忠孝國小 114-1 期中真題改編</div>
+    <div class="tabs" id="tabs"></div>
+  </header>
 
-    <div class="level-bar" id="levelBar"></div>
+  <div class="q-banner">
+    <span class="badge" id="qBadge">關卡 1</span><span id="qText"></span>
+    <div class="source">真題來源：高雄市忠孝國小 114 學年度一年級期中考 · 第三大題-2</div>
+  </div>
 
-    <div class="question-card">
-        <span class="q-num" id="qNum">關卡 1</span>
-        <span id="qText"></span>
+  <div class="board">
+    <div class="strip">
+      <div class="sign"><span class="emo">👈</span><span class="txt">左邊</span></div>
+      <div class="fruit-row" id="row"></div>
+      <div class="sign"><span class="emo">👉</span><span class="txt">右邊</span></div>
     </div>
+  </div>
 
-    <div class="shelf">
-        <div class="shelf-top-row">
-            <div class="sign left">👈 左邊</div>
-            <div class="shelf-label">🌸 今天的水果攤排好隊囉！🌸</div>
-            <div class="sign right">👉 右邊</div>
-        </div>
-        <div class="scroll-area">
-            <div class="row-wrap">
-                <div class="fruit-row" id="fruitRow"></div>
-                <svg class="lasso-layer" id="lassoLayer"></svg>
-            </div>
-        </div>
-    </div>
+  <div class="hint" id="hint"></div>
 
-    <div class="controls">
-        <div class="hud" id="hud">還沒圈喔！點水果開始圈圈 👆</div>
-        <button class="btn btn-check" id="btnCheck" disabled>✅ 確認答案</button>
-        <button class="btn btn-reset" id="btnReset">🔁 重數一次</button>
-    </div>
+  <div class="controls">
+    <button class="btn btn-ok" id="btnOk">✅ 確認答案</button>
+    <button class="btn btn-re" id="btnRe">🔄 重數一次</button>
+  </div>
 
-    <div class="feedback" id="feedback"></div>
-    <div class="final-banner" id="finalBanner">🎉 太棒了！四關全部答對，「第幾個」和「幾個」再也騙不了你！</div>
+  <div class="feedback" id="fb"></div>
+
+  <footer>純前端離線教具 · 028-1 國小數學 APP · 鐵律一：每單元嚴格真題 10 題精神之單題打樣</footer>
 </div>
 
-<!-- 隱藏 SVG：水果圖庫與蠟筆濾鏡 -->
-<svg width="0" height="0" style="position:absolute">
-    <defs>
-        <radialGradient id="g-melon" cx="38%" cy="32%" r="75%">
-            <stop offset="0%" stop-color="#a4dd6b"/><stop offset="60%" stop-color="#5cab2a"/><stop offset="100%" stop-color="#3a7a15"/>
-        </radialGradient>
-        <radialGradient id="g-wax" cx="38%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#ff9db0"/><stop offset="55%" stop-color="#f04a6d"/><stop offset="100%" stop-color="#c9184a"/>
-        </radialGradient>
-        <radialGradient id="g-star" cx="40%" cy="35%" r="80%">
-            <stop offset="0%" stop-color="#f9f18a"/><stop offset="60%" stop-color="#dbe457"/><stop offset="100%" stop-color="#a8b83a"/>
-        </radialGradient>
-        <radialGradient id="g-lemon" cx="40%" cy="35%" r="78%">
-            <stop offset="0%" stop-color="#fff3a0"/><stop offset="60%" stop-color="#ffd93d"/><stop offset="100%" stop-color="#eab308"/>
-        </radialGradient>
-
-        <filter id="crayonWobble" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="noise"/>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5"/>
-        </filter>
-
-        <!-- 🍉 西瓜 -->
-        <g id="f-melon">
-            <path d="M50 21 q 5 -9 12 -9" fill="none" stroke="#5a8f2a" stroke-width="3.5" stroke-linecap="round"/>
-            <circle cx="50" cy="58" r="36" fill="url(#g-melon)" stroke="#2d6a1e" stroke-width="3"/>
-            <path d="M31 30 Q 24 58 32 84" fill="none" stroke="#1e4d12" stroke-width="6" stroke-linecap="round"/>
-            <path d="M50 22 Q 47 58 50 93" fill="none" stroke="#1e4d12" stroke-width="6" stroke-linecap="round"/>
-            <path d="M69 30 Q 76 58 68 84" fill="none" stroke="#1e4d12" stroke-width="6" stroke-linecap="round"/>
-            <path d="M41 42 Q 44 58 41 74" fill="none" stroke="#1e4d12" stroke-width="4" stroke-linecap="round" opacity=".7"/>
-            <path d="M59 42 Q 56 58 59 74" fill="none" stroke="#1e4d12" stroke-width="4" stroke-linecap="round" opacity=".7"/>
-            <ellipse cx="35" cy="40" rx="9" ry="5" fill="#ffffff" opacity=".35" transform="rotate(-28 35 40)"/>
-            <circle cx="41" cy="58" r="3.2" fill="#26331b"/>
-            <circle cx="59" cy="58" r="3.2" fill="#26331b"/>
-            <circle cx="42" cy="57" r="1.1" fill="#fff"/>
-            <circle cx="60" cy="57" r="1.1" fill="#fff"/>
-            <path d="M43 68 Q 50 75 57 68" fill="none" stroke="#26331b" stroke-width="3" stroke-linecap="round"/>
-        </g>
-
-        <!-- 🍎 蓮霧 -->
-        <g id="f-wax">
-            <path d="M50 20 q 1 -7 7 -9" fill="none" stroke="#6d4c23" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M57 12 q 10 -4 14 4 q -10 4 -14 -4 Z" fill="#57a33a" stroke="#3d7a24" stroke-width="2"/>
-            <path d="M50 24 C 36 24 29 37 28 52 C 27 70 36 90 50 90 C 64 90 73 70 72 52 C 71 37 64 24 50 24 Z" fill="url(#g-wax)" stroke="#a80f36" stroke-width="3"/>
-            <path d="M40 25 q 10 8 20 0" fill="none" stroke="#8f0f30" stroke-width="3" stroke-linecap="round"/>
-            <path d="M43 22 q 7 6 14 0 q -4 6 -7 6 q -3 0 -7 -6 Z" fill="#57a33a" stroke="#3d7a24" stroke-width="1.6"/>
-            <ellipse cx="37" cy="42" rx="7" ry="11" fill="#ffffff" opacity=".35" transform="rotate(-14 37 42)"/>
-            <circle cx="41" cy="60" r="3.2" fill="#5c1024"/>
-            <circle cx="59" cy="60" r="3.2" fill="#5c1024"/>
-            <circle cx="42" cy="59" r="1.1" fill="#fff"/>
-            <circle cx="60" cy="59" r="1.1" fill="#fff"/>
-            <path d="M42 71 Q 50 78 58 71" fill="none" stroke="#5c1024" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="33" cy="68" r="4.5" fill="#ff8ba0" opacity=".55"/>
-            <circle cx="67" cy="68" r="4.5" fill="#ff8ba0" opacity=".55"/>
-        </g>
-
-        <!-- ⭐ 楊桃 -->
-        <g id="f-star">
-            <polygon points="50,13 61.2,39.6 89.9,42 68.1,60.9 74.7,89 50,74 25.3,89 31.9,60.9 10.1,42 38.8,39.6"
-                     fill="url(#g-star)" stroke="#7a9c2e" stroke-width="8" stroke-linejoin="round"/>
-            <path d="M50 34 L 50 66 M33 48 L 66 48" stroke="#b9c94a" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-            <ellipse cx="38" cy="34" rx="6" ry="4" fill="#ffffff" opacity=".4" transform="rotate(-30 38 34)"/>
-            <circle cx="43" cy="53" r="2.8" fill="#4c5a10"/>
-            <circle cx="57" cy="53" r="2.8" fill="#4c5a10"/>
-            <circle cx="44" cy="52" r="1" fill="#fff"/>
-            <circle cx="58" cy="52" r="1" fill="#fff"/>
-            <path d="M44 62 Q 50 68 56 62" fill="none" stroke="#4c5a10" stroke-width="2.8" stroke-linecap="round"/>
-        </g>
-
-        <!-- 🍋 檸檬 -->
-        <g id="f-lemon">
-            <path d="M52 30 q 2 -9 10 -10" fill="none" stroke="#6d4c23" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M60 22 q 12 -6 18 3 q -12 5 -18 -3 Z" fill="#57a33a" stroke="#3d7a24" stroke-width="2"/>
-            <ellipse cx="50" cy="60" rx="35" ry="27" fill="url(#g-lemon)" stroke="#c98a00" stroke-width="3"/>
-            <ellipse cx="15" cy="60" rx="7" ry="6" fill="url(#g-lemon)" stroke="#c98a00" stroke-width="3"/>
-            <ellipse cx="85" cy="60" rx="7" ry="6" fill="url(#g-lemon)" stroke="#c98a00" stroke-width="3"/>
-            <circle cx="30" cy="46" r="1.6" fill="#d9a400" opacity=".7"/>
-            <circle cx="70" cy="46" r="1.6" fill="#d9a400" opacity=".7"/>
-            <circle cx="66" cy="74" r="1.6" fill="#d9a400" opacity=".7"/>
-            <circle cx="34" cy="74" r="1.6" fill="#d9a400" opacity=".7"/>
-            <ellipse cx="36" cy="44" rx="9" ry="5" fill="#ffffff" opacity=".4" transform="rotate(-24 36 44)"/>
-            <circle cx="42" cy="60" r="3.2" fill="#7a5600"/>
-            <circle cx="58" cy="60" r="3.2" fill="#7a5600"/>
-            <circle cx="43" cy="59" r="1.1" fill="#fff"/>
-            <circle cx="59" cy="59" r="1.1" fill="#fff"/>
-            <path d="M43 70 Q 50 77 57 70" fill="none" stroke="#7a5600" stroke-width="3" stroke-linecap="round"/>
-        </g>
-    </defs>
-</svg>
-
 <script>
-(function () {
-    "use strict";
+"use strict";
 
-    /* ====================== 關卡資料（真題四道連續關卡） ====================== */
-    var TOTAL = 10;
-    var LEVELS = [
-        {
-            id: "melon", emoji: "🍉", name: "西瓜", symbol: "#f-melon",
-            q: "從 <span class='crayon-word'>👉 右邊</span> 數起，圈出 <span class='crayon-word'>第 5 顆</span> 西瓜。",
-            mode: "ordinal", dir: "right", n: 5,
-            explain: "「第 5 顆」是<b>序數</b>，只有 <span class='key-point'>單獨 1 顆</span>！從右邊開始數：1、2、3、4、5 —— 就是它（左邊數來第 6 顆）！",
-            trap: "把「第 5 顆」圈成 5 顆？不行喔！「第幾個」永遠只有 1 個。"
-        },
-        {
-            id: "wax", emoji: "🍎", name: "蓮霧", symbol: "#f-wax",
-            q: "從 <span class='crayon-word'>👈 左邊</span> 數起，圈出 <span class='crayon-word'>前面 8 顆</span> 蓮霧。",
-            mode: "cardinal", dir: "left", n: 8,
-            explain: "「前面 8 顆」是<b>數量（基數）</b>，共有 <span class='key-point'>8 顆</span>！要把左邊前面 8 顆<b>全部</b>圈在同一個大圈圈裡！",
-            trap: "只圈「第 8 顆」那 1 顆？不行喔！「前面 8 顆」是一整群 8 顆。"
-        },
-        {
-            id: "star", emoji: "⭐", name: "楊桃", symbol: "#f-star",
-            q: "從 <span class='crayon-word'>👉 右邊</span> 數起，圈出 <span class='crayon-word'>第 7 顆</span> 楊桃。",
-            mode: "ordinal", dir: "right", n: 7,
-            explain: "「第 7 顆」是<b>序數</b>，只有 <span class='key-point'>單獨 1 顆</span>！從右邊數：1、2、3、4、5、6、7 —— 就是它（左邊數來第 4 顆）！",
-            trap: "「第幾個」只指一顆，圈一堆就掉進陷阱啦！"
-        },
-        {
-            id: "lemon", emoji: "🍋", name: "檸檬", symbol: "#f-lemon",
-            q: "從 <span class='crayon-word'>👈 左邊</span> 數起，圈出 <span class='crayon-word'>前面 6 顆</span> 檸檬。",
-            mode: "cardinal", dir: "left", n: 6,
-            explain: "「前面 6 顆」是<b>數量（基數）</b>，總共有 <span class='key-point'>6 顆</span>！從左邊開始把前面 6 顆全部圈起來！",
-            trap: "「前面 6 顆」是一整群 6 顆，不是只有第 6 顆那一顆喔！"
-        }
-    ];
+/* ════════ 關卡資料（SSOT） ════════ */
+const LEVELS = [
+  { id:"watermelon", name:"西瓜", emo:"🍉", type:"ordinal", side:"right", n:5,
+    q:'從<span class="key-phrase">右邊</span>數起，圈出<span class="key-phrase">第 5 顆</span>西瓜。',
+    tip:'「<b>第 5 顆</b>」是序數，只有 <b>1 顆</b>！從右邊開始數：1, 2, 3, 4, 5，就是它！' },
+  { id:"waxapple", name:"蓮霧", emo:"🍎", type:"cardinal", side:"left", n:8,
+    q:'從<span class="key-phrase">左邊</span>數起，圈出<span class="key-phrase">前面 8 顆</span>蓮霧。',
+    tip:'「<b>前面 8 顆</b>」是數量（基數），共有 <b>8 顆</b>！要把左邊前 8 顆全部圈起來！' },
+  { id:"starfruit", name:"楊桃", emo:"⭐", type:"ordinal", side:"right", n:7,
+    q:'從<span class="key-phrase">右邊</span>數起，圈出<span class="key-phrase">第 7 顆</span>楊桃。',
+    tip:'「<b>第 7 顆</b>」是序數，只有 <b>1 顆</b>！從右邊數到 7 就是它！' },
+  { id:"lemon", name:"檸檬", emo:"🍋", type:"cardinal", side:"left", n:6,
+    q:'從<span class="key-phrase">左邊</span>數起，圈出<span class="key-phrase">前面 6 顆</span>檸檬。',
+    tip:'「<b>前面 6 顆</b>」是數量（基數），總共有 <b>6 顆</b>！' },
+];
+const TOTAL = 10; // 每列固定 10 顆
 
-    /* ====================== 狀態 ====================== */
-    var cur = 0;
-    var sel = new Set();          // 已圈選的左起索引 (0-based)
-    var done = [false, false, false, false];
-    var locked = false;           // 破招動畫進行中，鎖定互動
-    var demoTimer = null;
-    var fruitEls = [];
+/* ════════ 純向量 SVG 水果工廠 ════════ */
+const FACE = `
+  <g class="face">
+    <circle cx="41" cy="52" r="3.4" fill="#4e342e"/>
+    <circle cx="59" cy="52" r="3.4" fill="#4e342e"/>
+    <circle cx="42.2" cy="50.8" r="1.1" fill="#fff"/>
+    <circle cx="60.2" cy="50.8" r="1.1" fill="#fff"/>
+    <path d="M44,60 Q50,66 56,60" fill="none" stroke="#4e342e" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="33" cy="59" r="4" fill="#ff8a80" opacity=".45"/>
+    <circle cx="67" cy="59" r="4" fill="#ff8a80" opacity=".45"/>
+  </g>`;
 
-    var $ = function (id) { return document.getElementById(id); };
-    var fruitRow = $("fruitRow"), lassoLayer = $("lassoLayer");
+function svgWatermelon(){
+  return `<svg class="fruit" viewBox="0 0 100 100">
+    <defs><clipPath id="wmC"><circle cx="50" cy="55" r="37"/></clipPath></defs>
+    <circle cx="50" cy="55" r="37" fill="#8bc34a"/>
+    <g clip-path="url(#wmC)" stroke="#2e7d32" stroke-width="7.5" fill="none" stroke-linecap="round">
+      <path d="M30,16 C24,45 26,72 33,94"/>
+      <path d="M50,14 C47,45 47,75 50,96"/>
+      <path d="M70,16 C74,45 72,72 66,94"/>
+    </g>
+    <circle cx="50" cy="55" r="37" fill="none" stroke="#33691e" stroke-width="3.5"/>
+    <path d="M50,19 Q54,13 60,12" fill="none" stroke="#33691e" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M50,19 Q44,11 37,13 Q44,17 49,21 Z" fill="#66bb6a" stroke="#33691e" stroke-width="2"/>
+    <ellipse cx="36" cy="38" rx="9" ry="5" fill="#fff" opacity=".35" transform="rotate(-25 36 38)"/>
+  </svg>`;
+}
+function svgWaxapple(){
+  return `<svg class="fruit" viewBox="0 0 100 100">
+    <defs><linearGradient id="waG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ef5350"/><stop offset="1" stop-color="#b71c1c"/>
+    </linearGradient></defs>
+    <path d="M50,22 C76,22 84,50 79,70 C75,86 62,92 50,92 C38,92 25,86 21,70 C16,50 24,22 50,22 Z"
+      fill="url(#waG)" stroke="#8e0000" stroke-width="3.5"/>
+    <path d="M50,22 Q52,16 50,12" fill="none" stroke="#5d4037" stroke-width="4" stroke-linecap="round"/>
+    <path d="M51,15 Q62,6 72,12 Q62,19 52,17 Z" fill="#66bb6a" stroke="#33691e" stroke-width="2.4"/>
+    <path d="M33,34 Q28,46 31,58" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".4"/>
+    <ellipse cx="50" cy="30" rx="10" ry="4" fill="#ff8a80" opacity=".5"/>
+  </svg>`;
+}
+function svgStarfruit(){
+  const pts=[]; const cx=50, cy=56, R=40, r=17;
+  for(let i=0;i<10;i++){
+    const a=-Math.PI/2 + i*Math.PI/5;
+    const rad=(i%2===0)?R:r;
+    pts.push((cx+rad*Math.cos(a)).toFixed(1)+","+(cy+rad*Math.sin(a)).toFixed(1));
+  }
+  return `<svg class="fruit" viewBox="0 0 100 100">
+    <defs><linearGradient id="stG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e6ee9c"/><stop offset="1" stop-color="#c0ca33"/>
+    </linearGradient></defs>
+    <polygon points="${pts.join(" ")}" fill="url(#stG)" stroke="#827717" stroke-width="3.5"
+      stroke-linejoin="round" transform="rotate(8 50 56)"/>
+    <g stroke="#9e9d24" stroke-width="2" opacity=".8" transform="rotate(8 50 56)">
+      <line x1="50" y1="56" x2="50" y2="16"/><line x1="50" y1="56" x2="88" y2="43"/>
+      <line x1="50" y1="56" x2="74" y2="88"/><line x1="50" y1="56" x2="26" y2="88"/>
+      <line x1="50" y1="56" x2="12" y2="43"/>
+    </g>
+    <path d="M50,13 Q52,8 56,7" fill="none" stroke="#827717" stroke-width="3" stroke-linecap="round" transform="rotate(8 50 56)"/>
+  </svg>`;
+}
+function svgLemon(){
+  return `<svg class="fruit" viewBox="0 0 100 100">
+    <defs><linearGradient id="leG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#fbc02d"/>
+    </linearGradient></defs>
+    <path d="M14,58 Q12,50 18,46 Q22,34 36,30 Q50,26 64,30 Q78,34 82,46 Q88,50 86,58 Q88,66 82,70 Q78,82 64,86 Q50,90 36,86 Q22,82 18,70 Q12,66 14,58 Z"
+      fill="url(#leG)" stroke="#f57f17" stroke-width="3.5"/>
+    <circle cx="14" cy="58" r="5" fill="#fbc02d" stroke="#f57f17" stroke-width="3"/>
+    <circle cx="86" cy="58" r="5" fill="#fbc02d" stroke="#f57f17" stroke-width="3"/>
+    <path d="M50,30 Q54,22 62,20" fill="none" stroke="#5d4037" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M55,26 Q66,16 76,22 Q66,29 56,28 Z" fill="#66bb6a" stroke="#33691e" stroke-width="2.2"/>
+    <ellipse cx="32" cy="42" rx="8" ry="4" fill="#fff" opacity=".5" transform="rotate(-20 32 42)"/>
+  </svg>`;
+}
+const FRUIT_SVG = { watermelon:svgWatermelon, waxapple:svgWaxapple, starfruit:svgStarfruit, lemon:svgLemon };
 
-    var dirName = function (dir) { return dir === "left" ? "左邊" : "右邊"; };
+/* 手繪蠟筆粗糙橢圓路徑 */
+function roughEllipse(rx, ry){
+  const N=18, cx=50, cy=50, pts=[];
+  for(let i=0;i<N;i++){
+    const a=(i/N)*Math.PI*2 - Math.PI/2;
+    const jrx=rx*(0.92+0.10*Math.sin(i*2.7)), jry=ry*(0.92+0.10*Math.cos(i*3.3));
+    pts.push([cx+jrx*Math.cos(a), cy+jry*Math.sin(a)]);
+  }
+  let d="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1);
+  for(let i=1;i<=N;i++){
+    const p=pts[i%N], q=pts[i-1];
+    d+=" Q"+q[0].toFixed(1)+","+q[1].toFixed(1)+" "+((q[0]+p[0])/2).toFixed(1)+","+((q[1]+p[1])/2).toFixed(1);
+  }
+  return d+" Z";
+}
+const LASSO_D = roughEllipse(42, 42);
 
-    /* ====================== 簡易 WebAudio 音效（零依賴） ====================== */
-    var audioCtx = null;
-    function beep(freq, dur, type) {
-        try {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            var o = audioCtx.createOscillator(), g = audioCtx.createGain();
-            o.type = type || "sine"; o.frequency.value = freq;
-            g.gain.setValueAtTime(0.12, audioCtx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-            o.connect(g).connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + dur);
-        } catch (e) { /* 靜音環境降級，不阻擋互動 */ }
+/* ════════ 狀態 ════════ */
+const state = LEVELS.map(()=>({ sel:new Set(), answered:false, revealed:false }));
+let cur = 0;
+let timers = [];
+
+function expectedSet(li){
+  const L=LEVELS[li], s=new Set();
+  if(L.type==="ordinal"){
+    s.add(L.side==="right" ? TOTAL-L.n : L.n-1);
+  }else{
+    for(let i=0;i<L.n;i++) s.add(L.side==="left" ? i : TOTAL-1-i);
+  }
+  return s;
+}
+/* 破招數數序列：依題目方向依序 [{idx, count}] */
+function demoSeq(li){
+  const L=LEVELS[li], seq=[];
+  for(let c=1;c<=L.n;c++){
+    seq.push({ idx: L.side==="left" ? c-1 : TOTAL-c, count:c });
+  }
+  return seq;
+}
+function sideName(L){ return L.side==="left" ? "左" : "右"; }
+function posFromTap(li, idx){
+  const L=LEVELS[li];
+  return L.side==="left" ? idx+1 : TOTAL-idx;
+}
+
+/* ════════ 渲染 ════════ */
+const rowEl=document.getElementById("row");
+const tabsEl=document.getElementById("tabs");
+const fbEl=document.getElementById("fb");
+const hintEl=document.getElementById("hint");
+const qTextEl=document.getElementById("qText");
+const qBadgeEl=document.getElementById("qBadge");
+
+function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
+
+function buildTabs(){
+  tabsEl.innerHTML="";
+  LEVELS.forEach((L,i)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(i===cur?" active":"")+(state[i].answered?" done":"");
+    b.innerHTML=`<span class="dot"></span>${L.emo} ${L.name}`;
+    b.onclick=()=>gotoLevel(i);
+    tabsEl.appendChild(b);
+  });
+}
+
+function render(){
+  clearTimers();
+  const L=LEVELS[cur], st=state[cur];
+  qBadgeEl.textContent=`關卡 ${cur+1} / ${LEVELS.length}`;
+  qTextEl.innerHTML=L.q;
+  hintEl.innerHTML="💡 破招提示："+L.tip;
+  fbEl.className="feedback"; fbEl.innerHTML="";
+  rowEl.innerHTML="";
+  const svgFn=FRUIT_SVG[L.id];
+  for(let i=0;i<TOTAL;i++){
+    const cell=document.createElement("button");
+    cell.className="cell"; cell.dataset.idx=i;
+    cell.setAttribute("aria-label", `${L.name} 第 ${i+1} 顆（從左數）`);
+    cell.innerHTML =
+      `<span class="bubble"></span>`+
+      svgFn()+
+      `<svg class="lasso" viewBox="0 0 100 100" preserveAspectRatio="none">
+         <path d="${LASSO_D}" fill="none" stroke="#e53935" stroke-width="4.5"
+           stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+       </svg>`;
+    if(st.sel.has(i)) cell.classList.add("sel"), showBubble(cell, st.bubbleText?st.bubbleText[i]:posFromTap(cur,i));
+    cell.addEventListener("click", ()=>tapFruit(i, cell));
+    rowEl.appendChild(cell);
+  }
+  buildTabs();
+  if(st.revealed && !st.answered) runDemo(true); // 切回已破招未答對的關卡：重播破招
+}
+
+function showBubble(cell, num){
+  const b=cell.querySelector(".bubble");
+  b.textContent=num; b.classList.add("show");
+}
+function hideBubble(cell){ cell.querySelector(".bubble").classList.remove("show"); }
+
+/* ════════ 互動 ════════ */
+function tapFruit(idx, cell){
+  const st=state[cur];
+  if(st.answered){ // 已答對：只給鼓勵彈跳
+    cell.classList.remove("pressed"); void cell.offsetWidth; cell.classList.add("pressed");
+    return;
+  }
+  cell.classList.remove("pressed"); void cell.offsetWidth; cell.classList.add("pressed");
+  if(st.sel.has(idx)){
+    st.sel.delete(idx); cell.classList.remove("sel"); hideBubble(cell);
+  }else{
+    st.sel.add(idx); cell.classList.add("sel");
+    showBubble(cell, posFromTap(cur, idx));
+  }
+}
+
+function setFeedback(kind, html){
+  fbEl.className="feedback show "+kind;
+  fbEl.innerHTML=html;
+}
+
+function celebrate(){
+  const emos=["⭐","🎉","🍓","✨","💛","🏅"];
+  for(let i=0;i<14;i++){
+    const s=document.createElement("span");
+    s.className="star"; s.textContent=emos[i%emos.length];
+    const ang=Math.random()*Math.PI*2, dist=70+Math.random()*130;
+    s.style.left="50%"; s.style.top="40%";
+    s.style.setProperty("--dx", (Math.cos(ang)*dist).toFixed(0)+"px");
+    s.style.setProperty("--dy", (Math.sin(ang)*dist-40).toFixed(0)+"px");
+    s.style.setProperty("--rot", (Math.random()*360-180).toFixed(0)+"deg");
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 1000);
+  }
+}
+
+/* ════════ 破招動畫：老師依方向逐顆數數 ════════ */
+function runDemo(silent){
+  const L=LEVELS[cur], st=state[cur], seq=demoSeq(cur);
+  const cells=[...rowEl.querySelectorAll(".cell")];
+  // 清場（保留答對狀態不會進到這裡）
+  cells.forEach(c=>{ c.classList.remove("sel","demo","final"); hideBubble(c); });
+  removeBigLasso();
+  let t=300;
+  seq.forEach((s,k)=>{
+    later(()=>{
+      const c=cells[s.idx];
+      c.classList.add("demo"); showBubble(c, s.count);
+    }, t); t+=520;
+  });
+  later(()=>{
+    if(L.type==="ordinal"){
+      const c=cells[seq[seq.length-1].idx];
+      c.classList.add("final");
+    }else{
+      drawBigLasso(seq[0].idx, seq[seq.length-1].idx);
     }
-    var sPop = function () { beep(660, 0.12, "triangle"); };
-    var sGood = function () { beep(523, 0.15); setTimeout(function(){ beep(659,0.15); }, 120); setTimeout(function(){ beep(784,0.25); }, 240); };
-    var sBad  = function () { beep(220, 0.3, "sawtooth"); };
-
-    /* ====================== 關列 UI ====================== */
-    function buildLevelBar() {
-        var bar = $("levelBar"); bar.innerHTML = "";
-        LEVELS.forEach(function (lv, i) {
-            var b = document.createElement("button");
-            b.className = "lv-btn" + (i === cur ? " active" : "") + (done[i] ? " done" : "");
-            b.innerHTML = "<span class='em'>" + lv.emoji + "</span>關卡 " + (i + 1) + "·" + lv.name;
-            b.addEventListener("click", function () { if (!locked) gotoLevel(i); });
-            bar.appendChild(b);
-        });
+    st.revealed=true;
+    if(!silent){
+      const kind=L.type==="ordinal"?"ordinal":"cardinal";
+      setFeedback("think",
+        `🕵️ <b>破招解析</b>（${kind==="ordinal"?"序數·第幾個":"基數·幾個"}）：`+
+        (L.type==="ordinal"
+          ? `「第 ${L.n} 顆」是<b>序數</b> → 從${sideName(L)}邊數 <b>1, 2, … ${L.n}</b>，只有<b>單獨 1 顆</b>被圈起來！`
+          : `「前面 ${L.n} 顆」是<b>基數</b> → 從${sideName(L)}邊數出來的<b>一整群 ${L.n} 顆</b>，全部圈進同一個大圈圈！`)+
+        `<span class="why">按「🔄 重數一次」再自己圈圈看一次吧！</span>`);
     }
+  }, t+200);
+}
 
-    function gotoLevel(i) {
-        stopDemo();
-        cur = i;
-        sel = new Set();
-        locked = false;
-        hideFeedback();
-        $("finalBanner").classList.remove("show");
-        $("btnCheck").disabled = true;
-        $("btnCheck").textContent = "✅ 確認答案";
-        $("btnNext") && $("btnNext").remove();
-        buildLevelBar();
-        renderQuestion();
-        renderFruits();
-        updateHUD();
+function removeBigLasso(){
+  const old=rowEl.querySelector(".big-lasso");
+  if(old) old.remove();
+}
+function drawBigLasso(firstIdx, lastIdx){
+  removeBigLasso();
+  const cells=[...rowEl.querySelectorAll(".cell")];
+  const a=cells[firstIdx], b=cells[lastIdx];
+  const x0=a.offsetLeft-6, x1=b.offsetLeft+b.offsetWidth+6;
+  const y0=a.offsetTop-4, y1=a.offsetTop+a.offsetHeight+8;
+  const w=x1-x0, h=y1-y0;
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("class","big-lasso");
+  svg.setAttribute("viewBox","0 0 100 100");
+  svg.setAttribute("preserveAspectRatio","none");
+  svg.style.left=(x0-3)+"px"; svg.style.top=(y0-3)+"px";
+  svg.style.width=(w+6)+"px"; svg.style.height=(h+6)+"px";
+  svg.innerHTML=`<path d="${LASSO_D}" fill="none" stroke="#e53935" stroke-width="4"
+    stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".9"/>`;
+  rowEl.appendChild(svg);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>svg.classList.add("show")));
+}
+
+/* ════════ 判卷 ════════ */
+function sameSet(a, bSet){
+  if(a.length!==bSet.size) return false;
+  return a.every(x=>bSet.has(x));
+}
+
+function check(){
+  const L=LEVELS[cur], st=state[cur];
+  if(st.answered){ setFeedback("good", `🌟 已經答對囉！按關卡按鈕挑戰下一題！`); return; }
+  const sel=[...st.sel].sort((x,y)=>x-y);
+  if(sel.length===0){
+    setFeedback("think", `_pointer 先點水果，用紅色蠟筆圈圈把答案圈起來喔！`.replace("_pointer ","👇 "));
+    return;
+  }
+  const exp=expectedSet(cur);
+  if(sameSet(sel, exp)){
+    // ── 答對 ──
+    st.answered=true; buildTabs();
+    const cells=[...rowEl.querySelectorAll(".cell")];
+    if(L.type==="ordinal"){ cells[[...exp][0]].classList.add("final"); }
+    else{ drawBigLasso([...exp][0], [...exp][exp.size-1]); }
+    celebrate();
+    setFeedback("good",
+      `<span class="big-emo">🎉</span><b>答對了！好厲害！</b>`+
+      (L.type==="ordinal"
+        ? `「第 ${L.n} 顆」是序數 → 就只有<b>單獨這 1 顆</b>！`
+        : `「前面 ${L.n} 顆」是基數 → 一共圈了 <b>${L.n} 顆</b>！`));
+    if(cur<LEVELS.length-1){
+      later(()=>{ gotoLevel(cur+1); }, 1900);
+    }else{
+      later(()=>setFeedback("good",
+        `<span class="big-emo">🏆</span><b>四關全破！</b>你已經完全分清楚「<b>第幾顆</b>」和「<b>幾顆</b>」了！`), 1900);
     }
+    return;
+  }
+  // ── 答錯：精準指出序數/基數混淆 ──
+  const n=L.n, isOrd=L.type==="ordinal";
+  let msg;
+  if(isOrd && sel.length>1){
+    msg=`🤔 你圈了 <b>${sel.length} 顆</b>！可是「第 ${n} 顆」<b>只有 1 顆</b>喔～<br>`+
+        `<b>這是「第幾顆」還是「幾個」呢？</b>`;
+  }else if(isOrd){
+    msg=`🤔 圈錯顆了！要從<b>${sideName(L)}邊</b>開始數：1, 2, 3… 數到 ${n}！<br>`+
+        `<b>這是「第幾顆」還是「幾個」呢？</b>`;
+  }else if(sel.length===1){
+    msg=`🤔 你只圈了 <b>1 顆</b>！可是「前面 ${n} 顆」<b>有 ${n} 顆</b>喔～<br>`+
+        `<b>這是「第幾顆」還是「幾個」呢？</b>`;
+  }else if(sel.length<n){
+    msg=`🤔 還差一點點！「前面 ${n} 顆」要圈滿 <b>${n} 顆</b>，你只圈了 ${sel.length} 顆～<br>`+
+        `<b>這是「第幾顆」還是「幾個」呢？</b>`;
+  }else{
+    msg=`🤔 圈太多了！只要從<b>${sideName(L)}邊</b>數來的前 ${n} 顆喔～<br>`+
+        `<b>這是「第幾顆」還是「幾個」呢？</b>`;
+  }
+  setFeedback("bad", msg+`<span class="why">看！老師破招示範來囉 👇</span>`);
+  later(()=>runDemo(false), 900);
+}
 
-    function renderQuestion() {
-        var lv = LEVELS[cur];
-        $("qNum").textContent = "關卡 " + (cur + 1);
-        $("qText").innerHTML = lv.q;
-    }
+function resetLevel(){
+  const st=state[cur];
+  st.sel.clear(); st.answered=false; st.revealed=false;
+  render();
+}
 
-    function renderFruits() {
-        var lv = LEVELS[cur];
-        fruitRow.innerHTML = "";
-        fruitEls = [];
-        for (var i = 0; i < TOTAL; i++) {
-            var f = document.createElement("div");
-            f.className = "fruit";
-            f.setAttribute("role", "button");
-            f.setAttribute("aria-label", "第 " + (i + 1) + " 顆" + lv.name);
-            f.innerHTML = "<svg viewBox='0 0 100 100'><use href='" + lv.symbol + "'/></svg>" +
-                          "<div class='bubble'></div>";
-            f.addEventListener("click", function (idx) {
-                return function () { toggleFruit(idx); };
-            })(i);
-            fruitRow.appendChild(f);
-            fruitEls.push(f);
-        }
-        clearLasso();
-    }
+function gotoLevel(i){
+  cur=i;
+  render();
+}
 
-    /* ====================== 圈選互動 ====================== */
-    function toggleFruit(idx) {
-        if (locked) return;
-        var el = fruitEls[idx];
-        el.classList.remove("pop");
-        void el.offsetWidth; // 重觸發動畫
-        el.classList.add("pop");
-        sPop();
-        if (sel.has(idx)) { sel.delete(idx); }
-        else { sel.add(idx); }
-        renderSelState();
-    }
+document.getElementById("btnOk").addEventListener("click", check);
+document.getElementById("btnRe").addEventListener("click", resetLevel);
 
-    function bubbleNum(idx) {
-        var dir = LEVELS[cur].dir;
-        return dir === "left" ? idx + 1 : TOTAL - idx;
-    }
-
-    function renderSelState() {
-        fruitEls.forEach(function (el, idx) {
-            var isSel = sel.has(idx);
-            el.classList.toggle("sel", isSel);
-            var bub = el.querySelector(".bubble");
-            if (isSel) {
-                bub.textContent = bubbleNum(idx);
-                bub.classList.add("show");
-                bub.classList.remove("demo");
-            } else {
-                bub.classList.remove("show");
-            }
-        });
-        drawLasso(Array.from(sel).sort(function (a, b) { return a - b; }));
-        updateHUD();
-        $("btnCheck").disabled = sel.size === 0 || locked;
-    }
-
-    function updateHUD() {
-        var hud = $("hud");
-        if (sel.size === 0) {
-            hud.innerHTML = "還沒圈喔！點水果開始圈圈 👆";
-        } else {
-            hud.innerHTML = "已圈 <b>" + sel.size + "</b> 顆";
-        }
-    }
-
-    /* ====================== 蠟筆套索（SVG 手繪圈圈） ====================== */
-    function clearLasso() { lassoLayer.innerHTML = ""; }
-
-    function drawLasso(indices) {
-        clearLasso();
-        if (!indices.length) return;
-        var first = fruitEls[indices[0]], last = fruitEls[indices[indices.length - 1]];
-        var x1 = first.offsetLeft, x2 = last.offsetLeft + last.offsetWidth;
-        var yTop = first.offsetTop, h = first.offsetHeight;
-        var cx = (x1 + x2) / 2, cy = yTop + h / 2;
-        var rx = (x2 - x1) / 2 + 14, ry = h / 2 + 16;
-        var NS = "http://www.w3.org/2000/svg";
-        [ { rot: -2, dash: 0 }, { rot: 2.5, dash: 1 } ].forEach(function (cfg, k) {
-            var e = document.createElementNS(NS, "ellipse");
-            e.setAttribute("cx", cx); e.setAttribute("cy", cy);
-            e.setAttribute("rx", rx); e.setAttribute("ry", ry);
-            e.setAttribute("transform", "rotate(" + cfg.rot + " " + cx + " " + cy + ")");
-            e.setAttribute("fill", "none");
-            e.setAttribute("stroke", k === 0 ? "#d62828" : "#e76f51");
-            e.setAttribute("stroke-width", k === 0 ? 5 : 3);
-            e.setAttribute("stroke-linecap", "round");
-            e.setAttribute("filter", "url(#crayonWobble)");
-            e.setAttribute("pathLength", "100");
-            e.setAttribute("stroke-dasharray", "100");
-            e.setAttribute("stroke-dashoffset", "100");
-            e.style.animation = "lassoDraw .5s ease forwards";
-            e.style.animationDelay = (k * 0.18) + "s";
-            lassoLayer.appendChild(e);
-        });
-    }
-    // lassoDraw keyframes（動態注入，避免 inline style keyframes 限制）
-    var styleTag = document.createElement("style");
-    styleTag.textContent = "@keyframes lassoDraw { to { stroke-dashoffset: 0; } }";
-    document.head.appendChild(styleTag);
-
-    /* ====================== 判答 ====================== */
-    function expectedSet(lv) {
-        var set = [];
-        if (lv.mode === "ordinal") {
-            var leftIdx = lv.dir === "left" ? lv.n - 1 : TOTAL - lv.n;
-            set = [leftIdx];
-        } else {
-            var start = lv.dir === "left" ? 0 : TOTAL - lv.n;
-            for (var i = 0; i < lv.n; i++) set.push(start + i);
-        }
-        return set;
-    }
-
-    function sameSet(a, b) {
-        if (a.length !== b.length) return false;
-        var bs = new Set(b);
-        return a.every(function (x) { return bs.has(x); });
-    }
-
-    function checkAnswer() {
-        if (locked || sel.size === 0) return;
-        var lv = LEVELS[cur];
-        var expected = expectedSet(lv);
-        var selArr = Array.from(sel).sort(function (a, b) { return a - b; });
-        if (sameSet(selArr, expected)) {
-            onCorrect(lv);
-        } else {
-            onWrong(lv, selArr, expected);
-        }
-    }
-
-    function onCorrect(lv) {
-        sGood();
-        confetti();
-        done[cur] = true;
-        buildLevelBar();
-        var isLast = done.every(Boolean);
-        showFeedback(true,
-            "🎉 圈對了！就是這樣！",
-            lv.mode === "ordinal"
-                ? "「第 " + lv.n + " 顆」只有 <span class='key-point'>1 顆</span>，你圈得真準！"
-                : "「前面 " + lv.n + " 顆」共有 <span class='key-point'>" + lv.n + " 顆</span>，一顆都沒漏掉！",
-            lv.explain,
-            isLast ? null : [{ label: "➡️ 下一關", cls: "btn-next", fn: function () { gotoLevel(cur + 1); } }]
-        );
-        if (isLast) {
-            $("finalBanner").classList.add("show");
-            setTimeout(confetti, 400);
-            setTimeout(confetti, 900);
-        } else {
-            setTimeout(function () { if (!locked) gotoLevel(cur + 1); }, 2600); // 自動推進
-        }
-    }
-
-    function onWrong(lv, selArr, expected) {
-        sBad();
-        var title, sub;
-        if (lv.mode === "ordinal") {
-            if (selArr.length > 1) {
-                title = "🤔 你圈了 " + selArr.length + " 顆，但「第 " + lv.n + " 顆」只有 <span class='key-point'>1 顆</span>！";
-                sub = lv.trap;
-            } else {
-                title = "🤔 圈到隔壁去了！";
-                sub = "再從" + dirName(lv.dir) + "慢慢數一次：1、2、3…數到 " + lv.n + " 就是它！";
-            }
-        } else {
-            if (selArr.length === 1) {
-                title = "🤔 你只圈了 1 顆，但「前面 " + lv.n + " 顆」共有 <span class='key-point'>" + lv.n + " 顆</span>！";
-                sub = lv.trap;
-            } else if (selArr.length < lv.n) {
-                title = "🤔 你只圈了 " + selArr.length + " 顆，還有沒圈到的喔！";
-                sub = "「前面 " + lv.n + " 顆」要全部圈進來，一共 " + lv.n + " 顆。";
-            } else {
-                title = "🤔 圈錯位置囉！";
-                sub = "要從" + dirName(lv.dir) + "開始數，前面 " + lv.n + " 顆全部圈起來。";
-            }
-        }
-        showFeedback(false, title, sub + "<br><b>想一想：這是「第幾顆」還是「幾顆」呢？</b>", "");
-        // 展開破招動畫：自動示範正確數法與圈法
-        setTimeout(function () { runDemo(lv, expected); }, 1000);
-    }
-
-    /* ====================== 破招動畫：示範正確數法 ====================== */
-    function runDemo(lv, expected) {
-        stopDemo();
-        locked = true;
-        sel = new Set();
-        renderSelState();
-        $("btnCheck").disabled = true;
-        // 數數順序：依題目方向依序點亮
-        var order = [];
-        for (var k = 1; k <= TOTAL; k++) {
-            order.push(lv.dir === "left" ? k - 1 : TOTAL - k); // 第 k 個數到的左起索引
-        }
-        var step = 0;
-        demoTimer = setInterval(function () {
-            if (step >= order.length) {
-                stopDemo();
-                // 畫出正確套索並揭曉答案
-                fruitEls.forEach(function (el, idx) {
-                    el.querySelector(".bubble").classList.remove("show", "demo");
-                    el.classList.remove("demo-glow");
-                });
-                expected.forEach(function (idx) {
-                    sel.add(idx);
-                    fruitEls[idx].classList.add("sel");
-                    var bub = fruitEls[idx].querySelector(".bubble");
-                    bub.textContent = bubbleNum(idx);
-                    bub.classList.add("show");
-                });
-                drawLasso(expected.slice().sort(function (a, b) { return a - b; }));
-                sGood();
-                updateHUD();
-                locked = false;
-                $("btnCheck").disabled = false;
-                var lvNow = LEVELS[cur];
-                showFeedback(false,
-                    "👀 看清楚了嗎？正確圈法是這樣！",
-                    (lvNow.mode === "ordinal"
-                        ? "「第 " + lvNow.n + " 顆」只有 <span class='key-point'>1 顆</span>——從" + dirName(lvNow.dir) + "數到 " + lvNow.n + " 的那一顆！"
-                        : "「前面 " + lvNow.n + " 顆」共有 <span class='key-point'>" + lvNow.n + " 顆</span>——從" + dirName(lvNow.dir) + "開始整群圈起來！"),
-                    lvNow.explain,
-                    [{ label: "🔁 懂了！重數一次", cls: "btn-reset", fn: function () { resetRound(); } }]
-                );
-                return;
-            }
-            var idx = order[step];
-            var el = fruitEls[idx];
-            el.classList.add("demo-glow");
-            el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop");
-            var bub = el.querySelector(".bubble");
-            bub.textContent = step + 1;
-            bub.classList.remove("show"); void bub.offsetWidth;
-            bub.classList.add("show", "demo");
-            sPop();
-            step++;
-        }, 520);
-    }
-
-    function stopDemo() {
-        if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
-        fruitEls.forEach(function (el) {
-            el.classList.remove("demo-glow");
-            el.classList.remove("sel");
-            var bub = el.querySelector(".bubble");
-            if (bub) bub.classList.remove("show", "demo");
-        });
-        clearLasso();
-        sel = new Set();
-        updateHUD();
-    }
-
-    function resetRound() {
-        stopDemo();
-        locked = false;
-        hideFeedback();
-        $("btnCheck").disabled = true;
-        $("btnCheck").textContent = "✅ 確認答案";
-        $("btnNext") && $("btnNext").remove();
-        fruitEls.forEach(function (el) { el.classList.remove("sel", "demo-glow", "pop"); });
-        sel = new Set();
-        renderSelState();
-    }
-
-    /* ====================== 回饋面板 ====================== */
-    function showFeedback(good, title, sub, explain, actions) {
-        var fb = $("feedback");
-        fb.className = "feedback show " + (good ? "good" : "bad");
-        var html = "<div class='fb-title'>" + title + "</div>" +
-                   "<div class='fb-sub'>" + sub + "</div>";
-        if (explain) html += "<div class='fb-explain'>💡 <b>算理破招：</b>" + explain + "</div>";
-        if (actions && actions.length) {
-            html += "<div class='fb-actions'>";
-            actions.forEach(function (a, i) {
-                html += "<button class='btn " + (a.cls || "") + "' data-act='" + i + "'>" + a.label + "</button>";
-            });
-            html += "</div>";
-        }
-        fb.innerHTML = html;
-        if (actions) {
-            actions.forEach(function (a, i) {
-                var b = fb.querySelector("[data-act='" + i + "']");
-                if (b) b.addEventListener("click", a.fn);
-                if (a.cls === "btn-next") b.id = "btnNext";
-            });
-        }
-        fb.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-
-    function hideFeedback() {
-        var fb = $("feedback");
-        fb.className = "feedback";
-        fb.innerHTML = "";
-    }
-
-    /* ====================== 撒花 ====================== */
-    function confetti() {
-        var emojis = ["🌟", "🍎", "✨", "🎉", "🍉", "🍋", "⭐", "💛"];
-        for (var i = 0; i < 22; i++) {
-            var s = document.createElement("span");
-            s.className = "confetti";
-            s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            s.style.left = (Math.random() * 100) + "vw";
-            s.style.animationDuration = (1.6 + Math.random() * 1.4) + "s";
-            s.style.animationDelay = (Math.random() * 0.5) + "s";
-            document.body.appendChild(s);
-            setTimeout(function (n) { return function () { n.remove(); }; }(s), 3600);
-        }
-    }
-
-    /* ====================== 綁定與啟動 ====================== */
-    $("btnCheck").addEventListener("click", checkAnswer);
-    $("btnReset").addEventListener("click", resetRound);
-    window.addEventListener("resize", function () {
-        if (sel.size) drawLasso(Array.from(sel).sort(function (a, b) { return a - b; }));
-    });
-
-    gotoLevel(0);
-})();
+render();
 </script>
 </body>
 </html>
