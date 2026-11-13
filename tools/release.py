@@ -69,11 +69,14 @@ def main():
         # 如果遠端沒有 main，嘗試 push -u origin HEAD:main
         run_cmd(["git", "push", "-u", "origin", "HEAD:main"])
 
+    # S3: 部署至 Cloudflare Pages (math-108)
+    print("\n[S3] 部署至 Cloudflare Pages (math-108)...")
+    run_cmd(["npx", "wrangler", "pages", "deploy", ".", "--project-name=math-108", "--branch=main", "--commit-dirty=true"])
+
     print("\n" + "=" * 60)
-    print("🎉 [RELEASE PASS] 028-1 全新部署倉庫推送成功！")
+    print("🎉 [RELEASE PASS] 028-1 全新部署發布成功！")
     print("🔗 倉庫網址: https://github.com/xfarbetty-svg/math-108-app")
-    print("🌐 推薦綁定 Cloudflare Pages 站點名稱: math-108")
-    print("   (在 Cloudflare Pages Dashboard 新增專案，選擇 xfarbetty-svg/math-108-app 即可秒級開站！)")
+    print("🌐 正式上線網址: https://math-108.pages.dev")
     print("=" * 60)
 
 if __name__ == "__main__":
