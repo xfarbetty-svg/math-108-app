@@ -10,34 +10,35 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
             background: #f0fdf4;
             color: #0f172a;
-            padding: 16px;
+            padding: 6px; /* Reduced padding */
             display: flex;
             justify-content: center;
         }
         .container {
             width: 100%;
-            max-width: 820px;
+            max-width: 480px; /* Max width for mobile-first */
             background: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 12px; /* Smaller border radius */
+            padding: 10px 12px; /* Reduced padding */
             box-shadow: 0 4px 16px rgba(0,0,0,0.05);
             border: 1px solid #bbf7d0;
         }
-        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 2px; } /* Reduced margin */
         .source-tag { font-size: 11px; color: #94a3b8; }
-        .stem { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
-        /* 390px 手機 One-Screen：整張 SVG viewBox 500x280 等比縮放，絕不用 px 絕對定位 */
+        .stem { font-size: 14.5px; font-weight: 700; margin-bottom: 6px; color: #1e293b; line-height: 1.35; } /* Smaller font, reduced margin, added line-height */
+        /* 390px 手機 One-Screen：整張 SVG viewBox 500x180 等比縮放，絕不用 px 絕對定位 */
         .tree-stage {
             position: relative;
             width: 100%;
-            max-width: 480px;
-            margin: 0 auto 16px;
+            max-width: 480px; /* Fixed max-width */
+            height: 175px; /* Fixed height */
+            margin: 0 auto 6px; /* Reduced margin */
             border: 2px solid #86efac;
             border-radius: 14px;
             background: linear-gradient(180deg, #eff6ff 0%, #f0fdf4 70%);
             overflow: hidden;
         }
-        .tree-stage svg { display: block; width: 100%; height: auto; }
+        .tree-stage svg { display: block; width: 100%; height: 100%; object-fit: contain; } /* Ensure SVG fits and scales */
         .bird-holder, .bird-g {
             transition: transform 0.6s cubic-bezier(.3,1.4,.5,1), opacity 0.6s ease;
         }
@@ -48,70 +49,71 @@
             position: absolute;
             top: 10px;
             left: 12px;
-            font-size: 1.1rem;
+            font-size: 11px; /* Smaller font */
             font-weight: 800;
             color: #14532d;
             background: rgba(255,255,255,0.85);
             border: 1.5px solid #86efac;
-            border-radius: 10px;
-            padding: 6px 12px;
+            border-radius: 6px; /* Smaller border radius */
+            padding: 2px 8px; /* Smaller padding */
         }
-        .action-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
+        .action-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 6px; flex-wrap: wrap; } /* Reduced margin */
         .fly-btn {
-            min-height: 44px;
+            min-height: 36px; /* Smaller min-height */
             background: #16a34a;
             color: #fff;
-            font-size: 1.05rem;
+            font-size: 13px; /* Smaller font */
             font-weight: 800;
             border: none;
             border-radius: 10px;
-            padding: 10px 26px;
+            padding: 6px 14px; /* Smaller padding */
             cursor: pointer;
         }
         .fly-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
         .reset-btn {
-            min-height: 44px;
+            min-height: 36px; /* Smaller min-height */
             background: #ffffff;
             color: #334155;
-            font-size: 1rem;
+            font-size: 13px; /* Smaller font */
             font-weight: 700;
             border: 1.5px solid #cbd5e1;
             border-radius: 10px;
-            padding: 10px 20px;
+            padding: 6px 14px; /* Smaller padding */
             cursor: pointer;
         }
-        .equation-strip { text-align: center; font-size: 1.3rem; font-weight: 800; color: #14532d; min-height: 1.6em; margin-bottom: 16px; }
-        .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+        .equation-strip { text-align: center; font-size: 13.5px; font-weight: 800; color: #14532d; min-height: 1.2em; margin-bottom: 6px; } /* Smaller font, reduced margin, min-height */
+        .opt-group { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 6px; } /* Reduced gap and margin */
         .opt-btn {
-            min-height: 44px;
+            min-height: 36px; /* Smaller min-height */
             background: #ffffff;
             border: 1.5px solid #cbd5e1;
             border-radius: 8px;
-            font-size: 1.02rem;
+            font-size: 13px; /* Smaller font */
             font-weight: 700;
             cursor: pointer;
             color: #334155;
-            padding: 8px 14px;
+            padding: 6px 12px; /* Smaller padding */
         }
         .opt-btn.active { background: #16a34a; border-color: #16a34a; color: #ffffff; }
-        .footer-action { display: flex; justify-content: center; margin-top: 12px; }
+        .footer-action { display: flex; justify-content: center; margin-top: 6px; } /* Reduced margin */
         .check-btn {
             background: #0f172a;
             color: #ffffff;
-            font-size: 1.1rem;
+            font-size: 14px; /* Smaller font */
             font-weight: 700;
-            padding: 12px 40px;
+            padding: 6px 28px; /* Smaller padding */
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            min-height: 38px; /* Smaller min-height */
         }
         .result-banner {
-            margin-top: 14px;
-            padding: 12px;
+            margin-top: 6px; /* Reduced margin */
+            padding: 8px; /* Smaller padding */
             border-radius: 8px;
             text-align: center;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 13px; /* Smaller font */
             display: none;
         }
         .result-banner.success { display: block; background: #dcfce7; color: #166534; }
@@ -128,7 +130,7 @@
     <div class="stem">樹上原來有 6 隻鳥，又飛來 3 隻後，樹上共有幾隻？</div>
 
     <div class="tree-stage" id="treeStage">
-        <svg id="treeSvg" viewBox="0 0 500 280" role="img" aria-label="樹上的小鳥教具"></svg>
+        <svg id="treeSvg" viewBox="0 0 500 180" role="img" aria-label="樹上的小鳥教具"></svg>
         <div class="count-strip" id="countStrip">樹上現在：6 隻</div>
     </div>
 
@@ -152,38 +154,52 @@
     // 小鳥（SVG 使用者座標系繪製，頭朝左、尾朝右，腳點為群組原點）
     const birdMarkup = (bodyColor) => `
         <g class="bird-g">
-            <path d="M10 0 L20 -7 V7 Z" fill="${bodyColor}" stroke="#0f172a" stroke-width="1.6" stroke-linejoin="round"/>
-            <ellipse cx="0" cy="0" rx="10.5" ry="7" fill="${bodyColor}" stroke="#0f172a" stroke-width="1.6"/>
-            <circle cx="-6" cy="-2" r="2.1" fill="#0f172a"/>
-            <circle cx="-6.7" cy="-2.7" r="0.7" fill="#ffffff"/>
-            <path d="M-8 5 Q-4 7.5 0 5" fill="none" stroke="#0f172a" stroke-width="1.1" stroke-linecap="round"/>
-            <path d="M-2 -6 Q0 -11 4 -9" fill="none" stroke="#0f172a" stroke-width="1.1" stroke-linecap="round"/>
+            <!-- 身體與胸腹 -->
+            <path d="M-10,0 Q-15,-10 -5,-18 C5,-22 10,-12 12,-5 Q10,5 -5,8 C-10,7 -15,5 -10,0 Z"
+                  fill="${bodyColor}" stroke="#3b82f6" stroke-width="1.2"/>
+            <!-- 頭部 -->
+            <circle cx="-10" cy="-12" r="6" fill="${bodyColor}" stroke="#3b82f6" stroke-width="1.2"/>
+            <!-- 眼睛 -->
+            <circle cx="-12" cy="-13" r="1.8" fill="#0f172a"/>
+            <circle cx="-12.5" cy="-13.8" r="0.7" fill="#ffffff"/>
+            <!-- 鳥喙 -->
+            <polygon points="-16,-10 -20,-12 -16,-14" fill="#fbbf24" stroke="#d97706" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- 翅膀 -->
+            <path d="M-2,-10 Q3,-15 8,-10 Q3,-5 -2,-10 Z" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.2"/>
+            <!-- 尾羽 -->
+            <path d="M10,-2 Q14,-8 18,-6 Q16,0 10,-2 Z" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.2"/>
+            <!-- 爪子 -->
+            <path d="M-3,5 L-5,8 M0,5 L-2,8 M3,5 L1,8" stroke="#a16207" stroke-width="1.5" stroke-linecap="round"/>
             <g class="badge-g">
-                <circle cy="-15" r="8.5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
-                <text class="badge-num" y="-11.2" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff"></text>
+                <circle cy="-18" r="8.5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
+                <text class="badge-num" y="-14.2" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff"></text>
             </g>
         </g>`;
 
-    // 樹幹與樹冠（背景，全部收斂進 500x280 viewBox）
+    // 樹幹與樹冠（背景，全部收斂進 500x180 viewBox）
     const treeLayer = `
         <g pointer-events="none">
-            <rect x="0" y="254" width="500" height="26" fill="#bef264" opacity="0.55"/>
-            <rect x="240" y="182" width="32" height="76" rx="7" fill="#a16207" stroke="#78350f" stroke-width="2"/>
-            <path d="M270 205 Q352 194 372 228 Q340 240 274 232 Z" fill="#a16207" stroke="#78350f" stroke-width="2"/>
-            <path d="M366 226 q26 4 30 16" fill="none" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="250" cy="108" r="82" fill="#4ade80" opacity="0.9"/>
-            <circle cx="182" cy="142" r="52" fill="#22c55e" opacity="0.9"/>
-            <circle cx="318" cy="140" r="55" fill="#22c55e" opacity="0.9"/>
-            <circle cx="250" cy="72" r="46" fill="#4ade80" opacity="0.95"/>
+            <!-- 主樹幹 -->
+            <path d="M20 180 V80 Q60 50 150 70 L155 80 Q110 55 50 85 V180 Z" fill="#8d6e63" stroke="#5d4037" stroke-width="3"/>
+            <!-- 橫向樹枝 -->
+            <path d="M100 85 Q250 50 450 75 Q420 95 200 100 Z" fill="#8d6e63" stroke="#5d4037" stroke-width="3"/>
+            <path d="M120 90 Q180 60 250 70" fill="none" stroke="#5d4037" stroke-width="2"/>
+            <path d="M300 75 Q350 60 400 65" fill="none" stroke="#5d4037" stroke-width="2"/>
+            <!-- 樹冠 -->
+            <circle cx="150" cy="50" r="40" fill="#66bb6a"/>
+            <circle cx="250" cy="40" r="50" fill="#81c784"/>
+            <circle cx="350" cy="50" r="45" fill="#66bb6a"/>
+            <circle cx="200" cy="70" r="30" fill="#81c784"/>
+            <circle cx="300" cy="70" r="35" fill="#66bb6a"/>
         </g>`;
 
-    // 6 隻原住鳥位置（樹冠上）＋ 3 隻飛入鳥的落點（皆在 500x280 內，不再用 px 絕對定位）
+    // 6 隻原住鳥位置（樹冠上）＋ 3 隻飛入鳥的落點（皆在 500x180 內，不再用 px 絕對定位）
     const ORIG_POS = [
-        { x: 172, y: 92 }, { x: 228, y: 58 }, { x: 292, y: 62 },
-        { x: 346, y: 96 }, { x: 196, y: 142 }, { x: 322, y: 146 }
+        { x: 100, y: 55 }, { x: 160, y: 35 }, { x: 200, y: 60 },
+        { x: 260, y: 45 }, { x: 320, y: 55 }, { x: 380, y: 65 }
     ];
     const NEW_POS = [
-        { x: 252, y: 118 }, { x: 304, y: 134 }, { x: 382, y: 124 }
+        { x: 220, y: 80 }, { x: 280, y: 90 }, { x: 340, y: 85 }
     ];
 
     let userAnswer = null;
@@ -231,7 +247,7 @@
         const holder = makeBird(pos, '#38bdf8');
         const bird = holder.firstElementChild;
         // 起飛點在畫面外下方（SVG 使用者座標系，隨 viewBox 等比縮放，390px 不跑版）
-        holder.style.transform = `translate(${pos.x - 70}px, 300px) scale(0.4)`;
+        holder.style.transform = `translate(${pos.x}px, 200px) scale(0.4)`;
         bird.style.opacity = '0';
         document.getElementById('treeSvg').appendChild(holder);
         arrived++;

@@ -71,7 +71,13 @@
 - [x] Session 15 算力通道架構真理對齊與自動 Failover 憲法固化：
   1. 徹底釐清三大法定通道實體：通道一（本地 OpenCode）、通道二（A-SERVER SSH 4.2s Exit 0）、通道三（035 8把Key池 200 OK）。
   2. 固化 026 `_allow_remote_fallback = True` 契約：通道一額度耗盡時毫秒級自動切換通道二，對人類完全透明，嚴禁中途打擾人類或在專案內重複造輪子。
-- [ ] 下一步：調派通道二執行手機版 One-Screen 單屏緊湊重構與 Q2 小鳥純向量重繪。
+- [x] Session 16 手機 One-Screen 單屏緊湊重構與 Q2 小鳥純向量重繪全綠落地：
+  1. 通道一秒級響應，派工 OpenCode 施工工兵完成 `app/index.html`、`app/shell.js` 與 `app/components/birds_on_tree_demo.html` 重構。
+  2. 手機版（390px）Shell 頂部壓縮至 36px 超窄單行，消除重複標題與空白 padding。
+  3. `shell.js` 自適應高度精準貼合容器高度（434px），徹底破除 860px 撐滿死鎖。
+  4. 徹底重繪純向量小鳥（亮黃尖喙、圓頭靈眼、立體雙羽翼、微翹尾羽、抓枝小爪），完全告別金魚魚鰭感。
+  5. Playwright CDP 實機測量：390x844 單屏總高度 844px（零捲軸、免滑動），一屏完美容納「題幹 + 教具 + 選項 + 按鈕」！
+- [ ] 下一步：推進 G1-N-1-2 剩餘題目與 G1-N-1-3（20以內數與進退位）教具。
 
 
 ---

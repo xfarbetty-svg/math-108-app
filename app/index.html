@@ -196,7 +196,19 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   .brand .sub { display: none; }
   .grade-nav { flex: 1 1 auto; min-width: 0; }
   .grade-btn { padding: 4px 12px; font-size: 13px; }
-  main { padding-top: 14px; }
+  
+  /* Stage View Mobile Optimization */
+  #stageView .stage-head { align-items: center; justify-content: space-between; margin-bottom: 4px; min-height: 36px; padding: 0 8px; }
+  #stageView .btn-back { padding: 3px 8px; font-size: 12px; border-radius: 999px; }
+  #stageView .progress-box { display: flex; align-items: baseline; gap: 6px; }
+  #stageView .progress-num { font-size: 13px; }
+  #stageView .progress-source { font-size: 10px; }
+  #stageView .dots { gap: 4px; margin-bottom: 4px; }
+  #stageView .dot { width: 6px; height: 6px; }
+  #stageView .stage-title { display: none; }
+  main { padding: 6px 8px 10px; }
+  #stageView .stage-nav { min-height: 40px; margin-top: 6px; }
+  #stageView .stage-nav button { font-size: 13px; }
 }
 @media (min-width: 700px) {
   .unit-list { grid-template-columns: 1fr 1fr; }

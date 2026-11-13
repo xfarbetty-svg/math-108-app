@@ -127,7 +127,7 @@ function renderQuestion() {
   const frame = $("stageFrame");
   clearInterval(heightTimer);
   const isNarrow = window.innerWidth < 700;
-  frame.style.height = (q.fallback_height || (isNarrow ? 360 : 900)) + "px"; // 先落 fallback 高度防跳動
+  frame.style.height = (q.fallback_height || (isNarrow ? 480 : 900)) + "px"; // 先落 fallback 高度防跳動
   frame.src = q.component_path || q.component;
   frame.onload = () => fitFrame(frame, q);
   // 同源可讀時持續自適應高度；file:// 跨檔受限時保持 fallback 高度
@@ -137,11 +137,13 @@ function renderQuestion() {
 function fitFrame(frame, q) {
   try {
     const doc = frame.contentDocument;
-    if (!doc || !doc.documentElement) return;
-    const h = Math.max(doc.documentElement.scrollHeight, doc.body ? doc.body.scrollHeight : 0);
-    if (h > 100) frame.style.height = h + "px";
+    if (!doc) return;
+    const container = doc.querySelector('.container') || doc.body;
+    if (!container) return;
+    const h = Math.ceil(container.getBoundingClientRect().height || container.scrollHeight);
+    if (h > 100) frame.style.height = (h + 8) + "px";
   } catch (_e) {
-    /* file:// 同源限制 → 保持 fallback_height（降級已於資料檔標註） */
+    /* file:// 同源限制 → 保持 fallback */
   }
 }
 
