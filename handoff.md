@@ -31,27 +31,27 @@
 ---
 
 ## 🚦 目前狀態
-- **Web 服務監聽**：Port 3001（背景運行中）
-  - 🌟 **總入口網址**：`http://100.91.241.21:3001/app/index.html`
+- **正式線上發布網址 (Cloudflare Pages)**：
+  - 🌟 **正式入口**：`https://math-108.pages.dev/`（自動導向 `/app/`，HTTPS 200 OK，全球 CDN 上線）
+- **本地 Web 服務監聽**：Port 3001（背景運行中）
+  - 🌟 **本地入口網址**：`http://100.91.241.21:3001/app/index.html`
 - **一年級總進度**：**11 / 11 單元（100% 完工，合計 50 題真題 ＋ 32 套向量可互動教具）**
-- **Git 狀態**：✅ 已推送到 GitHub 專屬新倉庫 `xfarbetty-svg/math-108-app`（Commit `2ec077c`）。
+- **Git 狀態**：✅ 已推送到 GitHub 專屬新倉庫 `xfarbetty-svg/math-108-app`（Commit `3d2c88f`）。
+- **Cloudflare 狀態**：✅ 專案 `math-108` 建立完畢，全量靜態資產 570 檔案上傳成功，線上驗收通過。
 
 ---
 
-## ➡️ 下一個對話框接續任務（冷啟動開工）
-1. **Cloudflare Pages 站點綁定驗真**：
-   - 綁定專案 `math-108`（`https://math-108.pages.dev`）。
-2. **正式邁入二年級（Grade 2）108 課綱官方單元推進**：
+## ➡️ 接續任務
+1. **正式邁入二年級（Grade 2）108 課綱官方單元推進**：
    - `N-2-1`（一千以內的數：含位值積木操作活動、位值表、位值單位「百」）
    - `N-2-2`（加減直式計算：二位數加減直式計算與驗算）
-   - `N-2-3`（解題：兩步驟應用問題）
    - `N-2-6`（乘法：乘法的意義與應用，九九乘法）
-3. **二年級實體真題試卷萃取與核心通用教具打樣**。
+2. **二年級實體真題試卷萃取與核心通用教具打樣**。
 
 ---
 
 ## 🕐 最後更新
-- **時間**：2026-11-13 19:44
+- **時間**：2026-11-13 20:10
 - **更新者**：Antigravity (AGY) @ DESKTOP-6ELKIRH
-- **Git push 狀態**：✅ 已推（Commit `2ec077c` 至 `origin/main`）
-- **收工鋼印**：ALL G1 UNITS 100% READY (11/11) ＆ RELEASE READY
+- **Git push 狀態**：✅ 已推（Commit `3d2c88f` 至 `origin/main`）
+- **收工鋼印**：CLOUDFLARE PAGES LIVE (https://math-108.pages.dev) ＆ ALL G1 UNITS 100% READY
