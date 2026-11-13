@@ -89,6 +89,10 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 }
 .unit-card.locked .code { color: var(--ink-soft); background: #f4efe6; }
 .unit-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 4px; }
+.unit-card .desc {
+  font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin: 2px 0 6px;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
 .unit-card .hint { font-size: 12px; color: var(--ink-soft); }
 .badge-ready {
   position: absolute; top: 14px; right: 14px;
@@ -184,6 +188,16 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   display: none; margin: 10px 0 0; padding: 10px 14px; border-radius: 12px;
   background: #fff3cd; color: #8a6d1a; font-size: 12px; line-height: 1.6;
 }
+/* 手機 390px：header 單行壓到 ≈40px，藥丸橫向滑動，教具 One-Screen 優先 */
+@media (max-width: 699px) {
+  .topbar-inner { display: flex; align-items: center; gap: 10px; padding: 4px 12px; }
+  .brand { margin-bottom: 0; flex: 0 0 auto; }
+  .brand h1 { font-size: 15px; white-space: nowrap; }
+  .brand .sub { display: none; }
+  .grade-nav { flex: 1 1 auto; min-width: 0; }
+  .grade-btn { padding: 4px 12px; font-size: 13px; }
+  main { padding-top: 14px; }
+}
 @media (min-width: 700px) {
   .unit-list { grid-template-columns: 1fr 1fr; }
   .stage-title { font-size: 19px; }
@@ -197,7 +211,7 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   <div class="topbar-inner">
     <div class="brand">
       <h1>🎨 小數學冒險</h1>
-      <span class="sub">108 課綱 · 一到六年級 · 純離線真題</span>
+      <span class="sub">108 課綱官方 131 條目 · 一到六年級 · 純離線真題</span>
     </div>
     <nav class="grade-nav" id="gradeNav" aria-label="年級導航"></nav>
   </div>

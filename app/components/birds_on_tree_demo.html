@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加型：樹上的小鳥</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            background: #f0fdf4;
+            color: #0f172a;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #bbf7d0;
+        }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .source-tag { font-size: 11px; color: #94a3b8; }
+        .stem { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; color: #1e293b; }
+        /* 390px 手機 One-Screen：整張 SVG viewBox 500x280 等比縮放，絕不用 px 絕對定位 */
+        .tree-stage {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto 16px;
+            border: 2px solid #86efac;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #eff6ff 0%, #f0fdf4 70%);
+            overflow: hidden;
+        }
+        .tree-stage svg { display: block; width: 100%; height: auto; }
+        .bird-holder, .bird-g {
+            transition: transform 0.6s cubic-bezier(.3,1.4,.5,1), opacity 0.6s ease;
+        }
+        .bird-g { cursor: pointer; }
+        .badge-g { display: none; }
+        .bird-g.counted .badge-g { display: block; }
+        .count-strip {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #14532d;
+            background: rgba(255,255,255,0.85);
+            border: 1.5px solid #86efac;
+            border-radius: 10px;
+            padding: 6px 12px;
+        }
+        .action-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
+        .fly-btn {
+            min-height: 44px;
+            background: #16a34a;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 26px;
+            cursor: pointer;
+        }
+        .fly-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .reset-btn {
+            min-height: 44px;
+            background: #ffffff;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .equation-strip { text-align: center; font-size: 1.3rem; font-weight: 800; color: #14532d; min-height: 1.6em; margin-bottom: 16px; }
+        .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+        .opt-btn {
+            min-height: 44px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1.02rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #334155;
+            padding: 8px 14px;
+        }
+        .opt-btn.active { background: #16a34a; border-color: #16a34a; color: #ffffff; }
+        .footer-action { display: flex; justify-content: center; margin-top: 12px; }
+        .check-btn {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .result-banner {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: none;
+        }
+        .result-banner.success { display: block; background: #dcfce7; color: #166534; }
+        .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-row">
+        <span class="source-tag">忠孝 114-1 期末 九、4</span>
+    </div>
+
+    <div class="stem">樹上原來有 6 隻鳥，又飛來 3 隻後，樹上共有幾隻？</div>
+
+    <div class="tree-stage" id="treeStage">
+        <svg id="treeSvg" viewBox="0 0 500 280" role="img" aria-label="樹上的小鳥教具"></svg>
+        <div class="count-strip" id="countStrip">樹上現在：6 隻</div>
+    </div>
+
+    <div class="action-row">
+        <button class="fly-btn" id="flyBtn" onclick="flyIn()">🕊 再飛來 3 隻！</button>
+        <button class="reset-btn" onclick="resetAll()">重來</button>
+    </div>
+    <div class="equation-strip" id="equationStrip">原來 6 隻，還沒有新朋友飛來。</div>
+
+    <div class="opt-group" id="opts"></div>
+
+    <div class="footer-action">
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+    <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+    const SVGNS = 'http://www.w3.org/2000/svg';
+
+    // 小鳥（SVG 使用者座標系繪製，頭朝左、尾朝右，腳點為群組原點）
+    const birdMarkup = (bodyColor) => `
+        <g class="bird-g">
+            <path d="M10 0 L20 -7 V7 Z" fill="${bodyColor}" stroke="#0f172a" stroke-width="1.6" stroke-linejoin="round"/>
+            <ellipse cx="0" cy="0" rx="10.5" ry="7" fill="${bodyColor}" stroke="#0f172a" stroke-width="1.6"/>
+            <circle cx="-6" cy="-2" r="2.1" fill="#0f172a"/>
+            <circle cx="-6.7" cy="-2.7" r="0.7" fill="#ffffff"/>
+            <path d="M-8 5 Q-4 7.5 0 5" fill="none" stroke="#0f172a" stroke-width="1.1" stroke-linecap="round"/>
+            <path d="M-2 -6 Q0 -11 4 -9" fill="none" stroke="#0f172a" stroke-width="1.1" stroke-linecap="round"/>
+            <g class="badge-g">
+                <circle cy="-15" r="8.5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
+                <text class="badge-num" y="-11.2" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff"></text>
+            </g>
+        </g>`;
+
+    // 樹幹與樹冠（背景，全部收斂進 500x280 viewBox）
+    const treeLayer = `
+        <g pointer-events="none">
+            <rect x="0" y="254" width="500" height="26" fill="#bef264" opacity="0.55"/>
+            <rect x="240" y="182" width="32" height="76" rx="7" fill="#a16207" stroke="#78350f" stroke-width="2"/>
+            <path d="M270 205 Q352 194 372 228 Q340 240 274 232 Z" fill="#a16207" stroke="#78350f" stroke-width="2"/>
+            <path d="M366 226 q26 4 30 16" fill="none" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="250" cy="108" r="82" fill="#4ade80" opacity="0.9"/>
+            <circle cx="182" cy="142" r="52" fill="#22c55e" opacity="0.9"/>
+            <circle cx="318" cy="140" r="55" fill="#22c55e" opacity="0.9"/>
+            <circle cx="250" cy="72" r="46" fill="#4ade80" opacity="0.95"/>
+        </g>`;
+
+    // 6 隻原住鳥位置（樹冠上）＋ 3 隻飛入鳥的落點（皆在 500x280 內，不再用 px 絕對定位）
+    const ORIG_POS = [
+        { x: 172, y: 92 }, { x: 228, y: 58 }, { x: 292, y: 62 },
+        { x: 346, y: 96 }, { x: 196, y: 142 }, { x: 322, y: 146 }
+    ];
+    const NEW_POS = [
+        { x: 252, y: 118 }, { x: 304, y: 134 }, { x: 382, y: 124 }
+    ];
+
+    let userAnswer = null;
+    const ANSWER_INDEX = 1;
+    let arrived = 0;   // 已飛入 0..3
+
+    function makeBird(pos, color) {
+        const holder = document.createElementNS(SVGNS, 'g');
+        holder.setAttribute('class', 'bird-holder');
+        holder.innerHTML = birdMarkup(color);
+        const bird = holder.firstElementChild;
+        holder.style.transformOrigin = '0 0';
+        holder.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(0.8)`;
+        bird.addEventListener('click', () => {
+            bird.classList.toggle('counted');
+            renumber();
+        });
+        return holder;
+    }
+
+    function renumber() {
+        // 依「已飛入」狀態重編 1..(6+arrived)
+        let n = 1;
+        document.querySelectorAll('#treeSvg .bird-g').forEach((el) => {
+            const badge = el.querySelector('.badge-g');
+            if (el.classList.contains('counted')) {
+                badge.style.display = 'block';
+                el.querySelector('.badge-num').textContent = n++;
+            } else {
+                badge.style.display = 'none';
+            }
+        });
+        const total = 6 + arrived;
+        document.getElementById('countStrip').innerText = '樹上現在：' + total + ' 隻';
+        document.getElementById('equationStrip').innerHTML = arrived === 0
+            ? '原來 6 隻，還沒有新朋友飛來。'
+            : (arrived === 3
+                ? '6 ＋ 3 ＝ <span style="color:#16a34a">9</span> 🎉'
+                : `6 ＋ ${arrived} ＝ ${total}…還有 ${(3 - arrived)} 隻在路上`);
+    }
+
+    function flyIn() {
+        if (arrived >= 3) return;
+        const pos = NEW_POS[arrived];
+        const holder = makeBird(pos, '#38bdf8');
+        const bird = holder.firstElementChild;
+        // 起飛點在畫面外下方（SVG 使用者座標系，隨 viewBox 等比縮放，390px 不跑版）
+        holder.style.transform = `translate(${pos.x - 70}px, 300px) scale(0.4)`;
+        bird.style.opacity = '0';
+        document.getElementById('treeSvg').appendChild(holder);
+        arrived++;
+        void holder.getBoundingClientRect(); // 強制 reflow → 觸發飛入動畫
+        requestAnimationFrame(() => {
+            holder.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(0.8)`;
+            bird.style.opacity = '1';
+        });
+        document.getElementById('flyBtn').disabled = arrived === 3;
+        renumber();
+    }
+
+    function resetAll() {
+        arrived = 0;
+        document.querySelectorAll('#treeSvg .bird-holder').forEach((el) => el.remove());
+        document.getElementById('flyBtn').disabled = false;
+        renumber();
+    }
+
+    function build() {
+        const svg = document.getElementById('treeSvg');
+        svg.innerHTML = treeLayer;
+        ORIG_POS.forEach((p) => svg.appendChild(makeBird(p, '#f59e0b')));
+        renumber();
+
+        const group = document.getElementById('opts');
+        [
+            '6 - 3 = 3，共 3 隻',
+            '6 + 3 = 9，共 9 隻',
+            '6 + 4 = 10，共 10 隻',
+            '9 - 6 = 3，共 3 隻'
+        ].forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = function () {
+                group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                userAnswer = idx;
+            };
+            group.appendChild(btn);
+        });
+    }
+
+    function check() {
+        const banner = document.getElementById('resultBanner');
+        if (userAnswer === null) {
+            banner.className = 'result-banner fail';
+            banner.innerText = '先選一個算式再檢查喔！';
+            return;
+        }
+        if (userAnswer === ANSWER_INDEX) {
+            banner.className = 'result-banner success';
+            banner.innerText = '🎉 答對！6＋3＝9，樹上共有 9 隻鳥（添加型：「又飛來」是變多，用加法）';
+        } else {
+            banner.className = 'result-banner fail';
+            banner.innerText = '再想想：「又飛來 3 隻」是變多還是變少？點小鳥數數看樹上現在有幾隻！';
+        }
+    }
+
+    build();
+</script>
+
+</body>
+</html>

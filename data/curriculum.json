@@ -1,424 +1,1089 @@
 {
-  "$schema": "math-app-curriculum-v1",
-  "source": "docs/108課綱規格書_全學年視覺教具對照表.md (V3 權威版) + 國家教育研究院《十二年國教數學領域課程手冊》官方條目查證",
-  "note": "嚴格對齊教育部《108 課綱數學領域課程手冊》官方代碼。status: ready=已就緒可做題 / upcoming=即將開放。N-1-1 為全專案第一個已驗真落地單元（人類三端盲審通過）。",
-  "official_code_audit": "G3 除法直式依官方手冊校定為 N-3-5；G5 因數與倍數校定為 N-5-3（N-5-1 官方為十進位位值系統，N-6-1 質數條目之先備即 N-5-3）；G6 依官方 N-6-1 質數與質因數分解、N-6-2 公因數與公倍數。",
-  "pending_note": "G2~G6 為藍圖條目，其餘未列條目待逐條查證官方原文後補入（SSOT 禁止灌假條目）。",
+  "$schema": "math-app-curriculum-v2",
+  "source": "data/curriculum_108_official.json content_units（國家教育研究院《十二年國教數學領域課程手冊》官方 131 條目）",
+  "note": "status: ready=已驗真開放（人類三端盲審通過）/ upcoming=教具與真題建置中。N-1-1 為全專案第一個開放單元。",
   "grades": [
     {
       "grade": 1,
-      "label": "一年級",
-      "stage": "第一學習階段",
-      "theme": "🌱 數的萌芽",
+      "name": "一年級",
       "units": [
         {
           "code": "N-1-1",
-          "name": "10以內的數與比多少、序數",
-          "official_core": "數數、一對一點數、序數與基數、0的概念",
-          "visual_aid": "魚缸數數、課桌鉛筆、派對一對一配對、水果排一列圈圈看",
-          "common_trap": "序數起點搞錯方向（從右數第4 vs 從左數第2）；「第5顆」只圈一顆、「前面8顆」要圈一串。",
+          "title": "一百以內的數",
+          "full_text": "一百以內的數：含操作活動。用數表示多少與順序。結合數數、位值表徵、位值表。位值單位「個」和「十」。位值單位換算。認識0 的位值意義。",
           "status": "ready",
-          "unit_data": "data/units/G1/N-1-1.json",
-          "human_verified": true
+          "question_count": 4,
+          "verified_source": "高雄市忠孝國小 114 學年度第一學期 一年級期中考"
         },
         {
           "code": "N-1-2",
-          "name": "10以內的加減與比多少",
-          "official_core": "合成、分解、心算加減、一對一配對比多少",
-          "visual_aid": "雙色十格陣 (Ten Frame)、五五聚合圓點",
-          "common_trap": "倒數不熟，減法直接看著答案猜數字。",
-          "status": "upcoming",
-          "data": "data/curriculum_v3/g1_n12_diff_compare.json"
+          "title": "加法和減法的意義與應用。加法和減法的意義與應用。含",
+          "full_text": "加法和減法的意義與應用。加法和減法的意義與應用。含「添加型」、「併加型」、「拿走型」、「比較型」等應用問題。加法和減法算式。",
+          "status": "ready",
+          "question_count": 4,
+          "verified_source": "高雄市忠孝國小 114 學年度第一學期 一年級期末考（九、寫出算式和答案 1~4 題）"
         },
         {
           "code": "N-1-3",
-          "name": "基本加減法（湊十、拆十）",
-          "official_core": "湊十法 (Make 10)、拆十法",
-          "visual_aid": "荷葉跳步數線、雙色吸鐵拆合動畫",
-          "common_trap": "湊十時忘記扣除已被拿走的部分。",
-          "status": "upcoming",
-          "data": "data/curriculum_v3/g1_n13_make_ten.json"
+          "title": "基本加減法",
+          "full_text": "基本加減法：以操作活動為主。以熟練為目標。指1 到10 之數與1 到10之數的加法，及反向的減法計算。",
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "高雄市鳳山區忠孝國小 114 學年度第一學期 一年級數學科期末定期評量（四、比比看(4) 三組 ＋ 六、把答案是 5 的圈起來 ＋ 八、素養題魚網）"
         },
         {
           "code": "N-1-4",
-          "name": "錢幣（1元、5元、10元、50元、100元）",
-          "official_core": "數錢、換錢、找錢（操作活動為主）",
-          "visual_aid": "店鋪買賣情境、錢幣等值交換",
-          "common_trap": "50元與5元、10元與1元的幣值大小視覺混淆。",
+          "title": "解題（1 元、5 元、10 元、50）",
+          "full_text": "解題：1 元、5 元、10 元、50 元、100 元。以操作活動為主。數錢、換錢、找錢。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g1_n14_solve_problem.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-1-5",
-          "name": "長度（同 S-1-1，直接與間接比較）",
-          "official_core": "直接比較、間接比較（含個別單位）",
-          "visual_aid": "直尺對齊、起點對起點比長短",
-          "common_trap": "兩物起點沒對齊就比長短。",
+          "title": "長度（同S-1-1）",
+          "full_text": "長度（同S-1-1）：以操作活動為主。初步認識、直接比較、間接比較（含個別單位）。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g1_n15_length_compare.json"
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-1-6",
+          "title": "日常時間用語",
+          "full_text": "日常時間用語：以操作活動為主。簡單日期報讀「幾月幾日」；「明天」、「今天」、「昨天」；「上午」、「中午」、「下午」、「晚上」。簡單時刻報讀「整點」與「半點」。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "S-1-1",
-          "name": "直線曲線與平面形體、長短比較",
-          "official_core": "認識正方形、長方形、三角形、圓形；直線與曲線",
-          "visual_aid": "觸控等角積木、邊與頂點高亮標籤",
-          "common_trap": "將非水平放置的正方形誤認為菱形或非正方形。",
+          "title": "長度（同N-1-5）",
+          "full_text": "長度（同N-1-5）：以操作活動為主。初步認識、直接比較、間接比較（含個別單位）。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g1_s11_shape_identify.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "S-1-2",
-          "name": "立體形體（滾動、堆疊、平平的面）",
-          "official_core": "球、柱、錐、箱；可滾動與可堆疊之辨識",
-          "visual_aid": "物理堆疊台、滾動軌道",
-          "common_trap": "以為球也能堆疊；忽略圓柱有平平的面。",
+          "title": "形體的操作",
+          "full_text": "形體的操作：以操作活動為主。描繪、複製、拼貼、堆疊。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g1_s12_stack_roll.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "R-1-1",
-          "name": "相等關係與平衡天平",
-          "official_core": "等量與平衡、一邊加減另一邊同步",
-          "visual_aid": "力矩平衡天平",
-          "common_trap": "只看物品數量、不看重量關係。",
+          "title": "算式與符號",
+          "full_text": "算式與符號：含加減算式中的數、加號、減號、等號。以說、讀、聽、寫、做檢驗學生的理解。適用於後續階段。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g1_r11_balance_equal.json"
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-1-2",
+          "title": "兩數相加的順序不影響其和",
+          "full_text": "兩數相加的順序不影響其和：加法交換律。可併入其他教學活動。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "D-1-1",
-          "name": "資料分類與整理",
-          "official_core": "依屬性分類、簡單對應與計數",
-          "visual_aid": "資料分類工作台",
-          "common_trap": "分類標準中途變換，導致重複或遺漏。",
+          "title": "簡單分類",
+          "full_text": "簡單分類：以操作活動為主。能蒐集、分類、記錄、呈現日常生活物品，報讀、說明已處理好之分類。觀察分類的模式，知道同一組資料可有不同的分類方式。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g1_d11_data_sort.json"
+          "question_count": 0,
+          "verified_source": null
         }
       ]
     },
     {
       "grade": 2,
-      "label": "二年級",
-      "stage": "第一學習階段",
-      "theme": "🌿 位值與乘法",
+      "name": "二年級",
       "units": [
         {
           "code": "N-2-1",
-          "name": "1000以內的數",
-          "official_core": "三位數、百位位值",
-          "visual_aid": "百格板 (100)、橘色十條、白色積木合成分解",
-          "common_trap": "遇到「中間有 0」的大數讀寫錯誤（如 305 寫成 35）。",
+          "title": "一千以內的數",
+          "full_text": "一千以內的數：含位值積木操作活動。結合點數、位值表徵、位值表。位值單位「百」。位值單位換算。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_n21_place_value_1000.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-2",
-          "name": "加減算式與直式計算",
-          "official_core": "兩位數直式、二次進位、一次退位",
-          "visual_aid": "位值格線表（個十位虛線隔開）、借退位小字標記",
-          "common_trap": "個位不夠減時用減數反減被減數（如 52-28 算成 8-2=6）。",
+          "title": "加減算式與直式計算",
+          "full_text": "加減算式與直式計算：用位值理解多位數加減計算的原理與方法。初期可操作、橫式、直式等方法並陳，二年級最後歸結於直式計算，做為後續更大位數計算之基礎。直式計算的基礎為位值概念與基本加減法，教師須說明直式計算的合理性。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_n22_vertical_math.json"
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-2-3",
+          "title": "解題（加減應用問題）",
+          "full_text": "解題：加減應用問題。加數、被加數、減數、被減數未知之應用解題。連結加與減的關係（R-2-4）。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-2-4",
+          "title": "解題（簡單加減估算）",
+          "full_text": "解題：簡單加減估算。具體生活情境。以百位數估算為主。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-2-5",
+          "title": "解題（100 元、500 元、100）",
+          "full_text": "解題：100 元、500 元、1000 元。以操作活動為主兼及計算。容許多元策略，協助建立數感。包含已學習之更小幣值。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-6",
-          "name": "乘法意義",
-          "official_core": "連加轉化為「倍」、單位量與單位數",
-          "visual_aid": "雞蛋盒矩陣陣列 (Array Model)、同心分組圈",
-          "common_trap": "混淆「被乘數」與「乘數」的單位（3顆×4盒 vs 4盒×3顆）。",
+          "title": "乘法",
+          "full_text": "乘法：乘法的意義與應用。在學習乘法過程，逐步發展「倍」的概念，做為統整乘法應用情境的語言。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_n26_multiplication.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-7",
-          "name": "九九乘法",
-          "official_core": "乘法九九表、乘法交換律",
-          "visual_aid": "九九乘法階梯跳步數線、旋轉長方陣",
-          "common_trap": "6×7 與 7×6 誤認不同結果；7×8 記錯成 54。",
+          "title": "十十乘法",
+          "full_text": "十十乘法：乘除直式計算的基礎，以熟練為目標。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_n27_multiplication_formula.json"
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-2-8",
+          "title": "解題（兩步驟應用問題（加、減、乘））",
+          "full_text": "解題：兩步驟應用問題（加、減、乘）。加減混合、加與乘、減與乘之應用解題。不含併式。不含連乘。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-2-9",
+          "title": "解題（分裝與平分）",
+          "full_text": "解題：分裝與平分。以操作活動為主。除法前置經驗。理解分裝與平分之意義與方法。引導學生在解題過程，發現問題和乘法模式的關連。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-10",
-          "name": "從平分活動認識單位分數（二分之一、四分之一）",
-          "official_core": "平分、單位分數語言",
-          "visual_aid": "分數條、披薩等分盤",
-          "common_trap": "平分誤認為任意切割（分母意義未建立）。",
-          "status": "upcoming"
+          "title": "單位分數的認識",
+          "full_text": "單位分數的認識：從等分配的活動（如摺紙）認識單部分為全部的「幾分之一」。知道日常語言「的一半」、「的二分之一」、「的四分之一」的溝通意義。在已等分割之格圖中，能說明一格為全部的「幾分之一」。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-11",
-          "name": "長度：公尺與公分",
-          "official_core": "公分、公尺與其換算",
-          "visual_aid": "公尺量尺",
-          "common_trap": "公尺與公分單位混用。",
+          "title": "長度（「公分」、「公尺」）",
+          "full_text": "長度：「公分」、「公尺」。實測、量感、估測與計算。單位換算。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_n211_meter_length.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-12",
-          "name": "重量：公斤與公克",
-          "official_core": "公斤、公克、秤面報讀",
-          "visual_aid": "重量平衡秤",
-          "common_trap": "以為大的東西一定比較重。",
+          "title": "容量、重量、面積",
+          "full_text": "容量、重量、面積：以操作活動為主。此階段量的教學應包含初步認識、直接比較、間接比較（含個別單位）。不同的量應分不同的單元學習。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_n212_weight_mass.json"
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-2-13",
-          "name": "時間：從鐘面報讀幾時幾分",
-          "official_core": "鐘面、幾時幾分",
-          "visual_aid": "動態時鐘",
-          "common_trap": "分針格數與5的倍數對應不熟。",
-          "status": "upcoming"
+          "title": "鐘面的時刻",
+          "full_text": "鐘面的時刻：以操作活動為主。以鐘面時針與分針之位置認識「幾時幾分」。含兩整時時刻之間的整時點數（時間加減的前置經驗）。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-2-14",
+          "title": "時間（「年」、「月」、「星期」、「日）",
+          "full_text": "時間：「年」、「月」、「星期」、「日」。理解所列時間單位之關係與約定。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "S-2-1",
-          "name": "幾何形體與角",
-          "official_core": "邊、角、頂點、直角",
-          "visual_aid": "動態夾角展開扇、直角三角形比對角規",
-          "common_trap": "認為邊長越長、角就越大（混淆邊長與角度）。",
+          "title": "物體之幾何特徵",
+          "full_text": "物體之幾何特徵：以操作活動為主。進行辨認與描述之活動。藉由實際物體認識簡單幾何形體（包含平面圖形與立體形體），並連結幾何概念（如長、短、大、小等）。",
           "status": "upcoming",
-          "data": "data/curriculum_v3/g2_s21_shapes_angles.json"
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-2-2",
+          "title": "簡單幾何形體",
+          "full_text": "簡單幾何形體：以操作活動為主。包含平面圖形與立體形體。辨認與描述平面圖形與立體形體的幾何特徵並做分類。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-2-3",
+          "title": "直尺操作",
+          "full_text": "直尺操作：測量長度。報讀公分數。指定長度之線段作圖。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-2-4",
+          "title": "平面圖形的邊長",
+          "full_text": "平面圖形的邊長：以操作活動與直尺實測為主。認識特殊幾何圖形的邊長關係。含周長的計算活動。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-2-5",
+          "title": "面積（以具體操作為主）",
+          "full_text": "面積：以具體操作為主。初步認識、直接比較、間接比較（含個別單位）。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "R-2-1",
-          "name": "大小關係（>、=、<）",
-          "official_core": "符號意義、大小比較由高位比起",
-          "visual_aid": "比較鱷魚嘴",
-          "common_trap": "比較多位數時從個位比起。",
-          "status": "upcoming"
+          "title": "大小關係與遞移律",
+          "full_text": "大小關係與遞移律：「>」與「<」符號在算式中的意義，大小的遞移關係。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-2-2",
+          "title": "三數相加，順序改變不影響其和",
+          "full_text": "三數相加，順序改變不影響其和：加法交換律和結合律的綜合。可併入其他教學活動。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-2-3",
+          "title": "兩數相乘的順序不影響其積",
+          "full_text": "兩數相乘的順序不影響其積：乘法交換律。可併入其他教學活動。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-2-4",
+          "title": "加法與減法的關係",
+          "full_text": "加法與減法的關係：加減互逆。應用於驗算與解題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "D-2-1",
+          "title": "分類與呈現",
+          "full_text": "分類與呈現：以操作活動為主。能蒐集、分類、記錄、呈現資料、生活物件或幾何形體。討論分類之中還可以再分類的情況。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         }
       ]
     },
     {
       "grade": 3,
-      "label": "三年級",
-      "stage": "第二學習階段",
-      "theme": "🌳 萬以內的運算",
+      "name": "三年級",
       "units": [
         {
           "code": "N-3-1",
-          "name": "一萬以內的數",
-          "official_core": "四位數、千位位值",
-          "visual_aid": "位值積木（千）",
-          "common_trap": "9999 接 10000 的過千數數錯誤。",
-          "status": "upcoming"
+          "title": "一萬以內的數",
+          "full_text": "一萬以內的數：含位值積木操作活動。結合點數、位值表徵、位值表。位值單位「千」。位值單位換算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-3-2",
-          "name": "加減直式計算",
-          "official_core": "三位數加減、二次進位、兩次退位",
-          "visual_aid": "三位數格線直式、連續退位借位標註",
-          "common_trap": "被減數十位為 0 且個位不夠減時的「跨位借位」錯誤。",
-          "status": "upcoming"
+          "title": "加減直式計算",
+          "full_text": "加減直式計算：含加、減法多次進、退位。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-3-3",
-          "name": "乘以一位數",
-          "official_core": "二三位數乘一位數直式",
-          "visual_aid": "分層部分積 (Partial Products) 位值展開圖",
-          "common_trap": "漏加進位的小數字；多位數乘法的位值錯位。",
-          "status": "upcoming"
+          "title": "乘以一位數",
+          "full_text": "乘以一位數：乘法直式計算。教師用位值的概念說明直式計算的合理性。被乘數為二、三位數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-4",
+          "title": "除法",
+          "full_text": "除法：除法的意義與應用。基於N-2-9之學習，透過幾個一數的解題方法，理解如何用乘法解決除法問題。熟練十十乘法範圍的除法，做為估商的基礎。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-3-5",
-          "name": "除以一位數",
-          "official_core": "分裝與平分、商與餘數、長直式",
-          "visual_aid": "長除法階梯（商、相乘、相減、落位 Bring Down）",
-          "common_trap": "餘數大於或等於除數（未除盡）；商漏寫 0。",
-          "status": "upcoming"
+          "title": "除以一位數",
+          "full_text": "除以一位數：除法直式計算。教師用位值的概念說明直式計算的合理性。被除數為二、三位數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-6",
+          "title": "解題（乘除應用問題）",
+          "full_text": "解題：乘除應用問題。乘數、被乘數、除數、被除數未知之應用解題。連結乘與除的關係（R-3-1）。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-7",
+          "title": "解題（兩步驟應用問題（加減與除、連乘）",
+          "full_text": "解題：兩步驟應用問題（加減與除、連乘）。連乘、加與除、減與除之應用解題。不含併式。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-8",
+          "title": "解題（四則估算）",
+          "full_text": "解題：四則估算。具體生活情境。較大位數之估算策略。能用估算檢驗計算結果的合理性。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-3-9",
-          "name": "簡單同分母分數",
-          "official_core": "連續量/離散量等分、同分母加減",
-          "visual_aid": "長條等分尺、等分圓餅圖形",
-          "common_trap": "分子加分子、分母加分母（如 1/4 + 2/4 = 3/8）。",
-          "status": "upcoming"
+          "title": "簡單同分母分數",
+          "full_text": "簡單同分母分數：結合操作活動與整數經驗。簡單同分母分數比較、加、減的意義。牽涉之分數與運算結果皆不超過2。以單位分數之點數為基礎，連結整數之比較、加、減。知道「和等於1」的意義。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-10",
+          "title": "一位小數",
+          "full_text": "一位小數：認識小數與小數點。結合點數、位值表徵、位值表。位值單位「十分位」。位值單位換算。比較、加減（含直式計算）與解題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-11",
+          "title": "整數數線",
+          "full_text": "整數數線：認識數線，含報讀與標示。連結數序、長度、尺的經驗，理解在數線上做比較、加、減的意義。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-12",
+          "title": "長度（「毫米」）",
+          "full_text": "長度：「毫米」。實測、量感、估測與計算。單位換算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-13",
+          "title": "角與角度（同S-3-1）",
+          "full_text": "角與角度（同S-3-1）：以具體操作為主。初步認識角和角度。角度的直接比較與間接比較。認識直角。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-14",
+          "title": "面積（「平方公分」）",
+          "full_text": "面積：「平方公分」。實測、量感、估測與計算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-15",
+          "title": "容量（「公升」、「毫升」）",
+          "full_text": "容量：「公升」、「毫升」。實測、量感、估測與計算。單位換算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-3-16",
+          "title": "重量（「公斤」、「公克」）",
+          "full_text": "重量：「公斤」、「公克」。實測、量感、估測與計算。單位換算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-3-17",
-          "name": "日、時、分、秒的換算與時間加減",
-          "official_core": "時間單位換算、時間加減",
-          "visual_aid": "時間軸",
-          "common_trap": "60進位與100進位混淆。",
-          "status": "upcoming"
+          "title": "時間（「日」、「時」、「分」、「秒」）",
+          "full_text": "時間：「日」、「時」、「分」、「秒」。實測、量感、估測與計算。時間單位的換算。認識時間加減問題的類型。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-3-1",
+          "title": "角與角度（同N-3-13）",
+          "full_text": "角與角度（同N-3-13）：以具體操作為主。初步認識角和角度。角度的直接比較與間接比較。認識直角。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-3-2",
+          "title": "正方形和長方形",
+          "full_text": "正方形和長方形：以邊與角的特徵來定義正方形和長方形。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-3-3",
+          "title": "圓",
+          "full_text": "圓：「圓心」、「圓周」、「半徑」與「直徑」。能使用圓規畫指定半徑的圓。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-3-4",
+          "title": "幾何形體之操作",
+          "full_text": "幾何形體之操作：以操作活動為主。平面圖形的分割與重組。初步體驗展開圖如何黏合成立體形體。知道不同之展開圖可能黏合成同一形狀之立體形體。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "R-3-1",
-          "name": "乘法與除法的關係（乘除互逆）",
-          "official_core": "乘除互逆、驗算與解題",
-          "visual_aid": "因數分解樹、互逆箭頭",
-          "common_trap": "驗算時忘記用互逆運算。",
-          "status": "upcoming"
+          "title": "乘法與除法的關係",
+          "full_text": "乘法與除法的關係：乘除互逆。應用於驗算與解題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-3-2",
+          "title": "數量模式與推理（I）",
+          "full_text": "數量模式與推理（I）：以操作活動為主。一維變化模式之觀察與推理，例如數列、一維圖表等。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "D-3-1",
+          "title": "一維表格與二維表格",
+          "full_text": "一維表格與二維表格：以操作活動為主。報讀、說明與製作生活中的表格。二維表格含列聯表。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         }
       ]
     },
     {
       "grade": 4,
-      "label": "四年級",
-      "stage": "第二學習階段",
-      "theme": "🏔️ 大數與分數",
+      "name": "四年級",
       "units": [
         {
           "code": "N-4-1",
-          "name": "一億以內的數",
-          "official_core": "大數十進位、四位一圈（萬、億）",
-          "visual_aid": "位值記數板（每 4 位顏色分區分組）",
-          "common_trap": "讀數時連續多個 0 只讀一個零的漏讀或多讀。",
-          "status": "upcoming"
+          "title": "一億以內的數",
+          "full_text": "一億以內的數：位值單位「萬」、「十萬」、「百萬」、「千萬」。建立應用大數時之計算習慣，如「30萬1200」與「21萬300」的加減法。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-4-2",
-          "name": "整數四則運算",
-          "official_core": "多位數乘除直式、先乘除後加減",
-          "visual_aid": "兩位數乘兩位數矩陣模型、估商試商階梯",
-          "common_trap": "乘數十位相乘時未在個位補 0 對齊。",
-          "status": "upcoming"
+          "title": "較大位數之乘除計算",
+          "full_text": "較大位數之乘除計算：處理乘數與除數為多位數之乘除直式計算。教師用位值的概念說明直式計算的合理性。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-3",
+          "title": "解題（兩步驟應用問題（乘除，連除））",
+          "full_text": "解題：兩步驟應用問題（乘除，連除）。乘與除、連除之應用解題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-4",
+          "title": "解題（對大數取概數）",
+          "full_text": "解題：對大數取概數。具體生活情境。四捨五入法、無條件進入、無條件捨去。含運用概數做估算。近似符號「≈」的使用。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-5",
+          "title": "同分母分數",
+          "full_text": "同分母分數：一般同分母分數教學（包括「真分數」、「假分數」、「帶分數」名詞引入）。假分數和帶分數之變換。同分母分數的比較、加、減與整數倍。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-4-6",
-          "name": "等值分數與異分母初步",
-          "official_core": "等值分數、簡單異分母比較加減",
-          "visual_aid": "分數條等值對照",
-          "common_trap": "等值分數概念未建立就做異分母加減。",
-          "status": "upcoming"
+          "title": "等值分數",
+          "full_text": "等值分數：由操作活動中理解等值分數的意義。簡單異分母分數的比較、加、減的意義。簡單分數與小數的互換。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-7",
+          "title": "二位小數",
+          "full_text": "二位小數：位值單位「百分位」。位值單位換算。比較、計算與解題。用直式計算二位小數的加、減與整數倍。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-4-8",
-          "name": "數線與分數、小數",
-          "official_core": "整數、分數、小數在數線上的一體認識",
-          "visual_aid": "標記數線",
-          "common_trap": "分數與小數在數線上的位置對應錯誤。",
-          "status": "upcoming"
+          "title": "數線與分數、小數",
+          "full_text": "數線與分數、小數：連結分小數長度量的經驗。以標記和簡單的比較與計算，建立整數、分數、小數一體的認識。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-4-9",
-          "name": "長度：公里與單位換算",
-          "official_core": "公里、其他長度單位的換算與計算",
-          "visual_aid": "長度單位階梯",
-          "common_trap": "公里↔公尺的進率記錯。",
-          "status": "upcoming"
+          "title": "長度（「公里」）",
+          "full_text": "長度：「公里」。生活實例之應用。含其他長度單位的換算與計算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-10",
+          "title": "角度",
+          "full_text": "角度：「度」（同S-4-1）。量角器的操作。實測、估測與計算。以角的合成認識180度到360度之間的角度。「平角」、「周角」。指定角度作圖。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-11",
+          "title": "面積（「平方公尺」）",
+          "full_text": "面積：「平方公尺」。實測、量感、估測與計算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-4-12",
+          "title": "體積與「立方公分」",
+          "full_text": "體積與「立方公分」：以具體操作為主。體積認識基於1立方公分之正方體。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-4-13",
-          "name": "跨時跨午跨日與 24 小時制的時間問題",
-          "official_core": "24小時制、跨日計算",
-          "visual_aid": "24小時時間軸",
-          "common_trap": "跨午、跨日加減忘記進位或借位。",
-          "status": "upcoming"
+          "title": "解題（日常生活的時間加減問題）",
+          "full_text": "解題：日常生活的時間加減問題。跨時、跨午、跨日、24小時制。含時間單位換算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-1",
+          "title": "角度",
+          "full_text": "角度：「度」（同N-4-10）。量角器的操作。實測、估測與計算。以角的合成認識180度到360度之間的角度。「平角」、「周角」。指定角度作圖。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "S-4-2",
-          "name": "周長與面積",
-          "official_core": "長方形/正方形周長與面積公式",
-          "visual_aid": "周長拉直一維線段 vs 面積二維平方公分網格",
-          "common_trap": "周長與面積混淆（問圍籬長度卻去算長×寬）。",
-          "status": "upcoming"
+          "title": "解題（旋轉角）",
+          "full_text": "解題：旋轉角。以具體操作為主，並結合計算。以鐘面為模型討論從始邊轉到終邊所轉的角度。旋轉有兩個方向：「順時針」、「逆時針」。「平角」、「周角」。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-3",
+          "title": "正方形與長方形的面積與周長",
+          "full_text": "正方形與長方形的面積與周長：理解邊長與周長或面積的關係，並能理解其公式與應用。簡單複合圖形。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-4",
+          "title": "體積",
+          "full_text": "體積：以具體操作為主。在活動中認識體積的意義與比較。認識1立方公分之正方體，能理解並計數正方體堆疊的體積。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-5",
+          "title": "垂直與平行",
+          "full_text": "垂直與平行：以具體操作為主。直角是90度。直角常用記號。垂直於一線的兩線相互平行。平行線間距離處處相等。作垂直線；作平行線。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-6",
+          "title": "平面圖形的全等",
+          "full_text": "平面圖形的全等：以具體操作為主。形狀大小一樣的兩圖形全等。能用平移、旋轉、翻轉做全等疊合。全等圖形之對應角相等、對應邊相等。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-7",
+          "title": "三角形",
+          "full_text": "三角形：以邊與角的特徵認識特殊三角形並能作圖。如正三角形、等腰三角形、直角三角形、銳角三角形、鈍角三角形。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-4-8",
+          "title": "四邊形",
+          "full_text": "四邊形：以邊與角的特徵（含平行）認識特殊四邊形並能作圖。如正方形、長方形、平行四邊形、菱形、梯形。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-4-1",
+          "title": "兩步驟問題併式",
+          "full_text": "兩步驟問題併式：併式是代數學習的重要基礎。含四則混合計算的約定（由左往右算、先乘除後加減、括號先算）。學習逐次減項計算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-4-2",
+          "title": "四則計算規律（I）",
+          "full_text": "四則計算規律（I）：兩步驟計算規則。加減混合計算、乘除混合計算。在四則混合計算中運用數的運算性質。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-4-3",
+          "title": "以文字表示數學公式",
+          "full_text": "以文字表示數學公式：理解以文字和運算符號聯合表示的數學公式，並能應用公式。可併入其他教學活動（如S-4-3）。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-4-4",
+          "title": "數量模式與推理（II）",
+          "full_text": "數量模式與推理（II）：以操作活動為主。二維變化模式之觀察與推理，如二維數字圖之推理。奇數與偶數，及其加、減、乘模式。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "D-4-1",
+          "title": "報讀長條圖與折線圖以及製作長條圖",
+          "full_text": "報讀長條圖與折線圖以及製作長條圖：報讀與說明生活中的長條圖與折線圖。配合其他領域課程，學習製作長條圖。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         }
       ]
     },
     {
       "grade": 5,
-      "label": "五年級",
-      "stage": "第三學習階段",
-      "theme": "🔭 位值系統與分數通分",
+      "name": "五年級",
       "units": [
         {
           "code": "N-5-1",
-          "name": "十進位的位值系統（兆位至千分位）",
-          "official_core": "整合整數與小數、乘以十/除以十延伸",
-          "visual_aid": "位值延伸表",
-          "common_trap": "小數點左右移位方向搞反。",
-          "status": "upcoming"
+          "title": "十進位的位值系統",
+          "full_text": "十進位的位值系統：「兆位」至「千分位」。整合整數與小數。理解基於位值系統可延伸表示更大的數和更小的數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-2",
+          "title": "解題（多步驟應用問題）",
+          "full_text": "解題：多步驟應用問題。除「平均」之外，原則上為三步驟解題應用。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-5-3",
-          "name": "因數與倍數",
-          "official_core": "因數、公因數、質數認識",
-          "visual_aid": "矩形因數拼圖陣列、倍數跳步光點數線",
-          "common_trap": "漏找因數（特別是 1 和本身）；1 誤認為質數。",
-          "status": "upcoming"
+          "title": "公因數和公倍數",
+          "full_text": "公因數和公倍數：因數、倍數、公因數、公倍數、最大公因數、最小公倍數的意義。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-5-4",
-          "name": "異分母分數加減",
-          "official_core": "約分、擴分、通分",
-          "visual_aid": "二維矩陣橫縱雙向切割通分動畫",
-          "common_trap": "異分母未通分直接相加（如 1/2 + 1/3 = 2/5）。",
-          "status": "upcoming"
+          "title": "異分母分數",
+          "full_text": "異分母分數：用約分、擴分處理等值分數並做比較。用通分做異分母分數的加減。養成利用約分化簡分數計算習慣。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-5",
+          "title": "分數的乘法",
+          "full_text": "分數的乘法：整數乘以分數、分數乘以分數的意義。知道用約分簡化乘法計算。處理乘積一定比被乘數大的錯誤類型。透過分數計算的公式，知道乘法交換律在分數也成立。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-6",
+          "title": "整數相除之分數表示",
+          "full_text": "整數相除之分數表示：從分裝（測量）和平分的觀點，分別說明整數相除為分數之意義與合理性。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-5-7",
-          "name": "分數乘法",
-          "official_core": "整數乘分數、分數乘分數",
-          "visual_aid": "面積重疊交集模型 (Area Model)",
-          "common_trap": "乘法誤用通分；越乘越大思維慣性（分數乘小於1應變小）。",
-          "status": "upcoming"
+          "title": "分數除以整數",
+          "full_text": "分數除以整數：分數除以整數的意義。最後將問題轉化為乘以單位分數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
-          "code": "S-5-6",
-          "name": "正方體長方體面與面的平行與垂直",
-          "official_core": "展開圖、面與面的關係",
-          "visual_aid": "正方體展開圖動畫",
-          "common_trap": "展開圖摺回時相對面判斷錯誤。",
-          "status": "upcoming"
+          "code": "N-5-8",
+          "title": "小數的乘法",
+          "full_text": "小數的乘法：整數乘以小數、小數乘以小數的意義。乘數為小數的直式計算。教師用位值的概念說明直式計算的合理性。處理乘積一定比被乘數大的錯誤類型。n-III-",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-9",
+          "title": "整數、小數除以整數（商為小數）",
+          "full_text": "整數、小數除以整數（商為小數）：整數除以整數（商為小數）、小數除以整數的意義。教師用位值的概念說明直式計算的合理性。能用概數協助處理除不盡的情況。熟悉分母為2、4、5、8 之真分數所對應的小數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-10",
+          "title": "解題（比率與應用）",
+          "full_text": "解題：比率與應用。整數相除的應用。含「百分率」、「折」、「成」。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-11",
+          "title": "解題（對小數取概數）",
+          "full_text": "解題：對小數取概數。具體生活情境。四捨五入法。知道商除不盡的處理。理解近似的意義。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-12",
+          "title": "面積（「公畝」、「公頃」、「平方公里）",
+          "full_text": "面積：「公畝」、「公頃」、「平方公里」。生活實例之應用。含與「平方公尺」的換算與計算。使用概數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-13",
+          "title": "重量（「公噸」）",
+          "full_text": "重量：「公噸」。生活實例之應用。含與「公斤」的換算與計算。使用概數。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-14",
+          "title": "體積",
+          "full_text": "體積：「立方公尺」。簡單實測、量感、估測與計算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-15",
+          "title": "解題（容積）",
+          "full_text": "解題：容積。容量、容積和體積間的關係。知道液體體積的意義。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-5-16",
+          "title": "解題（時間的乘除問題）",
+          "full_text": "解題：時間的乘除問題。在分數和小數學習的範圍內，解決與時間相關的乘除問題。1/4 15/60 1/4 1/5n-III-11",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "S-5-1",
-          "name": "三角形與平行四邊形面積",
-          "official_core": "底高垂直關係、底×高、底×高÷2",
-          "visual_aid": "高線垂足動態投影、割補旋轉拼成長方形",
-          "common_trap": "找不到對應的「底與高」（用斜邊當高）。",
-          "status": "upcoming"
+          "title": "三角形與四邊形的性質",
+          "full_text": "三角形與四邊形的性質：操作活動與簡單推理。含三角形三內角和為180度。三角形任意兩邊和大於第三邊。平行四邊形的對邊相等、對角相等。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-5-2",
+          "title": "三角形與四邊形的面積",
+          "full_text": "三角形與四邊形的面積：操作活動與推理。利用切割重組，建立面積公式，並能應用。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-5-3",
+          "title": "扇形",
+          "full_text": "扇形：扇形的定義。「圓心角」。扇形可視為圓的一部分。將扇形與分數結合（幾分之幾圓）。能畫出指定扇形。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-5-4",
+          "title": "線對稱",
+          "full_text": "線對稱：線對稱的意義。「對稱軸」、「對稱點」、「對稱邊」、「對稱角」。由操作活動知道特殊平面圖形的線對稱性質。利用線對稱做簡單幾何推理。製作或繪製線對稱圖形。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-5-5",
+          "title": "正方體和長方體",
+          "full_text": "正方體和長方體：計算正方體和長方體的體積與表面積。正方體與長方體的體積公式。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-5-6",
+          "title": "空間中面與面的關係",
+          "full_text": "空間中面與面的關係：以操作活動為主。生活中面與面平行或垂直的現象。正方體（長方體）中面與面的平行或垂直關係。用正方體（長方體）檢查面與面的平行與垂直。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-5-7",
+          "title": "球、柱體與錐體",
+          "full_text": "球、柱體與錐體：以操作活動為主。認識球、（直）圓柱、（直）角柱、（直）角錐、（直）圓錐。認識柱體和錐體之構成要素與展開圖。檢查柱體兩底面平行；檢查柱體側面和底面垂直，錐體側面和底面不垂直。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-5-1",
+          "title": "三步驟問題併式",
+          "full_text": "三步驟問題併式：建立將計算步驟併式的習慣，以三步驟為主。介紹「平均」。與分配律連結。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-5-2",
+          "title": "四則計算規律（II）",
+          "full_text": "四則計算規律（II）：乘除混合計算。「乘法對加法或減法的分配律」。將計算規律應用於簡化混合計算。熟練整數四則混合計算。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-5-3",
+          "title": "以符號表示數學公式",
+          "full_text": "以符號表示數學公式：國中代數的前置經驗。初步體驗符號之使用，隱含「符號代表數」、「符號與運算符號的結合」的經驗。應併入其他教學活動。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "D-5-1",
+          "title": "製作折線圖",
+          "full_text": "製作折線圖：製作生活中的折線圖。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         }
       ]
     },
     {
       "grade": 6,
-      "label": "六年級",
-      "stage": "第三學習階段",
-      "theme": "🚀 質數與國中銜接",
+      "name": "六年級",
       "units": [
         {
           "code": "N-6-1",
-          "name": "20 以內的質數和質因數分解",
-          "official_core": "質數與合數、2/3/5 判別法、短除法分解",
-          "visual_aid": "因數分解樹、短除法階梯",
-          "common_trap": "28=4×7 誤認為質因數分解（未分解到底）。",
-          "status": "upcoming"
+          "title": "20以內的質數和質因數分解",
+          "full_text": "20以內的質數和質因數分解：小於20的質數與合數。2、3、5的質因數判別法。以短除法做質因數的分解。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-6-2",
-          "name": "公因數與公倍數",
-          "official_core": "最大公因數、最小公倍數",
-          "visual_aid": "短除法 I 型與 L 型",
-          "common_trap": "GCD 與 LCM 混用。",
-          "status": "upcoming"
+          "title": "最大公因數與最小公倍數",
+          "full_text": "最大公因數與最小公倍數：質因數分解法與短除法。兩數互質。運用到分數的約分與通分。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "N-6-3",
-          "name": "分數除法",
-          "official_core": "包含除、等分除、除以分數等於乘倒數",
-          "visual_aid": "雙重數線 (Double Number Line)、單位量縮放尺",
-          "common_trap": "除數倒數忘記顛倒，把被除數也顛倒。",
-          "status": "upcoming"
+          "title": "分數的除法",
+          "full_text": "分數的除法：整數除以分數、分數除以分數的意義。最後理解除以一數等於乘以其倒數之公式。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-6-4",
+          "title": "小數的除法",
+          "full_text": "小數的除法：整數除以小數、小數除以小數的意義。直式計算。教師用位值的概念說明直式計算的合理性。處理商一定比被除數小的錯誤類型。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-6-5",
+          "title": "解題（整數、分數、小數的四則應用問題）",
+          "full_text": "解題：整數、分數、小數的四則應用問題。二到三步驟的應用解題。含使用概數協助解題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-6-6",
+          "title": "比與比值",
+          "full_text": "比與比值：異類量的比與同類量的比之比值的意義。理解相等的比中牽涉到的兩種倍數關係（比例思考的基礎）。解決比的應用問題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-6-7",
+          "title": "解題（速度）",
+          "full_text": "解題：速度。比和比值的應用。速度的意義。能做單位換算（大單位到小單位）。含不同時間區段的平均速度。含「距離＝速度×時間」公式。用比例思考協助解題。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-6-8",
+          "title": "解題（基準量與比較量）",
+          "full_text": "解題：基準量與比較量。比和比值的應用。含交換基準時之關係。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "N-6-9",
+          "title": "解題（由問題中的數量關係，列出恰當的）",
+          "full_text": "解題：由問題中的數量關係，列出恰當的算式解題（同R-6-4）。可包含（1）較複雜的模式（如座位排列模式）；（2）較複雜的計數：乘法原理、加法原理或其混合；（3）較複雜之情境：如年齡問題、流水問題、和差問題、雞兔問題。連結R-6-2、R-6-3。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-6-1",
+          "title": "放大與縮小",
+          "full_text": "放大與縮小：比例思考的應用。「幾倍放大圖」、「幾倍縮小圖」。知道縮放時，對應角相等，對應邊成比例。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-6-2",
+          "title": "解題（地圖比例尺）",
+          "full_text": "解題：地圖比例尺。地圖比例尺之意義、記號與應用。地圖上兩邊長的比和實際兩邊長的比相等。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "S-6-3",
-          "name": "圓面積與扇形",
-          "official_core": "圓周率 3.14、圓面積公式 r×r×π",
-          "visual_aid": "圓形無窮細分扇形切片、拉直拼成平行四邊形",
-          "common_trap": "誤用直徑計算面積（忘記先將直徑除以 2 得半徑）。",
-          "status": "upcoming"
+          "title": "圓周率、圓周長、圓面積、扇形面積",
+          "full_text": "圓周率、圓周長、圓面積、扇形面積：用分割說明圓面積公式。求扇形弧長與面積。知道以下三個比相等：（1）圓心角：360；（2）扇形弧長：圓周長；（3）扇形面積：圓面積，但應用問題只處理用（1）求弧長或面積。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "S-6-4",
+          "title": "柱體體積與表面積",
+          "full_text": "柱體體積與表面積：含角柱和圓柱。利用簡單柱體，理解「柱體體積＝底面積×高」的公式。簡單複合形體體積。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-6-1",
+          "title": "數的計算規律",
+          "full_text": "數的計算規律：小學最後應認識（1）整數、小數、分數都是數，享有一樣的計算規律。（2）整數乘除計算及規律，因分數運算更容易理解。（3）逐漸體會乘法和除法的計算實為一體。併入其他教學活動。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-6-2",
+          "title": "數量關係",
+          "full_text": "數量關係：代數與函數的前置經驗。從具體情境或數量模式之活動出發，做觀察、推理、說明。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "R-6-3",
+          "title": "數量關係的表示",
+          "full_text": "數量關係的表示：代數與函數的前置經驗。將具體情境或模式中的數量關係，學習以文字或符號列出數量關係的關係式。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         },
         {
           "code": "R-6-4",
-          "name": "速度與行程問題",
-          "official_core": "距離、速度、時間三者關係，追趕與相遇",
-          "visual_aid": "動態雙向火車/跑者數線、相對速度向量圖",
-          "common_trap": "平均速度直接用兩個速度相加除以 2（忽略時間權重）。",
-          "status": "upcoming"
+          "title": "解題（由問題中的數量關係，列出恰當的）",
+          "full_text": "解題：由問題中的數量關係，列出恰當的算式解題（同N-6-9）。可包含（1）較複雜的模式（如座位排列模式）；（2）較複雜的計數：乘法原理、加法原理或其混合；（3）較複雜之情境：如年齡問題、流水問題、和差問題、雞兔問題。連結R-6-2、R-6-3。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "D-6-1",
+          "title": "圓形圖",
+          "full_text": "圓形圖：報讀、說明與製作生活中的圓形圖。包含以百分率分配之圓形圖（製作時應提供學生已分成百格的圓形圖。）",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
+        },
+        {
+          "code": "D-6-2",
+          "title": "解題（可能性）",
+          "full_text": "解題：可能性。從統計圖表資料，回答可能性問題。機率前置經驗。「很有可能」、「很不可能」、「Ａ比Ｂ可能」。",
+          "status": "upcoming",
+          "question_count": 0,
+          "verified_source": null
         }
       ]
     }

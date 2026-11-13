@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>誰最大誰最小：10-5、10-0、10-10</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+            background: #eff6ff;
+            color: #0f172a;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 820px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #93c5fd;
+        }
+        .meta-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .source-tag { font-size: 11px; color: #94a3b8; }
+        .stem { font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; color: #1e293b; }
+        .stem-sub { font-size: 1.05rem; font-weight: 700; color: #475569; margin-bottom: 16px; }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 640px) { .cards-grid { grid-template-columns: 1fr; gap: 8px; } }
+        .exp-card {
+            background: #f0f9ff;
+            border: 2px solid #38bdf8;
+            border-radius: 12px;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .exp-card:active { transform: scale(0.97); }
+        .expr { font-size: 1.45rem; font-weight: 800; color: #0369a1; letter-spacing: 1px; }
+        .dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; min-height: 26px; max-width: 170px; }
+        .dot-unit { width: 16px; height: 16px; border-radius: 50%; background: #0ea5e9; border: 1.5px solid #0369a1; }
+        .dot-unit.gone { background: #e5e7eb; border-color: #9ca3af; opacity: 0.55; position: relative; }
+        .dot-unit.gone::after { content: '✕'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #6b7280; font-weight: 800; }
+        .card-note { font-size: 0.88rem; font-weight: 700; color: #0369a1; text-align: center; min-height: 1.3em; }
+        .ans-slot {
+            font-size: 1.15rem; font-weight: 800; color: #0369a1;
+            min-height: 1.6em;
+        }
+        .ans-slot .blank { color: #cbd5e1; }
+        .mark-row { display: flex; gap: 6px; }
+        .mark-btn {
+            min-width: 52px; min-height: 44px;
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1.25rem; font-weight: 800;
+            cursor: pointer; color: #475569;
+            padding: 4px 10px;
+        }
+        .mark-btn.o-active { background: #0284c7; border-color: #0284c7; color: #ffffff; }
+        .mark-btn.x-active { background: #b91c1c; border-color: #b91c1c; color: #ffffff; }
+        .hint-line { text-align: center; font-size: 1.05rem; font-weight: 700; color: #0369a1; margin-bottom: 14px; min-height: 1.6em; }
+        .footer-action { display: flex; justify-content: center; margin-top: 12px; }
+        .check-btn {
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .result-banner {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: none;
+        }
+        .result-banner.success { display: block; background: #dcfce7; color: #166534; }
+        .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="meta-row">
+        <span class="source-tag">忠孝 114-1 期末 四、(4)-(3)</span>
+    </div>
+
+    <div class="stem">把答案最大的數畫○，最小的數打 X</div>
+    <div class="stem-sub">③ 10 - 5、10 - 0、10 - 10　（先點卡片算出答案，再畫記）</div>
+
+    <div class="cards-grid" id="cards"></div>
+
+    <div class="hint-line" id="hintLine">先點卡片算一算：每張卡片的答案是幾？小心「減去 0」！</div>
+
+    <div class="footer-action">
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+    <div class="result-banner" id="resultBanner"></div>
+</div>
+
+<script>
+    // 真題（四、比比看 (4)-(3)）：10-5、10-0、10-10 → 10 > 5 > 0
+    const CARDS = [
+        { expr: '10 - 5',  base: 10, take: 5,  ans: 10 - 5,  ansText: '5',  note: '拿走 5 個，剩下 5 個' },
+        { expr: '10 - 0',  base: 10, take: 0,  ans: 10,      ansText: '10', note: '－0＝什麼都沒拿走，10 個全都在！' },
+        { expr: '10 - 10', base: 10, take: 10, ans: 10 - 10, ansText: '0',  note: '全部拿走，一個不剩＝0' }
+    ];
+    const LARGEST = 1;   // 10 - 0 = 10 最大 → 畫○
+    const SMALLEST = 2;  // 10 - 10 = 0 最小 → 打 X
+
+    let oCard = null, xCard = null;
+
+    function build() {
+        const wrap = document.getElementById('cards');
+        CARDS.forEach((c, i) => {
+            const card = document.createElement('div');
+            card.className = 'exp-card';
+            card.innerHTML = `
+                <div class="expr">${c.expr}</div>
+                <div class="dots" id="dots-${i}"></div>
+                <div class="card-note" id="note-${i}"></div>
+                <div class="ans-slot">（<span class="blank" id="ans-${i}">?</span>）</div>
+                <div class="mark-row">
+                    <button class="mark-btn mo" id="o-${i}" title="答案最大畫○" onclick="markO(${i})">○</button>
+                    <button class="mark-btn mx" id="x-${i}" title="答案最小打X" onclick="markX(${i})">✕</button>
+                </div>`;
+            card.onclick = (ev) => { if (!ev.target.classList.contains('mark-btn')) solve(i); };
+            wrap.appendChild(card);
+        });
+    }
+
+    function solve(i) {
+        const c = CARDS[i];
+        const dots = document.getElementById('dots-' + i);
+        if (dots.childElementCount) return; // 已攤開
+        for (let k = 0; k < c.base; k++) {
+            const d = document.createElement('span');
+            d.className = 'dot-unit';
+            dots.appendChild(d);
+        }
+        // 減法：最後 take 顆變灰打叉（拿走）
+        const units = [...dots.children];
+        for (let k = 0; k < c.take; k++) units[units.length - 1 - k].classList.add('gone');
+        document.getElementById('note-' + i).innerText = c.note;
+        const slot = document.getElementById('ans-' + i);
+        slot.classList.remove('blank');
+        slot.innerText = c.ansText;
+        const done = CARDS.every((_, k) => document.getElementById('dots-' + k).childElementCount);
+        if (done) {
+            document.getElementById('hintLine').innerHTML =
+                '三個答案都算出來了：' + CARDS.map((x) => x.expr + '＝' + x.ansText).join('、') +
+                '　→　比大小：<b>10 ＞ 5 ＞ 0</b>。最大的畫○，最小的打 ✕！';
+        }
+    }
+
+    function markO(i) {
+        document.querySelectorAll('.mark-btn.mo').forEach((b) => b.classList.remove('o-active'));
+        if (oCard === i) { oCard = null; return; }
+        document.getElementById('o-' + i).classList.add('o-active');
+        oCard = i;
+    }
+    function markX(i) {
+        document.querySelectorAll('.mark-btn.mx').forEach((b) => b.classList.remove('x-active'));
+        if (xCard === i) { xCard = null; return; }
+        document.getElementById('x-' + i).classList.add('x-active');
+        xCard = i;
+    }
+
+    function check() {
+        const banner = document.getElementById('resultBanner');
+        if (oCard === null || xCard === null) {
+            banner.className = 'result-banner fail';
+            banner.innerText = '要先算出答案，並且畫好一個 ○ 和一個 ✕ 再檢查喔！';
+            return;
+        }
+        if (oCard === LARGEST && xCard === SMALLEST) {
+            banner.className = 'result-banner success';
+            banner.innerText = '🎉 答對！10－0＝10 什麼都沒拿走最大畫○、10－10＝0 一個不剩最小打 ✕！';
+        } else {
+            banner.className = 'result-banner fail';
+            banner.innerText = '再想想：－0 是什麼都沒減掉（還是 10），－10 是全部減光（剩 0）——先算出 10、5、0 再比！';
+        }
+    }
+
+    build();
+</script>
+
+</body>
+</html>
