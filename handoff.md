@@ -19,3 +19,16 @@
    - 嚴格依照專案法典，不得由 AGY 大腦寫入死圖。
    - 由現場指揮官開出 Given-When-Then 互動規格卡，派工給**通道一（本地 OpenCode CLI）**或**通道二（A-SERVER OpenCode CLI）**施工帶手腳之互動元件。
    - 每個元件必須包含可點擊硬幣、收銀盤金額累積、即時檢查反饋。
+
+---
+
+## 🚨 2026-11-13 核心防錯與工兵派工鋼印（最高優先級）
+
+1. **嚴禁 Agent 自行動手寫業務代碼或拼造假題庫**：
+   - AGY 是架構師、監工與驗收者，**絕對禁止使用 Python 腳本硬編碼題目內容、正則拼裝 JSON 或偽造靜態死圖**！
+   - 題目辨識、解析與互動元件撰寫，**一律指派 OpenCode CLI 執行**。
+2. **唯一標準派工通道**：
+   - 派工唯一指令：`python tools/dispatch_worker.py --file <task_card.md> "任務簡述"`
+   - 嚴格遵守 026 AutoFlow 底層規格（`--format json --auto --standalone stdin=DEVNULL encoding=utf-8`），禁止任何其他野雞腳本。
+3. **只認 Exit Code 0 與真實互動**：
+   - 所有產出元件必須具備按鈕、事件監聽與可玩互動邏輯，任何無互動死圖一律視為假成功，拒絕收工。
