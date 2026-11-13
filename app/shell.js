@@ -21,8 +21,8 @@ const views = ["gradeView", "stageView", "resultView"];
 /* ---------- 視圖切換 ---------- */
 function showView(name) {
   views.forEach((v) => { $(v).style.display = (v === name) ? "block" : "none"; });
-  const fab = $("btnOpenScratchpad");
-  if (fab) fab.style.display = (name === "stageView") ? "flex" : "none";
+  const draftBtn = $("btnOpenScratchpad");
+  if (draftBtn) draftBtn.style.display = (name === "stageView") ? "inline-flex" : "none";
   window.scrollTo({ top: 0 });
 }
 
@@ -124,15 +124,14 @@ function renderQuestion() {
   $("btnPrev").disabled = state.qIndex === 0;
   $("btnNext").disabled = state.qIndex === state.unit.questions.length - 1;
 
-  // 嵌入具象教具（無邊框 iframe，三端自適應高度）
-  // 手機 390px：fallback 只落 360px（One-Screen），桌面維持 900px，之後由 fitFrame 自適應矯正
+  // 嵌入具象教具（無邊框 iframe，三端緊湊自適應高度）
   const frame = $("stageFrame");
   clearInterval(heightTimer);
   const isNarrow = window.innerWidth < 700;
-  frame.style.height = (q.fallback_height || (isNarrow ? 480 : 900)) + "px"; // 先落 fallback 高度防跳動
+  frame.style.height = (q.fallback_height || (isNarrow ? 440 : 480)) + "px"; // 緊湊 fallback 防跳動與虛空空白
   frame.src = q.component_path || q.component;
   frame.onload = () => fitFrame(frame, q);
-  // 同源可讀時持續自適應高度；file:// 跨檔受限時保持 fallback 高度
+  // 同源可讀時持續自適應高度；file:// 跨檔受限時保持緊湊高度
   heightTimer = setInterval(() => fitFrame(frame, q), 600);
 }
 
@@ -140,7 +139,7 @@ function fitFrame(frame, q) {
   try {
     const doc = frame.contentDocument;
     if (!doc) return;
-    const container = doc.querySelector('.container') || doc.body;
+    const container = doc.querySelector('#app') || doc.querySelector('.container') || doc.body;
     if (!container) return;
     const h = Math.ceil(container.getBoundingClientRect().height || container.scrollHeight);
     if (h > 100) frame.style.height = (h + 8) + "px";

@@ -176,7 +176,7 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 }
 .stage-nav button:disabled { opacity: 0.35; cursor: default; }
 
-/* 🔊 朗讀按鈕 & 📝 草稿板浮動按鈕 */
+/* 🔊 朗讀按鈕 & 📝 頂部草稿按鈕 */
 .btn-speak {
   background: #fff0f3; border: 1.5px solid #ffccd5; color: #d6336c;
   border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 800;
@@ -187,15 +187,14 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 .btn-speak.speaking { background: #ffccd5; color: #c2255c; animation: pulse 1s infinite; }
 @keyframes pulse { 50% { transform: scale(1.05); } }
 
-.scratchpad-fab {
-  position: fixed; right: 14px; bottom: 74px; z-index: 100;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #fff; border: 2px solid #fde68a; border-radius: 999px;
-  padding: 8px 14px; font-size: 13px; font-weight: 900;
-  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35); cursor: pointer;
-  display: flex; align-items: center; gap: 4px;
+.btn-draft {
+  background: #fffbeb; border: 1.5px solid #fde68a; color: #b45309;
+  border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 800;
+  display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
 }
-.scratchpad-fab:active { transform: scale(0.94); }
+.btn-draft:active { transform: scale(0.94); }
+.btn-draft:hover { background: #fef3c7; }
 
 /* 📝 全螢幕手寫草稿板 Modal */
 .sp-modal {
@@ -290,7 +289,10 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   <section id="stageView" class="stage-wrap">
     <div class="stage-head">
       <button class="btn-back" id="btnBack">← 回單元列表</button>
-      <button class="btn-speak" id="btnSpeak">🔊 聽題目</button>
+      <div style="display:inline-flex; gap:6px; align-items:center;">
+        <button class="btn-speak" id="btnSpeak">🔊 聽題目</button>
+        <button class="btn-draft" id="btnOpenScratchpad" style="display:none;">📝 算草稿</button>
+      </div>
       <div class="progress-box">
         <div class="progress-num" id="progressNum"></div>
         <div class="progress-source" id="progressSource"></div>
@@ -307,8 +309,7 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
     </div>
   </section>
 
-  <!-- 📝 手寫草稿紙浮動按鈕與彈窗 -->
-  <button class="scratchpad-fab" id="btnOpenScratchpad" style="display:none;">📝 算草稿</button>
+  <!-- 📝 手寫草稿紙全螢幕彈窗 -->
   <div class="sp-modal" id="scratchpadModal">
     <div class="sp-head">
       <span class="sp-title">📝 手寫計算草稿板</span>
