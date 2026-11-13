@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>小數學冒險 · 108 課綱一到六年級</title>
+<link rel="manifest" href="manifest.json">
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    });
+  }
+</script>
 <style>
 :root {
   --bg: #fff9f0;
@@ -44,7 +52,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .topbar-inner { max-width: 960px; margin: 0 auto; padding: 10px 16px 12px; }
 .brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
 .brand h1 { font-size: 17px; font-weight: 800; letter-spacing: 0.5px; }
-.brand .sub { font-size: 11px; color: var(--ink-soft); }
+.btn-update {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 999px;
+  background: #fff; border: 1.5px solid var(--coral);
+  color: var(--coral-deep); font-size: 12px; font-weight: 800;
+  cursor: pointer; box-shadow: 0 2px 6px rgba(244, 105, 75, 0.15);
+  transition: transform 0.15s, background 0.15s;
+}
+.btn-update:active { transform: scale(0.92); }
+.btn-update.spinning { opacity: 0.7; pointer-events: none; }
 .grade-nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
 .grade-nav::-webkit-scrollbar { display: none; }
 .grade-btn {
@@ -276,8 +293,11 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <h1>🎨 小數學冒險</h1>
-      <span class="sub">108 課綱官方 131 條目 · 一到六年級 · 純離線真題</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <h1>🎨 小數學冒險</h1>
+        <button id="btnAppUpdate" class="btn-update" title="檢查與更新最新版本">🔄 更新</button>
+      </div>
+      <span class="sub" style="font-size:11px;color:var(--ink-soft)">108 課綱官方 131 條目 · 一到六年級 · 純離線真題</span>
     </div>
     <nav class="grade-nav" id="gradeNav" aria-label="年級導航"></nav>
   </div>

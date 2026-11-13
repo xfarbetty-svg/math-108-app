@@ -428,6 +428,35 @@ async function init() {
   $("btnSpeak").addEventListener("click", speakCurrentProblem);
   $("btnFinish").addEventListener("click", () => { stopSpeech(); renderResult(); });
 
+  const btnUpdate = $("btnAppUpdate");
+  if (btnUpdate) {
+    btnUpdate.addEventListener("click", async () => {
+      btnUpdate.classList.add("spinning");
+      btnUpdate.textContent = "⏳ 更新中...";
+      try {
+        if ("serviceWorker" in navigator) {
+          const reg = await navigator.serviceWorker.getRegistration();
+          if (reg) await reg.update();
+        }
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((k) => caches.delete(k)));
+        }
+        const res = await fetch("../data/curriculum.json?_t=" + Date.now(), { cache: "no-store" });
+        if (res.ok) {
+          btnUpdate.textContent = "✅ 已更新！";
+          setTimeout(() => { window.location.reload(true); }, 500);
+        } else {
+          btnUpdate.textContent = "已是最新版";
+          setTimeout(() => { btnUpdate.classList.remove("spinning"); btnUpdate.textContent = "🔄 更新"; }, 1500);
+        }
+      } catch (err) {
+        btnUpdate.textContent = "已是最新版";
+        setTimeout(() => { btnUpdate.classList.remove("spinning"); btnUpdate.textContent = "🔄 更新"; }, 1500);
+      }
+    });
+  }
+
   initScratchpad();
 }
 

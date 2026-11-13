@@ -71,13 +71,15 @@
   #skySvg .w-ico.used .chk{ opacity:1; }
 
   /* ── Q1 「正」字畫記表 ── */
-  .tally-table{ padding:1px 6px 4px; border-top:2px dashed #e0c9a0; }
-  .tally-row{ display:flex; align-items:center; gap:6px; height:24px; }
-  .t-label{ flex:0 0 62px; font-size:11px; font-weight:800; }
-  .tally{ flex:0 0 42px; height:22px; }
-  .tally .ts{ stroke:#d33b2f; stroke-width:3.4; stroke-linecap:round; fill:none; opacity:0; }
+  .tally-table{ padding:3px 8px; border-top:2px dashed #e0c9a0; background:rgba(255,255,255,0.7); }
+  .tally-row{ display:flex; align-items:center; height:25px; border-bottom:1px solid rgba(224,201,160,0.5); }
+  .tally-row:last-child{ border-bottom:none; }
+  .t-label{ flex:0 0 68px; font-size:11.5px; font-weight:800; color:var(--wood-dark); }
+  .tally-box{ flex:1 1 auto; display:flex; justify-content:center; align-items:center; }
+  .tally{ width:50px; height:24px; display:block; }
+  .tally .ts{ stroke:#d33b2f; stroke-width:3.8; stroke-linecap:round; stroke-linejoin:round; fill:none; opacity:0; transition:opacity .15s; }
   .tally .ts.on{ opacity:1; }
-  .t-count{ margin-left:auto; font-size:11px; font-weight:800; color:var(--blue); }
+  .t-count{ flex:0 0 46px; text-align:right; font-size:11.5px; font-weight:800; color:var(--blue); }
   .tally-row.full .t-count{ color:var(--green); }
 
   .btn-row{ display:flex; gap:4px; margin-top:2px; }
@@ -205,29 +207,41 @@
       <div class="tally-table">
         <div class="tally-row" id="row-sun">
           <span class="t-label">☀ 晴天</span>
-          <svg class="tally" id="tallySunSvg" viewBox="0 0 64 44" aria-label="晴天正字畫記">
-            <path class="ts" d="M10,7 L54,7"/><path class="ts" d="M14,7 L14,38"/>
-            <path class="ts" d="M14,22 L36,22"/><path class="ts" d="M42,22 L42,38"/>
-            <path class="ts" d="M10,38 L54,38"/>
-          </svg>
+          <div class="tally-box">
+            <svg class="tally" id="tallySunSvg" viewBox="0 0 64 44" aria-label="晴天正字畫記">
+              <path class="ts" d="M14,8 L50,8"/>
+              <path class="ts" d="M32,8 L32,36"/>
+              <path class="ts" d="M32,22 L48,22"/>
+              <path class="ts" d="M48,22 L48,36"/>
+              <path class="ts" d="M10,36 L54,36"/>
+            </svg>
+          </div>
           <span class="t-count" id="cnt-sun">0 天</span>
         </div>
         <div class="tally-row" id="row-cloud">
           <span class="t-label">☁ 陰天</span>
-          <svg class="tally" id="tallyCloudSvg" viewBox="0 0 64 44" aria-label="陰天正字畫記">
-            <path class="ts" d="M10,7 L54,7"/><path class="ts" d="M14,7 L14,38"/>
-            <path class="ts" d="M14,22 L36,22"/><path class="ts" d="M42,22 L42,38"/>
-            <path class="ts" d="M10,38 L54,38"/>
-          </svg>
+          <div class="tally-box">
+            <svg class="tally" id="tallyCloudSvg" viewBox="0 0 64 44" aria-label="陰天正字畫記">
+              <path class="ts" d="M14,8 L50,8"/>
+              <path class="ts" d="M32,8 L32,36"/>
+              <path class="ts" d="M32,22 L48,22"/>
+              <path class="ts" d="M48,22 L48,36"/>
+              <path class="ts" d="M10,36 L54,36"/>
+            </svg>
+          </div>
           <span class="t-count" id="cnt-cloud">0 天</span>
         </div>
         <div class="tally-row" id="row-rain">
           <span class="t-label">☂ 雨天</span>
-          <svg class="tally" id="tallyRainSvg" viewBox="0 0 64 44" aria-label="雨天正字畫記">
-            <path class="ts" d="M10,7 L54,7"/><path class="ts" d="M14,7 L14,38"/>
-            <path class="ts" d="M14,22 L36,22"/><path class="ts" d="M42,22 L42,38"/>
-            <path class="ts" d="M10,38 L54,38"/>
-          </svg>
+          <div class="tally-box">
+            <svg class="tally" id="tallyRainSvg" viewBox="0 0 64 44" aria-label="雨天正字畫記">
+              <path class="ts" d="M14,8 L50,8"/>
+              <path class="ts" d="M32,8 L32,36"/>
+              <path class="ts" d="M32,22 L48,22"/>
+              <path class="ts" d="M48,22 L48,36"/>
+              <path class="ts" d="M10,36 L54,36"/>
+            </svg>
+          </div>
           <span class="t-count" id="cnt-rain">0 天</span>
         </div>
       </div>

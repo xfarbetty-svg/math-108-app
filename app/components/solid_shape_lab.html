@@ -150,20 +150,26 @@
   @keyframes spop{ 0%{ transform:scale(1.6); opacity:0;} 60%{ transform:scale(.92); opacity:1;} 100%{ transform:scale(1);} }
 
   /* ════ Q3 等角積木 ════ */
-  .blk{ cursor:pointer; }
-  .blk .f-top{ fill:#f7f2e4; stroke:#6b4a26; stroke-width:1.4; }
-  .blk .f-l{ fill:#d8b57c; stroke:#6b4a26; stroke-width:1.4; }
-  .blk .f-r{ fill:#b98a4e; stroke:#6b4a26; stroke-width:1.4; }
-  .blk.lit .f-top{ fill:#ffe9a8; }
-  .blk.lit .f-l{ fill:#f0c568; }
-  .blk.lit .f-r{ fill:#e0a93e; }
-  .blk.lit{ filter:drop-shadow(0 0 4px rgba(255,179,0,.9)); }
-  .blk .num{ font-size:13px; font-weight:800; fill:#7a4b00; opacity:0; pointer-events:none; }
+  .blk{ cursor:pointer; transition:opacity .3s, filter .3s; }
+  .blk .f-top{ fill:#fcf8ee; stroke:#6b4a26; stroke-width:1.5; stroke-linejoin:round; }
+  .blk .f-l{ fill:#d4a86a; stroke:#6b4a26; stroke-width:1.5; stroke-linejoin:round; }
+  .blk .f-r{ fill:#b8823f; stroke:#6b4a26; stroke-width:1.5; stroke-linejoin:round; }
+  .blk.lit .f-top{ fill:#fff3c4; }
+  .blk.lit .f-l{ fill:#ffca28; }
+  .blk.lit .f-r{ fill:#f57f17; }
+  .blk.lit{ filter:drop-shadow(0 0 5px rgba(255,179,0,1)); }
+  .blk .num{ font-size:13px; font-weight:800; fill:#5d3800; opacity:0; pointer-events:none; text-anchor:middle; }
   .blk.lit .num{ opacity:1; }
   #hiddenFace{ opacity:0; transition:opacity .3s; pointer-events:none; }
-  #hiddenFace path{ fill:rgba(229,57,53,.10); stroke:var(--red); stroke-width:1.6; stroke-dasharray:4 3; }
+  #hiddenFace polygon{ fill:rgba(229,57,53,.22); stroke:var(--red); stroke-width:2.2; stroke-dasharray:5 3; }
   #isoSvg.xray #hiddenFace{ opacity:1; }
-  #isoSvg.xray .blk.top-block{ opacity:.55; }
+  #isoSvg.xray .blk.top-block,
+  #isoSvg.xray #blkLeft,
+  #isoSvg.xray #blkRight{ opacity:.55; }
+  #isoSvg.xray #blkBottom{ opacity:1; filter:drop-shadow(0 0 6px rgba(229,57,53,.85)); }
+  #isoSvg.xray #blkBottom .f-top{ fill:#ffebee; stroke:var(--red); stroke-dasharray:4 2; }
+  #isoSvg.xray #blkBottom .f-l{ fill:#ffcdd2; stroke:var(--red); stroke-dasharray:4 2; }
+  #isoSvg.xray #blkBottom .f-r{ fill:#ef9a9a; stroke:var(--red); stroke-dasharray:4 2; }
 
   /* ════ Q4 拼圖卡 ════ */
   #stage4 .card-tri{ transition:transform .8s cubic-bezier(.35,1.15,.5,1); }
@@ -301,37 +307,37 @@
   <!-- ════════ Q3 等角透視積木點數 ════════ -->
   <section class="mode" id="mode3">
     <div class="stage-box" id="stage3">
-      <svg viewBox="0 0 360 114" id="isoSvg" aria-label="等角透視立體城堡">
-        <line x1="120" y1="92" x2="240" y2="92" stroke="#c8b28a" stroke-width="2" stroke-dasharray="8 6"></line>
-        <!-- 底層 (0,0,0) -->
+      <svg viewBox="0 0 360 126" id="isoSvg" aria-label="等角透視立體城堡">
+        <line x1="80" y1="120" x2="280" y2="120" stroke="#c8b28a" stroke-width="2" stroke-dasharray="8 6"></line>
+        <!-- 底層後 (0,0,0) - 被上層壓住且被前兩塊擋住的底座 -->
         <g class="blk" id="blkBottom">
-          <polygon class="f-top" points="170,31 192,44 170,57 148,44"></polygon>
-          <polygon class="f-l" points="170,31 148,44 148,71 170,58"></polygon>
-          <polygon class="f-r" points="170,31 192,44 192,71 170,58"></polygon>
-          <text class="num" x="163" y="64">①</text>
+          <polygon class="f-top" points="180,36 210,52 180,68 150,52"></polygon>
+          <polygon class="f-l" points="150,52 180,68 180,100 150,84"></polygon>
+          <polygon class="f-r" points="180,68 210,52 210,84 180,100"></polygon>
+          <text class="num" x="180" y="60">①</text>
         </g>
-        <!-- X-Ray 透視：被上層壓住看不見的底面 -->
-        <g id="hiddenFace"><path d="M170,31 L192,44 L170,57 L148,44 Z"></path></g>
-        <!-- 上層 (0,0,1) -->
+        <!-- X-Ray 透視頂面標示 -->
+        <g id="hiddenFace"><polygon points="180,36 210,52 180,68 150,52"></polygon></g>
+        <!-- 上層 (0,0,1) - 穩穩立在底座正上方 -->
         <g class="blk top-block" id="blkTop">
-          <polygon class="f-top" points="170,4 192,17 170,30 148,17"></polygon>
-          <polygon class="f-l" points="170,4 148,17 148,44 170,31"></polygon>
-          <polygon class="f-r" points="170,4 192,17 192,44 170,31"></polygon>
-          <text class="num" x="163" y="34">②</text>
+          <polygon class="f-top" points="180,4 210,20 180,36 150,20"></polygon>
+          <polygon class="f-l" points="150,20 180,36 180,68 150,52"></polygon>
+          <polygon class="f-r" points="180,36 210,20 210,52 180,68"></polygon>
+          <text class="num" x="180" y="26">②</text>
         </g>
-        <!-- 底層右 (1,0,0) -->
-        <g class="blk" id="blkRight">
-          <polygon class="f-top" points="192,44 214,57 192,70 170,57"></polygon>
-          <polygon class="f-l" points="192,44 170,57 170,84 192,71"></polygon>
-          <polygon class="f-r" points="192,44 214,57 214,84 192,71"></polygon>
-          <text class="num" x="192" y="81">③</text>
-        </g>
-        <!-- 底層左 (0,1,0) -->
+        <!-- 底層左前 (0,1,0) -->
         <g class="blk" id="blkLeft">
-          <polygon class="f-top" points="148,44 170,57 148,70 126,57"></polygon>
-          <polygon class="f-l" points="148,44 126,57 126,84 148,71"></polygon>
-          <polygon class="f-r" points="148,44 170,57 170,84 148,71"></polygon>
-          <text class="num" x="135" y="81">④</text>
+          <polygon class="f-top" points="150,52 180,68 150,84 120,68"></polygon>
+          <polygon class="f-l" points="120,68 150,84 150,116 120,100"></polygon>
+          <polygon class="f-r" points="150,84 180,68 180,100 150,116"></polygon>
+          <text class="num" x="150" y="76">③</text>
+        </g>
+        <!-- 底層右前 (1,0,0) -->
+        <g class="blk" id="blkRight">
+          <polygon class="f-top" points="210,52 240,68 210,84 180,68"></polygon>
+          <polygon class="f-l" points="180,68 210,84 210,116 180,100"></polygon>
+          <polygon class="f-r" points="210,84 240,68 240,100 210,116"></polygon>
+          <text class="num" x="210" y="76">④</text>
         </g>
       </svg>
     </div>

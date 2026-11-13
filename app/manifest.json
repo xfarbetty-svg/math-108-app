@@ -1,0 +1,9 @@
+{
+  "name": "小數學冒險 · 108 課綱",
+  "short_name": "小數學冒險",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff9f0",
+  "theme_color": "#ff8a65",
+  "description": "108 課綱官方 131 條目 · 一到六年級段考真題"
+}
