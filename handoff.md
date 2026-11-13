@@ -29,4 +29,4 @@
 ## 🕐 最後更新
 - **時間**：2026-11-13 08:35:00 (UTC+8)
 - **更新者**：Antigravity (AGY) @ DESKTOP-6ELKIRH
-- **Git Commit**：待推
+- **Git Commit**：`bced098`（純本地版控鋼印，無遠端 remote）
