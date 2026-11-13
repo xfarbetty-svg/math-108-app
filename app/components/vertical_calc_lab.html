@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-2 加減直式計算教具</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --bg: #f8f9fa;
+            --grid: #dfe6e9;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            margin: 0; padding: 0; 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+        }
+        #app {
+            width: 390px;
+            height: 420px;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        .header {
+            font-size: 11px;
+            color: #95a5a6;
+            text-align: center;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: #f1f2f6;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--primary);
+            height: 44px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--accent);
+        }
+        .calc-area {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 240px;
+            height: 180px;
+        }
+        .digit { font-size: 24px; font-weight: 600; fill: var(--primary); font-family: 'Courier New', Courier, monospace; }
+        .op { font-size: 22px; fill: var(--primary); }
+        .carry { font-size: 12px; fill: var(--accent); font-weight: bold; }
+        .borrow { font-size: 12px; fill: var(--error); font-weight: bold; }
+        .slash { stroke: var(--error); stroke-width: 2; }
+        .line { stroke: var(--primary); stroke-width: 2; }
+        .grid-line { stroke: var(--grid); stroke-width: 1; stroke-dasharray: 2; }
+        .glow { filter: drop-shadow(0 0 2px rgba(230, 126, 34, 0.8)); }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .step-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .opt-btn {
+            height: 32px;
+            border: 2px solid var(--grid);
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .opt-btn.selected { border-color: var(--accent); background: #fffaf0; }
+        
+        .feedback {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .success { background: var(--success); }
+        .fail { background: var(--error); }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">臺北市內湖國小段考真題</div>
+    <div class="question-box" id="qText">載入中...</div>
+    
+    <div class="calc-area">
+        <svg id="svgCanvas" viewBox="0 0 240 180">
+            <!-- Grid Lines -->
+            <line x1="40" y1="10" x2="40" y2="170" class="grid-line" />
+            <line x1="85" y1="10" x2="85" y2="170" class="grid-line" />
+            <line x1="130" y1="10" x2="130" y2="170" class="grid-line" />
+            <line x1="175" y1="10" x2="175" y2="170" class="grid-line" />
+            <line x1="220" y1="10" x2="220" y2="170" class="grid-line" />
+            
+            <!-- Labels -->
+            <text x="50" y="15" font-size="8" fill="#999">千</text>
+            <text x="95" y="15" font-size="8" fill="#999">百</text>
+            <text x="140" y="15" font-size="8" fill="#999">十</text>
+            <text x="185" y="15" font-size="8" fill="#999">個</text>
+
+            <g id="drawLayer"></g>
+        </svg>
+    </div>
+
+    <div class="controls">
+        <button class="step-btn" onclick="nextStep()">一步一步看算理 ▶</button>
+        <div class="options-grid" id="options"></div>
+        <button class="step-btn" style="background:var(--success)" onclick="checkAnswer()">檢查答案</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+</div>
+
+<script>
+    const questions = {
+        1: { q: "5319 ＋ 806 ＝ ?", n1: 5319, n2: 806, op: '+', ans: 6125 },
+        2: { q: "2015 － 207 ＝ ?", n1: 2015, n2: 207, op: '-', ans: 1808 },
+        3: { q: "3397 ＋ 1826 ＝ ?", n1: 3397, n2: 1826, op: '+', ans: 5223 },
+        4: { q: "4000 － 1368 ＝ ?", n1: 4000, n2: 1368, op: '-', ans: 2632 },
+        5: { q: "3677 ＋ 4189 ＝ ?", n1: 3677, n2: 4189, op: '+', ans: 7866 },
+        6: { q: "7800 － 4831 ＝ ?", n1: 7800, n2: 4831, op: '-', ans: 2969 },
+        7: { q: "演唱會門票 7406 元，手續費 1193 元，共需付多少元？", n1: 7406, n2: 1193, op: '+', ans: 8599 },
+        8: { q: "小說共 1022 頁，小明看了 237 頁，還剩幾頁？", n1: 1022, n2: 237, op: '-', ans: 785 },
+        9: { q: "上衣 1399 元，褲子 1200 元，兩件共多少元？", n1: 1399, n2: 1200, op: '+', ans: 2599 },
+        10: { q: "皮卡丘 1200 元，比卡比獸便宜 300 元，卡比獸多少錢？", n1: 1200, n2: 300, op: '+', ans: 1500 }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const qId = urlParams.get('q') || 1;
+    const currentQ = questions[qId];
+    let currentStep = 0;
+    let selectedAns = null;
+
+    function init() {
+        document.getElementById('qText').innerText = currentQ.q;
+        renderOptions();
+        renderCalc();
+    }
+
+    function renderOptions() {
+        const container = document.getElementById('options');
+        const choices = [currentQ.ans, currentQ.ans + 10, currentQ.ans - 1, currentQ.ans + 100].sort(() => Math.random() - 0.5);
+        container.innerHTML = '';
+        choices.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = c;
+            btn.onclick = () => {
+                selectedAns = c;
+                document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function getDigits(num) {
+        return num.toString().padStart(4, '0').split('').map(Number);
+    }
+
+    function renderCalc() {
+        const layer = document.getElementById('drawLayer');
+        layer.innerHTML = '';
+        const d1 = getDigits(currentQ.n1);
+        const d2 = getDigits(currentQ.n2);
+        const res = getDigits(currentQ.ans);
+        const xPos = [55, 100, 145, 190];
+
+        // Operator
+        layer.innerHTML += `<text x="15" y="105" class="op">${currentQ.op}</text>`;
+        layer.innerHTML += `<line x1="10" y1="120" x2="230" y2="120" class="line" />`;
+
+        // Numbers
+        for(let i=0; i<4; i++) {
+            // Num 1
+            layer.innerHTML += `<text x="${xPos[i]}" y="70" class="digit">${d1[i]}</text>`;
+            // Num 2
+            if (currentQ.n2.toString().padStart(4, ' ')[i] !== ' ') {
+                layer.innerHTML += `<text x="${xPos[i]}" y="105" class="digit">${d2[i]}</text>`;
+            }
+            // Result (Step based)
+            if (currentStep > (3-i)) {
+                layer.innerHTML += `<text x="${xPos[i]}" y="155" class="digit" style="fill:var(--success)">${res[i]}</text>`;
+            }
+        }
+
+        // Logic Visuals (Carry/Borrow)
+        if (currentQ.op === '+') {
+            let carry = 0;
+            for (let i=3; i>=0; i--) {
+                let sum = d1[i] + d2[i] + carry;
+                if (currentStep > (3-i) && sum >= 10 && i > 0) {
+                    layer.innerHTML += `<text x="${xPos[i-1]}" y="35" class="carry glow">①</text>`;
+                    carry = 1;
+                } else {
+                    carry = 0;
+                }
+            }
+        } else {
+            // Subtraction Borrowing Logic
+            let tempD1 = [...d1];
+            for (let i=3; i>=0; i--) {
+                if (currentStep > (3-i)) {
+                    if (tempD1[i] < d2[i]) {
+                        // Need borrow
+                        let j = i - 1;
+                        while (tempD1[j] === 0 && j >= 0) j--;
+                        if (j >= 0) {
+                            // Slash the source
+                            layer.innerHTML += `<line x1="${xPos[j]}" y1="70" x2="${xPos[j]+20}" y2="50" class="slash" />`;
+                            layer.innerHTML += `<text x="${xPos[j]}" y="45" class="borrow">${tempD1[j]-1}</text>`;
+                            
+                            // Fill intermediate zeros
+                            for (let k = j + 1; k < i; k++) {
+                                layer.innerHTML += `<line x1="${xPos[k]}" y1="70" x2="${xPos[k]+20}" y2="50" class="slash" />`;
+                                layer.innerHTML += `<text x="${xPos[k]}" y="45" class="borrow">9</text>`;
+                                tempD1[k] = 9;
+                            }
+                            // Add 10 to current
+                            layer.innerHTML += `<text x="${xPos[i]}" y="45" class="borrow">10</text>`;
+                            tempD1[j]--;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function nextStep() {
+        currentStep = (currentStep + 1) % 6;
+        if (currentStep === 5) currentStep = 0;
+        renderCalc();
+    }
+
+    function checkAnswer() {
+        const fb = document.getElementById('feedback');
+        fb.style.display = 'block';
+        if (selectedAns === currentQ.ans) {
+            fb.innerText = "太棒了！計算正確";
+            fb.className = "feedback success";
+            currentStep = 4;
+            renderCalc();
+        } else {
+            fb.innerText = "再試試看喔！";
+            fb.className = "feedback fail";
+        }
+        setTimeout(() => fb.style.display = 'none', 2000);
+    }
+
+    init();
+</script>
+
+</body>
+</html>

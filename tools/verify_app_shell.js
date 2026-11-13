@@ -134,6 +134,10 @@ async function main() {
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
       // 0. 骨架載入
+      for (let t = 0; t < 50; t++) {
+        if (document.querySelectorAll('#gradeNav .grade-btn').length === 6) break;
+        await sleep(100);
+      }
       ok(document.querySelectorAll('#gradeNav .grade-btn').length === 6, '頂部年級導航 6 顆按鈕');
 
       // 1. G1~G6 逐級切換：條目數 / 已開放 x/y / ready 卡 / upcoming 卡禁用

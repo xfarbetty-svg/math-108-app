@@ -1,0 +1,296 @@
+{
+  "code": "N-3-2",
+  "title": "加減直式計算",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 114-1/113-1/112-1 期中",
+  "questions": [
+    {
+      "id": "G3-N-3-2-Q01",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 1,
+      "title": "四位數加三位數進位",
+      "stem": "用直式算算看：5319 ＋ 806 ＝ ( ? )",
+      "choices": [
+        "6125",
+        "5125",
+        "6115",
+        "6025"
+      ],
+      "answer_index": 0,
+      "answer_raw": "6125",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=1",
+      "fallback_height": 390,
+      "explanation": {
+        "concept": "四位數加法進位",
+        "steps": [
+          "個位：9 + 6 = 15，寫 5 進 1 到十位",
+          "十位：1 + 0 + 1(進位) = 2",
+          "百位：3 + 8 = 11，寫 1 進 1 到千位",
+          "千位：5 + 1(進位) = 6"
+        ],
+        "trap": "百位滿十容易忘記向千位進位，導致千位仍寫 5。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q02",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 2,
+      "title": "四位數減三位數退位",
+      "stem": "用直式算算看：2015 － 207 ＝ ( ? )",
+      "choices": [
+        "1808",
+        "1818",
+        "1708",
+        "1802"
+      ],
+      "answer_index": 0,
+      "answer_raw": "1808",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=2",
+      "fallback_height": 400,
+      "explanation": {
+        "concept": "跨位數退位減法",
+        "steps": [
+          "個位：5 不夠減 7，向十位借 1 當 10，15 - 7 = 8，十位剩 0",
+          "十位：0 - 0 = 0",
+          "百位：0 不夠減 2，向千位借 1 當 10，10 - 2 = 8，千位剩 1",
+          "千位：剩下 1，直接落下"
+        ],
+        "trap": "中間百位是 0，向千位借位時容易混淆，或十位借出後忘記扣減。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q03",
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "五、用直式算算看",
+      "question_num": 2,
+      "title": "四位數連續進位加法",
+      "stem": "用直式算算看：3397 ＋ 1826 ＝ ( ? )",
+      "choices": [
+        "5223",
+        "5123",
+        "5213",
+        "4223"
+      ],
+      "answer_index": 0,
+      "answer_raw": "5223",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=3",
+      "fallback_height": 410,
+      "explanation": {
+        "concept": "三次連續進位加法",
+        "steps": [
+          "個位：7 + 6 = 13，進 1 到十位",
+          "十位：9 + 2 + 1 = 12，進 1 到百位",
+          "百位：3 + 8 + 1 = 12，進 1 到千位",
+          "千位：3 + 1 + 1 = 5"
+        ],
+        "trap": "連續進位（個位➔十位➔百位➔千位）中，漏掉任何一次進位都會出錯。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q04",
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "五、用直式算算看",
+      "question_num": 3,
+      "title": "整千數連續退位減法",
+      "stem": "用直式算算看：4000 － 1368 ＝ ( ? )",
+      "choices": [
+        "2632",
+        "2732",
+        "3632",
+        "2642"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2632",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "被減數含多個 0 的連續退位",
+        "steps": [
+          "千位 4 借 1 給百位剩 3，百位變 10 再借給十位剩 9",
+          "十位變 10 再借給個位剩 9，個位變 10",
+          "計算：10-8=2, 9-6=3, 9-3=6, 3-1=2"
+        ],
+        "trap": "整千數連續借位是最大難點，常誤寫為 3000-1368 或個位直接用 8-0。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q05",
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "四、用直式算算看",
+      "question_num": 2,
+      "title": "四位數雙重進位加法",
+      "stem": "用直式算算看：3677 ＋ 4189 ＝ ( ? )",
+      "choices": [
+        "7866",
+        "7766",
+        "7856",
+        "8866"
+      ],
+      "answer_index": 0,
+      "answer_raw": "7866",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=5",
+      "fallback_height": 390,
+      "explanation": {
+        "concept": "四位數加法進位判斷",
+        "steps": [
+          "個位：7 + 9 = 16，進 1",
+          "十位：7 + 8 + 1 = 16，進 1",
+          "百位：6 + 1 + 1 = 8",
+          "千位：3 + 4 = 7"
+        ],
+        "trap": "雙重進位後，百位 6+1+1=8 不需進位，容易慣性多進一位到千位。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q06",
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "四、用直式算算看",
+      "question_num": 4,
+      "title": "末尾雙零退位減法",
+      "stem": "用直式算算看：7800 － 4831 ＝ ( ? )",
+      "choices": [
+        "2969",
+        "2979",
+        "3069",
+        "2869"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2969",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=6",
+      "fallback_height": 410,
+      "explanation": {
+        "concept": "雙零退位與百位借位",
+        "steps": [
+          "個位向十位借，十位向百位借，百位 8 剩 7，十位變 9，個位變 10",
+          "個位 10-1=9，十位 9-3=6",
+          "百位 7 不夠減 8，向千位 7 借 1 剩 6，百位 17-8=9",
+          "千位 6-4=2"
+        ],
+        "trap": "雙零退位加上千百位二次借位，計算步驟較多容易出錯。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q07",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "八、應用題",
+      "question_num": 3,
+      "title": "門票銷售加法應用",
+      "stem": "演唱會的門票，第一週賣出了 7406 張票，第二週比第一週多賣了 1193 張，第二週賣出了幾張票？",
+      "choices": [
+        "8599 張",
+        "6213 張",
+        "8699 張",
+        "8509 張"
+      ],
+      "answer_index": 0,
+      "answer_raw": "8599 張",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=7",
+      "fallback_height": 430,
+      "explanation": {
+        "concept": "比較型加法應用題",
+        "steps": [
+          "理解題意：第二週比第一週「多」，所以用加法",
+          "列式：7406 + 1193",
+          "計算：個位 6+3=9，十位 0+9=9，百位 4+1=5，千位 7+1=8"
+        ],
+        "trap": "看到「多」或「少」容易盲目做減法，誤算成 7406 - 1193。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q08",
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "八、應用題",
+      "question_num": 1,
+      "title": "頁數剩餘減法應用",
+      "stem": "一本小說有 1022 頁，姐姐已經看了 237 頁，還剩下幾頁沒有看？",
+      "choices": [
+        "785 頁",
+        "885 頁",
+        "795 頁",
+        "1259 頁"
+      ],
+      "answer_index": 0,
+      "answer_raw": "785 頁",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "跨千位退位減法應用",
+        "steps": [
+          "列式：1022 - 237",
+          "個位：12 - 7 = 5",
+          "十位：11 - 3 = 8",
+          "百位：9 - 2 = 7",
+          "千位：借出後歸零"
+        ],
+        "trap": "連續借位後千位已歸零，不可誤算為 885。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q09",
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "八、應用題",
+      "question_num": 2,
+      "title": "價格比較加法應用",
+      "stem": "一件上衣 1399 元，一件褲子比上衣貴 1200 元，一件褲子是多少元？",
+      "choices": [
+        "2599 元",
+        "199 元",
+        "2499 元",
+        "2699 元"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2599 元",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=9",
+      "fallback_height": 400,
+      "explanation": {
+        "concept": "價格加法應用題",
+        "steps": [
+          "理解題意：褲子比上衣「貴」，代表褲子價錢較高",
+          "列式：1399 + 1200",
+          "計算：1+1=2(千), 3+2=5(百), 9+0=9(十), 9+0=9(個)"
+        ],
+        "trap": "容易將「貴」誤解為需要比較差額而使用減法。"
+      }
+    },
+    {
+      "id": "G3-N-3-2-Q10",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "一、選擇題",
+      "question_num": 2,
+      "title": "語意反轉加法應用",
+      "stem": "皮卡丘玩偶一個 1200 元，比一個卡比獸玩偶便宜 300 元，一個卡比獸玩偶是多少元？",
+      "choices": [
+        "1500 元",
+        "900 元",
+        "1100 元",
+        "800 元"
+      ],
+      "answer_index": 0,
+      "answer_raw": "1500 元",
+      "component": "vertical-calc-lab",
+      "component_path": "components/vertical_calc_lab.html?q=10",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "語意反轉應用題",
+        "steps": [
+          "分析語意：「皮卡丘比卡比獸便宜 300 元」代表「卡比獸比皮卡丘貴 300 元」。",
+          "列出直式算式：1200 ＋ 300。",
+          "計算千位與百位：1200 ＋ 300 ＝ 1500 元。"
+        ],
+        "trap": "看到「便宜」二字直覺用減法 (1200 - 300 = 900)，這是最經典的語意陷阱。"
+      }
+    }
+  ]
+}
