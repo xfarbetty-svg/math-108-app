@@ -35,4 +35,4 @@
 ## 🕐 最後更新
 - **時間**：2026-11-13 09:51:00 (UTC+8)
 - **更新者**：Antigravity (AGY) @ DESKTOP-6ELKIRH
-- **Git Commit**：待推（提交後回填）
+- **Git Commit**：`ef2d201` (本地已提交，無遠端 remote)
