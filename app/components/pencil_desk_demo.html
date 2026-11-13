@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桌上的鉛筆 · 忠孝國小 114-1 期中 第 3 題</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+        background: #fdf6ec;
+        color: #4a2c12;
+        padding: 16px 10px;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    .app {
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .meta-row { display: flex; justify-content: flex-end; }
+    .source-tag { font-size: 11px; color: #b0a08c; }
+    .title {
+        font-size: 1.35rem; font-weight: 800; color: #6b3f1d;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .title .chip {
+        font-size: 0.7rem; font-weight: 700; color: #fff;
+        background: #f59e0b; border-radius: 999px; padding: 3px 10px;
+    }
+
+    /* ===== 木紋課桌 ===== */
+    .desk {
+        position: relative;
+        border-radius: 18px;
+        padding: 10px 8px 14px;
+        background:
+            repeating-linear-gradient(90deg,
+                rgba(120,72,30,0.10) 0 3px, rgba(0,0,0,0) 3px 26px, rgba(120,72,30,0.07) 26px 29px, rgba(0,0,0,0) 29px 58px),
+            linear-gradient(180deg, #d9a05f 0%, #c98a4b 45%, #b97a3f 100%);
+        border: 4px solid #8a5a2b;
+        box-shadow: inset 0 6px 12px rgba(255,235,200,0.35), inset 0 -8px 14px rgba(90,50,15,0.35), 0 6px 14px rgba(0,0,0,0.12);
+        overflow: hidden;
+    }
+    .desk svg { display: block; width: 100%; height: auto; }
+
+    /* ===== SVG 互動 ===== */
+    .pencil-g { cursor: pointer; }
+    .pencil-g .hit { fill: transparent; pointer-events: all; }
+    .pencil-g.bounce { animation: pop 0.6s ease; transform-box: fill-box; transform-origin: center; }
+    @keyframes pop { 30% { transform: translateY(-30px) rotate(-3deg); } 60% { transform: translateY(2px); } }
+    .pencil-g.glow { animation: glowPulse 1.1s ease-in-out infinite; }
+    @keyframes glowPulse {
+        0%, 100% { filter: drop-shadow(0 0 3px #ffde59); }
+        50%      { filter: drop-shadow(0 0 12px #ffb700); }
+    }
+    .pencil-g.wrong-shake { animation: shake 0.4s ease; }
+    @keyframes shake { 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+    .badge { animation: badgeIn 0.35s cubic-bezier(.2,1.6,.5,1); transform-box: fill-box; transform-origin: center; }
+    @keyframes badgeIn { from { transform: scale(0); } to { transform: scale(1); } }
+    .lasso-path {
+        fill: none; stroke: #e11d48; stroke-width: 6; stroke-linecap: round;
+        stroke-dasharray: 1200; stroke-dashoffset: 1200;
+        animation: drawLasso 0.7s ease forwards;
+    }
+    @keyframes drawLasso { to { stroke-dashoffset: 0; } }
+
+    /* ===== 關卡列 ===== */
+    .stepbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .step-chip {
+        flex: 1 1 60px; min-height: 48px; border: 2px solid #d4b483; border-radius: 12px;
+        background: #fffdf7; font-weight: 800; font-size: 0.95rem; color: #8a6a3b; cursor: pointer;
+    }
+    .step-chip.active { background: #f59e0b; border-color: #d97706; color: #fff; box-shadow: 0 3px 8px rgba(245,158,11,0.4); }
+    .step-chip.done { background: #dcfce7; border-color: #86efac; color: #15803d; }
+
+    /* ===== 題目卡 ===== */
+    .qcard {
+        background: #fffdf7; border: 3px dashed #d9a05f; border-radius: 16px;
+        padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .qtext { font-size: 1.15rem; font-weight: 800; line-height: 1.55; }
+    .qhint { font-size: 0.95rem; color: #9c7a4f; font-weight: 600; }
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn {
+        min-height: 52px; min-width: 76px; padding: 8px 18px;
+        border: 2px solid #d97706; border-radius: 14px; cursor: pointer;
+        background: #fffdf7; color: #92400e; font-size: 1.05rem; font-weight: 800;
+        box-shadow: 0 3px 0 #d97706;
+    }
+    .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #d97706; }
+    .btn.primary { background: #f59e0b; color: #fff; }
+    .btn.good { background: #22c55e; border-color: #16a34a; box-shadow: 0 3px 0 #16a34a; color: #fff; }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+
+    /* ===== 回饋 ===== */
+    .feedback {
+        min-height: 58px; border-radius: 14px; padding: 10px 14px;
+        font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px;
+        background: #f1f5f9; color: #64748b;
+    }
+    .feedback.ok   { background: #dcfce7; color: #15803d; }
+    .feedback.warn { background: #fef3c7; color: #b45309; }
+    .confetti { display: inline-block; animation: drop 1s ease; }
+    @keyframes drop { from { transform: translateY(-18px) scale(1.6); opacity: 0; } }
+
+    @media (max-width: 420px) {
+        .qtext { font-size: 1.02rem; }
+        .btn { min-width: 64px; padding: 8px 12px; font-size: 1rem; }
+        .step-chip { font-size: 0.85rem; }
+    }
+</style>
+</head>
+<body>
+<div class="app">
+    <div class="meta-row"><span class="source-tag">真題來源：高雄市鳳山區忠孝國小 114-1 期中 · 第 3 題（桌上的鉛筆）</span></div>
+    <div class="title">✏️ 桌上的鉛筆 <span class="chip">一年級 · N-1-1 數數與序數</span></div>
+
+    <div class="desk"><svg id="scene" viewBox="0 0 980 230" xmlns="http://www.w3.org/2000/svg"></svg></div>
+
+    <div class="stepbar" id="stepbar"></div>
+
+    <div class="qcard">
+        <div class="qtext" id="qtext"></div>
+        <div class="qhint" id="qhint"></div>
+        <div class="controls" id="controls"></div>
+    </div>
+
+    <div class="feedback" id="feedback">👆 先看看桌面上的鉛筆，再開始作答！</div>
+</div>
+
+<script>
+"use strict";
+/* ============ 鉛筆資料（由長到短，從左到右） ============ */
+const PENCILS = [
+    { len: 220, x:  15, deco: "hearts",      name: "愛心（最長）" },
+    { len: 185, x: 280, deco: "stripeBlue",  name: "藍黃條紋" },
+    { len: 150, x: 510, deco: "plain",       name: "素面木頭" },
+    { len: 120, x: 705, deco: "hearts",      name: "愛心（短）" },
+    { len:  90, x: 870, deco: "stripeGreen", name: "綠白條紋" },
+];
+const T = 96, CY = 128, TIP = 26, HARD = 32; // 厚度 / 中線 / 筆尖長 / 橡皮擦+金屬環
+const CIRCLED = ["①","②","③","④","⑤"];
+
+/* ============ 關卡題目 ============ */
+const STEPS = [
+    { short:"第 1 題", q:"(1) 數一數，桌上有幾枝鉛筆？",
+      hint:"用手指點一點鉛筆，每點一枝就會跳起來、幫它標上編號喔！",
+      mode:"count", options:["3 枝","4 枝","5 枝","6 枝"], answer:2,
+      ok:"答對了！桌上一共有 5 枝鉛筆 🎉 你全部數對了！", bad:"再數一次看看～數到 5 枝了嗎？🤔" },
+    { short:"第 2 題", q:"(2) 老師的鉛筆排在「從右邊數起」的第 4 枝，請把它圈起來。",
+      hint:"先點「從右邊數起」看示範編號，再點你覺得是老師鉛筆的那一枝！",
+      mode:"circle", answerPencil:1,
+      ok:"答對了！🎉 從右邊數第 4 枝，就是【從左邊數第 2 枝】——藍黃條紋的那枝！",
+      bad:"再試試看：要從 👉 右邊開始數喔，第 4 枝是哪一枝？🤔" },
+    { short:"第 3 題", q:"(3) 美美說：「有愛心圖案的鉛筆中，最長的那枝是我的。」美美的鉛筆是從左邊數起第幾枝？",
+      hint:"有愛心的鉛筆正在閃閃發光 ✨ 比一比哪枝最長，點點看！",
+      mode:"pickLongest", answerPencil:0,
+      ok:"答對了！有愛心的鉛筆有 2 枝，最長的是第 1 枝。美美的鉛筆從左邊數起是【第 1 枝】！🎉",
+      bad:"這枝有愛心，但不是最長的喔～比一比長度 👀",
+      bad2:"這枝沒有愛心圖案喔～要找閃閃發光的愛心筆 ✨" },
+    { short:"第 4 題", q:"(4) 找一找，有愛心圖案的鉛筆有幾枝？",
+      hint:"愛心鉛筆在發光 ✨ 數一數有幾枝？",
+      mode:"choice", options:["1 枝","2 枝","3 枝","4 枝"], answer:1,
+      ok:"答對了！有愛心圖案的鉛筆有 2 枝（最左邊和第 4 枝）🎉", bad:"再找找看～閃閃發光的愛心筆有幾枝呢？🤔" },
+];
+
+/* ============ SVG 建構 ============ */
+function pencilSVG(p, i) {
+    const y0 = CY - T/2, y1 = CY + T/2;
+    const bodyW = p.len - HARD - TIP;
+    const bx = p.x + HARD, tipX = p.x + p.len;
+    let deco = "";
+    if (p.deco === "hearts")      deco = `<rect x="${bx}" y="${y0}" width="${bodyW}" height="${T}" fill="url(#patHearts)"/>`;
+    else if (p.deco === "stripeBlue")  deco = `<rect x="${bx}" y="${y0}" width="${bodyW}" height="${T}" fill="url(#patStripeBlue)"/>`;
+    else if (p.deco === "stripeGreen") deco = `<rect x="${bx}" y="${y0}" width="${bodyW}" height="${T}" fill="url(#patStripeGreen)"/>`;
+    return `<g class="pencil-g" data-i="${i}" id="pen${i}">
+        <rect x="${p.x}" y="${y0+3}" width="18" height="${T-6}" rx="9" fill="#f8a5a5" stroke="#d97706" stroke-width="2"/>
+        <rect x="${p.x+18}" y="${y0+1}" width="14" height="${T-2}" fill="#d1d5db" stroke="#9ca3af" stroke-width="2"/>
+        <line x1="${p.x+22}" y1="${y0+1}" x2="${p.x+22}" y2="${y1-1}" stroke="#9ca3af" stroke-width="2"/>
+        <line x1="${p.x+27}" y1="${y0+1}" x2="${p.x+27}" y2="${y1-1}" stroke="#9ca3af" stroke-width="2"/>
+        <rect x="${bx}" y="${y0}" width="${bodyW}" height="${T}" fill="url(#woodGrad)" stroke="#a1662f" stroke-width="2.5"/>
+        ${deco}
+        <polygon points="${tipX-TIP},${y0+5} ${tipX},${CY} ${tipX-TIP},${y1-5}" fill="#f3cf95" stroke="#a1662f" stroke-width="2.5"/>
+        <polygon points="${tipX-10},${CY-5.5} ${tipX},${CY} ${tipX-10},${CY+5.5}" fill="#4b5563"/>
+        <rect class="hit" x="${p.x-10}" y="${y0-24}" width="${p.len+20}" height="${T+48}"/>
+    </g>`;
+}
+
+function buildScene() {
+    const defs = `
+    <defs>
+        <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f6d08a"/><stop offset="1" stop-color="#e0a94f"/>
+        </linearGradient>
+        <pattern id="patHearts" width="46" height="46" patternUnits="userSpaceOnUse">
+            <rect width="46" height="46" fill="#fde8ec"/>
+            <path d="M23 35 C 7 24, 10 11, 23 18 C 36 11, 39 24, 23 35 Z" fill="#ef5350"/>
+            <circle cx="19" cy="19" r="2.5" fill="#ffcdd2"/>
+        </pattern>
+        <pattern id="patStripeBlue" width="30" height="200" patternUnits="userSpaceOnUse">
+            <rect width="15" height="200" fill="#ffd54f"/><rect x="15" width="15" height="200" fill="#64b5f6"/>
+        </pattern>
+        <pattern id="patStripeGreen" width="30" height="200" patternUnits="userSpaceOnUse">
+            <rect width="15" height="200" fill="#f1f8e9"/><rect x="15" width="15" height="200" fill="#66bb6a"/>
+        </pattern>
+    </defs>`;
+    const labels = `
+        <text x="12" y="34" font-size="26" font-weight="800" fill="#7c4a12">👈 左邊</text>
+        <text x="968" y="34" font-size="26" font-weight="800" fill="#7c4a12" text-anchor="end">右邊 👉</text>`;
+    const layers = `
+        <g id="pencilLayer">${PENCILS.map(pencilSVG).join("")}</g>
+        <g id="fxLayer"></g>`;
+    document.getElementById("scene").innerHTML = defs + labels + layers;
+    PENCILS.forEach((_, i) => {
+        document.getElementById("pen" + i).addEventListener("click", () => onPencilClick(i));
+    });
+}
+
+/* ============ 特效工具 ============ */
+const fxLayer = () => document.getElementById("fxLayer");
+
+function clearFX() {
+    fxLayer().innerHTML = "";
+    document.querySelectorAll(".pencil-g").forEach(g => g.classList.remove("bounce", "wrong-shake", "glow"));
+}
+
+function addBadge(i, text) {
+    const p = PENCILS[i];
+    const cx = p.x + p.len / 2, cy = CY - T/2 - 26;
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("class", "badge");
+    g.innerHTML = `<circle cx="${cx}" cy="${cy}" r="21" fill="#fffdf7" stroke="#f59e0b" stroke-width="4"/>
+        <text x="${cx}" y="${cy+8}" font-size="24" font-weight="800" text-anchor="middle" fill="#b45309">${text}</text>`;
+    fxLayer().appendChild(g);
+}
+
+function addLasso(i) {
+    const p = PENCILS[i];
+    const cx = p.x + p.len / 2;
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `rotate(-2 ${cx} ${CY})`);
+    g.innerHTML = `<ellipse class="lasso-path" cx="${cx}" cy="${CY}" rx="${p.len/2+16}" ry="${T/2+22}"/>`;
+    fxLayer().appendChild(g);
+}
+
+function bounce(i) {
+    const g = document.getElementById("pen" + i);
+    g.classList.remove("bounce"); void g.getBoundingClientRect(); g.classList.add("bounce");
+}
+
+function shake(i) {
+    const g = document.getElementById("pen" + i);
+    g.classList.remove("wrong-shake"); void g.getBoundingClientRect(); g.classList.add("wrong-shake");
+}
+
+function setFeedback(kind, msg) {
+    const fb = document.getElementById("feedback");
+    fb.className = "feedback" + (kind ? " " + kind : "");
+    fb.innerHTML = msg;
+}
+
+function confettiMsg(msg) {
+    return `<span class="confetti">🎉</span><span class="confetti" style="animation-delay:.15s">✨</span><span>${msg}</span><span class="confetti" style="animation-delay:.3s">🌟</span>`;
+}
+
+/* ============ 關卡流程 ============ */
+let stepIdx = 0;
+const doneSteps = new Set();
+let clickCount = 0;          // 第 1 題：已點數的鉛筆數
+let rightModeReady = false;  // 第 2 題：是否已看「從右邊數起」示範
+
+function renderStepbar() {
+    const bar = document.getElementById("stepbar");
+    bar.innerHTML = "";
+    STEPS.forEach((s, i) => {
+        const b = document.createElement("button");
+        b.className = "step-chip" + (i === stepIdx ? " active" : "") + (doneSteps.has(i) ? " done" : "");
+        b.textContent = (doneSteps.has(i) ? "✅ " : "") + s.short;
+        b.onclick = () => goStep(i);
+        bar.appendChild(b);
+    });
+    const next = document.createElement("button");
+    next.className = "btn primary"; next.style.minHeight = "48px";
+    next.textContent = stepIdx < STEPS.length - 1 ? "下一題 →" : "🔄 再玩一次";
+    next.onclick = () => {
+        if (stepIdx < STEPS.length - 1) goStep(stepIdx + 1);
+        else { doneSteps.clear(); goStep(0); }
+    };
+    bar.appendChild(next);
+}
+
+function renderOptions() {
+    const s = STEPS[stepIdx];
+    const box = document.getElementById("controls");
+    box.innerHTML = "";
+    if (s.mode === "choice" || s.mode === "count") {
+        s.options.forEach((opt, oi) => {
+            const b = document.createElement("button");
+            b.className = "btn"; b.textContent = opt;
+            b.onclick = () => {
+                if (oi === s.answer) {
+                    b.classList.add("good");
+                    if (stepIdx === 3) PENCILS.forEach((p, i) => { if (p.deco === "hearts") addLasso(i); });
+                    doneSteps.add(stepIdx);
+                    setFeedback("ok", confettiMsg(s.ok));
+                    renderStepbar();
+                    if (stepIdx < STEPS.length - 1) setTimeout(() => goStep(stepIdx + 1), 2600);
+                } else { setFeedback("warn", s.bad); }
+            };
+            box.appendChild(b);
+        });
+    } else if (s.mode === "circle") {
+        const b = document.createElement("button");
+        b.className = "btn primary"; b.textContent = "👀 從右邊數起（示範）";
+        b.onclick = () => {
+            rightModeReady = true;
+            clearFX();
+            for (let k = 0; k < 5; k++) addBadge(4 - k, CIRCLED[k]); // 從右往左 ①→⑤
+            setFeedback("warn", "看！從 👉 右邊數起：最右邊是 ①，往左數到 ⑤。老師的鉛筆是第 ④ 枝，點點看是哪一枝！");
+        };
+        box.appendChild(b);
+    }
+}
+
+function goStep(i) {
+    stepIdx = i; clickCount = 0; rightModeReady = false;
+    clearFX();
+    document.getElementById("qtext").textContent = STEPS[i].q;
+    document.getElementById("qhint").textContent = STEPS[i].hint;
+    setFeedback("", i === 0 ? "👆 先看看桌面上的鉛筆，再開始作答！" : "");
+    renderStepbar();
+    renderOptions();
+    if (i === 2 || i === 3) PENCILS.forEach((p, k) => { if (p.deco === "hearts") document.getElementById("pen" + k).classList.add("glow"); });
+}
+
+function onPencilClick(i) {
+    const s = STEPS[stepIdx];
+    if (s.mode === "count") {
+        if (clickCount < 5) { bounce(i); addBadge(i, CIRCLED[clickCount]); clickCount++; }
+        if (clickCount === 5) setFeedback("warn", "數完了！現在選下面的答案：桌上有幾枝鉛筆？");
+        else setFeedback("", `已經點了 ${clickCount} 枝，繼續數～`);
+    } else if (s.mode === "circle") {
+        if (!rightModeReady) { setFeedback("warn", "先點上面的「👀 從右邊數起（示範）」，看看怎麼從右邊數！"); return; }
+        clearFX();
+        for (let k = 0; k < 5; k++) addBadge(4 - k, CIRCLED[k]);
+        if (i === s.answerPencil) {
+            addLasso(i); bounce(i); doneSteps.add(stepIdx);
+            setFeedback("ok", confettiMsg(s.ok)); renderStepbar();
+            if (stepIdx < STEPS.length - 1) setTimeout(() => goStep(stepIdx + 1), 3000);
+        } else { shake(i); setFeedback("warn", s.bad); }
+    } else if (s.mode === "pickLongest") {
+        if (PENCILS[i].deco !== "hearts") { shake(i); setFeedback("warn", s.bad2); return; }
+        if (i === s.answerPencil) {
+            clearFX(); addLasso(i); bounce(i); doneSteps.add(stepIdx);
+            setFeedback("ok", confettiMsg(s.ok)); renderStepbar();
+            if (stepIdx < STEPS.length - 1) setTimeout(() => goStep(stepIdx + 1), 3000);
+        } else { shake(i); setFeedback("warn", s.bad); }
+    }
+}
+
+buildScene();
+goStep(0);
+</script>
+</body>
+</html>

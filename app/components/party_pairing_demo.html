@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>派對配對 · 看圖圈圈看（忠孝國小 114-1 期中 · 三-1）</title>
+<style>
+  :root{
+    --ink:#4a3b32; --panel:#fffdf8; --line:#f0d9c0;
+    --ok:#43a047; --no:#e53935; --accent:#ff8fab;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; font-family:"Yuanti TC","YuanQuan","Microsoft JhengHei","PingFang TC",sans-serif;
+    color:var(--ink); background:linear-gradient(180deg,#fff4ec,#ffeef4);
+    min-height:100vh; display:flex; justify-content:center;
+  }
+  #app{width:100%; max-width:980px; padding:10px 10px 28px;}
+
+  /* ===== 頂部標題與進度 ===== */
+  header{display:flex; align-items:center; gap:10px; padding:6px 4px 10px; flex-wrap:wrap;}
+  header h1{font-size:clamp(18px,4.5vw,24px); margin:0; letter-spacing:1px;}
+  #dots{display:flex; gap:8px; margin-left:auto;}
+  .dot{
+    width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:15px; font-weight:bold; background:#fff; border:3px solid #f3cfd8; color:#c9a3ad; transition:.3s;
+  }
+  .dot.cur{background:var(--accent); border-color:var(--accent); color:#fff; transform:scale(1.12);}
+  .dot.done{background:#a5d6a7; border-color:#81c784; color:#1b5e20;}
+
+  /* ===== 場景 ===== */
+  #sceneWrap{position:relative; border-radius:20px; overflow:hidden;
+    box-shadow:0 6px 18px rgba(180,120,90,.18); border:4px solid #fff; background:#ffeef2;}
+  #scene{display:block; width:100%; height:auto;}
+  .ghost{position:absolute; top:6px; right:10px; font-size:11px; color:rgba(90,60,50,.35); letter-spacing:.5px; pointer-events:none;}
+  #toast{
+    position:absolute; left:50%; top:12px; transform:translateX(-50%) translateY(-8px);
+    background:rgba(74,59,50,.88); color:#fff; font-size:15px; padding:9px 18px; border-radius:999px;
+    opacity:0; transition:.3s; pointer-events:none; white-space:nowrap; max-width:92%;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  #confetti{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
+  .cf{position:absolute; top:-16px; width:10px; height:15px; border-radius:2px; animation:cfFall linear forwards;}
+  @keyframes cfFall{ to{ transform:translateY(600px) rotate(720deg); opacity:.85; } }
+
+  /* ===== 狀態列 ===== */
+  #status{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    background:var(--panel); border:2px solid var(--line); border-radius:14px;
+    padding:8px 12px; margin-top:10px; font-size:15px; min-height:44px;
+  }
+  .chip{background:#fff0f3; border:1.5px solid #ffc7d0; border-radius:999px; padding:3px 12px; font-weight:bold; font-size:14px;}
+  #guide{margin-left:auto; color:#8a6f60; font-weight:bold;}
+
+  /* ===== 題目面板 ===== */
+  #panel{
+    background:var(--panel); border:2px solid var(--line); border-radius:18px;
+    margin-top:10px; padding:14px 16px 16px;
+  }
+  .qhead{display:flex; align-items:center; gap:10px;}
+  .qnum{background:var(--accent); color:#fff; border-radius:10px; padding:4px 12px; font-weight:bold; font-size:15px; flex:none;}
+  #qtext{font-size:clamp(18px,4.6vw,22px); font-weight:bold; line-height:1.45;}
+  #choices{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-top:14px;}
+  .choice{
+    min-height:54px; border-radius:14px; border:3px solid #f3cfd8; background:#fff;
+    font-size:21px; font-weight:bold; color:var(--ink); font-family:inherit; cursor:pointer;
+    transition:transform .15s, border-color .2s, background .2s; padding:8px 6px;
+  }
+  .choice:active{transform:scale(.96);}
+  .choice:hover{border-color:var(--accent);}
+  .choice.correct{background:#c8e6c9; border-color:var(--ok); color:#1b5e20;}
+  .choice.wrong{background:#ffcdd2; border-color:var(--no); color:#b71c1c; animation:shake .4s;}
+  @keyframes shake{ 20%{transform:translateX(-7px);} 40%{transform:translateX(7px);} 60%{transform:translateX(-5px);} 80%{transform:translateX(5px);} }
+  #feedback{margin-top:12px; font-size:16.5px; line-height:1.6; border-radius:14px; padding:11px 14px; display:none;}
+  #feedback.good{display:block; background:#e8f5e9; border:2px solid #a5d6a7;}
+  #feedback.hint{display:block; background:#fff3e0; border:2px solid #ffcc80;}
+  #actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .act{
+    min-height:50px; padding:8px 20px; border-radius:999px; font-size:17px; font-weight:bold;
+    font-family:inherit; cursor:pointer; border:none; transition:transform .15s;
+  }
+  .act:active{transform:scale(.95);}
+  #btnReplay{background:#fff; border:2.5px solid #bcaaa4; color:#6d4c41;}
+  #btnNext{background:var(--accent); color:#fff; margin-left:auto; display:none;}
+  #btnNext.show{display:inline-block; animation:pop .35s;}
+  @keyframes pop{ 0%{transform:scale(.6);} 70%{transform:scale(1.1);} 100%{transform:scale(1);} }
+  #finish{display:none; text-align:center; padding:16px 8px;}
+  #finish .big{font-size:52px;}
+  #finish h2{margin:8px 0 6px; font-size:24px;}
+  #finish p{margin:4px 0 14px; font-size:16.5px; line-height:1.6;}
+
+  /* ===== SVG 互動 ===== */
+  .grab{cursor:pointer;}
+  .grab:hover{filter:brightness(1.06) drop-shadow(0 0 5px rgba(255,213,79,.9));}
+  .glow{filter:drop-shadow(0 0 6px #ffd54f) drop-shadow(0 0 12px #ffd54f);}
+  .hidden{display:none;}
+  .tag{opacity:0; transition:opacity .4s;}
+  .tag.show{opacity:1;}
+  svg text{user-select:none;}
+
+  @media (max-width:430px){
+    header h1{font-size:18px;}
+    .dot{width:30px; height:30px; font-size:13px;}
+    #guide{margin-left:0; width:100%;}
+    #feedback{font-size:15.5px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>🎂 派對配對 · 看圖圈圈看</h1>
+    <div id="dots"></div>
+  </header>
+
+  <div id="sceneWrap">
+    <svg id="scene" viewBox="0 0 960 560" role="img" aria-label="生日派對配對場景">
+      <defs>
+        <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff6ec"/><stop offset="1" stop-color="#ffe4ee"/>
+        </linearGradient>
+        <linearGradient id="juiceGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffb74d"/><stop offset="1" stop-color="#fb8c00"/>
+        </linearGradient>
+      </defs>
+      <!-- 房間背景 -->
+      <rect x="0" y="0" width="960" height="400" fill="url(#wallGrad)"/>
+      <rect x="0" y="400" width="960" height="160" fill="#f6d7a0"/>
+      <rect x="0" y="400" width="960" height="10" fill="#e2b87c"/>
+      <line x1="0" y1="465" x2="960" y2="465" stroke="#eac990" stroke-width="3"/>
+      <line x1="0" y1="525" x2="960" y2="525" stroke="#eac990" stroke-width="3"/>
+      <g id="decorLayer"></g>
+      <path d="M0 46 Q480 118 960 46" fill="none" stroke="#c9a3a0" stroke-width="3"/>
+      <g id="buntingLayer"></g>
+      <!-- 生日布條 -->
+      <g>
+        <path d="M370 84 L330 104 L370 124 Z" fill="#f06292"/>
+        <rect x="368" y="82" width="224" height="42" rx="12" fill="#ff8fab"/>
+        <path d="M590 84 L630 104 L590 124 Z" fill="#f06292"/>
+        <text x="480" y="112" text-anchor="middle" font-size="24" font-weight="bold" fill="#fff">🎂 生日快樂 🎂</text>
+      </g>
+      <!-- 三位小朋友（在桌子後方） -->
+      <g id="kidsLayer"></g>
+      <!-- 戴上的帽子 -->
+      <g id="wornLayer"></g>
+      <!-- 派對桌 -->
+      <g id="tableLayer">
+        <rect x="205" y="470" width="20" height="66" rx="6" fill="#a9714b"/>
+        <rect x="745" y="470" width="20" height="66" rx="6" fill="#a9714b"/>
+        <rect x="170" y="372" width="630" height="102" rx="12" fill="#c68a5f"/>
+        <rect x="170" y="350" width="630" height="28" rx="14" fill="#e8b788"/>
+        <rect x="170" y="372" width="630" height="10" fill="#b97b4e"/>
+        <circle cx="276" cy="358" r="9" fill="#ffe3c9"/><circle cx="344" cy="358" r="9" fill="#ffe3c9"/>
+        <circle cx="446" cy="358" r="9" fill="#ffe3c9"/><circle cx="514" cy="358" r="9" fill="#ffe3c9"/>
+        <circle cx="616" cy="358" r="9" fill="#ffe3c9"/><circle cx="684" cy="358" r="9" fill="#ffe3c9"/>
+      </g>
+      <!-- 桌上物品 -->
+      <g id="itemsLayer"></g>
+      <!-- 一一對應連線 -->
+      <g id="arcsLayer" fill="none"></g>
+      <!-- 飛行特效層 -->
+      <g id="fxLayer"></g>
+      <!-- 數量標籤 -->
+      <g id="tagLayer"></g>
+    </svg>
+    <span class="ghost">忠孝國小 114-1 期中 · 第三大題-1</span>
+    <div id="toast"></div>
+    <div id="confetti"></div>
+  </div>
+
+  <div id="status"><span id="chips"></span><span id="guide"></span></div>
+
+  <section id="panel">
+    <div class="qhead"><span class="qnum" id="qnum">第 1 題</span><div id="qtext"></div></div>
+    <div id="choices"></div>
+    <div id="feedback"></div>
+    <div id="actions">
+      <button class="act" id="btnReplay">🔁 重播這一題</button>
+      <button class="act" id="btnNext">下一題 ➜</button>
+    </div>
+    <div id="finish">
+      <div class="big">🎉🎊🎈</div>
+      <h2>太棒了，4 關全部完成！</h2>
+      <p>你學會了「一對一配對」：東西夠不夠、誰多誰少，<br>連連看、比一比就知道了！</p>
+      <button class="act" id="btnAgain" style="background:var(--accent);color:#fff;">🔄 再玩一次</button>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+/* ================= 小工具 ================= */
+const NS = "http://www.w3.org/2000/svg";
+const $  = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function el(tag, attrs, parent){
+  const n = document.createElementNS(NS, tag);
+  for(const k in attrs) n.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(n);
+  return n;
+}
+let AC = null;
+function tone(f, d, type, v, when){
+  try{
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type || "sine"; o.frequency.value = f;
+    g.gain.value = v == null ? .12 : v;
+    o.connect(g); g.connect(AC.destination);
+    const t0 = AC.currentTime + (when || 0);
+    o.start(t0);
+    g.gain.setValueAtTime(g.gain.value, t0);
+    g.gain.exponentialRampToValueAtTime(.001, t0 + d);
+    o.stop(t0 + d + .02);
+  }catch(e){}
+}
+const sndPop   = () => tone(560, .12, "triangle", .14);
+const sndWear  = () => { tone(660, .1, "sine", .1); tone(880, .16, "sine", .1, .08); };
+const sndChime = () => { tone(660, .18, "sine", .12); tone(830, .18, "sine", .12, .14); tone(990, .3, "sine", .12, .28); };
+const sndNo    = () => tone(200, .22, "sawtooth", .05);
+let toastTimer = null;
+function toast(msg, ms){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), ms || 2200);
+}
+function confetti(n){
+  const box = $("#confetti"), colors = ["#ef5350","#ffca28","#66bb6a","#42a5f5","#ab47bc","#ff8fab"];
+  for(let i = 0; i < (n || 26); i++){
+    const p = document.createElement("div");
+    p.className = "cf";
+    p.style.left = Math.random() * 100 + "%";
+    p.style.background = colors[i % colors.length];
+    p.style.animationDuration = (1.6 + Math.random() * 1.4) + "s";
+    p.style.transform = "rotate(" + Math.random() * 360 + "deg)";
+    box.appendChild(p);
+    setTimeout(() => p.remove(), 3200);
+  }
+}
+
+/* ================= 場景佈置（背景裝飾） ================= */
+(function decorate(){
+  const decor = $("#decorLayer");
+  const dots = [[60,300],[190,120],[260,330],[430,60],[700,70],[760,320],[905,300],[120,340],[640,40],[930,90]];
+  const dc = ["#ffd1dc","#cdeafc","#dcedc8","#ffe0b2","#e1bee7"];
+  dots.forEach((p, i) => el("circle", {cx:p[0], cy:p[1], r:5 + (i % 3) * 2, fill:dc[i % 5], opacity:.75}, decor));
+  const balloons = [[86,190,"#ff8fab"],[150,140,"#81d4fa"],[872,170,"#aed581"],[925,220,"#ffcc80"],[830,105,"#ce93d8"]];
+  balloons.forEach(b => {
+    const g = el("g", {}, decor);
+    el("path", {d:`M${b[0]} ${b[1]+22} Q${b[0]+12} ${b[1]+65} ${b[0]-6} ${b[1]+105}`, stroke:"#b08080", "stroke-width":1.6, fill:"none"}, g);
+    el("ellipse", {cx:b[0], cy:b[1], rx:17, ry:21, fill:b[2]}, g);
+    el("path", {d:`M${b[0]-6} ${b[1]-9} q4 -6 9 -7`, stroke:"#ffffff", "stroke-width":3, fill:"none", "stroke-linecap":"round", opacity:.8}, g);
+  });
+  const flagC = ["#ef5350","#ffca28","#66bb6a","#42a5f5","#ab47bc"];
+  for(let i = 0; i <= 14; i++){
+    const t = i / 14, x = 2*(1-t)*t*480 + t*t*960, y = (1-t)*(1-t)*46 + 2*(1-t)*t*118 + t*t*46;
+    el("path", {d:`M${x-11} ${y} L${x+11} ${y} L${x} ${y+24} Z`, fill:flagC[i % 5], opacity:.95}, $("#buntingLayer"));
+  }
+})();
+
+/* ================= 場景物件 ================= */
+const KIDS = [
+  {x:310, shirt:"#f48fb1", hair:"#6d4c41", girl:true },
+  {x:480, shirt:"#64b5f6", hair:"#37474f", girl:false},
+  {x:650, shirt:"#ba68c8", hair:"#212121", girl:true },
+];
+const kidsLayer = $("#kidsLayer"), wornLayer = $("#wornLayer"),
+      itemsLayer = $("#itemsLayer"), fxLayer = $("#fxLayer"),
+      arcsLayer = $("#arcsLayer"), tagLayer = $("#tagLayer");
+
+KIDS.forEach((k, i) => {
+  const g = el("g", {}, kidsLayer);
+  if(k.girl){ // 雙马尾
+    el("circle", {cx:k.x-38, cy:242, r:11, fill:k.hair}, g);
+    el("circle", {cx:k.x+38, cy:242, r:11, fill:k.hair}, g);
+    el("circle", {cx:k.x-40, cy:236, r:4, fill:"#ff8fab"}, g);
+    el("circle", {cx:k.x+40, cy:236, r:4, fill:"#ff8fab"}, g);
+  }else{
+    el("circle", {cx:k.x, cy:222, r:8, fill:k.hair}, g); // 瀏海呆毛
+  }
+  el("circle", {cx:k.x, cy:246, r:34, fill:k.hair}, g);                    // 髮
+  el("rect", {x:k.x-42, y:300, width:84, height:76, rx:26, fill:k.shirt}, g); // 身體(被桌子遮)
+  el("circle", {cx:k.x, cy:260, r:33, fill:"#ffe3c9"}, g);                 // 臉
+  el("circle", {cx:k.x-12, cy:256, r:3.6, fill:"#4a3b32"}, g);
+  el("circle", {cx:k.x+12, cy:256, r:3.6, fill:"#4a3b32"}, g);
+  el("circle", {cx:k.x-11, cy:255, r:1.2, fill:"#fff"}, g);
+  el("circle", {cx:k.x+13, cy:255, r:1.2, fill:"#fff"}, g);
+  el("circle", {cx:k.x-20, cy:264, r:4.5, fill:"#ffb3ba", opacity:.6}, g);
+  el("circle", {cx:k.x+20, cy:264, r:4.5, fill:"#ffb3ba", opacity:.6}, g);
+  el("path", {d:`M${k.x-9} 264 Q${k.x} 273 ${k.x+9} 264`, stroke:"#a1663d", "stroke-width":2.6, fill:"none", "stroke-linecap":"round"}, g);
+});
+
+/* --- 帽子工廠 --- */
+function makeHat(bx, by, s, color, parent){
+  const g = el("g", {}, parent);
+  const h = 64 * s;
+  el("ellipse", {cx:bx, cy:by + 2, rx:30*s, ry:8*s, fill:"#ffffff", stroke:"#e0e0e0", "stroke-width":1.5}, g);
+  el("path", {d:`M${bx-28*s} ${by} L${bx+28*s} ${by} L${bx} ${by-h} Z`, fill:color, stroke:"rgba(0,0,0,.1)", "stroke-width":1.5}, g);
+  [[-8,20],[9,32],[-3,44]].forEach(d =>
+    el("circle", {cx:bx + d[0]*s, cy:by - d[1]*s, r:3.4*s, fill:"#fff", opacity:.85}, g));
+  el("circle", {cx:bx, cy:by - h, r:7*s, fill:"#fff", stroke:"#eee", "stroke-width":1.5}, g);
+  g.dataset.bx = bx; g.dataset.by = by; g.dataset.s = s;
+  return g;
+}
+/* 桌上 3 頂（後排）＋ 旁邊 2 頂（地上） */
+const HAT_COLORS = ["#ef5350","#66bb6a","#ffca28","#42a5f5","#ab47bc"];
+const looseHats = [];
+[[235,354,.82],[545,354,.82],[760,354,.82],[105,486,1.15],[858,486,1.15]].forEach((p, i) => {
+  const g = makeHat(p[0], p[1], p[2], HAT_COLORS[i], itemsLayer);
+  g.classList.add("grab");
+  g.dataset.idx = i;
+  looseHats.push({g, bx:p[0], by:p[1], s:p[2], parent:itemsLayer, worn:false});
+});
+/* 戴上後的帽子（預畫好、先隱藏） */
+const wornHats = KIDS.map((k, i) => {
+  const g = makeHat(k.x, 236, .95, HAT_COLORS[i], wornLayer);
+  g.setAttribute("transform", `rotate(${i === 0 ? -7 : i === 2 ? 7 : 0} ${k.x} 236)`);
+  g.classList.add("hidden");
+  return g;
+});
+
+/* --- 蛋糕工廠 --- */
+function makeCake(cx, parent){
+  const g = el("g", {}, parent);
+  el("ellipse", {cx, cy:374, rx:42, ry:9, fill:"#fff", stroke:"#e0e0e0", "stroke-width":2}, g);
+  el("path", {d:`M${cx-30} 372 L${cx+30} 372 L${cx} 310 Z`, fill:"#ffd54f", stroke:"#e6a23c", "stroke-width":2}, g);
+  el("path", {d:`M${cx-12.6} 346 L${cx+12.6} 346 L${cx+7.7} 356 L${cx-7.7} 356 Z`, fill:"#ef5350"}, g);   // 草莓醬
+  el("path", {d:`M${cx-20.3} 330 L${cx+20.3} 330 L${cx+17.4} 336 L${cx-17.4} 336 Z`, fill:"#fff8e1"}, g); // 鮮奶油
+  return g;
+}
+const CAKE_X = [290, 375, 460];
+const cakes = CAKE_X.map(cx => ({g:makeCake(cx, itemsLayer), pt:{x:cx, y:322}}));
+
+/* --- 櫻桃工廠 --- */
+function makeCherry(cx, cy, parent){
+  const g = el("g", {}, parent);
+  el("path", {d:`M${cx} ${cy-9} Q${cx+5} ${cy-20} ${cx+10} ${cy-23}`, stroke:"#5d4037", "stroke-width":2.6, fill:"none", "stroke-linecap":"round"}, g);
+  el("path", {d:`M${cx+7} ${cy-21} q8 -4 12 2 q-7 4 -12 -2`, fill:"#66bb6a"}, g);
+  el("circle", {cx, cy, r:10, fill:"#e53935"}, g);
+  el("circle", {cx:cx-3, cy:cy-3, r:3, fill:"#fff", opacity:.7}, g);
+  g.dataset.cx = cx; g.dataset.cy = cy;
+  return g;
+}
+el("ellipse", {cx:560, cy:356, rx:56, ry:12, fill:"#fff", stroke:"#e0e0e0", "stroke-width":2}, itemsLayer); // 櫻桃盤
+const CHERRY_X = [528, 560, 592];
+const cherries = CHERRY_X.map(cx => {
+  const g = makeCherry(cx, 340, itemsLayer);
+  g.classList.add("grab");
+  return {g, hx:cx, hy:340, parent:itemsLayer, placed:false};
+});
+
+/* --- 果汁工廠 --- */
+function makeJuice(cx, parent){
+  const g = el("g", {}, parent);
+  el("path", {d:`M${cx+6} 300 L${cx+16} 258 L${cx+25} 254`, stroke:"#ef5350", "stroke-width":7, fill:"none", "stroke-linecap":"round"}, g);
+  el("path", {d:`M${cx+6} 300 L${cx+16} 258 L${cx+25} 254`, stroke:"#fff", "stroke-width":7, fill:"none", "stroke-linecap":"round", "stroke-dasharray":"4 7"}, g);
+  el("path", {d:`M${cx-23} 300 L${cx+23} 300 L${cx+17} 370 L${cx-17} 370 Z`, fill:"rgba(255,255,255,.55)", stroke:"#b0bec5", "stroke-width":2.5}, g);
+  el("path", {d:`M${cx-20.5} 314 L${cx+20.5} 314 L${cx+15.6} 366 L${cx-15.6} 366 Z`, fill:"url(#juiceGrad)"}, g);
+  el("circle", {cx:cx-8, cy:310, r:3, fill:"#ffe0b2"}, g);
+  el("circle", {cx:cx+6, cy:308, r:2.4, fill:"#ffe0b2"}, g);
+  el("path", {d:`M${cx-18} 316 L${cx-15.5} 362`, stroke:"#fff", "stroke-width":3, opacity:.5, "stroke-linecap":"round"}, g);
+  return g;
+}
+const JUICE_X = [650, 708, 766];
+const juices = JUICE_X.map(cx => ({g:makeJuice(cx, itemsLayer), pt:{x:cx, y:306}}));
+
+/* --- 數量標籤 --- */
+const TAG_STYLE = {"果汁":"#fb8c00","櫻桃":"#e53935","蛋糕":"#fbc02d"};
+function makeTag(x, y, label){
+  const g = el("g", {class:"tag"}, tagLayer);
+  el("rect", {x:x-52, y:y-17, width:104, height:34, rx:17, fill:"#fff", stroke:TAG_STYLE[label], "stroke-width":2.5}, g);
+  el("text", {x, y:y+6, "text-anchor":"middle", "font-size":17, "font-weight":"bold", fill:TAG_STYLE[label]}, g)
+    .textContent = `${label} 3`;
+  return g;
+}
+const tags = {果汁:makeTag(708, 284, "果汁"), 櫻桃:makeTag(560, 292, "櫻桃"), 蛋糕:makeTag(375, 282, "蛋糕")};
+
+/* ================= 關卡資料 ================= */
+const STEPS = [
+  { mode:"hats",
+    q:"1 個人戴 1 頂派對帽，派對帽夠不夠？",
+    guide:"👆 點擊派對帽，幫小朋友戴上！",
+    chips:[["小朋友","3","c"],["派對帽","5","r"]],
+    choices:[{t:"夠",ok:true},{t:"不夠",ok:false}],
+    good:"小朋友有 3 位，派對帽有 5 頂。一人一頂之後，桌上還剩下 2 頂（5 比 3 多），所以派對帽【夠】！🎉",
+    hint:"數一數：大家都戴上之後，桌上是不是還有帽子剩下來？剩下就是「夠」喔！" },
+  { mode:"cherries",
+    q:"1 塊蛋糕上放 1 顆櫻桃，櫻桃夠不夠？",
+    guide:"👆 點擊櫻桃，一顆一顆放到蛋糕上！",
+    chips:[["蛋糕","3","y"],["櫻桃","3","r"]],
+    choices:[{t:"夠",ok:true},{t:"不夠",ok:false}],
+    good:"蛋糕 3 塊、櫻桃 3 顆，一塊蛋糕配一顆櫻桃，剛剛好全部配完（3 = 3），所以櫻桃【夠】！🍒",
+    hint:"數一數：每塊蛋糕都放一颗櫻桃了嗎？剛好一一配對完就是「夠」！" },
+  { mode:"pair", pair:"juice-cherry",
+    q:"果汁和櫻桃，哪一種比較少？",
+    guide:"先選答案，我們再一一對應連連看！",
+    chips:[["果汁","3","o"],["櫻桃","3","r"]],
+    choices:[{t:"果汁",ok:false},{t:"櫻桃",ok:false},{t:"一樣多",ok:true}],
+    good:"果汁 3 杯、櫻桃 3 顆，一一對應後 3 = 3，兩種【一樣多】，沒有誰比較少！🧃🍒",
+    hint:"連連看之後，每一杯果汁都配到一顆櫻桃了嗎？全部配得上，就是「一樣多」喔！" },
+  { mode:"pair", pair:"juice-cake",
+    q:"果汁和蛋糕，哪一種比較多？",
+    guide:"先選答案，我們再一一對應連連看！",
+    chips:[["果汁","3","o"],["蛋糕","3","y"]],
+    choices:[{t:"果汁",ok:false},{t:"蛋糕",ok:false},{t:"一樣多",ok:true}],
+    good:"果汁 3 杯、蛋糕 3 塊，一一對應後 3 = 3，兩種【一樣多】，沒有誰比較多！🧃🍰",
+    hint:"連連看之後，每一杯果汁都配到一塊蛋糕了嗎？全部配得上，就是「一樣多」喔！" },
+];
+
+/* ================= 遊戲狀態機 ================= */
+let step = 0, wornCount = 0, placedCount = 0, busy = false, solved = [false,false,false,false];
+
+function renderDots(){
+  const box = $("#dots"); box.innerHTML = "";
+  STEPS.forEach((_, i) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (i === step ? " cur" : solved[i] ? " done" : "");
+    d.textContent = solved[i] ? "✓" : i + 1;
+    box.appendChild(d);
+  });
+}
+function renderChips(st){
+  $("#chips").innerHTML = st.chips.map(c =>
+    `<span class="chip" style="border-color:${c[2] === "r" ? "#ffcdd2" : c[2] === "o" ? "#ffe0b2" : c[2] === "y" ? "#fff59d" : "#cdeafc"}">${c[0]} ×${c[1]}</span>`).join(" ")
+    + (st.mode === "hats" ? ` <span class="chip" id="hatCount">已戴 ${wornCount}/3</span>` :
+       st.mode === "cherries" ? ` <span class="chip" id="chCount">已放 ${placedCount}/3</span>` : "");
+}
+function loadStep(i){
+  step = i; busy = false;
+  arcsLayer.innerHTML = "";
+  Object.values(tags).forEach(t => t.classList.remove("show"));
+  const st = STEPS[i];
+  $("#qnum").textContent = `第 ${i+1} 題`;
+  $("#qtext").textContent = st.q;
+  $("#guide").textContent = st.guide;
+  renderChips(st);
+  $("#feedback").className = ""; $("#feedback").style.display = "none";
+  $("#btnNext").classList.remove("show");
+  $("#finish").style.display = "none";
+  $("#panel").querySelectorAll(".qhead,#choices,#actions").forEach(e => e.style.display = "");
+  const box = $("#choices"); box.innerHTML = "";
+  st.choices.forEach((c, idx) => {
+    const b = document.createElement("button");
+    b.className = "choice"; b.textContent = c.t; b.dataset.ok = c.ok ? "1" : "0";
+    b.onclick = () => onChoice(b, c.ok);
+    box.appendChild(b);
+  });
+  if(st.mode === "pair"){ tags["果汁"].classList.add("show"); tags[st.pair === "juice-cherry" ? "櫻桃" : "蛋糕"].classList.add("show"); }
+  renderDots();
+}
+
+/* --- 帽子飛戴 --- */
+function flyTo(g, tx, ty, tScale, tilt, dur, done){
+  const bx = +g.dataset.bx, by = +g.dataset.by, s = +g.dataset.s;
+  fxLayer.appendChild(g);
+  g.style.transformOrigin = `${bx}px ${by}px`;
+  g.style.transition = "none";
+  g.style.transform = "";
+  void g.getBoundingClientRect();
+  g.style.transition = `transform ${dur || .85}s cubic-bezier(.3,.75,.35,1.05)`;
+  g.style.transform = `translate(${tx-bx}px,${ty-by}px) rotate(${tilt}deg) scale(${tScale/s})`;
+  setTimeout(() => done && done(), (dur || .85) * 1000);
+}
+looseHats.forEach(h => {
+  h.g.addEventListener("click", () => {
+    if(step !== 0 || h.worn || busy) return;
+    h.worn = true;
+    const kidIdx = [0,1,2].find(i => !looseHats.some(x => x.worn && x.kid === i));
+    if(kidIdx == null){
+      h.worn = false;
+      toast("小朋友都戴好帽帽了！桌上還剩 2 頂喔 😯");
+      sndPop();
+      return;
+    }
+    h.kid = kidIdx; busy = true; sndPop();
+    const k = KIDS[kidIdx];
+    flyTo(h.g, k.x, 236, .95, kidIdx === 0 ? -7 : kidIdx === 2 ? 7 : 0, .85, () => {
+      h.g.classList.add("hidden");
+      wornHats[kidIdx].classList.remove("hidden");
+      sndWear(); confetti(8);
+      wornCount++;
+      const c = $("#hatCount"); if(c) c.textContent = `已戴 ${wornCount}/3`;
+      busy = false;
+      if(wornCount === 3) toast("桌邊還剩 2 頂派對帽，帽子有剩下 → 夠！👍", 2600);
+    });
+  });
+});
+
+/* --- 櫻桃跳上蛋糕 --- */
+cherries.forEach((c, i) => {
+  c.g.addEventListener("click", () => {
+    if(step !== 1 || c.placed || busy) return;
+    busy = true; sndPop();
+    const t = cakes[i].pt;
+    fxLayer.appendChild(c.g);
+    c.g.style.transformOrigin = `${c.hx}px ${c.hy}px`;
+    c.g.style.transition = "none"; c.g.style.transform = "";
+    void c.g.getBoundingClientRect();
+    c.g.style.transition = "transform .7s cubic-bezier(.34,1.56,.64,1)";
+    c.g.style.transform = `translate(${t.x - c.hx}px,${t.y - c.hy}px) scale(1.08)`;
+    setTimeout(() => {
+      c.g.style.transform = `translate(${t.x - c.hx}px,${t.y - c.hy}px) scale(1)`;
+      sndWear(); confetti(6);
+      c.placed = true; c.pt = t; placedCount++;
+      const el2 = $("#chCount"); if(el2) el2.textContent = `已放 ${placedCount}/3`;
+      busy = false;
+      if(placedCount === 3) toast("3 塊蛋糕剛好 3 顆櫻桃，一一配對完成！🍒", 2600);
+    }, 720);
+  });
+});
+
+/* --- 一一對應連連看 --- */
+function glow(g, ms){
+  g.classList.add("glow");
+  setTimeout(() => g.classList.remove("glow"), ms || 550);
+}
+function drawArc(p1, p2){
+  const midX = (p1.x + p2.x) / 2, midY = Math.min(p1.y, p2.y) - 46;
+  const path = el("path", {d:`M${p1.x} ${p1.y} Q${midX} ${midY} ${p2.x} ${p2.y}`,
+    stroke:"#ff8fab", "stroke-width":5, "stroke-linecap":"round"}, arcsLayer);
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+  path.style.transition = "stroke-dashoffset .45s ease";
+  void path.getBoundingClientRect();
+  path.style.strokeDashoffset = 0;
+  return sleep(480);
+}
+async function runPairing(kind){
+  arcsLayer.innerHTML = "";
+  for(let i = 0; i < 3; i++){
+    const a = juices[i], b = kind === "juice-cherry" ? cherries[i] : cakes[i];
+    glow(a.g); glow(b.g);
+    sndPop();
+    await drawArc(a.pt, b.pt || {x:+b.g.dataset.cx, y:+b.g.dataset.cy - 18});
+    await sleep(160);
+  }
+  await sleep(300);
+}
+function cherryPt(c){ return c.placed ? c.pt : {x:c.hx, y:c.hy}; }
+
+/* --- 作答 --- */
+function onChoice(btn, ok){
+  if(busy || solved[step]) return;
+  const st = STEPS[step];
+  if(st.mode === "hats" && wornCount < 3){ toast("先把帽帽都戴上，再回答喔！👆"); return; }
+  if(st.mode === "cherries" && placedCount < 3){ toast("先把櫻桃都放上去，再回答喔！👆"); return; }
+  if(st.mode === "pair"){
+    busy = true;
+    runPairing(st.pair).then(() => { busy = false; judge(btn, ok); });
+    return;
+  }
+  judge(btn, ok);
+}
+function judge(btn, ok){
+  const st = STEPS[step], fb = $("#feedback");
+  if(ok){
+    btn.classList.add("correct");
+    solved[step] = true;
+    sndChime(); confetti(30);
+    fb.className = "good"; fb.textContent = "✨ " + st.good;
+    $("#btnNext").classList.add("show");
+    $("#btnNext").textContent = step === 3 ? "看結果 🎉" : "下一題 ➜";
+    document.querySelectorAll(".choice").forEach(b => b.disabled = true);
+    renderDots();
+  }else{
+    btn.classList.add("wrong"); sndNo();
+    fb.className = "hint"; fb.textContent = "💡 " + st.hint;
+    setTimeout(() => btn.classList.remove("wrong"), 500);
+  }
+}
+
+/* --- 重播／下一題／全部重來 --- */
+function resetStep(){
+  const st = STEPS[step];
+  arcsLayer.innerHTML = "";
+  $("#feedback").className = ""; $("#feedback").style.display = "none";
+  document.querySelectorAll(".choice").forEach(b => { b.disabled = false; b.classList.remove("correct","wrong"); });
+  $("#btnNext").classList.remove("show");
+  if(st.mode === "hats"){
+    looseHats.forEach(h => {
+      if(!h.worn) return;
+      h.worn = false; delete h.kid;
+      h.g.style.transition = "none"; h.g.style.transform = "";
+      h.parent.appendChild(h.g); h.g.classList.remove("hidden");
+    });
+    wornHats.forEach(w => w.classList.add("hidden"));
+    wornCount = 0; renderChips(st);
+    toast("再戴一次帽帽！🧢");
+  }else if(st.mode === "cherries"){
+    cherries.forEach(c => {
+      if(!c.placed) return;
+      c.placed = false; delete c.pt;
+      c.g.style.transition = "none"; c.g.style.transform = "";
+      c.parent.appendChild(c.g);
+    });
+    placedCount = 0; renderChips(st);
+    toast("再把櫻桃放回去！🍒");
+  }else{
+    toast("再看一次連連看！🔗");
+  }
+}
+$("#btnReplay").onclick = () => { if(!busy) resetStep(); };
+$("#btnNext").onclick = () => {
+  if(step < 3) loadStep(step + 1);
+  else{
+    $("#qnum").parentElement.style.display = "none";
+    $("#choices").style.display = "none";
+    $("#actions").style.display = "none";
+    $("#finish").style.display = "block";
+    confetti(40); sndChime();
+  }
+};
+$("#btnAgain").onclick = () => {
+  solved = [false,false,false,false];
+  looseHats.forEach(h => { h.worn = false; delete h.kid; h.g.style.transition = "none"; h.g.style.transform = ""; h.parent.appendChild(h.g); h.g.classList.remove("hidden"); });
+  wornHats.forEach(w => w.classList.add("hidden"));
+  cherries.forEach(c => { c.placed = false; delete c.pt; c.g.style.transition = "none"; c.g.style.transform = ""; c.parent.appendChild(c.g); });
+  wornCount = 0; placedCount = 0;
+  loadStep(0);
+};
+
+loadStep(0);
+</script>
+</body>
+</html>
