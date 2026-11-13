@@ -1,0 +1,426 @@
+{
+  "$schema": "math-app-curriculum-v1",
+  "source": "docs/108課綱規格書_全學年視覺教具對照表.md (V3 權威版) + 國家教育研究院《十二年國教數學領域課程手冊》官方條目查證",
+  "note": "嚴格對齊教育部《108 課綱數學領域課程手冊》官方代碼。status: ready=已就緒可做題 / upcoming=即將開放。N-1-1 為全專案第一個已驗真落地單元（人類三端盲審通過）。",
+  "official_code_audit": "G3 除法直式依官方手冊校定為 N-3-5；G5 因數與倍數校定為 N-5-3（N-5-1 官方為十進位位值系統，N-6-1 質數條目之先備即 N-5-3）；G6 依官方 N-6-1 質數與質因數分解、N-6-2 公因數與公倍數。",
+  "pending_note": "G2~G6 為藍圖條目，其餘未列條目待逐條查證官方原文後補入（SSOT 禁止灌假條目）。",
+  "grades": [
+    {
+      "grade": 1,
+      "label": "一年級",
+      "stage": "第一學習階段",
+      "theme": "🌱 數的萌芽",
+      "units": [
+        {
+          "code": "N-1-1",
+          "name": "10以內的數與比多少、序數",
+          "official_core": "數數、一對一點數、序數與基數、0的概念",
+          "visual_aid": "魚缸數數、課桌鉛筆、派對一對一配對、水果排一列圈圈看",
+          "common_trap": "序數起點搞錯方向（從右數第4 vs 從左數第2）；「第5顆」只圈一顆、「前面8顆」要圈一串。",
+          "status": "ready",
+          "unit_data": "data/units/G1/N-1-1.json",
+          "human_verified": true
+        },
+        {
+          "code": "N-1-2",
+          "name": "10以內的加減與比多少",
+          "official_core": "合成、分解、心算加減、一對一配對比多少",
+          "visual_aid": "雙色十格陣 (Ten Frame)、五五聚合圓點",
+          "common_trap": "倒數不熟，減法直接看著答案猜數字。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_n12_diff_compare.json"
+        },
+        {
+          "code": "N-1-3",
+          "name": "基本加減法（湊十、拆十）",
+          "official_core": "湊十法 (Make 10)、拆十法",
+          "visual_aid": "荷葉跳步數線、雙色吸鐵拆合動畫",
+          "common_trap": "湊十時忘記扣除已被拿走的部分。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_n13_make_ten.json"
+        },
+        {
+          "code": "N-1-4",
+          "name": "錢幣（1元、5元、10元、50元、100元）",
+          "official_core": "數錢、換錢、找錢（操作活動為主）",
+          "visual_aid": "店鋪買賣情境、錢幣等值交換",
+          "common_trap": "50元與5元、10元與1元的幣值大小視覺混淆。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_n14_solve_problem.json"
+        },
+        {
+          "code": "N-1-5",
+          "name": "長度（同 S-1-1，直接與間接比較）",
+          "official_core": "直接比較、間接比較（含個別單位）",
+          "visual_aid": "直尺對齊、起點對起點比長短",
+          "common_trap": "兩物起點沒對齊就比長短。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_n15_length_compare.json"
+        },
+        {
+          "code": "S-1-1",
+          "name": "直線曲線與平面形體、長短比較",
+          "official_core": "認識正方形、長方形、三角形、圓形；直線與曲線",
+          "visual_aid": "觸控等角積木、邊與頂點高亮標籤",
+          "common_trap": "將非水平放置的正方形誤認為菱形或非正方形。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_s11_shape_identify.json"
+        },
+        {
+          "code": "S-1-2",
+          "name": "立體形體（滾動、堆疊、平平的面）",
+          "official_core": "球、柱、錐、箱；可滾動與可堆疊之辨識",
+          "visual_aid": "物理堆疊台、滾動軌道",
+          "common_trap": "以為球也能堆疊；忽略圓柱有平平的面。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_s12_stack_roll.json"
+        },
+        {
+          "code": "R-1-1",
+          "name": "相等關係與平衡天平",
+          "official_core": "等量與平衡、一邊加減另一邊同步",
+          "visual_aid": "力矩平衡天平",
+          "common_trap": "只看物品數量、不看重量關係。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_r11_balance_equal.json"
+        },
+        {
+          "code": "D-1-1",
+          "name": "資料分類與整理",
+          "official_core": "依屬性分類、簡單對應與計數",
+          "visual_aid": "資料分類工作台",
+          "common_trap": "分類標準中途變換，導致重複或遺漏。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g1_d11_data_sort.json"
+        }
+      ]
+    },
+    {
+      "grade": 2,
+      "label": "二年級",
+      "stage": "第一學習階段",
+      "theme": "🌿 位值與乘法",
+      "units": [
+        {
+          "code": "N-2-1",
+          "name": "1000以內的數",
+          "official_core": "三位數、百位位值",
+          "visual_aid": "百格板 (100)、橘色十條、白色積木合成分解",
+          "common_trap": "遇到「中間有 0」的大數讀寫錯誤（如 305 寫成 35）。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_n21_place_value_1000.json"
+        },
+        {
+          "code": "N-2-2",
+          "name": "加減算式與直式計算",
+          "official_core": "兩位數直式、二次進位、一次退位",
+          "visual_aid": "位值格線表（個十位虛線隔開）、借退位小字標記",
+          "common_trap": "個位不夠減時用減數反減被減數（如 52-28 算成 8-2=6）。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_n22_vertical_math.json"
+        },
+        {
+          "code": "N-2-6",
+          "name": "乘法意義",
+          "official_core": "連加轉化為「倍」、單位量與單位數",
+          "visual_aid": "雞蛋盒矩陣陣列 (Array Model)、同心分組圈",
+          "common_trap": "混淆「被乘數」與「乘數」的單位（3顆×4盒 vs 4盒×3顆）。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_n26_multiplication.json"
+        },
+        {
+          "code": "N-2-7",
+          "name": "九九乘法",
+          "official_core": "乘法九九表、乘法交換律",
+          "visual_aid": "九九乘法階梯跳步數線、旋轉長方陣",
+          "common_trap": "6×7 與 7×6 誤認不同結果；7×8 記錯成 54。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_n27_multiplication_formula.json"
+        },
+        {
+          "code": "N-2-10",
+          "name": "從平分活動認識單位分數（二分之一、四分之一）",
+          "official_core": "平分、單位分數語言",
+          "visual_aid": "分數條、披薩等分盤",
+          "common_trap": "平分誤認為任意切割（分母意義未建立）。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-2-11",
+          "name": "長度：公尺與公分",
+          "official_core": "公分、公尺與其換算",
+          "visual_aid": "公尺量尺",
+          "common_trap": "公尺與公分單位混用。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_n211_meter_length.json"
+        },
+        {
+          "code": "N-2-12",
+          "name": "重量：公斤與公克",
+          "official_core": "公斤、公克、秤面報讀",
+          "visual_aid": "重量平衡秤",
+          "common_trap": "以為大的東西一定比較重。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_n212_weight_mass.json"
+        },
+        {
+          "code": "N-2-13",
+          "name": "時間：從鐘面報讀幾時幾分",
+          "official_core": "鐘面、幾時幾分",
+          "visual_aid": "動態時鐘",
+          "common_trap": "分針格數與5的倍數對應不熟。",
+          "status": "upcoming"
+        },
+        {
+          "code": "S-2-1",
+          "name": "幾何形體與角",
+          "official_core": "邊、角、頂點、直角",
+          "visual_aid": "動態夾角展開扇、直角三角形比對角規",
+          "common_trap": "認為邊長越長、角就越大（混淆邊長與角度）。",
+          "status": "upcoming",
+          "data": "data/curriculum_v3/g2_s21_shapes_angles.json"
+        },
+        {
+          "code": "R-2-1",
+          "name": "大小關係（>、=、<）",
+          "official_core": "符號意義、大小比較由高位比起",
+          "visual_aid": "比較鱷魚嘴",
+          "common_trap": "比較多位數時從個位比起。",
+          "status": "upcoming"
+        }
+      ]
+    },
+    {
+      "grade": 3,
+      "label": "三年級",
+      "stage": "第二學習階段",
+      "theme": "🌳 萬以內的運算",
+      "units": [
+        {
+          "code": "N-3-1",
+          "name": "一萬以內的數",
+          "official_core": "四位數、千位位值",
+          "visual_aid": "位值積木（千）",
+          "common_trap": "9999 接 10000 的過千數數錯誤。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-3-2",
+          "name": "加減直式計算",
+          "official_core": "三位數加減、二次進位、兩次退位",
+          "visual_aid": "三位數格線直式、連續退位借位標註",
+          "common_trap": "被減數十位為 0 且個位不夠減時的「跨位借位」錯誤。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-3-3",
+          "name": "乘以一位數",
+          "official_core": "二三位數乘一位數直式",
+          "visual_aid": "分層部分積 (Partial Products) 位值展開圖",
+          "common_trap": "漏加進位的小數字；多位數乘法的位值錯位。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-3-5",
+          "name": "除以一位數",
+          "official_core": "分裝與平分、商與餘數、長直式",
+          "visual_aid": "長除法階梯（商、相乘、相減、落位 Bring Down）",
+          "common_trap": "餘數大於或等於除數（未除盡）；商漏寫 0。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-3-9",
+          "name": "簡單同分母分數",
+          "official_core": "連續量/離散量等分、同分母加減",
+          "visual_aid": "長條等分尺、等分圓餅圖形",
+          "common_trap": "分子加分子、分母加分母（如 1/4 + 2/4 = 3/8）。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-3-17",
+          "name": "日、時、分、秒的換算與時間加減",
+          "official_core": "時間單位換算、時間加減",
+          "visual_aid": "時間軸",
+          "common_trap": "60進位與100進位混淆。",
+          "status": "upcoming"
+        },
+        {
+          "code": "R-3-1",
+          "name": "乘法與除法的關係（乘除互逆）",
+          "official_core": "乘除互逆、驗算與解題",
+          "visual_aid": "因數分解樹、互逆箭頭",
+          "common_trap": "驗算時忘記用互逆運算。",
+          "status": "upcoming"
+        }
+      ]
+    },
+    {
+      "grade": 4,
+      "label": "四年級",
+      "stage": "第二學習階段",
+      "theme": "🏔️ 大數與分數",
+      "units": [
+        {
+          "code": "N-4-1",
+          "name": "一億以內的數",
+          "official_core": "大數十進位、四位一圈（萬、億）",
+          "visual_aid": "位值記數板（每 4 位顏色分區分組）",
+          "common_trap": "讀數時連續多個 0 只讀一個零的漏讀或多讀。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-4-2",
+          "name": "整數四則運算",
+          "official_core": "多位數乘除直式、先乘除後加減",
+          "visual_aid": "兩位數乘兩位數矩陣模型、估商試商階梯",
+          "common_trap": "乘數十位相乘時未在個位補 0 對齊。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-4-6",
+          "name": "等值分數與異分母初步",
+          "official_core": "等值分數、簡單異分母比較加減",
+          "visual_aid": "分數條等值對照",
+          "common_trap": "等值分數概念未建立就做異分母加減。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-4-8",
+          "name": "數線與分數、小數",
+          "official_core": "整數、分數、小數在數線上的一體認識",
+          "visual_aid": "標記數線",
+          "common_trap": "分數與小數在數線上的位置對應錯誤。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-4-9",
+          "name": "長度：公里與單位換算",
+          "official_core": "公里、其他長度單位的換算與計算",
+          "visual_aid": "長度單位階梯",
+          "common_trap": "公里↔公尺的進率記錯。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-4-13",
+          "name": "跨時跨午跨日與 24 小時制的時間問題",
+          "official_core": "24小時制、跨日計算",
+          "visual_aid": "24小時時間軸",
+          "common_trap": "跨午、跨日加減忘記進位或借位。",
+          "status": "upcoming"
+        },
+        {
+          "code": "S-4-2",
+          "name": "周長與面積",
+          "official_core": "長方形/正方形周長與面積公式",
+          "visual_aid": "周長拉直一維線段 vs 面積二維平方公分網格",
+          "common_trap": "周長與面積混淆（問圍籬長度卻去算長×寬）。",
+          "status": "upcoming"
+        }
+      ]
+    },
+    {
+      "grade": 5,
+      "label": "五年級",
+      "stage": "第三學習階段",
+      "theme": "🔭 位值系統與分數通分",
+      "units": [
+        {
+          "code": "N-5-1",
+          "name": "十進位的位值系統（兆位至千分位）",
+          "official_core": "整合整數與小數、乘以十/除以十延伸",
+          "visual_aid": "位值延伸表",
+          "common_trap": "小數點左右移位方向搞反。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-5-3",
+          "name": "因數與倍數",
+          "official_core": "因數、公因數、質數認識",
+          "visual_aid": "矩形因數拼圖陣列、倍數跳步光點數線",
+          "common_trap": "漏找因數（特別是 1 和本身）；1 誤認為質數。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-5-4",
+          "name": "異分母分數加減",
+          "official_core": "約分、擴分、通分",
+          "visual_aid": "二維矩陣橫縱雙向切割通分動畫",
+          "common_trap": "異分母未通分直接相加（如 1/2 + 1/3 = 2/5）。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-5-7",
+          "name": "分數乘法",
+          "official_core": "整數乘分數、分數乘分數",
+          "visual_aid": "面積重疊交集模型 (Area Model)",
+          "common_trap": "乘法誤用通分；越乘越大思維慣性（分數乘小於1應變小）。",
+          "status": "upcoming"
+        },
+        {
+          "code": "S-5-6",
+          "name": "正方體長方體面與面的平行與垂直",
+          "official_core": "展開圖、面與面的關係",
+          "visual_aid": "正方體展開圖動畫",
+          "common_trap": "展開圖摺回時相對面判斷錯誤。",
+          "status": "upcoming"
+        },
+        {
+          "code": "S-5-1",
+          "name": "三角形與平行四邊形面積",
+          "official_core": "底高垂直關係、底×高、底×高÷2",
+          "visual_aid": "高線垂足動態投影、割補旋轉拼成長方形",
+          "common_trap": "找不到對應的「底與高」（用斜邊當高）。",
+          "status": "upcoming"
+        }
+      ]
+    },
+    {
+      "grade": 6,
+      "label": "六年級",
+      "stage": "第三學習階段",
+      "theme": "🚀 質數與國中銜接",
+      "units": [
+        {
+          "code": "N-6-1",
+          "name": "20 以內的質數和質因數分解",
+          "official_core": "質數與合數、2/3/5 判別法、短除法分解",
+          "visual_aid": "因數分解樹、短除法階梯",
+          "common_trap": "28=4×7 誤認為質因數分解（未分解到底）。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-6-2",
+          "name": "公因數與公倍數",
+          "official_core": "最大公因數、最小公倍數",
+          "visual_aid": "短除法 I 型與 L 型",
+          "common_trap": "GCD 與 LCM 混用。",
+          "status": "upcoming"
+        },
+        {
+          "code": "N-6-3",
+          "name": "分數除法",
+          "official_core": "包含除、等分除、除以分數等於乘倒數",
+          "visual_aid": "雙重數線 (Double Number Line)、單位量縮放尺",
+          "common_trap": "除數倒數忘記顛倒，把被除數也顛倒。",
+          "status": "upcoming"
+        },
+        {
+          "code": "S-6-3",
+          "name": "圓面積與扇形",
+          "official_core": "圓周率 3.14、圓面積公式 r×r×π",
+          "visual_aid": "圓形無窮細分扇形切片、拉直拼成平行四邊形",
+          "common_trap": "誤用直徑計算面積（忘記先將直徑除以 2 得半徑）。",
+          "status": "upcoming"
+        },
+        {
+          "code": "R-6-4",
+          "name": "速度與行程問題",
+          "official_core": "距離、速度、時間三者關係，追趕與相遇",
+          "visual_aid": "動態雙向火車/跑者數線、相對速度向量圖",
+          "common_trap": "平均速度直接用兩個速度相加除以 2（忽略時間權重）。",
+          "status": "upcoming"
+        }
+      ]
+    }
+  ]
+}
