@@ -64,7 +64,13 @@
             cursor: pointer;
         }
         .hint-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
-        .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 12px; }
+        .opt-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-width: 320px;
+            margin: 0 auto 12px;
+        }
         .opt-btn {
             min-height: 44px;
             background: #ffffff;
@@ -74,7 +80,12 @@
             font-weight: 700;
             cursor: pointer;
             color: #334155;
-            padding: 8px 14px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            white-space: nowrap;
         }
         .opt-btn.active { background: #2563eb; border-color: #2563eb; color: #ffffff; }
         .footer-action { display: flex; justify-content: center; margin-top: 8px; }
@@ -107,8 +118,8 @@
             .tally-line { font-size: 13px; min-height: 2.4em; margin-bottom: 6px; }
             .action-row { margin-bottom: 6px; gap: 6px; }
             .hint-btn, .reset-btn { min-height: 36px; padding: 6px 14px; font-size: 13px; border-radius: 10px; }
-            .opt-group { gap: 6px; margin-bottom: 6px; }
-            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; max-width: 280px; }
+            .opt-btn { min-height: 36px; padding: 6px 8px; font-size: 13px; }
             .footer-action { margin-top: 4px; }
             .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
             .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
