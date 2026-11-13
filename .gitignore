@@ -3,3 +3,4 @@ _scratch/
 .DS_Store
 Thumbs.db
 reports/*.png
+.wrangler/
