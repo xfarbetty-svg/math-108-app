@@ -185,6 +185,22 @@
     to{ transform:translate(var(--dx),var(--dy)) scale(1.25) rotate(var(--rot)); opacity:0; }
   }
 
+  @media (max-width: 640px) {
+    body { min-height: auto; padding: 4px 6px; }
+    #app { padding: 4px; max-width: 480px; }
+    header { padding: 6px 10px; border-radius: 12px; border-width: 2px; }
+    header h1 { font-size: 14.5px; }
+    header .sub { display: none; }
+    .tabs { margin-top: 4px; gap: 4px; }
+    .tab { padding: 3px 8px; font-size: 11px; border-radius: 8px; }
+    .q-banner { margin: 6px 0 0; padding: 6px 10px; font-size: 13.5px; }
+    .board { margin-top: 6px; padding: 6px 4px; border-radius: 12px; }
+    .fruit-row { padding: 20px 4px 8px; }
+    .hint { margin: 6px 0 0; padding: 6px 8px; font-size: 12px; }
+    .controls { margin-top: 6px; gap: 6px; }
+    .btn { min-height: 36px; padding: 6px 16px; font-size: 13.5px; border-radius: 10px; }
+    .feedback { margin-top: 6px; padding: 6px 10px; font-size: 12.5px; border-radius: 10px; }
+  }
   footer{ text-align:center; margin-top:14px; font-size:11px; color:#b9a58a; }
 </style>
 </head>

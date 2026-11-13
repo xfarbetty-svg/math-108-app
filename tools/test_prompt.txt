@@ -1,0 +1,1 @@
+請把 app/components/fish_tank_demo.html 中的 .container 的 padding 改為 8px 12px

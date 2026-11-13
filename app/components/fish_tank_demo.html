@@ -45,7 +45,21 @@
             margin-bottom: 24px;
         }
         @media (max-width: 640px) {
-            .tanks-grid { grid-template-columns: 1fr; }
+            body { padding: 4px 6px; }
+            .container { padding: 8px 10px; max-width: 480px; }
+            .stem { font-size: 14.5px; margin-bottom: 8px; line-height: 1.35; }
+            .tanks-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+            .tank-card { padding: 6px 4px; border-radius: 10px; }
+            .tank-sublabel { font-size: 13px; margin-bottom: 4px; }
+            .tank-box { min-height: 95px; padding: 4px; gap: 4px; }
+            .fish-item svg { width: 34px !important; height: 24px !important; }
+            .answer-row { margin-top: 6px; gap: 4px; }
+            .answer-display { font-size: 13px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; }
+            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+            .footer-action { margin-top: 6px; }
+            .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
+            .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
         }
         .tank-card {
             background: #ffffff;

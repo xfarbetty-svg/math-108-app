@@ -108,6 +108,20 @@
         }
         .result-banner.success { display: block; background: #dcfce7; color: #166534; }
         .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+        @media (max-width: 640px) {
+            body { padding: 4px 6px; }
+            .container { padding: 8px 10px; max-width: 480px; }
+            .stem { font-size: 14.5px; margin-bottom: 8px; line-height: 1.35; }
+            .playground { margin-bottom: 6px; padding: 4px; border-radius: 12px; }
+            .pair-note { font-size: 13px; min-height: 1.2em; margin-bottom: 6px; }
+            .action-row { margin-bottom: 6px; gap: 6px; }
+            .pair-btn, .reset-btn { min-height: 36px; padding: 6px 14px; font-size: 13px; border-radius: 10px; }
+            .opt-group { gap: 6px; margin-bottom: 6px; }
+            .opt-btn { min-height: 36px; padding: 6px 12px; font-size: 13px; }
+            .footer-action { margin-top: 6px; }
+            .check-btn { min-height: 38px; padding: 6px 28px; font-size: 14px; }
+            .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>

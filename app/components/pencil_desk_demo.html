@@ -108,10 +108,24 @@
     .confetti { display: inline-block; animation: drop 1s ease; }
     @keyframes drop { from { transform: translateY(-18px) scale(1.6); opacity: 0; } }
 
+    @media (max-width: 640px) {
+        body { padding: 4px 6px; min-height: auto; }
+        .app { gap: 6px; max-width: 480px; }
+        .title { font-size: 14.5px; }
+        .desk { padding: 4px; border-radius: 12px; border-width: 2px; }
+        .stepbar { gap: 4px; }
+        .step-chip { min-height: 32px; font-size: 12px; border-radius: 8px; }
+        .qcard { padding: 8px 10px; gap: 6px; border-radius: 12px; }
+        .qtext { font-size: 13.5px; line-height: 1.35; }
+        .qhint { font-size: 11px; }
+        .controls { gap: 6px; }
+        .btn { min-height: 36px; min-width: 50px; padding: 6px 12px; font-size: 13px; border-radius: 10px; }
+        .feedback { min-height: 36px; padding: 6px 10px; font-size: 12.5px; border-radius: 10px; }
+    }
     @media (max-width: 420px) {
-        .qtext { font-size: 1.02rem; }
-        .btn { min-width: 64px; padding: 8px 12px; font-size: 1rem; }
-        .step-chip { font-size: 0.85rem; }
+        .qtext { font-size: 13px; }
+        .btn { min-width: 48px; padding: 6px 10px; font-size: 12px; }
+        .step-chip { font-size: 11px; }
     }
 </style>
 </head>
