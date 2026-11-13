@@ -1,170 +1,234 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>028-1 國小數學APP｜108 課綱 G1~G6 主入口</title>
-  <style>
-    /* ===== 日系手繪溫暖童趣 ===== */
-    :root {
-      --cream: #FBF6EE;
-      --paper: #FFFDF8;
-      --ink: #4A3F35;
-      --ink-soft: #8A7B6C;
-      --green: #7BC47F;
-      --green-deep: #4E9B54;
-      --gold: #F5C451;
-      --gold-deep: #E0A62E;
-      --pink: #F6B8B8;
-      --blue: #9EC9E8;
-      --line: #4A3F35;
-      --shadow: 0 4px 0 rgba(74, 63, 53, .18);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body {
-      background: var(--cream);
-      color: var(--ink);
-      font-family: "Yuanti TC", "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
-      min-height: 100vh;
-      padding: 14px 12px 28px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #app { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 14px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>小數學冒險 · 108 課綱一到六年級</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --mint: #7bc9b2;
+  --sky: #7db8e8;
+  --lemon: #ffd166;
+  --lilac: #b39ddb;
+  --line: #f0e7da;
+  --shadow: 0 10px 30px rgba(120, 90, 40, 0.08);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { height: 100%; }
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 8% 4%, rgba(255, 209, 102, 0.18), transparent 34%),
+    radial-gradient(circle at 94% 90%, rgba(123, 200, 178, 0.16), transparent 36%),
+    var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding-bottom: 40px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 
-    /* ===== Hero ===== */
-    .hero { text-align: center; padding: 10px 0 2px; }
-    .hero-emoji { font-size: 42px; }
-    .hero h1 { font-size: 22px; letter-spacing: 1px; }
-    .hero-sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+/* ===== 頂部導航列 ===== */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255, 249, 240, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner { max-width: 960px; margin: 0 auto; padding: 10px 16px 12px; }
+.brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.brand h1 { font-size: 17px; font-weight: 800; letter-spacing: 0.5px; }
+.brand .sub { font-size: 11px; color: var(--ink-soft); }
+.grade-nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.grade-nav::-webkit-scrollbar { display: none; }
+.grade-btn {
+  flex: 0 0 auto; padding: 9px 18px; border-radius: 999px;
+  background: var(--card); border: 2px solid var(--line);
+  font-size: 14px; font-weight: 700; color: var(--ink-soft);
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s, color 0.15s;
+}
+.grade-btn:active { transform: scale(0.94); }
+.grade-btn.active {
+  color: #fff; border-color: transparent;
+  background: linear-gradient(135deg, var(--coral), var(--coral-deep));
+  box-shadow: 0 6px 14px rgba(244, 105, 75, 0.3);
+}
 
-    /* ===== 年級藥丸導航 ===== */
-    .grade-nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-    .pill {
-      border: 2.5px solid var(--line); border-radius: 999px;
-      background: var(--paper); color: var(--ink);
-      font-size: 15px; font-weight: bold; font-family: inherit;
-      padding: 9px 16px; cursor: pointer;
-      box-shadow: var(--shadow); transition: transform .12s, background .12s;
-    }
-    .pill:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(74,63,53,.18); }
-    .pill-active { background: var(--gold); }
-    .pill-emoji { margin-right: 5px; }
+/* ===== 主內容 ===== */
+main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 
-    /* ===== 單元卡片 ===== */
-    .unit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-    .unit-card {
-      text-align: left; font-family: inherit; color: var(--ink);
-      border: 2.5px solid var(--line); border-radius: 18px;
-      background: var(--paper); padding: 16px; cursor: default;
-      box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
-    }
-    button.unit-card { cursor: pointer; transition: transform .12s; }
-    button.unit-card:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(74,63,53,.18); }
-    .unit-ready { background: linear-gradient(150deg, #FFFDF8 55%, #F3F9EE); border-color: var(--green-deep); border-width: 3px; }
-    .unit-locked { opacity: .82; }
-    .card-top { display: flex; justify-content: space-between; align-items: center; }
-    .code-badge {
-      font-size: 12px; font-weight: bold; letter-spacing: .5px;
-      border: 2px solid var(--ink); border-radius: 8px; padding: 2px 8px; background: #FFF;
-    }
-    .code-ready { background: var(--green); border-color: var(--green-deep); color: #fff; }
-    .badge { font-size: 11px; border-radius: 999px; padding: 3px 10px; font-weight: bold; }
-    .badge-ready { background: var(--gold); border: 2px solid var(--gold-deep); color: #6b4a00; }
-    .badge-upcoming { background: #EFEAE2; border: 2px dashed var(--ink-soft); color: var(--ink-soft); }
-    .card-name { font-size: 18px; font-weight: 900; }
-    .card-core, .card-visual { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
-    .card-cta { margin-top: 4px; font-size: 14px; font-weight: bold; color: var(--green-deep); }
-    .card-cta-muted { color: var(--ink-soft); font-weight: normal; }
+/* 年級首頁 */
+.grade-hero { margin-bottom: 18px; }
+.grade-hero .hero-card {
+  background: var(--card); border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow); border: 1px solid var(--line);
+}
+.hero-card .stage-tag { display: inline-block; font-size: 11px; color: var(--ink-soft); background: #f6f1e7; border-radius: 999px; padding: 3px 10px; margin-bottom: 8px; }
+.hero-card h2 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.hero-card p { font-size: 13px; color: var(--ink-soft); }
+.unit-list { display: grid; gap: 12px; grid-template-columns: 1fr; }
+.unit-card {
+  position: relative; text-align: left; width: 100%;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px 18px; box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.unit-card:active { transform: scale(0.98); }
+.unit-card.ready { border: 2px solid var(--coral); background: linear-gradient(135deg, #fff 0%, #fff3ec 100%); }
+.unit-card.ready:active { transform: scale(0.97); box-shadow: 0 14px 30px rgba(244, 105, 75, 0.18); }
+.unit-card.locked { opacity: 0.65; box-shadow: none; cursor: default; }
+.unit-card .code {
+  display: inline-block; font-size: 11px; font-weight: 800; color: var(--coral-deep);
+  background: #ffe8de; border-radius: 8px; padding: 2px 8px; margin-bottom: 6px;
+}
+.unit-card.locked .code { color: var(--ink-soft); background: #f4efe6; }
+.unit-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 4px; }
+.unit-card .hint { font-size: 12px; color: var(--ink-soft); }
+.badge-ready {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 11px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--coral), var(--coral-deep));
+  border-radius: 999px; padding: 4px 10px;
+  box-shadow: 0 4px 10px rgba(244, 105, 75, 0.3);
+}
+.badge-upcoming {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 11px; font-weight: 700; color: var(--ink-soft);
+  background: #f4efe6; border-radius: 999px; padding: 4px 10px;
+}
+.badge-plan {
+  display: inline-block; margin-top: 8px;
+  font-size: 11px; font-weight: 700; color: var(--lilac);
+  background: #f1ecf9; border-radius: 999px; padding: 4px 10px;
+}
+.start-arrow { position: absolute; bottom: 14px; right: 16px; font-size: 15px; color: var(--coral-deep); font-weight: 800; }
 
-    /* ===== 測驗舞台：頂部 ===== */
-    .stage-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .btn-back {
-      border: 2.5px solid var(--line); border-radius: 12px; background: var(--paper);
-      font-family: inherit; font-weight: bold; font-size: 13px; padding: 8px 12px; cursor: pointer;
-      box-shadow: var(--shadow);
-    }
-    .btn-back:active { transform: translateY(2px); box-shadow: none; }
-    .stage-title { display: flex; align-items: center; gap: 8px; }
-    .stage-title h2 { font-size: 18px; }
-    .exam-source {
-      font-size: 11.5px; color: var(--ink-soft);
-      border: 2px dashed var(--ink-soft); border-radius: 10px; padding: 6px 10px; background: #FFF9EE;
-    }
+/* 籌備中年級藍圖 */
+.blueprint {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px;
+}
+.blueprint .plan-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--lilac), #9575cd);
+  border-radius: 999px; padding: 5px 14px; margin-bottom: 12px;
+}
+.blueprint h2 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+.blueprint .desc { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+.topic-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.topic-chip {
+  background: #faf6ee; border: 1px dashed #e3d9c6; border-radius: 12px;
+  padding: 10px 12px; font-size: 12px; color: var(--ink-soft);
+}
+.topic-chip b { display: block; font-size: 12px; color: var(--ink); margin-bottom: 2px; }
+.pending-note { margin-top: 14px; font-size: 11px; color: var(--ink-soft); line-height: 1.6; }
 
-    /* ===== 題號分頁 ===== */
-    .q-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
-    .q-tab {
-      flex: 0 0 auto; border: 2.5px solid var(--line); border-radius: 14px;
-      background: var(--paper); font-family: inherit; cursor: pointer;
-      padding: 8px 14px; display: flex; flex-direction: column; gap: 2px; text-align: center;
-      box-shadow: var(--shadow);
-    }
-    .q-tab-num { font-size: 13px; font-weight: 900; }
-    .q-tab-title { font-size: 11px; color: var(--ink-soft); white-space: nowrap; }
-    .q-tab-active { background: var(--green); border-color: var(--green-deep); }
-    .q-tab-active .q-tab-title { color: #EAF7EA; }
-    .q-tab-visited:not(.q-tab-active) { background: #FDF3D7; }
+/* ===== 單元測驗舞台 ===== */
+.stage-wrap { display: none; }
+.stage-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.btn-back {
+  font-size: 13px; font-weight: 700; color: var(--coral-deep);
+  background: var(--card); border: 2px solid var(--line);
+  border-radius: 999px; padding: 8px 14px;
+}
+.progress-box { text-align: right; }
+.progress-num { font-size: 15px; font-weight: 800; color: var(--coral-deep); }
+.progress-source { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+.dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: #eadfcc; transition: all 0.2s; }
+.dot.on { background: var(--coral); transform: scale(1.25); }
+.dot.done { background: var(--mint); }
+.stage-title { text-align: center; font-size: 17px; font-weight: 800; margin-bottom: 12px; }
+.stage-frame {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); border: 1px solid var(--line);
+  overflow: hidden;
+}
+.stage-frame iframe { display: block; width: 100%; border: 0; }
+.stage-nav { display: flex; gap: 10px; margin-top: 16px; }
+.stage-nav button {
+  flex: 1; min-height: 52px; border-radius: 16px;
+  font-size: 15px; font-weight: 800;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.stage-nav button:active { transform: scale(0.96); }
+.btn-prev { background: var(--card); color: var(--ink-soft); border: 2px solid var(--line); }
+.btn-next { background: linear-gradient(135deg, var(--coral), var(--coral-deep)); color: #fff; box-shadow: 0 8px 18px rgba(244, 105, 75, 0.3); }
+.btn-finish { background: linear-gradient(135deg, var(--mint), #4fa88e); color: #fff; box-shadow: 0 8px 18px rgba(79, 168, 142, 0.3); flex: 1.4 !important; }
+.stage-nav button:disabled { opacity: 0.4; }
 
-    /* ===== iframe 舞台 ===== */
-    .stage-frame {
-      border: 3px solid var(--line); border-radius: 20px; overflow: hidden;
-      background: var(--paper); box-shadow: var(--shadow);
-    }
-    .demo-frame { display: block; width: 100%; height: 640px; border: 0; background: #fff; }
-
-    /* ===== 底部導航 ===== */
-    .stage-bottom { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .btn-nav {
-      border: 2.5px solid var(--line); border-radius: 999px; background: var(--paper);
-      font-family: inherit; font-size: 15px; font-weight: bold; padding: 11px 20px; cursor: pointer;
-      box-shadow: var(--shadow);
-    }
-    .btn-nav:active { transform: translateY(2px); box-shadow: none; }
-    .btn-disabled { opacity: .38; pointer-events: none; }
-    .btn-submit { background: var(--gold); border-color: var(--gold-deep); }
-
-    /* ===== 結算彈窗 ===== */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(74, 63, 53, .45);
-      display: flex; align-items: center; justify-content: center; z-index: 99; padding: 16px;
-    }
-    .result-card {
-      background: var(--paper); border: 3px solid var(--line); border-radius: 22px;
-      max-width: 360px; width: 100%; padding: 22px; text-align: center; box-shadow: 0 8px 0 rgba(74,63,53,.2);
-    }
-    .result-emoji { font-size: 44px; }
-    .result-card h3 { margin: 6px 0 2px; }
-    .result-unit { font-size: 13px; color: var(--ink-soft); }
-    .result-count { font-size: 15px; font-weight: bold; margin: 8px 0; }
-    .result-list { list-style: none; text-align: left; margin: 8px 0; display: flex; flex-direction: column; gap: 5px; font-size: 13.5px; }
-    .res-miss { color: var(--ink-soft); }
-    .result-note { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 12px; }
-    .btn-close { width: 100%; }
-
-    /* ===== 三端自適應 ===== */
-    @media (max-width: 767px) {           /* 手機 390px 基準 */
-      body { padding: 10px 8px 22px; }
-      .hero h1 { font-size: 19px; }
-      .unit-grid { grid-template-columns: 1fr; }
-      .stage-title h2 { font-size: 15px; }
-      .exam-source { font-size: 10.5px; }
-      .demo-frame { height: 580px; }
-      .btn-nav { font-size: 14px; padding: 10px 14px; }
-      .stage-bottom { position: sticky; bottom: 0; }
-    }
-    @media (min-width: 768px) {           /* 平板 */
-      .demo-frame { height: 640px; }
-    }
-    @media (min-width: 960px) {           /* 電腦寬螢幕 */
-      .demo-frame { height: 680px; }
-      .hero h1 { font-size: 24px; }
-    }
-  </style>
+/* ===== 交卷結算 ===== */
+.result-wrap { display: none; }
+.result-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px;
+}
+.result-card h2 { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 4px; }
+.result-card .rsub { text-align: center; font-size: 12px; color: var(--ink-soft); margin-bottom: 16px; }
+.result-item { border-top: 1px dashed var(--line); padding: 14px 2px; }
+.result-item .rtitle { font-weight: 800; font-size: 14.5px; display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.result-item .rsrc { font-size: 11px; color: var(--ink-soft); font-weight: 400; }
+.result-item .rlabel { font-size: 12px; font-weight: 800; color: var(--mint); margin: 6px 0 2px; }
+.result-item .rexp { font-size: 13px; line-height: 1.7; color: var(--ink); }
+.result-item .rdemo { font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+.result-actions { display: flex; gap: 10px; }
+.result-actions button { flex: 1; min-height: 52px; border-radius: 16px; font-size: 15px; font-weight: 800; }
+.note-offline {
+  display: none; margin: 10px 0 0; padding: 10px 14px; border-radius: 12px;
+  background: #fff3cd; color: #8a6d1a; font-size: 12px; line-height: 1.6;
+}
+@media (min-width: 700px) {
+  .unit-list { grid-template-columns: 1fr 1fr; }
+  .stage-title { font-size: 19px; }
+  .brand h1 { font-size: 19px; }
+}
+</style>
 </head>
 <body>
-  <div id="app"></div>
-  <script src="shell.js"></script>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <h1>🎨 小數學冒險</h1>
+      <span class="sub">108 課綱 · 一到六年級 · 純離線真題</span>
+    </div>
+    <nav class="grade-nav" id="gradeNav" aria-label="年級導航"></nav>
+  </div>
+</header>
+
+<main>
+  <section id="gradeView"></section>
+
+  <section id="stageView" class="stage-wrap">
+    <div class="stage-head">
+      <button class="btn-back" id="btnBack">← 回單元列表</button>
+      <div class="progress-box">
+        <div class="progress-num" id="progressNum"></div>
+        <div class="progress-source" id="progressSource"></div>
+      </div>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="stage-title" id="stageTitle"></div>
+    <div class="stage-frame"><iframe id="stageFrame" title="具象考題教具"></iframe></div>
+    <div class="stage-nav">
+      <button class="btn-prev" id="btnPrev">上一題</button>
+      <button class="btn-next" id="btnNext">下一題 →</button>
+      <button class="btn-finish" id="btnFinish">交卷結算</button>
+    </div>
+  </section>
+
+  <section id="resultView" class="result-wrap"></section>
+
+  <div class="note-offline" id="offlineNote"></div>
+</main>
+
+<script src="shell.js"></script>
 </body>
 </html>
