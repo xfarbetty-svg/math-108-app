@@ -1,0 +1,236 @@
+# -*- coding: utf-8 -*-
+import json
+import re
+
+# 1. 更新 5 題真實資料庫的 props 與 labels，徹底廢除「大數/小數」
+real_questions = [
+    {
+        "id": "REAL-NEIHU-01",
+        "unit": "N-1-3",
+        "unit_title": "加減退位借十",
+        "source": "臺北市內湖國小 114-2 期末 七、1",
+        "stem": "公車裡原本有 21 個人，有 7 個人先下車，還有幾個人在車上？（試卷要求：先畫 ⑩ 和 ①，再用算式記下來）",
+        "choices": ["12 人", "13 人", "14 人", "15 人"],
+        "answer_index": 2,
+        "visual_engine": {
+            "type": "ten-frame-grid",
+            "props": {
+                "unmoved_tens": 1,
+                "unmoved_tens_label": "車上不動的 1 個 ⑩ (10人)",
+                "left_initial": 10,
+                "left_label": "借來拆開的 10人",
+                "right_initial": 1,
+                "right_label": "個位原有的 1人",
+                "take_away": 7,
+                "operation": "subtract",
+                "interactive": True
+            }
+        },
+        "explanation": {
+            "breakdown_tree": {
+                "step_1": "21 人是「2 個 ⑩」和「1 個 ①」，先留 1 個 ⑩ 在車上不動",
+                "step_2": "拿另 1 個 ⑩ 拆成 10 個 ①，先下車 7 人，剩下 3 人（10 － 7 ＝ 3）",
+                "step_3": "下車後剩下的 3 人，加上車上原本的 1 人是 4 人；再加回不動的 1 個 ⑩，車上共有 14 人（10 ＋ 4 ＝ 14）"
+            },
+            "formula": "21 - 7 = 14",
+            "trap_warning": "內湖真題算理：畫出 2 個 ⑩ 和 1 個 ①，1 個 ⑩ 不動，另 1 個 ⑩ 拿來扣 7 剩 3，3 加 1 得 4，合起來 14！"
+        }
+    },
+    {
+        "id": "REAL-NEIHU-02",
+        "unit": "N-1-3",
+        "unit_title": "加法進位湊整十",
+        "source": "臺北市內湖國小 114-2 期末 七、2",
+        "stem": "存錢筒裡原有 42 元，再放 8 元進去，存錢筒裡共有多少元？（試卷要求：先畫 ⑩ 和 ①，再用算式記下來）",
+        "choices": ["48 元", "49 元", "50 元", "52 元"],
+        "answer_index": 2,
+        "visual_engine": {
+            "type": "ten-frame-grid",
+            "props": {
+                "unmoved_tens": 4,
+                "unmoved_tens_label": "原本十位的 4 個 ⑩ (40元)",
+                "left_initial": 2,
+                "left_label": "原本的 2 元",
+                "right_initial": 8,
+                "right_label": "放進的 8 元",
+                "target": 10,
+                "operation": "add",
+                "interactive": True
+            }
+        },
+        "explanation": {
+            "breakdown_tree": {
+                "step_1": "42 元是「4 個 ⑩」和「2 個 ①」，十位的 4 個 ⑩ 先放著不動",
+                "step_2": "個位的 2 元和放進的 8 元剛好湊成 10 元（2 ＋ 8 ＝ 10），進位成 1 個新 ⑩",
+                "step_3": "原本的 4 個 ⑩ 加上新湊出的 1 個 ⑩，合起來是 5 個 ⑩，也就是 50 元（40 ＋ 10 ＝ 50）"
+            },
+            "formula": "42 + 8 = 50",
+            "trap_warning": "內湖真題算理：2 個 ① 和 8 個 ① 圈起來剛好湊滿一個新 ⑩，40 加 10 等於 50！"
+        }
+    },
+    {
+        "id": "REAL-ZHONGXIAO-01",
+        "unit": "N-1-3",
+        "unit_title": "基礎加法運算",
+        "source": "高雄市忠孝國小 114-1 期末 九、4",
+        "stem": "樹上原來有 6 隻鳥，又飛來 3 隻後，樹上共有幾隻鳥？",
+        "choices": ["7 隻", "8 隻", "9 隻", "10 隻"],
+        "answer_index": 2,
+        "visual_engine": {
+            "type": "ten-frame-grid",
+            "props": {
+                "unmoved_tens": 0,
+                "left_initial": 6,
+                "left_label": "原本 6 隻鳥",
+                "right_initial": 3,
+                "right_label": "又飛來 3 隻鳥",
+                "target": 9,
+                "operation": "add",
+                "interactive": True
+            }
+        },
+        "explanation": {
+            "breakdown_tree": {
+                "step_1": "樹上原本有 6 隻鳥（十格陣放 6 顆紅球）",
+                "step_2": "又飛來 3 隻鳥（十格陣放 3 顆藍球）",
+                "step_3": "兩邊合在一起：6 ＋ 3 ＝ 9 隻鳥（差 1 隻才滿十，絕不能畫成 10 隻！）"
+            },
+            "formula": "6 + 3 = 9",
+            "trap_warning": "忠孝真題算理：6 加 3 等於 9，十格陣只放 9 顆，空 1 格，切勿多畫！"
+        }
+    },
+    {
+        "id": "REAL-ZHONGXIAO-02",
+        "unit": "N-1-3",
+        "unit_title": "基礎加法倍數",
+        "source": "高雄市忠孝國小 114-1 期末 九、1",
+        "stem": "小明吃了 3 片披薩，小星吃了 3 片披薩，兩個人共吃了幾片披薩？",
+        "choices": ["5 片", "6 片", "7 片", "8 片"],
+        "answer_index": 1,
+        "visual_engine": {
+            "type": "ten-frame-grid",
+            "props": {
+                "unmoved_tens": 0,
+                "left_initial": 3,
+                "left_label": "小明吃 3 片",
+                "right_initial": 3,
+                "right_label": "小星吃 3 片",
+                "target": 6,
+                "operation": "add",
+                "interactive": True
+            }
+        },
+        "explanation": {
+            "breakdown_tree": {
+                "step_1": "小明吃了 3 片披薩（放 3 顆紅點）",
+                "step_2": "小星吃了 3 片披薩（放 3 顆藍點）",
+                "step_3": "合起來一共是 6 片披薩（3 ＋ 3 ＝ 6，畫面只有 6 顆，絕不是 10 顆！）"
+            },
+            "formula": "3 + 3 = 6",
+            "trap_warning": "忠孝真題算理：3 加 3 是 6，不是湊十題，畫面只有 6 片披薩！"
+        }
+    },
+    {
+        "id": "REAL-G1EXAM-01",
+        "unit": "N-1-3",
+        "unit_title": "加法進位湊整十",
+        "source": "國小一年級下學期評量 五、(2)",
+        "stem": "算算看：6 ＋ 14 ＝（ ）？（試卷要求：畫 ⑩ 和 ① 算算看）",
+        "choices": ["18", "19", "20", "21"],
+        "answer_index": 2,
+        "visual_engine": {
+            "type": "ten-frame-grid",
+            "props": {
+                "unmoved_tens": 1,
+                "unmoved_tens_label": "14 裡的 1 個 ⑩ (10)",
+                "left_initial": 6,
+                "left_label": "加數 6 (6 個 ①)",
+                "right_initial": 4,
+                "right_label": "14 的個位 4 (4 個 ①)",
+                "target": 10,
+                "operation": "add",
+                "interactive": True
+            }
+        },
+        "explanation": {
+            "breakdown_tree": {
+                "step_1": "試卷要求畫 ⑩ 和 ①：先畫出 6 個 ①，再畫 14（1 個 ⑩ 和 4 個 ①）",
+                "step_2": "個位的 6 個 ① 和 4 個 ① 剛好圈起來湊成 1 個新 ⑩（6 ＋ 4 ＝ 10）",
+                "step_3": "新湊出的 1 個 ⑩ 加上 14 原本的 1 個 ⑩，總共是 2 個 ⑩，也就是 20（10 ＋ 10 ＝ 20）"
+            },
+            "formula": "6 + 14 = 20",
+            "trap_warning": "真題算理：6 個 ① 和 4 個 ① 圈成一個新 ⑩，加回原本的 ⑩，答案是整整 20！"
+        }
+    }
+]
+
+with open('data/curriculum_v3/g1_n13_make_ten.json', 'w', encoding='utf-8') as f:
+    json.dump(real_questions, f, ensure_ascii=False, indent=2)
+
+print('1. JSON updated.')
+
+# 2. 更新 app/unit_n13.html
+with open('app/unit_n13.html', 'r', encoding='utf-8') as f:
+    html = f.read()
+
+# 替換 EMBEDDED_QUESTIONS
+real_str = json.dumps(real_questions, ensure_ascii=False, indent=2)
+html = re.sub(
+    r'const EMBEDDED_QUESTIONS = \[[\s\S]*?\];\s*var questions',
+    'const EMBEDDED_QUESTIONS = ' + real_str + ';\n    var questions',
+    html
+)
+
+# 替換標籤顯示邏輯：徹底刪除「大數/小數」，改用精準的題目標籤
+render_labels_old = """      if (isAdd) {
+        fL.setCount(p.left_initial);
+        fR.setCount(p.right_initial);
+        $('opSymbol').textContent = '＋';
+        $('labelLeft').textContent = '大數 ' + p.left_initial;
+        $('labelRight').textContent = '小數 ' + p.right_initial;
+        $('btnPlayDemo').textContent = '▶ 演示湊十飛補';
+      } else {
+        fL.setCount(p.left_initial);
+        fR.setCount(p.right_initial);
+        $('opSymbol').textContent = '－';
+        $('labelLeft').textContent = '整盒 ' + p.left_initial;
+        $('labelRight').textContent = '個位 ' + p.right_initial;
+        $('btnPlayDemo').textContent = '▶ 演示破十拆十';
+      }"""
+
+render_labels_new = """      if (isAdd) {
+        fL.setCount(p.left_initial);
+        fR.setCount(p.right_initial);
+        $('opSymbol').textContent = '＋';
+        $('labelLeft').textContent = p.left_label || (p.left_initial + '');
+        $('labelRight').textContent = p.right_label || (p.right_initial + '');
+        $('btnPlayDemo').textContent = (p.left_initial + p.right_initial >= 10) ? '▶ 演示湊十進位' : '▶ 演示合起來';
+      } else {
+        fL.setCount(p.left_initial);
+        fR.setCount(p.right_initial);
+        $('opSymbol').textContent = '－';
+        $('labelLeft').textContent = p.left_label || ('整盒 ' + p.left_initial);
+        $('labelRight').textContent = p.right_label || ('個位 ' + p.right_initial);
+        $('btnPlayDemo').textContent = '▶ 演示借十下車/拆十';
+      }"""
+
+if render_labels_old in html:
+    html = html.replace(render_labels_old, render_labels_new)
+    print('2. Render labels replaced cleanly.')
+else:
+    print('2. Warning: render_labels_old not found directly, performing regex replace...')
+    html = re.sub(
+        r"\$\('labelLeft'\)\.textContent = '大數 ' \+ p\.left_initial;\s*\$\('labelRight'\)\.textContent = '小數 ' \+ p\.right_initial;",
+        "$('labelLeft').textContent = p.left_label || (p.left_initial + '');\n        $('labelRight').textContent = p.right_label || (p.right_initial + '');",
+        html
+    )
+    html = re.sub(
+        r"\$\('labelLeft'\)\.textContent = '整盒 ' \+ p\.left_initial;\s*\$\('labelRight'\)\.textContent = '個位 ' \+ p\.right_initial;",
+        "$('labelLeft').textContent = p.left_label || ('整盒 ' + p.left_initial);\n        $('labelRight').textContent = p.right_label || ('個位 ' + p.right_initial);",
+        html
+    )
+
+with open('app/unit_n13.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print('3. unit_n13.html successfully overwritten.')

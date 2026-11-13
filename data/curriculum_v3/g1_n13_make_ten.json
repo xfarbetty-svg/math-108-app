@@ -1,282 +1,185 @@
 [
   {
-    "id": "G1-N13-01",
+    "id": "REAL-NEIHU-01",
     "unit": "N-1-3",
-    "unit_title": "基本加減法（湊十法）",
-    "source": "111學年北市段考真題",
-    "stem": "弟弟原來有 9 顆牛奶糖，姐姐又給他 4 顆，弟弟現在一共有幾顆牛奶糖？",
-    "choices": ["12 顆", "13 顆", "14 顆", "15 顆"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 9,
-        "right_initial": 4,
-        "target": 10,
-        "operation": "add",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "看大數 9，想湊十還缺 1",
-        "step_2": "把小數 4 分解成 1 和 3",
-        "step_3": "9 ＋ 1 ＝ 10，10 ＋ 3 ＝ 13"
-      },
-      "formula": "9 + 4 = 13",
-      "trap_warning": "常見迷思：直接手指往後數 4 次容易數漏，利用湊十法秒殺進位！"
-    }
-  },
-  {
-    "id": "G1-N13-02",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（湊十法）",
-    "source": "112學年新北段考真題",
-    "stem": "公車上原本有 8 位乘客，到站後又有 5 位乘客上車，現在車上一共有幾位乘客？",
-    "choices": ["11 位", "12 位", "13 位", "14 位"],
+    "unit_title": "加減退位借十",
+    "source": "臺北市內湖國小 114-2 期末 七、1",
+    "stem": "公車裡原本有 21 個人，有 7 個人先下車，還有幾個人在車上？（試卷要求：先畫 ⑩ 和 ①，再用算式記下來）",
+    "choices": [
+      "12 人",
+      "13 人",
+      "14 人",
+      "15 人"
+    ],
     "answer_index": 2,
     "visual_engine": {
       "type": "ten-frame-grid",
       "props": {
-        "left_initial": 8,
-        "right_initial": 5,
-        "target": 10,
-        "operation": "add",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "看大數 8，想湊十還缺 2",
-        "step_2": "把小數 5 分解成 2 和 3",
-        "step_3": "8 ＋ 2 ＝ 10，10 ＋ 3 ＝ 13"
-      },
-      "formula": "8 + 5 = 13",
-      "trap_warning": "算理關鍵：從 5 裡面借 2 給 8 湊成 10，剩下的 3 直接合起來。"
-    }
-  },
-  {
-    "id": "G1-N13-03",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（湊十法）",
-    "source": "110學年中市段考真題",
-    "stem": "花園裡開了 7 朵紅花和 6 朵黃花，花園裡一共有幾朵花？",
-    "choices": ["13 朵", "14 朵", "12 朵", "15 朵"],
-    "answer_index": 0,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 7,
-        "right_initial": 6,
-        "target": 10,
-        "operation": "add",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "看大數 7，想湊十還缺 3",
-        "step_2": "把小數 6 分解成 3 和 3",
-        "step_3": "7 ＋ 3 ＝ 10，10 ＋ 3 ＝ 13"
-      },
-      "formula": "7 + 6 = 13",
-      "trap_warning": "雙胞胎拆數法：也可以想成 6 + 6 = 12，再加多出來的 1 等於 13！"
-    }
-  },
-  {
-    "id": "G1-N13-04",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（湊十法）",
-    "source": "111學年桃市段考真題",
-    "stem": "小明有 9 枝彩色筆，小華有 7 枝彩色筆，兩人合起來有幾枝彩色筆？",
-    "choices": ["15 枝", "16 枝", "17 枝", "18 枝"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 9,
-        "right_initial": 7,
-        "target": 10,
-        "operation": "add",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "9 缺 1 變成 10",
-        "step_2": "把 7 分解成 1 和 6",
-        "step_3": "9 ＋ 1 ＝ 10，10 ＋ 6 ＝ 16"
-      },
-      "formula": "9 + 7 = 16",
-      "trap_warning": "口訣：見 9 想 1，7 借出 1 還剩 6，合起來就是 16！"
-    }
-  },
-  {
-    "id": "G1-N13-05",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（拆十法）",
-    "source": "112學年高市段考真題",
-    "stem": "籃子裡有 13 顆水蜜桃，媽媽拿走 4 顆，籃子裡還剩下幾顆水蜜桃？",
-    "choices": ["8 顆", "9 顆", "10 顆", "7 顆"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
+        "unmoved_tens": 1,
+        "unmoved_tens_label": "車上不動的 1 個 ⑩ (10人)",
         "left_initial": 10,
-        "right_initial": 3,
-        "take_away": 4,
-        "operation": "subtract",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "個位的 3 顆不夠減 4 顆",
-        "step_2": "把整盒 10 顆拆開，10 減 4 剩下 6",
-        "step_3": "剩下的 6 和原來的 3 合起來：6 ＋ 3 ＝ 9"
-      },
-      "formula": "13 - 4 = 9",
-      "trap_warning": "常見陷阱：千萬不要倒過來算 4 - 3 = 1 然後猜 11，必須拆整十！"
-    }
-  },
-  {
-    "id": "G1-N13-06",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（拆十法）",
-    "source": "111學年台南段考真題",
-    "stem": "樹上有 12 隻小鳥，飛走了 5 隻，樹上還剩下幾隻小鳥？",
-    "choices": ["6 隻", "7 隻", "8 隻", "9 隻"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 10,
-        "right_initial": 2,
-        "take_away": 5,
-        "operation": "subtract",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "個位 2 不夠減 5",
-        "step_2": "從 10 裡面減去 5 剩下 5",
-        "step_3": "5 再加上個位的 2 得到 7"
-      },
-      "formula": "12 - 5 = 7",
-      "trap_warning": "算理核心：12 分成 10 和 2；10 - 5 = 5；5 + 2 = 7。"
-    }
-  },
-  {
-    "id": "G1-N13-07",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（湊十法）",
-    "source": "110學年竹市段考真題",
-    "stem": "文具店有 8 盒蠟筆，老闆又進貨 6 盒，現在文具店一共有幾盒蠟筆？",
-    "choices": ["13 盒", "14 盒", "15 盒", "12 盒"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 8,
-        "right_initial": 6,
-        "target": 10,
-        "operation": "add",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "8 缺 2 湊滿十",
-        "step_2": "6 分解成 2 和 4",
-        "step_3": "8 ＋ 2 ＝ 10，10 ＋ 4 ＝ 14"
-      },
-      "formula": "8 + 6 = 14",
-      "trap_warning": "思維提示：8 需要 2，記住 6 拿走 2 剩下 4，答案個位就是 4！"
-    }
-  },
-  {
-    "id": "G1-N13-08",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（拆十法）",
-    "source": "112學年彰化段考真題",
-    "stem": "小美摺了 15 顆紙星星，送給同學 8 顆，小美自己還剩下幾顆紙星星？",
-    "choices": ["6 顆", "7 顆", "8 顆", "9 顆"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 10,
-        "right_initial": 5,
-        "take_away": 8,
-        "operation": "subtract",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "15 分成 10 和 5",
-        "step_2": "10 減 8 剩下 2",
-        "step_3": "2 加上原有的 5 等於 7"
-      },
-      "formula": "15 - 8 = 7",
-      "trap_warning": "拆十法口訣：拆十減八剩二，二五合成七！"
-    }
-  },
-  {
-    "id": "G1-N13-09",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（加法交換律）",
-    "source": "111學年屏東段考真題",
-    "stem": "桌上有 4 顆紅蘋果和 9 顆青蘋果，如果要湊十，把哪一種算式算成湊十最快速？",
-    "choices": ["4 ＋ 9 ＝ 13", "9 ＋ 4 ＝ 13", "4 ＋ 4 ＋ 5 ＝ 13", "9 － 4 ＝ 5"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 9,
-        "right_initial": 4,
-        "target": 10,
-        "operation": "add",
-        "interactive": true
-      }
-    },
-    "explanation": {
-      "breakdown_tree": {
-        "step_1": "「看大數，拆小數」原則",
-        "step_2": "9 離 10 只有差 1，比 4 離 10 差 6 更容易湊十",
-        "step_3": "將 4 ＋ 9 想成 9 ＋ 4 ＝ 13 最聰明"
-      },
-      "formula": "4 + 9 = 9 + 4 = 13",
-      "trap_warning": "數學家思維：加法順序調換結果不變，永遠從接近 10 的大數開始湊！"
-    }
-  },
-  {
-    "id": "G1-N13-10",
-    "unit": "N-1-3",
-    "unit_title": "基本加減法（連減與退位思考）",
-    "source": "112學年基隆段考真題",
-    "stem": "停車場停了 11 輛車，先開走 1 輛，又開走 3 輛，現在停車場還剩下幾輛車？",
-    "choices": ["6 輛", "7 輛", "8 輛", "9 輛"],
-    "answer_index": 1,
-    "visual_engine": {
-      "type": "ten-frame-grid",
-      "props": {
-        "left_initial": 10,
+        "left_label": "借來拆開的 10人",
         "right_initial": 1,
-        "take_away": 4,
+        "right_label": "個位原有的 1人",
+        "take_away": 7,
         "operation": "subtract",
         "interactive": true
       }
     },
     "explanation": {
       "breakdown_tree": {
-        "step_1": "先開走 1 輛：11 － 1 ＝ 10（剛好退回整十）",
-        "step_2": "再開走 3 輛：10 － 3 ＝ 7",
-        "step_3": "合起來總共開走 4 輛：11 － 4 ＝ 7"
+        "step_1": "21 人是「2 個 ⑩」和「1 個 ①」，先留 1 個 ⑩ 在車上不動",
+        "step_2": "拿另 1 個 ⑩ 拆成 10 個 ①，先下車 7 人，剩下 3 人（10 － 7 ＝ 3）",
+        "step_3": "下車後剩下的 3 人，加上車上原本的 1 人是 4 人；再加回不動的 1 個 ⑩，車上共有 14 人（10 ＋ 4 ＝ 14）"
       },
-      "formula": "11 - 1 - 3 = 11 - 4 = 7",
-      "trap_warning": "兩步走算理：先減去個位退回滿十，再從整十扣除剩下的，這叫「連減拆十法」！"
+      "formula": "21 - 7 = 14",
+      "trap_warning": "內湖真題算理：畫出 2 個 ⑩ 和 1 個 ①，1 個 ⑩ 不動，另 1 個 ⑩ 拿來扣 7 剩 3，3 加 1 得 4，合起來 14！"
+    }
+  },
+  {
+    "id": "REAL-NEIHU-02",
+    "unit": "N-1-3",
+    "unit_title": "加法進位湊整十",
+    "source": "臺北市內湖國小 114-2 期末 七、2",
+    "stem": "存錢筒裡原有 42 元，再放 8 元進去，存錢筒裡共有多少元？（試卷要求：先畫 ⑩ 和 ①，再用算式記下來）",
+    "choices": [
+      "48 元",
+      "49 元",
+      "50 元",
+      "52 元"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "unmoved_tens": 4,
+        "unmoved_tens_label": "原本十位的 4 個 ⑩ (40元)",
+        "left_initial": 2,
+        "left_label": "原本的 2 元",
+        "right_initial": 8,
+        "right_label": "放進的 8 元",
+        "target": 10,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "42 元是「4 個 ⑩」和「2 個 ①」，十位的 4 個 ⑩ 先放著不動",
+        "step_2": "個位的 2 元和放進的 8 元剛好湊成 10 元（2 ＋ 8 ＝ 10），進位成 1 個新 ⑩",
+        "step_3": "原本的 4 個 ⑩ 加上新湊出的 1 個 ⑩，合起來是 5 個 ⑩，也就是 50 元（40 ＋ 10 ＝ 50）"
+      },
+      "formula": "42 + 8 = 50",
+      "trap_warning": "內湖真題算理：2 個 ① 和 8 個 ① 圈起來剛好湊滿一個新 ⑩，40 加 10 等於 50！"
+    }
+  },
+  {
+    "id": "REAL-ZHONGXIAO-01",
+    "unit": "N-1-3",
+    "unit_title": "基礎加法運算",
+    "source": "高雄市忠孝國小 114-1 期末 九、4",
+    "stem": "樹上原來有 6 隻鳥，又飛來 3 隻後，樹上共有幾隻鳥？",
+    "choices": [
+      "7 隻",
+      "8 隻",
+      "9 隻",
+      "10 隻"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "unmoved_tens": 0,
+        "left_initial": 6,
+        "left_label": "原本 6 隻鳥",
+        "right_initial": 3,
+        "right_label": "又飛來 3 隻鳥",
+        "target": 9,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "樹上原本有 6 隻鳥（十格陣放 6 顆紅球）",
+        "step_2": "又飛來 3 隻鳥（十格陣放 3 顆藍球）",
+        "step_3": "兩邊合在一起：6 ＋ 3 ＝ 9 隻鳥（差 1 隻才滿十，絕不能畫成 10 隻！）"
+      },
+      "formula": "6 + 3 = 9",
+      "trap_warning": "忠孝真題算理：6 加 3 等於 9，十格陣只放 9 顆，空 1 格，切勿多畫！"
+    }
+  },
+  {
+    "id": "REAL-ZHONGXIAO-02",
+    "unit": "N-1-3",
+    "unit_title": "基礎加法倍數",
+    "source": "高雄市忠孝國小 114-1 期末 九、1",
+    "stem": "小明吃了 3 片披薩，小星吃了 3 片披薩，兩個人共吃了幾片披薩？",
+    "choices": [
+      "5 片",
+      "6 片",
+      "7 片",
+      "8 片"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "unmoved_tens": 0,
+        "left_initial": 3,
+        "left_label": "小明吃 3 片",
+        "right_initial": 3,
+        "right_label": "小星吃 3 片",
+        "target": 6,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "小明吃了 3 片披薩（放 3 顆紅點）",
+        "step_2": "小星吃了 3 片披薩（放 3 顆藍點）",
+        "step_3": "合起來一共是 6 片披薩（3 ＋ 3 ＝ 6，畫面只有 6 顆，絕不是 10 顆！）"
+      },
+      "formula": "3 + 3 = 6",
+      "trap_warning": "忠孝真題算理：3 加 3 是 6，不是湊十題，畫面只有 6 片披薩！"
+    }
+  },
+  {
+    "id": "REAL-G1EXAM-01",
+    "unit": "N-1-3",
+    "unit_title": "加法進位湊整十",
+    "source": "國小一年級下學期評量 五、(2)",
+    "stem": "算算看：6 ＋ 14 ＝（ ）？（試卷要求：畫 ⑩ 和 ① 算算看）",
+    "choices": [
+      "18",
+      "19",
+      "20",
+      "21"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "unmoved_tens": 1,
+        "unmoved_tens_label": "14 裡的 1 個 ⑩ (10)",
+        "left_initial": 6,
+        "left_label": "加數 6 (6 個 ①)",
+        "right_initial": 4,
+        "right_label": "14 的個位 4 (4 個 ①)",
+        "target": 10,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "試卷要求畫 ⑩ 和 ①：先畫出 6 個 ①，再畫 14（1 個 ⑩ 和 4 個 ①）",
+        "step_2": "個位的 6 個 ① 和 4 個 ① 剛好圈起來湊成 1 個新 ⑩（6 ＋ 4 ＝ 10）",
+        "step_3": "新湊出的 1 個 ⑩ 加上 14 原本的 1 個 ⑩，總共是 2 個 ⑩，也就是 20（10 ＋ 10 ＝ 20）"
+      },
+      "formula": "6 + 14 = 20",
+      "trap_warning": "真題算理：6 個 ① 和 4 個 ① 圈成一個新 ⑩，加回原本的 ⑩，答案是整整 20！"
     }
   }
 ]

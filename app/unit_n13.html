@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>國小一年級數學 (G1) — N-1-3 基本加減法 (湊十法與拆十法)</title>
+  <title>國小一年級數學 (G1) — N-1-3 湊十法與拆十法 (12題段考真題)</title>
   <script src="components/ten-frame-grid.js"></script>
   <style>
     :root {
@@ -32,7 +32,7 @@
       flex-direction: column;
     }
 
-    /* 頂部狀態列 < 40px */
+    /* ===== 頂部狀態列 < 40px ===== */
     header.status-bar {
       height: 38px;
       background: var(--card-bg);
@@ -40,41 +40,45 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      gap: 8px;
+      padding: 0 10px;
       font-size: 13px;
       font-weight: 700;
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .status-left { display: flex; align-items: center; gap: 8px; }
+    .status-left { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
     .badge-unit {
       background: #EFF6FF;
       color: var(--accent);
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
       font-size: 11px;
+      font-weight: 800;
     }
-    .progress-dots { display: flex; gap: 4px; }
+    .status-title { font-size: 12px; }
+    .progress-dots { display: flex; gap: 3px; flex-shrink: 0; }
     .dot-item {
-      width: 7px; height: 7px; border-radius: 50%; background: var(--border);
-      transition: background 0.2s;
+      width: 11px; height: 11px; border-radius: 50%;
+      border: none; padding: 0; cursor: pointer;
+      background: var(--border);
+      transition: background 0.2s, transform 0.2s;
     }
-    .dot-item.active { background: var(--accent); transform: scale(1.2); }
+    .dot-item.active { background: var(--accent); transform: scale(1.25); }
     .dot-item.done { background: var(--green); }
 
-    /* 主要容器響應式切分 (Mobile: 垂直, Tablet/Desktop: 雙欄) */
+    /* ===== 主容器：手機垂直流 / 平板電腦雙欄 ===== */
     main.quiz-layout {
       flex: 1;
-      max-width: 1024px;
       width: 100%;
+      max-width: 1024px;
       margin: 0 auto;
-      padding: 16px;
+      padding: 10px 8px 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
-
     @media (min-width: 768px) {
       main.quiz-layout {
         display: grid;
@@ -85,53 +89,42 @@
       }
     }
 
-    /* 左欄：題幹與教具 */
-    .left-panel {
+    .left-panel, .right-panel {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       position: relative;
     }
+
+    /* ===== 題幹卡片 ===== */
     .stem-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
-    .question-no {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--accent);
-    }
-    /* 11px 幽靈字題源 */
-    .source-ghost {
-      font-size: 11px;
-      color: var(--ghost);
-      font-weight: 500;
-    }
-    .stem-text {
-      font-size: 17px;
-      line-height: 1.6;
-      font-weight: 600;
-      color: var(--ink);
-    }
+    .question-no { font-size: 13px; font-weight: 800; color: var(--accent); white-space: nowrap; }
+    .source-ghost { font-size: 11px; color: var(--ghost); font-weight: 500; text-align: right; }
+    .stem-text { font-size: 17px; line-height: 1.6; font-weight: 600; }
 
-    /* 教具展示艙 */
+    /* ===== 教具舞臺 ===== */
     .visual-stage {
       background: #F1F5F9;
       border: 1px dashed var(--border);
       border-radius: 10px;
-      padding: 16px;
+      padding: 14px 8px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 10px;
       position: relative;
       overflow: hidden;
     }
@@ -139,30 +132,67 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       position: relative;
-      min-height: 90px;
+      min-height: 92px;
+    }
+    .frame-labels {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .frame-labels span { width: 168px; text-align: center; }
+    .op-symbol {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .demo-caption {
+      min-height: 22px;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gold);
+      text-align: center;
     }
     .flying-dot {
       position: absolute;
-      width: 24px;
-      height: 24px;
+      width: 22px; height: 22px;
       border-radius: 50%;
       background: #2563EB;
       box-shadow: 0 2px 8px rgba(37,99,235,0.6);
       pointer-events: none;
       z-index: 50;
       display: none;
+      left: 0; top: 0;
     }
-
-    /* 右欄：選項與破招解析 */
-    .right-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    /* 教具尺寸（33px 熱區規格；360px 窄螢幕微縮不破版） */
+    #frameLeft, #frameRight { --tfg-pitch: 33px; --tfg-cell: 30px; --tfg-dot: 24px; }
+    @media (max-width: 369px) {
+      #frameLeft, #frameRight { --tfg-pitch: 29px; --tfg-cell: 26px; --tfg-dot: 21px; }
+      .frame-labels span { width: 148px; }
     }
+    #btnPlayDemo {
+      height: 44px;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #EEF2F6;
+      color: var(--ink);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #btnPlayDemo:disabled { opacity: 0.55; cursor: default; }
 
-    /* 2x2 拇指熱區按鈕 (手機端高度 >= 48px) */
+    /* ===== 2x2 拇指熱區選項 ===== */
     .choices-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -180,42 +210,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s ease-out;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
       touch-action: manipulation;
     }
-    .choice-btn:hover { border-color: var(--accent); background: #F8FAFC; }
-    .choice-btn.correct {
-      border-color: var(--green);
-      background: var(--green-bg);
-      color: var(--green);
-    }
-    .choice-btn.wrong {
-      border-color: var(--red);
-      background: var(--red-bg);
-      color: var(--red);
-    }
+    .choice-btn:hover { border-color: var(--accent); }
+    .choice-btn.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+    .choice-btn.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); }
     .choice-btn[disabled] { cursor: default; }
 
-    /* 抽屜式／內嵌破招詳解 */
+    /* ===== 抽屜式破招詳解 ===== */
     .expl-drawer {
       display: none;
       background: var(--card-bg);
       border: 1.5px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
-      animation: slideDown 0.2s ease-out;
+      padding: 14px;
     }
-    .expl-drawer.open { display: block; }
+    .expl-drawer.open { display: block; animation: slideDown 0.22s ease-out; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-
     .expl-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 14px; font-weight: 800; color: var(--accent);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
     }
     .breakdown-box {
       background: #F8FAFC;
@@ -226,11 +241,11 @@
       font-size: 14px;
       line-height: 1.6;
     }
-    .breakdown-step { color: var(--muted); margin-bottom: 4px; }
+    .breakdown-step { margin-bottom: 4px; }
     .breakdown-step strong { color: var(--ink); }
     .formula-tag {
       display: inline-block;
-      font-family: monospace;
+      font-family: Consolas, monospace;
       font-size: 16px;
       font-weight: 800;
       color: var(--gold);
@@ -246,33 +261,91 @@
       border-left: 3px solid var(--red);
       padding: 8px 10px;
       border-radius: 4px;
-      margin-top: 8px;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
-    /* 底部導航控制 */
+    /* ===== 完成橫幅 ===== */
+    .finish-banner {
+      display: none;
+      background: linear-gradient(135deg, #FEF3C7, #DCFCE7);
+      border: 1.5px solid var(--gold);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .finish-banner.show { display: block; animation: slideDown 0.25s ease-out; }
+
+    /* ===== 導航控制列 ===== */
     .nav-bar {
-      margin-top: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
     }
     .action-btn {
       height: 44px;
-      padding: 0 18px;
+      padding: 0 16px;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 700;
       border: none;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.15s;
+      transition: background 0.15s, opacity 0.15s;
     }
+    .btn-prev { background: #EEF2F6; color: var(--ink); border: 1px solid var(--border); }
     .btn-next { background: var(--accent); color: #FFF; }
     .btn-next:hover { background: var(--accent-hover); }
-    .btn-demo { background: #EEF2F6; color: var(--ink); border: 1px solid var(--border); }
+    .action-btn:disabled { opacity: 0.45; cursor: default; }
+    @media (prefers-reduced-motion: reduce) {
+      .expl-drawer.open, .finish-banner.show { animation: none; }
+      .dot-item, .choice-btn { transition: none; }
+    }
+  
+    /* 十位硬幣區 (保留不動的 10) */
+    .tens-bank {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      min-height: 38px;
+    }
+    .coin-10-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #FFFBEB;
+      border: 2px solid #F59E0B;
+      border-radius: 99px;
+      padding: 4px 14px;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2);
+    }
+    .coin-10-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FDE68A, #F59E0B);
+      border: 1.5px solid #D97706;
+      color: #78350F;
+      font-weight: 900;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .coin-10-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #B45309;
+    }
+
   </style>
 </head>
 <body>
@@ -281,44 +354,49 @@
   <header class="status-bar">
     <div class="status-left">
       <span class="badge-unit">N-1-3</span>
-      <span>湊十法與拆十法</span>
+      <span class="status-title">湊十法與拆十法</span>
     </div>
-    <div class="progress-dots" id="dotsContainer"></div>
+    <div class="progress-dots" id="dotsContainer" aria-label="題目進度"></div>
   </header>
 
-  <!-- 主要互動題卡 -->
   <main class="quiz-layout">
-    
-    <!-- 左欄：題幹與即時教具 -->
+
+    <!-- 左欄：題幹與教具舞臺 -->
     <section class="left-panel">
       <div class="card">
         <div class="stem-header">
-          <span class="question-no" id="questionIndexText">第 1 / 10 題</span>
-          <span class="source-ghost" id="questionSource">北市段考真題</span>
+          <span class="question-no" id="questionIndexText">第 1 / 12 題</span>
+          <span class="source-ghost" id="questionSource"></span>
         </div>
-        <div class="stem-text" id="questionStem">載入中...</div>
+        <div class="stem-text" id="questionStem"></div>
       </div>
 
       <div class="visual-stage">
+        <div class="tens-bank" id="tensBank"></div>
+        <div class="frame-labels" id="frameLabels">
+          <span id="labelLeft">大數</span>
+          <span style="width:24px;"></span>
+          <span id="labelRight">小數</span>
+        </div>
         <div class="frames-container" id="framesBox">
-          <ten-frame-grid id="frameLeft" fill-color="#DC2626" value="9"></ten-frame-grid>
-          <ten-frame-grid id="frameRight" fill-color="#2563EB" value="4"></ten-frame-grid>
+          <ten-frame-grid id="frameLeft" fill-color="#DC2626" value="0" interactive="false" label="左盒"></ten-frame-grid>
+          <span class="op-symbol" id="opSymbol">＋</span>
+          <ten-frame-grid id="frameRight" fill-color="#2563EB" value="0" interactive="false" label="右盒"></ten-frame-grid>
         </div>
         <div id="flyDot" class="flying-dot"></div>
+        <div class="demo-caption" id="demoCaption"></div>
+        <button id="btnPlayDemo">▶ 演示湊十飛補</button>
       </div>
     </section>
 
-    <!-- 右欄：選項與抽屜式算理詳解 -->
+    <!-- 右欄：選項與抽屜式算理破招詳解 -->
     <section class="right-panel">
       <div class="card">
         <div class="choices-grid" id="choicesGrid"></div>
       </div>
 
-      <!-- 抽屜式破招算理詳解 -->
       <div class="expl-drawer" id="explDrawer">
-        <div class="expl-title">
-          <span>💡 破招算理分解</span>
-        </div>
+        <div class="expl-title"><span>💡 破招算理分解</span></div>
         <div class="breakdown-box">
           <div class="breakdown-step" id="step1"></div>
           <div class="breakdown-step" id="step2"></div>
@@ -328,178 +406,493 @@
         <div class="trap-alert" id="trapAlert"></div>
       </div>
 
-      <!-- 下一題按鈕 -->
+      <div class="finish-banner" id="finishBanner"></div>
+
       <div class="nav-bar">
-        <button class="action-btn btn-demo" id="btnPlayDemo">▶ 演示飛補湊十</button>
-        <button class="action-btn btn-next" id="btnNext" style="display:none;">下一題 ➔</button>
+        <button class="action-btn btn-prev" id="btnPrev">⬅ 上一題</button>
+        <button class="action-btn btn-next" id="btnNext">下一題 ➔</button>
       </div>
     </section>
 
   </main>
 
   <script>
-    var currentIdx = 0;
-    var questions = [];
-    var answered = false;
+    'use strict';
 
-    // 載入題目
-    fetch('../data/curriculum_v3/g1_n13_make_ten.json')
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        questions = data;
-        initDots();
-        renderQuestion(0);
-      });
-
-    function initDots() {
-      var container = document.getElementById('dotsContainer');
-      container.innerHTML = '';
-      for (var i = 0; i < questions.length; i++) {
-        var dot = document.createElement('div');
-        dot.className = 'dot-item' + (i === 0 ? ' active' : '');
-        dot.id = 'dot-' + i;
-        container.appendChild(dot);
+    /* ===== 12 題段考真題（內嵌預設數據，file:// 離線保證載入） ===== */
+    const EMBEDDED_QUESTIONS = [
+  {
+    "id": "REAL-NEIHU-01",
+    "unit": "N-1-3",
+    "unit_title": "加減退位借十",
+    "source": "臺北市內湖國小 114-2 期末 七、1",
+    "stem": "公車裡原本有 21 個人，有 7 個人先下車，還有幾個人在車上？（試卷要求：先畫 ⑩ 和 ①，再用算式記下來）",
+    "choices": [
+      "12 人",
+      "13 人",
+      "14 人",
+      "15 人"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "left_initial": 10,
+        "right_initial": 1,
+        "take_away": 7,
+        "operation": "subtract",
+        "interactive": true
       }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "個位只有 1 個人，不夠讓 7 個人下車",
+        "step_2": "向十位借 1 個 ⑩ 展開成 10 個 ①，10 個人先走 7 個人剩下 3 個人",
+        "step_3": "剩下的 3 個人加上車上原有的 1 個人，還有十位的 1 個 ⑩，合起來是 14 個人"
+      },
+      "formula": "21 - 7 = 14",
+      "trap_warning": "內湖真題算理：個位不夠減時，借十拆解，10 - 7 = 3，3 + 1 = 4，加上十位剩 10，答案 14！"
+    }
+  },
+  {
+    "id": "REAL-NEIHU-02",
+    "unit": "N-1-3",
+    "unit_title": "加法進位湊整十",
+    "source": "臺北市內湖國小 114-2 期末 七、2",
+    "stem": "存錢筒裡原有 42 元，再放 8 元進去，存錢筒裡共有多少元？（試卷要求：先畫 ⑩ 和 ①，再用算式記下來）",
+    "choices": [
+      "48 元",
+      "49 元",
+      "50 元",
+      "52 元"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "left_initial": 2,
+        "right_initial": 8,
+        "target": 10,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "個位原本有 2 元，又放進 8 元",
+        "step_2": "2 元和 8 元剛好湊成 10 元（滿十），進位成 1 個 ⑩",
+        "step_3": "原本十位的 4 個 ⑩ 加上新湊出的 1 個 ⑩，合起來是 5 個 ⑩，也就是 50 元"
+      },
+      "formula": "42 + 8 = 50",
+      "trap_warning": "內湖真題算理：2 + 8 剛好湊十進位，40 + 10 = 50！"
+    }
+  },
+  {
+    "id": "REAL-ZHONGXIAO-01",
+    "unit": "N-1-3",
+    "unit_title": "基礎加法運算",
+    "source": "高雄市忠孝國小 114-1 期末 九、4",
+    "stem": "樹上原來有 6 隻鳥，又飛來 3 隻後，樹上共有幾隻鳥？",
+    "choices": [
+      "7 隻",
+      "8 隻",
+      "9 隻",
+      "10 隻"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "left_initial": 6,
+        "right_initial": 3,
+        "target": 10,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "原本樹上有 6 隻鳥",
+        "step_2": "又飛來 3 隻鳥，用十格陣合起來看",
+        "step_3": "6 加上 3 等於 9 隻鳥，還差 1 隻才滿十"
+      },
+      "formula": "6 + 3 = 9",
+      "trap_warning": "忠孝真題算理：直接合起來是 9，觀察十格陣只空 1 格，表示離 10 只差 1！"
+    }
+  },
+  {
+    "id": "REAL-ZHONGXIAO-02",
+    "unit": "N-1-3",
+    "unit_title": "基礎加法倍數",
+    "source": "高雄市忠孝國小 114-1 期末 九、1",
+    "stem": "小明吃了 3 片披薩，小星吃了 3 片披薩，兩個人共吃了幾片披薩？",
+    "choices": [
+      "5 片",
+      "6 片",
+      "7 片",
+      "8 片"
+    ],
+    "answer_index": 1,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "left_initial": 3,
+        "right_initial": 3,
+        "target": 10,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "小明吃 3 片，小星吃 3 片",
+        "step_2": "相同的兩數相加：3 ＋ 3",
+        "step_3": "合起來一共吃了 6 片披薩"
+      },
+      "formula": "3 + 3 = 6",
+      "trap_warning": "忠孝真題算理：雙數相加基礎題，3 + 3 = 6！"
+    }
+  },
+  {
+    "id": "REAL-G1EXAM-01",
+    "unit": "N-1-3",
+    "unit_title": "加法進位計算",
+    "source": "國小一年級下學期評量 五、(2)",
+    "stem": "算算看：6 ＋ 14 ＝（ ）？（試卷要求：畫 ⑩ 和 ① 算算看）",
+    "choices": [
+      "18",
+      "19",
+      "20",
+      "21"
+    ],
+    "answer_index": 2,
+    "visual_engine": {
+      "type": "ten-frame-grid",
+      "props": {
+        "left_initial": 6,
+        "right_initial": 4,
+        "target": 10,
+        "operation": "add",
+        "interactive": true
+      }
+    },
+    "explanation": {
+      "breakdown_tree": {
+        "step_1": "看個位的 6 和 14 的個位 4",
+        "step_2": "6 ＋ 4 剛好湊成 10（滿十進位）",
+        "step_3": "新湊出的 10 加上 14 原本的 10，10 ＋ 10 ＝ 20"
+      },
+      "formula": "6 + 14 = 20",
+      "trap_warning": "真題算理：個位 6 和 4 剛好湊十，再加上原本的 10 就是 20！"
+    }
+  }
+];
+
+    /* ===== 狀態 ===== */
+    var questions = EMBEDDED_QUESTIONS;   // 預設：內嵌數據，絕不死卡
+    var currentIdx = 0;
+    var answers = [];                     // 每題紀錄：-1 未答，否則選擇索引
+    var demoTimers = [];
+
+    var $ = function (id) { return document.getElementById(id); };
+    var fL = $('frameLeft'), fR = $('frameRight');
+
+    /* ===== 題庫載入：先以內嵌數據立即渲染，fetch 成功且為合法 12 題才覆寫 ===== */
+    function tryFetchRemote() {
+      if (location.protocol === 'file:') return; // file:// 直接用內嵌，避免主動報錯
+      fetch('../data/curriculum_v3/g1_n13_make_ten.json')
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (data) {
+          if (Array.isArray(data) && data.length > 0 &&
+              data.every(function (q) { return q && q.unit === 'N-1-3' && q.stem && Array.isArray(q.choices); })) {
+            questions = data;
+            answers = questions.map(function () { return -1; });
+            buildDots();
+            renderQuestion(currentIdx);
+          }
+        })
+        .catch(function () { /* 降級：靜默沿用 EMBEDDED_QUESTIONS */ });
     }
 
-    function renderQuestion(idx) {
-      answered = false;
-      var q = questions[idx];
-      document.getElementById('questionIndexText').textContent = '第 ' + (idx + 1) + ' / ' + questions.length + ' 題';
-      document.getElementById('questionSource').textContent = q.source;
-      document.getElementById('questionStem').textContent = q.stem;
+    /* ===== 頂部 12 顆可點擊進度圓點 ===== */
+    var dotEls = [];
+    function buildDots() {
+      var box = $('dotsContainer');
+      box.innerHTML = '';
+      dotEls = [];
+      questions.forEach(function (_, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'dot-item';
+        b.setAttribute('aria-label', '跳到第 ' + (i + 1) + ' 題');
+        b.addEventListener('click', function () { goTo(i); });
+        box.appendChild(b);
+        dotEls.push(b);
+      });
+      syncDots();
+    }
+    function syncDots() {
+      dotEls.forEach(function (d, i) {
+        var cls = 'dot-item';
+        if (i === currentIdx) cls += ' active';
+        else if (answers[i] !== -1) cls += ' done';
+        d.className = cls;
+      });
+    }
 
-      // 更新頂部圓點
-      for (var i = 0; i < questions.length; i++) {
-        var d = document.getElementById('dot-' + i);
-        if (d) {
-          d.className = 'dot-item' + (i === idx ? ' active' : (i < idx ? ' done' : ''));
+    /* ===== 渲染題卡 ===== */
+    function renderQuestion(idx) {
+      clearDemoTimers();
+      var q = questions[idx];
+      var p = q.visual_engine.props;
+      var isAdd = p.operation === 'add';
+
+      $('questionIndexText').textContent = '第 ' + (idx + 1) + ' / ' + questions.length + ' 題';
+      $('questionSource').textContent = q.source;
+      $('questionStem').textContent = q.stem;
+
+      /* 十位不動硬幣區渲染 */
+      var tensBox = $('tensBank');
+      if (tensBox) {
+        tensBox.innerHTML = '';
+        if (p.unmoved_tens && p.unmoved_tens > 0) {
+          var pill = document.createElement('div');
+          pill.className = 'coin-10-pill';
+          var circlesHtml = '';
+          for (var t = 0; t < p.unmoved_tens; t++) {
+            circlesHtml += '<div class="coin-10-circle">⑩</div>';
+          }
+          pill.innerHTML = circlesHtml + '<div class="coin-10-label">' + (p.unmoved_tens_label || ('不動的 ' + p.unmoved_tens + ' 個 ⑩')) + '</div>';
+          tensBox.appendChild(pill);
         }
       }
 
-      // 教具數值初始化
-      var fL = document.getElementById('frameLeft');
-      var fR = document.getElementById('frameRight');
-      if (q.visual_engine.props.operation === 'add') {
-        fL.setCount(q.visual_engine.props.left_initial);
-        fR.setCount(q.visual_engine.props.right_initial);
-        document.getElementById('btnPlayDemo').style.display = 'inline-flex';
-      } else {
-        fL.setCount(q.visual_engine.props.left_initial);
-        fR.setCount(q.visual_engine.props.right_initial);
-        document.getElementById('btnPlayDemo').style.display = 'none';
-      }
 
-      // 渲染選項 (2x2)
-      var grid = document.getElementById('choicesGrid');
+      /* 教具初始化 */
+      fL.setAttribute('interactive', 'false');
+      fR.setAttribute('interactive', 'false');
+      if (isAdd) {
+        fL.setCount(p.left_initial);
+        fR.setCount(p.right_initial);
+        $('opSymbol').textContent = '＋';
+        $('labelLeft').textContent = p.left_label || (p.left_initial + '');
+        $('labelRight').textContent = p.right_label || (p.right_initial + '');
+        $('btnPlayDemo').textContent = (p.left_initial + p.right_initial >= 10) ? '▶ 演示湊十進位' : '▶ 演示合起來';
+      } else {
+        fL.setCount(p.left_initial);
+        fR.setCount(p.right_initial);
+        $('opSymbol').textContent = '－';
+        $('labelLeft').textContent = p.left_label || ('整盒 ' + p.left_initial);
+        $('labelRight').textContent = p.right_label || ('個位 ' + p.right_initial);
+        $('btnPlayDemo').textContent = '▶ 演示借十下車/拆十';
+      }
+      $('demoCaption').textContent = '';
+      $('btnPlayDemo').disabled = false;
+
+      /* 選項 2x2 */
+      var grid = $('choicesGrid');
       grid.innerHTML = '';
-      q.choices.forEach(function(c, i) {
+      q.choices.forEach(function (c, i) {
         var btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'choice-btn';
         btn.textContent = c;
-        btn.onclick = function() { onSelectChoice(i); };
+        btn.addEventListener('click', function () { onSelectChoice(i, btn); });
         grid.appendChild(btn);
       });
 
-      // 隱藏詳解與下一題
-      document.getElementById('explDrawer').classList.remove('open');
-      document.getElementById('btnNext').style.display = 'none';
+      /* 導航按鈕狀態 */
+      $('btnPrev').disabled = (idx === 0);
+      $('btnNext').textContent = (idx === questions.length - 1) ? '看完成績 🏁' : '下一題 ➔';
+
+      /* 已答題重播反饋；未答題收起抽屜 */
+      var drawer = $('explDrawer');
+      drawer.classList.remove('open');
+      if (answers[idx] !== -1) {
+        replayAnsweredState(q, answers[idx]);
+      }
+      syncDots();
     }
 
-    function onSelectChoice(choiceIdx) {
-      if (answered) return;
-      answered = true;
-      var q = questions[currentIdx];
-      var btns = document.querySelectorAll('.choice-btn');
-      
-      btns.forEach(function(b, i) {
+    function replayAnsweredState(q, chosen) {
+      var btns = $('choicesGrid').querySelectorAll('.choice-btn');
+      btns.forEach(function (b, i) {
         b.disabled = true;
-        if (i === q.answer_index) {
-          b.classList.add('correct');
-        } else if (i === choiceIdx) {
-          b.classList.add('wrong');
-        }
+        if (i === q.answer_index) b.classList.add('correct');
+        else if (i === chosen) b.classList.add('wrong');
       });
-
-      // 展開算理詳解
       showExplanation(q);
-      document.getElementById('btnNext').style.display = 'inline-flex';
+    }
 
-      // 答對或答錯皆觸發動態演示
-      if (q.visual_engine.props.operation === 'add') {
-        playMakeTenAnimation();
-      }
+    /* ===== 選答 ===== */
+    function onSelectChoice(choiceIdx) {
+      if (answers[currentIdx] !== -1) return;
+      answers[currentIdx] = choiceIdx;
+      var q = questions[currentIdx];
+      var btns = $('choicesGrid').querySelectorAll('.choice-btn');
+      btns.forEach(function (b, i) {
+        b.disabled = true;
+        if (i === q.answer_index) b.classList.add('correct');
+        else if (i === choiceIdx) b.classList.add('wrong');
+      });
+      showExplanation(q);
+      syncDots();
+      /* 答題後立即動態演示算理 */
+      playDemo();
     }
 
     function showExplanation(q) {
-      var d = document.getElementById('explDrawer');
-      document.getElementById('step1').innerHTML = '① ' + q.explanation.breakdown_tree.step_1;
-      document.getElementById('step2').innerHTML = '② ' + q.explanation.breakdown_tree.step_2;
-      document.getElementById('step3').innerHTML = '③ <strong>' + q.explanation.breakdown_tree.step_3 + '</strong>';
-      document.getElementById('formulaTag').textContent = q.explanation.formula;
-      document.getElementById('trapAlert').textContent = '⚠️ ' + q.explanation.trap_warning;
-      d.classList.add('open');
+      var bt = q.explanation.breakdown_tree;
+      $('step1').innerHTML = '<strong>Step 1</strong>：' + bt.step_1;
+      $('step2').innerHTML = '<strong>Step 2</strong>：' + bt.step_2;
+      $('step3').innerHTML = '<strong>Step 3</strong>：<strong>' + bt.step_3 + '</strong>';
+      $('formulaTag').textContent = q.explanation.formula;
+      $('trapAlert').textContent = '⚠️ ' + q.explanation.trap_warning;
+      $('explDrawer').classList.add('open');
+      $('explDrawer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    // 拋物線飛補湊十動畫
-    function playMakeTenAnimation() {
-      var fL = document.getElementById('frameLeft');
-      var fR = document.getElementById('frameRight');
-      var q = questions[currentIdx];
-      var leftNeed = 10 - q.visual_engine.props.left_initial;
-      if (leftNeed <= 0) return;
-
-      var flyDot = document.getElementById('flyDot');
-      flyDot.style.display = 'block';
-
-      var rRect = fR.getBoundingClientRect();
-      var lRect = fL.getBoundingClientRect();
-      var stageRect = document.querySelector('.visual-stage').getBoundingClientRect();
-
-      var startX = rRect.left - stageRect.left + 20;
-      var startY = rRect.top - stageRect.top + 20;
-      var endX = lRect.left - stageRect.left + 140;
-      var endY = lRect.top - stageRect.top + 20;
-
-      flyDot.style.left = startX + 'px';
-      flyDot.style.top = startY + 'px';
-      flyDot.style.transition = 'none';
-
-      // 扣除右盒 1 顆
-      fR.setCount(q.visual_engine.props.right_initial - leftNeed);
-
-      requestAnimationFrame(function() {
-        flyDot.style.transition = 'all 320ms cubic-bezier(0.25, 1, 0.5, 1)';
-        flyDot.style.left = endX + 'px';
-        flyDot.style.top = (endY - 30) + 'px';
-
-        setTimeout(function() {
-          flyDot.style.top = endY + 'px';
-          setTimeout(function() {
-            flyDot.style.display = 'none';
-            fL.setCount(10); // 左盒滿十金色鎖定
-          }, 80);
-        }, 240);
+    /* ===== 動畫工具：拋物線飛行一顆 ===== */
+    function clearDemoTimers() {
+      demoTimers.forEach(function (t) { clearTimeout(t); });
+      demoTimers = [];
+      var fd = $('flyDot');
+      fd.style.display = 'none';
+      fd.style.transition = 'none';
+    }
+    function later(fn, ms) {
+      var t = setTimeout(fn, ms);
+      demoTimers.push(t);
+      return t;
+    }
+    function flyOne(cb) {
+      var fd = $('flyDot');
+      var stage = document.querySelector('.visual-stage').getBoundingClientRect();
+      var r = fR.getBoundingClientRect();
+      var l = fL.getBoundingClientRect();
+      var sx = r.left - stage.left + r.width / 2 - 11;
+      var sy = r.top - stage.top + r.height / 2 - 11;
+      var ex = l.left - stage.left + l.width / 2 - 11;
+      var ey = l.top - stage.top + l.height / 2 - 11;
+      fd.style.transition = 'none';
+      fd.style.left = sx + 'px';
+      fd.style.top = sy + 'px';
+      fd.style.display = 'block';
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          fd.style.transition = 'left 280ms cubic-bezier(0.25,1,0.5,1), top 140ms ease-out';
+          fd.style.left = ex + 'px';
+          fd.style.top = (ey - 26) + 'px';
+          later(function () {
+            fd.style.transition = 'top 120ms ease-in';
+            fd.style.top = ey + 'px';
+            later(function () {
+              fd.style.display = 'none';
+              if (cb) cb();
+            }, 120);
+          }, 280);
+        });
       });
     }
 
-    document.getElementById('btnPlayDemo').onclick = function() {
-      var q = questions[currentIdx];
-      var fL = document.getElementById('frameLeft');
-      var fR = document.getElementById('frameRight');
-      fL.setCount(q.visual_engine.props.left_initial);
-      fR.setCount(q.visual_engine.props.right_initial);
-      setTimeout(playMakeTenAnimation, 200);
-    };
-
-    document.getElementById('btnNext').onclick = function() {
-      if (currentIdx < questions.length - 1) {
-        currentIdx++;
-        renderQuestion(currentIdx);
+    /* ===== 演示一：湊十飛補（add） ===== */
+    function playAddDemo() {
+      var p = questions[currentIdx].visual_engine.props;
+      var left = p.left_initial, right = p.right_initial;
+      fL.setCount(left);
+      fR.setCount(right);
+      if (right <= 0) return;
+      var total = left + right;
+      var moveCount = right;
+      var k = 0;
+      if (total >= 10) {
+        var need = 10 - left;
+        $('demoCaption').textContent = '大數 ' + left + '，從右邊拿 ' + need + ' 顆湊成 10！';
       } else {
-        alert('恭喜完成 N-1-3 湊十拆十全部 10 題段考考題！');
+        $('demoCaption').textContent = left + ' 加上 ' + right + ' 合併成 ' + total + '！';
       }
-    };
+      function step() {
+        k++;
+        flyOne(function () {
+          fR.setCount(right - k);
+          fL.setCount(left + k);
+          if (k < moveCount) {
+            later(step, 160);
+          } else {
+            $('demoCaption').textContent = questions[currentIdx].explanation.breakdown_tree.step_3;
+            $('btnPlayDemo').disabled = false;
+          }
+        });
+      }
+      step();
+    }
+        });
+      }
+      step();
+    }
+
+    /* ===== 演示二：破十拆十（subtract）：800ms 呼吸淡出割捨 → 個位合體 ===== */
+    function playSubDemo() {
+      var p = questions[currentIdx].visual_engine.props;
+      var ones = p.right_initial;
+      var take = (p.take_away != null) ? p.take_away : p.target;
+      fL.setCount(p.left_initial);
+      fR.setCount(ones);
+      $('demoCaption').textContent = '個位不夠減，拆開整盒 10！';
+      var ok = fL.takeAway(take, function (next) {
+        $('demoCaption').textContent = '10 － ' + take + ' ＝ ' + next;
+        var k = 0;
+        function merge() {
+          k++;
+          flyOne(function () {
+            fR.setCount(ones - k);
+            fL.setCount(next + k);
+            if (k < ones) {
+              later(merge, 150);
+            } else {
+              $('demoCaption').textContent = questions[currentIdx].explanation.breakdown_tree.step_3;
+              $('btnPlayDemo').disabled = false;
+            }
+          });
+        }
+        if (ones > 0) later(merge, 250);
+        else { $('demoCaption').textContent = questions[currentIdx].explanation.breakdown_tree.step_3; $('btnPlayDemo').disabled = false; }
+      });
+      if (!ok) { $('demoCaption').textContent = ''; $('btnPlayDemo').disabled = false; }
+    }
+
+    function playDemo() {
+      var p = questions[currentIdx].visual_engine.props;
+      clearDemoTimers();
+      $('btnPlayDemo').disabled = true;
+      if (p.operation === 'add') later(playAddDemo, 60);
+      else later(playSubDemo, 60);
+    }
+
+    $('btnPlayDemo').addEventListener('click', playDemo);
+
+    /* ===== 導航 ===== */
+    function goTo(i) {
+      if (i < 0 || i >= questions.length || i === currentIdx) return;
+      currentIdx = i;
+      renderQuestion(i);
+    }
+    $('btnPrev').addEventListener('click', function () { goTo(currentIdx - 1); });
+    $('btnNext').addEventListener('click', function () {
+      if (currentIdx < questions.length - 1) { goTo(currentIdx + 1); return; }
+      var done = answers.filter(function (a) { return a !== -1; }).length;
+      var correct = answers.filter(function (a, i) { return a === questions[i].answer_index; }).length;
+      var banner = $('finishBanner');
+      banner.textContent = '🎉 恭喜完成 N-1-3 湊十拆十全部 ' + questions.length + ' 題段考真題！答對 ' + correct + ' / ' + done + ' 題。';
+      banner.classList.add('show');
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    /* ===== 啟動：先以內嵌數據秒開，再嘗試遠端題庫覆寫 ===== */
+    answers = questions.map(function () { return -1; });
+    buildDots();
+    renderQuestion(0);
+    tryFetchRemote();
   </script>
 </body>
 </html>
