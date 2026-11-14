@@ -23,17 +23,20 @@
             background: radial-gradient(circle at top left, rgba(255,215,175,0.35) 0%, transparent 50%),
                         radial-gradient(circle at bottom right, rgba(255,190,140,0.25) 0%, transparent 50%), var(--bg);
             color: var(--text-dark);
-            overflow: hidden;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 6px;
-            height: 100vh;
+            height: auto;
+            min-height: auto;
         }
         .container {
             width: 100%;
-            max-width: 380px;
-            min-height: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            height: auto;
+            min-height: auto;
             display: flex;
             flex-direction: column;
             gap: 5px;
@@ -50,6 +53,10 @@
             font-weight: 500;
         }
         .stage-area {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
             background: var(--card);
             border-radius: 16px;
             box-shadow: 0 6px 18px rgba(149,117,76,0.10);
@@ -163,26 +170,29 @@
         /* ===== 跳數小火車（q3/q9） ===== */
         .train-track {
             display: flex; align-items: flex-end;
-            position: relative; gap: 3px;
-            padding: 20px 2px 9px;
-            width: 100%;
+            position: relative; gap: 2px;
+            padding: 18px 2px 8px;
+            width: 100%; max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
-        .loco { flex-shrink: 0; width: 52px; height: 40px; position: relative; z-index: 2; margin-right: -4px; }
+        .loco { flex-shrink: 0; width: 32px; height: 26px; position: relative; z-index: 2; margin-right: -2px; }
         .loco svg { width: 100%; height: 100%; overflow: visible; }
         .car {
-            flex-shrink: 0;
-            min-width: 40px; height: 42px;
+            flex: 1 1 0;
+            min-width: 0; height: 38px;
             background: linear-gradient(180deg, #b0603a, #8b4a2a);
             border: 2px solid #7a3f20;
-            border-radius: 8px;
+            border-radius: 6px;
             position: relative;
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-size: 10px; font-weight: bold;
+            padding: 0 1px;
             box-shadow: inset 0 -3px 5px rgba(0,0,0,0.2);
         }
         .car::before, .car::after {
             content: ''; position: absolute; bottom: -6px;
-            width: 10px; height: 10px; border-radius: 50%;
+            width: 9px; height: 9px; border-radius: 50%;
             background: #444; border: 2px solid #222; z-index: 3;
         }
         .car::before { left: 4px; }
@@ -252,31 +262,31 @@
         .vs { align-self: center; font-size: 13px; font-weight: bold; color: var(--text-light); }
 
         /* ===== 立體卡牌桌遊盤（q6） ===== */
-        .card-tray { display: flex; gap: 7px; margin-bottom: 5px; }
+        .card-tray { display: flex; gap: 5px; margin-bottom: 3px; }
         .num-card {
-            width: 36px; height: 46px;
+            width: 34px; height: 38px;
             background: #fff; border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.12);
             border: 1px solid rgba(0,0,0,0.1);
             position: relative; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
-            font-size: 19px; font-weight: bold; color: var(--text-dark);
+            font-size: 17px; font-weight: bold; color: var(--text-dark);
         }
         .num-card::before {
             content: ''; position: absolute; top: 2px; left: 2px; right: 2px; height: 5px;
             background: linear-gradient(to bottom, rgba(255,255,255,0.85), transparent);
             border-radius: 7px 7px 0 0;
         }
-        .duel-row { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+        .duel-row { display: flex; align-items: center; gap: 5px; margin: 1px 0; }
         .duel-label { font-size: 10px; font-weight: bold; white-space: nowrap; }
         .duel-label.max { color: #c99a1e; }
         .duel-label.min { color: #7a9e6b; }
-        .duel-slots { display: flex; gap: 4px; background: #f3ede4; border-radius: 8px; padding: 4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); }
+        .duel-slots { display: flex; gap: 3px; background: #f3ede4; border-radius: 8px; padding: 3px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); }
         .card-slot {
-            width: 36px; height: 44px;
+            width: 34px; height: 36px;
             border: 2px dashed #ccc; border-radius: 7px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 16px; font-weight: bold; color: #bbb;
+            font-size: 14px; font-weight: bold; color: #bbb;
             background: rgba(255,255,255,0.55);
         }
         .card-slot.filled { border: 2px solid var(--sky); background: #fff; color: var(--text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.12); animation: popIn 0.3s; }

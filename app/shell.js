@@ -132,7 +132,13 @@ function renderQuestion() {
   frame.src = q.component_path || q.component;
   frame.onload = () => fitFrame(frame, q);
   // 同源可讀時持續自適應高度；file:// 跨檔受限時保持緊湊高度
-  heightTimer = setInterval(() => fitFrame(frame, q), 600);
+  // 約 2.5 秒（6 次）穩定高度後自動停止輪詢，消滅無窮重排抖動
+  let fitTicks = 0;
+  heightTimer = setInterval(() => {
+    fitFrame(frame, q);
+    fitTicks += 1;
+    if (fitTicks >= 6) clearInterval(heightTimer);
+  }, 600);
 }
 
 function fitFrame(frame, q) {
@@ -142,7 +148,10 @@ function fitFrame(frame, q) {
     const container = doc.querySelector('#app') || doc.querySelector('.container') || doc.body;
     if (!container) return;
     const h = Math.ceil(container.getBoundingClientRect().height || container.scrollHeight);
-    if (h > 100) frame.style.height = (h + 8) + "px";
+    if (h > 100) {
+      const curH = parseInt(frame.style.height, 10) || 0;
+      if (Math.abs(curH - h) > 4) frame.style.height = (h + 8) + "px";
+    }
   } catch (_e) {
     /* file:// 同源限制 → 保持 fallback */
   }
