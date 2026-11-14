@@ -129,7 +129,12 @@
   2. `multiplication_division_relation_lab.html` 日系擬物乘除關係與未知數實驗台：純 SVG 旋轉算式卡、雙天平對照、估算進度條、未知數長條圖、雙步驟解密槽。
   3. 雙硬閘門全綠：`verify_n36.js`（資料契約＋逐題數學真值驗算）與 `verify_n36_cdp.js`（390px 實機 10/10 題 app 高度 387~414px ≤ 420px、零溢出、零 console 錯誤）。
   4. 課綱同步：`curriculum.json` N-3-6 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 17 條全綠。
-- [ ] 下一步：推進三年級第七單元 `N-3-7 兩步驟應用問題（加減與除、連乘）`（連乘、加與除、減與除之應用解題，不含併式）。
+- [x] Session 29 G3-N-3-7 兩步驟應用問題 100% 落地閉環（已開放 7/24，全專案 18/131 條目，批次 A 第三戰完工）：
+  1. 10 題多樣化兩步驟真題落地（`data/units/G3/N-3-7.json`，不含併式）：規律探索連乘結合律（(4×5)×12 vs 4×(5×12) 均 240）、秒殺比大小（8×4×2＞8×4÷2）、兩步驟採買估算（48×3＋65→找零41）、漏乘除錯偵探（小明 85 ✗ → 正解 160）、先減後除繩長陷阱（123－19=104→÷4=26）、連乘雙層包裝（64 顆）、先乘後除平分（36÷6=6）、先除後減分裝（20－18=2 盒）、先減後除土司用量（900÷6=150ml）、綜合階梯氣球連乘（300 顆）。
+  2. `two_step_problem_lab.html` 日系擬物階梯式解題實驗台：10 種視覺模式（associate/compare/estimate/detective/wire_trap/boxes/oranges/apples/milk_toast/balloons）。
+  3. 雙硬閘門全綠：`verify_n37.js`（資料契約＋逐題兩步驟數學真值驗算）與 `verify_n37_cdp.js`（390px 實機 10/10 題 app 高度 367~409px ≤ 420px、零溢出、零 console 錯誤）。
+  4. 課綱同步：`curriculum.json` N-3-7 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 18 條全綠。
+- [ ] 下一步：推進三年級第八單元 `N-3-8 四則估算`（具體生活情境、較大位數之估算策略、估算檢驗合理性）。
 
 
 ---
