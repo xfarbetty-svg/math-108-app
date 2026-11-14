@@ -473,6 +473,7 @@
 
     // Q1: 1L = 1000mL
     function drawQ1(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(45, 20)">
                 <!-- 1L 量杯 -->
@@ -482,107 +483,139 @@
             </g>
             <text x="120" y="65" font-size="20" font-weight="bold" fill="#64748b" text-anchor="middle">＝</text>
             <g transform="translate(135, 20)">
-                <!-- 1000mL 標記 -->
+                <!-- 毫升量杯 -->
                 <rect x="0" y="0" width="65" height="85" rx="3" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
                 <rect x="2" y="15" width="61" height="68" fill="#34d399" opacity="0.6"/>
-                <text x="32" y="55" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">1000 mL</text>
+                <text x="32" y="55" font-size="${isRevealed ? '10.5' : '14'}" font-weight="bold" fill="#ffffff" text-anchor="middle">${isRevealed ? '1000 mL' : '? mL'}</text>
             </g>
-            <rect x="35" y="120" width="170" height="22" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
-            <text x="120" y="135" font-size="10.5" font-weight="bold" fill="#0284c7" text-anchor="middle">1 公升 (L) ＝ 1000 毫升 (mL) ✓</text>
+            <rect x="35" y="120" width="170" height="22" rx="4" fill="${isRevealed ? '#ecfdf5' : '#f8fafc'}" stroke="${isRevealed ? '#10b981' : '#cbd5e1'}"/>
+            <text x="120" y="135" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '1 公升 (L) ＝ 1000 毫升 (mL) ✓' : '想一想：1 公升等於多少毫升？'}
+            </text>
         `;
     }
 
     // Q2: 生活容量量感 (家庭號鮮奶 2L)
     function drawQ2(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(40, 20)">
                 <!-- 家庭號牛奶 -->
                 <rect x="0" y="15" width="45" height="70" rx="4" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
                 <rect x="10" y="0" width="25" height="15" rx="2" fill="#38bdf8"/>
-                <text x="22" y="52" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">2 L</text>
-                <text x="22" y="98" font-size="9" fill="#0284c7" text-anchor="middle">家庭號牛奶</text>
+                <text x="22" y="52" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">${isRevealed ? '2 L' : '？'}</text>
+                <text x="22" y="98" font-size="9" fill="#0284c7" text-anchor="middle">家庭號鮮奶</text>
             </g>
             <g transform="translate(140, 35)">
                 <!-- 養樂多 100mL -->
                 <rect x="0" y="10" width="28" height="45" rx="2" fill="#fed7aa" stroke="#ea580c"/>
                 <text x="14" y="35" font-size="8" font-weight="bold" fill="#9a3412" text-anchor="middle">100mL</text>
-                <text x="14" y="68" font-size="9" fill="#ea580c" text-anchor="middle">養樂多</text>
+                <text x="14" y="68" font-size="9" fill="#ea580c" text-anchor="middle">小養樂多</text>
             </g>
-            <rect x="35" y="120" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
-            <text x="120" y="135" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">家庭號鮮奶容量約 2 公升 ✓</text>
+            <rect x="35" y="120" width="170" height="22" rx="4" fill="${isRevealed ? '#ecfdf5' : '#f8fafc'}" stroke="${isRevealed ? '#10b981' : '#cbd5e1'}"/>
+            <text x="120" y="135" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '家庭號鮮奶容量約 2 公升 ✓' : '估估看：家庭號大瓶鮮奶大約是幾公升？'}
+            </text>
         `;
     }
 
     // Q3: 3公升4毫升 = 3004毫升 (補0)
     function drawQ3(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(30, 25)">
                 <rect x="0" y="0" width="180" height="75" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
-                <text x="20" y="25" font-size="11" font-weight="bold" fill="#0284c7">① 3 公升 ＝ 3000 毫升</text>
-                <text x="20" y="48" font-size="11" font-weight="bold" fill="#d97706">② 加上 4 毫升：</text>
-                <text x="35" y="68" font-size="12" font-weight="bold" fill="#ef4444">3000 ＋ 4 ＝ 3004 毫升 ✓</text>
+                <text x="20" y="25" font-size="11" font-weight="bold" fill="#0284c7">3 公升 4 毫升 ＝ ？ 毫升</text>
+                ${isRevealed ? `
+                    <text x="20" y="48" font-size="10.5" fill="#475569">① 3 公升 ＝ 3000 毫升</text>
+                    <text x="20" y="68" font-size="11" font-weight="bold" fill="#ef4444">② 3000 ＋ 4 ＝ 3004 毫升 ✓</text>
+                ` : `
+                    <text x="20" y="52" font-size="10" fill="#64748b">提示：1 公升是 1000 毫升</text>
+                `}
             </g>
-            <text x="120" y="125" font-size="10.5" font-weight="bold" fill="#dc2626" text-anchor="middle">⚠️ 百位與十位補 0，不是 34 或 304！</text>
+            <text x="120" y="125" font-size="10" font-weight="bold" fill="#dc2626" text-anchor="middle">
+                ${isRevealed ? '⚠️ 百位與十位補 0，不是 34 或 304！' : '注意：換算時百位與十位要注意位數！'}
+            </text>
         `;
     }
 
     // Q4: 4080毫升 = 4公升80毫升
     function drawQ4(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(35, 20)">
                 <rect x="0" y="0" width="170" height="30" rx="4" fill="#f0fdf4" stroke="#86efac"/>
                 <text x="85" y="20" font-size="11" font-weight="bold" fill="#15803d" text-anchor="middle">果汁總量：4080 毫升</text>
             </g>
-            <path d="M 80 55 L 60 75" stroke="#10b981" stroke-width="2"/>
-            <path d="M 160 55 L 180 75" stroke="#f59e0b" stroke-width="2"/>
-            <g transform="translate(25, 78)">
-                <rect x="0" y="0" width="80" height="40" rx="4" fill="#ecfdf5" stroke="#10b981"/>
-                <text x="40" y="18" font-size="9" fill="#047857" text-anchor="middle">4000 毫升 ＝</text>
-                <text x="40" y="32" font-size="11" font-weight="bold" fill="#047857" text-anchor="middle">4 公升</text>
-            </g>
-            <g transform="translate(135, 78)">
-                <rect x="0" y="0" width="80" height="40" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
-                <text x="40" y="18" font-size="9" fill="#b45309" text-anchor="middle">剩下 80 毫升</text>
-                <text x="40" y="32" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">80 毫升</text>
-            </g>
-            <text x="120" y="138" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">合為：4 公升 80 毫升 ✓</text>
+            ${isRevealed ? `
+                <path d="M 80 55 L 60 75" stroke="#10b981" stroke-width="2"/>
+                <path d="M 160 55 L 180 75" stroke="#f59e0b" stroke-width="2"/>
+                <g transform="translate(25, 78)">
+                    <rect x="0" y="0" width="80" height="40" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+                    <text x="40" y="18" font-size="9" fill="#047857" text-anchor="middle">4000 毫升 ＝</text>
+                    <text x="40" y="32" font-size="11" font-weight="bold" fill="#047857" text-anchor="middle">4 公升</text>
+                </g>
+                <g transform="translate(135, 78)">
+                    <rect x="0" y="0" width="80" height="40" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+                    <text x="40" y="18" font-size="9" fill="#b45309" text-anchor="middle">剩下 80 毫升</text>
+                    <text x="40" y="32" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">80 毫升</text>
+                </g>
+                <text x="120" y="138" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">合為：4 公升 80 毫升 ✓</text>
+            ` : `
+                <text x="120" y="80" font-size="11" fill="#64748b" text-anchor="middle">每滿 1000 毫升可以換成 1 公升</text>
+                <text x="120" y="130" font-size="10.5" fill="#0284c7" text-anchor="middle">4080 毫升是幾公升幾毫升？</text>
+            `}
         `;
     }
 
     // Q5: 1000mL 量杯 700 刻度
     function drawQ5(g, step) {
+        // 量杯刻度幾何：滿杯 1000mL 在 y=16，800mL 在 y=36，600mL 在 y=56
+        // 700mL 正好在 36 與 56 正中間：y = 46
+        // 藍色水面頂部嚴格對齊 y = 46，到底部 height = 50
+        const isRevealed = (step >= 2);
         g.innerHTML = `
-            <g transform="translate(85, 15)">
+            <g transform="translate(85, 12)">
                 <!-- 量杯外框 -->
-                <rect x="0" y="0" width="70" height="95" rx="3" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
-                <!-- 水位 700mL (高度約 66.5px) -->
-                <rect x="2" y="28" width="66" height="65" fill="#38bdf8" opacity="0.6"/>
+                <rect x="0" y="0" width="70" height="98" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                <!-- 水位 700mL (精準停在 y=46 刻度線，剛好在 600 與 800 正中間) -->
+                <rect x="2" y="46" width="66" height="50" fill="#38bdf8" opacity="0.6"/>
                 <!-- 刻度線 -->
-                <line x1="0" y1="15" x2="15" y2="15" stroke="#333"/><text x="18" y="18" font-size="8">1000</text>
-                <line x1="0" y1="35" x2="15" y2="35" stroke="#333"/><text x="18" y="38" font-size="8">800</text>
-                <!-- 700 中線 -->
-                <line x1="0" y1="45" x2="20" y2="45" stroke="#ef4444" stroke-width="2"/><text x="22" y="48" font-size="9" font-weight="bold" fill="#ef4444">700</text>
-                <line x1="0" y1="55" x2="15" y2="55" stroke="#333"/><text x="18" y="58" font-size="8">600</text>
+                <line x1="0" y1="16" x2="16" y2="16" stroke="#475569" stroke-width="1.5"/><text x="20" y="19" font-size="8.5" fill="#475569">1000</text>
+                <line x1="0" y1="36" x2="16" y2="36" stroke="#475569" stroke-width="1.5"/><text x="20" y="39" font-size="8.5" fill="#475569">800</text>
+                <!-- 700 中長中線 (紅色標記，未揭開前顯示 ? 不劇透) -->
+                <line x1="0" y1="46" x2="22" y2="46" stroke="#ef4444" stroke-width="2"/>
+                <text x="25" y="49" font-size="9" font-weight="bold" fill="#ef4444">${isRevealed ? '700' : '?'}</text>
+                <line x1="0" y1="56" x2="16" y2="56" stroke="#475569" stroke-width="1.5"/><text x="20" y="59" font-size="8.5" fill="#475569">600</text>
+                <line x1="0" y1="76" x2="16" y2="76" stroke="#475569" stroke-width="1.5"/><text x="20" y="79" font-size="8.5" fill="#475569">400</text>
             </g>
-            <text x="120" y="130" font-size="11" font-weight="bold" fill="#0284c7" text-anchor="middle">水面在 600 與 800 正中間 ＝ 700 毫升 ✓</text>
+            <text x="120" y="130" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#0284c7' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '水面在 600 與 800 正中間 ＝ 700 毫升 ✓' : '觀察量杯中的水面停在 600 與 800 正中間刻度'}
+            </text>
         `;
     }
 
     // Q6: 2L 20mL = 2020mL
     function drawQ6(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(35, 30)">
                 <rect x="0" y="0" width="170" height="55" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
-                <text x="20" y="22" font-size="10" fill="#64748b">統一換算為毫升：</text>
-                <text x="20" y="42" font-size="12" font-weight="bold" fill="#0284c7">2L 20mL ＝ 2020 毫升</text>
+                <text x="20" y="24" font-size="10.5" fill="#64748b">容量換算比較：</text>
+                <text x="20" y="44" font-size="12" font-weight="bold" fill="#0284c7">
+                    2 公升 20 毫升 ${isRevealed ? '＝ 2020 毫升' : '◯ 2020 毫升'}
+                </text>
             </g>
-            <rect x="35" y="115" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
-            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">2 公升 20 毫升 ＝ 2020 毫升 ✓</text>
+            <rect x="35" y="115" width="170" height="22" rx="4" fill="${isRevealed ? '#ecfdf5' : '#f8fafc'}" stroke="${isRevealed ? '#10b981' : '#cbd5e1'}"/>
+            <text x="120" y="130" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '2 公升 20 毫升 ＝ 2020 毫升 ✓' : '比比看：哪一個選項的等式正確？'}
+            </text>
         `;
     }
 
     // Q7: 容量加法進位
     function drawQ7(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(50, 15)">
                 <rect x="0" y="0" width="140" height="100" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
@@ -590,9 +623,11 @@
                 <text x="90" y="18" font-size="10" font-weight="bold" fill="#d97706">毫升</text>
                 <line x1="10" y1="23" x2="130" y2="23" stroke="#cbd5e1"/>
 
-                <!-- 進位 ① -->
-                <circle cx="38" cy="30" r="5" fill="#ef4444"/>
-                <text x="38" y="33" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+                ${isRevealed ? `
+                    <!-- 進位 ① -->
+                    <circle cx="38" cy="30" r="5" fill="#ef4444"/>
+                    <text x="38" y="33" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+                ` : ''}
 
                 <text x="35" y="45" font-size="11" font-weight="bold">2</text>
                 <text x="90" y="45" font-size="11" font-weight="bold">650</text>
@@ -601,42 +636,60 @@
                 <text x="90" y="62" font-size="11" font-weight="bold">550</text>
                 <line x1="10" y1="68" x2="130" y2="68" stroke="#333" stroke-width="1.5"/>
 
-                <text x="35" y="85" font-size="12" font-weight="bold" fill="#047857">4</text>
-                <text x="90" y="85" font-size="12" font-weight="bold" fill="#047857">200</text>
+                ${isRevealed ? `
+                    <text x="35" y="85" font-size="12" font-weight="bold" fill="#047857">4</text>
+                    <text x="90" y="85" font-size="12" font-weight="bold" fill="#047857">200</text>
+                ` : `
+                    <text x="35" y="85" font-size="12" fill="#94a3b8">?</text>
+                    <text x="90" y="85" font-size="12" fill="#94a3b8">?</text>
+                `}
             </g>
-            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">滿 1000 毫升進 1 公升 ＝ 4L 200mL ✓</text>
+            <text x="120" y="130" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '滿 1000 毫升進 1 公升 ＝ 4L 200mL ✓' : '毫升與毫升相加，滿 1000 進 1 公升'}
+            </text>
         `;
     }
 
     // Q8: 容量減法退位
     function drawQ8(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(45, 20)">
                 <rect x="0" y="0" width="150" height="70" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
-                <text x="15" y="22" font-size="10.5" font-weight="bold" fill="#0284c7">4 公升 ＝ 4000 毫升</text>
-                <text x="15" y="42" font-size="11" font-weight="bold" fill="#dc2626">4000 － 3280 ＝ 720 毫升</text>
-                <text x="15" y="60" font-size="9" fill="#64748b">(借 1 公升當 1000 毫升)</text>
+                <text x="15" y="24" font-size="10.5" font-weight="bold" fill="#0284c7">原有：4 公升 (4000 毫升)</text>
+                <text x="15" y="44" font-size="11" font-weight="bold" fill="#dc2626">
+                    ${isRevealed ? '4000 － 3280 ＝ 720 毫升' : '用掉：？ 毫升（剩下 3280mL）'}
+                </text>
+                <text x="15" y="60" font-size="9" fill="#64748b">(1 公升換為 1000 毫升相減)</text>
             </g>
-            <rect x="40" y="115" width="160" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
-            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">用掉熱水：720 毫升 ✓</text>
+            <rect x="40" y="115" width="160" height="22" rx="4" fill="${isRevealed ? '#ecfdf5' : '#f8fafc'}" stroke="${isRevealed ? '#10b981' : '#cbd5e1'}"/>
+            <text x="120" y="130" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '用掉熱水：720 毫升 ✓' : '算算看：原本的水扣掉剩下的水'}
+            </text>
         `;
     }
 
     // Q9: 檸檬紅茶混合
     function drawQ9(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(30, 20)">
                 <rect x="0" y="0" width="180" height="60" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
-                <text x="15" y="22" font-size="10" font-weight="bold" fill="#ea580c">檸檬汁 90mL ＋ 紅茶 2L 60mL</text>
-                <text x="15" y="42" font-size="11" font-weight="bold" fill="#047857">60 ＋ 90 ＝ 150 毫升</text>
+                <text x="15" y="24" font-size="10" font-weight="bold" fill="#ea580c">檸檬汁 90mL ＋ 紅茶 2L 60mL</text>
+                <text x="15" y="46" font-size="11" font-weight="bold" fill="#047857">
+                    ${isRevealed ? '60 ＋ 90 ＝ 150 毫升' : '毫升與毫升合併相加：60 ＋ 90 ＝ ?'}
+                </text>
             </g>
-            <rect x="35" y="115" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
-            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">總量：2 公升 150 毫升 ✓</text>
+            <rect x="35" y="115" width="170" height="22" rx="4" fill="${isRevealed ? '#ecfdf5' : '#f8fafc'}" stroke="${isRevealed ? '#10b981' : '#cbd5e1'}"/>
+            <text x="120" y="130" font-size="10.5" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '總量：2 公升 150 毫升 ✓' : '合在一起共有幾公升幾毫升？'}
+            </text>
         `;
     }
 
     // Q10: 小南 vs 小冬飲水差量
     function drawQ10(g, step) {
+        const isRevealed = (step >= 1);
         g.innerHTML = `
             <g transform="translate(30, 15)">
                 <!-- 小南 2500mL -->
@@ -644,12 +697,14 @@
                 <text x="10" y="24" font-size="9.5" font-weight="bold" fill="#0369a1">小南：2500 毫升</text>
                 <!-- 小冬 2L 50mL = 2050mL -->
                 <rect x="0" y="38" width="105" height="20" rx="3" fill="#fed7aa" stroke="#ea580c"/>
-                <text x="10" y="52" font-size="9.5" font-weight="bold" fill="#9a3412">小冬：2050 毫升</text>
+                <text x="10" y="52" font-size="9.5" font-weight="bold" fill="#9a3412">小冬：2L 50mL (2050mL)</text>
                 <line x1="105" y1="38" x2="130" y2="38" stroke="#ef4444" stroke-dasharray="2 2"/>
-                <text x="135" y="45" font-size="9" font-weight="bold" fill="#ef4444">多450</text>
+                <text x="135" y="45" font-size="9" font-weight="bold" fill="#ef4444">${isRevealed ? '多450' : '差?'}</text>
             </g>
-            <rect x="30" y="115" width="180" height="24" rx="4" fill="#ecfdf5" stroke="#10b981"/>
-            <text x="120" y="131" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">小南喝得多，多 450 毫升 ✓</text>
+            <rect x="30" y="115" width="180" height="24" rx="4" fill="${isRevealed ? '#ecfdf5' : '#f8fafc'}" stroke="${isRevealed ? '#10b981' : '#cbd5e1'}"/>
+            <text x="120" y="131" font-size="10" font-weight="${isRevealed ? 'bold' : 'normal'}" fill="${isRevealed ? '#047857' : '#64748b'}" text-anchor="middle">
+                ${isRevealed ? '小南喝得多，多 450 毫升 ✓' : '算算看：誰喝得多？相差多少？'}
+            </text>
         `;
     }
 
