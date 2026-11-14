@@ -1,0 +1,265 @@
+{
+  "code": "N-3-5",
+  "title": "除以一位數",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-2 期中/期末 ＋ 114-2 期中 ＋ 高雄市永安國小 114-2 期中 [通道二: A-SERVER SSH (GLM 備援)]",
+  "questions": [
+    {
+      "id": "G3-N-3-5-Q01",
+      "exam_source": "臺北市內湖國小 111-2 期中",
+      "section": "二、填填看",
+      "question_num": 8,
+      "title": "位值除法倍數規律探索",
+      "stem": "觀察算式的規律：已知 38 ÷ 2 ＝ 19，請問 3800 ÷ 2 ＝ ( ? )",
+      "choices": ["1900", "190", "19000", "19"],
+      "answer_index": 0,
+      "answer_raw": "1900",
+      "visual_mode": "pattern",
+      "final_check": "1900",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "位值除法倍數規律（商的變化）",
+        "steps": [
+          "38 ÷ 2 ＝ 19，這是基本的除法題",
+          "被除數 38 擴大 10 倍變成 380，除數 2 不變，商也跟著擴大 10 倍：380 ÷ 2 ＝ 190",
+          "被除數再擴大 10 倍變成 3800，商就擴大 100 倍：19 × 100 ＝ 1900"
+        ],
+        "trap": "被除數尾巴多幾個 0，商就跟著補幾個 0；補成 19000 是多補了一個 0，補成 190 是只擴大 10 倍少算了一次。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q02",
+      "exam_source": "臺北市內湖國小 114-2 期中",
+      "section": "三、比大小",
+      "question_num": 3,
+      "title": "被除數相同免算比大小",
+      "stem": "比一比，在括號中應該填入哪一個符號？ 100 ÷ 10  ( ? )  100 ÷ 5",
+      "choices": ["＜", "＞", "＝", "無法比較"],
+      "answer_index": 0,
+      "answer_raw": "＜",
+      "visual_mode": "compare",
+      "final_check": "＜",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "被除數相同時免計算比大小",
+        "steps": [
+          "兩邊的被除數都是 100，總量完全相同",
+          "100 ÷ 10：把 100 平分給 10 個人，每人得 10；100 ÷ 5：把 100 平分給 5 個人，每人得 20",
+          "除數越大，平分給越多人，每人分到的商反而越小：10 ＜ 20，所以 100 ÷ 10 ＜ 100 ÷ 5"
+        ],
+        "trap": "看到除法就以為要逐題硬算，其實被除數相同時，除數越大商越小，不用動筆就能秒答。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q03",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "一、是非題",
+      "question_num": 1,
+      "title": "商的位數判斷與概數估算",
+      "stem": "在算式「86 ÷ 5 ＝ 17 … 1」中，商是幾位數？（動動腦：最高位十位 8 夠不夠除以 5 呢？）",
+      "choices": ["二位數", "一位數", "三位數", "四位數"],
+      "answer_index": 0,
+      "answer_raw": "二位數",
+      "visual_mode": "digits",
+      "final_check": "商是二位數 (17)",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "由最高位判斷商的位數",
+        "steps": [
+          "先看被除數 86 的最高位十位「8」：8 ＞ 5，夠除以 5",
+          "十位就能商「1」：1 × 5 ＝ 5，8 − 5 ＝ 3；移下個位 6 合成 36",
+          "36 ÷ 5：5 × 7 ＝ 35，36 − 35 ＝ 1，商的個位寫 7",
+          "商的最高位在十位，因此商是二位數（商是 17，餘數 1）"
+        ],
+        "trap": "誤以為 86 有兩個數字商就一定兩位數；其實要看最高位夠不夠除：8 ＞ 5 夠除，商才從十位開始寫。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q04",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "三、改錯題",
+      "question_num": 1,
+      "title": "直式不夠除忘記補0改錯小偵探",
+      "stem": "小明用直式計算「618 ÷ 6」，他算出來的答案是「13」，請問他哪裡算錯了？",
+      "choices": ["十位 1 不夠除以 6 時，商的十位忘記補 0，正確答案是 103", "個位 8 算錯了，應該是 14", "百位 6 ÷ 6 應該等於 0", "算式完全正確沒有錯"],
+      "answer_index": 0,
+      "answer_raw": "十位 1 不夠除以 6 時，商的十位忘記補 0，正確答案是 103",
+      "visual_mode": "detective",
+      "final_check": "正確答案是 103 (商中間補 0)",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "直式除法十位不夠除要補 0（偵錯思維）",
+        "steps": [
+          "小明算出 618 ÷ 6 ＝ 13，答案少了一位，放大鏡來找 bug",
+          "百位 6 ÷ 6 ＝ 1 這步沒有錯；移下十位 1，1 ＜ 6 不夠除以 6",
+          "十位不夠除時，必須在商的十位補「0」佔位，再移下個位 8 合成 18",
+          "18 ÷ 6 ＝ 3，所以正確答案是 103；小明直接跳過十位才會算成 13"
+        ],
+        "trap": "「不夠除就跳過」是直式除法最經典的錯誤；商中間一定要補 0 佔位，少一個 0 商就少一位。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q05",
+      "exam_source": "臺北市內湖國小 111-2 期中",
+      "section": "三、計算題",
+      "question_num": 3,
+      "title": "商中間含0經典直式陷阱",
+      "stem": "用直式計算「436 ÷ 4」，請問商是多少？",
+      "choices": ["109", "19", "108", "190"],
+      "answer_index": 0,
+      "answer_raw": "109",
+      "visual_mode": "zero_trap",
+      "final_check": "436 ÷ 4 ＝ 109",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "直式除法商中間含 0 陷阱",
+        "steps": [
+          "百位 4 ÷ 4 ＝ 1，商的百位寫 1；1 × 4 ＝ 4，4 − 4 ＝ 0",
+          "移下十位 3：3 ＜ 4 不夠除以 4，商的十位必須寫「0」",
+          "再移下個位 6 合成 36：36 ÷ 4 ＝ 9，36 − 36 ＝ 0",
+          "所以商是 109，絕不能寫成 19！"
+        ],
+        "trap": "十位不夠除時商要補 0：寫成 19 等於把 0 吃掉，商整整少了一位。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q06",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "一、是非題",
+      "question_num": 2,
+      "title": "剛好整除無餘數檢驗",
+      "stem": "計算「285 ÷ 5」，請問算式的結果是什麼？",
+      "choices": ["剛好整除，商是 57，沒有餘數", "商是 57，餘數是 1", "商是 55，餘數是 2", "商是 56，餘數是 5"],
+      "answer_index": 0,
+      "answer_raw": "剛好整除，商是 57，沒有餘數",
+      "visual_mode": "divisible",
+      "final_check": "285 ÷ 5 ＝ 57 (整除)",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "直式除法剛好整除無餘數",
+        "steps": [
+          "百位 2 ＜ 5 不夠除，看前兩位 28：5 × 5 ＝ 25，28 − 25 ＝ 3",
+          "移下個位 5 合成 35：5 × 7 ＝ 35，35 − 35 ＝ 0",
+          "完全減到 0，剛好整除沒有餘數，商是 57"
+        ],
+        "trap": "「餘數是 5」是錯的：餘數一定要比除數小，除數是 5 時餘數只可能是 0～4；減到 0 才是整除。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q07",
+      "exam_source": "臺北市內湖國小 111-2 期中",
+      "section": "三、計算題",
+      "question_num": 2,
+      "title": "三位數平分帶餘數直式應用",
+      "stem": "學校烘焙社做了 629 顆手工糖果，每 5 顆裝成一袋，最多可以裝成幾袋？還剩下幾顆？",
+      "choices": ["最多裝成 125 袋，剩下 4 顆", "最多裝成 124 袋，剩下 9 顆", "最多裝成 125 袋，剩下 0 顆", "最多裝成 120 袋，剩下 29 顆"],
+      "answer_index": 0,
+      "answer_raw": "最多裝成 125 袋，剩下 4 顆",
+      "visual_mode": "remainder",
+      "final_check": "125 袋 剩 4 顆",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "直式除法平分帶餘數的生活應用",
+        "steps": [
+          "百位 6 ÷ 5 ＝ 1 餘 1；1 × 5 ＝ 5，6 − 5 ＝ 1",
+          "移下十位 2 合成 12：12 ÷ 5 ＝ 2 餘 2；2 × 5 ＝ 10，12 − 10 ＝ 2",
+          "移下個位 9 合成 29：29 ÷ 5 ＝ 5 餘 4；5 × 5 ＝ 25，29 − 25 ＝ 4",
+          "餘數 4 ＜ 除數 5 合格！629 ÷ 5 ＝ 125 … 4，最多裝成 125 袋，剩下 4 顆"
+        ],
+        "trap": "剩下 4 顆不夠再裝一袋（一袋要 5 顆），不能進位說成 126 袋；餘數一定要比除數小。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q08",
+      "exam_source": "臺北市內湖國小 111-2 期中",
+      "section": "三、計算題",
+      "question_num": 1,
+      "title": "跨位進位直式除法應用",
+      "stem": "農場採收了 938 顆柳丁，平分裝進 7 個大木箱，請問每個大木箱可以裝幾顆柳丁？",
+      "choices": ["134 顆", "132 顆", "144 顆", "124 顆"],
+      "answer_index": 0,
+      "answer_raw": "134 顆",
+      "visual_mode": "carrying",
+      "final_check": "938 ÷ 7 ＝ 134",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "直式除法餘數跨位結合下一位",
+        "steps": [
+          "百位 9 ÷ 7 ＝ 1 餘 2；1 × 7 ＝ 7，9 − 7 ＝ 2",
+          "餘數 2 與十位 3 合成 23：7 × 3 ＝ 21，23 − 21 ＝ 2",
+          "餘數 2 與個位 8 合成 28：7 × 4 ＝ 28，剛好除盡",
+          "商是 134，每個大木箱可以裝 134 顆柳丁"
+        ],
+        "trap": "每一步的餘數都要跟下一位的數字「合體」再除，不能丟掉餘數直接除下一位。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q09",
+      "exam_source": "臺北市內湖國小 114-2 期中",
+      "section": "四、計算題",
+      "question_num": 5,
+      "title": "商含0整除直式檢驗",
+      "stem": "用直式計算「927 ÷ 9」，請問商是多少？",
+      "choices": ["103", "13", "130", "102"],
+      "answer_index": 0,
+      "answer_raw": "103",
+      "visual_mode": "zero_divisible",
+      "final_check": "927 ÷ 9 ＝ 103",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "直式除法商中間補 0 並剛好整除",
+        "steps": [
+          "百位 9 ÷ 9 ＝ 1；1 × 9 ＝ 9，9 − 9 ＝ 0",
+          "移下十位 2：2 ＜ 9 不夠除以 9，商的十位必須補「0」",
+          "再移下個位 7 合成 27：9 × 3 ＝ 27 剛好整除",
+          "所以商是 103，不能寫成 13"
+        ],
+        "trap": "十位 2 不夠除時商要補 0；927 ÷ 9 寫成 13 就是把十位的 0 吃掉了。"
+      }
+    },
+    {
+      "id": "G3-N-3-5-Q10",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "一、選擇題",
+      "question_num": 4,
+      "title": "未知被除數逆向推導",
+      "stem": "算式「( ? ) ÷ 8 ＝ 32」中，括號裡的被除數應該是多少？",
+      "choices": ["256", "4", "240", "264"],
+      "answer_index": 0,
+      "answer_raw": "256",
+      "visual_mode": "reverse",
+      "final_check": "32 × 8 ＝ 256",
+      "component": "division-vertical-lab",
+      "component_path": "components/division_vertical_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘除互逆與除法驗算原理（逆向推導）",
+        "steps": [
+          "( ? ) ÷ 8 ＝ 32：被除數躲起來了，用乘除互逆把它找回來",
+          "被除數 ＝ 商 × 除數 → 32 × 8",
+          "32 × 8 ＝ 256；驗算 256 ÷ 8 ＝ 32 完全吻合"
+        ],
+        "trap": "被除數不是 32 ＋ 8 ＝ 40，也不是 32 − 8；乘與除互為逆運算，求被除數要用乘法 32 × 8 ＝ 256。"
+      }
+    }
+  ]
+}

@@ -335,9 +335,9 @@
           "code": "N-3-5",
           "title": "除以一位數",
           "full_text": "除以一位數：除法直式計算。教師用位值的概念說明直式計算的合理性。被除數為二、三位數。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 111-2 期中/期末 ＋ 114-2 期中 ＋ 高雄市永安國小 114-2 期中（規律探索/免算比大小/商位數估算/補0改錯偵探/商中間含0陷阱/整除檢驗/平分帶餘數/跨位進位直式/商含0整除/逆向推導題）[通道二: A-SERVER SSH (GLM 備援)]"
         },
         {
           "code": "N-3-6",
