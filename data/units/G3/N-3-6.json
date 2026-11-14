@@ -1,0 +1,264 @@
+{
+  "code": "N-3-6",
+  "title": "解題（乘除應用問題）",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-2/112-2/113-2 期末 ＋ 114-1 期中（規律探索/免算比大小/生活估算/被除數未知改錯偵探/除數未知陷阱/被乘數未知/乘數未知/被除數未知平分/雙算式天平/兩步驟逆向推導題）[通道二: A-SERVER SSH (GLM 備援)]",
+  "questions": [
+    {
+      "id": "G3-N-3-6-Q01",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "一、選擇題",
+      "question_num": 2,
+      "title": "規律探索：乘除互逆算式家族",
+      "stem": "我們知道除法算式「125 ÷ 5 ＝ 25」，利用乘除互逆的關係，可以直接知道下面哪一個算式的答案？",
+      "choices": ["25 × 5 ＝ 125", "125 ＋ 5 ＝ 130", "125 × 5 ＝ 625", "25 ÷ 5 ＝ 5"],
+      "answer_index": 0,
+      "answer_raw": "25 × 5 ＝ 125",
+      "visual_mode": "family",
+      "final_check": "25 × 5 ＝ 125",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘除互逆算式家族（規律探索）",
+        "steps": [
+          "已知 125 ÷ 5 ＝ 25，先把這張算式卡牢牢記住",
+          "乘法與除法互為逆運算：125 ÷ 5 ＝ 25 代表 125 是 5 的 25 倍",
+          "算式卡翻面 → 25 × 5 ＝ 125（或 5 × 25 ＝ 125），不用計算直接推導"
+        ],
+        "trap": "125 × 5 ＝ 625 是把已知算式亂乘一通的陷阱；互逆家族的正確翻面是 25 × 5 ＝ 125，積一定回到被除數 125。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q02",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "六、比大小",
+      "question_num": 5,
+      "title": "秒殺思維：乘除算式免算比大小",
+      "stem": "比一比，在括號中應該填入哪一個符號？ 50 × 3  ( ? )  150 ÷ 3",
+      "choices": ["＞", "＜", "＝", "無法比較"],
+      "answer_index": 0,
+      "answer_raw": "＞",
+      "visual_mode": "compare",
+      "final_check": "＞",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘除算式免計算比大小（秒殺思維）",
+        "steps": [
+          "左邊 50 × 3：乘法越乘越大，50 × 3 ＝ 150",
+          "右邊 150 ÷ 3：除法越除越小，150 ÷ 3 ＝ 50",
+          "天平左邊下沉：150 ＞ 50 → 50 × 3 ＞ 150 ÷ 3"
+        ],
+        "trap": "看到除法就以為要逐題硬算，其實乘法變大、除法變小，150 與 50 一比就秒答。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q03",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "二、填填看",
+      "question_num": 5,
+      "title": "生活估算：採買總量與件數估算",
+      "stem": "文具店舉辦特賣會，每盒彩色筆特價 85 元。小英帶了 300 元，大約可以買幾盒彩色筆？（動動腦：估算 85 × ( ? ) 最接近 300 且不超過 300）",
+      "choices": ["3 盒", "4 盒", "2 盒", "5 盒"],
+      "answer_index": 0,
+      "answer_raw": "3 盒",
+      "visual_mode": "estimate",
+      "final_check": "大約 3 盒 (85 × 3 ＝ 255)",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘法累乘估算與金錢上限（生活估算）",
+        "steps": [
+          "小英一共有 300 元，每盒彩色筆 85 元",
+          "85 × 2 ＝ 170；85 × 3 ＝ 255，都沒有超過 300 元",
+          "85 × 4 ＝ 340 ＞ 300，錢不夠！→ 最多大約 3 盒 (85 × 3 ＝ 255)"
+        ],
+        "trap": "誤以為 300 ÷ 85 要整除才能答；估算是找「最接近且不超過」的倍數，340 超過預算就不能選 4 盒。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q04",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "一、選擇題",
+      "question_num": 4,
+      "title": "除錯小偵探：被除數未知列式改錯",
+      "stem": "小明在解「( ? ) ÷ 8 ＝ 32」時，他說：「要求括號裡的數，只要算 32 ÷ 8 ＝ 4 就可以了！」請問小明說得對不對？",
+      "choices": ["不對，括號是被除數，應該用乘法算 32 × 8 ＝ 256 才對", "對，看到除法算式一律用除法求答案", "對，因為 4 確實比 32 小", "不對，應該用加法 32 ＋ 8 ＝ 40"],
+      "answer_index": 0,
+      "answer_raw": "不對，括號是被除數，應該用乘法算 32 × 8 ＝ 256 才對",
+      "visual_mode": "detective",
+      "final_check": "被除數 ＝ 商 × 除數 (32 × 8 ＝ 256)",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "被除數未知的乘法逆推（除錯小偵探）",
+        "steps": [
+          "放大鏡聚焦「( ? ) ÷ 8 ＝ 32」：括號裡是被除數，代表全部的總量",
+          "總量一定比商 32 大！小明的 32 ÷ 8 ＝ 4 反而變小，一定錯",
+          "求被除數要用乘法逆推：被除數 ＝ 商 × 除數",
+          "32 × 8 ＝ 256；驗算 256 ÷ 8 ＝ 32 ✓ → 小明說錯了！"
+        ],
+        "trap": "「看到除法就用除法」是最大盲點；被除數是總量，求總量必須用乘法 32 × 8 ＝ 256 逆推回去。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q05",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 2,
+      "title": "核心陷阱：除數未知解題陷阱",
+      "stem": "在算式「112 ÷ ( ? ) ＝ 7」中，括號裡的除數應該是多少？",
+      "choices": ["16", "784", "14", "18"],
+      "answer_index": 0,
+      "answer_raw": "16",
+      "visual_mode": "divisor_trap",
+      "final_check": "112 ÷ 7 ＝ 16",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "除數未知的除法求解（核心陷阱題）",
+        "steps": [
+          "112 ÷ ( ? ) ＝ 7：這次換除數躲起來了",
+          "亂乘陷阱紅燈：112 × 7 ＝ 784 是最常見的錯誤答案！",
+          "除數未知的求法：除數 ＝ 被除數 ÷ 商 → 112 ÷ 7",
+          "112 ÷ 7 ＝ 16；驗算 112 ÷ 16 ＝ 7 ✓ 綠燈通過！"
+        ],
+        "trap": "看到未知數就亂乘一通（112 × 7 ＝ 784 大陷阱！）；除數 ＝ 被除數 ÷ 商，要用除法 112 ÷ 7 ＝ 16。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q06",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 3,
+      "title": "被乘數未知：生活包裝每包數量求值",
+      "stem": "烘焙坊烤了一批手工餅乾，每包裝的塊數都相同。如果裝了 16 包，剛好有 112 塊，請問「每包」有幾塊餅乾？（列式：( ? ) × 16 ＝ 112）",
+      "choices": ["7 塊", "6 塊", "8 塊", "9 塊"],
+      "answer_index": 0,
+      "answer_raw": "7 塊",
+      "visual_mode": "multiplicand",
+      "final_check": "112 ÷ 16 ＝ 7 塊",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "被乘數未知的等分除求解",
+        "steps": [
+          "16 包餅乾一共 112 塊，每包塊數（被乘數）都相同",
+          "被乘數 × 包數 ＝ 總塊數 → ( ? ) × 16 ＝ 112",
+          "求被乘數用除法：112 ÷ 16 ＝ 7",
+          "驗算 7 × 16 ＝ 112 ✓ 每包 7 塊"
+        ],
+        "trap": "把「每包塊數」當成被乘數就不會算了；其實總量 ÷ 包數就是每包塊數，112 ÷ 16 ＝ 7 塊。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q07",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 4,
+      "title": "乘數未知：生活採買買了幾盒情境",
+      "stem": "水果行將特級蘋果每 8 顆裝成一盒，果園今天一共採收了 96 顆蘋果，可以裝成幾盒？（列式：8 × ( ? ) ＝ 96）",
+      "choices": ["12 盒", "11 盒", "13 盒", "14 盒"],
+      "answer_index": 0,
+      "answer_raw": "12 盒",
+      "visual_mode": "multiplier",
+      "final_check": "96 ÷ 8 ＝ 12 盒",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘數未知的包含除求解",
+        "steps": [
+          "每盒 8 顆蘋果，一共採收 96 顆，要裝成 ( ? ) 盒",
+          "每盒顆數 × 盒數 ＝ 總顆數 → 8 × ( ? ) ＝ 96",
+          "求乘數用除法：96 ÷ 8 ＝ 12",
+          "驗算 8 × 12 ＝ 96 ✓ 可以裝成 12 盒"
+        ],
+        "trap": "96 裡面有幾個 8 就是幾盒；用減法一直減 8 太慢，直接用除法 96 ÷ 8 ＝ 12 秒解。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q08",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 5,
+      "title": "被除數未知：平分剩餘原本總量推導",
+      "stem": "老師把一整箱故事書平分給 7 個班級，每個班級分到 16 本剛好分完。請問這箱故事書原本共有幾本？（列式：( ? ) ÷ 7 ＝ 16）",
+      "choices": ["112 本", "102 本", "119 本", "98 本"],
+      "answer_index": 0,
+      "answer_raw": "112 本",
+      "visual_mode": "dividend",
+      "final_check": "16 × 7 ＝ 112 本",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "被除數未知的乘法合體反推",
+        "steps": [
+          "7 個班級每班分到 16 本，剛好全部分完",
+          "原本總本數（被除數）÷ 7 ＝ 16，被除數未知",
+          "求被除數用乘法合體：16 × 7 ＝ 112",
+          "驗算 112 ÷ 7 ＝ 16 ✓ 這箱原本共有 112 本"
+        ],
+        "trap": "「剛好分完」代表沒有剩餘；把 7 個班級的 16 本全部合體回去就是總量，16 × 7 ＝ 112 本。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q09",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "一、選擇題",
+      "question_num": 2,
+      "title": "直觀符號推理：雙算式未知數天平",
+      "stem": "已知「20 ÷ 5 ＝ 4」且「20 ÷ ▲ ＝ 4」，請問符號 ▲ 代表的數字是多少？",
+      "choices": ["5", "4", "20", "1"],
+      "answer_index": 0,
+      "answer_raw": "5",
+      "visual_mode": "balance",
+      "final_check": "▲ ＝ 5",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "雙算式對照的天平符號推理",
+        "steps": [
+          "兩座天平並排：20 ÷ 5 ＝ 4 與 20 ÷ ▲ ＝ 4",
+          "比較兩個算式：被除數都是 20，商也都是 4",
+          "被除數和商都相同 → 除數必定相同 → ▲ ＝ 5"
+        ],
+        "trap": "不用真的去算 ▲，只要發現兩座天平「兩端都一樣」，除數就一定一樣，▲ ＝ 5。"
+      }
+    },
+    {
+      "id": "G3-N-3-6-Q10",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "一、選擇題",
+      "question_num": 2,
+      "title": "綜合應用：乘除逆向關係兩步驟",
+      "stem": "已知「4 × 5 ＝ 20」且「20 ÷ ▲ ＝ 4」，請問「▲ × 6」的答案是多少？",
+      "choices": ["30", "24", "20", "36"],
+      "answer_index": 0,
+      "answer_raw": "30",
+      "visual_mode": "reverse_calc",
+      "final_check": "5 × 6 ＝ 30",
+      "component": "multiplication-division-lab",
+      "component_path": "components/multiplication_division_relation_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘除互逆兩步驟逆向推導（綜合應用）",
+        "steps": [
+          "第一關：4 × 5 ＝ 20 且 20 ÷ ▲ ＝ 4，先找出 ▲",
+          "由 20 ÷ ▲ ＝ 4 → ▲ ＝ 20 ÷ 4 ＝ 5",
+          "第二關：▲ × 6 → 5 × 6 ＝ 30，兩步驟解密完成"
+        ],
+        "trap": "不能把 ▲ 直接當成 4 或 20 硬乘；要先由 20 ÷ ▲ ＝ 4 解出 ▲ ＝ 5，再算 5 × 6 ＝ 30。"
+      }
+    }
+  ]
+}

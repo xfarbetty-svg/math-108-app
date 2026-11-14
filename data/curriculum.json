@@ -343,9 +343,9 @@
           "code": "N-3-6",
           "title": "解題（乘除應用問題）",
           "full_text": "解題：乘除應用問題。乘數、被乘數、除數、被除數未知之應用解題。連結乘與除的關係（R-3-1）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 111-2/112-2/113-2 期末 ＋ 114-1 期中（規律探索/免算比大小/生活估算/被除數未知改錯偵探/除數未知陷阱/被乘數未知/乘數未知/被除數未知平分/雙算式天平/兩步驟逆向推導題）[通道二: A-SERVER SSH (GLM 備援)]"
         },
         {
           "code": "N-3-7",

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-6 解題（乘除應用問題） 乘除關係實驗台</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.35;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 18px rgba(149,117,76,0.10);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(149,117,76,0.10);
+            padding: 4px 8px 6px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 190px;
+            height: auto;
+            display: block;
+        }
+        .expr { font-size: 16px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 16px; fill: var(--coral); font-weight: bold; }
+        .expr-mint { font-size: 15px; fill: var(--mint); font-weight: bold; }
+        .expr-red { font-size: 14px; fill: #e57373; font-weight: bold; }
+        .place-label { font-size: 9px; fill: var(--muted); }
+        .cap { font-size: 12px; min-height: 17px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.3; }
+        .controls { display: flex; flex-direction: column; gap: 5px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 10px rgba(149,117,76,0.18);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+        .step-btn { background: linear-gradient(135deg, var(--coral), #ff9e85); }
+        .check-btn { background: linear-gradient(135deg, var(--mint), #93d8c4); }
+        .step-btn:active, .check-btn:active { transform: scale(0.95) translateY(1px); box-shadow: 0 1px 4px rgba(149,117,76,0.18); }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .opt-btn {
+            min-height: 36px;
+            height: auto;
+            padding: 4px 6px;
+            line-height: 1.25;
+            border: 2px solid #f0e6d8;
+            background: var(--card);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 6px rgba(149,117,76,0.08);
+        }
+        .opt-btn:active { transform: scale(0.96); }
+        .opt-btn.selected { border-color: var(--coral); background: #fff3ec; }
+        .feedback {
+            position: absolute;
+            top: 45%; left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 22px;
+            border-radius: 999px;
+            color: white;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+        .success { background: var(--mint); }
+        .fail { background: var(--error); }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">臺北市內湖國小段考真題 · 乘除關係（連結 R-3-1）</div>
+
+    <div class="question-box" id="qText">載入中...</div>
+
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="svgCanvas" viewBox="0 0 240 168">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="stepCap"></div>
+    </div>
+
+    <div class="controls">
+        <button class="step-btn" onclick="nextStep()">一步一步看算理 ▶</button>
+        <div class="options-grid" id="options"></div>
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+</div>
+
+<script>
+    const QUESTIONS = {
+        1:  { mode: 'family', stem: '我們知道除法算式「125 ÷ 5 ＝ 25」，利用乘除互逆的關係，可以直接知道下面哪一個算式的答案？',
+              correct: '25 × 5 ＝ 125', choices: ['25 × 5 ＝ 125', '125 ＋ 5 ＝ 130', '125 × 5 ＝ 625', '25 ÷ 5 ＝ 5'],
+              caps: ['已知 125 ÷ 5 ＝ 25，先把這張算式卡牢牢記住', '乘法與除法互為逆運算：125 ÷ 5 ＝ 25 代表 125 是 5 的 25 倍', '算式卡翻面 → 25 × 5 ＝ 125（或 5 × 25 ＝ 125），不用計算直接推導'] },
+        2:  { mode: 'compare', stem: '比一比，在括號中應該填入哪一個符號？ 50 × 3  ( ? )  150 ÷ 3',
+              correct: '＞', choices: ['＞', '＜', '＝', '無法比較'],
+              caps: ['左邊 50 × 3：乘法越乘越大，50 × 3 ＝ 150', '右邊 150 ÷ 3：除法越除越小，150 ÷ 3 ＝ 50', '天平左邊下沉：150 ＞ 50 → 50 × 3 ＞ 150 ÷ 3'] },
+        3:  { mode: 'estimate', stem: '文具店舉辦特賣會，每盒彩色筆特價 85 元。小英帶了 300 元，大約可以買幾盒彩色筆？（動動腦：估算 85 × ( ? ) 最接近 300 且不超過 300）',
+              correct: '3 盒', choices: ['3 盒', '4 盒', '2 盒', '5 盒'],
+              caps: ['小英一共有 300 元，每盒彩色筆 85 元', '85 × 2 ＝ 170；85 × 3 ＝ 255，都沒有超過 300 元', '85 × 4 ＝ 340 ＞ 300，錢不夠！→ 最多大約 3 盒 (85 × 3 ＝ 255)'] },
+        4:  { mode: 'detective', stem: '小明在解「( ? ) ÷ 8 ＝ 32」時，他說：「要求括號裡的數，只要算 32 ÷ 8 ＝ 4 就可以了！」請問小明說得對不對？',
+              correct: '不對，括號是被除數，應該用乘法算 32 × 8 ＝ 256 才對',
+              choices: ['不對，括號是被除數，應該用乘法算 32 × 8 ＝ 256 才對', '對，看到除法算式一律用除法求答案', '對，因為 4 確實比 32 小', '不對，應該用加法 32 ＋ 8 ＝ 40'],
+              caps: ['放大鏡聚焦「( ? ) ÷ 8 ＝ 32」：括號裡是被除數，代表全部的總量', '總量一定比商 32 大！小明的 32 ÷ 8 ＝ 4 反而變小，一定錯', '求被除數要用乘法逆推：被除數 ＝ 商 × 除數', '32 × 8 ＝ 256；驗算 256 ÷ 8 ＝ 32 ✓ → 小明說錯了！'] },
+        5:  { mode: 'divisor_trap', stem: '在算式「112 ÷ ( ? ) ＝ 7」中，括號裡的除數應該是多少？',
+              correct: '16', choices: ['16', '784', '14', '18'],
+              caps: ['112 ÷ ( ? ) ＝ 7：這次換除數躲起來了', '亂乘陷阱紅燈：112 × 7 ＝ 784 是最常見的錯誤答案！', '除數未知的求法：除數 ＝ 被除數 ÷ 商 → 112 ÷ 7', '112 ÷ 7 ＝ 16；驗算 112 ÷ 16 ＝ 7 ✓ 綠燈通過！'] },
+        6:  { mode: 'multiplicand', stem: '烘焙坊烤了一批手工餅乾，每包裝的塊數都相同。如果裝了 16 包，剛好有 112 塊，請問「每包」有幾塊餅乾？（列式：( ? ) × 16 ＝ 112）',
+              correct: '7 塊', choices: ['7 塊', '6 塊', '8 塊', '9 塊'],
+              caps: ['16 包餅乾一共 112 塊，每包塊數（被乘數）都相同', '被乘數 × 包數 ＝ 總塊數 → ( ? ) × 16 ＝ 112', '求被乘數用除法：112 ÷ 16 ＝ 7', '驗算 7 × 16 ＝ 112 ✓ 每包 7 塊'] },
+        7:  { mode: 'multiplier', stem: '水果行將特級蘋果每 8 顆裝成一盒，果園今天一共採收了 96 顆蘋果，可以裝成幾盒？（列式：8 × ( ? ) ＝ 96）',
+              correct: '12 盒', choices: ['12 盒', '11 盒', '13 盒', '14 盒'],
+              caps: ['每盒 8 顆蘋果，一共採收 96 顆，要裝成 ( ? ) 盒', '每盒顆數 × 盒數 ＝ 總顆數 → 8 × ( ? ) ＝ 96', '求乘數用除法：96 ÷ 8 ＝ 12', '驗算 8 × 12 ＝ 96 ✓ 可以裝成 12 盒'] },
+        8:  { mode: 'dividend', stem: '老師把一整箱故事書平分給 7 個班級，每個班級分到 16 本剛好分完。請問這箱故事書原本共有幾本？（列式：( ? ) ÷ 7 ＝ 16）',
+              correct: '112 本', choices: ['112 本', '102 本', '119 本', '98 本'],
+              caps: ['7 個班級每班分到 16 本，剛好全部分完', '原本總本數（被除數）÷ 7 ＝ 16，被除數未知', '求被除數用乘法合體：16 × 7 ＝ 112', '驗算 112 ÷ 7 ＝ 16 ✓ 這箱原本共有 112 本'] },
+        9:  { mode: 'balance', stem: '已知「20 ÷ 5 ＝ 4」且「20 ÷ ▲ ＝ 4」，請問符號 ▲ 代表的數字是多少？',
+              correct: '5', choices: ['5', '4', '20', '1'],
+              caps: ['兩座天平並排：20 ÷ 5 ＝ 4 與 20 ÷ ▲ ＝ 4', '比較兩個算式：被除數都是 20，商也都是 4', '被除數和商都相同 → 除數必定相同 → ▲ ＝ 5'] },
+        10: { mode: 'reverse_calc', stem: '已知「4 × 5 ＝ 20」且「20 ÷ ▲ ＝ 4」，請問「▲ × 6」的答案是多少？',
+              correct: '30', choices: ['30', '24', '20', '36'],
+              caps: ['第一關：4 × 5 ＝ 20 且 20 ÷ ▲ ＝ 4，先找出 ▲', '由 20 ÷ ▲ ＝ 4 → ▲ ＝ 20 ÷ 4 ＝ 5', '第二關：▲ × 6 → 5 × 6 ＝ 30，兩步驟解密完成'] }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const qId = urlParams.get('q') || 1;
+    const q = QUESTIONS[qId];
+    let currentStep = 0;
+    let selectedAns = null;
+
+    function totalSteps() { return q.caps.length; }
+
+    function setCap() {
+        const el = document.getElementById('stepCap');
+        if (currentStep === 0) { el.innerText = '按「一步一步看算理」開始演繹！'; return; }
+        el.innerText = q.caps[currentStep - 1];
+    }
+
+    function init() {
+        document.getElementById('qText').innerText = q.stem;
+        renderOptions();
+        render();
+    }
+
+    function renderOptions() {
+        const container = document.getElementById('options');
+        const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+        container.innerHTML = '';
+        shuffled.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = c;
+            btn.onclick = () => {
+                selectedAns = c;
+                document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer() {
+        const fb = document.getElementById('feedback');
+        if (!selectedAns) { fb.innerText = '先選一個答案喔！'; fb.className = 'feedback fail'; fb.style.display = 'block'; setTimeout(() => fb.style.display = 'none', 1200); return; }
+        if (selectedAns === q.correct) {
+            fb.innerText = '答對了！' + (q.caps[q.caps.length - 1] || '');
+            fb.className = 'feedback success';
+        } else {
+            fb.innerText = '再想想看～按「一步一步看算理」提示！';
+            fb.className = 'feedback fail';
+        }
+        fb.style.display = 'block';
+        setTimeout(() => fb.style.display = 'none', 1500);
+    }
+
+    function nextStep() {
+        if (currentStep < totalSteps()) { currentStep++; render(); }
+    }
+
+    function render() {
+        if (q.mode === 'family') renderFamily();
+        else if (q.mode === 'compare') renderCompare();
+        else if (q.mode === 'estimate') renderEstimate();
+        else if (q.mode === 'detective') renderDetective();
+        else if (q.mode === 'divisor_trap') renderDivisorTrap();
+        else if (q.mode === 'multiplicand') renderMultiplicand();
+        else if (q.mode === 'multiplier') renderMultiplier();
+        else if (q.mode === 'dividend') renderDividend();
+        else if (q.mode === 'balance') renderBalance();
+        else if (q.mode === 'reverse_calc') renderReverseCalc();
+        setCap();
+    }
+
+    function resetView() {
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 168');
+        return '';
+    }
+
+    /* ===== 模式 1：乘除互逆旋轉算式卡（125÷5=25 ⇄ 25×5=125） ===== */
+    function renderFamily() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<text x="30" y="12" text-anchor="start" class="place-label">已知算式</text>`;
+        svg += `<rect x="28" y="16" width="184" height="34" rx="10" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="39" text-anchor="middle" class="expr" style="font-size:15px">125 ÷ 5 ＝ 25</text>`;
+        // 翻面幽靈卡（未揭示時的虛線預告位）
+        svg += `<rect x="28" y="82" width="184" height="34" rx="10" fill="none" stroke="#b2dfdb" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+        svg += `<text x="120" y="105" text-anchor="middle" class="place-label" style="font-size:13px">? × 5 ＝ ?</text>`;
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="68" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a;font-weight:bold">⇄ 乘除互逆：125 是 5 的 25 倍</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="28" y="82" width="184" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="105" text-anchor="middle" class="expr-coral" style="font-size:15px">25 × 5 ＝ 125</text>`;
+            svg += `<text x="120" y="136" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">驗算：5 × 25 ＝ 125 ✓</text>`;
+            svg += `<text x="120" y="158" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">不用計算，直接翻面推導！</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 2：50×3 vs 150÷3 左右天平（左側下沉） ===== */
+    function renderCompare() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        const sunk = currentStep >= 1;
+        const ly = sunk ? 104 : 96;   // 左梁端 y
+        const ry = sunk ? 88 : 96;    // 右梁端 y
+        // 天平梁與支點
+        svg += `<line x1="60" y1="${ly}" x2="180" y2="${ry}" stroke="#a1887f" stroke-width="3" stroke-linecap="round"/>`;
+        svg += `<polygon points="112,142 128,142 120,126" fill="#a1887f"/>`;
+        svg += `<circle cx="120" cy="126" r="4" fill="#8d6e63"/>`;
+        // 左盤
+        svg += `<line x1="60" y1="${ly}" x2="60" y2="${ly + 6}" stroke="#a1887f" stroke-width="2"/>`;
+        svg += `<rect x="20" y="${ly + 6}" width="82" height="34" rx="9" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="61" y="${ly + 20}" text-anchor="middle" class="expr" style="font-size:12px">50 × 3</text>`;
+        if (currentStep >= 1) svg += `<text x="61" y="${ly + 34}" text-anchor="middle" class="expr-coral" style="font-size:12px">＝ 150</text>`;
+        // 右盤
+        svg += `<line x1="180" y1="${ry}" x2="180" y2="${ry + 6}" stroke="#a1887f" stroke-width="2"/>`;
+        svg += `<rect x="138" y="${ry + 6}" width="82" height="34" rx="9" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="179" y="${ry + 20}" text-anchor="middle" class="expr" style="font-size:12px">150 ÷ 3</text>`;
+        if (currentStep >= 2) svg += `<text x="179" y="${ry + 34}" text-anchor="middle" class="expr-mint" style="font-size:12px">＝ 50</text>`;
+        if (currentStep >= 3) {
+            svg += `<circle cx="120" cy="112" r="0" fill="none"/>`;
+            svg += `<text x="120" y="160" text-anchor="middle" class="expr-coral" style="font-size:12px">150 ＞ 50 → 50 × 3 ＞ 150 ÷ 3</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 3：85 元彩色筆累乘進度條（85→170→255 ≤ 300） ===== */
+    function renderEstimate() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 錢袋
+        svg += `<rect x="16" y="10" width="64" height="26" rx="8" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.5"/>`;
+        svg += `<text x="48" y="28" text-anchor="middle" class="expr-coral" style="font-size:12px">300 元</text>`;
+        svg += `<rect x="96" y="10" width="120" height="26" rx="8" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="156" y="28" text-anchor="middle" class="expr" style="font-size:12px">每盒 85 元</text>`;
+        // 進度條（刻度 0~400 → x 20~220）
+        const px = v => 20 + v / 400 * 200;
+        svg += `<rect x="20" y="96" width="200" height="16" rx="8" fill="#f0e6d8"/>`;
+        if (currentStep >= 2) {
+            svg += `<rect x="20" y="96" width="${px(255) - 20}" height="16" rx="8" fill="#7bc9b2"/>`;
+            [[85, '85'], [170, '170'], [255, '255']].forEach(([v, t]) => {
+                svg += `<line x1="${px(v)}" y1="92" x2="${px(v)}" y2="116" stroke="#26a69a" stroke-width="1.6"/>`;
+                svg += `<text x="${px(v)}" y="128" text-anchor="middle" class="place-label" style="font-size:9px;fill:#26a69a;font-weight:bold">${t}</text>`;
+            });
+            svg += `<text x="120" y="76" text-anchor="middle" class="expr-mint" style="font-size:11px">85 × 2 ＝ 170；85 × 3 ＝ 255 ✓</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<line x1="${px(340)}" y1="92" x2="${px(340)}" y2="116" stroke="#e57373" stroke-width="2"/>`;
+            svg += `<text x="${px(340)}" y="128" text-anchor="middle" class="place-label" style="font-size:9px;fill:#e57373;font-weight:bold">340 ✗</text>`;
+            svg += `<text x="120" y="58" text-anchor="middle" class="expr-red" style="font-size:11px">85 × 4 ＝ 340 ＞ 300 錢不夠！</text>`;
+            svg += `<rect x="30" y="142" width="180" height="22" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="158" text-anchor="middle" class="expr-coral" style="font-size:12px">85 × 3 ＝ 255 → 大約 3 盒</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 4：放大鏡聚焦被除數未知（( ? )÷8=32 → 32×8=256） ===== */
+    function renderDetective() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 放大鏡
+        svg += `<circle cx="104" cy="34" r="26" fill="#fff" stroke="#ff8a65" stroke-width="2.5"/>`;
+        svg += `<text x="104" y="42" text-anchor="middle" class="expr-coral" style="font-size:18px">?</text>`;
+        svg += `<line x1="122" y1="52" x2="136" y2="66" stroke="#ff8a65" stroke-width="4" stroke-linecap="round"/>`;
+        svg += `<text x="120" y="92" text-anchor="middle" class="expr" style="font-size:15px">( ? ) ÷ 8 ＝ 32</text>`;
+        if (currentStep < 2) {
+            svg += `<text x="120" y="112" text-anchor="middle" class="place-label" style="font-size:10px">括號裡是被除數（全部的總量）</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="112" text-anchor="middle" class="expr-red" style="font-size:11px">小明：32 ÷ 8 ＝ 4 ✗ 越除越小！</text>`;
+            svg += `<line x1="52" y1="108" x2="188" y2="108" stroke="#e57373" stroke-width="1.6"/>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="130" text-anchor="middle" class="expr-mint" style="font-size:12px">被除數 ＝ 商 × 除數</text>`;
+        }
+        if (currentStep >= 4) {
+            svg += `<rect x="38" y="138" width="164" height="24" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="155" text-anchor="middle" class="expr-coral" style="font-size:13px">32 × 8 ＝ 256 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 5：除數未知紅綠燈（112÷( ? )=7，排斥 784 亮 16） ===== */
+    function renderDivisorTrap() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<text x="120" y="26" text-anchor="middle" class="expr" style="font-size:15px">112 ÷ ( ? ) ＝ 7</text>`;
+        // 紅綠燈座（未亮起時灰燈）
+        svg += `<circle cx="40" cy="60" r="6" fill="${currentStep >= 2 ? '#e57373' : '#e0e0e0'}"/>`;
+        svg += `<circle cx="40" cy="118" r="6" fill="${currentStep >= 4 ? '#7bc9b2' : '#e0e0e0'}"/>`;
+        if (currentStep < 2) {
+            svg += `<text x="120" y="60" text-anchor="middle" class="place-label" style="font-size:10px">這次是除數躲起來了！</text>`;
+            svg += `<text x="120" y="118" text-anchor="middle" class="place-label" style="font-size:10px">千萬別看到 ? 就亂乘喔</text>`;
+        }
+        if (currentStep >= 2) {
+            // 紅燈卡：亂乘陷阱
+            svg += `<circle cx="40" cy="60" r="6" fill="#e57373"/><circle cx="40" cy="60" r="10" fill="none" stroke="#e57373" stroke-width="1.4" opacity="0.5"/>`;
+            svg += `<rect x="54" y="46" width="162" height="28" rx="9" fill="#fdecea" stroke="#e57373" stroke-width="1.5"/>`;
+            svg += `<text x="135" y="65" text-anchor="middle" class="expr-red" style="font-size:12px">亂乘陷阱：112 × 7 ＝ 784 ✗</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="94" text-anchor="middle" class="expr-mint" style="font-size:12px">除數 ＝ 被除數 ÷ 商</text>`;
+        }
+        if (currentStep >= 4) {
+            // 綠燈卡：正解
+            svg += `<circle cx="40" cy="118" r="6" fill="#7bc9b2"/><circle cx="40" cy="118" r="10" fill="none" stroke="#7bc9b2" stroke-width="1.4" opacity="0.5"/>`;
+            svg += `<rect x="54" y="104" width="162" height="28" rx="9" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="135" y="123" text-anchor="middle" class="expr-coral" style="font-size:13px">112 ÷ 7 ＝ 16 ✓</text>`;
+            svg += `<text x="120" y="156" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">驗算：112 ÷ 16 ＝ 7 ✓ 綠燈通過</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 6：被乘數未知等分長條（16 包餅乾 → 112÷16=7） ===== */
+    function renderMultiplicand() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 16 個餅乾箱 4×4
+        for (let i = 0; i < 16; i++) {
+            const bx = 44 + (i % 4) * 40, by = 14 + Math.floor(i / 4) * 18;
+            svg += `<rect x="${bx}" y="${by}" width="34" height="14" rx="4" fill="#fff" stroke="#d7ccc8" stroke-width="1.2"/>`;
+            svg += `<text x="${bx + 17}" y="${by + 11}" text-anchor="middle" class="place-label" style="font-size:9px;fill:#ff8a65;font-weight:bold">${currentStep >= 3 ? 7 : '?'}</text>`;
+        }
+        svg += `<text x="22" y="46" text-anchor="middle" class="place-label" style="font-size:9px;writing-mode:tb">16 包</text>`;
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="98" text-anchor="middle" class="expr" style="font-size:13px">( ? ) × 16 ＝ 112</text>`;
+        }
+        if (currentStep >= 3) {
+            // 等分長條：112 切 16 段，每段 7
+            for (let i = 0; i < 16; i++) {
+                svg += `<rect x="${20 + i * 12.5}" y="108" width="12.5" height="14" fill="${i % 2 ? '#b2dfdb' : '#7bc9b2'}" stroke="#fff" stroke-width="0.8"/>`;
+            }
+            svg += `<text x="120" y="140" text-anchor="middle" class="expr-coral" style="font-size:13px">112 ÷ 16 ＝ 7</text>`;
+        }
+        if (currentStep >= 4) {
+            svg += `<text x="120" y="160" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">驗算：7 × 16 ＝ 112 ✓ 每包 7 塊</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 7：乘數未知蘋果盒計數（每盒 8 顆 → 96÷8=12） ===== */
+    function renderMultiplier() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 12 個蘋果盒 4×3，逐步亮起
+        const showCount = currentStep >= 3 ? 12 : 4;
+        for (let i = 0; i < 12; i++) {
+            const bx = 28 + (i % 4) * 48, by = 14 + Math.floor(i / 4) * 22;
+            const on = i < showCount;
+            svg += `<rect x="${bx}" y="${by}" width="42" height="18" rx="5" fill="${on ? '#fff3ec' : '#f5f0e8'}" stroke="${on ? '#ff8a65' : '#e0d5c5'}" stroke-width="1.3"/>`;
+            svg += `<circle cx="${bx + 12}" cy="${by + 9}" r="4.5" fill="${on ? '#ef5350' : '#cfd8dc'}"/>`;
+            svg += `<text x="${bx + 30}" y="${by + 13}" text-anchor="middle" class="place-label" style="font-size:9px;fill:${on ? '#ff8a65' : '#b0a08a'};font-weight:bold">8</text>`;
+        }
+        svg += `<text x="120" y="86" text-anchor="middle" class="place-label" style="font-size:9px">每盒 8 顆 × 共 ? 盒 ＝ 96 顆</text>`;
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="104" text-anchor="middle" class="expr" style="font-size:13px">8 × ( ? ) ＝ 96</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="126" text-anchor="middle" class="expr-coral" style="font-size:13px">96 ÷ 8 ＝ 12</text>`;
+        }
+        if (currentStep >= 4) {
+            svg += `<rect x="38" y="136" width="164" height="24" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="153" text-anchor="middle" class="place-label" style="font-size:11px;fill:#26a69a;font-weight:bold">驗算：8 × 12 ＝ 96 ✓ 12 盒</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 8：被除數未知班級合體拼圖（7 班×16 本 → 16×7=112） ===== */
+    function renderDividend() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 7 張班級卡：4 + 3
+        for (let i = 0; i < 7; i++) {
+            const bx = i < 4 ? 24 + i * 50 : 49 + (i - 4) * 50;
+            const by = i < 4 ? 14 : 40;
+            const merged = currentStep >= 3;
+            svg += `<rect x="${bx}" y="${by}" width="44" height="22" rx="6" fill="${merged ? '#e8f7f1' : '#fff'}" stroke="${merged ? '#7bc9b2' : '#f0e6d8'}" stroke-width="1.4"/>`;
+            svg += `<text x="${bx + 22}" y="${by + 15}" text-anchor="middle" class="place-label" style="font-size:9px;fill:${merged ? '#26a69a' : '#8d6e63'};font-weight:bold">16 本</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="88" text-anchor="middle" class="expr" style="font-size:13px">( ? ) ÷ 7 ＝ 16</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="110" text-anchor="middle" class="expr-mint" style="font-size:12px">7 班合體 → 被除數 ＝ 16 × 7</text>`;
+        }
+        if (currentStep >= 4) {
+            svg += `<rect x="38" y="120" width="164" height="24" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="137" text-anchor="middle" class="expr-coral" style="font-size:13px">16 × 7 ＝ 112 本</text>`;
+            svg += `<text x="120" y="160" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">驗算：112 ÷ 7 ＝ 16 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 9：雙算式未知數天平卡位（20÷5=4 vs 20÷▲=4） ===== */
+    function renderBalance() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 左天平卡
+        svg += `<rect x="14" y="18" width="100" height="58" rx="12" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<line x1="30" y1="34" x2="98" y2="34" stroke="#a1887f" stroke-width="2.5" stroke-linecap="round"/>`;
+        svg += `<polygon points="58,52 72,52 65,42" fill="#a1887f"/>`;
+        svg += `<text x="64" y="70" text-anchor="middle" class="expr" style="font-size:13px">20 ÷ 5 ＝ 4</text>`;
+        // 右天平卡
+        svg += `<rect x="126" y="18" width="100" height="58" rx="12" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<line x1="142" y1="34" x2="210" y2="34" stroke="#a1887f" stroke-width="2.5" stroke-linecap="round"/>`;
+        svg += `<polygon points="170,52 184,52 177,42" fill="#a1887f"/>`;
+        svg += `<text x="176" y="70" text-anchor="middle" class="expr" style="font-size:13px">20 ÷ ▲ ＝ 4</text>`;
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="98" text-anchor="middle" class="place-label" style="font-size:10px;fill:#ff8a65;font-weight:bold">被除數都是 20，商也都是 4</text>`;
+            svg += `<text x="120" y="114" text-anchor="middle" class="place-label" style="font-size:10px;fill:#ff8a65;font-weight:bold">兩座天平完全平衡！</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="52" y="124" width="136" height="26" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="142" text-anchor="middle" class="expr-coral" style="font-size:14px">▲ ＝ 5</text>`;
+            svg += `<text x="120" y="163" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">除數必定相同 → ▲ ＝ 5</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 10：兩步驟解密槽（▲=20÷4=5 → 5×6=30） ===== */
+    function renderReverseCalc() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 第一關卡
+        svg += `<text x="30" y="16" text-anchor="start" class="place-label" style="fill:#ff8a65;font-weight:bold">第一關</text>`;
+        svg += `<rect x="24" y="22" width="192" height="26" rx="9" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="40" text-anchor="middle" class="expr" style="font-size:13px">4 × 5 ＝ 20 且 20 ÷ ▲ ＝ 4</text>`;
+        // 第二關幽靈卡（未揭示時的虛線預告位）
+        svg += `<rect x="24" y="108" width="192" height="30" rx="9" fill="none" stroke="#e0d5c5" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+        svg += `<text x="120" y="128" text-anchor="middle" class="place-label" style="font-size:13px">? × 6 ＝ ?</text>`;
+        if (currentStep >= 2) {
+            svg += `<rect x="24" y="56" width="192" height="26" rx="9" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="74" text-anchor="middle" class="expr-mint" style="font-size:13px">▲ ＝ 20 ÷ 4 ＝ 5</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="30" y="102" text-anchor="start" class="place-label" style="fill:#ff8a65;font-weight:bold">第二關</text>`;
+            svg += `<rect x="24" y="108" width="192" height="30" rx="9" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="128" text-anchor="middle" class="expr-coral" style="font-size:14px">▲ × 6 → 5 × 6 ＝ 30</text>`;
+            svg += `<text x="120" y="158" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">兩步驟解密完成 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    init();
+</script>
+</body>
+</html>
