@@ -1,4 +1,4 @@
-# AutoFlow R0 規格藍圖：108 課綱導向國小數學 APP「倒著做」全面重構規格書
+# Step-by-Step (單步推進) R0 規格藍圖：108 課綱導向國小數學 APP「倒著做」全面重構規格書
 
 ## 📌 文件屬性表頭 (Document Attributes Header)
 1. **任務編號**：`20261105_1955_v3_curriculum_app`

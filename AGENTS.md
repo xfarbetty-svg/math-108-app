@@ -40,8 +40,8 @@
 - [x] 產出 R0 樣品藍圖與打樣規格書 (`reports/20261105_2035_g1_visual_spec/R0_AGY_BLUEPRINT.md`)
 - [x] 產出一年級 9 大單元可操作視覺打樣 Showcase (`reports/20261105_2035_g1_visual_spec/g1_visual_samples_showcase.html`)
 - [x] 人類三端實機驗收打樣手感 (手機 390px / 平板 768px / 電腦 960px)
-- [x] 算力通道驗真與 026 AutoFlow v2.6.3 三層閉環拓撲對齊 (通道1 Magpie 3425 / 通道2 A-SERVER SSH / 通道3 035 7把 Key Pool)
-- [x] 啟動 AutoFlow Stage 1：派工 BP 拆解 T-01~T-03 任務卡，由 OpenCode GLM 帶手腳施工首批元件 (<ten-frame-grid>, <dual-track-diff>, <balance-beam>)
+- [x] 算力通道驗真與 Step-by-Step (單步推進流程) 三層閉環拓撲對齊 (通道1 Magpie 3425 / 通道2 A-SERVER SSH / 通道3 035 7把 Key Pool)
+- [x] 啟動 Step-by-Step Stage 1：派工 BP 拆解 T-01~T-03 任務卡，由 OpenCode GLM 帶手腳施工首批元件 (<ten-frame-grid>, <dual-track-diff>, <balance-beam>)
 - [x] Stage 3 工兵施工：T-01~T-04 全量落盤並逐條 AC 實測通過 (`app/components/*.js` + `app/playground.html` + `tools/ac_run.js`)
 - [x] Stage 3.5 工單重工：TCK-01~TCK-08 全數落地（30px 格/33px 熱區、生命週期對稱、單一幾何公式、deg 量綱、分解樹+拋物線、`tools/ac_gate.js` 機械化閘門 exit 0）
 - [x] BP 盲審 `R3_WORKER_BUILD_REPORT.md` 的 D-01~D-13 偏離裁決 + 新開 **TCK-09**（44px 熱區 vs 兩盒並排矛盾）
@@ -134,7 +134,7 @@
   3. 高雄市忠孝國小 114-2 期末試卷
   4. 臺北市內湖國小 114-2 期末試卷
 
-## ⚡ 三大法定免費算力拓撲與三層閉環 (對齊 026 AutoFlow v2.6.3)
+## ⚡ 三大法定免費算力拓撲與三層閉環 (對齊 Step-by-Step 單步推進流程)
 1. **三層閉環工作流**：
    - **第一層 (決策大腦 AGY)**：反推 Given-When-Then R0 藍圖規格書，**零業務代碼寫入權 (WRITE-FILE LOCKED)**。
    - **第二層 (現場指揮官 Big Pickle)**：接收 R0 拆解任務卡，調度 GLM 施工，**親自審查代碼與盲審比對**後向 AGY 回報。
@@ -174,6 +174,26 @@
    - 題目辨識、解析與互動元件撰寫，**一律指派 OpenCode CLI 執行**。
 2. **唯一標準派工通道**：
    - 派工唯一指令：`python tools/dispatch_worker.py --file <task_card.md> "任務簡述"`
-   - 嚴格遵守 026 AutoFlow 底層規格（`--format json --auto --standalone stdin=DEVNULL encoding=utf-8`），禁止任何其他野雞腳本。
+   - 嚴格遵守 Step-by-Step 單步推進底層規格（`--format json --auto --standalone stdin=DEVNULL encoding=utf-8`），禁止任何其他野雞腳本。
 3. **只認 Exit Code 0 與真實互動**：
    - 所有產出元件必須具備按鈕、事件監聽與可玩互動邏輯，任何無互動死圖一律視為假成功，拒絕收工。
+
+---
+
+## 🏭 單元工廠化與整年級批次交付標準規約 (2026-11-14 固化)
+> 完整規範文件：[`docs/UNIT_FACTORY_STANDARD.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/docs/UNIT_FACTORY_STANDARD.md)
+
+1. **10 題多樣性矩陣（10-Type Matrix）**：
+   - 每單元嚴格 10 題實體段考真題，杜絕單一題型連續罰寫。
+   - 必須涵蓋：Q1 規律探索、Q2 秒殺免算比大小、Q3 生活估算、Q4 除錯小偵探、Q5 核心陷阱（含0或關鍵運算）、Q6 經典特徵、Q7 生活包裝/分裝、Q8 生活購物/平分、Q9 幾何/天平/數線直觀、Q10 逆向推導/乘除互逆。
+2. **教具 One-Screen 單屏緊湊防抖規範**：
+   - 純 SVG / CSS 日系繪本擬物風。
+   - 手機 390px 視口寬度 100% 入屏、零橫向溢出。
+   - 教具高度 $\le 420\text{px}$，`body` 與外層嚴禁 `height: 100vh`（改用 `height: auto`），外層總高 $\le 740\text{px}$ 一屏入眼免滑動。
+3. **機械化三硬閘門驗收體系**：
+   - 閘門一（靜態資料契約）：`verify_<unit>.js`（10 題結構、唯一 stem、4 選項、有效正解、教具物理檔案存在）。
+   - 閘門二（動態 CDP 實機測量）：`verify_<unit>_cdp.js`（390×844 視口實測高 $\le 420\text{px}$、零控制台報錯、按鈕切換流暢）。
+   - 閘門三（課綱大廳總檢）：`verify_curriculum_131.js`（131 條目、開放單元累計、帳實閉環）。
+4. **年級級別交付模式（Grade-Level Batch Delivery）**：
+   - 完成 N-3-4 後全面啟用：單元級別改由工兵依標準模板批量施工，人類驗收升級為整年級自動化跑通 ＋ 抽樣盲審。
+

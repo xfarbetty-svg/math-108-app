@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-4 除法多模式分裝平分教具</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.35;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 18px rgba(149,117,76,0.10);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(149,117,76,0.10);
+            padding: 4px 8px 6px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+        }
+        .expr { font-size: 17px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 17px; fill: var(--coral); font-weight: bold; }
+        .expr-reveal { font-size: 18px; fill: var(--mint); font-weight: bold; }
+        .expr-mint { font-size: 16px; fill: var(--mint); font-weight: bold; }
+        .place-label { font-size: 9px; fill: var(--muted); }
+        .bubble-c { fill: var(--coral); }
+        .bubble-t { font-size: 12px; fill: #fff; font-weight: bold; text-anchor: middle; }
+        .hline { stroke: var(--text-dark); stroke-width: 2; stroke-linecap: round; }
+        .cap { font-size: 12px; min-height: 17px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.3; }
+        .controls { display: flex; flex-direction: column; gap: 5px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 10px rgba(149,117,76,0.18);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+        .step-btn { background: linear-gradient(135deg, var(--coral), #ff9e85); }
+        .check-btn { background: linear-gradient(135deg, var(--mint), #93d8c4); }
+        .step-btn:active, .check-btn:active { transform: scale(0.95) translateY(1px); box-shadow: 0 1px 4px rgba(149,117,76,0.18); }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .opt-btn {
+            min-height: 36px;
+            height: auto;
+            padding: 4px 6px;
+            line-height: 1.25;
+            border: 2px solid #f0e6d8;
+            background: var(--card);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 6px rgba(149,117,76,0.08);
+        }
+        .opt-btn:active { transform: scale(0.96); }
+        .opt-btn.selected { border-color: var(--coral); background: #fff3ec; }
+        .feedback {
+            position: absolute;
+            top: 45%; left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 22px;
+            border-radius: 999px;
+            color: white;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+        .success { background: var(--mint); }
+        .fail { background: var(--error); }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">臺北市內湖國小 ＋ 高雄市永安國小段考真題</div>
+
+    <div class="question-box" id="qText">載入中...</div>
+
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="svgCanvas" viewBox="0 0 240 150">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="stepCap"></div>
+    </div>
+
+    <div class="controls">
+        <button class="step-btn" onclick="nextStep()">一步一步看算理 ▶</button>
+        <div class="options-grid" id="options"></div>
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+</div>
+
+<script>
+    const QUESTIONS = {
+        1:  { mode: 'rule', stem: '21 ÷ ● ＝ 21、50 ÷ 50 ＝ ▲、16 ÷ ■ ＝ 1，請問 ●、▲、■ 的值分別是多少？',
+              correct: '●=1, ▲=1, ■=16', choices: ['●=1, ▲=1, ■=16', '●=21, ▲=1, ■=1', '●=1, ▲=0, ■=16', '●=0, ▲=1, ■=16'],
+              rows: ['21 ÷ ● ＝ 21', '50 ÷ 50 ＝ ▲', '16 ÷ ■ ＝ 1'],
+              caps: ['21 ÷ 1 ＝ 21：任何數除以 1 都等於原數 → ● ＝ 1', '50 ÷ 50 ＝ 1：不為 0 的數除以自己都等於 1 → ▲ ＝ 1', '16 ÷ 16 ＝ 1 → ●=1, ▲=1, ■=16'] },
+        2:  { mode: 'compare', stem: '比一比，在括號中應該填入哪一個符號？ 40 ÷ 8  ( ? )  20 ÷ 5', correct: '＞', choices: ['＞', '＜', '＝', '無法比較'],
+              caps: ['左式 40 ÷ 8：想九九乘法「五八四十」→ 商是 5', '右式 20 ÷ 5：想九九乘法「四五二十」→ 商是 4', '5 ＞ 4 → 40 ÷ 8 ＞ 20 ÷ 5'] },
+        3:  { mode: 'estimate', stem: '蓉蓉買了 60 個果凍，每 8 個裝成一袋。如果她想把所有果凍全部裝完，準備 7 個袋子夠不夠裝？',
+              correct: '不夠，裝完 7 袋還會剩下 4 個，需要 8 個袋子',
+              choices: ['不夠，裝完 7 袋還會剩下 4 個，需要 8 個袋子', '剛好夠裝，可以裝滿 7 個袋子', '太充足了，只要 6 個袋子就夠了', '不夠，還差 10 個果凍才能裝完'],
+              caps: ['每袋 8 個，7 袋只能裝 8 × 7 ＝ 56 個', '60 − 56 ＝ 4，還剩下 4 個果凍沒有裝到', '剩下 4 個要第 8 袋才裝得完 → 需要 8 個袋子'] },
+        4:  { mode: 'detective', stem: '小明計算「21 ÷ 8 ＝ 2 … 5」，他說這個算式一定是錯的，因為「除法計算時，餘數一定要比商小」。請問小明的說法對不對？',
+              correct: '不對，餘數只要比除數小就可以，5 ＜ 8 所以算式是正確的',
+              choices: ['不對，餘數只要比除數小就可以，5 ＜ 8 所以算式是正確的', '對，餘數一定要比商小才算及格', '對，因為 5 ＞ 2 所以算式一定算錯了', '不對，除法沒有餘數這種東西'],
+              caps: ['除法的鐵律：餘數一定要比「除數」小，跟商無關', '這題除數是 8、餘數是 5：5 ＜ 8 合格！', '驗算 8 × 2 ＋ 5 ＝ 21 正確 → 小明說錯了！'] },
+        5:  { mode: 'trap', stem: '一袋果凍平分給 5 個人，在盡量平分完的情況下，最後剩下的果凍數量「不可能」是下面哪一個？',
+              correct: '5 個', choices: ['5 個', '4 個', '2 個', '1 個'],
+              caps: ['平分給 5 個人 → 除數是 5，餘數必須比 5 小', '可能剩下 0、1、2、3、4 個（都比 5 小）', '若剩 5 個，每人還能再多分 1 個 → 不可能剩下 5 個'] },
+        6:  { mode: 'inverse', stem: '已知乘法口訣「八七五十六（8 × 7 ＝ 56）」，請問除法算式「56 ÷ 8」的商是多少？',
+              correct: '7', choices: ['7', '8', '6', '9'],
+              caps: ['乘法和除法互為逆運算，可用乘法口訣直接找商', '八七五十六：8 × 7 ＝ 56', '所以 56 ÷ 8 ＝ 7'] },
+        7:  { mode: 'grouping', stem: '欣宇採了 30 顆芒果，每 4 顆裝成一盒，最多可以裝成幾盒？還剩下幾顆？',
+              correct: '最多裝成 7 盒，剩下 2 顆',
+              choices: ['最多裝成 7 盒，剩下 2 顆', '最多裝成 8 盒，剩下 0 顆', '最多裝成 6 盒，剩下 6 顆', '最多裝成 7 盒，剩下 4 顆'],
+              caps: ['每 4 顆裝一盒：30 ÷ 4，想 4 × ? 最接近 30 且不超過', '4 × 7 ＝ 28，30 − 28 ＝ 2', '30 ÷ 4 ＝ 7 … 2 → 7 盒 剩 2 顆'] },
+        8:  { mode: 'sharing', stem: '有 36 顆草莓泡芙，平分裝成 4 袋，請問每袋可以裝幾顆草莓泡芙？',
+              correct: '9 顆', choices: ['9 顆', '8 顆', '7 顆', '6 顆'],
+              caps: ['平分成 4 袋：36 ÷ 4，想「4 的幾倍是 36」', '4 × 9 ＝ 36，剛好分完沒有剩', '36 ÷ 4 ＝ 9 → 每袋 9 顆'] },
+        9:  { mode: 'boxes', stem: '麵包店老闆烤了 42 個蛋塔，要把蛋塔平分放進盒子裡。要怎麼分裝才能剛好分完、「沒有剩下」？',
+              correct: '每盒裝 6 個（裝成 7 盒剛好）',
+              choices: ['每盒裝 6 個（裝成 7 盒剛好）', '每盒裝 5 個', '每盒裝 8 個', '每盒裝 9 個'],
+              caps: ['要剛好分完 → 找能整除 42 的數', '42 ÷ 5 ＝ 8…2、42 ÷ 8 ＝ 5…2、42 ÷ 9 ＝ 4…6 都會剩下', '42 ÷ 6 ＝ 7 剛好整除 → 每盒裝 6 個'] },
+        10: { mode: 'reverse', stem: '老師把一包獎勵貼紙平分給 6 位小朋友，每人分到 7 張，最後還剩下 3 張。請問這包貼紙原本共有幾張？',
+              correct: '45 張', choices: ['45 張', '42 張', '48 張', '39 張'],
+              caps: ['逆推原理：被除數 ＝ 除數 × 商 ＋ 餘數', '6 人 × 每人 7 張 ＝ 42 張已分出', '42 ＋ 3 ＝ 45 → 原本共有 45 張'] }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const qId = urlParams.get('q') || 1;
+    const q = QUESTIONS[qId];
+    let currentStep = 0;
+    let selectedAns = null;
+
+    function totalSteps() { return q.caps.length; }
+
+    function setCap() {
+        const el = document.getElementById('stepCap');
+        if (currentStep === 0) { el.innerText = '按「一步一步看算理」開始演繹！'; return; }
+        el.innerText = q.caps[currentStep - 1];
+    }
+
+    function init() {
+        document.getElementById('qText').innerText = q.stem;
+        renderOptions();
+        render();
+    }
+
+    function renderOptions() {
+        const container = document.getElementById('options');
+        const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+        container.innerHTML = '';
+        shuffled.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = c;
+            btn.onclick = () => {
+                selectedAns = c;
+                document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    /* ===== 模式 1：除以 1 與除以自身 性質卡片 ===== */
+    function renderRule() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 160');
+        let svg = '';
+        const vals = [['●', '1'], ['▲', '1'], ['■', '16']];
+        q.rows.forEach((r, i) => {
+            const y = 14 + i * 38;
+            const shown = currentStep > i;
+            svg += `<rect x="24" y="${y}" width="192" height="30" rx="9" fill="${shown ? '#e8f7f1' : '#ffffff'}" stroke="${shown ? '#7bc9b2' : '#f0e6d8'}" stroke-width="1.5"/>`;
+            svg += `<text x="98" y="${y + 21}" text-anchor="middle" class="expr" style="font-size:15px">${r}</text>`;
+            if (shown) {
+                svg += `<text x="185" y="${y + 21}" text-anchor="middle" class="expr-reveal" style="font-size:14px">${vals[i][1]}</text>`;
+            }
+        });
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="154" text-anchor="middle" class="expr-coral" style="font-size:13px">●=1, ▲=1, ■=16</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 2：雙算式對照天平（免算比大小） ===== */
+    function renderCompare() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        const tilt = currentStep >= 3;
+        let svg = '';
+        svg += `<rect x="113" y="72" width="14" height="50" rx="4" fill="#c8a27a"/>`;
+        svg += `<rect x="86" y="120" width="68" height="8" rx="4" fill="#c8a27a"/>`;
+        svg += `<g transform="rotate(${tilt ? -7 : 0} 120 70)">`;
+        svg += `<rect x="26" y="66" width="188" height="7" rx="3.5" fill="#a5825e"/>`;
+        svg += `<line x1="52" y1="73" x2="52" y2="92" stroke="#a5825e" stroke-width="1.5"/>`;
+        svg += `<line x1="188" y1="73" x2="188" y2="92" stroke="#a5825e" stroke-width="1.5"/>`;
+        svg += `<path d="M32 92 h40 l-7 13 h-26 z" fill="${currentStep === 1 ? '#ffd8cc' : '#e3d5c2'}" stroke="#c8b39a" stroke-width="1"/>`;
+        svg += `<text x="52" y="89" text-anchor="middle" class="expr" style="font-size:11px">40 ÷ 8</text>`;
+        svg += `<text x="52" y="103" text-anchor="middle" class="place-label" style="font-size:10px">${currentStep >= 1 ? '商 5' : ''}</text>`;
+        svg += `<path d="M168 92 h40 l-7 13 h-26 z" fill="${currentStep === 2 ? '#ffd8cc' : '#e3d5c2'}" stroke="#c8b39a" stroke-width="1"/>`;
+        svg += `<text x="188" y="89" text-anchor="middle" class="expr" style="font-size:11px">20 ÷ 5</text>`;
+        svg += `<text x="188" y="103" text-anchor="middle" class="place-label" style="font-size:10px">${currentStep >= 2 ? '商 4' : ''}</text>`;
+        svg += `</g>`;
+        if (tilt) {
+            svg += `<text x="120" y="147" text-anchor="middle" class="expr-coral" style="font-size:14px">40 ÷ 8 ＞ 20 ÷ 5</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 3：果凍裝袋進度條與第 8 袋警示 ===== */
+    function renderEstimate() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        // 60 顆果凍總量條
+        svg += `<rect x="20" y="14" width="200" height="16" rx="8" fill="#fce4ec" stroke="#e8b8c8" stroke-width="1"/>`;
+        svg += `<rect x="20" y="14" width="${currentStep >= 1 ? 187 : 0}" height="16" rx="8" fill="#f48fb1"/>`;
+        svg += `<text x="120" y="44" text-anchor="middle" class="expr" style="font-size:13px">果凍 60 個 · 每袋 8 個</text>`;
+        // 7 個袋子圖示
+        for (let i = 0; i < 7; i++) {
+            const x = 14 + i * 31;
+            svg += `<rect x="${x}" y="56" width="24" height="28" rx="5" fill="#fff3e0" stroke="#c8a27a" stroke-width="1.2"/>`;
+            svg += `<path d="M${x + 7} 56 q5 -5 10 0" fill="none" stroke="#c8a27a" stroke-width="1.2"/>`;
+            svg += `<text x="${x + 12}" y="75" text-anchor="middle" class="place-label" style="font-size:9px">8個</text>`;
+        }
+        svg += `<text x="120" y="100" text-anchor="middle" class="expr-mint" style="font-size:12px">8 × 7 ＝ 56 個</text>`;
+        if (currentStep >= 2) {
+            // 剩餘 4 顆果凍
+            for (let i = 0; i < 4; i++) {
+                const x = 58 + i * 18;
+                svg += `<circle cx="${x}" cy="112" r="6.5" fill="#f48fb1" stroke="#d86a95" stroke-width="1"/>`;
+                svg += `<circle cx="${x - 2}" cy="110" r="1.4" fill="#fff"/>`;
+            }
+            svg += `<text x="150" y="116" text-anchor="middle" class="place-label" style="font-size:10px">還剩 4 個沒裝</text>`;
+        }
+        if (currentStep >= 3) {
+            // 第 8 袋警示
+            svg += `<rect x="86" y="124" width="68" height="22" rx="6" fill="#ff8a65"/>`;
+            svg += `<text x="120" y="139" text-anchor="middle" class="bubble-t" style="font-size:12px">需要 8 個袋子</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 4：改錯放大鏡（餘數迷思偵探） ===== */
+    function renderDetective() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        svg += `<rect x="20" y="8" width="200" height="34" rx="10" fill="#ffffff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="31" text-anchor="middle" class="expr" style="font-size:19px">21 ÷ 8 ＝ 2 … 5</text>`;
+        if (currentStep >= 1) {
+            // 放大鏡聚焦
+            svg += `<circle cx="120" cy="26" r="42" fill="none" stroke="#ffb74d" stroke-width="2" stroke-dasharray="5 3" opacity="0.8"/>`;
+            svg += `<line x1="150" y1="58" x2="176" y2="86" stroke="#ffb74d" stroke-width="3" stroke-linecap="round"/>`;
+        }
+        // 兩張判定卡（step 0 顯示底稿，step 2 點亮綠燈）
+        const lit = currentStep >= 2;
+        svg += `<rect x="24" y="72" width="92" height="26" rx="8" fill="${lit ? '#e8f7f1' : '#f5efe6'}" stroke="${lit ? '#7bc9b2' : '#e8ddcc'}" stroke-width="1.5"/>`;
+        svg += `<text x="70" y="89" text-anchor="middle" class="${lit ? 'expr-reveal' : 'place-label'}" style="font-size:12px">${lit ? '餘數 5 ＜ 除數 8' : '餘數 ＜ 除數 ?'}</text>`;
+        svg += `<rect x="128" y="72" width="88" height="26" rx="8" fill="${lit ? '#fff8e1' : '#f5efe6'}" stroke="${lit ? '#e0b84f' : '#e8ddcc'}" stroke-width="1.5"/>`;
+        svg += `<text x="172" y="89" text-anchor="middle" class="${lit ? 'expr' : 'place-label'}" style="font-size:11px">${lit ? '跟商 2 無關！' : '跟商有關嗎?'}</text>`;
+        if (currentStep >= 3) {
+            svg += `<circle cx="120" cy="118" r="14" class="bubble-c" />`;
+            svg += `<text x="120" y="122" text-anchor="middle" class="bubble-t" style="font-size:10px">8×2+5=21</text>`;
+            svg += `<text x="120" y="148" text-anchor="middle" class="expr-coral" style="font-size:14px">小明說錯了！</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 5：餘數陷阱紅綠燈（除數 5 餘數 0~4 綠標 / 5 紅叉） ===== */
+    function renderTrap() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        svg += `<text x="120" y="24" text-anchor="middle" class="expr" style="font-size:15px">果凍平分給 5 人 → 除數 5</text>`;
+        svg += `<text x="120" y="44" text-anchor="middle" class="place-label" style="font-size:10px">餘數必須比除數 5 小</text>`;
+        const chips = [0, 1, 2, 3, 4, 5];
+        chips.forEach((n, i) => {
+            const x = 24 + i * 33;
+            const danger = n === 5 && currentStep >= 3;
+            const safe = currentStep >= 2 && n < 5;
+            const fill = danger ? '#ffcdd2' : (safe ? '#e8f7f1' : '#f5efe6');
+            const stroke = danger ? '#e57373' : (safe ? '#7bc9b2' : '#e8ddcc');
+            svg += `<rect x="${x}" y="56" width="26" height="26" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="1.6"/>`;
+            svg += `<text x="${x + 13}" y="74" text-anchor="middle" class="expr" style="font-size:14px">${n}</text>`;
+            if (danger) {
+                svg += `<line x1="${x + 5}" y1="60" x2="${x + 21}" y2="78" stroke="#e57373" stroke-width="2.4" stroke-linecap="round"/>`;
+                svg += `<line x1="${x + 21}" y1="60" x2="${x + 5}" y2="78" stroke="#e57373" stroke-width="2.4" stroke-linecap="round"/>`;
+            }
+            if (safe) {
+                svg += `<text x="${x + 13}" y="97" text-anchor="middle" class="place-label" style="font-size:9px" fill="#7bc9b2">可以</text>`;
+            }
+        });
+        if (currentStep >= 3) {
+            svg += `<circle cx="206" cy="69" r="16" class="bubble-c" />`;
+            svg += `<text x="206" y="73" text-anchor="middle" class="bubble-t" style="font-size:11px">X</text>`;
+            svg += `<text x="120" y="120" text-anchor="middle" class="expr-coral" style="font-size:14px">不可能剩下 5 個</text>`;
+            svg += `<text x="120" y="140" text-anchor="middle" class="place-label" style="font-size:10px">剩 5 個時每人還能再分 1 個！</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 6：九九乘法 ⇄ 除法 雙向箭頭旋轉卡 ===== */
+    function renderInverse() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        // 乘法卡
+        svg += `<rect x="34" y="16" width="172" height="34" rx="10" fill="#fff8e1" stroke="#e0b84f" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="39" text-anchor="middle" class="expr" style="font-size:16px">8 × 7 ＝ 56</text>`;
+        // 雙向箭頭
+        const spin = currentStep >= 2;
+        svg += `<g transform="rotate(${spin ? 180 : 0} 120 76)">`;
+        svg += `<line x1="120" y1="62" x2="120" y2="90" stroke="#ff8a65" stroke-width="2.4"/>`;
+        svg += `<path d="M114 84 L120 92 L126 84" fill="none" stroke="#ff8a65" stroke-width="2.4" stroke-linecap="round"/>`;
+        svg += `<path d="M114 68 L120 60 L126 68" fill="none" stroke="#ff8a65" stroke-width="2.4" stroke-linecap="round"/>`;
+        svg += `</g>`;
+        // 除法卡
+        const reveal = currentStep >= 2;
+        svg += `<rect x="34" y="100" width="172" height="34" rx="10" fill="${reveal ? '#e8f7f1' : '#ffffff'}" stroke="${reveal ? '#7bc9b2' : '#f0e6d8'}" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="123" text-anchor="middle" class="${reveal ? 'expr-reveal' : 'expr'}" style="font-size:16px">56 ÷ 8 ＝ ${reveal ? '7' : '?'}</text>`;
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="62" text-anchor="middle" class="place-label" style="font-size:10px">八七五十六</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<circle cx="198" cy="117" r="12" class="bubble-c" />`;
+            svg += `<text x="198" y="121" text-anchor="middle" class="bubble-t">7</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 7：芒果裝盒（30 顆 → 7 盒 剩 2 顆） ===== */
+    function renderGrouping() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        const shown = currentStep >= 2;
+        // 7 個盒子，每盒 4 顆芒果
+        for (let b = 0; b < 7; b++) {
+            const bx = 8 + b * 32.5;
+            svg += `<rect x="${bx}" y="18" width="28" height="34" rx="5" fill="${shown ? '#e8f7f1' : '#fff'}" stroke="${shown ? '#7bc9b2' : '#e8ddcc'}" stroke-width="1.3"/>`;
+            for (let k = 0; k < 4; k++) {
+                const mx = bx + 7 + (k % 2) * 12, my = 30 + Math.floor(k / 2) * 12;
+                svg += `<circle cx="${mx}" cy="${my}" r="4.4" fill="${shown ? '#ffb74d' : '#ffe0b2'}" stroke="#e0a04f" stroke-width="0.8"/>`;
+            }
+            svg += `<text x="${bx + 14}" y="66" text-anchor="middle" class="place-label" style="font-size:9px">盒${b + 1}</text>`;
+        }
+        // 盤上剩下的芒果
+        svg += `<ellipse cx="120" cy="104" rx="52" ry="12" fill="#fff3e0" stroke="#c8a27a" stroke-width="1.2"/>`;
+        const restShown = currentStep >= 3;
+        const restCount = restShown ? 2 : 6;
+        for (let i = 0; i < restCount; i++) {
+            const mx = 86 + i * 14;
+            svg += `<circle cx="${mx}" cy="98" r="5.5" fill="#ffb74d" stroke="#e0a04f" stroke-width="1"/>`;
+            svg += `<path d="M${mx} 93 q2 -4 4 -1" fill="none" stroke="#8aa04f" stroke-width="1"/>`;
+        }
+        svg += `<text x="120" y="126" text-anchor="middle" class="${restShown ? 'expr-coral' : 'expr'}" style="font-size:13px">${restShown ? '30 ÷ 4 ＝ 7 … 2 → 7 盒 剩 2 顆' : '30 顆芒果，每 4 顆裝一盒'}</text>`;
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 8：泡芙平分 4 袋（36 → 每袋 9 顆） ===== */
+    function renderSharing() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        const shown = currentStep >= 3;
+        for (let t = 0; t < 4; t++) {
+            const tx = 10 + t * 58;
+            svg += `<rect x="${tx}" y="20" width="52" height="74" rx="9" fill="${shown ? '#e8f7f1' : '#fff'}" stroke="${shown ? '#7bc9b2' : '#e8ddcc'}" stroke-width="1.4"/>`;
+            svg += `<text x="${tx + 26}" y="38" text-anchor="middle" class="place-label" style="font-size:9px">第 ${t + 1} 袋</text>`;
+            // 每袋 9 顆泡芙（3×3 陣列）
+            if (shown) {
+                for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+                    svg += `<circle cx="${tx + 13 + c * 13}" cy="${52 + r * 13}" r="4.6" fill="#ffcdd2" stroke="#d86a95" stroke-width="0.8"/>`;
+                }
+                svg += `<text x="${tx + 26}" y="88" text-anchor="middle" class="expr-reveal" style="font-size:13px">9 顆</text>`;
+            } else {
+                svg += `<text x="${tx + 26}" y="64" text-anchor="middle" class="place-label" style="font-size:10px">? 顆</text>`;
+            }
+        }
+        svg += `<text x="120" y="122" text-anchor="middle" class="${shown ? 'expr-coral' : 'expr'}" style="font-size:14px">${shown ? '36 ÷ 4 ＝ 9 → 每袋 9 顆' : '36 顆草莓泡芙 平分成 4 袋'}</text>`;
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="142" text-anchor="middle" class="place-label" style="font-size:10px">想：4 × 9 ＝ 36 剛好分完</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 9：蛋塔分裝四種盒型檢驗（6 格盒完美卡位） ===== */
+    function renderBoxes() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        svg += `<text x="120" y="18" text-anchor="middle" class="expr" style="font-size:14px">42 個蛋塔，找剛好分完的盒型</text>`;
+        const types = [[6, '7 盒剛好'], [5, '剩 2 個'], [8, '剩 2 個'], [9, '剩 6 個']];
+        types.forEach((t, i) => {
+            const x = 12 + i * 57;
+            const perfect = t[0] === 6;
+            const show = currentStep >= 2;
+            const win = perfect && currentStep >= 3;
+            const stroke = win ? '#7bc9b2' : (show && !perfect ? '#e57373' : '#e8ddcc');
+            const fill = win ? '#e8f7f1' : (show && !perfect ? '#fff5f5' : '#fff');
+            svg += `<rect x="${x}" y="30" width="48" height="46" rx="7" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+            // 盒格
+            for (let c = 0; c < Math.min(t[0], 6); c++) {
+                svg += `<line x1="${x + 8 + c * 8}" y1="34" x2="${x + 8 + c * 8}" y2="72" stroke="#eee4d4" stroke-width="0.8"/>`;
+            }
+            svg += `<text x="${x + 24}" y="58" text-anchor="middle" class="expr" style="font-size:14px">${t[0]}</text>`;
+            const verdict = currentStep >= 3 ? (perfect ? '42 ÷ 6 ＝ 7 ✓' : `42 ÷ ${t[0]} 有剩`) : (show ? t[1] : '');
+            svg += `<text x="${x + 24}" y="92" text-anchor="middle" style="font-size:9.5px;fill:${win ? '#7bc9b2' : (show && !perfect ? '#e57373' : '#b0a08a')};font-weight:bold">${verdict}</text>`;
+        });
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="116" text-anchor="middle" class="place-label" style="font-size:10px">42 ÷ 5 ＝ 8…2、42 ÷ 8 ＝ 5…2、42 ÷ 9 ＝ 4…6</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<circle cx="30" cy="53" r="16" class="bubble-c" />`;
+            svg += `<text x="30" y="57" text-anchor="middle" class="bubble-t" style="font-size:10px">剛好!</text>`;
+            svg += `<text x="120" y="140" text-anchor="middle" class="expr-coral" style="font-size:14px">每盒裝 6 個（裝成 7 盒剛好）</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 10：反向拼圖（被除數 ＝ 除數 × 商 ＋ 餘數） ===== */
+    function renderReverse() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        // 6 位小朋友 × 7 張
+        const kids = currentStep >= 2;
+        for (let k = 0; k < 6; k++) {
+            const kx = 12 + k * 37;
+            svg += `<circle cx="${kx + 10}" cy="34" r="7" fill="${kids ? '#b3e5fc' : '#e3f2fd'}" stroke="#90caf9" stroke-width="1"/>`;
+            svg += `<path d="M${kx + 2} 50 q8 -8 16 0" fill="none" stroke="#90caf9" stroke-width="1.4"/>`;
+            svg += `<text x="${kx + 10}" y="62" text-anchor="middle" class="place-label" style="font-size:9px">7張</text>`;
+        }
+        if (kids) {
+            svg += `<text x="120" y="80" text-anchor="middle" class="expr" style="font-size:14px">6 × 7 ＝ 42 張（已分出）</text>`;
+        }
+        if (currentStep >= 3) {
+            // 剩餘 3 張貼紙
+            for (let i = 0; i < 3; i++) {
+                const sx = 74 + i * 18;
+                svg += `<rect x="${sx}" y="88" width="14" height="14" rx="3" fill="#ffd166" stroke="#e0b84f" stroke-width="1" transform="rotate(${-12 + i * 12} ${sx + 7} 95)"/>`;
+            }
+            svg += `<text x="150" y="99" text-anchor="middle" class="place-label" style="font-size:10px">剩下 3 張</text>`;
+            svg += `<rect x="40" y="112" width="160" height="26" rx="9" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="130" text-anchor="middle" class="expr-reveal" style="font-size:14px">42 ＋ 3 ＝ 45 → 原本共有 45 張</text>`;
+        } else {
+            svg += `<text x="120" y="112" text-anchor="middle" class="place-label" style="font-size:10px">被除數 ＝ 除數 × 商 ＋ 餘數</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    function render() {
+        if (q.mode === 'rule') renderRule();
+        else if (q.mode === 'compare') renderCompare();
+        else if (q.mode === 'estimate') renderEstimate();
+        else if (q.mode === 'detective') renderDetective();
+        else if (q.mode === 'trap') renderTrap();
+        else if (q.mode === 'inverse') renderInverse();
+        else if (q.mode === 'grouping') renderGrouping();
+        else if (q.mode === 'sharing') renderSharing();
+        else if (q.mode === 'boxes') renderBoxes();
+        else renderReverse();
+    }
+
+    function nextStep() {
+        const total = totalSteps();
+        currentStep = currentStep + 1 > total ? 0 : currentStep + 1;
+        render();
+    }
+
+    function checkAnswer() {
+        const fb = document.getElementById('feedback');
+        fb.style.display = 'block';
+        if (selectedAns === q.correct) {
+            fb.innerText = '太棒了！答對了';
+            fb.className = 'feedback success';
+            currentStep = totalSteps();
+            render();
+        } else {
+            fb.innerText = '再試試看喔！';
+            fb.className = 'feedback fail';
+        }
+        setTimeout(() => fb.style.display = 'none', 2000);
+    }
+
+    init();
+</script>
+
+</body>
+</html>

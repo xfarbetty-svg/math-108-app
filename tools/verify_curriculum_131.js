@@ -48,7 +48,7 @@ if (fieldOk) check(true, '131 條目全部具備 6 個必要欄位（code/title/
 
 // 3. status 分佈：G1 全量 11 條 ready，其餘 120 條 upcoming；question_count / verified_source 一致
 const all = data.grades.flatMap((g) => g.units);
-const EXPECTED_READY_CODES = ['N-1-1', 'N-1-2', 'N-1-3', 'N-1-4', 'N-1-5', 'N-1-6', 'S-1-1', 'S-1-2', 'R-1-1', 'R-1-2', 'D-1-1', 'N-3-1', 'N-3-2', 'N-3-3'];
+const EXPECTED_READY_CODES = ['N-1-1', 'N-1-2', 'N-1-3', 'N-1-4', 'N-1-5', 'N-1-6', 'S-1-1', 'S-1-2', 'R-1-1', 'R-1-2', 'D-1-1', 'N-3-1', 'N-3-2', 'N-3-3', 'N-3-4'];
 const readyUnits = all.filter((u) => u.status === 'ready');
 check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);
 

@@ -7,7 +7,8 @@
 
 ## 📚 規格與參考文檔
 - **108 課綱官方教具對照表**：[`docs/108課綱規格書_全學年視覺教具對照表.md`](docs/108課綱規格書_全學年視覺教具對照表.md)
-- **AutoFlow 重構規格藍圖**：[`docs/R0_AGY_BLUEPRINT.md`](docs/R0_AGY_BLUEPRINT.md)
+- **Step-by-Step 重構規格藍圖**：[`docs/R0_AGY_BLUEPRINT.md`](docs/R0_AGY_BLUEPRINT.md)
+- **單元工廠化施工與交付標準規約**：[`docs/UNIT_FACTORY_STANDARD.md`](docs/UNIT_FACTORY_STANDARD.md)
 - **教育部課綱結構化資料**：[`課綱/curriculum_108_math.json`](課綱/curriculum_108_math.json)
 
 ## 🛡️ 治理規範

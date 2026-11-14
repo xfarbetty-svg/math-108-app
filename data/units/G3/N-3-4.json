@@ -1,0 +1,259 @@
+{
+  "code": "N-3-4",
+  "title": "除法",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 114-1/113-1/111-1 期末 ＋ 高雄市永安國小 114-1 期末",
+  "questions": [
+    {
+      "id": "G3-N-3-4-Q01",
+      "exam_source": "臺北市內湖國小 114-1 期末",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "除以 1 與除以自身基本性質",
+      "stem": "21 ÷ ● ＝ 21、50 ÷ 50 ＝ ▲、16 ÷ ■ ＝ 1，請問 ●、▲、■ 的值分別是多少？",
+      "choices": ["●=1, ▲=1, ■=16", "●=21, ▲=1, ■=1", "●=1, ▲=0, ■=16", "●=0, ▲=1, ■=16"],
+      "answer_index": 0,
+      "answer_raw": "●=1, ▲=1, ■=16",
+      "visual_mode": "rule",
+      "final_check": "●=1, ▲=1, ■=16",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "除以 1 與除以自身的基本性質",
+        "steps": [
+          "21 ÷ 1 ＝ 21：任何數除以 1 都等於原數，所以 ● ＝ 1",
+          "50 ÷ 50 ＝ 1：任何不為 0 的數除以自己都等於 1，所以 ▲ ＝ 1",
+          "16 ÷ 16 ＝ 1：同樣的道理，■ ＝ 16 才會讓商等於 1"
+        ],
+        "trap": "「除以自己等於 1」容易誤答成 ▲ ＝ 0；「除以 1 等於原數」容易誤答成 ● ＝ 21 或 ● ＝ 0。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q02",
+      "exam_source": "臺北市內湖國小 113-1 期末",
+      "section": "二、比大小",
+      "question_num": 2,
+      "title": "乘除算式求商免算比大小",
+      "stem": "比一比，在括號中應該填入哪一個符號？ 40 ÷ 8  ( ? )  20 ÷ 5",
+      "choices": ["＞", "＜", "＝", "無法比較"],
+      "answer_index": 0,
+      "answer_raw": "＞",
+      "visual_mode": "compare",
+      "final_check": "＞",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "用九九乘法求商再比大小",
+        "steps": [
+          "左式 40 ÷ 8：想九九乘法「五八四十」，商是 5",
+          "右式 20 ÷ 5：想九九乘法「四五二十」，商是 4",
+          "5 ＞ 4，所以 40 ÷ 8 ＞ 20 ÷ 5"
+        ],
+        "trap": "除法比大小不用硬算，用九九乘法求出商就能秒比；40 ÷ 8 ＝ 5 大於 20 ÷ 5 ＝ 4。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q03",
+      "exam_source": "高雄市永安國小 114-1 期末",
+      "section": "四、應用題",
+      "question_num": 3,
+      "title": "果凍分裝袋數估算",
+      "stem": "蓉蓉買了 60 個果凍，每 8 個裝成一袋。如果她想把所有果凍全部裝完，準備 7 個袋子夠不夠裝？",
+      "choices": ["不夠，裝完 7 袋還會剩下 4 個，需要 8 個袋子", "剛好夠裝，可以裝滿 7 個袋子", "太充足了，只要 6 個袋子就夠了", "不夠，還差 10 個果凍才能裝完"],
+      "answer_index": 0,
+      "answer_raw": "不夠，裝完 7 袋還會剩下 4 個，需要 8 個袋子",
+      "visual_mode": "estimate",
+      "final_check": "需要 8 個袋子",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "用乘法估算分裝袋數",
+        "steps": [
+          "每 8 個裝一袋，7 袋只能裝 8 × 7 ＝ 56 個",
+          "60 − 56 ＝ 4，還剩下 4 個果凍沒有裝到",
+          "剩下的 4 個需要第 8 個袋子才裝得完"
+        ],
+        "trap": "用乘法估算最快：8 × 7 ＝ 56 ＜ 60，7 袋不夠裝；別誤以為剛好裝滿或只要 6 袋。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q04",
+      "exam_source": "高雄市永安國小 114-1 期末",
+      "section": "一、是非題",
+      "question_num": 1,
+      "title": "經典迷思：餘數必須比除數小",
+      "stem": "小明計算「21 ÷ 8 ＝ 2 … 5」，他說這個算式一定是錯的，因為「除法計算時，餘數一定要比商小」。請問小明的說法對不對？",
+      "choices": ["不對，餘數只要比除數小就可以，5 ＜ 8 所以算式是正確的", "對，餘數一定要比商小才算及格", "對，因為 5 ＞ 2 所以算式一定算錯了", "不對，除法沒有餘數這種東西"],
+      "answer_index": 0,
+      "answer_raw": "不對，餘數只要比除數小就可以，5 ＜ 8 所以算式是正確的",
+      "visual_mode": "detective",
+      "final_check": "小明說錯了！",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "餘數鐵律：餘數 ＜ 除數（與商的大小無關）",
+        "steps": [
+          "除法的鐵律是「餘數一定要比除數小」，餘數跟商的大小無關",
+          "這題除數是 8，餘數是 5：5 ＜ 8，完全合格",
+          "驗算：8 × 2 ＋ 5 ＝ 16 ＋ 5 ＝ 21，計算完全正確，小明說錯了！"
+        ],
+        "trap": "「餘數一定要比商小」是最經典的迷思句；正確鐵律是「餘數一定要比除數小」，餘數 5 ＜ 除數 8，算式正確。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q05",
+      "exam_source": "臺北市內湖國小 114-1 期末",
+      "section": "一、選擇題",
+      "question_num": 2,
+      "title": "核心陷阱：餘數不可能大於等於除數",
+      "stem": "一袋果凍平分給 5 個人，在盡量平分完的情況下，最後剩下的果凍數量「不可能」是下面哪一個？",
+      "choices": ["5 個", "4 個", "2 個", "1 個"],
+      "answer_index": 0,
+      "answer_raw": "5 個",
+      "visual_mode": "trap",
+      "final_check": "不可能剩下 5 個",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "餘數必須小於除數的應用",
+        "steps": [
+          "平分給 5 個人，除數就是 5，餘數必須比 5 小",
+          "在盡量平分的情況下，可能剩下 0、1、2、3、4 個",
+          "如果剩下 5 個，代表每個人還能再多分 1 個，所以絕對不可能剩下 5 個"
+        ],
+        "trap": "餘數 5 ＝ 除數 5，代表還能再平分一輪；「盡量平分」下餘數只能是 0 到 4。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q06",
+      "exam_source": "臺北市內湖國小 111-1 期末",
+      "section": "二、計算題",
+      "question_num": 2,
+      "title": "乘除互逆：由九九乘法求商",
+      "stem": "已知乘法口訣「八七五十六（8 × 7 ＝ 56）」，請問除法算式「56 ÷ 8」的商是多少？",
+      "choices": ["7", "8", "6", "9"],
+      "answer_index": 0,
+      "answer_raw": "7",
+      "visual_mode": "inverse",
+      "final_check": "7",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘法與除法互為逆運算",
+        "steps": [
+          "乘法和除法互為逆運算，可以用乘法口訣直接找商",
+          "八七五十六：8 × 7 ＝ 56",
+          "所以 56 ÷ 8 ＝ 7"
+        ],
+        "trap": "想「8 乘以幾會等於 56」就能秒答；56 ÷ 8 的商是 7，不是 8 或 6。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q07",
+      "exam_source": "臺北市內湖國小 111-1 期末",
+      "section": "四、應用題",
+      "question_num": 1,
+      "title": "包含除：芒果裝盒與剩餘",
+      "stem": "欣宇採了 30 顆芒果，每 4 顆裝成一盒，最多可以裝成幾盒？還剩下幾顆？",
+      "choices": ["最多裝成 7 盒，剩下 2 顆", "最多裝成 8 盒，剩下 0 顆", "最多裝成 6 盒，剩下 6 顆", "最多裝成 7 盒，剩下 4 顆"],
+      "answer_index": 0,
+      "answer_raw": "最多裝成 7 盒，剩下 2 顆",
+      "visual_mode": "grouping",
+      "final_check": "7 盒 剩 2 顆",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "包含除（每幾個一盒，求盒數）",
+        "steps": [
+          "每 4 顆裝成一盒：30 ÷ 4，用乘法想「4 × ? 最接近 30 但不超過」",
+          "4 × 7 ＝ 28，30 − 28 ＝ 2",
+          "所以 30 ÷ 4 ＝ 7 … 2：最多裝成 7 盒，剩下 2 顆"
+        ],
+        "trap": "剩下 2 顆不夠再裝一盒（4 顆才一盒）；「7 盒剩 4 顆」是錯的，因為 4 × 8 ＝ 32 超過 30。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q08",
+      "exam_source": "臺北市內湖國小 113-1 期末",
+      "section": "二、填填看",
+      "question_num": 3,
+      "title": "等分除：泡芙平分袋數",
+      "stem": "有 36 顆草莓泡芙，平分裝成 4 袋，請問每袋可以裝幾顆草莓泡芙？",
+      "choices": ["9 顆", "8 顆", "7 顆", "6 顆"],
+      "answer_index": 0,
+      "answer_raw": "9 顆",
+      "visual_mode": "sharing",
+      "final_check": "每袋 9 顆",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "等分除（平分成幾袋，求每袋幾個）",
+        "steps": [
+          "平分成 4 袋：36 ÷ 4，想「4 的幾倍是 36」",
+          "4 × 9 ＝ 36，剛好分完沒有剩餘",
+          "所以 36 ÷ 4 ＝ 9，每袋可以裝 9 顆"
+        ],
+        "trap": "等分除想「幾倍」：4 × 9 ＝ 36；誤想成 4 × 8 ＝ 32 就會答 8 顆而少裝。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q09",
+      "exam_source": "高雄市永安國小 114-1 期末",
+      "section": "二、甜點盒分裝",
+      "question_num": 1,
+      "title": "整除盒裝：蛋塔剛好裝完沒有剩",
+      "stem": "麵包店老闆烤了 42 個蛋塔，要把蛋塔平分放進盒子裡。要怎麼分裝才能剛好分完、「沒有剩下」？",
+      "choices": ["每盒裝 6 個（裝成 7 盒剛好）", "每盒裝 5 個", "每盒裝 8 個", "每盒裝 9 個"],
+      "answer_index": 0,
+      "answer_raw": "每盒裝 6 個（裝成 7 盒剛好）",
+      "visual_mode": "boxes",
+      "final_check": "每盒裝 6 個",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "整除判斷（找被除數的因數）",
+        "steps": [
+          "要剛好分完沒有剩下，就要找能整除 42 的數",
+          "42 ÷ 5 ＝ 8 … 2、42 ÷ 8 ＝ 5 … 2、42 ÷ 9 ＝ 4 … 6，都會剩下",
+          "42 ÷ 6 ＝ 7 剛好整除：每盒裝 6 個，裝成 7 盒剛好分完"
+        ],
+        "trap": "逐個檢驗餘數：只有 6 能整除 42（六七四十二）；5、8、9 都會留下餘數。"
+      }
+    },
+    {
+      "id": "G3-N-3-4-Q10",
+      "exam_source": "臺北市內湖國小 113-1 期末",
+      "section": "三、應用題",
+      "question_num": 1,
+      "title": "逆向推導：平分剩餘反推總數",
+      "stem": "老師把一包獎勵貼紙平分給 6 位小朋友，每人分到 7 張，最後還剩下 3 張。請問這包貼紙原本共有幾張？",
+      "choices": ["45 張", "42 張", "48 張", "39 張"],
+      "answer_index": 0,
+      "answer_raw": "45 張",
+      "visual_mode": "reverse",
+      "final_check": "原本共有 45 張",
+      "component": "division-lab",
+      "component_path": "components/division_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "除法驗算與逆向推導：被除數 ＝ 除數 × 商 ＋ 餘數",
+        "steps": [
+          "除法的逆推原理：被除數 ＝ 除數 × 商 ＋ 餘數",
+          "6 位小朋友每人 7 張，已分出 6 × 7 ＝ 42 張",
+          "加上剩下的 3 張：42 ＋ 3 ＝ 45，原本共有 45 張"
+        ],
+        "trap": "不能只算 6 × 7 ＝ 42 而忘記加剩下的 3 張；答 48 是把餘數誤乘成 6。"
+      }
+    }
+  ]
+}
