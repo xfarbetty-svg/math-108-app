@@ -24,7 +24,7 @@ ok(unit.questions.length === 10, '題庫題目數 = 10 題（實際 ' + unit.que
 ok(unit.question_count === 10, 'question_count 標記 = 10');
 ok(unit.verified_source.includes('通道一') && unit.verified_source.includes('本地 OpenCode'), '施工鋼印含通道一 本地 OpenCode');
 
-const expectedSources = ['內湖 113-1', '永安 114-2', '內湖 113-1', '內湖 114-1', '永安 114-2', '永安 114-2', '內湖 111-1', '內湖 111-1', '永安 114-2', '永安 114-2'];
+const expectedSources = ['內湖 113-1', '永安 114-2', '內湖 113-1', '內湖 114-1', '永安 114-2', '永安 114-2', '內湖 111-1', '內湖 112-1', '永安 114-2', '永安 114-2'];
 unit.questions.forEach((q, i) => {
   const num = i + 1;
   const idStr = num < 10 ? `G3-N-3-9-Q0${num}` : `G3-N-3-9-Q${num}`;
@@ -42,11 +42,11 @@ unit.questions.forEach((q, i) => {
 });
 
 // 10 種視覺模式逐一契約
-const expectedModes = ['fraction_compare', 'add_balance', 'cake_slices', 'pizza_detective', 'one_minus', 'dumplings', 'jelly_add', 'jelly_sub', 'fish_slices', 'one_equal'];
+const expectedModes = ['fraction_compare', 'add_balance', 'cake_slices', 'pizza_detective', 'one_minus', 'dumplings', 'jelly_add', 'basketball', 'fish_slices', 'one_equal'];
 unit.questions.forEach((q, i) => ok(q.visual_mode === expectedModes[i], `Q${i + 1} visual_mode = ${expectedModes[i]}`));
 
 // 10-Type Matrix：題型關鍵字逐一命中
-const typeKeywords = ['規律', '秒殺', '生活情境', '除錯', '核心陷阱', '單位分數', '同分母加法', '同分母減法', '連續同分母減法', '綜合分數'];
+const typeKeywords = ['規律', '秒殺', '生活情境', '除錯', '核心陷阱', '單位分數', '同分母加法', '單位分數', '連續同分母減法', '綜合分數'];
 typeKeywords.forEach((kw, i) => ok(unit.questions[i].title.includes(kw) || unit.questions[i].explanation.concept.includes(kw), `Q${i + 1} 題型矩陣命中關鍵字「${kw}」`));
 
 // 算理真值驗證：同分母分數比較、加、減（牽涉之分數與結果皆不超過 2）
@@ -57,7 +57,7 @@ ok(4 * (1 / 8) === 4 / 8 && 4 / 8 === 0.5, 'Q4 披薩切片除錯真值 4 片 �
 ok((6 - 4) === 2 && Math.abs((1 - 4 / 6) - 2 / 6) < 1e-9 && Math.abs((2 / 6 + 4 / 6) - 1) < 1e-9, 'Q5 和等於1與減法真值 1 － 4/6 ＝ 6/6 － 4/6 ＝ 2/6');
 ok(8 * (5 / 8) === 5, 'Q6 單位分數點數真值 8 顆中的 5/8 籠 ＝ 5 顆');
 ok((3 + 7) / 12 === 10 / 12, 'Q7 果凍盒同分母加法真值 3/12 ＋ 7/12 ＝ 10/12');
-ok((12 - 10) / 12 === 2 / 12, 'Q8 果凍盒同分母減法真值 12/12 － 10/12 ＝ 2/12');
+ok((10 - 7) === 3 && (10 - 7) / 10 === 3 / 10, 'Q8 投籃命中率真值 10 次中 7 次 → 未進 3 次占 3/10');
 ok((10 - 3 - 5) / 10 === 2 / 10, 'Q9 石斑魚切片連續減法真值 10/10 － 3/10 － 5/10 ＝ 2/10');
 ok(5 / 5 === 1 && 6 / 7 < 1, 'Q10 整數1與分數真值 5/5 ＝ 1 且 1 ＞ 6/7');
 

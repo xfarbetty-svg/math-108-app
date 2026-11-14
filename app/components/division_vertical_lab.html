@@ -175,8 +175,8 @@
         1:  { mode: 'pattern', stem: '觀察算式的規律：已知 38 ÷ 2 ＝ 19，請問 3800 ÷ 2 ＝ ( ? )',
               correct: '1900', choices: ['1900', '190', '19000', '19'],
               caps: ['38 ÷ 2 ＝ 19：先把基本除法題算出來', '被除數 38 → 380 擴大 10 倍，除數 2 不變 → 商 19 也擴大 10 倍變成 190', '38 → 3800 擴大 100 倍 → 19 × 100 ＝ 1900'] },
-        2:  { mode: 'compare', stem: '比一比，在括號中應該填入哪一個符號？ 100 ÷ 10  ( ? )  100 ÷ 5', correct: '＜', choices: ['＜', '＞', '＝', '無法比較'],
-              caps: ['兩邊的被除數都是 100，總量完全相同！', '100 ÷ 10：平分給 10 人每人得 10；100 ÷ 5：平分給 5 人每人得 20', '除數越大每人分到越少 → 10 ＜ 20，所以 100 ÷ 10 ＜ 100 ÷ 5'] },
+        2:  { mode: 'compare', stem: '算算看：80 ÷ 4 ＝ ( ? )', correct: '20', choices: ['20', '2', '200', '24'],
+              caps: ['80 ÷ 4：80 是 8 個十與 0 個一', '十位計算：8 個十除以 4 等於 2 個十，在十位商寫 2（2 × 4 ＝ 8）', '個位計算：0 個一除以 4 等於 0 個一，個位補 0 → 商為 20（餘數 0）', '驗算：20 × 4 ＝ 80 ✓ 完全整除'] },
         3:  { mode: 'digits', stem: '在算式「86 ÷ 5 ＝ 17 … 1」中，商是幾位數？（動動腦：最高位十位 8 夠不夠除以 5 呢？）',
               correct: '二位數', choices: ['二位數', '一位數', '三位數', '四位數'],
               caps: ['先看最高位十位：8 夠不夠除以 5？8 ＞ 5 夠除！', '十位商 1：1 × 5 ＝ 5，8 − 5 ＝ 3；移下個位 6 合成 36', '36 ÷ 5：5 × 7 ＝ 35，36 − 35 ＝ 1 → 商 17 餘 1', '商的最高位在十位 → 商是二位數 (17)'],
@@ -342,34 +342,36 @@
         layer.innerHTML = svg;
     }
 
-    /* ===== 模式 2：100÷10 vs 100÷5 雙槽對比天平 ===== */
+    /* ===== 模式 2：80÷4 整十除法位值演繹 ===== */
     function renderCompare() {
         const layer = document.getElementById('drawLayer');
         document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 168');
         let svg = '';
-        // 左右雙槽
-        svg += `<rect x="16" y="22" width="94" height="66" rx="12" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
-        svg += `<rect x="130" y="22" width="94" height="66" rx="12" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
-        svg += `<text x="63" y="44" text-anchor="middle" class="expr" style="font-size:14px">100 ÷ 10</text>`;
-        svg += `<text x="177" y="44" text-anchor="middle" class="expr" style="font-size:14px">100 ÷ 5</text>`;
-        svg += `<text x="120" y="34" text-anchor="middle" class="place-label">總量都是 100</text>`;
+        svg += `<text x="120" y="16" text-anchor="middle" class="place-label">80 ÷ 4 ＝ 20（整除）</text>`;
+        
+        // 直式除法展示框
+        svg += `<rect x="50" y="24" width="140" height="90" rx="10" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        
+        // 長除號
+        svg += `<path d="M 85 45 C 80 55 80 75 75 85 L 170 45" fill="none" stroke="#6d4c41" stroke-width="2"/>`;
+        svg += `<text x="70" y="66" text-anchor="middle" class="expr" style="font-size:16px">4</text>`;
+        svg += `<text x="105" y="66" text-anchor="middle" class="expr" style="font-size:16px">8</text>`;
+        svg += `<text x="125" y="66" text-anchor="middle" class="expr" style="font-size:16px">0</text>`;
+
         if (currentStep >= 2) {
-            // 人頭點：左 10 人、右 5 人
-            for (let i = 0; i < 10; i++) {
-                const px = 28 + (i % 5) * 12, py = 58 + Math.floor(i / 5) * 13;
-                svg += `<circle cx="${px}" cy="${py}" r="4" fill="#ffab91"/><circle cx="${px - 1.2}" cy="${py - 1.2}" r="1" fill="#fff"/>`;
-            }
-            for (let i = 0; i < 5; i++) {
-                const px = 145 + (i % 5) * 15, py = 58;
-                svg += `<circle cx="${px}" cy="${py}" r="4" fill="#80cbc4"/><circle cx="${px - 1.2}" cy="${py - 1.2}" r="1" fill="#fff"/>`;
-            }
-            svg += `<text x="63" y="84" text-anchor="middle" class="place-label" style="font-size:10px;fill:#ff8a65">每人得 10</text>`;
-            svg += `<text x="177" y="84" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">每人得 20</text>`;
+            // 十位商 2
+            svg += `<text x="105" y="40" text-anchor="middle" class="expr-coral" style="font-size:16px">2</text>`;
+            svg += `<text x="105" y="85" text-anchor="middle" class="expr" style="font-size:14px">8</text>`;
+            svg += `<line x1="95" y1="90" x2="115" y2="90" stroke="#6d4c41" stroke-width="1.5"/>`;
         }
         if (currentStep >= 3) {
-            svg += `<circle cx="120" cy="112" r="17" fill="#fff3ec" stroke="#ff8a65" stroke-width="2"/>`;
-            svg += `<text x="120" y="119" text-anchor="middle" class="expr-coral" style="font-size:18px">＜</text>`;
-            svg += `<text x="120" y="152" text-anchor="middle" class="expr-coral" style="font-size:13px">10 ＜ 20 → 100 ÷ 10 ＜ 100 ÷ 5</text>`;
+            // 個位補 0
+            svg += `<text x="125" y="40" text-anchor="middle" class="expr-mint" style="font-size:16px">0</text>`;
+            svg += `<text x="125" y="105" text-anchor="middle" class="expr-mint" style="font-size:14px">0</text>`;
+        }
+        if (currentStep >= 4) {
+            svg += `<rect x="30" y="122" width="180" height="34" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">80 ÷ 4 ＝ 20 ✓（商 20 餘 0）</text>`;
         }
         layer.innerHTML = svg;
     }

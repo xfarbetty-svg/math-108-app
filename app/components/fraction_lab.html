@@ -282,18 +282,18 @@
         },
         {
             q: 8,
-            stem: "接續上題，原本有一整盒（12/12 盒）果凍，姐姐和弟弟一共吃掉了 10/12 盒，請問還剩下幾盒果凍？",
-            options: ["2/12 盒", "1/12 盒", "3/12 盒", "0 盒"],
+            stem: "小蓁練習投籃，全部投了 10 次，投進 7 次，沒有投進的次數占全部的幾分之幾？",
+            options: ["3/10", "7/10", "5/10", "6/10"],
             answer_index: 0,
-            visual_mode: "jelly_sub",
-            final_reveal: "12/12 － 10/12 ＝ 2/12 盒",
+            visual_mode: "basketball",
+            final_reveal: "10 － 7 ＝ 3 → 占全部的 3/10",
             total_steps: 3,
             explanations: [
-                "整盒滿裝為 12/12 盒（12 個果凍）",
-                "吃掉了 10/12 盒（10 個果凍）",
-                "剩下：12/12 － 10/12 ＝ 2/12 盒 (2 個果凍) ✓"
+                "全部投了 10 次，投進 7 次 (7/10)",
+                "沒投進的次數：10 － 7 ＝ 3 次",
+                "每次占 1/10，3 次占全部的 3/10 ✓"
             ],
-            feedback: "答對了！滿盒 12/12 減去 10/12，分子 12－10＝2，還剩下 2/12 盒！"
+            feedback: "答對了！全部 10 次，沒投進 3 次，占全部的 3/10！"
         },
         {
             q: 9,
@@ -424,7 +424,8 @@
             case 'one_minus': renderOneMinus(); break;
             case 'dumplings': renderDumplings(); break;
             case 'jelly_add': renderJellyAdd(); break;
-            case 'jelly_sub': renderJellySub(); break;
+            case 'jelly_sub':
+            case 'basketball': renderBasketball(); break;
             case 'fish_slices': renderFishSlices(); break;
             case 'one_equal': renderOneEqual(); break;
         }
@@ -630,27 +631,30 @@
         layer.innerHTML = svg;
     }
 
-    /* ===== 模式 8：果凍盒 12/12 － 10/12 ＝ 2/12 ===== */
-    function renderJellySub() {
+    /* ===== 模式 8：投籃命中率 10-7=3 占 3/10 ===== */
+    function renderBasketball() {
         let svg = resetView();
         const layer = document.getElementById('drawLayer');
-        svg += `<rect x="20" y="24" width="200" height="48" rx="8" fill="#fff" stroke="#b0bec5" stroke-width="2"/>`;
-        for (let i = 0; i < 12; i++) {
-            const jx = 24 + i * 16;
-            const fill = (i < 10) ? '#cfd8dc' : '#7bc9b2';
-            svg += `<rect x="${jx}" y="28" width="14" height="40" rx="4" fill="${fill}" stroke="#fff" stroke-width="1"/>`;
+        // 10 顆籃球排一列
+        for (let i = 0; i < 10; i++) {
+            const bx = 22 + i * 20;
+            const inGoal = i < 7;
+            const fill = inGoal ? '#7bc9b2' : '#ff8a65';
+            const icon = inGoal ? '🏀' : '✕';
+            svg += `<circle cx="${bx}" cy="42" r="8" fill="${fill}" stroke="#fff" stroke-width="1.5"/>`;
+            svg += `<text x="${bx}" y="45" text-anchor="middle" font-size="8" fill="#fff">${icon}</text>`;
         }
         if (currentStep >= 1) {
-            svg += `<text x="80" y="18" text-anchor="middle" class="place-label">吃掉 10/12</text>`;
-            svg += `<text x="195" y="18" text-anchor="middle" class="place-label" style="fill:#7bc9b2">剩下 2 格</text>`;
+            svg += `<text x="80" y="20" text-anchor="middle" class="place-label" style="fill:#2e7d32">投進 7 次 (7/10)</text>`;
+            svg += `<text x="180" y="20" text-anchor="middle" class="place-label" style="fill:#c62828">沒進 3 次</text>`;
         }
         if (currentStep >= 2) {
-            svg += `<rect x="25" y="86" width="190" height="30" rx="8" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.2"/>`;
-            svg += `<text x="120" y="105" text-anchor="middle" class="expr-coral" style="font-size:12px">12/12 － 10/12 ＝ (12－10)/12</text>`;
+            svg += `<rect x="25" y="76" width="190" height="30" rx="8" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.2"/>`;
+            svg += `<text x="120" y="95" text-anchor="middle" class="expr-coral" style="font-size:12px">沒投進：10 － 7 ＝ 3 次</text>`;
         }
         if (currentStep >= 3) {
-            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
-            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">還剩下 2/12 盒 ✓</text>`;
+            svg += `<rect x="25" y="118" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="139" text-anchor="middle" class="expr-mint" style="font-size:13px">占全部的 3/10 ✓</text>`;
         }
         layer.innerHTML = svg;
     }

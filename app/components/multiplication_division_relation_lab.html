@@ -157,7 +157,7 @@
     <div class="controls">
         <button class="step-btn" onclick="nextStep()">一步一步看算理 ▶</button>
         <div class="options-grid" id="options"></div>
-        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+        <button class="check-btn" style="display:none;" onclick="checkAnswer()">檢查答案</button>
     </div>
 
     <div id="feedback" class="feedback"></div>
@@ -190,12 +190,12 @@
         8:  { mode: 'dividend', stem: '老師把一整箱故事書平分給 7 個班級，每個班級分到 16 本剛好分完。請問這箱故事書原本共有幾本？（列式：( ? ) ÷ 7 ＝ 16）',
               correct: '112 本', choices: ['112 本', '102 本', '119 本', '98 本'],
               caps: ['7 個班級每班分到 16 本，剛好全部分完', '原本總本數（被除數）÷ 7 ＝ 16，被除數未知', '求被除數用乘法合體：16 × 7 ＝ 112', '驗算 112 ÷ 7 ＝ 16 ✓ 這箱原本共有 112 本'] },
-        9:  { mode: 'balance', stem: '已知「20 ÷ 5 ＝ 4」且「20 ÷ ▲ ＝ 4」，請問符號 ▲ 代表的數字是多少？',
-              correct: '5', choices: ['5', '4', '20', '1'],
-              caps: ['兩座天平並排：20 ÷ 5 ＝ 4 與 20 ÷ ▲ ＝ 4', '比較兩個算式：被除數都是 20，商也都是 4', '被除數和商都相同 → 除數必定相同 → ▲ ＝ 5'] },
-        10: { mode: 'reverse_calc', stem: '已知「4 × 5 ＝ 20」且「20 ÷ ▲ ＝ 4」，請問「▲ × 6」的答案是多少？',
-              correct: '30', choices: ['30', '24', '20', '36'],
-              caps: ['第一關：4 × 5 ＝ 20 且 20 ÷ ▲ ＝ 4，先找出 ▲', '由 20 ÷ ▲ ＝ 4 → ▲ ＝ 20 ÷ 4 ＝ 5', '第二關：▲ × 6 → 5 × 6 ＝ 30，兩步驟解密完成'] }
+        9:  { mode: 'balance', stem: '已知算式：20÷5＝4  4×5＝□  20÷▲＝4  4×▲＝□。上面 4 個算式中的 □ 和 ▲ 分別代表一個數。想想看，「□ × ▲」的答案是多少？',
+              correct: '100', choices: ['100', '20', '25', '80'],
+              caps: ['由 4 × 5 ＝ □ 可以推得：□ ＝ 20', '由 20 ÷ ▲ ＝ 4（或 4 × ▲ ＝ 20）可以推得：▲ ＝ 20 ÷ 4 ＝ 5', '最後求「□ × ▲」的答案：20 × 5 ＝ 100'] },
+        10: { mode: 'reverse_calc', stem: '已知乘法算式「16 × 7 ＝ 112」，利用乘除互逆的關係，可以知道算式「112 ÷ 7」的答案是多少？',
+              correct: '16', choices: ['16', '7', '112', '784'],
+              caps: ['已知乘法算式：16 × 7 ＝ 112', '乘除互逆：112 是 7 的 16 倍，平分 7 份每份必是 16', '不用直式計算，直接反推得出 112 ÷ 7 ＝ 16'] }
     };
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -493,48 +493,71 @@
     function renderBalance() {
         let svg = resetView();
         const layer = document.getElementById('drawLayer');
-        // 左天平卡
-        svg += `<rect x="14" y="18" width="100" height="58" rx="12" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
-        svg += `<line x1="30" y1="34" x2="98" y2="34" stroke="#a1887f" stroke-width="2.5" stroke-linecap="round"/>`;
-        svg += `<polygon points="58,52 72,52 65,42" fill="#a1887f"/>`;
-        svg += `<text x="64" y="70" text-anchor="middle" class="expr" style="font-size:13px">20 ÷ 5 ＝ 4</text>`;
-        // 右天平卡
-        svg += `<rect x="126" y="18" width="100" height="58" rx="12" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
-        svg += `<line x1="142" y1="34" x2="210" y2="34" stroke="#a1887f" stroke-width="2.5" stroke-linecap="round"/>`;
-        svg += `<polygon points="170,52 184,52 177,42" fill="#a1887f"/>`;
-        svg += `<text x="176" y="70" text-anchor="middle" class="expr" style="font-size:13px">20 ÷ ▲ ＝ 4</text>`;
-        if (currentStep >= 2) {
-            svg += `<text x="120" y="98" text-anchor="middle" class="place-label" style="font-size:10px;fill:#ff8a65;font-weight:bold">被除數都是 20，商也都是 4</text>`;
-            svg += `<text x="120" y="114" text-anchor="middle" class="place-label" style="font-size:10px;fill:#ff8a65;font-weight:bold">兩座天平完全平衡！</text>`;
+        const eqns = [
+            "20 ÷ 5 ＝ 4",
+            "4 × 5 ＝ □",
+            "20 ÷ ▲ ＝ 4",
+            "4 × ▲ ＝ □"
+        ];
+        const colors = ["#ff8a65", "#7bc9b2", "#ff8a65", "#7bc9b2"]; // Coral for first pair, Mint for second
+
+        // Display 4 equations in cards
+        for (let i = 0; i < eqns.length; i++) {
+            const x = 14 + (i % 2) * 112; // Two columns
+            const y = 10 + Math.floor(i / 2) * 40; // Two rows
+            const color = colors[i];
+
+            svg += `<rect x="${x}" y="${y}" width="100" height="34" rx="10" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+            svg += `<text x="${x + 50}" y="${y + 22}" text-anchor="middle" class="expr" style="font-size:13px; fill:${color}">${eqns[i]}</text>`;
         }
-        if (currentStep >= 3) {
-            svg += `<rect x="52" y="124" width="136" height="26" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
-            svg += `<text x="120" y="142" text-anchor="middle" class="expr-coral" style="font-size:14px">▲ ＝ 5</text>`;
-            svg += `<text x="120" y="163" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">除數必定相同 → ▲ ＝ 5</text>`;
+
+        // 推導區
+        if (currentStep === 0) {
+            svg += `<text x="120" y="105" text-anchor="middle" class="expr" style="font-size:14px">□ ＝ ?</text>`;
+            svg += `<text x="120" y="125" text-anchor="middle" class="expr" style="font-size:14px">▲ ＝ ?</text>`;
+            svg += `<text x="120" y="145" text-anchor="middle" class="expr" style="font-size:14px">求 □ × ▲ ＝ ?</text>`;
+        } else if (currentStep === 1) { // 揭示 □
+            svg += `<rect x="52" y="90" width="136" height="26" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="108" text-anchor="middle" class="expr-mint" style="font-size:14px">□ ＝ 20 ✓</text>`;
+            svg += `<text x="120" y="125" text-anchor="middle" class="expr" style="font-size:14px">▲ ＝ ?</text>`;
+            svg += `<text x="120" y="145" text-anchor="middle" class="expr" style="font-size:14px">求 □ × ▲ ＝ ?</text>`;
+        } else if (currentStep === 2) { // 揭示 ▲
+            svg += `<rect x="52" y="90" width="136" height="26" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="108" text-anchor="middle" class="expr-mint" style="font-size:14px">□ ＝ 20 ✓</text>`;
+            svg += `<rect x="52" y="120" width="136" height="26" rx="10" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="138" text-anchor="middle" class="expr-coral" style="font-size:14px">▲ ＝ 5 ✓</text>`;
+            svg += `<text x="120" y="155" text-anchor="middle" class="expr" style="font-size:14px">求 □ × ▲ ＝ ?</text>`;
+        } else if (currentStep >= 3) { // 揭示最終答案
+            svg += `<rect x="52" y="90" width="136" height="26" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="108" text-anchor="middle" class="expr-mint" style="font-size:14px">□ ＝ 20 ✓</text>`;
+            svg += `<rect x="52" y="120" width="136" height="26" rx="10" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="138" text-anchor="middle" class="expr-coral" style="font-size:14px">▲ ＝ 5 ✓</text>`;
+            svg += `<rect x="24" y="145" width="192" height="26" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="163" text-anchor="middle" class="expr-coral" style="font-size:14px">□ × ▲ ＝ 20 × 5 ＝ 100 ✓</text>`;
         }
+
         layer.innerHTML = svg;
     }
 
-    /* ===== 模式 10：兩步驟解密槽（▲=20÷4=5 → 5×6=30） ===== */
+    /* ===== 模式 10：乘除互逆反推卡（16×7=112 ➔ 112÷7=16） ===== */
     function renderReverseCalc() {
         let svg = resetView();
         const layer = document.getElementById('drawLayer');
-        // 第一關卡
-        svg += `<text x="30" y="16" text-anchor="start" class="place-label" style="fill:#ff8a65;font-weight:bold">第一關</text>`;
-        svg += `<rect x="24" y="22" width="192" height="26" rx="9" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
-        svg += `<text x="120" y="40" text-anchor="middle" class="expr" style="font-size:13px">4 × 5 ＝ 20 且 20 ÷ ▲ ＝ 4</text>`;
-        // 第二關幽靈卡（未揭示時的虛線預告位）
-        svg += `<rect x="24" y="108" width="192" height="30" rx="9" fill="none" stroke="#e0d5c5" stroke-width="1.4" stroke-dasharray="4 3"/>`;
-        svg += `<text x="120" y="128" text-anchor="middle" class="place-label" style="font-size:13px">? × 6 ＝ ?</text>`;
-        if (currentStep >= 2) {
-            svg += `<rect x="24" y="56" width="192" height="26" rx="9" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
-            svg += `<text x="120" y="74" text-anchor="middle" class="expr-mint" style="font-size:13px">▲ ＝ 20 ÷ 4 ＝ 5</text>`;
+        // 已知乘法卡
+        svg += `<text x="30" y="18" text-anchor="start" class="place-label" style="fill:#ff8a65;font-weight:bold">已知乘法算式</text>`;
+        svg += `<rect x="24" y="24" width="192" height="30" rx="9" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="44" text-anchor="middle" class="expr" style="font-size:14px">16 × 7 ＝ 112</text>`;
+        // 反推除法卡
+        svg += `<text x="30" y="80" text-anchor="start" class="place-label" style="fill:#26a69a;font-weight:bold">互逆除法問題</text>`;
+        svg += `<rect x="24" y="86" width="192" height="30" rx="9" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="106" text-anchor="middle" class="expr" style="font-size:14px">112 ÷ 7 ＝ ( ? )</text>`;
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="132" text-anchor="middle" class="place-label" style="font-size:11px;fill:#ff8a65">⇄ 乘除互逆：乘數是 7，積是 112</text>`;
         }
-        if (currentStep >= 3) {
-            svg += `<text x="30" y="102" text-anchor="start" class="place-label" style="fill:#ff8a65;font-weight:bold">第二關</text>`;
-            svg += `<rect x="24" y="108" width="192" height="30" rx="9" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.5"/>`;
-            svg += `<text x="120" y="128" text-anchor="middle" class="expr-coral" style="font-size:14px">▲ × 6 → 5 × 6 ＝ 30</text>`;
-            svg += `<text x="120" y="158" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">兩步驟解密完成 ✓</text>`;
+        if (currentStep >= 2) {
+            svg += `<rect x="24" y="86" width="192" height="30" rx="9" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="106" text-anchor="middle" class="expr-coral" style="font-size:14px">112 ÷ 7 ＝ 16 ✓</text>`;
+            svg += `<text x="120" y="152" text-anchor="middle" class="place-label" style="font-size:10px;fill:#26a69a">不用直式計算，直接由 16 × 7 ＝ 112 反推！</text>`;
         }
         layer.innerHTML = svg;
     }

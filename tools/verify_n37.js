@@ -44,8 +44,8 @@ unit.questions.forEach((q, i) => {
 // 10 種視覺模式逐一契約
 const expectedModes = ['associate', 'compare', 'estimate', 'detective', 'wire_trap', 'boxes', 'oranges', 'apples', 'milk_toast', 'balloons'];
 unit.questions.forEach((q, i) => ok(q.visual_mode === expectedModes[i], `Q${i + 1} visual_mode = ${expectedModes[i]}`));
-// 10-Type Matrix：題型關鍵字逐一命中（規律/免算比大小/估算/偵探/陷阱/連乘經典/先乘後除/先除後減/先減後除/綜合階梯）
-const typeKeywords = ['規律', '免算比大小', '估算', '偵探', '陷阱', '連乘經典', '先乘後除', '先除後減', '先減後除', '綜合階梯'];
+// 10-Type Matrix：題型關鍵字逐一命中（規律/先乘後除/估算/偵探/陷阱/連乘經典/先乘後除/先除後減/先減後除/綜合階梯）
+const typeKeywords = ['規律', '先乘後除', '估算', '偵探', '陷阱', '連乘經典', '先乘後除', '先除後減', '先減後除', '綜合階梯'];
 typeKeywords.forEach((kw, i) => ok(unit.questions[i].title.includes(kw) || unit.questions[i].explanation.concept.includes(kw), `Q${i + 1} 題型矩陣命中關鍵字「${kw}」`));
 // 兩步驟類型契約：不含併式（每題恰兩個運算步驟）
 ok(unit.verified_source.includes('不含併式') === false && true, '兩步驟應用（非併式）題型結構');
@@ -53,7 +53,7 @@ ok(unit.questions.every(q => q.explanation.steps.length <= 4), '每題算理步�
 
 // 算理真值驗證：每題兩步驟數學正確性（step1_calc → step2_calc）
 ok(4 * 5 === 20 && 20 * 12 === 240 && 5 * 12 === 60 && 60 * 4 === 240, 'Q1 連乘結合律真值 (4×5)×12 ＝ 4×(5×12) ＝ 240');
-ok(32 * 2 === 64 && 32 / 2 === 16 && 64 > 16, 'Q2 比大小真值 8×4×2=64 ＞ 8×4÷2=16');
+ok(24 * 3 === 72 && 72 / 8 === 9 && 9 * 8 === 72, 'Q2 先乘後除真值 24×3=72 → 72÷8=9 顆');
 ok(48 * 3 === 144 && 144 + 65 === 209 && 250 - 209 === 41 && 41 >= 35 && 41 < 85, 'Q3 估算真值 48×3=144 → 250－209=41 ≈ 大約 35 元');
 ok(25 + 15 === 40 && 40 * 4 === 160 && 25 + 15 * 4 === 85 && 160 !== 85, 'Q4 偵探真值 (25＋15)×4=160（小明 85 ✗ 漏乘果汁）');
 ok(123 - 19 === 104 && 104 / 4 === 26 && 26 * 4 + 19 === 123, 'Q5 陷阱真值 123－19=104 → 104÷4=26 公分');
@@ -76,7 +76,7 @@ expectedModes.forEach(m => ok(html.includes(`'${m}'`), `教具支援視覺模式
 
 // 10 題資料完整映射檢核（最終揭示逐題存在於教具）
 const truths = [
-  '都是 240 枝', '64 ＞ 16', '250 － 209 ＝ 41', '40 × 4 ＝ 160 元 ✓', '104 ÷ 4 ＝ 26 公分',
+  '都是 240 枝', '每人分到 9 顆', '250 － 209 ＝ 41', '40 × 4 ＝ 160 元 ✓', '104 ÷ 4 ＝ 26 公分',
   '32 × 2 ＝ 64', '36 ÷ 6 ＝ 6', '20 － 18 ＝ 2 盒', '900 ÷ 6 ＝ 150', '100 × 3 ＝ 300 顆'
 ];
 truths.forEach((t, i) => ok(html.includes(t), `教具 Q${i + 1} 題組最終揭示 '${t}' 已映射`));

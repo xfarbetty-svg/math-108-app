@@ -26,7 +26,7 @@ ok(unit.verified_source.includes('通道二') && unit.verified_source.includes('
 
 const expectedSources = [
   '內湖 113-2', '內湖 113-2', '內湖 114-1', '內湖 111-2', '內湖 111-2',
-  '內湖 111-2', '內湖 111-2', '內湖 111-2', '內湖 112-2', '內湖 112-2'
+  '內湖 111-2', '內湖 111-2', '內湖 111-2', '內湖 112-2', '內湖 111-2'
 ];
 
 unit.questions.forEach((q, i) => {
@@ -48,8 +48,8 @@ unit.questions.forEach((q, i) => {
 // 10 種視覺模式逐一契約
 const expectedModes = ['family', 'compare', 'estimate', 'detective', 'divisor_trap', 'multiplicand', 'multiplier', 'dividend', 'balance', 'reverse_calc'];
 unit.questions.forEach((q, i) => ok(q.visual_mode === expectedModes[i], `Q${i + 1} visual_mode = ${expectedModes[i]}`));
-// 10-Type Matrix：題型關鍵字逐一命中（規律/免算比大小/估算/偵探/陷阱/被乘數/乘數/被除數/符號推理/綜合應用）
-const typeKeywords = ['規律', '免算比大小', '估算', '偵探', '陷阱', '被乘數', '乘數', '被除數', '符號推理', '綜合應用'];
+// 10-Type Matrix：題型關鍵字逐一命中（規律/免算比大小/估算/偵探/陷阱/被乘數/乘數/被除數/符號推理/乘除互逆）
+const typeKeywords = ['規律', '免算比大小', '估算', '偵探', '陷阱', '被乘數', '乘數', '被除數', '符號推理', '乘除互逆'];
 typeKeywords.forEach((kw, i) => ok(unit.questions[i].title.includes(kw) || unit.questions[i].explanation.concept.includes(kw), `Q${i + 1} 題型矩陣命中關鍵字「${kw}」`));
 
 // 算理真值驗證：每題乘除互逆與未知數求解數學正確性
@@ -61,8 +61,8 @@ ok(112 / 7 === 16 && 16 * 7 === 112 && 112 * 7 === 784, 'Q5 陷阱真值 除數�
 ok(112 / 16 === 7 && 7 * 16 === 112, 'Q6 被乘數真值 112÷16=7（每包 7 塊）');
 ok(96 / 8 === 12 && 8 * 12 === 96, 'Q7 乘數真值 96÷8=12（12 盒）');
 ok(16 * 7 === 112 && 112 / 7 === 16, 'Q8 被除數真值 16×7=112（原本 112 本）');
-ok(20 / 5 === 4 && 20 / 5 === 20 / 5 && 20 / 5 === 4, 'Q9 天平真值 20÷5=4 且 20÷▲=4 → ▲=5');
-ok(20 / 4 === 5 && 5 * 6 === 30, 'Q10 兩步驟真值 ▲=20÷4=5 → 5×6=30');
+ok(4 * 5 === 20 && 20 / 5 === 4 && 20 * 5 === 100, 'Q9 真題真值 □=20, ▲=5 → □×▲=100');
+ok(16 * 7 === 112 && 112 / 7 === 16, 'Q10 互逆真值 16×7=112 → 112÷7=16');
 
 const html = fs.readFileSync('app/components/multiplication_division_relation_lab.html', 'utf8');
 ok(html.includes('checkAnswer'), '教具具備檢查答題函式');
@@ -79,7 +79,7 @@ expectedModes.forEach(m => ok(html.includes(`'${m}'`), `教具支援視覺模式
 const truths = [
   '25 × 5 ＝ 125', '150 ＞ 50 → 50 × 3 ＞ 150 ÷ 3', '85 × 3 ＝ 255 → 大約 3 盒',
   '32 × 8 ＝ 256 ✓', '112 ÷ 7 ＝ 16 ✓', '112 ÷ 16 ＝ 7', '96 ÷ 8 ＝ 12',
-  '16 × 7 ＝ 112 本', '▲ ＝ 5', '5 × 6 ＝ 30'
+  '16 × 7 ＝ 112 本', '□ × ▲ ＝ 20 × 5 ＝ 100', '112 ÷ 7 ＝ 16'
 ];
 truths.forEach((t, i) => ok(html.includes(t), `教具 Q${i + 1} 題組最終揭示 '${t}' 已映射`));
 

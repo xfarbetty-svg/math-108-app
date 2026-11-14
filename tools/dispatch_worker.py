@@ -58,9 +58,11 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
         print(f"[Worker Dispatch CH{channel}] 完成，耗時 {elapsed:.2f}s，Exit Code: {proc.returncode}")
         
         if proc.returncode != 0:
-            print(f"[Worker Dispatch ERROR] 工兵執行失敗 (Exit Code {proc.returncode})", file=sys.stderr)
+            print(f"[Worker Dispatch ERROR] 工兵執行失敗 (Exit Code {proc.returncode})")
             if proc.stderr:
-                print(proc.stderr.strip()[:500], file=sys.stderr)
+                print(f"[Worker Dispatch STDERR]: {proc.stderr.strip()[:1000]}")
+            if proc.stdout:
+                print(f"[Worker Dispatch STDOUT]: {proc.stdout.strip()[:1000]}")
             
             # 若通道 1 失敗且開啟自動容錯：
             # 優先切換至本地備援模型 (gemini-2.5-flash)，維持本地工具落地能力
