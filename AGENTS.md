@@ -139,7 +139,12 @@
   2. `estimation_lab.html` 日系擬物四則估算實驗台：10 種視覺模式（round_add/radar_scale/bakery/detective/cap_budget/thousands_add/thousands_sub/hundreds_sub/snack_multiply/thousands_sum）。
   3. 雙硬閘門全綠：`verify_n38.js`（資料契約＋逐題取概數數學真值驗算）與 `verify_n38_cdp.js`（390px 實機 10/10 題 app 高度 364~391px ≤ 420px、零溢出、零 console 錯誤）。
   4. 課綱同步：`curriculum.json` N-3-8 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 19 條全綠。
-- [ ] 下一步：推進三年級第九單元 `N-3-9 簡單同分母分數`（結合操作活動與整數經驗，簡單同分母分數比較、加、減的意義）。
+- [x] Session 31 G3-N-3-9 簡單同分母分數 100% 落地閉環（已開放 9/24，全專案 20/131 條目，批次 A 第五戰完工）：
+  1. 10 題多樣化同分母分數真題落地（`data/units/G3/N-3-9.json`，涵蓋比較、加、減，牽涉分數與結果皆不超過2）：規律探索同分母大小比較（5/8＞3/8）、秒殺比大小（5/12＋1/12＝2/12＋4/12）、蛋糕切片平分生活情境（弟弟吃4片）、披薩切片除錯小偵探（4片＝4/8個披薩）、核心陷阱和等於1與減法（1－4/6＝6/6－4/6＝2/6）、湯包單位分數點數（5/8籠＝5顆）、果凍盒同分母加法（3/12＋7/12＝10/12）、果凍盒同分母減法（12/12－10/12＝2/12）、石斑魚切片連續同分母減法（10/10－3/10－5/10＝2/10）、整數1與真分數綜合思維（5/5＝1且1＞6/7）。
+  2. `fraction_lab.html` 日系擬物同分母分數實驗台：10 種視覺模式（fraction_compare/add_balance/cake_slices/pizza_detective/one_minus/dumplings/jelly_add/jelly_sub/fish_slices/one_equal）。
+  3. 雙硬閘門全綠：`verify_n39.js`（資料契約＋逐題分數數學真值驗算）與 `verify_n39_cdp.js`（390px 實機 10/10 題 app 高度 364~391px ≤ 420px、零溢出、零 console 錯誤）。
+  4. 課綱同步：`curriculum.json` N-3-9 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 20 條全綠，`verify_app_shell.js` G3 hero「已開放 9/24」。
+- [ ] 下一步：推進三年級第十單元 `N-3-10 一位小數` 或後續單元。
 
 
 ---

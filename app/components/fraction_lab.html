@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-9 簡單同分母分數 分數實驗台</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.3;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+        }
+        .expr { font-size: 14px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 14px; fill: var(--coral); font-weight: bold; }
+        .expr-mint { font-size: 13px; fill: var(--mint); font-weight: bold; }
+        .expr-red { font-size: 12.5px; fill: var(--error); font-weight: bold; }
+        .place-label { font-size: 9px; fill: var(--muted); }
+        .cap { font-size: 11.5px; min-height: 16px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.25; }
+        .controls { display: flex; flex-direction: column; gap: 4px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 6px 4px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-N-3-9 簡單同分母分數實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 240 170">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看分數動態</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    /* ===== 10 題真題資料庫（SSOT 與 10-Type Matrix 映射） ===== */
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "同分母的分數在比較大小時，分子越大的分數代表什麼？",
+            options: ["越大", "越小", "一樣大", "無法比較"],
+            answer_index: 0,
+            visual_mode: "fraction_compare",
+            final_reveal: "分子越大分數越大",
+            total_steps: 3,
+            explanations: [
+                "分母相同：平分成的總份數完全一樣（每份大小相同）",
+                "分子點數：3/8 是 3 片，5/8 是 5 片",
+                "比較結論：5 片 ＞ 3 片 → 分子越大的分數越大 ✓"
+            ],
+            feedback: "答對了！分母相同時，分子越大代表拿取的等分數越多，分數就越大！"
+        },
+        {
+            q: 2,
+            stem: "比一比，在括號中應該填入哪一個符號？ 5/12 ＋ 1/12  ( ? )  2/12 ＋ 4/12",
+            options: ["＝", "＞", "＜", "無法比較"],
+            answer_index: 0,
+            visual_mode: "add_balance",
+            final_reveal: "6/12 ＝ 6/12",
+            total_steps: 3,
+            explanations: [
+                "計算左邊：5/12 ＋ 1/12 ＝ 6/12",
+                "計算右邊：2/12 ＋ 4/12 ＝ 6/12",
+                "兩邊相等：6/12 ＝ 6/12 天平水平平衡 ✓"
+            ],
+            feedback: "答對了！左邊 5＋1＝6，右邊 2＋4＝6，兩邊都是 6/12，所以填入「＝」！"
+        },
+        {
+            q: 3,
+            stem: "一條巧克力脆片蛋糕平分成 12 片。哥哥吃了 3 片，媽媽吃了 5/12 條。弟弟說他吃的蛋糕比哥哥多、比媽媽少，請問弟弟吃了幾片蛋糕？",
+            options: ["4 片", "2 片", "6 片", "8 片"],
+            answer_index: 0,
+            visual_mode: "cake_slices",
+            final_reveal: "弟弟吃了 4 片 (4/12 條)",
+            total_steps: 3,
+            explanations: [
+                "平分 12 片：1 片就是 1/12 條蛋糕",
+                "哥哥吃 3 片 (3/12 條)；媽媽吃 5 片 (5/12 條)",
+                "弟弟比 3 片多、比 5 片少 → 剛好吃了 4 片 (4/12 條) ✓"
+            ],
+            feedback: "答對了！哥哥吃 3 片，媽媽吃 5 片，弟弟介於兩人之間，吃了 4 片（4/12 條）！"
+        },
+        {
+            q: 4,
+            stem: "將一個披薩切成 8 片。請問下列關於披薩分數的敘述，哪一個是正確的？",
+            options: ["妹妹拿了 4/8 個披薩，也就是吃了 4 片", "2/8 個披薩讀作「二分之八」個披薩", "爸爸拿了 6/8 個披薩，其中的「6」代表一個披薩平分成 6 等分", "哥哥拿了 5 片，也就是吃了 8/5 個披薩"],
+            answer_index: 0,
+            visual_mode: "pizza_detective",
+            final_reveal: "4/8 個披薩 ＝ 4 片 ✓",
+            total_steps: 3,
+            explanations: [
+                "切成 8 片：分母是 8，每片是 1/8 個披薩",
+                "妹妹拿 4 片：4 個 1/8 是 4/8 個披薩 ✓ 正確",
+                "除錯辨析：2/8 讀作八分之二；6/8 中的 8 才是分母；5 片是 5/8"
+            ],
+            feedback: "答對了！切成 8 片，4 片就是 4/8 個披薩；2/8 讀作八分之二，5 片是 5/8 個披薩！"
+        },
+        {
+            q: 5,
+            stem: "算算看：算式「1 － 4/6」的答案是多少？",
+            options: ["2/6", "3/6", "4/6", "1/6"],
+            answer_index: 0,
+            visual_mode: "one_minus",
+            final_reveal: "6/6 － 4/6 ＝ 2/6",
+            total_steps: 3,
+            explanations: [
+                "整數「1」代表一個完整整體：1 ＝ 6/6",
+                "同分母相減：6/6 － 4/6",
+                "分母不變分子相減：(6－4)/6 ＝ 2/6 ✓"
+            ],
+            feedback: "答對了！把 1 看成 6/6，6/6 － 4/6 ＝ 2/6，分母不變，分子相減！"
+        },
+        {
+            q: 6,
+            stem: "一籠湯包有 8 顆。祥志吃了 5/8 籠，請問祥志一共吃了幾顆湯包？",
+            options: ["5 顆", "8 顆", "3 顆", "4 顆"],
+            answer_index: 0,
+            visual_mode: "dumplings",
+            final_reveal: "5/8 籠 ＝ 5 顆",
+            total_steps: 3,
+            explanations: [
+                "一籠 8 顆平分成 8 等分：1 顆就是 1/8 籠",
+                "祥志吃了 5/8 籠：代表吃了 5 個 1/8 籠",
+                "單位分數點數：5 個 1/8 籠就是 5 顆湯包 ✓"
+            ],
+            feedback: "答對了！1 顆是 1/8 籠，5/8 籠是 5 個 1/8 籠，剛好是 5 顆湯包！"
+        },
+        {
+            q: 7,
+            stem: "媽媽買了一盒 12 個裝的果凍。姐姐吃了 3/12 盒，弟弟吃了 7/12 盒，兩人一共吃了幾盒果凍？",
+            options: ["10/12 盒", "10/24 盒", "4/12 盒", "1 盒"],
+            answer_index: 0,
+            visual_mode: "jelly_add",
+            final_reveal: "3/12 ＋ 7/12 ＝ 10/12 盒",
+            total_steps: 3,
+            explanations: [
+                "姐姐吃 3/12 盒；弟弟吃 7/12 盒",
+                "同分母相加：3/12 ＋ 7/12",
+                "分母 12 不變：(3＋7)/12 ＝ 10/12 盒 ✓"
+            ],
+            feedback: "答對了！同分母相加分母不變，分子 3＋7＝10，答案是一共吃了 10/12 盒！"
+        },
+        {
+            q: 8,
+            stem: "接續上題，原本有一整盒（12/12 盒）果凍，姐姐和弟弟一共吃掉了 10/12 盒，請問還剩下幾盒果凍？",
+            options: ["2/12 盒", "1/12 盒", "3/12 盒", "0 盒"],
+            answer_index: 0,
+            visual_mode: "jelly_sub",
+            final_reveal: "12/12 － 10/12 ＝ 2/12 盒",
+            total_steps: 3,
+            explanations: [
+                "整盒滿裝為 12/12 盒（12 個果凍）",
+                "吃掉了 10/12 盒（10 個果凍）",
+                "剩下：12/12 － 10/12 ＝ 2/12 盒 (2 個果凍) ✓"
+            ],
+            feedback: "答對了！滿盒 12/12 減去 10/12，分子 12－10＝2，還剩下 2/12 盒！"
+        },
+        {
+            q: 9,
+            stem: "一尾石斑魚切成 10 片，每片一樣重。妹妹吃了 3/10 尾，又送給姐姐 5 片（5/10 尾），請問妹妹還剩下幾尾石斑魚？",
+            options: ["2/10 尾", "3/10 尾", "1/10 尾", "8/10 尾"],
+            answer_index: 0,
+            visual_mode: "fish_slices",
+            final_reveal: "10/10 － 3/10 － 5/10 ＝ 2/10 尾",
+            total_steps: 3,
+            explanations: [
+                "一整尾魚是 10/10 尾（共 10 片）",
+                "吃了 3/10 尾剩下：10/10 － 3/10 ＝ 7/10 尾",
+                "再送給姐姐 5/10 尾：7/10 － 5/10 ＝ 2/10 尾 ✓"
+            ],
+            feedback: "答對了！10/10 減 3/10 減 5/10 ＝ 2/10 尾，妹妹還剩 2/10 尾（2 片）！"
+        },
+        {
+            q: 10,
+            stem: "下列哪一個關於整數「1」和分數大小關係的敘述是正確的？",
+            options: ["5/5 ＝ 1，且 1 ＞ 6/7", "5/5 ＞ 1", "1 ＜ 6/7", "7/7 ＜ 1"],
+            answer_index: 0,
+            visual_mode: "one_equal",
+            final_reveal: "5/5 ＝ 1 且 1 ＞ 6/7",
+            total_steps: 3,
+            explanations: [
+                "分子等於分母代表滿份：5/5 ＝ 1，7/7 ＝ 1",
+                "真分數 6/7 未滿 1 個整體：6/7 ＜ 1",
+                "綜合關係：5/5 ＝ 1 且 1 ＞ 6/7 ✓ 完全正確"
+            ],
+            feedback: "答對了！分子等於分母時分數等於 1，而 6/7 還差 1 份才滿 1，所以 1 ＞ 6/7！"
+        }
+    ];
+
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = -1;
+
+    function init() {
+        const params = new URLSearchParams(window.location.search);
+        const qVal = parseInt(params.get('q')) || 1;
+        currentQ = (qVal >= 1 && qVal <= 10) ? qVal : 1;
+        const qData = QUESTIONS[currentQ - 1];
+
+        document.getElementById('questionBox').textContent = qData.stem;
+        currentStep = 0;
+        selectedOption = -1;
+        updateStepUI();
+        renderOptions();
+        renderVisual();
+    }
+
+    function renderOptions() {
+        const qData = QUESTIONS[currentQ - 1];
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = '';
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+        document.getElementById('feedbackBox').className = 'feedback';
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach((btn, i) => {
+            if (i === idx) btn.classList.add('selected');
+            else btn.classList.remove('selected');
+        });
+    }
+
+    function checkAnswer() {
+        if (selectedOption < 0) {
+            alert('請先選擇一個答案！');
+            return;
+        }
+        const qData = QUESTIONS[currentQ - 1];
+        const fb = document.getElementById('feedbackBox');
+        if (selectedOption === qData.answer_index) {
+            fb.className = 'feedback show correct';
+            fb.textContent = qData.feedback;
+            currentStep = qData.total_steps;
+            updateStepUI();
+            renderVisual();
+        } else {
+            fb.className = 'feedback show wrong';
+            fb.textContent = '差一點點！試試點擊「逐步算理演繹」查看分數切片再選一次。';
+        }
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        if (currentStep < qData.total_steps) {
+            currentStep++;
+        } else {
+            currentStep = 0;
+        }
+        updateStepUI();
+        renderVisual();
+    }
+
+    function updateStepUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        const btn = document.getElementById('stepBtn');
+        const cap = document.getElementById('capText');
+        btn.textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        if (currentStep === 0) {
+            cap.textContent = "點擊「逐步算理」看分數動態";
+        } else {
+            cap.textContent = qData.explanations[currentStep - 1];
+        }
+    }
+
+    function resetView() {
+        return `<rect x="0" y="0" width="240" height="170" fill="none"/>`;
+    }
+
+    function renderVisual() {
+        const qData = QUESTIONS[currentQ - 1];
+        switch (qData.visual_mode) {
+            case 'fraction_compare': renderFractionCompare(); break;
+            case 'add_balance': renderAddBalance(); break;
+            case 'cake_slices': renderCakeSlices(); break;
+            case 'pizza_detective': renderPizzaDetective(); break;
+            case 'one_minus': renderOneMinus(); break;
+            case 'dumplings': renderDumplings(); break;
+            case 'jelly_add': renderJellyAdd(); break;
+            case 'jelly_sub': renderJellySub(); break;
+            case 'fish_slices': renderFishSlices(); break;
+            case 'one_equal': renderOneEqual(); break;
+        }
+    }
+
+    // 輔助：繪製扇形切片
+    function makePieSlice(cx, cy, r, startAngle, endAngle, fill, stroke) {
+        const rad = Math.PI / 180;
+        const x1 = cx + r * Math.cos(startAngle * rad);
+        const y1 = cy + r * Math.sin(startAngle * rad);
+        const x2 = cx + r * Math.cos(endAngle * rad);
+        const y2 = cy + r * Math.sin(endAngle * rad);
+        const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+        return `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${fill}" stroke="${stroke || '#fff'}" stroke-width="1.5"/>`;
+    }
+
+    /* ===== 模式 1：3/8 vs 5/8 扇形比較 ===== */
+    function renderFractionCompare() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 左圓 3/8
+        svg += `<circle cx="65" cy="55" r="32" fill="#fff" stroke="#d7ccc8" stroke-width="2"/>`;
+        for (let i = 0; i < 8; i++) {
+            const fill = (i < 3) ? '#ff8a65' : '#f5ebe0';
+            svg += makePieSlice(65, 55, 32, i * 45, (i + 1) * 45, fill, '#fff');
+        }
+        svg += `<text x="65" y="105" text-anchor="middle" class="expr-coral" style="font-size:13px">3/8</text>`;
+
+        // 右圓 5/8
+        svg += `<circle cx="175" cy="55" r="32" fill="#fff" stroke="#d7ccc8" stroke-width="2"/>`;
+        for (let i = 0; i < 8; i++) {
+            const fill = (i < 5) ? '#7bc9b2' : '#f5ebe0';
+            svg += makePieSlice(175, 55, 32, i * 45, (i + 1) * 45, fill, '#fff');
+        }
+        svg += `<text x="175" y="105" text-anchor="middle" class="expr-mint" style="font-size:13px">5/8</text>`;
+
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="62" text-anchor="middle" class="expr" style="font-size:18px">＜</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="120" width="190" height="32" rx="10" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="141" text-anchor="middle" class="expr-coral" style="font-size:12.5px">分子越大分數越大 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 2：5/12+1/12 ＝ 2/12+4/12 天平 ===== */
+    function renderAddBalance() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 天平梁 (水平)
+        svg += `<line x1="45" y1="65" x2="195" y2="65" stroke="#a1887f" stroke-width="3" stroke-linecap="round"/>`;
+        svg += `<polygon points="120,65 110,85 130,85" fill="#a1887f"/>`;
+        svg += `<circle cx="120" cy="65" r="4" fill="#8d6e63"/>`;
+        // 左盤
+        svg += `<line x1="50" y1="65" x2="50" y2="78" stroke="#a1887f" stroke-width="2"/>`;
+        svg += `<rect x="15" y="78" width="70" height="34" rx="8" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="50" y="94" text-anchor="middle" class="expr" style="font-size:11px">5/12 ＋ 1/12</text>`;
+        if (currentStep >= 1) svg += `<text x="50" y="106" text-anchor="middle" class="expr-coral" style="font-size:11px">＝ 6/12</text>`;
+        // 右盤
+        svg += `<line x1="190" y1="65" x2="190" y2="78" stroke="#a1887f" stroke-width="2"/>`;
+        svg += `<rect x="155" y="78" width="70" height="34" rx="8" fill="#fff" stroke="#f0e6d8" stroke-width="1.5"/>`;
+        svg += `<text x="190" y="94" text-anchor="middle" class="expr" style="font-size:11px">2/12 ＋ 4/12</text>`;
+        if (currentStep >= 2) svg += `<text x="190" y="106" text-anchor="middle" class="expr-mint" style="font-size:11px">＝ 6/12</text>`;
+
+        if (currentStep >= 3) {
+            svg += `<rect x="35" y="122" width="170" height="32" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="142" text-anchor="middle" class="expr-mint" style="font-size:13px">6/12 ＝ 6/12 (天平平衡) ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 3：12 等分巧克力蛋糕長條 ===== */
+    function renderCakeSlices() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<rect x="12" y="30" width="216" height="36" rx="8" fill="#fff" stroke="#a1887f" stroke-width="2"/>`;
+        const sliceW = 18;
+        for (let i = 0; i < 12; i++) {
+            const sx = 12 + i * sliceW;
+            let fill = '#efebe9';
+            if (i < 3) fill = '#90caf9'; // 哥哥 3 片
+            else if (i === 3) fill = (currentStep >= 2) ? '#a5d6a7' : '#efebe9'; // 弟弟 4 片
+            else if (i < 9) fill = '#ffcc80'; // 媽媽 5 片 (4~8)
+            svg += `<rect x="${sx}" y="30" width="${sliceW}" height="36" fill="${fill}" stroke="#fff" stroke-width="1"/>`;
+            svg += `<text x="${sx + 9}" y="52" text-anchor="middle" class="place-label" style="font-size:8px">${i + 1}</text>`;
+        }
+        // 標籤指示
+        svg += `<text x="39" y="22" text-anchor="middle" class="place-label" style="fill:#1976d2">哥 3 片</text>`;
+        svg += `<text x="147" y="22" text-anchor="middle" class="place-label" style="fill:#e65100">媽 5 片</text>`;
+        if (currentStep >= 1) {
+            svg += `<text x="66" y="82" text-anchor="middle" class="expr-coral" style="font-size:11.5px">弟弟比 3 片多、比 5 片少</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="30" y="100" width="180" height="36" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="122" text-anchor="middle" class="expr-mint" style="font-size:13px">弟弟吃了 4 片 (4/12 條) ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 4：8 切片披薩除錯放大鏡 ===== */
+    function renderPizzaDetective() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 8 片披薩
+        svg += `<circle cx="70" cy="65" r="38" fill="#ffd54f" stroke="#ffb300" stroke-width="2"/>`;
+        for (let i = 0; i < 8; i++) {
+            const fill = (i < 4) ? '#ff8a65' : '#fff9c4';
+            svg += makePieSlice(70, 65, 38, i * 45, (i + 1) * 45, fill, '#fff');
+        }
+        // 放大鏡
+        svg += `<circle cx="165" cy="55" r="26" fill="#fff" stroke="#5c6bc0" stroke-width="3"/>`;
+        svg += `<line x1="183" y1="73" x2="198" y2="88" stroke="#5c6bc0" stroke-width="4" stroke-linecap="round"/>`;
+        svg += `<text x="165" y="61" text-anchor="middle" style="font-size:15px">🔍</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="70" y="120" text-anchor="middle" class="expr-coral" style="font-size:12px">4 片 ＝ 4/8 個披薩</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="20" y="126" width="200" height="30" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="145" text-anchor="middle" class="expr-mint" style="font-size:12px">4/8 個披薩 ＝ 4 片 ✓ 正確</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 5：1 － 4/6 ＝ 2/6 圓形相減 ===== */
+    function renderOneMinus() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 滿圓 6/6
+        svg += `<circle cx="65" cy="60" r="35" fill="#fff" stroke="#a1887f" stroke-width="2"/>`;
+        for (let i = 0; i < 6; i++) {
+            const fill = (i < 4) ? '#ffe0b2' : '#7bc9b2';
+            svg += makePieSlice(65, 60, 35, i * 60, (i + 1) * 60, fill, '#fff');
+        }
+        svg += `<text x="65" y="112" text-anchor="middle" class="expr" style="font-size:12px">1 ＝ 6/6</text>`;
+
+        svg += `<text x="120" y="65" text-anchor="middle" class="expr-coral" style="font-size:18px">－ 4/6</text>`;
+
+        // 剩下 2/6
+        if (currentStep >= 2) {
+            svg += `<circle cx="175" cy="60" r="35" fill="#f5ebe0" stroke="#a1887f" stroke-width="2"/>`;
+            svg += makePieSlice(175, 60, 35, 0, 120, '#7bc9b2', '#fff');
+            svg += `<text x="175" y="112" text-anchor="middle" class="expr-mint" style="font-size:12px">剩下 2/6</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="30" y="124" width="180" height="32" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="144" text-anchor="middle" class="expr-mint" style="font-size:13px">6/6 － 4/6 ＝ 2/6 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 6：一籠湯包 8 顆 祥志吃 5/8 籠 ===== */
+    function renderDumplings() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 蒸籠外圈
+        svg += `<circle cx="120" cy="55" r="45" fill="#efebe9" stroke="#8d6e63" stroke-width="3"/>`;
+        for (let i = 0; i < 8; i++) {
+            const rad = (i * 45) * Math.PI / 180;
+            const dx = 120 + 26 * Math.cos(rad);
+            const dy = 55 + 26 * Math.sin(rad);
+            const fill = (i < 5) ? '#ffcc80' : '#fff';
+            const stroke = (i < 5) ? '#ff9800' : '#d7ccc8';
+            svg += `<circle cx="${dx}" cy="${dy}" r="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+            svg += `<text x="${dx}" y="${dy + 3}" text-anchor="middle" style="font-size:8px">🥟</text>`;
+        }
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="116" text-anchor="middle" class="expr-coral" style="font-size:12px">1 顆 ＝ 1/8 籠</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="30" y="124" width="180" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="145" text-anchor="middle" class="expr-mint" style="font-size:13px">5/8 籠 ＝ 5 顆湯包 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 7：果凍盒 3/12 ＋ 7/12 ＝ 10/12 ===== */
+    function renderJellyAdd() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<rect x="20" y="24" width="200" height="48" rx="8" fill="#fff" stroke="#b0bec5" stroke-width="2"/>`;
+        for (let i = 0; i < 12; i++) {
+            const jx = 24 + i * 16;
+            let fill = '#eceff1';
+            let icon = '';
+            if (i < 3) { fill = '#ff8a65'; icon = '🍓'; } // 姐 3
+            else if (i < 10) { fill = '#4fc3f7'; icon = '🫐'; } // 弟 7
+            svg += `<rect x="${jx}" y="28" width="14" height="40" rx="4" fill="${fill}" stroke="#fff" stroke-width="1"/>`;
+        }
+        if (currentStep >= 1) {
+            svg += `<text x="48" y="18" text-anchor="middle" class="place-label" style="fill:#ff8a65">姐 3/12</text>`;
+            svg += `<text x="120" y="18" text-anchor="middle" class="place-label" style="fill:#0288d1">弟 7/12</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="25" y="86" width="190" height="30" rx="8" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.2"/>`;
+            svg += `<text x="120" y="105" text-anchor="middle" class="expr-coral" style="font-size:12px">分母 12 不變：3 ＋ 7 ＝ 10</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">一共吃了 10/12 盒 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 8：果凍盒 12/12 － 10/12 ＝ 2/12 ===== */
+    function renderJellySub() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<rect x="20" y="24" width="200" height="48" rx="8" fill="#fff" stroke="#b0bec5" stroke-width="2"/>`;
+        for (let i = 0; i < 12; i++) {
+            const jx = 24 + i * 16;
+            const fill = (i < 10) ? '#cfd8dc' : '#7bc9b2';
+            svg += `<rect x="${jx}" y="28" width="14" height="40" rx="4" fill="${fill}" stroke="#fff" stroke-width="1"/>`;
+        }
+        if (currentStep >= 1) {
+            svg += `<text x="80" y="18" text-anchor="middle" class="place-label">吃掉 10/12</text>`;
+            svg += `<text x="195" y="18" text-anchor="middle" class="place-label" style="fill:#7bc9b2">剩下 2 格</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="25" y="86" width="190" height="30" rx="8" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.2"/>`;
+            svg += `<text x="120" y="105" text-anchor="middle" class="expr-coral" style="font-size:12px">12/12 － 10/12 ＝ (12－10)/12</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">還剩下 2/12 盒 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 9：石斑魚 10/10 － 3/10 － 5/10 ＝ 2/10 ===== */
+    function renderFishSlices() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<rect x="15" y="26" width="210" height="42" rx="10" fill="#fff" stroke="#80deea" stroke-width="2"/>`;
+        for (let i = 0; i < 10; i++) {
+            const fx = 20 + i * 20;
+            let fill = '#e0f7fa';
+            if (i < 3) fill = '#ffab91'; // 妹吃 3
+            else if (i < 8) fill = '#b39ddb'; // 送姐 5
+            else fill = '#a5d6a7'; // 剩 2
+            svg += `<rect x="${fx}" y="30" width="18" height="34" rx="4" fill="${fill}" stroke="#fff" stroke-width="1"/>`;
+            svg += `<text x="${fx + 9}" y="50" text-anchor="middle" style="font-size:9px">🐟</text>`;
+        }
+        if (currentStep >= 1) {
+            svg += `<text x="45" y="18" text-anchor="middle" class="place-label" style="fill:#e64a19">吃 3/10</text>`;
+            svg += `<text x="100" y="18" text-anchor="middle" class="place-label" style="fill:#512da8">送 5/10</text>`;
+            svg += `<text x="180" y="18" text-anchor="middle" class="place-label" style="fill:#2e7d32">剩 2/10</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="25" y="84" width="190" height="30" rx="8" fill="#fff3ec" stroke="#ff8a65" stroke-width="1.2"/>`;
+            svg += `<text x="120" y="103" text-anchor="middle" class="expr-coral" style="font-size:12px">10/10 － 3/10 － 5/10</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">還剩下 2/10 尾 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== 模式 10：5/5 ＝ 1 且 1 ＞ 6/7 ===== */
+    function renderOneEqual() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 5/5 滿圓 ＝ 1
+        svg += `<circle cx="65" cy="55" r="32" fill="#7bc9b2" stroke="#4db6ac" stroke-width="2"/>`;
+        for (let i = 0; i < 5; i++) {
+            svg += makePieSlice(65, 55, 32, i * 72, (i + 1) * 72, '#7bc9b2', '#fff');
+        }
+        svg += `<text x="65" y="105" text-anchor="middle" class="expr-mint" style="font-size:12.5px">5/5 ＝ 1</text>`;
+
+        svg += `<text x="120" y="60" text-anchor="middle" class="expr-coral" style="font-size:16px">＞</text>`;
+
+        // 6/7 缺 1 片
+        svg += `<circle cx="175" cy="55" r="32" fill="#fff" stroke="#d7ccc8" stroke-width="2"/>`;
+        for (let i = 0; i < 7; i++) {
+            const fill = (i < 6) ? '#ffd166' : '#efebe9';
+            svg += makePieSlice(175, 55, 32, i * (360/7), (i + 1) * (360/7), fill, '#fff');
+        }
+        svg += `<text x="175" y="105" text-anchor="middle" class="expr" style="font-size:12.5px">6/7 (未滿1)</text>`;
+
+        if (currentStep >= 2) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">5/5 ＝ 1 且 1 ＞ 6/7 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

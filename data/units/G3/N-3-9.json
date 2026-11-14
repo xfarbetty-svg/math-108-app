@@ -1,0 +1,259 @@
+{
+  "code": "N-3-9",
+  "title": "簡單同分母分數",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-1/113-1/114-1 期末 ＋ 高雄市永安國小 114-1/114-2（同分母比較/加法天平/蛋糕切片平分/披薩概念除錯/1減分數陷阱/湯包單位分數/果凍盒加減/石斑魚切片連續減/1與分數比較）[通道一: 本地 OpenCode (Gemini 2.5 Flash)]",
+  "questions": [
+    {
+      "id": "G3-N-3-9-Q01",
+      "exam_source": "臺北市內湖國小 113-1 期末",
+      "section": "一、選擇題",
+      "question_num": 7,
+      "title": "規律探索：同分母分數大小比較規律",
+      "stem": "同分母的分數在比較大小時，分子越大的分數代表什麼？",
+      "choices": ["越大", "越小", "一樣大", "無法比較"],
+      "answer_index": 0,
+      "answer_raw": "越大",
+      "visual_mode": "fraction_compare",
+      "final_check": "分子越大分數越大",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同分母分數大小比較規律探索",
+        "steps": [
+          "分母相同：代表把一個完整的單位平分成相同的份數，每一等分的大小相同",
+          "分子點數：分子代表拿取了其中的幾等分（例如 5/8 比 3/8 多拿了 2 等分）",
+          "結論：同分母分數比較時，分子越大，分數就越大 ✓"
+        ],
+        "trap": "將分數與整數倒轉混淆，誤以為分母越大分數越小就代表分子也是越小越好；同分母時分子越大分數越大。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q02",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "四、填入＞、＜或＝",
+      "question_num": 1,
+      "title": "秒殺思維：同分母加法免算比大小",
+      "stem": "比一比，在括號中應該填入哪一個符號？ 5/12 ＋ 1/12  ( ? )  2/12 ＋ 4/12",
+      "choices": ["＝", "＞", "＜", "無法比較"],
+      "answer_index": 0,
+      "answer_raw": "＝",
+      "visual_mode": "add_balance",
+      "final_check": "6/12 ＝ 6/12",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同分母加法等量比較（秒殺思維）",
+        "steps": [
+          "計算左邊：5/12 ＋ 1/12 ＝ (5＋1)/12 ＝ 6/12",
+          "計算右邊：2/12 ＋ 4/12 ＝ (2＋4)/12 ＝ 6/12",
+          "兩邊結果相等：6/12 ＝ 6/12，天平維持水平平衡 ✓"
+        ],
+        "trap": "以為分數相加時分母也要相加（算成 6/24）；同分母分數相加，分母保持不變，只有分子相加！"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q03",
+      "exam_source": "臺北市內湖國小 113-1 期末",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "生活情境平分：蛋糕平分吃掉片數推理",
+      "stem": "一條巧克力脆片蛋糕平分成 12 片。哥哥吃了 3 片，媽媽吃了 5/12 條。弟弟說他吃的蛋糕比哥哥多、比媽媽少，請問弟弟吃了幾片蛋糕？",
+      "choices": ["4 片", "2 片", "6 片", "8 片"],
+      "answer_index": 0,
+      "answer_raw": "4 片",
+      "visual_mode": "cake_slices",
+      "final_check": "弟弟吃了 4 片 (4/12 條)",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "平分等分與同分母分數轉換",
+        "steps": [
+          "蛋糕平分成 12 片，1 片就是 1/12 條蛋糕",
+          "哥哥吃了 3 片 ＝ 3/12 條；媽媽吃了 5/12 條 ＝ 5 片",
+          "弟弟吃的片數介於 3 片和 5 片之間：只有 4 片（4/12 條）符合 ✓"
+        ],
+        "trap": "沒有把「片」和「條」的單位進行轉換；3 片就是 3/12 條，5/12 條就是 5 片。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q04",
+      "exam_source": "臺北市內湖國小 114-1 期末",
+      "section": "一、選擇題",
+      "question_num": 4,
+      "title": "除錯偵探：披薩切片分數概念除錯",
+      "stem": "將一個披薩切成 8 片。請問下列關於披薩分數的敘述，哪一個是正確的？",
+      "choices": ["妹妹拿了 4/8 個披薩，也就是吃了 4 片", "2/8 個披薩讀作「二分之八」個披薩", "爸爸拿了 6/8 個披薩，其中的「6」代表一個披薩平分成 6 等分", "哥哥拿了 5 片，也就是吃了 8/5 個披薩"],
+      "answer_index": 0,
+      "answer_raw": "妹妹拿了 4/8 個披薩，也就是吃了 4 片",
+      "visual_mode": "pizza_detective",
+      "final_check": "4/8 個披薩 ＝ 4 片 ✓",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "分數的意義、讀法與分子分母角色辨析",
+        "steps": [
+          "切成 8 片：分母是 8，每片是 1/8 個披薩",
+          "妹妹拿 4 片：4 個 1/8 個披薩合起來是 4/8 個披薩，完全正確！",
+          "除錯分析：2/8 應讀作「八分之二」；6/8 中的 8 才代表平分成 8 等分；5 片是 5/8 個披薩而不是 8/5"
+        ],
+        "trap": "分子分母讀法顛倒（把 2/8 讀成二分之八），或把分子分母的意義張冠李戴。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q05",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "五、算算看",
+      "question_num": 5,
+      "title": "核心陷阱：整數 1 減分數運算陷阱",
+      "stem": "算算看：算式「1 － 4/6」的答案是多少？",
+      "choices": ["2/6", "3/6", "4/6", "1/6"],
+      "answer_index": 0,
+      "answer_raw": "2/6",
+      "visual_mode": "one_minus",
+      "final_check": "6/6 － 4/6 ＝ 2/6",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "整數 1 轉換為同分母假分數與減法意義",
+        "steps": [
+          "看成等分數：整數「1」代表一個完整的整體",
+          "因為減數的分母是 6，把 1 換成同分母分數：1 ＝ 6/6",
+          "計算同分母減法：6/6 － 4/6 ＝ (6－4)/6 ＝ 2/6 ✓"
+        ],
+        "trap": "直接拿整數 1 去減分子 4 算出負數，或者直接忘記分母；看到 1 要立即聯想到「分母是多少，就是幾分之幾（6/6）」。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q06",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "三、填填看",
+      "question_num": 6,
+      "title": "單位分數點數：湯包蒸籠單位分數點數",
+      "stem": "一籠湯包有 8 顆。祥志吃了 5/8 籠，請問祥志一共吃了幾顆湯包？",
+      "choices": ["5 顆", "8 顆", "3 顆", "4 顆"],
+      "answer_index": 0,
+      "answer_raw": "5 顆",
+      "visual_mode": "dumplings",
+      "final_check": "5/8 籠 ＝ 5 顆",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "以單位分數之點數為基礎連結整數數量",
+        "steps": [
+          "一整籠有 8 顆湯包，平分成 8 等分",
+          "每 1 顆湯包就是 1 等分，代表 1/8 籠",
+          "祥志吃了 5/8 籠，就是吃了 5 個 1/8 籠，也就是 5 顆湯包 ✓"
+        ],
+        "trap": "將分數 5/8 誤以為是吃了 5 籠或 8 顆；5/8 籠是把一籠分成 8 份取 5 份，即 5 顆。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q07",
+      "exam_source": "臺北市內湖國小 111-1 期末",
+      "section": "二、填填看",
+      "question_num": 4,
+      "title": "同分母加法：果凍盒同分母加法",
+      "stem": "媽媽買了一盒 12 個裝的果凍。姐姐吃了 3/12 盒，弟弟吃了 7/12 盒，兩人一共吃了幾盒果凍？",
+      "choices": ["10/12 盒", "10/24 盒", "4/12 盒", "1 盒"],
+      "answer_index": 0,
+      "answer_raw": "10/12 盒",
+      "visual_mode": "jelly_add",
+      "final_check": "3/12 ＋ 7/12 ＝ 10/12 盒",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同分母分數加法的意義（分母不變，分子相加）",
+        "steps": [
+          "姐姐吃了 3/12 盒（3 個 1/12 盒）",
+          "弟弟吃了 7/12 盒（7 個 1/12 盒）",
+          "合起來是 3 ＋ 7 ＝ 10 個 1/12 盒，也就是 10/12 盒 ✓"
+        ],
+        "trap": "最經典錯誤：把分母也加起來變成 10/24 盒！分母 12 代表每盒有 12 個，份額大小沒有變，只有吃掉的數量累加。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q08",
+      "exam_source": "臺北市內湖國小 111-1 期末",
+      "section": "二、填填看",
+      "question_num": 4,
+      "title": "同分母減法：滿盒果凍扣除剩餘盒數",
+      "stem": "接續上題，原本有一整盒（12/12 盒）果凍，姐姐和弟弟一共吃掉了 10/12 盒，請問還剩下幾盒果凍？",
+      "choices": ["2/12 盒", "1/12 盒", "3/12 盒", "0 盒"],
+      "answer_index": 0,
+      "answer_raw": "2/12 盒",
+      "visual_mode": "jelly_sub",
+      "final_check": "12/12 － 10/12 ＝ 2/12 盒",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同分母分數減法的意義",
+        "steps": [
+          "原本滿盒是 12/12 盒（12 個果凍）",
+          "吃掉了 10/12 盒（10 個果凍）",
+          "計算剩餘：12/12 － 10/12 ＝ (12－10)/12 ＝ 2/12 盒（剩下 2 個）✓"
+        ],
+        "trap": "計算減法時把分母相減變成 2/0 或 0；同分母減法分母不變，只算分子 12－10＝2。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q09",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "八、應用題",
+      "question_num": 2,
+      "title": "連續同分母減法：石斑魚切片連續減法",
+      "stem": "一尾石斑魚切成 10 片，每片一樣重。妹妹吃了 3/10 尾，又送給姐姐 5 片（5/10 尾），請問妹妹還剩下幾尾石斑魚？",
+      "choices": ["2/10 尾", "3/10 尾", "1/10 尾", "8/10 尾"],
+      "answer_index": 0,
+      "answer_raw": "2/10 尾",
+      "visual_mode": "fish_slices",
+      "final_check": "10/10 － 3/10 － 5/10 ＝ 2/10 尾",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "生活情境連續同分母分數減法",
+        "steps": [
+          "一整尾魚看成 10/10 尾（共有 10 片）",
+          "吃了 3/10 尾後剩下：10/10 － 3/10 ＝ 7/10 尾",
+          "再送給姐姐 5 片（5/10 尾）：7/10 － 5/10 ＝ 2/10 尾（剩下 2 片）✓"
+        ],
+        "trap": "送給姐姐「5 片」以為單位是片就無法跟「尾」相減；10 片是一整尾，5 片就是 5/10 尾。"
+      }
+    },
+    {
+      "id": "G3-N-3-9-Q10",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "四、填入＞、＜或＝",
+      "question_num": 2,
+      "title": "綜合分數推理：整數 1 與分數的等價與比較",
+      "stem": "下列哪一個關於整數「1」和分數大小關係的敘述是正確的？",
+      "choices": ["5/5 ＝ 1，且 1 ＞ 6/7", "5/5 ＞ 1", "1 ＜ 6/7", "7/7 ＜ 1"],
+      "answer_index": 0,
+      "answer_raw": "5/5 ＝ 1，且 1 ＞ 6/7",
+      "visual_mode": "one_equal",
+      "final_check": "5/5 ＝ 1 且 1 ＞ 6/7",
+      "component": "fraction-lab",
+      "component_path": "components/fraction_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "整數 1 與真分數、假分數（等於 1）之大小關係",
+        "steps": [
+          "分子分母相同代表拿滿了整份：5/5 ＝ 1，7/7 ＝ 1",
+          "6/7 是真分數（分子比分母小），代表 7 份中只拿了 6 份，還不滿 1 個整體",
+          "因此 1 ＝ 7/7 ＞ 6/7，選項「5/5 ＝ 1，且 1 ＞ 6/7」完全正確 ✓"
+        ],
+        "trap": "誤認 5/5 比 1 大，或者把 6/7 當作大於 1；真分數分子小於分母，值必定小於 1。"
+      }
+    }
+  ]
+}
