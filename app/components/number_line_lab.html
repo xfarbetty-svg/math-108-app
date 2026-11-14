@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>整數數線實驗台 (Number Line Lab)</title>
+  <!-- 引入 034 中央教具工具櫃 (Web Components & Sketchy 手繪) -->
+  <script src="./anatomy-tools.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    html, body {
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #fdfbf7;
+      color: #1e293b;
+    }
+    #app {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 8px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .badge-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid #bae6fd;
+    }
+    .badge-rule {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid #fde68a;
+    }
+    .board {
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      padding: 10px 8px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .svg-container {
+      width: 100%;
+      max-height: 250px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+    /* 034 基因 1：物理緩動曲線 */
+    .bounce-in {
+      animation: landBounce 0.45s cubic-bezier(0.55, 0, 0.2, 1.12) forwards;
+    }
+    @keyframes landBounce {
+      0% { transform: translateY(-16px) scale(0.92); opacity: 0; }
+      70% { transform: translateY(2px) scale(1.04); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    /* 034 基因 3：pathLength="1" 動態描繪線條 */
+    .motion-arc {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: drawArc 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes drawArc {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    .ctrl-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-act {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-act:active {
+      transform: scale(0.95);
+    }
+    .info-card {
+      margin-top: 8px;
+      width: 100%;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.4;
+      border-left: 3px solid #3b82f6;
+    }
+    .story-container {
+      width: 100%;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="badge-bar">
+      <span class="badge-tag" id="mode-tag">N-3-11 整數數線</span>
+      <span class="badge-rule" id="rule-tip">越往右數越大，向右加、向左減</span>
+    </div>
+
+    <div class="board">
+      <div class="svg-container" id="svg-stage">
+        <!-- SVG 數線將由 renderScene() 動態填入 -->
+      </div>
+
+      <div class="info-card" id="info-desc">
+        正在載入數線演示...
+      </div>
+
+      <div class="ctrl-bar" id="ctrl-bar">
+        <button class="btn-act" id="btn-replay">🎬 重播跳躍算理</button>
+      </div>
+
+      <!-- 若為 Q10 或特定探究題，掛載 034 教具元件 -->
+      <div class="story-container" id="story-host" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    // 解析 URL 參數
+    const urlParams = new URLSearchParams(window.location.search);
+    const qNum = parseInt(urlParams.get('q') || '1', 10);
+
+    const STAGE = document.getElementById('svg-stage');
+    const INFO = document.getElementById('info-desc');
+    const TAG = document.getElementById('mode-tag');
+    const TIP = document.getElementById('rule-tip');
+    const REPLAY_BTN = document.getElementById('btn-replay');
+    const STORY_HOST = document.getElementById('story-host');
+
+    // 向量角色繪製輔助
+    function drawFrog(cx, cy, scale = 1) {
+      return `
+        <g transform="translate(${cx}, ${cy}) scale(${scale})" class="bounce-in">
+          <!-- 綠色青蛙造型 -->
+          <ellipse cx="0" cy="-14" rx="14" ry="12" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+          <ellipse cx="-8" cy="-22" rx="5" ry="6" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+          <ellipse cx="8" cy="-22" rx="5" ry="6" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+          <!-- 眼睛 -->
+          <circle cx="-8" cy="-22" r="3" fill="#ffffff"/>
+          <circle cx="-8" cy="-22" r="1.5" fill="#0f172a"/>
+          <circle cx="8" cy="-22" r="3" fill="#ffffff"/>
+          <circle cx="8" cy="-22" r="1.5" fill="#0f172a"/>
+          <!-- 肚皮與微笑 -->
+          <ellipse cx="0" cy="-10" rx="9" ry="7" fill="#86efac"/>
+          <path d="M -5 -11 Q 0 -8 5 -11" stroke="#15803d" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <!-- 腳蹼 -->
+          <ellipse cx="-12" cy="-4" rx="4" ry="2.5" fill="#16a34a"/>
+          <ellipse cx="12" cy="-4" rx="4" ry="2.5" fill="#16a34a"/>
+        </g>
+      `;
+    }
+
+    function drawCat(cx, cy, scale = 1) {
+      return `
+        <g transform="translate(${cx}, ${cy}) scale(${scale})" class="bounce-in">
+          <!-- 貓耳 -->
+          <polygon points="-12,-20 -6,-30 -2,-20" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+          <polygon points="12,-20 6,-30 2,-20" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+          <!-- 貓頭部 -->
+          <ellipse cx="0" cy="-14" rx="14" ry="12" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+          <!-- 眼睛與鼻子 -->
+          <ellipse cx="-5" cy="-15" rx="2.5" ry="3.5" fill="#0f172a"/>
+          <ellipse cx="5" cy="-15" rx="2.5" ry="3.5" fill="#0f172a"/>
+          <polygon points="0,-12 -2,-10 2,-10" fill="#e11d48"/>
+          <!-- 鬍鬚 -->
+          <line x1="-8" y1="-12" x2="-16" y2="-13" stroke="#7c2d12" stroke-width="1.2"/>
+          <line x1="-8" y1="-10" x2="-16" y2="-9" stroke="#7c2d12" stroke-width="1.2"/>
+          <line x1="8" y1="-12" x2="16" y2="-13" stroke="#7c2d12" stroke-width="1.2"/>
+          <line x1="8" y1="-10" x2="16" y2="-9" stroke="#7c2d12" stroke-width="1.2"/>
+        </g>
+      `;
+    }
+
+    function drawRobot(cx, cy, scale = 1) {
+      return `
+        <g transform="translate(${cx}, ${cy}) scale(${scale})" class="bounce-in">
+          <!-- 天線 -->
+          <line x1="0" y1="-26" x2="0" y2="-32" stroke="#64748b" stroke-width="2"/>
+          <circle cx="0" cy="-34" r="2.5" fill="#ef4444"/>
+          <!-- 方形頭部 -->
+          <rect x="-12" y="-26" width="24" height="22" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+          <!-- 護目鏡與發光眼 -->
+          <rect x="-8" y="-21" width="16" height="8" rx="2" fill="#0f172a"/>
+          <circle cx="-4" cy="-17" r="2" fill="#22c55e"/>
+          <circle cx="4" cy="-17" r="2" fill="#22c55e"/>
+          <!-- 身體輪軸 -->
+          <rect x="-9" y="-4" width="18" height="4" rx="2" fill="#64748b"/>
+        </g>
+      `;
+    }
+
+    function drawDuck(cx, cy, scale = 1) {
+      return `
+        <g transform="translate(${cx}, ${cy}) scale(${scale})" class="bounce-in">
+          <!-- 鴨身 -->
+          <ellipse cx="0" cy="-12" rx="13" ry="11" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+          <!-- 鴨頭 -->
+          <circle cx="8" cy="-20" r="8" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+          <!-- 鴨嘴 -->
+          <polygon points="14,-20 22,-18 14,-16" fill="#f97316"/>
+          <!-- 眼睛 -->
+          <circle cx="10" cy="-22" r="1.5" fill="#0f172a"/>
+          <!-- 小翅膀 -->
+          <path d="M -6 -14 Q 0 -6 4 -14" stroke="#ca8a04" stroke-width="2" fill="#fef08a"/>
+        </g>
+      `;
+    }
+
+    function drawDragonfly(cx, cy, scale = 1) {
+      return `
+        <g transform="translate(${cx}, ${cy}) scale(${scale})" class="bounce-in">
+          <!-- 蜻蜓翅膀 -->
+          <ellipse cx="-10" cy="-22" rx="10" ry="3" fill="#a5f3fc" opacity="0.8" stroke="#0891b2" stroke-width="1.2" transform="rotate(-15, -10, -22)"/>
+          <ellipse cx="10" cy="-22" rx="10" ry="3" fill="#a5f3fc" opacity="0.8" stroke="#0891b2" stroke-width="1.2" transform="rotate(15, 10, -22)"/>
+          <!-- 細長腹部 -->
+          <rect x="-2" y="-20" width="4" height="20" rx="2" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+          <!-- 圓圓大眼睛頭部 -->
+          <circle cx="-3" cy="-23" r="3.5" fill="#60a5fa" stroke="#1d4ed8" stroke-width="1.2"/>
+          <circle cx="3" cy="-23" r="3.5" fill="#60a5fa" stroke="#1d4ed8" stroke-width="1.2"/>
+          <circle cx="-3" cy="-23" r="1.5" fill="#0f172a"/>
+          <circle cx="3" cy="-23" r="1.5" fill="#0f172a"/>
+        </g>
+      `;
+    }
+
+    // 基礎數線軸渲染函式
+    function renderAxis(min, max, step = 1, width = 360, height = 140, originY = 95) {
+      const padding = 30;
+      const totalUnits = max - min;
+      const xSpan = (width - padding * 2) / totalUnits;
+      
+      let ticks = '';
+      for (let v = min; v <= max; v += step) {
+        const x = padding + (v - min) * xSpan;
+        const isMajor = (v % 5 === 0) || (step > 1);
+        const tickH = isMajor ? 14 : 8;
+        ticks += `
+          <line x1="${x}" y1="${originY}" x2="${x}" y2="${originY + tickH}" stroke="#334155" stroke-width="${isMajor ? 2.2 : 1.4}" stroke-linecap="round"/>
+          <text x="${x}" y="${originY + tickH + 15}" font-size="${isMajor ? 13 : 11}" font-weight="${isMajor ? '700' : '500'}" fill="#1e293b" text-anchor="middle">${v}</text>
+        `;
+      }
+
+      const endX = width - padding + 15;
+      const axisLine = `
+        <!-- 主數線軌道 -->
+        <line x1="${padding - 10}" y1="${originY}" x2="${endX}" y2="${originY}" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 右側箭頭 (越右越大) -->
+        <polygon points="${endX},${originY - 5} ${endX + 10},${originY} ${endX},${originY + 5}" fill="#1e293b"/>
+      `;
+
+      return {
+        svgBase: axisLine + ticks,
+        getX: (val) => padding + (val - min) * xSpan,
+        originY,
+        width,
+        height
+      };
+    }
+
+    // 依據 Q 編號渲染對應場景
+    function renderScene() {
+      STORY_HOST.style.display = 'none';
+      STORY_HOST.innerHTML = '';
+
+      switch (qNum) {
+        case 1: {
+          TAG.innerText = 'Q1: 方位與大小比較';
+          TIP.innerText = '數線箭頭向右：越右邊數字越大！';
+          const axis = renderAxis(0, 10, 1, 380, 150, 100);
+          const frogX = axis.getX(6);
+          const catX = axis.getX(9);
+          
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              <!-- 貓咪在右邊的標籤與箭頭 -->
+              <path d="M ${frogX + 15} 60 Q ${(frogX + catX) / 2} 40 ${catX - 15} 60" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4,4" class="motion-arc" pathLength="1"/>
+              <text x="${(frogX + catX) / 2}" y="36" font-size="12" font-weight="700" fill="#2563eb" text-anchor="middle">向右（數字更大 ➜）</text>
+              ${drawFrog(frogX, axis.originY, 1)}
+              ${drawCat(catX, axis.originY, 1)}
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>真題解析：</strong>青蛙在 <strong>6</strong>，貓咪在青蛙的<strong>右邊</strong>（如 9 的位置）。數線上越往右數越大，所以<strong>貓咪</strong>的位置刻度數字比較大！`;
+          break;
+        }
+
+        case 2: {
+          TAG.innerText = 'Q2: 大小左右方位';
+          TIP.innerText = '小數在左邊，大數在右邊';
+          const axis = renderAxis(0, 12, 2, 380, 140, 90);
+          const x6 = axis.getX(6);
+          const x10 = axis.getX(10);
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 140">
+              ${axis.svgBase}
+              <!-- 標示 6 與 10 -->
+              <circle cx="${x6}" cy="${axis.originY}" r="5" fill="#ef4444"/>
+              <circle cx="${x10}" cy="${axis.originY}" r="5" fill="#3b82f6"/>
+              <!-- 對比標註 -->
+              <rect x="${x6 - 20}" y="25" width="40" height="24" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
+              <text x="${x6}" y="41" font-size="12" font-weight="700" fill="#b91c1c" text-anchor="middle">6 (較小)</text>
+
+              <rect x="${x10 - 20}" y="25" width="40" height="24" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+              <text x="${x10}" y="41" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle">10 (較大)</text>
+
+              <path d="M ${x10 - 25} 37 L ${x6 + 25} 37" stroke="#64748b" stroke-width="2" marker-end="url(#arrow-left)" stroke-linecap="round"/>
+              <text x="${(x6 + x10) / 2}" y="55" font-size="11" font-weight="700" fill="#64748b" text-anchor="middle">6 在 10 的左邊 ⬅</text>
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>真題解析：</strong>因為 6 ＜ 10，比較小的數在數線上一定位於比較大的數的<strong>左邊</strong>。`;
+          break;
+        }
+
+        case 3: {
+          TAG.innerText = 'Q3: 機器人向右走 5 格';
+          TIP.innerText = '向右走代表加法：8 ＋ 5 ＝ 13';
+          const axis = renderAxis(0, 15, 1, 380, 150, 105);
+          const startX = axis.getX(8);
+          const endX = axis.getX(13);
+
+          let arcs = '';
+          for (let i = 8; i < 13; i++) {
+            const x1 = axis.getX(i);
+            const x2 = axis.getX(i + 1);
+            arcs += `<path d="M ${x1} 105 Q ${(x1 + x2) / 2} 75 ${x2} 105" fill="none" stroke="#f59e0b" stroke-width="2.2" class="motion-arc" pathLength="1"/>`;
+          }
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              ${arcs}
+              <!-- 總跨距指示 -->
+              <text x="${(startX + endX) / 2}" y="65" font-size="12" font-weight="700" fill="#d97706" text-anchor="middle">＋5 格 (向右)</text>
+              ${drawRobot(endX, axis.originY, 0.95)}
+              <!-- 起點標籤 -->
+              <circle cx="${startX}" cy="${axis.originY}" r="4" fill="#64748b"/>
+              <text x="${startX}" y="145" font-size="10" font-weight="700" fill="#64748b" text-anchor="middle">起點(8)</text>
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>算理步驟：</strong>從 8 出發向右走 5 格，每向右 1 格數值加 1：8 ➔ 9 ➔ 10 ➔ 11 ➔ 12 ➔ <strong>13</strong>。算式：8 ＋ 5 ＝ <strong>13</strong>。`;
+          break;
+        }
+
+        case 4: {
+          TAG.innerText = 'Q4: 機器人接續向左走 3 格';
+          TIP.innerText = '向左走代表減法：13 － 3 ＝ 10';
+          const axis = renderAxis(0, 15, 1, 380, 150, 105);
+          const startX = axis.getX(13);
+          const endX = axis.getX(10);
+
+          let arcs = '';
+          for (let i = 13; i > 10; i--) {
+            const x1 = axis.getX(i);
+            const x2 = axis.getX(i - 1);
+            arcs += `<path d="M ${x1} 105 Q ${(x1 + x2) / 2} 75 ${x2} 105" fill="none" stroke="#ef4444" stroke-width="2.2" class="motion-arc" pathLength="1"/>`;
+          }
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              ${arcs}
+              <text x="${(startX + endX) / 2}" y="65" font-size="12" font-weight="700" fill="#dc2626" text-anchor="middle">－3 格 (向左)</text>
+              ${drawRobot(endX, axis.originY, 0.95)}
+              <circle cx="${startX}" cy="${axis.originY}" r="4" fill="#94a3b8"/>
+              <text x="${startX}" y="145" font-size="10" font-weight="700" fill="#64748b" text-anchor="middle">前次位置(13)</text>
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>算理步驟：</strong>承上題目前在 13，向左走 3 格代表減法：13 ➔ 12 ➔ 11 ➔ <strong>10</strong>。算式：13 － 3 ＝ <strong>10</strong>。`;
+          break;
+        }
+
+        case 5: {
+          TAG.innerText = 'Q5: 小鴨向左走 7 格';
+          TIP.innerText = '9 － 7 ＝ 2 (小鴨停在 2)';
+          const axis = renderAxis(0, 12, 1, 380, 150, 105);
+          const startX = axis.getX(9);
+          const endX = axis.getX(2);
+
+          let arcs = '';
+          for (let i = 9; i > 2; i--) {
+            const x1 = axis.getX(i);
+            const x2 = axis.getX(i - 1);
+            arcs += `<path d="M ${x1} 105 Q ${(x1 + x2) / 2} 80 ${x2} 105" fill="none" stroke="#0ea5e9" stroke-width="2" class="motion-arc" pathLength="1"/>`;
+          }
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              ${arcs}
+              <text x="${(startX + endX) / 2}" y="68" font-size="12" font-weight="700" fill="#0284c7" text-anchor="middle">⬅ 向左走 7 格 (－7)</text>
+              ${drawDuck(endX, axis.originY, 0.9)}
+              <circle cx="${startX}" cy="${axis.originY}" r="4" fill="#64748b"/>
+              <text x="${startX}" y="145" font-size="10" font-weight="700" fill="#64748b" text-anchor="middle">起點(9)</text>
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>算理步驟：</strong>小鴨停在 9，向左走 7 格：9 － 7 ＝ <strong>2</strong>。小鴨會停在刻度 <strong>2</strong>。`;
+          break;
+        }
+
+        case 6: {
+          TAG.innerText = 'Q6: 小鴨接續向右走 3 格';
+          TIP.innerText = '2 ＋ 3 ＝ 5 (停在 5)';
+          const axis = renderAxis(0, 10, 1, 380, 150, 105);
+          const startX = axis.getX(2);
+          const endX = axis.getX(5);
+
+          let arcs = '';
+          for (let i = 2; i < 5; i++) {
+            const x1 = axis.getX(i);
+            const x2 = axis.getX(i + 1);
+            arcs += `<path d="M ${x1} 105 Q ${(x1 + x2) / 2} 75 ${x2} 105" fill="none" stroke="#10b981" stroke-width="2.2" class="motion-arc" pathLength="1"/>`;
+          }
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              ${arcs}
+              <text x="${(startX + endX) / 2}" y="65" font-size="12" font-weight="700" fill="#059669" text-anchor="middle">＋3 格 (向右 ➜)</text>
+              ${drawDuck(endX, axis.originY, 0.9)}
+              <circle cx="${startX}" cy="${axis.originY}" r="4" fill="#64748b"/>
+              <text x="${startX}" y="145" font-size="10" font-weight="700" fill="#64748b" text-anchor="middle">目前位置(2)</text>
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>算理步驟：</strong>承上題小鴨在 2，向右走 3 格：2 ＋ 3 ＝ <strong>5</strong>。小鴨最後停在 <strong>5</strong>。`;
+          break;
+        }
+
+        case 7: {
+          TAG.innerText = 'Q7: 青蛙跳躍目標距離';
+          TIP.innerText = '從 8 到 2：數字變小向左跳，8 － 2 ＝ 6 格';
+          const axis = renderAxis(0, 10, 1, 380, 150, 105);
+          const startX = axis.getX(8);
+          const targetX = axis.getX(2);
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              <!-- 大跳躍弧線 -->
+              <path d="M ${startX} 105 Q ${(startX + targetX) / 2} 35 ${targetX} 105" fill="none" stroke="#8b5cf6" stroke-width="2.8" stroke-dasharray="6,4" class="motion-arc" pathLength="1"/>
+              <text x="${(startX + targetX) / 2}" y="45" font-size="13" font-weight="700" fill="#7c3aed" text-anchor="middle">⬅ 向左跳 6 格 (8－2＝6)</text>
+              <!-- 終點目標光圈 -->
+              <circle cx="${targetX}" cy="${axis.originY}" r="8" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="3,3"/>
+              <text x="${targetX}" y="145" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle">目標(2)</text>
+              ${drawFrog(startX, axis.originY, 0.95)}
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>算理步驟：</strong>目標 2 比起點 8 小，所以必須<strong>向左跳</strong>；計算兩數距離：8 － 2 ＝ <strong>6</strong> 格。所以是「向左跳 6 格」。`;
+          break;
+        }
+
+        case 8: {
+          TAG.innerText = 'Q8: 小蜻蜓三段複合飛行';
+          TIP.innerText = '2 ＋ 3 － 4 ＋ 1 ＝ 2 (停在 2)';
+          const axis = renderAxis(0, 8, 1, 380, 160, 115);
+          const x2 = axis.getX(2);
+          const x5 = axis.getX(5);
+          const x1 = axis.getX(1);
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 160">
+              ${axis.svgBase}
+              <!-- 航線 1: 2 ➔ 5 (+3) -->
+              <path d="M ${x2} 115 Q ${(x2 + x5) / 2} 75 ${x5} 115" fill="none" stroke="#3b82f6" stroke-width="2.2" class="motion-arc" pathLength="1"/>
+              <text x="${(x2 + x5) / 2}" y="80" font-size="11" font-weight="700" fill="#2563eb" text-anchor="middle">① 右飛 3 (+3)</text>
+
+              <!-- 航線 2: 5 ➔ 1 (-4) -->
+              <path d="M ${x5} 115 Q ${(x5 + x1) / 2} 45 ${x1} 115" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-dasharray="4,2" class="motion-arc" pathLength="1"/>
+              <text x="${(x5 + x1) / 2}" y="50" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">② 左飛 4 (-4)</text>
+
+              <!-- 航線 3: 1 ➔ 2 (+1) -->
+              <path d="M ${x1} 115 Q ${(x1 + x2) / 2} 90 ${x2} 115" fill="none" stroke="#10b981" stroke-width="2.2" class="motion-arc" pathLength="1"/>
+              <text x="${(x1 + x2) / 2}" y="105" font-size="10" font-weight="700" fill="#059669" text-anchor="middle">③ 右飛 1</text>
+
+              ${drawDragonfly(x2, axis.originY, 0.95)}
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>連續算式：</strong>① 2 ＋ 3 ＝ 5 ➔ ② 5 － 4 ＝ 1 ➔ ③ 1 ＋ 1 ＝ <strong>2</strong>。蜻蜓最後停在位置 <strong>2</strong>！`;
+          break;
+        }
+
+        case 9: {
+          TAG.innerText = 'Q9: 等距刻度間距與報讀';
+          TIP.innerText = '每一大格代表 5，內分 5 小格，每小格為 1';
+          const axis = renderAxis(0, 20, 5, 380, 150, 95);
+          
+          // 在 15 到 20 之間畫 5 個小刻度
+          const x15 = axis.getX(15);
+          const x20 = axis.getX(20);
+          const subSpan = (x20 - x15) / 5;
+          let subTicks = '';
+          for (let s = 1; s < 5; s++) {
+            const sx = x15 + s * subSpan;
+            subTicks += `<line x1="${sx}" y1="95" x2="${sx}" y2="102" stroke="#64748b" stroke-width="1.2"/>`;
+          }
+
+          const arrowX = x15 + 1 * subSpan; // 指向 16
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 150">
+              ${axis.svgBase}
+              ${subTicks}
+              <!-- 放大鏡或標記框 -->
+              <rect x="${x15 - 5}" y="85" width="${x20 - x15 + 10}" height="32" rx="4" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,3"/>
+              <!-- 指標箭頭指在 16 -->
+              <polygon points="${arrowX},85 ${arrowX - 5},72 ${arrowX + 5},72" fill="#ef4444"/>
+              <rect x="${arrowX - 18}" y="48" width="36" height="22" rx="4" fill="#fee2e2" stroke="#ef4444" stroke-width="1.2"/>
+              <text x="${arrowX}" y="63" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">16</text>
+            </svg>
+          `;
+          INFO.innerHTML = `<strong>刻度剖析：</strong>大刻度間隔 5 － 0 ＝ <strong>5</strong>（每一大格代表 5）；內分 5 小格，每一小格是 5 ÷ 5 ＝ 1。箭頭指在 15 往右 1 格：15 ＋ 1 ＝ <strong>16</strong>。`;
+          break;
+        }
+
+        case 10: {
+          TAG.innerText = 'Q10: 大數數線標示與區間';
+          TIP.innerText = '26 介於 20~30 偏右；47 介於 40~50 接近 50';
+          const axis = renderAxis(0, 50, 10, 380, 140, 95);
+          const x26 = axis.getX(26);
+          const x47 = axis.getX(47);
+
+          STAGE.innerHTML = `
+            <svg viewBox="0 0 380 140">
+              ${axis.svgBase}
+              <!-- 標示 26 -->
+              <circle cx="${x26}" cy="${axis.originY}" r="4" fill="#2563eb"/>
+              <line x1="${x26}" y1="${axis.originY}" x2="${x26}" y2="55" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="2,2"/>
+              <rect x="${x26 - 16}" y="32" width="32" height="20" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+              <text x="${x26}" y="46" font-size="11" font-weight="700" fill="#1e40af" text-anchor="middle">26</text>
+
+              <!-- 標示 47 -->
+              <circle cx="${x47}" cy="${axis.originY}" r="4" fill="#dc2626"/>
+              <line x1="${x47}" y1="${axis.originY}" x2="${x47}" y2="55" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="2,2"/>
+              <rect x="${x47 - 16}" y="32" width="32" height="20" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="1.2"/>
+              <text x="${x47}" y="46" font-size="11" font-weight="700" fill="#991b1b" text-anchor="middle">47</text>
+            </svg>
+          `;
+
+          // 實裝 034 教具組件: <math-sketch-canvas>
+          STORY_HOST.style.display = 'block';
+          STORY_HOST.innerHTML = `
+            <math-sketch-canvas 
+              shapes='[{"type":"polygon","points":[[20,20],[320,20],[320,38],[20,38]],"stroke":"#3b82f6","fill":"#dbeafe","label":"20~30區間: 26偏右 | 40~50區間: 47接近50"}]' 
+              theme="paper" 
+              width="340" 
+              height="55">
+            </math-sketch-canvas>
+          `;
+
+          INFO.innerHTML = `<strong>區間定位：</strong>26 在 20 和 30 之間（比中點 25 大，偏右）；47 在 40 和 50 之間（非常接近 50）。在數線上 47 在 26 的右邊。`;
+          break;
+        }
+
+        default:
+          STAGE.innerHTML = '<p style="padding:20px; color:#64748b;">未知的題號</p>';
+      }
+
+      // 通知父外框高度更新
+      notifyParentHeight();
+    }
+
+    function notifyParentHeight() {
+      if (window.parent && window.parent !== window) {
+        const height = document.getElementById('app').scrollHeight + 10;
+        window.parent.postMessage({
+          type: 'resize',
+          height: height
+        }, '*');
+      }
+    }
+
+    REPLAY_BTN.addEventListener('click', () => {
+      renderScene();
+    });
+
+    window.addEventListener('load', () => {
+      renderScene();
+    });
+
+    window.addEventListener('resize', notifyParentHeight);
+  </script>
+</body>
+</html>

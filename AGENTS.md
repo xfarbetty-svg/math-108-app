@@ -171,7 +171,13 @@
   3. 通道三（035 8把Key池）教育專家盲審 10/10 題 ALL PASS 准予採用。
   4. 雙硬閘門全綠：`verify_s33.js` 與 `verify_s33_cdp.js`（390px 實機 10/10 題 app 高度 392~415px ≤ 420px、零溢出、零 console 錯誤）。
   5. 課綱同步：`curriculum.json` S-3-3 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 22 條全綠，`verify_app_shell.js` G3 hero「已開放 11/24」。
-- [ ] 下一步：推進三年級第十二單元 `N-3-11 整數數線`（1000 以內的數線標記、刻度間距判定、兩數距離）。
+- [x] Session 36 G3-N-3-11 整數數線 100% 落地閉環（已開放 12/24，全專案 23/131 條目）：
+  1. 遵照使用者最高指示與【鐵律六：實事求是契約（做了什麼就說什麼，嚴禁虛假賦能）】，實裝 034 工具庫 `dist/anatomy-tools.js`，在 `number_line_lab.html` 引入並使用 034 基因 1 緩動曲線、基因 3 `pathLength="1"` 描繪、以及 Q10 實體掛載 `<math-sketch-canvas>`。
+  2. 10 題多樣化真題落地（`data/units/G3/N-3-11.json`）：100% 來自臺北市內湖國小 111-1/112-1/114-1 期中 ＆ 高雄市永安國小 114-1 期中段考真題（方位大小、大小左右、向右走加法、向左走減法、小鴨向左走、小鴨向右走、青蛙跳躍目標距離、蜻蜓三段複合飛行、等距刻度間距與報讀、大數數線標示與區間）。
+  3. 雙通道調用與驗真：通道二（A-SERVER SSH 遠端 OpenCode CLI，使用 glm-5.3-flash-free）9.93s 驗收秒通，035 本地 8把 Key 池閘道恢復待命。
+  4. 雙硬閘門全綠：`verify_n311.js`（資料契約＋逐題數學真值驗算）與 `verify_n311_cdp.js`（390px 實機 10/10 題 app 高度 297~415px ≤ 420px、零溢出、零 console 錯誤、034Lib 成功載入）。
+  5. 課綱同步：`curriculum.json` N-3-11 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 23 條全綠，`verify_app_shell.js` G3 hero「已開放 12/24」。
+- [ ] 下一步：推進三年級第十三單元 `N-3-12 長度（「毫米」）`（實測、量感、估測與計算、單位換算）。
 
 
 ---

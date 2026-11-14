@@ -1,0 +1,311 @@
+{
+  "code": "N-3-11",
+  "title": "整數數線",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-1/112-1/114-1 期中 ＆ 高雄市永安國小 114-1 期中段考真題（青蛙貓咪方位大小/左右位置判別/機器人向右加法/機器人向左減法/小鴨向左走/小鴨向右走/青蛙跳躍目標距離/小蜻蜓三段複合飛行/等距刻度間距報讀/大數數線標示）",
+  "questions": [
+    {
+      "id": "G3-N-3-11-Q01",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "一、選擇題",
+      "question_num": 1,
+      "title": "數線方位大小：青蛙在 6，貓咪在右邊，誰的位置數字大",
+      "stem": "一隻青蛙站在數線上 6 的位置，貓咪站在青蛙的右邊，誰站的位置刻度數字比較大？",
+      "choices": [
+        "① 貓咪",
+        "② 青蛙",
+        "③ 不一定",
+        "④ 不能比較"
+      ],
+      "answer_index": 0,
+      "answer_raw": "① 貓咪",
+      "visual_mode": "frog_cat_compare",
+      "final_check": "數線上越右邊的數越大，貓咪在右邊故貓咪較大",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "數線的方向性與數的大小關係",
+        "steps": [
+          "觀察數線特性：數線右端有箭頭，表示向右的方向",
+          "在數線上，越往右邊的點所代表的數字越大；越往左邊的數字越小",
+          "貓咪站在青蛙的右邊，因此貓咪所在位置的刻度數字一定比青蛙大 ✓"
+        ],
+        "trap": "數線箭頭向右代表數值增大，不可受動物大小或直覺混淆。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q02",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "六、看數線填一填",
+      "question_num": 1,
+      "title": "大小左右判別：6 比 10 小，6 在 10 的哪一邊",
+      "stem": "6 比 10 小，在數線上 6 的位置是在 10 的左邊還是右邊？",
+      "choices": [
+        "左邊",
+        "右邊",
+        "重疊在同一點",
+        "無法由數線判斷"
+      ],
+      "answer_index": 0,
+      "answer_raw": "左邊",
+      "visual_mode": "left_right_check",
+      "final_check": "小數在左邊，大數在右邊，6 < 10 故 6 在 10 的左邊",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "大小比較與數線左右位置的對應",
+        "steps": [
+          "比較兩數大小：6 小於 10（6 ＜ 10）",
+          "數線法則：比較小的數會位在比較大的數的「左邊」",
+          "因此 6 的位置在 10 的「左邊」 ✓"
+        ],
+        "trap": "切勿左右顛倒，記住「小在左、大在右」。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q03",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "六、看數線填一填",
+      "question_num": 2,
+      "title": "向右位移加法：機器人停在 8 向右走 5 格停在哪",
+      "stem": "機器人停在數線上 8 的位置，向右走 5 格，會停在哪一個數字？",
+      "choices": [
+        "13",
+        "14",
+        "3",
+        "5"
+      ],
+      "answer_index": 0,
+      "answer_raw": "13",
+      "visual_mode": "robot_walk_right",
+      "final_check": "8 + 5 = 13",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "數線向右移動代表加法",
+        "steps": [
+          "起點位置在 8",
+          "在數線上向右移動，數值增加，代表加法運算",
+          "列式計算：8 ＋ 5 ＝ 13 ✓"
+        ],
+        "trap": "向右走是「加」，向左走才是「減」。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q04",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "六、看數線填一填",
+      "question_num": 3,
+      "title": "接續向左位移減法：承上題再向左走 3 格停在哪",
+      "stem": "承上題，機器人停在 13 的位置，接著再向左走 3 格，會停在哪一個數字？",
+      "choices": [
+        "10",
+        "16",
+        "8",
+        "11"
+      ],
+      "answer_index": 0,
+      "answer_raw": "10",
+      "visual_mode": "robot_walk_left",
+      "final_check": "13 - 3 = 10",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "數線向左移動代表減法",
+        "steps": [
+          "當前起點在上一題得到的 13",
+          "在數線上向左移動，數值減少，代表減法運算",
+          "列式計算：13 － 3 ＝ 10 ✓"
+        ],
+        "trap": "記得是從 13 出發向左走 3 格，而非從原點或 8 出發。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q05",
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "一、填填看",
+      "question_num": 5,
+      "title": "向左位移減法：小鴨停在 9 向左走 7 格停在哪",
+      "stem": "小鴨停在數線上 9 的位置，向左走 7 格，會停在哪一個數字？",
+      "choices": [
+        "2",
+        "3",
+        "16",
+        "1"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2",
+      "visual_mode": "duck_walk_left",
+      "final_check": "9 - 7 = 2",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "數線上向左移動的減法算理",
+        "steps": [
+          "起點為刻度 9",
+          "向左走 7 格，表示從 9 倒數 7 格或減去 7",
+          "算式：9 － 7 ＝ 2 ✓"
+        ],
+        "trap": "注意題目是向左走，不可誤算成 9 ＋ 7 ＝ 16。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q06",
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "一、填填看",
+      "question_num": 5,
+      "title": "接續向右走加法：承上題小鴨在 2 再向右走 3 格停在哪",
+      "stem": "承上題，小鴨停在 2 的位置，再向右走 3 格，會停在哪一個數字？",
+      "choices": [
+        "5",
+        "4",
+        "6",
+        "1"
+      ],
+      "answer_index": 0,
+      "answer_raw": "5",
+      "visual_mode": "duck_walk_right",
+      "final_check": "2 + 3 = 5",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "接續起點向右位移之加法運算",
+        "steps": [
+          "承接上題結果，小鴨目前停在刻度 2",
+          "向右走 3 格表示加上 3",
+          "算式：2 ＋ 3 ＝ 5 ✓"
+        ],
+        "trap": "不可從 9 開始算，必須從目前小鴨停留的 2 算起。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q07",
+      "exam_source": "高雄市永安國小 114-1 期中",
+      "section": "一、填填看",
+      "question_num": 4,
+      "title": "跳躍目標判定：青蛙想從位置 8 跳到 2 要向哪跳幾格",
+      "stem": "青蛙想從數線上的位置 8 跳到位置 2，要向左還是向右跳？跳幾格？",
+      "choices": [
+        "向左跳 6 格",
+        "向右跳 6 格",
+        "向左跳 8 格",
+        "向右跳 10 格"
+      ],
+      "answer_index": 0,
+      "answer_raw": "向左跳 6 格",
+      "visual_mode": "frog_jump_target",
+      "final_check": "從 8 到 2 是變小(向左)，8 - 2 = 6 格",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "目標數值之方向判斷與距離計算",
+        "steps": [
+          "比較起點與終點：起點是 8，終點是 2",
+          "2 比 8 小，數字變小必須「向左」跳",
+          "計算格數距離：8 － 2 ＝ 6 格",
+          "結論：青蛙要向左跳 6 格 ✓"
+        ],
+        "trap": "方向判別容易粗心弄反，先看目標是變大還是變小。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q08",
+      "exam_source": "高雄市永安國小 114-1 期中",
+      "section": "八、看圖填填看",
+      "question_num": 6,
+      "title": "三段複合飛行：蜻蜓從 2 右飛 3、左飛 4、右飛 1 停在哪",
+      "stem": "小蜻蜓在數線上進行飛行訓練，從位置 2 出發，先向右飛 3 格，再向左飛 4 格，然後再往右飛 1 格，最後會停在哪一個位置？",
+      "choices": [
+        "2",
+        "3",
+        "1",
+        "4"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2",
+      "visual_mode": "dragonfly_flight",
+      "final_check": "2 + 3 - 4 + 1 = 2",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "多步驟連續位移的加減綜合計算",
+        "steps": [
+          "第一步：從 2 向右飛 3 格 ➔ 2 ＋ 3 ＝ 5",
+          "第二步：從 5 向左飛 4 格 ➔ 5 － 4 ＝ 1",
+          "第三步：從 1 再向右飛 1 格 ➔ 1 ＋ 1 ＝ 2",
+          "最後停在位置 2 ✓"
+        ],
+        "trap": "步驟較多，每一步都要確認是向右（＋）還是向左（－）。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q09",
+      "exam_source": "高雄市永安國小 114-1 期中",
+      "section": "七、畫畫看",
+      "question_num": 3,
+      "title": "等距刻度間距與報讀：0, 5, 10, 15, 20 每大格多少與讀數",
+      "stem": "觀察數線，上面的大刻度依序標記著 0、5、10、15、20。每一大格代表多少？若箭頭指在 15 再往右數 1 小格（每小格為 1），箭頭所指的數是多少？",
+      "choices": [
+        "每一大格代表 5，箭頭所指為 16",
+        "每一大格代表 10，箭頭所指為 25",
+        "每一大格代表 1，箭頭所指為 15",
+        "每一大格代表 5，箭頭所指為 20"
+      ],
+      "answer_index": 0,
+      "answer_raw": "每一大格代表 5，箭頭所指為 16",
+      "visual_mode": "scale_reading",
+      "final_check": "5 - 0 = 5，15 + 1 = 16",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "數線等距刻度間距與精準報讀",
+        "steps": [
+          "觀察相鄰大刻度：5 － 0 ＝ 5、10 － 5 ＝ 5，每一大格代表 5",
+          "每一大格內平分為 5 個小格，所以每一小格代表 1",
+          "箭頭指在 15 往右 1 小格：15 ＋ 1 ＝ 16 ✓"
+        ],
+        "trap": "切勿將刻度間距與刻度數字混為一談，需先算出每格代表多少單位。"
+      }
+    },
+    {
+      "id": "G3-N-3-11-Q10",
+      "exam_source": "臺北市內湖國小 111-1 期中",
+      "section": "一、做做看",
+      "question_num": 2,
+      "title": "大數數線標示與區間：26 與 47 在數線上的相對位置",
+      "stem": "在以 10 為大格刻度的整數數線上（標有 0, 10, 20, 30, 40, 50...），標出 26 與 47 的位置。下列關於 26 與 47 在數線上的敘述何者正確？",
+      "choices": [
+        "26 在 20 和 30 之間偏右；47 在 40 和 50 之間偏右接近 50",
+        "26 在 10 和 20 之間；47 在 50 右邊",
+        "26 剛好在 25 左邊；47 剛好在 40",
+        "47 在 26 的左邊"
+      ],
+      "answer_index": 0,
+      "answer_raw": "26 在 20 和 30 之間偏右；47 在 40 和 50 之間偏右接近 50",
+      "visual_mode": "big_number_plot",
+      "final_check": "20 < 26 < 30 (26 > 25偏右); 40 < 47 < 50 (接近50)",
+      "component": "number-line-lab",
+      "component_path": "components/number_line_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "整數在較大區間數線上的定位與標示",
+        "steps": [
+          "定位 26：26 介於 20 與 30 之間，因為 26 ＞ 25（中點），所以位置在 20 和 30 之間且偏右",
+          "定位 47：47 介於 40 與 50 之間，47 比 45 更大，非常接近 50",
+          "比較兩數：47 ＞ 26，所以在數線上 47 在 26 的右邊 ✓"
+        ],
+        "trap": "找區間時先以 10 為基準（十位數），再看個位數決定在區間中點的左側還是右側。"
+      }
+    }
+  ]
+}
