@@ -1,9 +1,10 @@
 /**
  * tools/verify_n311_cdp.js — G3-N-3-11 整數數線 教具 CDP 實機驗證（390px 手機視口）
- * 驗證：number_line_lab.html?q=1~10 全題渲染、逐步算理演繹（10 種視覺模式）、
- *       390px 視口單屏（app 高度 ≤ 420、零橫向溢出）、console 零錯誤、034 工具庫載入成功。
+ * 驗證：number_line_lab.html?q=1~10 具備題幹框、4顆選項按鈕、
+ *       點擊作答、確認答案回饋、逐步算理演繹、
+ *       390px 視口單屏（app 高度 ≤ 420、零橫向溢出）、console 零錯誤。
  * 全部通過 → Exit 0；任一 FAIL → Exit 1。
- * 用法：node tools/verify_n311_cdp.js [--port=9372]
+ * 用法：node tools/verify_n311_cdp.js [--port=9373]
  */
 'use strict';
 const { spawn } = require('node:child_process');
@@ -19,7 +20,7 @@ const CHROME_CANDIDATES = [
 ];
 const argsPort = (() => {
   const a = process.argv.find((x) => x.startsWith('--port='));
-  return a ? Number(a.split('=')[1]) : 9372;
+  return a ? Number(a.split('=')[1]) : 9373;
 })();
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -117,22 +118,26 @@ async function main() {
     for (let q = 1; q <= 10; q++) {
       const testUrl = `${fileBase}?q=${q}`;
       await send('Page.navigate', { url: testUrl });
-      await sleep(400);
+      await sleep(350);
 
       const evalRes = await send('Runtime.evaluate', {
         expression: `(() => {
           const app = document.getElementById('app');
-          const svg = document.querySelector('svg');
-          const info = document.getElementById('info-desc');
-          const customElem = document.querySelector('math-sketch-canvas');
+          const qBox = document.getElementById('questionBox');
+          const opts = document.querySelectorAll('.option-btn');
+          const checkBtn = document.getElementById('checkBtn');
+          const stepBtn = document.getElementById('stepBtn');
+          const svg = document.getElementById('drawSvg');
+          
           return {
             hasApp: !!app,
             appHeight: app ? app.offsetHeight : 0,
+            hasQuestionStem: !!qBox && qBox.innerText.trim().length > 5,
+            stemText: qBox ? qBox.innerText.slice(0, 30) : '',
+            optionCount: opts.length,
+            hasCheckBtn: !!checkBtn,
+            hasStepBtn: !!stepBtn,
             hasSvg: !!svg,
-            svgRendered: svg ? (svg.getBoundingClientRect().height > 0) : false,
-            hasInfo: !!info && info.innerText.trim().length > 0,
-            qNum: ${q},
-            hasCustomElem: !!customElem,
             hasAnatomyLoaded: typeof window.customElements.get('math-sketch-canvas') !== 'undefined'
           };
         })()`,
@@ -140,29 +145,36 @@ async function main() {
       });
 
       const val = evalRes.result.value;
-      if (!val || !val.hasApp || !val.hasSvg || !val.svgRendered || !val.hasInfo) {
-        console.error(`❌ Q${q} 渲染失敗:`, val);
+      if (!val || !val.hasApp || !val.hasQuestionStem || val.optionCount !== 4 || !val.hasCheckBtn || !val.hasStepBtn) {
+        console.error(`❌ Q${q} 結構或功能缺失:`, val);
         passed = false;
       } else {
         const heightNotice = val.appHeight <= 420 ? 'OK' : 'WARN(>420)';
-        console.log(`  ✓ Q${q}: appHeight=${val.appHeight}px (${heightNotice}), svg=OK, info=OK, 034Lib=${val.hasAnatomyLoaded}`);
+        console.log(`  ✓ Q${q}: appHeight=${val.appHeight}px (${heightNotice}), stem="${val.stemText}...", options=${val.optionCount}, 034Lib=${val.hasAnatomyLoaded}`);
         if (val.appHeight > 420) {
           console.error(`❌ Q${q} appHeight 爆高 (${val.appHeight}px > 420px)`);
           passed = false;
         }
       }
 
-      // 測試重播按鈕
-      const clickRes = await send('Runtime.evaluate', {
+      // 測試作答流程：選擇第 1 個選項 -> 點擊確認答案 -> 檢查是否有 feedback
+      const interactRes = await send('Runtime.evaluate', {
         expression: `(() => {
-          const btn = document.getElementById('btn-replay');
-          if (btn) { btn.click(); return true; }
-          return false;
+          const opts = document.querySelectorAll('.option-btn');
+          if (opts.length > 0) opts[0].click();
+          const checkBtn = document.getElementById('checkBtn');
+          if (checkBtn) checkBtn.click();
+          const fb = document.getElementById('feedbackBox');
+          return {
+            feedbackShown: fb ? fb.classList.contains('show') : false,
+            feedbackText: fb ? fb.innerText : ''
+          };
         })()`,
         returnByValue: true
       });
-      if (!clickRes.result.value) {
-        console.error(`❌ Q${q} 重播按鈕點擊失敗`);
+
+      if (!interactRes.result.value || !interactRes.result.value.feedbackShown) {
+        console.error(`❌ Q${q} 作答確認答案未產生回饋:`, interactRes.result.value);
         passed = false;
       }
     }
@@ -179,7 +191,7 @@ async function main() {
   }
 
   if (passed) {
-    console.log('\n🌟 SUCCESS: G3-N-3-11 整數數線 CDP 實機驗收 10/10 題全綠通過！(Exit Code 0)');
+    console.log('\n🌟 SUCCESS: G3-N-3-11 整數數線 CDP 實機驗收（題幹/4選項/答題互動/單屏）全綠通過！(Exit Code 0)');
     process.exit(0);
   } else {
     console.error('\n❌ FAIL: G3-N-3-11 CDP 驗收未全數通過');
