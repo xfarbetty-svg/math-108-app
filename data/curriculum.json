@@ -319,9 +319,9 @@
           "code": "N-3-3",
           "title": "乘以一位數",
           "full_text": "乘以一位數：乘法直式計算。教師用位值的概念說明直式計算的合理性。被乘數為二、三位數。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 114-1/113-1/111-1 期中 ＋ 高雄市永安國小 114-1 期中（直式乘法/積比大小/估算/倍數應用題）"
         },
         {
           "code": "N-3-4",

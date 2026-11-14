@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-3 乘以一位數直式教具</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.35;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 18px rgba(149,117,76,0.10);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(149,117,76,0.10);
+            padding: 4px 8px 6px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            display: block;
+        }
+        .digit { font-size: 23px; font-weight: 600; fill: var(--text-dark); font-family: 'Courier New', Courier, monospace; }
+        .digit-reveal { font-size: 23px; font-weight: 600; fill: var(--mint); font-family: 'Courier New', Courier, monospace; }
+        .op { font-size: 21px; fill: var(--text-dark); }
+        .grid-line { stroke: #e8ddcc; stroke-width: 1; stroke-dasharray: 2 3; }
+        .hline { stroke: var(--text-dark); stroke-width: 2; stroke-linecap: round; }
+        .place-label { font-size: 9px; fill: var(--muted); }
+        .hl-rect { fill: rgba(255,138,101,0.14); stroke: var(--coral); stroke-width: 1.5; stroke-dasharray: 4 3; rx: 6; }
+        .bubble-c { fill: var(--coral); }
+        .bubble-t { font-size: 12px; fill: #fff; font-weight: bold; text-anchor: middle; }
+        .cap { font-size: 12px; min-height: 17px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.3; }
+        .expr { font-size: 17px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 17px; fill: var(--coral); font-weight: bold; }
+        .expr-reveal { font-size: 18px; fill: var(--mint); font-weight: bold; }
+        .box-mark { font-size: 20px; fill: var(--coral); font-weight: bold; }
+        .controls { display: flex; flex-direction: column; gap: 6px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 10px rgba(149,117,76,0.18);
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+        .step-btn { background: linear-gradient(135deg, var(--coral), #ff9e85); }
+        .check-btn { background: linear-gradient(135deg, var(--mint), #93d8c4); }
+        .step-btn:active, .check-btn:active { transform: scale(0.95) translateY(1px); box-shadow: 0 1px 4px rgba(149,117,76,0.18); }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .opt-btn {
+            height: 36px;
+            border: 2px solid #f0e6d8;
+            background: var(--card);
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 6px rgba(149,117,76,0.08);
+        }
+        .opt-btn:active { transform: scale(0.96); }
+        .opt-btn.selected { border-color: var(--coral); background: #fff3ec; }
+        .feedback {
+            position: absolute;
+            top: 45%; left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 22px;
+            border-radius: 999px;
+            color: white;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+        .success { background: var(--mint); }
+        .fail { background: var(--error); }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">臺北市內湖國小 ＋ 高雄市永安國小段考真題</div>
+    <div class="question-box" id="qText">載入中...</div>
+
+    <div class="calc-card">
+        <div class="calc-area" id="calc-area">
+            <svg id="svgCanvas" viewBox="0 0 240 150">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="stepCap"></div>
+    </div>
+
+    <div class="controls">
+        <button class="step-btn" onclick="nextStep()">一步一步看算理 ▶</button>
+        <div class="options-grid" id="options"></div>
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+</div>
+
+<script>
+    const QUESTIONS = {
+        1:  { mode: 'calc', stem: '用直式算算看：53 × 2 ＝ ( ? )', a: '53', m: 2, product: '106', correct: '106', choices: ['106', '105', '112', '96'] },
+        2:  { mode: 'calc', stem: '用直式算算看：33 × 4 ＝ ( ? )', a: '33', m: 4, product: '132', correct: '132', choices: ['132', '128', '123', '92'] },
+        3:  { mode: 'calc', stem: '用直式算算看：84 × 6 ＝ ( ? )', a: '84', m: 6, product: '504', correct: '504', choices: ['504', '484', '514', '486'] },
+        4:  { mode: 'calc', stem: '用直式算算看：131 × 7 ＝ ( ? )', a: '131', m: 7, product: '917', correct: '917', choices: ['917', '907', '927', '971'] },
+        5:  { mode: 'calc', stem: '用直式算算看：309 × 3 ＝ ( ? )', a: '309', m: 3, product: '927', correct: '927', choices: ['927', '907', '977', '279'] },
+        6:  { mode: 'calc', stem: '用直式算算看：506 × 9 ＝ ( ? )', a: '506', m: 9, product: '4554', correct: '4554', choices: ['4554', '4545', '4514', '4584'] },
+        7:  { mode: 'calc', stem: '用直式算算看：125 × 8 ＝ ( ? )', a: '125', m: 8, product: '1000', correct: '1000', choices: ['1000', '960', '900', '1060'] },
+        8:  { mode: 'compare', stem: '在 □ 中填入 ＞、＜ 或 ＝：400 × 5 □ 500 × 4', correct: '＝', choices: ['＝', '＞', '＜'], caps: ['先算左邊：400 × 5 = 2000', '再算右邊：500 × 4 = 2000', '2000 ＝ 2000，所以 □ 填 ＝'] },
+        9:  { mode: 'estimate', stem: '495 × 6 的答案最接近下列哪一個數？', correct: '3000', choices: ['3000', '2400', '3600', '1800'], caps: ['估算：把 495 看成整百數 500', '用 500 × 6 = 3000 估算', '所以 495 × 6 最接近 3000'] },
+        10: { mode: 'calc', stem: '弟弟有 200 元，哥哥買一架飛機模型，花的錢是弟弟的 3 倍，哥哥花了多少元？', a: '200', m: 3, product: '600', correct: '600 元', choices: ['600 元', '203 元', '180 元', '630 元'] }
+    };
+
+    const PLACE_CN = ['個位', '十位', '百位', '千位'];
+    const PLACE_CHAR = ['個', '十', '百', '千'];
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const qId = urlParams.get('q') || 1;
+    const q = QUESTIONS[qId];
+    let currentStep = 0;
+    let selectedAns = null;
+
+    function totalSteps() {
+        return q.mode === 'calc' ? q.product.length : q.caps.length;
+    }
+
+    function init() {
+        document.getElementById('qText').innerText = q.stem;
+        renderOptions();
+        render();
+    }
+
+    function renderOptions() {
+        const container = document.getElementById('options');
+        const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+        container.innerHTML = '';
+        shuffled.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = c;
+            btn.onclick = () => {
+                selectedAns = c;
+                document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    /* 逐位直式乘法引擎：由個位往高位逐位演繹，自動生成步驟說明與進位氣泡 */
+    function computeCalcSteps() {
+        const aDigits = q.a.split('');
+        const steps = [];
+        let carry = 0;
+        for (let s = 1; s <= totalSteps(); s++) {
+            const p = s - 1; // 位值：0=個位
+            let digit, newCarry = 0, cap;
+            if (p < aDigits.length) {
+                const ad = Number(aDigits[aDigits.length - 1 - p]);
+                const val = ad * q.m + carry;
+                digit = val % 10;
+                newCarry = Math.floor(val / 10);
+                cap = `${PLACE_CN[p]}：${ad} × ${q.m} = ${val}`;
+                if (val >= 10) cap += `，寫 ${digit} 進 ${newCarry}`;
+            } else {
+                digit = carry;
+                cap = `把進位的 ${carry} 落下來`;
+            }
+            steps.push({ p, digit, carryOut: newCarry, cap, carryIn: carry });
+            carry = newCarry;
+        }
+        return steps;
+    }
+
+    function renderCalc() {
+        const layer = document.getElementById('drawLayer');
+        layer.innerHTML = '';
+        const aDigits = q.a.split('');
+        const prod = q.product.split('');
+        const cols = prod.length;
+        const colX = i => 195 - (cols - 1 - i) * 42; // i=0 最左欄
+
+        // 欄位分隔虛線與位值標籤
+        let svg = '';
+        for (let i = 1; i < cols; i++) {
+            const x = colX(i) - 21;
+            svg += `<line x1="${x}" y1="18" x2="${x}" y2="140" class="grid-line" />`;
+        }
+        for (let j = 0; j < cols; j++) {
+            svg += `<text x="${colX(j)}" y="13" text-anchor="middle" class="place-label">${PLACE_CHAR[cols - 1 - j]}</text>`;
+        }
+
+        // 高亮當前演繹欄位
+        const allSteps = computeCalcSteps();
+        const cur = allSteps[currentStep - 1];
+        if (cur) {
+            const j = cols - 1 - cur.p;
+            svg += `<rect x="${colX(j) - 20}" y="30" width="40" height="106" rx="6" class="hl-rect" />`;
+        }
+
+        // 被乘數（上排）
+        for (let p = 0; p < aDigits.length; p++) {
+            const j = cols - 1 - p;
+            svg += `<text x="${colX(j)}" y="60" text-anchor="middle" class="digit">${aDigits[aDigits.length - 1 - p]}</text>`;
+        }
+
+        // 乘號與乘數（下排，對齊個位）
+        svg += `<text x="45" y="90" class="op">×</text>`;
+        svg += `<text x="${colX(cols - 1)}" y="90" text-anchor="middle" class="digit">${q.m}</text>`;
+
+        // 底線
+        svg += `<line x1="40" y1="98" x2="216" y2="98" class="hline" />`;
+
+        // 積（由右至左逐位揭示）
+        for (let p = 0; p < cols; p++) {
+            if (currentStep >= p + 1) {
+                svg += `<text x="${colX(cols - 1 - p)}" y="132" text-anchor="middle" class="digit-reveal">${prod[cols - 1 - p]}</text>`;
+            }
+        }
+
+        // 進位氣泡（珊瑚橘圓圈白字，漂浮於被進位欄上方）
+        for (let s = 0; s < currentStep; s++) {
+            const st = allSteps[s];
+            if (st.carryOut > 0 && st.p + 1 < cols) {
+                const x = colX(cols - 1 - (st.p + 1));
+                svg += `<circle cx="${x}" cy="28" r="10" class="bubble-c" />`;
+                svg += `<text x="${x}" y="32" class="bubble-t">${st.carryOut}</text>`;
+            }
+        }
+
+        layer.innerHTML = svg;
+
+        // 步驟說明
+        const capEl = document.getElementById('stepCap');
+        capEl.innerText = currentStep === 0
+            ? '按「一步一步看算理」開始演繹！'
+            : allSteps[currentStep - 1].cap;
+    }
+
+    function renderCompare() {
+        const layer = document.getElementById('drawLayer');
+        let svg = '';
+        // 左式
+        svg += `<text x="14" y="72" class="expr">400 × 5</text>`;
+        svg += `<text x="104" y="76" class="box-mark">□</text>`;
+        // 右式
+        svg += `<text x="138" y="72" class="expr">500 × 4</text>`;
+        // 左積
+        if (currentStep >= 1) {
+            svg += `<rect x="14" y="86" width="86" height="36" rx="6" class="hl-rect" />`;
+            svg += `<text x="57" y="112" text-anchor="middle" class="expr-reveal">2000</text>`;
+        }
+        // 右積
+        if (currentStep >= 2) {
+            svg += `<rect x="138" y="86" width="86" height="36" rx="6" class="hl-rect" />`;
+            svg += `<text x="181" y="112" text-anchor="middle" class="expr-reveal">2000</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<line x1="14" y1="128" x2="224" y2="128" class="hline" />`;
+            svg += `<text x="119" y="146" text-anchor="middle" class="expr-coral" style="font-size:13px">2000 ＝ 2000</text>`;
+        }
+        layer.innerHTML = svg;
+        document.getElementById('stepCap').innerText =
+            currentStep === 0 ? '按「一步一步看算理」開始演繹！' : q.caps[currentStep - 1];
+    }
+
+    function renderEstimate() {
+        const layer = document.getElementById('drawLayer');
+        let svg = '';
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="55" text-anchor="middle" class="expr">495 <tspan class="expr-coral">≈ 500</tspan></text>`;
+        } else {
+            svg += `<text x="120" y="55" text-anchor="middle" class="expr">495 × 6 ≈ ( ? )</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="95" text-anchor="middle" class="expr">500 × 6 = <tspan class="expr-reveal">3000</tspan></text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<circle cx="120" cy="123" r="17" class="bubble-c" />`;
+            svg += `<text x="120" y="128" text-anchor="middle" class="bubble-t" style="font-size:14px">3000</text>`;
+        }
+        layer.innerHTML = svg;
+        document.getElementById('stepCap').innerText =
+            currentStep === 0 ? '按「一步一步看算理」開始演繹！' : q.caps[currentStep - 1];
+    }
+
+    function render() {
+        if (q.mode === 'calc') renderCalc();
+        else if (q.mode === 'compare') renderCompare();
+        else renderEstimate();
+    }
+
+    function nextStep() {
+        const total = totalSteps();
+        currentStep = currentStep + 1 > total ? 0 : currentStep + 1;
+        render();
+    }
+
+    function checkAnswer() {
+        const fb = document.getElementById('feedback');
+        fb.style.display = 'block';
+        if (selectedAns === q.correct) {
+            fb.innerText = '太棒了！計算正確';
+            fb.className = 'feedback success';
+            currentStep = totalSteps();
+            render();
+        } else {
+            fb.innerText = '再試試看喔！';
+            fb.className = 'feedback fail';
+        }
+        setTimeout(() => fb.style.display = 'none', 2000);
+    }
+
+    init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,290 @@
+{
+  "code": "N-3-3",
+  "title": "乘以一位數",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 114-1/113-1/111-1 期中 ＋ 高雄市永安國小 114-1 期中",
+  "questions": [
+    {
+      "id": "G3-N-3-3-Q01",
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 1,
+      "title": "二位數乘一位數（十位進位）",
+      "stem": "用直式算算看：53 × 2 ＝ ( ? )",
+      "choices": [
+        "106",
+        "105",
+        "112",
+        "96"
+      ],
+      "answer_index": 0,
+      "answer_raw": "106",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "二位數乘一位數直式（十位滿十進位）",
+        "steps": [
+          "個位：3 × 2 = 6",
+          "十位：5 × 2 = 10，寫 0 進 1 到百位",
+          "百位：把進位的 1 落下來，得到 106"
+        ],
+        "trap": "十位 5 × 2 = 10 滿十要進位，容易忘記百位的 1，誤答成 56 或直接寫 10。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q02",
+      "exam_source": "臺北市內湖國小 111-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 2,
+      "title": "二位數乘一位數（兩次進位）",
+      "stem": "用直式算算看：33 × 4 ＝ ( ? )",
+      "choices": [
+        "132",
+        "128",
+        "123",
+        "92"
+      ],
+      "answer_index": 0,
+      "answer_raw": "132",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "二位數乘一位數連續兩次進位",
+        "steps": [
+          "個位：3 × 4 = 12，寫 2 進 1",
+          "十位：3 × 4 + 1 = 13，寫 3 進 1",
+          "百位：把進位的 1 落下來，得到 132"
+        ],
+        "trap": "個位與十位都要進位，漏掉任何一次進位都會算錯，常誤得 122 或 112。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q03",
+      "exam_source": "高雄市永安國小 114-1 期中",
+      "section": "二、用直式算算看",
+      "question_num": 1,
+      "title": "二位數乘一位數（連續進位到百位）",
+      "stem": "用直式算算看：84 × 6 ＝ ( ? )",
+      "choices": [
+        "504",
+        "484",
+        "514",
+        "486"
+      ],
+      "answer_index": 0,
+      "answer_raw": "504",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "二位數乘一位數連續進位（進到百位）",
+        "steps": [
+          "個位：4 × 6 = 24，寫 4 進 2",
+          "十位：8 × 6 + 2 = 50，寫 0 進 5",
+          "百位：把進位的 5 落下來，得到 504"
+        ],
+        "trap": "十位 8 × 6 + 2 = 50 滿五十要向百位進 5，忘記第二次進位就會少一位。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q04",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 3,
+      "title": "三位數乘一位數（一次進位）",
+      "stem": "用直式算算看：131 × 7 ＝ ( ? )",
+      "choices": [
+        "917",
+        "907",
+        "927",
+        "971"
+      ],
+      "answer_index": 0,
+      "answer_raw": "917",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "三位數乘一位數直式（十位進位到百位）",
+        "steps": [
+          "個位：1 × 7 = 7",
+          "十位：3 × 7 = 21，寫 1 進 2",
+          "百位：1 × 7 + 2 = 9，得到 917"
+        ],
+        "trap": "百位 1 × 7 後容易忘記加十位進上來的 2，誤得 717。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q05",
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 4,
+      "title": "三位數乘一位數（中間有 0）",
+      "stem": "用直式算算看：309 × 3 ＝ ( ? )",
+      "choices": [
+        "927",
+        "907",
+        "977",
+        "279"
+      ],
+      "answer_index": 0,
+      "answer_raw": "927",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "中間有 0 的三位數乘法",
+        "steps": [
+          "個位：9 × 3 = 27，寫 7 進 2",
+          "十位：0 × 3 + 2 = 2",
+          "百位：3 × 3 = 9，得到 927"
+        ],
+        "trap": "中間的 0 也要占位並加上進位的 2，容易漏算成 907 或把 0 直接跳過。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q06",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 5,
+      "title": "三位數乘一位數（積進到千位）",
+      "stem": "用直式算算看：506 × 9 ＝ ( ? )",
+      "choices": [
+        "4554",
+        "4545",
+        "4514",
+        "4584"
+      ],
+      "answer_index": 0,
+      "answer_raw": "4554",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "三位數乘一位數（積為四位數）",
+        "steps": [
+          "個位：6 × 9 = 54，寫 4 進 5",
+          "十位：0 × 9 + 5 = 5",
+          "百位：5 × 9 = 45，寫 5 進 4",
+          "千位：把進位的 4 落下來，得到 4554"
+        ],
+        "trap": "三位數乘出四位數，兩次進位都要記得，千位的 4 最常被漏掉而誤答成 554。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q07",
+      "exam_source": "臺北市內湖國小 111-1 期中",
+      "section": "三、用直式算算看",
+      "question_num": 6,
+      "title": "三位數乘一位數（連續進位到千位）",
+      "stem": "用直式算算看：125 × 8 ＝ ( ? )",
+      "choices": [
+        "1000",
+        "960",
+        "900",
+        "1060"
+      ],
+      "answer_index": 0,
+      "answer_raw": "1000",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "連續進位乘法（積剛好進到千位）",
+        "steps": [
+          "個位：5 × 8 = 40，寫 0 進 4",
+          "十位：2 × 8 + 4 = 20，寫 0 進 2",
+          "百位：1 × 8 + 2 = 10，寫 0 進 1",
+          "千位：把進位的 1 落下來，得到 1000"
+        ],
+        "trap": "連續三次進位，積剛好是 1000，三個 0 容易寫少一個變成 100。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q08",
+      "exam_source": "高雄市永安國小 114-1 期中",
+      "section": "四、在□裡填入＞、＜或＝",
+      "question_num": 1,
+      "title": "乘法積比大小",
+      "stem": "在 □ 中填入 ＞、＜ 或 ＝：400 × 5 □ 500 × 4",
+      "choices": [
+        "＝",
+        "＞",
+        "＜"
+      ],
+      "answer_index": 0,
+      "answer_raw": "＝",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘法積的比較（比大小）",
+        "steps": [
+          "先算左邊：400 × 5 = 2000",
+          "再算右邊：500 × 4 = 2000",
+          "2000 ＝ 2000，所以 □ 填 ＝"
+        ],
+        "trap": "看到 400 和 500 不同就直覺填 ＞ 或 ＜，其實兩邊的積一樣大。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q09",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "乘法估算（最接近的數）",
+      "stem": "495 × 6 的答案最接近下列哪一個數？",
+      "choices": [
+        "3000",
+        "2400",
+        "3600",
+        "1800"
+      ],
+      "answer_index": 0,
+      "answer_raw": "3000",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘法估算（四捨五入到整百數）",
+        "steps": [
+          "把 495 看成最接近的整百數 500",
+          "用 500 × 6 = 3000 估算",
+          "所以 495 × 6 最接近 3000"
+        ],
+        "trap": "估算要把 495 看成 500，不是用 400 × 6 = 2400，也不是硬算 495 × 6。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q10",
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "五、應用題",
+      "question_num": 2,
+      "title": "三倍關係應用題",
+      "stem": "弟弟有 200 元，哥哥買一架飛機模型，花的錢是弟弟的 3 倍，哥哥花了多少元？",
+      "choices": [
+        "600 元",
+        "203 元",
+        "180 元",
+        "630 元"
+      ],
+      "answer_index": 0,
+      "answer_raw": "600 元",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "倍數關係應用題（整百數乘法）",
+        "steps": [
+          "「3 倍」就是 3 個 200",
+          "列式：200 × 3",
+          "算出 200 × 3 = 600（元）"
+        ],
+        "trap": "「花了弟弟的 3 倍」是乘法，看到「3」就做 200 + 3 = 203 是最經典陷阱。"
+      }
+    }
+  ]
+}
