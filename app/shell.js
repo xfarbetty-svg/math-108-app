@@ -18,6 +18,23 @@ const state = {
 const $ = (id) => document.getElementById(id);
 const views = ["gradeView", "stageView", "resultView"];
 
+/* ---------- 記住最後位置（解決重頭找單元問題） ---------- */
+function saveLastPosition(grade, unitCode = null, qIndex = 0) {
+  try {
+    const pos = { grade, unitCode, qIndex, time: Date.now() };
+    localStorage.setItem("math108_last_pos", JSON.stringify(pos));
+  } catch (e) {}
+}
+
+function getLastPosition() {
+  try {
+    const saved = localStorage.getItem("math108_last_pos");
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 /* ---------- 視圖切換 ---------- */
 function showView(name) {
   views.forEach((v) => { $(v).style.display = (v === name) ? "block" : "none"; });
@@ -37,6 +54,7 @@ function renderNav() {
     b.setAttribute("aria-label", g.label);
     b.addEventListener("click", () => {
       state.grade = g.grade;
+      saveLastPosition(state.grade, null, 0);
       renderNav();
       renderGrade();
     });
@@ -81,7 +99,7 @@ function renderGrade() {
 }
 
 /* ---------- 載入單元資料（SSOT：不內嵌題目副本） ---------- */
-async function openUnit(code) {
+async function openUnit(code, initialQIndex = 0) {
   const g = state.curriculum.grades.find((x) => x.grade === state.grade);
   const unitMeta = g.units.find((u) => u.code === code);
   if (!unitMeta || unitMeta.status !== "ready") return;
@@ -94,8 +112,10 @@ async function openUnit(code) {
     showDegraded("<!-- DEGRADED:單元題庫載入失敗（" + url + "）→ " + err.message + "。請以本機伺服器開啟：python -m http.server 8000 -->");
     return;
   }
-  state.qIndex = 0;
+  const maxIdx = state.unit.questions ? state.unit.questions.length - 1 : 0;
+  state.qIndex = (initialQIndex >= 0 && initialQIndex <= maxIdx) ? initialQIndex : 0;
   state.visited.clear();
+  saveLastPosition(state.grade, code, state.qIndex);
   renderStage();
 }
 
@@ -423,15 +443,51 @@ async function init() {
     showDegraded("<!-- DEGRADED:全域骨架 data/curriculum.json 載入失敗 → " + err.message + "。請以本機伺服器開啟（於專案根目錄執行：python -m http.server 8000，再連 http://127.0.0.1:8000/app/index.html）。 -->");
     return;
   }
-  renderNav();
-  renderGrade();
 
-  $("btnBack").addEventListener("click", () => { clearInterval(heightTimer); stopSpeech(); renderGrade(); });
+  // 讀取最後離開位置（記住年級、單元與題目）
+  const lastPos = getLastPosition();
+  let targetUnit = null;
+  let targetQ = 0;
+  if (lastPos && lastPos.grade && state.curriculum.grades.some((g) => g.grade === lastPos.grade)) {
+    state.grade = lastPos.grade;
+    if (lastPos.unitCode) {
+      const g = state.curriculum.grades.find((x) => x.grade === state.grade);
+      const u = g && g.units.find((x) => x.code === lastPos.unitCode);
+      if (u && u.status === "ready") {
+        targetUnit = lastPos.unitCode;
+        targetQ = typeof lastPos.qIndex === "number" ? lastPos.qIndex : 0;
+      }
+    }
+  }
+
+  renderNav();
+  if (targetUnit) {
+    openUnit(targetUnit, targetQ);
+  } else {
+    renderGrade();
+  }
+
+  $("btnBack").addEventListener("click", () => {
+    clearInterval(heightTimer);
+    stopSpeech();
+    saveLastPosition(state.grade, null, 0);
+    renderGrade();
+  });
   $("btnPrev").addEventListener("click", () => {
-    if (state.qIndex > 0) { state.qIndex--; stopSpeech(); renderQuestion(); }
+    if (state.qIndex > 0) {
+      state.qIndex--;
+      stopSpeech();
+      saveLastPosition(state.grade, state.unit ? state.unit.unit_code : null, state.qIndex);
+      renderQuestion();
+    }
   });
   $("btnNext").addEventListener("click", () => {
-    if (state.qIndex < state.unit.questions.length - 1) { state.qIndex++; stopSpeech(); renderQuestion(); }
+    if (state.qIndex < state.unit.questions.length - 1) {
+      state.qIndex++;
+      stopSpeech();
+      saveLastPosition(state.grade, state.unit ? state.unit.unit_code : null, state.qIndex);
+      renderQuestion();
+    }
   });
   $("btnCheckMain").addEventListener("click", triggerCheckAnswer);
   $("btnSpeak").addEventListener("click", speakCurrentProblem);
