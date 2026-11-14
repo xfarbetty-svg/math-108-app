@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-S-3-3 圓 擬物幾何實驗台</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.3;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            display: block;
+        }
+        .expr { font-size: 14px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 14px; fill: var(--coral); font-weight: bold; }
+        .expr-mint { font-size: 13px; fill: var(--mint); font-weight: bold; }
+        .expr-red { font-size: 12px; fill: var(--error); font-weight: bold; }
+        .expr-sky { font-size: 13px; fill: #0284c7; font-weight: bold; }
+        .place-label { font-size: 9.5px; fill: var(--muted); font-weight: 600; }
+        .cap { font-size: 11.5px; min-height: 16px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.25; }
+        .controls { display: flex; flex-direction: column; gap: 4px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 6px 4px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-S-3-3 圓 擬物幾何實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 240 170">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看圓形動態</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    /* ===== 10 題實體段考真題資料庫（SSOT） ===== */
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "下列有關「圓」的敘述何者錯誤？",
+            options: [
+                "直徑有無限多條",
+                "半徑是直徑的 2 倍",
+                "直徑是圓內最長的直線",
+                "半徑越小，畫的圓越小"
+            ],
+            answer_index: 1,
+            visual_mode: "circle_concepts",
+            final_reveal: "直徑是半徑的 2 倍 (半徑是直徑的一半)",
+            total_steps: 3,
+            explanations: [
+                "直徑通過圓心，兩端在圓周上，有無限多條",
+                "直徑是圓內最長的直線",
+                "錯誤在此：直徑才是半徑的 2 倍，半徑是直徑的「一半」✓"
+            ],
+            feedback: "答對了！直徑是半徑的 2 倍（直徑＝半徑×2），所以「半徑是直徑的 2 倍」是錯誤的！"
+        },
+        {
+            q: 2,
+            stem: "將圓周上任何一點與圓心相連，所形成的線段稱為圓的什麼？",
+            options: ["半徑", "直徑", "圓周", "圓心"],
+            answer_index: 0,
+            visual_mode: "radius_definition",
+            final_reveal: "圓心到圓周任一點的距離叫做半徑",
+            total_steps: 3,
+            explanations: [
+                "圓的最外圍曲線稱為「圓周」",
+                "正中央的固定基準點稱為「圓心」",
+                "從圓心連接到圓周上任意一點的線段稱為「半徑」✓"
+            ],
+            feedback: "答對了！從圓心連到圓周上任意一點的線段就是「半徑」！"
+        },
+        {
+            q: 3,
+            stem: "阿明拿一條長 10 公分的繩子，固定繩子的一邊為圓心，繩子的另一邊繞著圓心旋轉畫一個圓，畫出來的圓直徑是多少公分？",
+            options: ["20 公分", "10 公分", "5 公分", "15 公分"],
+            answer_index: 0,
+            visual_mode: "rope_spin_circle",
+            final_reveal: "繩長 10cm 是半徑，直徑＝10×2＝20cm",
+            total_steps: 3,
+            explanations: [
+                "繩長 10 公分即為圓心到圓周的「半徑」",
+                "同一個圓中，直徑長度為半徑的 2 倍",
+                "直徑 ＝ 10 × 2 ＝ 20 公分 ✓"
+            ],
+            feedback: "答對了！繩子長度是半徑，旋轉畫出來的圓直徑是 10×2＝20 公分！"
+        },
+        {
+            q: 4,
+            stem: "媽媽做了一個半徑 6 公分的圓形披薩，哥哥做了一個直徑 10 公分的圓形披薩，哪一個人做的披薩比較大？",
+            options: ["媽媽", "哥哥", "一樣大", "不能比較"],
+            answer_index: 0,
+            visual_mode: "pizza_compare",
+            final_reveal: "媽媽直徑 12cm ＞ 哥哥直徑 10cm",
+            total_steps: 3,
+            explanations: [
+                "換算標準：媽媽披薩半徑 6 公分 → 直徑 ＝ 6 × 2 ＝ 12 公分",
+                "哥哥披薩直徑 ＝ 10 公分",
+                "比較直徑：12 公分 ＞ 10 公分，所以媽媽的披薩比較大 ✓"
+            ],
+            feedback: "答對了！媽媽披薩直徑是 12 公分，比哥哥的 10 公分披薩大！"
+        },
+        {
+            q: 5,
+            stem: "畫一個直徑 12 公分的圓，圓規兩腳要打開多少公分？",
+            options: ["6 公分", "12 公分", "24 公分", "3 公分"],
+            answer_index: 0,
+            visual_mode: "compass_open_radius",
+            final_reveal: "圓規打開距離＝半徑＝12÷2＝6cm",
+            total_steps: 3,
+            explanations: [
+                "圓規兩腳打開的距離代表圓的「半徑」",
+                "已知圓的直徑為 12 公分",
+                "半徑 ＝ 12 ÷ 2 ＝ 6 公分，故圓規要打開 6 公分 ✓"
+            ],
+            feedback: "答對了！圓規打開的長度就是半徑，12÷2＝6 公分！"
+        },
+        {
+            q: 6,
+            stem: "若將圓規兩腳張開 6 公分，畫出一個圓，這個圓的直徑會是幾公分？",
+            options: ["12 公分", "6 公分", "3 公分", "18 公分"],
+            answer_index: 0,
+            visual_mode: "compass_calc_diameter",
+            final_reveal: "半徑 6cm，直徑＝6×2＝12cm",
+            total_steps: 3,
+            explanations: [
+                "圓規兩腳張開 6 公分，畫出的圓半徑就是 6 公分",
+                "直徑是半徑的 2 倍",
+                "直徑 ＝ 6 × 2 ＝ 12 公分 ✓"
+            ],
+            feedback: "答對了！圓規張開 6 公分是半徑，直徑要乘以 2，是 12 公分！"
+        },
+        {
+            q: 7,
+            stem: "甲圓的半徑是 3 公分，它的直徑剛好是乙圓的半徑，所以乙圓的直徑長度是多少公分？",
+            options: ["12 公分", "6 公分", "9 公分", "3 公分"],
+            answer_index: 0,
+            visual_mode: "nested_circles_ratio",
+            final_reveal: "甲直徑 6cm＝乙半徑，乙直徑＝6×2＝12cm",
+            total_steps: 3,
+            explanations: [
+                "算甲圓直徑：3 × 2 ＝ 6 公分",
+                "甲圓直徑等於乙圓半徑：乙圓半徑 ＝ 6 公分",
+                "算乙圓直徑：6 × 2 ＝ 12 公分 ✓"
+            ],
+            feedback: "答對了！甲直徑 6 公分即乙半徑，所以乙直徑是 6×2＝12 公分！"
+        },
+        {
+            q: 8,
+            stem: "甲：半徑 12 公分的圓、乙：直徑 10 公分的圓、丙：直徑 8 公分的圓、丁：半徑 6 公分的圓。將這四個圓由大到小排列，順序為何？",
+            options: [
+                "甲 ＞ 丁 ＞ 乙 ＞ 丙",
+                "甲 ＞ 乙 ＞ 丙 ＞ 丁",
+                "丁 ＞ 甲 ＞ 乙 ＞ 丙",
+                "甲 ＞ 乙 ＞ 丁 ＞ 丙"
+            ],
+            answer_index: 0,
+            visual_mode: "four_circles_sort",
+            final_reveal: "甲(24) ＞ 丁(12) ＞ 乙(10) ＞ 丙(8)",
+            total_steps: 3,
+            explanations: [
+                "全部換算為直徑統一比較：",
+                "甲(直徑 24cm)、丁(直徑 12cm)、乙(直徑 10cm)、丙(直徑 8cm)",
+                "由大到小排序：甲 ＞ 丁 ＞ 乙 ＞ 丙 ✓"
+            ],
+            feedback: "答對了！統一直徑：甲24 ＞ 丁12 ＞ 乙10 ＞ 丙8，丁的直徑是12比乙大！"
+        },
+        {
+            q: 9,
+            stem: "在同一個圓中，下列哪一條直線是最長的？",
+            options: [
+                "通過圓心的直徑",
+                "從圓心到圓周的半徑",
+                "沒通過圓心的圓內直線",
+                "以上直線一樣長"
+            ],
+            answer_index: 0,
+            visual_mode: "longest_chord_diameter",
+            final_reveal: "直徑是圓內最長的一條直線",
+            total_steps: 3,
+            explanations: [
+                "半徑只從圓心到圓周，只有直徑長度的一半",
+                "未通過圓心的圓內直線長度皆小於直徑",
+                "只有通過圓心的直徑跨越圓周兩端，是圓內最長的直線 ✓"
+            ],
+            feedback: "答對了！在同一個圓裡，通過圓心的直徑是最長的一條線！"
+        },
+        {
+            q: 10,
+            stem: "如下圖，小圓半徑是 2 公分，大圓半徑剛好是小圓直徑。請問大圓的直徑是多少公分？",
+            options: ["8 公分", "4 公分", "6 公分", "10 公分"],
+            answer_index: 0,
+            visual_mode: "concentric_ratio_calc",
+            final_reveal: "小圓直徑 4cm＝大圓半徑，大圓直徑＝4×2＝8cm",
+            total_steps: 3,
+            explanations: [
+                "算小圓直徑：2 × 2 ＝ 4 公分",
+                "大圓半徑等於小圓直徑：大圓半徑 ＝ 4 公分",
+                "算大圓直徑：4 × 2 ＝ 8 公分 ✓"
+            ],
+            feedback: "答對了！小圓直徑 4 公分即為大圓半徑，大圓直徑＝4×2＝8 公分！"
+        }
+    ];
+
+    /* ===== 全局狀態管理 ===== */
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = null;
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function init() {
+        const qParam = parseInt(getQueryParam('q'), 10);
+        if (qParam >= 1 && qParam <= 10) currentQ = qParam;
+        renderQuestionUI();
+    }
+
+    function renderQuestionUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = 0;
+        selectedOption = null;
+
+        document.getElementById('questionBox').textContent = `Q${qData.q}. ${qData.stem}`;
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (0/${qData.total_steps})`;
+        document.getElementById('capText').textContent = "點擊「逐步算理」看圓形動態";
+        
+        const feedbackBox = document.getElementById('feedbackBox');
+        feedbackBox.className = 'feedback';
+        feedbackBox.textContent = '';
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = '';
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+
+        drawVisual();
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = (currentStep + 1) % (qData.total_steps + 1);
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        
+        if (currentStep === 0) {
+            document.getElementById('capText').textContent = "點擊「逐步算理」看圓形動態";
+        } else {
+            document.getElementById('capText').textContent = qData.explanations[currentStep - 1];
+        }
+        drawVisual();
+    }
+
+    function checkAnswer() {
+        const qData = QUESTIONS[currentQ - 1];
+        const feedbackBox = document.getElementById('feedbackBox');
+        if (selectedOption === null) {
+            feedbackBox.className = 'feedback show wrong';
+            feedbackBox.textContent = '請先選擇一個答案！';
+            return;
+        }
+
+        if (selectedOption === qData.answer_index) {
+            feedbackBox.className = 'feedback show correct';
+            feedbackBox.textContent = `🎉 ${qData.feedback}`;
+            currentStep = qData.total_steps;
+            document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+            document.getElementById('capText').textContent = `✅ 正解鎖定：${qData.final_reveal}`;
+            drawVisual();
+        } else {
+            feedbackBox.className = 'feedback show wrong';
+            feedbackBox.textContent = '再想一想，點擊「逐步算理」觀察圓的半徑與直徑關係喔！';
+        }
+    }
+
+    /* ===== 034 擬物幾何 SVG 繪製核心 ===== */
+    function resetView() {
+        return `<defs>
+            <radialGradient id="gradCircle" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="85%" stop-color="#eff6ff"/>
+                <stop offset="100%" stop-color="#dbeafe"/>
+            </radialGradient>
+            <radialGradient id="gradPizza" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fef08a"/>
+                <stop offset="85%" stop-color="#fde047"/>
+                <stop offset="100%" stop-color="#ca8a04"/>
+            </radialGradient>
+            <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+            </filter>
+        </defs>`;
+    }
+
+    function drawVisual() {
+        switch (currentQ) {
+            case 1: renderCircleConcepts(); break;
+            case 2: renderRadiusDefinition(); break;
+            case 3: renderRopeSpinCircle(); break;
+            case 4: renderPizzaCompare(); break;
+            case 5: renderCompassOpenRadius(); break;
+            case 6: renderCompassCalcDiameter(); break;
+            case 7: renderNestedCirclesRatio(); break;
+            case 8: renderFourCirclesSort(); break;
+            case 9: renderLongestChordDiameter(); break;
+            case 10: renderConcentricRatioCalc(); break;
+            default: renderCircleConcepts(); break;
+        }
+    }
+
+    /* ===== Q1: 圓特徵概念（半徑是直徑的2倍是錯的） ===== */
+    function renderCircleConcepts() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 主圓 (R=48, Center 120, 75)
+        svg += `<circle cx="120" cy="75" r="48" fill="url(#gradCircle)" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>`;
+        svg += `<circle cx="120" cy="75" r="4" fill="#ef4444"/>`;
+        svg += `<text x="120" y="70" text-anchor="middle" font-size="8.5" fill="#ef4444" font-weight="bold">圓心</text>`;
+
+        // 直徑 (橫跨兩端)
+        svg += `<line x1="72" y1="75" x2="168" y2="75" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="3 2"/>`;
+        svg += `<text x="96" y="90" text-anchor="middle" font-size="9" fill="#0284c7" font-weight="bold">半徑 r</text>`;
+        svg += `<text x="144" y="90" text-anchor="middle" font-size="9" fill="#0284c7" font-weight="bold">半徑 r</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="24" text-anchor="middle" class="place-label" style="fill:#2563eb">直徑 ＝ 2 個半徑 (直徑＝半徑×2)</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="112" text-anchor="middle" class="expr-red" style="font-size:11.5px">半徑是直徑的一半！(非2倍)</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#ffebee" stroke="#ef4444" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-red" style="font-size:12px">❌ 錯誤：「半徑是直徑的 2 倍」</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q2: 圓周上一點與圓心相連＝半徑 ===== */
+    function renderRadiusDefinition() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<circle cx="120" cy="75" r="48" fill="url(#gradCircle)" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>`;
+        svg += `<circle cx="120" cy="75" r="4" fill="#ef4444"/>`;
+        svg += `<text x="110" y="72" font-size="9" fill="#ef4444" font-weight="bold">圓心 O</text>`;
+
+        // 圓周上的點 P (例如在角度 45度: 120 + 48*0.707 = 154, 75 - 48*0.707 = 41)
+        const px = 154, py = 41;
+        svg += `<circle cx="${px}" cy="${py}" r="4" fill="#059669"/>`;
+        svg += `<text x="${px + 6}" y="${py - 2}" font-size="9" fill="#059669" font-weight="bold">圓周點 P</text>`;
+
+        // 連接線 OP
+        svg += `<line x1="120" y1="75" x2="${px}" y2="${py}" stroke="#059669" stroke-width="2.5"/>`;
+        svg += `<text x="135" y="52" font-size="10" fill="#047857" font-weight="bold">半徑</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="24" text-anchor="middle" class="place-label" style="fill:#047857">外圍封閉曲線 ＝ 圓周</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="115" text-anchor="middle" class="place-label">圓心到圓周上任一點距離皆等長</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">此線段稱為「半徑」✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q3: 長 10cm 繩子繞圓心畫圓直徑 20cm ===== */
+    function renderRopeSpinCircle() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<circle cx="120" cy="75" r="46" fill="url(#gradCircle)" stroke="#f97316" stroke-width="1.8" stroke-dasharray="4 2"/>`;
+        svg += `<circle cx="120" cy="75" r="4.5" fill="#ef4444"/>`;
+
+        // 繩子
+        svg += `<line x1="120" y1="75" x2="166" y2="75" stroke="#ea580c" stroke-width="3" stroke-linecap="round"/>`;
+        svg += `<circle cx="166" cy="75" r="4" fill="#ea580c"/>`;
+        svg += `<text x="143" y="68" text-anchor="middle" font-size="9" fill="#c2410c" font-weight="bold">繩長 10cm (半徑)</text>`;
+
+        // 直徑對應延伸
+        if (currentStep >= 1) {
+            svg += `<line x1="74" y1="75" x2="120" y2="75" stroke="#94a3b8" stroke-width="2" stroke-dasharray="2 2"/>`;
+            svg += `<text x="97" y="68" text-anchor="middle" font-size="8.5" fill="#64748b">10cm</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="112" text-anchor="middle" class="expr-coral" style="font-size:11.5px">直徑 ＝ 10 ＋ 10 ＝ 20 公分</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">畫出圓直徑 ＝ 20 公分 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q4: 媽媽半徑 6cm vs 哥哥直徑 10cm 披薩 ===== */
+    function renderPizzaCompare() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 媽媽披薩 (半徑 6 -> R=42, 直徑 12)
+        svg += `<circle cx="68" cy="70" r="40" fill="url(#gradPizza)" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>`;
+        svg += `<circle cx="68" cy="70" r="3" fill="#b45309"/>`;
+        svg += `<line x1="28" y1="70" x2="108" y2="70" stroke="#b45309" stroke-width="1.5" stroke-dasharray="2 2"/>`;
+        svg += `<text x="68" y="62" text-anchor="middle" font-size="9" fill="#92400e" font-weight="bold">直徑 12cm</text>`;
+        svg += `<text x="68" y="118" text-anchor="middle" font-size="10.5" fill="#92400e" font-weight="bold">媽媽披薩 (半徑6cm)</text>`;
+
+        // 哥哥披薩 (直徑 10 -> R=33)
+        svg += `<circle cx="172" cy="70" r="33" fill="#fed7aa" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>`;
+        svg += `<circle cx="172" cy="70" r="3" fill="#c2410c"/>`;
+        svg += `<line x1="139" y1="70" x2="205" y2="70" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="2 2"/>`;
+        svg += `<text x="172" y="62" text-anchor="middle" font-size="9" fill="#9a3412" font-weight="bold">直徑 10cm</text>`;
+        svg += `<text x="172" y="118" text-anchor="middle" font-size="10.5" fill="#9a3412" font-weight="bold">哥哥披薩 (直徑10cm)</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="24" text-anchor="middle" class="place-label" style="fill:#b45309">媽媽直徑 ＝ 6 × 2 ＝ 12 公分</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="75" text-anchor="middle" class="expr-coral" style="font-size:18px">＞</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">媽媽做的披薩比較大 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q5: 畫直徑 12cm 的圓，圓規打開 6cm ===== */
+    function renderCompassOpenRadius() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 量尺背景
+        svg += `<rect x="30" y="90" width="180" height="24" rx="3" fill="#fef08a" stroke="#ca8a04" stroke-width="1.2"/>`;
+        for (let i = 0; i <= 12; i++) {
+            const rx = 40 + i * 13;
+            svg += `<line x1="${rx}" y1="90" x2="${rx}" y2="${i%5===0?104:98}" stroke="#713f12" stroke-width="1"/>`;
+            if (i % 2 === 0) svg += `<text x="${rx}" y="110" text-anchor="middle" font-size="7.5" fill="#713f12">${i}</text>`;
+        }
+
+        // 金屬圓規兩腳 (尖端在 40, 鉛筆在 40 + 6*13 = 118)
+        const x1 = 40, x2 = 118;
+        const topX = (x1 + x2) / 2, topY = 32;
+        svg += `<circle cx="${topX}" cy="${topY}" r="6" fill="#64748b"/>`;
+        svg += `<line x1="${topX}" y1="${topY}" x2="${x1}" y2="90" stroke="#475569" stroke-width="3" stroke-linecap="round"/>`;
+        svg += `<line x1="${topX}" y1="${topY}" x2="${x2}" y2="90" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>`;
+        svg += `<polygon points="${x1},90 ${x1-2},84 ${x1+2},84" fill="#0f172a"/>`;
+        svg += `<polygon points="${x2},90 ${x2-2},84 ${x2+2},84" fill="#2563eb"/>`;
+
+        svg += `<text x="${topX}" y="${topY - 10}" text-anchor="middle" font-size="10" fill="#2563eb" font-weight="bold">兩腳開度 ＝ 6 cm</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="22" text-anchor="middle" class="place-label">圓規開度 ＝ 圓的半徑</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="122" text-anchor="middle" class="expr-coral" style="font-size:11px">半徑 ＝ 12 ÷ 2 ＝ 6 公分</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="128" width="190" height="30" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="148" text-anchor="middle" class="expr-mint" style="font-size:13px">圓規要打開 6 公分 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q6: 圓規張開 6cm，直徑＝12cm ===== */
+    function renderCompassCalcDiameter() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<circle cx="120" cy="72" r="46" fill="url(#gradCircle)" stroke="#2563eb" stroke-width="2"/>`;
+        svg += `<circle cx="120" cy="72" r="4" fill="#ef4444"/>`;
+
+        // 半徑 (圓規開度 6cm)
+        svg += `<line x1="120" y1="72" x2="166" y2="72" stroke="#2563eb" stroke-width="2.5"/>`;
+        svg += `<text x="143" y="65" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="bold">半徑 6cm</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<line x1="74" y1="72" x2="120" y2="72" stroke="#2563eb" stroke-width="2" stroke-dasharray="2 2"/>`;
+            svg += `<text x="97" y="65" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="bold">6cm</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="108" text-anchor="middle" class="expr-coral" style="font-size:12px">直徑 ＝ 6 × 2 ＝ 12 公分</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">圓的直徑 ＝ 12 公分 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q7: 甲圓半徑3 其直徑是乙半徑 求乙直徑 12cm ===== */
+    function renderNestedCirclesRatio() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 乙圓大圓 (R=48)
+        svg += `<circle cx="120" cy="75" r="48" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>`;
+        svg += `<circle cx="120" cy="75" r="3" fill="#16a34a"/>`;
+
+        // 甲圓小圓 (半徑3cm -> 畫在乙圓左側半徑上，R=24)
+        svg += `<circle cx="96" cy="75" r="24" fill="#fff7ed" stroke="#f97316" stroke-width="1.8"/>`;
+        svg += `<circle cx="96" cy="75" r="2.5" fill="#f97316"/>`;
+
+        svg += `<text x="96" y="70" text-anchor="middle" font-size="8" fill="#ea580c" font-weight="bold">甲直徑 6cm</text>`;
+        svg += `<text x="144" y="70" text-anchor="middle" font-size="8" fill="#15803d" font-weight="bold">乙半徑 6cm</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="22" text-anchor="middle" class="place-label" style="fill:#ea580c">甲半徑 3cm → 甲直徑 ＝ 6cm</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="112" text-anchor="middle" class="place-label" style="fill:#16a34a">乙半徑 ＝ 6cm → 乙直徑 ＝ 6 × 2 ＝ 12cm</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">乙圓直徑長度 ＝ 12 公分 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q8: 四個圓大小排序 (甲24 > 丁12 > 乙10 > 丙8) ===== */
+    function renderFourCirclesSort() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 四個同軸排列圓
+        const circles = [
+            { id: "甲", r: 48, stroke: "#3b82f6", d: "24cm" },
+            { id: "丁", r: 36, stroke: "#8b5cf6", d: "12cm" },
+            { id: "乙", r: 26, stroke: "#06b6d4", d: "10cm" },
+            { id: "丙", r: 16, stroke: "#f59e0b", d: "8cm" }
+        ];
+
+        circles.forEach(c => {
+            svg += `<circle cx="120" cy="70" r="${c.r}" fill="none" stroke="${c.stroke}" stroke-width="1.8"/>`;
+            svg += `<text x="${120 + c.r - 4}" y="65" font-size="8.5" fill="${c.stroke}" font-weight="bold">${c.id}</text>`;
+        });
+        svg += `<circle cx="120" cy="70" r="3" fill="#64748b"/>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="20" text-anchor="middle" class="place-label">統一直徑：甲24、丁12、乙10、丙8</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="120" text-anchor="middle" class="expr-coral" style="font-size:11px">甲(24) ＞ 丁(12) ＞ 乙(10) ＞ 丙(8)</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="128" width="190" height="30" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="148" text-anchor="middle" class="expr-mint" style="font-size:13px">甲 ＞ 丁 ＞ 乙 ＞ 丙 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q9: 圓內最長的直線是直徑 ===== */
+    function renderLongestChordDiameter() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        svg += `<circle cx="120" cy="72" r="48" fill="url(#gradCircle)" stroke="#475569" stroke-width="2"/>`;
+        svg += `<circle cx="120" cy="72" r="3.5" fill="#ef4444"/>`;
+
+        // 偏弦 (短)
+        svg += `<line x1="85" y1="38" x2="155" y2="38" stroke="#94a3b8" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="34" text-anchor="middle" font-size="7.5" fill="#64748b">普通弦 (較短)</text>`;
+
+        // 直徑 (最長)
+        svg += `<line x1="72" y1="72" x2="168" y2="72" stroke="#ef4444" stroke-width="2.5"/>`;
+        svg += `<text x="120" y="66" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="bold">通過圓心的直徑 (最長)</text>`;
+
+        // 半徑
+        svg += `<line x1="120" y1="72" x2="154" y2="106" stroke="#0ea5e9" stroke-width="1.8"/>`;
+        svg += `<text x="145" y="98" font-size="7.5" fill="#0284c7">半徑</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="18" text-anchor="middle" class="place-label">兩端在圓周且通過圓心</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="116" text-anchor="middle" class="expr-red" style="font-size:11.5px">直徑是圓內最長的直線</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">通過圓心的直徑最長 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q10: 嵌套相切圓 大圓直徑 8cm ===== */
+    function renderConcentricRatioCalc() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 大圓 (R=48, Center 120, 75)
+        svg += `<circle cx="120" cy="75" r="48" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8"/>`;
+        svg += `<circle cx="120" cy="75" r="3" fill="#1d4ed8"/>`;
+        svg += `<text x="120" y="70" text-anchor="middle" font-size="8" fill="#1d4ed8">大圓心</text>`;
+
+        // 小圓 (半徑2cm -> 直徑4cm，剛好貼在大圓半徑上，R=24，圓心 144, 75)
+        svg += `<circle cx="144" cy="75" r="24" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>`;
+        svg += `<circle cx="144" cy="75" r="2.5" fill="#b45309"/>`;
+
+        svg += `<text x="144" y="92" text-anchor="middle" font-size="7.5" fill="#b45309">小圓直徑 4cm</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="20" text-anchor="middle" class="place-label" style="fill:#b45309">小圓半徑 2cm → 小圓直徑 ＝ 4cm</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="114" text-anchor="middle" class="place-label" style="fill:#1d4ed8">大圓半徑 ＝ 4cm → 大圓直徑 ＝ 4 × 2 ＝ 8cm</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">大圓的直徑 ＝ 8 公分 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

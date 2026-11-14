@@ -1,0 +1,278 @@
+{
+  "code": "S-3-3",
+  "title": "圓",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 112-2/113-2/114-2 期末 ＋ 高雄市永安國小 114-2 期中段考真題（圓特徵概念/圓部位定義/繩子繞圓心/披薩比大小/圓規半徑換算/圓規求直徑/甲乙圓倍數/四圓混合排序/圓內最長直線/大小圓直徑推理）",
+  "questions": [
+    {
+      "id": "G3-S-3-3-Q01",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "一、選擇題",
+      "question_num": 2,
+      "title": "特徵概念：下列有關圓的敘述何者錯誤",
+      "stem": "下列有關「圓」的敘述何者錯誤？",
+      "choices": [
+        "直徑有無限多條",
+        "半徑是直徑的 2 倍",
+        "直徑是圓內最長的直線",
+        "半徑越小，畫的圓越小"
+      ],
+      "answer_index": 1,
+      "answer_raw": "半徑是直徑的 2 倍",
+      "visual_mode": "circle_concepts",
+      "final_check": "直徑是半徑的2倍 (半徑是直徑的一半)",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "圓的基本特徵與直徑半徑關係",
+        "steps": [
+          "同一個圓中，通過圓心且兩端在圓周上的直線叫做直徑，直徑有無限多條",
+          "直徑是圓內最長的一條線段，且「直徑是半徑的 2 倍」",
+          "因此「半徑是直徑的 2 倍」是錯誤的敘述，半徑應該是直徑的「一半」✓"
+        ],
+        "trap": "將「直徑是半徑的 2 倍」與「半徑是直徑的 2 倍」搞混；直徑比半徑長，直徑＝半徑×2。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q02",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "三、填入答案",
+      "question_num": 4,
+      "title": "部位定義：圓周上一點與圓心相連的線段名稱",
+      "stem": "將圓周上任何一點與圓心相連，所形成的線段稱為圓的什麼？",
+      "choices": ["半徑", "直徑", "圓周", "圓心"],
+      "answer_index": 0,
+      "answer_raw": "半徑",
+      "visual_mode": "radius_definition",
+      "final_check": "圓心到圓周任一點的距離叫做半徑",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "圓的幾何部位精確定義",
+        "steps": [
+          "圓的最外圍封閉曲線叫做「圓周」",
+          "圓正中間的固定點叫做「圓心」",
+          "從圓心連接到圓周上任意一點的線段，叫做「半徑」✓"
+        ],
+        "trap": "容易把「半徑」與「直徑」混淆；通過圓心且連接圓周兩端的完整線段才是直徑，從圓心到圓周的一半線段是半徑。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q03",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "一、選擇題",
+      "question_num": 3,
+      "title": "繩子旋轉：長 10 公分繩子繞圓心畫圓的直徑",
+      "stem": "阿明拿一條長 10 公分的繩子，固定繩子的一邊為圓心，繩子的另一邊繞著圓心旋轉畫一個圓，畫出來的圓直徑是多少公分？",
+      "choices": ["20 公分", "10 公分", "5 公分", "15 公分"],
+      "answer_index": 0,
+      "answer_raw": "20 公分",
+      "visual_mode": "rope_spin_circle",
+      "final_check": "繩長10cm為半徑，直徑＝10×2＝20cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "以定點為圓心、定長為半徑的圓形成原理",
+        "steps": [
+          "繩子一端固定為圓心，另一端旋轉一圈：繩子的長度就是圓的「半徑」（半徑 ＝ 10 公分）",
+          "題目詢問的是「直徑」：同一個圓中，直徑是半徑的 2 倍",
+          "計算直徑：10 × 2 ＝ 20 公分 ✓"
+        ],
+        "trap": "直接把繩長 10 公分當成直徑；繩子只是從圓心到圓周的半徑，直徑必須乘以 2。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q04",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "生活比較：半徑 6 公分與直徑 10 公分的披薩大小",
+      "stem": "媽媽做了一個半徑 6 公分的圓形披薩，哥哥做了一個直徑 10 公分的圓形披薩，哪一個人做的披薩比較大？",
+      "choices": ["媽媽", "哥哥", "一樣大", "不能比較"],
+      "answer_index": 0,
+      "answer_raw": "媽媽",
+      "visual_mode": "pizza_compare",
+      "final_check": "媽媽直徑12cm ＞ 哥哥直徑10cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "不同單位指標（半徑 vs 直徑）下的圓大小比較",
+        "steps": [
+          "統一比較標準（轉換為直徑）：",
+          "媽媽的披薩半徑 6 公分 → 直徑 ＝ 6 × 2 ＝ 12 公分",
+          "哥哥的披薩直徑 10 公分",
+          "比較直徑：12 公分 ＞ 10 公分，所以媽媽做的披薩比較大 ✓"
+        ],
+        "trap": "只看數字 10 比 6 大就誤選哥哥；必須先將半徑與直徑統一換算成同一個標準才能比較。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q05",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "二、填填看",
+      "question_num": 4,
+      "title": "圓規操作：畫直徑 12 公分的圓，圓規要打開幾公分",
+      "stem": "畫一個直徑 12 公分的圓，圓規兩腳要打開多少公分？",
+      "choices": ["6 公分", "12 公分", "24 公分", "3 公分"],
+      "answer_index": 0,
+      "answer_raw": "6 公分",
+      "visual_mode": "compass_open_radius",
+      "final_check": "圓規打開距離＝半徑＝12÷2＝6cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "圓規畫圓原理與兩腳開度",
+        "steps": [
+          "圓規有針尖的一腳固定在圓心，鉛筆腳在圓周上旋轉",
+          "兩腳之間的開度即為「圓心到圓周的距離」，也就是「半徑」",
+          "已知直徑為 12 公分，半徑 ＝ 12 ÷ 2 ＝ 6 公分，所以圓規要打開 6 公分 ✓"
+        ],
+        "trap": "直覺把直徑 12 公分當作圓規開度；圓規開度等於半徑，不是直徑。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q06",
+      "exam_source": "高雄市永安國小 114-2 期中",
+      "section": "二、選擇題",
+      "question_num": 8,
+      "title": "圓規逆推：圓規兩腳張開 6 公分畫出的直徑",
+      "stem": "若將圓規兩腳張開 6 公分，畫出一個圓，這個圓的直徑會是幾公分？",
+      "choices": ["12 公分", "6 公分", "3 公分", "18 公分"],
+      "answer_index": 0,
+      "answer_raw": "12 公分",
+      "visual_mode": "compass_calc_diameter",
+      "final_check": "半徑6cm，直徑＝6×2＝12cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "由圓規張開長度逆推圓之直徑",
+        "steps": [
+          "圓規兩腳張開 6 公分，代表畫出來的圓「半徑 ＝ 6 公分」",
+          "同一個圓中，直徑長度為半徑的 2 倍",
+          "計算直徑：6 × 2 ＝ 12 公分 ✓"
+        ],
+        "trap": "容易把圓規開度 6 公分直接當成直徑 6 公分；圓規開度是半徑，直徑要乘以 2。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q07",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "倍數關係：甲圓半徑3公分其直徑是乙圓半徑求乙直徑",
+      "stem": "甲圓的半徑是 3 公分，它的直徑剛好是乙圓的半徑，所以乙圓的直徑長度是多少公分？",
+      "choices": ["12 公分", "6 公分", "9 公分", "3 公分"],
+      "answer_index": 0,
+      "answer_raw": "12 公分",
+      "visual_mode": "nested_circles_ratio",
+      "final_check": "甲直徑6cm＝乙半徑，乙直徑＝6×2＝12cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "兩圓直徑與半徑的傳遞推導",
+        "steps": [
+          "第一步：先算甲圓的直徑 ＝ 3 × 2 ＝ 6 公分",
+          "第二步：依題目條件，甲圓直徑就是乙圓的半徑，因此乙圓半徑 ＝ 6 公分",
+          "第三步：計算乙圓的直徑 ＝ 6 × 2 ＝ 12 公分 ✓"
+        ],
+        "trap": "算到甲圓直徑 6 公分就以為是答案；題目問的是「乙圓的直徑」，要再乘一次 2。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q08",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "二、填填看",
+      "question_num": 12,
+      "title": "大小排序：四個圓半徑與直徑由大到小排列",
+      "stem": "甲：半徑 12 公分的圓、乙：直徑 10 公分的圓、丙：直徑 8 公分的圓、丁：半徑 6 公分的圓。將這四個圓由大到小排列，順序為何？",
+      "choices": [
+        "甲 ＞ 丁 ＞ 乙 ＞ 丙",
+        "甲 ＞ 乙 ＞ 丙 ＞ 丁",
+        "丁 ＞ 甲 ＞ 乙 ＞ 丙",
+        "甲 ＞ 乙 ＞ 丁 ＞ 丙"
+      ],
+      "answer_index": 0,
+      "answer_raw": "甲 ＞ 丁 ＞ 乙 ＞ 丙",
+      "visual_mode": "four_circles_sort",
+      "final_check": "直徑：甲24cm ＞ 丁12cm ＞ 乙10cm ＞ 丙8cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "混合半徑與直徑的多元圓形尺度排序",
+        "steps": [
+          "將四個圓的尺寸全部換算為「直徑」來統一比較：",
+          "甲：半徑 12 cm → 直徑 ＝ 24 cm",
+          "乙：直徑 ＝ 10 cm",
+          "丙：直徑 ＝ 8 cm",
+          "丁：半徑 6 cm → 直徑 ＝ 12 cm",
+          "直徑由大到小：24 cm (甲) ＞ 12 cm (丁) ＞ 10 cm (乙) ＞ 8 cm (丙) ✓"
+        ],
+        "trap": "如果不換算直接看數字，會把 10 (乙) 誤認比 6 (丁) 大，導致排錯；丁的直徑是 12，比乙的 10 還大！"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q09",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "一、選擇題",
+      "question_num": 4,
+      "title": "圓內線段：在同一個圓中哪一條直線是最長的",
+      "stem": "在同一個圓中，下列哪一條直線是最長的？",
+      "choices": [
+        "通過圓心的直徑",
+        "從圓心到圓周的半徑",
+        "沒通過圓心的圓內直線",
+        "以上直線一樣長"
+      ],
+      "answer_index": 0,
+      "answer_raw": "通過圓心的直徑",
+      "visual_mode": "longest_chord_diameter",
+      "final_check": "直徑是圓內最長的直線",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "圓內弦與直徑之長度特性",
+        "steps": [
+          "半徑是圓心到圓周的線段，長度只有直徑的一半",
+          "未通過圓心的圓內線段，兩端都在圓周上，但長度一定小於直徑",
+          "只有「通過圓心的直線（直徑）」兩端跨越圓的兩極，是圓內最長的一條線段 ✓"
+        ],
+        "trap": "誤以為圓內所有端點在圓周上的直線都一樣長；只有通過圓心的那條直徑才是最長的。"
+      }
+    },
+    {
+      "id": "G3-S-3-3-Q10",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "二、填填看",
+      "question_num": 7,
+      "title": "相切與嵌套：小圓半徑2公分且大圓半徑為小圓直徑求大圓直徑",
+      "stem": "如下圖，小圓半徑是 2 公分，大圓半徑剛好是小圓直徑。請問大圓的直徑是多少公分？",
+      "choices": ["8 公分", "4 公分", "6 公分", "10 公分"],
+      "answer_index": 0,
+      "answer_raw": "8 公分",
+      "visual_mode": "concentric_ratio_calc",
+      "final_check": "小圓直徑4cm＝大圓半徑，大圓直徑＝4×2＝8cm",
+      "component": "circle-lab",
+      "component_path": "components/circle_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "嵌套幾何圓形直徑半徑兩步驟推理",
+        "steps": [
+          "第一步：先求小圓直徑 ＝ 2 × 2 ＝ 4 公分",
+          "第二步：大圓半徑 ＝ 小圓直徑 ＝ 4 公分",
+          "第三步：大圓直徑 ＝ 大圓半徑 × 2 ＝ 4 × 2 ＝ 8 公分 ✓"
+        ],
+        "trap": "將大圓半徑 4 公分誤當成大圓直徑；求大圓直徑必須將大圓半徑再乘以 2。"
+      }
+    }
+  ]
+}
