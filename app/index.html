@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>小數學冒險 · 108 課綱一到六年級</title>
 <link rel="manifest" href="manifest.json">
 <script>
@@ -29,9 +29,18 @@
   --radius: 18px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html { height: 100%; }
+html {
+  height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
 body {
   min-height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
   background:
     radial-gradient(circle at 8% 4%, rgba(255, 209, 102, 0.18), transparent 34%),
     radial-gradient(circle at 94% 90%, rgba(123, 200, 178, 0.16), transparent 36%),
@@ -171,8 +180,17 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   background: var(--card); border-radius: var(--radius);
   box-shadow: var(--shadow); border: 1px solid var(--line);
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
-.stage-frame iframe { display: block; width: 100%; border: 0; }
+.stage-frame iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  box-sizing: border-box;
+}
 .stage-nav { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
 .stage-nav button {
   min-height: 44px; border-radius: 14px;

@@ -102,7 +102,13 @@
   1. 四套通用核心教具落地：`solid_shape_lab.html`（S-1-2 形體操作台）、`math_balance_scale.html`（R-1-1 等量天平）、`commutative_bead_bar.html`（R-1-2 雙色珠串翻轉板）、`tally_sorting_board.html`（D-1-1 正字計數分類板）。
   2. 單元題庫 SSOT 全數落盤：`S-1-2.json` (5題)、`R-1-1.json` (5題)、`R-1-2.json` (3題)、`D-1-1.json` (4題)、`S-1-1.json` (5題鏡像對齊 N-1-5)。
   3. 全量守門員測試全綠：`verify_s12.js`、`verify_r11_r12.js`、`verify_d11.js`、`verify_curriculum_131.js`、`verify_app_shell.js`、`ac_gate.js` 全部 Exit Code 0！
-- [ ] 下一步：開新對話框開啟二年級課綱條目推進（N-2-1 一千以內的數、N-2-2 二位數直式計算）。
+- [x] Session 24 回歸「教具先行（Visual-First）」最高憲法，三年級三大核心教具打樣 (v2 日系繪本擬物版) 100% 落地閉環：
+  1. 全域防溢出鎖死：在 `app/index.html` 鎖死 `html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }` 與 `user-scalable=no`，徹底根絕手機端「頁寬會動/左右飄移晃動」Bug。
+  2. 單元誠實下架：在 `data/curriculum.json` 將三年級 N-3-1、N-3-2 撤回 `upcoming`，堅決不推未打樣半成品。
+  3. 日系繪本擬物三大教具打樣落地 (`reports/g3_visual_samples_showcase.html` ＋ `app/g3_showcase.html`)：7 節自適應跳數小火車（360px~390px 滿版 100% 入屏、純 SVG 蒸氣火車頭、輪子、枕木、跳數拋物線弧線）、立體卡牌桌遊盤（最大 8720 與最小 2078 雙槽對照、千位避 0 警示、兩小題完整比較）、四艙位值收納台（翡翠綠千位箱、珊瑚紅百位板、雙 0 幽靈占位、滿十進千動畫）。
+  4. 手機寬度極致優化：消滅雙層 80px 冗餘 padding，緊湊 8px~10px 貼邊，單手膠囊滑動導航。
+  5. 機械化驗收全綠：`tools/verify_g3_showcase.js`（360px/390px 視口零溢出、全按鈕真實點擊）、`verify_curriculum_131.js`、`verify_app_shell.js` 全數 Exit Code 0！
+- [ ] 下一步：人類真機驗收 `app/g3_showcase.html`，合格後依照打樣規格將教具組件化並切片掛載 N-3-1 真題。
 
 
 ---

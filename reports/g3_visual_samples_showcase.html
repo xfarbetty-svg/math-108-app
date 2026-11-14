@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>G3 Visual Showcase</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --sky: #7db8e8;
+            --lilac: #b39ddb;
+            --text-dark: #333;
+            --text-light: #666;
+        }
+
+        html, body {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        body {
+            padding: 8px 10px;
+            max-width: 480px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            background: radial-gradient(circle at top left, rgba(255, 215, 175, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at bottom right, rgba(255, 190, 140, 0.2) 0%, transparent 50%);
+            min-height: 100vh; /* Ensure background gradient covers full height */
+        }
+
+        .container {
+            background-color: var(--card);
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(149, 117, 76, 0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--coral);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Pill Tabs Navigation */
+        .pill-tabs {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            background-color: var(--card);
+            border-radius: 50px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .pill-tabs button {
+            background-color: transparent;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1em;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pill-tabs button.active {
+            background-color: var(--mint);
+            color: white;
+            box-shadow: 0 4px 12px rgba(123, 201, 178, 0.4);
+            font-weight: bold;
+        }
+
+        .pill-tabs button:hover:not(.active) {
+            background-color: rgba(123, 201, 178, 0.1);
+            color: var(--mint);
+        }
+
+        .pill-tabs button:active {
+            transform: scale(0.95);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Mini Express Train */
+        .mini-express-train {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .train-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .train-controls button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--coral);
+            color: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 138, 101, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .train-controls button:hover {
+            background-color: #e67a5b;
+            transform: translateY(-2px);
+        }
+
+        .train-controls button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(255, 138, 101, 0.4);
+        }
+
+        .train-display {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 10px;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        .train-display::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .train-track {
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            padding-top: 20px;
+        }
+
+        .locomotive {
+            flex-shrink: 0;
+            width: 80px;
+            height: 60px;
+            position: relative;
+            margin-right: -10px; /* Overlap with first carriage */
+            z-index: 2;
+        }
+        .locomotive svg { width: 100%; height: 100%; }
+
+        .carriage-container {
+            display: flex;
+            flex-grow: 1;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+
+        .carriage {
+            flex: 1 1 0; /* Ensures all carriages fit */
+            min-width: 0;
+            height: 50px;
+            background-color: #a0522d; /* Sienna wood color */
+            border-radius: 10px;
+            margin-left: -5px; /* Overlap for connection */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.2);
+            border: 2px solid #8b4513; /* SaddleBrown border */
+        }
+        .carriage:first-child { margin-left: 0; }
+        .carriage-wheel {
+            position: absolute;
+            bottom: -8px;
+            width: 16px;
+            height: 16px;
+            background-color: #444;
+            border-radius: 50%;
+            border: 2px solid #222;
+            z-index: 3;
+        }
+        .carriage-wheel.left { left: 5px; }
+        .carriage-wheel.right { right: 5px; }
+        .carriage-coupler {
+            position: absolute;
+            right: -2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 4px;
+            background-color: #666;
+            border-radius: 2px;
+            z-index: 1;
+        }
+
+        .jump-arc-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+        }
+        .jump-arc-path {
+            fill: none;
+            stroke: var(--sky);
+            stroke-width: 3;
+            stroke-dasharray: 5,5;
+            animation: drawArc 1s forwards;
+        }
+        @keyframes drawArc {
+            from { stroke-dashoffset: 1000; }
+            to { stroke-dashoffset: 0; }
+        }
+        .jump-flag {
+            position: absolute;
+            top: -20px;
+            background-color: var(--lemon);
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: var(--text-dark);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            z-index: 5;
+        }
+
+        .explanation-card {
+            background-color: var(--lemon);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: 0 4px 12px rgba(255, 209, 102, 0.4);
+        }
+
+        /* Card Deck & Dual Comparator */
+        .card-deck-comparator {
+            margin-bottom: 30px;
+        }
+        .card-tray {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .card-item {
+            width: 50px;
+            height: 70px;
+            background-color: var(--card);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--text-dark);
+            border: 1px solid rgba(0,0,0,0.1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.3s ease;
+        }
+        .card-item::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            height: 5px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            border-radius: 5px 5px 0 0;
+            opacity: 0.7;
+        }
+        .card-item:active {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .comparator-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .comparator-slot-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .slot-label {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .slot-label.max { color: #d4af37; /* Gold */ }
+        .slot-label.min { color: #a6a6a6; /* Silver */ }
+
+        .card-slots {
+            display: flex;
+            gap: 5px;
+            background-color: #eee;
+            border-radius: 10px;
+            padding: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card-slot {
+            width: 50px;
+            height: 70px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #999;
+            background-color: rgba(255,255,255,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-slot.filled {
+            border: 2px solid var(--sky);
+            background-color: var(--card);
+            color: var(--text-dark);
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .card-slot.zero-alert::after {
+            content: "🚫";
+            position: absolute;
+            font-size: 2em;
+            animation: bounceIn 0.5s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            70% { transform: scale(0.8); }
+            100% { transform: scale(1); }
+        }
+
+        .comparison-area {
+            margin-top: 25px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .comparison-step-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        .comparison-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .comparison-number-item {
+            padding: 10px 15px;
+            background-color: var(--card);
+            border-radius: 10px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--text-dark);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .comparison-number-item.highlight-mint {
+            background-color: var(--mint);
+            color: white;
+            box-shadow: 0 4px 15px rgba(123, 201, 178, 0.5);
+        }
+        .comparison-number-item.highlight-gold {
+            background-color: #d4af37; /* Gold */
+            color: white;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5);
+        }
+        .comparison-number-item.strike-through {
+            text-decoration: line-through;
+            opacity: 0.5;
+            transform: scale(0.9);
+        }
+        .comparison-number-item.crown::before {
+            content: '👑';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+        }
+
+        .comparison-result {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--coral);
+        }
+
+        /* Place Value Vault */
+        .place-value-vault {
+            margin-bottom: 30px;
+        }
+        .vault-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            perspective: 1000px;
+        }
+        .vault-box {
+            width: 70px;
+            height: 90px;
+            border-radius: 10px;
+            background-color: rgba(255,255,255,0.8);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(10deg) rotateY(10deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.5s ease;
+        }
+        .vault-box.thousand { background-color: var(--mint); }
+        .vault-box.hundred { background-color: var(--coral); }
+        .vault-box.ten { background-color: var(--lemon); }
+        .vault-box.one { background-color: #cccccc; }
+
+        .vault-box-label {
+            position: absolute;
+            top: 5px;
+            font-size: 0.7em;
+            font-weight: normal;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .vault-box-value {
+            margin-top: 15px;
+        }
+        .vault-box.placeholder::after {
+            content: '0';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: rgba(255,255,255,0.4);
+            z-index: 0;
+            opacity: 0.6;
+        }
+        .vault-input {
+            margin-top: 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .vault-input input {
+            width: 60px;
+            padding: 8px 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .vault-input label {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-top: 5px;
+            display: block;
+        }
+
+        .vault-action button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            background-color: var(--sky);
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(125, 184, 232, 0.4);
+            transition: all 0.3s ease;
+        }
+        .vault-action button:hover {
+            background-color: #6daee0;
+            transform: translateY(-2px);
+        }
+        .vault-action button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(125, 184, 232, 0.5);
+        }
+
+        .vault-result {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--coral);
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .gold-nugget {
+            position: absolute;
+            background-color: gold;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: flyNugget 1s forwards;
+            z-index: 10;
+        }
+        @keyframes flyNugget {
+            from { transform: translate(0, 0) scale(1); opacity: 1; }
+            to { transform: translate(var(--dx), var(--dy)) scale(0.5); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="pill-tabs">
+        <button class="tab-button active" data-tab="train">🚂 小火車</button>
+        <button class="tab-button" data-tab="cards">🃏 卡牌比拼</button>
+        <button class="tab-button" data-tab="vault">📦 位值進位</button>
+    </div>
+
+    <div id="train" class="tab-content active container">
+        <h2>🚂 日系繪本跳數小火車</h2>
+        <div class="train-controls">
+            <button id="trainModeA">模式 A: +5 (495➔525)</button>
+            <button id="trainModeB">模式 B: +10 (1980➔2020)</button>
+            <button id="startTrain">發動跳數小火車 ▶</button>
+        </div>
+        <div class="train-display">
+            <div class="train-track">
+                <div class="locomotive">
+                    <svg viewBox="0 0 80 60">
+                        <path d="M5 30 L5 45 Q5 55 15 55 L70 55 Q75 55 75 45 L75 30 L65 30 L65 15 Q65 5 55 5 L25 5 Q15 5 15 15 L15 30 Z" fill="#ff6347" stroke="#b22222" stroke-width="2"></path>
+                        <rect x="18" y="10" width="10" height="15" rx="3" fill="#8b4513"></rect> <!-- Chimney Base -->
+                        <rect x="20" y="2" width="6" height="10" rx="3" fill="#8b4513"></rect> <!-- Chimney Top -->
+                        <circle cx="23" cy="-3" r="10" fill="white" opacity="0.8"></circle> <!-- Smoke puff -->
+                        <circle cx="28" cy="-8" r="7" fill="white" opacity="0.8"></circle>
+                        <circle cx="20" cy="-10" r="5" fill="white" opacity="0.8"></circle>
+                        <rect x="0" y="45" width="80" height="10" fill="#a0522d"></rect> <!-- Train Base -->
+                        <circle cx="18" cy="55" r="8" fill="#444"></circle>
+                        <circle cx="62" cy="55" r="8" fill="#444"></circle>
+                        <rect x="70" y="35" width="5" height="5" fill="#ffd700"></rect> <!-- Headlight -->
+                        <polygon points="75,37 75,42 80,42 80,37" fill="#666"></polygon> <!-- Coupler -->
+                    </svg>
+                </div>
+                <div class="carriage-container" id="trainCarriages">
+                    <!-- Carriages will be generated here by JS -->
+                </div>
+                <svg class="jump-arc-svg" id="jumpArcSVG"></svg>
+                <div id="jumpFlag" class="jump-flag" style="display:none;"></div>
+            </div>
+        </div>
+        <div id="trainExplanation" class="explanation-card" style="display:none;"></div>
+    </div>
+
+    <div id="cards" class="tab-content container">
+        <h2>🃏 立體卡牌桌遊盤</h2>
+        <div class="card-tray" id="cardTray">
+            <div class="card-item" data-value="0">0</div>
+            <div class="card-item" data-value="7">7</div>
+            <div class="card-item" data-value="2">2</div>
+            <div class="card-item" data-value="8">8</div>
+        </div>
+        <div class="comparator-slots">
+            <div class="comparator-slot-row">
+                <div class="slot-label max">🏆 最大四位數</div>
+                <div class="card-slots" id="maxNumberSlots">
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                </div>
+                <button id="arrangeMax" class="train-controls button" style="margin-top:15px; background-color: var(--mint);">排最大</button>
+                <div id="maxNumberHint" class="explanation-card" style="display:none; margin-top:15px;"></div>
+            </div>
+            <div class="comparator-slot-row">
+                <div class="slot-label min">🌱 最小四位數</div>
+                <div class="card-slots" id="minNumberSlots">
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                </div>
+                <button id="arrangeMin" class="train-controls button" style="margin-top:15px; background-color: var(--sky);">排最小</button>
+                <div id="minNumberHint" class="explanation-card" style="display:none; margin-top:15px;"></div>
+            </div>
+        </div>
+
+        <div class="comparison-area">
+            <div class="comparison-step-label">步驟 1: 兩數比大小 (4388 vs 4368)</div>
+            <div class="comparison-numbers" id="comparisonStep1">
+                <div class="comparison-number-item" data-value="4388">4388</div>
+                <div class="comparison-number-item" data-value="4368">4368</div>
+            </div>
+            <div class="comparison-result" id="comparisonResult1"></div>
+            <button id="compareStep1Btn" class="train-controls button" style="margin-top:15px; background-color: var(--lilac);">開始比大小</button>
+
+            <div class="comparison-step-label" style="margin-top:20px;">步驟 2: 三數比大小 (6008 vs 5999 vs 6100)</div>
+            <div class="comparison-numbers" id="comparisonStep2">
+                <div class="comparison-number-item" data-value="6008">6008</div>
+                <div class="comparison-number-item" data-value="5999">5999</div>
+                <div class="comparison-number-item" data-value="6100">6100</div>
+            </div>
+            <div class="comparison-result" id="comparisonResult2"></div>
+            <button id="compareStep2Btn" class="train-controls button" style="margin-top:15px; background-color: var(--lilac);">開始比大小</button>
+        </div>
+    </div>
+
+    <div id="vault" class="tab-content container">
+        <h2>📦 立體四艙位值與進位收納台</h2>
+        <div class="vault-display" id="vaultDisplay">
+            <div class="vault-box thousand" data-place="thousand"><span class="vault-box-label">千位</span><span class="vault-box-value">0</span></div>
+            <div class="vault-box hundred" data-place="hundred"><span class="vault-box-label">百位</span><span class="vault-box-value">0</span></div>
+            <div class="vault-box ten" data-place="ten"><span class="vault-box-label">十位</span><span class="vault-box-value">0</span></div>
+            <div class="vault-box one" data-place="one"><span class="vault-box-label">個位</span><span class="vault-box-value">0</span></div>
+        </div>
+        <div class="vault-input">
+            <div><input type="number" id="inputThousand" value="0"><label>千</label></div>
+            <div><input type="number" id="inputHundred" value="0"><label>百</label></div>
+            <div><input type="number" id="inputTen" value="0"><label>十</label></div>
+            <div><input type="number" id="inputOne" value="0"><label>一</label></div>
+        </div>
+        <div class="vault-action" style="text-align: center;">
+            <button id="demonstrateZeros">雙0占位演示 (5030, 8006)</button>
+            <button id="demonstrateCarry">滿十進千動畫 (8千14百7十3一)</button>
+        </div>
+        <div class="vault-result" id="vaultResult"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.pill-tabs .tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    button.classList.add('active');
+                    document.getElementById(button.dataset.tab).classList.add('active');
+                });
+            });
+
+            // Mini Express Train
+            const trainCarriages = document.getElementById('trainCarriages');
+            const trainExplanation = document.getElementById('trainExplanation');
+            const jumpArcSVG = document.getElementById('jumpArcSVG');
+            const jumpFlag = document.getElementById('jumpFlag');
+            const startTrainBtn = document.getElementById('startTrain');
+            const trainModeA = document.getElementById('trainModeA');
+            const trainModeB = document.getElementById('trainModeB');
+
+            let currentTrainMode = 'A'; // 'A' for +5 (495->525), 'B' for +10 (1980->2020)
+            let currentTrainValues = [];
+
+            function generateCarriages(startValue, count) {
+                trainCarriages.innerHTML = '';
+                currentTrainValues = [];
+                for (let i = 0; i < count; i++) {
+                    const value = startValue + i * (currentTrainMode === 'A' ? 5 : 10);
+                    currentTrainValues.push(value);
+                    const carriage = document.createElement('div');
+                    carriage.className = 'carriage';
+                    carriage.innerHTML = `<span>${value}</span><div class="carriage-wheel left"></div><div class="carriage-wheel right"></div>`;
+                    if (i < count - 1) {
+                        carriage.innerHTML += `<div class="carriage-coupler"></div>`;
+                    }
+                    trainCarriages.appendChild(carriage);
+                }
+            }
+
+            function setTrainMode(mode) {
+                currentTrainMode = mode;
+                if (mode === 'A') {
+                    generateCarriages(495, 7); // 495 -> 525 (7 carriages for +5)
+                    trainModeA.classList.add('active');
+                    trainModeB.classList.remove('active');
+                } else {
+                    generateCarriages(1980, 5); // 1980 -> 2020 (5 carriages for +10)
+                    trainModeB.classList.add('active');
+                    trainModeA.classList.remove('active');
+                }
+                jumpArcSVG.innerHTML = '';
+                jumpFlag.style.display = 'none';
+                trainExplanation.style.display = 'none';
+            }
+
+            trainModeA.addEventListener('click', () => setTrainMode('A'));
+            trainModeB.addEventListener('click', () => setTrainMode('B'));
+
+            startTrainBtn.addEventListener('click', () => {
+                jumpArcSVG.innerHTML = '';
+                trainExplanation.style.display = 'none';
+                jumpFlag.style.display = 'none';
+
+                if (currentTrainValues.length < 2) return;
+
+                const firstCarriage = trainCarriages.children[0];
+                const lastCarriage = trainCarriages.children[trainCarriages.children.length - 1];
+
+                const startX = firstCarriage.offsetLeft + firstCarriage.offsetWidth / 2;
+                const startY = firstCarriage.offsetTop;
+                const endX = lastCarriage.offsetLeft + lastCarriage.offsetWidth / 2;
+                const endY = lastCarriage.offsetTop;
+
+                const midX = (startX + endX) / 2;
+                const midY = startY - 50; // Arc height
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute('d', `M${startX},${startY} Q${midX},${midY} ${endX},${endY}`);
+                path.setAttribute('class', 'jump-arc-path');
+                jumpArcSVG.appendChild(path);
+
+                jumpFlag.style.left = `${midX - jumpFlag.offsetWidth / 2}px`;
+                jumpFlag.style.top = `${midY - 20}px`;
+                jumpFlag.textContent = currentTrainMode === 'A' ? '+5' : '+10';
+                jumpFlag.style.display = 'block';
+
+                const explanationText = currentTrainMode === 'A' ?
+                    '495 個位 5+5 滿十進一，十位 9+1 再滿十進一，連進兩位跨整百變 500！' :
+                    '1980 個位 0+0 不變，十位 8+1 變 9，百位 9+1 滿十進一，千位 1+1 變 2，變成 2020！';
+                trainExplanation.textContent = explanationText;
+                trainExplanation.style.display = 'block';
+            });
+
+            setTrainMode('A'); // Initialize with Mode A
+
+            // Card Deck & Dual Comparator
+            const cardTray = document.getElementById('cardTray');
+            const maxNumberSlots = document.getElementById('maxNumberSlots');
+            const minNumberSlots = document.getElementById('minNumberSlots');
+            const arrangeMaxBtn = document.getElementById('arrangeMax');
+            const arrangeMinBtn = document.getElementById('arrangeMin');
+            const maxNumberHint = document.getElementById('maxNumberHint');
+            const minNumberHint = document.getElementById('minNumberHint');
+
+            let availableCards = [0, 7, 2, 8]; // Initial cards
+
+            // Reset card tray
+            function resetCardTray() {
+                cardTray.innerHTML = '';
+                availableCards.sort((a, b) => a - b).forEach(value => {
+                    const card = document.createElement('div');
+                    card.className = 'card-item';
+                    card.dataset.value = value;
+                    card.textContent = value;
+                    cardTray.appendChild(card);
+                });
+            }
+
+            function clearSlots(slots) {
+                Array.from(slots.children).forEach(slot => {
+                    slot.textContent = '';
+                    slot.classList.remove('filled', 'zero-alert');
+                });
+            }
+
+            arrangeMaxBtn.addEventListener('click', () => {
+                clearSlots(maxNumberSlots);
+                maxNumberHint.style.display = 'none';
+                const sortedCards = [...availableCards].sort((a, b) => b - a); // Descending for max
+                sortedCards.forEach((value, index) => {
+                    const slot = maxNumberSlots.children[index];
+                    slot.textContent = value;
+                    slot.classList.add('filled');
+                });
+                maxNumberHint.textContent = `高位填最大數字 ➔ ${sortedCards.join('')}!`;
+                maxNumberHint.style.display = 'block';
+            });
+
+            arrangeMinBtn.addEventListener('click', () => {
+                clearSlots(minNumberSlots);
+                minNumberHint.style.display = 'none';
+                const sortedCards = [...availableCards].sort((a, b) => a - b); // Ascending for min
+                const finalArrangement = [];
+                let alertTriggered = false;
+
+                // Handle leading zero
+                if (sortedCards[0] === 0) {
+                    // Find the smallest non-zero number
+                    const smallestNonZeroIndex = sortedCards.findIndex(val => val !== 0);
+                    if (smallestNonZeroIndex !== -1) {
+                        const firstNonZero = sortedCards.splice(smallestNonZeroIndex, 1)[0];
+                        finalArrangement.push(firstNonZero);
+                        finalArrangement.push(0); // Place zero after the first non-zero
+                        finalArrangement.push(...sortedCards.filter(val => val !== 0)); // Add remaining non-zeros
+                    } else {
+                        // All zeros, just arrange them
+                        finalArrangement.push(...sortedCards);
+                    }
+                } else {
+                    finalArrangement.push(...sortedCards);
+                }
+
+                finalArrangement.forEach((value, index) => {
+                    const slot = minNumberSlots.children[index];
+                    slot.textContent = value;
+                    slot.classList.add('filled');
+                    if (index === 0 && value === 0) { // If after arrangement, first digit is 0, means an alert
+                         slot.classList.add('zero-alert');
+                         minNumberHint.textContent = '🚫 首位不能為 0!';
+                         minNumberHint.style.display = 'block';
+                         alertTriggered = true;
+                    }
+                });
+
+                if (!alertTriggered) {
+                    minNumberHint.textContent = `挑選非零最小數 ${finalArrangement[0]} 放入千位，排成 ${finalArrangement.join('')}!`;
+                    minNumberHint.style.display = 'block';
+                }
+            });
+
+
+            // Comparison Step 1
+            const comparisonStep1Div = document.getElementById('comparisonStep1');
+            const comparisonResult1 = document.getElementById('comparisonResult1');
+            const compareStep1Btn = document.getElementById('compareStep1Btn');
+
+            compareStep1Btn.addEventListener('click', () => {
+                const num1Element = comparisonStep1Div.children[0];
+                const num2Element = comparisonStep1Div.children[1];
+                const num1 = parseInt(num1Element.dataset.value);
+                const num2 = parseInt(num2Element.dataset.value);
+
+                num1Element.classList.remove('highlight-mint');
+                num2Element.classList.remove('highlight-mint');
+
+                if (num1 < num2) {
+                    num1Element.classList.add('highlight-mint');
+                    comparisonResult1.textContent = `${num1} 比較小！`;
+                } else if (num2 < num1) {
+                    num2Element.classList.add('highlight-mint');
+                    comparisonResult1.textContent = `${num2} 比較小！`;
+                } else {
+                    comparisonResult1.textContent = '兩數相等！';
+                }
+            });
+
+            // Comparison Step 2
+            const comparisonStep2Div = document.getElementById('comparisonStep2');
+            const comparisonResult2 = document.getElementById('comparisonResult2');
+            const compareStep2Btn = document.getElementById('compareStep2Btn');
+
+            compareStep2Btn.addEventListener('click', () => {
+                const numElements = Array.from(comparisonStep2Div.children);
+                let numbers = numElements.map(el => ({ value: parseInt(el.dataset.value), element: el }));
+
+                numElements.forEach(el => {
+                    el.classList.remove('strike-through', 'highlight-gold', 'crown');
+                });
+                comparisonResult2.textContent = '';
+
+                // Step 1: Filter out the smallest number
+                let smallestValue = numbers[0].value;
+                for (let i = 1; i < numbers.length; i++) {
+                    if (numbers[i].value < smallestValue) {
+                        smallestValue = numbers[i].value;
+                    }
+                }
+
+                numbers = numbers.filter(item => {
+                    if (item.value === smallestValue) {
+                        item.element.classList.add('strike-through');
+                        return false;
+                    }
+                    return true;
+                });
+
+                if (numbers.length === 1) {
+                    numbers[0].element.classList.add('highlight-gold', 'crown');
+                    comparisonResult2.textContent = `${numbers[0].value} 戴上金色皇冠！`;
+                } else if (numbers.length > 1) {
+                    // Step 2: Compare remaining numbers to find the largest
+                    let largestValue = numbers[0].value;
+                    let largestElement = numbers[0].element;
+
+                    for (let i = 1; i < numbers.length; i++) {
+                        if (numbers[i].value > largestValue) {
+                            largestValue = numbers[i].value;
+                            largestElement = numbers[i].element;
+                        }
+                    }
+                    largestElement.classList.add('highlight-gold', 'crown');
+                    comparisonResult2.textContent = `${largestValue} 戴上金色皇冠！`;
+                } else {
+                    comparisonResult2.textContent = '沒有數字可供比較！';
+                }
+            });
+
+            // Place Value Vault
+            const vaultDisplay = document.getElementById('vaultDisplay');
+            const vaultResult = document.getElementById('vaultResult');
+            const demonstrateZerosBtn = document.getElementById('demonstrateZeros');
+            const demonstrateCarryBtn = document.getElementById('demonstrateCarry');
+
+            const inputThousand = document.getElementById('inputThousand');
+            const inputHundred = document.getElementById('inputHundred');
+            const inputTen = document.getElementById('inputTen');
+            const inputOne = document.getElementById('inputOne');
+
+            function updateVaultDisplay(thousand, hundred, ten, one) {
+                const vaultBoxes = vaultDisplay.children;
+                vaultBoxes[0].querySelector('.vault-box-value').textContent = thousand;
+                vaultBoxes[1].querySelector('.vault-box-value').textContent = hundred;
+                vaultBoxes[2].querySelector('.vault-box-value').textContent = ten;
+                vaultBoxes[3].querySelector('.vault-box-value').textContent = one;
+
+                Array.from(vaultBoxes).forEach(box => box.classList.remove('placeholder'));
+
+                if (thousand === 0 && !vaultBoxes[0].classList.contains('placeholder')) vaultBoxes[0].classList.add('placeholder');
+                if (hundred === 0 && !vaultBoxes[1].classList.contains('placeholder')) vaultBoxes[1].classList.add('placeholder');
+                if (ten === 0 && !vaultBoxes[2].classList.contains('placeholder')) vaultBoxes[2].classList.add('placeholder');
+                if (one === 0 && !vaultBoxes[3].classList.contains('placeholder')) vaultBoxes[3].classList.add('placeholder');
+            }
+
+            demonstrateZerosBtn.addEventListener('click', () => {
+                vaultResult.textContent = '';
+                const numbers = [5030, 8006];
+                let currentNumberIndex = 0;
+
+                function showNumber() {
+                    if (currentNumberIndex < numbers.length) {
+                        const numStr = String(numbers[currentNumberIndex]).padStart(4, '0');
+                        updateVaultDisplay(
+                            parseInt(numStr[0]),
+                            parseInt(numStr[1]),
+                            parseInt(numStr[2]),
+                            parseInt(numStr[3])
+                        );
+                        vaultResult.textContent = `${numbers[currentNumberIndex]} 雙0占位`;
+                        currentNumberIndex++;
+                        setTimeout(showNumber, 2000); // Show next number after 2 seconds
+                    } else {
+                        // Reset to default after demonstration
+                        setTimeout(() => {
+                            updateVaultDisplay(0, 0, 0, 0);
+                            vaultResult.textContent = '';
+                        }, 1000);
+                    }
+                }
+                showNumber();
+            });
+
+            demonstrateCarryBtn.addEventListener('click', () => {
+                vaultResult.textContent = '';
+                let thousand = 8;
+                let hundred = 14;
+                let ten = 7;
+                let one = 3;
+
+                updateVaultDisplay(thousand, hundred, ten, one);
+                vaultResult.textContent = `${thousand}千 ${hundred}百 ${ten}十 ${one}一`;
+
+                setTimeout(() => {
+                    // Carry from ones to tens (not in this example, but for completeness)
+                    // ten += Math.floor(one / 10);
+                    // one %= 10;
+
+                    // Carry from tens to hundreds
+                    // hundred += Math.floor(ten / 10);
+                    // ten %= 10;
+
+                    // Carry from hundreds to thousands
+                    const hundredsToCarry = Math.floor(hundred / 10);
+                    if (hundredsToCarry > 0) {
+                        const hundredBox = vaultDisplay.children[1]; // Hundred box
+                        const thousandBox = vaultDisplay.children[0]; // Thousand box
+
+                        // Create gold nuggets animation
+                        for (let i = 0; i < hundredsToCarry; i++) {
+                            const nugget = document.createElement('div');
+                            nugget.className = 'gold-nugget';
+                            document.body.appendChild(nugget);
+
+                            const hundredRect = hundredBox.getBoundingClientRect();
+                            const thousandRect = thousandBox.getBoundingClientRect();
+
+                            nugget.style.left = `${hundredRect.left + hundredRect.width / 2}px`;
+                            nugget.style.top = `${hundredRect.top + hundredRect.height / 2}px`;
+
+                            // Calculate target position relative to current position
+                            const dx = (thousandRect.left + thousandRect.width / 2) - (hundredRect.left + hundredRect.width / 2);
+                            const dy = (thousandRect.top + thousandRect.height / 2) - (hundredRect.top + hundredRect.height / 2);
+
+                            nugget.style.setProperty('--dx', `${dx}px`);
+                            nugget.style.setProperty('--dy', `${dy}px`);
+
+                            nugget.addEventListener('animationend', () => {
+                                nugget.remove();
+                            });
+                        }
+
+                        thousand += hundredsToCarry;
+                        hundred %= 10;
+                    }
+
+                    setTimeout(() => {
+                        updateVaultDisplay(thousand, hundred, ten, one);
+                        vaultResult.textContent = `結算為 ${thousand}${hundred}${ten}${one}!`;
+                    }, 1000); // Wait for nugget animation to finish
+                }, 1500); // Initial delay
+            });
+
+            // Initial display for vault
+            updateVaultDisplay(0,0,0,0);
+        });
+    </script>
+</body>
+</html>
