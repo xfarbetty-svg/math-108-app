@@ -131,8 +131,7 @@ async function main() {
       });
       const s = snap.result.value;
       if (!s.qText || s.qText === '載入中...') fail(`Q${qn} 題幹未渲染`);
-      const minNodes = qn === 8 ? 3 : qn === 9 ? 1 : 5; // Q8 比大小初始 3 節點、Q9 估算初始 1 節點，其餘直式 ≥5
-      if (s.nodes < minNodes) fail(`Q${qn} 直式乘法 SVG 未渲染（節點數 ${s.nodes}）`);
+      if (s.nodes < 5) fail(`Q${qn} 教具 SVG 未渲染（節點數 ${s.nodes}）`);
       if (s.opts < 3) fail(`Q${qn} 選項按鈕不足（${s.opts} 個）`);
       if (s.overflowX) fail(`Q${qn} 390px 視口橫向溢出`);
       if (s.appH > 420) fail(`Q${qn} app 高度 ${s.appH}px 超過單屏上限 420px`);
@@ -161,17 +160,13 @@ async function main() {
         returnByValue: true
       });
       const fc = finalCheck.result.value;
-      const expected = q.answer_raw.replace(/[^0-9＝＞＜]/g, '');
+      const expected = q.final_check || q.answer_raw.replace(/[^0-9＝＞＜]/g, '');
       if (q.component_path.includes('multiplication_lab')) {
-        if (qn === 8) {
-          if (!fc.svg.includes('2000 ＝ 2000')) fail(`Q8 比大小最終演繹未揭示 2000 ＝ 2000`);
-        } else if (qn === 9) {
-          if (!fc.svg.includes('3000')) fail(`Q9 估算最終演繹未揭示 3000`);
-        } else {
-          for (const d of expected) {
-            if (!fc.svg.includes(d)) fail(`Q${qn} 最終積未完整揭示（缺 ${d}）`);
-          }
-        }
+        // 直式積為逐位獨立 <text> 節點：純數字須逐位檢核；其餘（單一文字標記）連續比對
+        const pass = /^[0-9]+$/.test(expected)
+          ? [...expected].every(d => fc.svg.includes(d))
+          : fc.svg.includes(expected);
+        if (!pass) fail(`Q${qn} 最終演繹未揭示關鍵結果（缺 ${expected}）`);
       }
       console.log(`PASS: Q${qn} 算理演繹 ${total.result.value} 步全揭示（進位氣泡：${fc.bubbles.length ? fc.bubbles.join(',') : '無'}）`);
 

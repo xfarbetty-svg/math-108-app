@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G3-N-3-3 乘以一位數直式教具</title>
+    <title>G3-N-3-3 乘以一位數多元題型教具</title>
     <style>
         :root {
             --bg: #fff9f0;
@@ -79,6 +79,7 @@
         }
         .digit { font-size: 23px; font-weight: 600; fill: var(--text-dark); font-family: 'Courier New', Courier, monospace; }
         .digit-reveal { font-size: 23px; font-weight: 600; fill: var(--mint); font-family: 'Courier New', Courier, monospace; }
+        .digit-wrong { font-size: 23px; font-weight: 600; fill: var(--error); font-family: 'Courier New', Courier, monospace; }
         .op { font-size: 21px; fill: var(--text-dark); }
         .grid-line { stroke: #e8ddcc; stroke-width: 1; stroke-dasharray: 2 3; }
         .hline { stroke: var(--text-dark); stroke-width: 2; stroke-linecap: round; }
@@ -169,16 +170,26 @@
 
 <script>
     const QUESTIONS = {
-        1:  { mode: 'calc', stem: '用直式算算看：53 × 2 ＝ ( ? )', a: '53', m: 2, product: '106', correct: '106', choices: ['106', '105', '112', '96'] },
-        2:  { mode: 'calc', stem: '用直式算算看：33 × 4 ＝ ( ? )', a: '33', m: 4, product: '132', correct: '132', choices: ['132', '128', '123', '92'] },
-        3:  { mode: 'calc', stem: '用直式算算看：84 × 6 ＝ ( ? )', a: '84', m: 6, product: '504', correct: '504', choices: ['504', '484', '514', '486'] },
-        4:  { mode: 'calc', stem: '用直式算算看：131 × 7 ＝ ( ? )', a: '131', m: 7, product: '917', correct: '917', choices: ['917', '907', '927', '971'] },
-        5:  { mode: 'calc', stem: '用直式算算看：309 × 3 ＝ ( ? )', a: '309', m: 3, product: '927', correct: '927', choices: ['927', '907', '977', '279'] },
-        6:  { mode: 'calc', stem: '用直式算算看：506 × 9 ＝ ( ? )', a: '506', m: 9, product: '4554', correct: '4554', choices: ['4554', '4545', '4514', '4584'] },
-        7:  { mode: 'calc', stem: '用直式算算看：125 × 8 ＝ ( ? )', a: '125', m: 8, product: '1000', correct: '1000', choices: ['1000', '960', '900', '1060'] },
-        8:  { mode: 'compare', stem: '在 □ 中填入 ＞、＜ 或 ＝：400 × 5 □ 500 × 4', correct: '＝', choices: ['＝', '＞', '＜'], caps: ['先算左邊：400 × 5 = 2000', '再算右邊：500 × 4 = 2000', '2000 ＝ 2000，所以 □ 填 ＝'] },
-        9:  { mode: 'estimate', stem: '495 × 6 的答案最接近下列哪一個數？', correct: '3000', choices: ['3000', '2400', '3600', '1800'], caps: ['估算：把 495 看成整百數 500', '用 500 × 6 = 3000 估算', '所以 495 × 6 最接近 3000'] },
-        10: { mode: 'calc', stem: '弟弟有 200 元，哥哥買一架飛機模型，花的錢是弟弟的 3 倍，哥哥花了多少元？', a: '200', m: 3, product: '600', correct: '600 元', choices: ['600 元', '203 元', '180 元', '630 元'] }
+        1:  { mode: 'pattern', stem: '觀察算式的規律：已知 9 × 7 ＝ 63，請問 900 × 7 ＝ ( ? )', correct: '6300', choices: ['6300', '630', '63000', '63'],
+              cards: ['9 × 7 = 63', '90 × 7 = 630', '900 × 7 = 6300'],
+              caps: ['規律起點：9 × 7 = 63（九九乘法基本題）', '被乘數 9 擴大 10 倍變 90，積也擴大 10 倍 → 630', '被乘數 9 擴大 100 倍變 900，積就擴大 100 倍 → 6300，尾巴補 2 個 0'] },
+        2:  { mode: 'bar', stem: '下面哪一個算式的答案最大？（動動腦：不用算出答案喔！）', correct: '99 × 6', choices: ['99 × 6', '98 × 6', '92 × 6', '84 × 6'],
+              rows: [['99 × 6', 99], ['98 × 6', 98], ['92 × 6', 92], ['84 × 6', 84]],
+              caps: ['四個算式的乘數都是 6，都是「6 個一數」', '乘數相同時，被乘數越大，積就越大', '99 最大 → 99 × 6 的答案最大，完全不用計算！'] },
+        3:  { mode: 'estimate', stem: '估算「29 × 5」，請選出最接近正確答案的選項：', correct: '150', choices: ['150', '100', '120', '130'],
+              caps: ['估算：把 29 看成最接近的整十數 30', '用 30 × 5 = 150 估算', '所以 29 × 5 最接近 150'] },
+        4:  { mode: 'debug', stem: '小明在直式計算 33 × 4 時，算出答案是 122，請問他哪裡算錯了？', correct: '十位忘記加個位進位的 1', choices: ['十位忘記加個位進位的 1', '個位 3×4 乘錯了', '十位 3×4 乘錯了', '百位少寫一個 1'],
+              caps: ['小明的答案 122：個位 2 對了，問題出在十位！', '個位：3 × 4 = 12，寫 2 進 1（小明這步沒錯）', '十位：3 × 4 ＋ 進位的 1 = 13，小明忘記加進位才寫成 12', '正解：33 × 4 = 132'] },
+        5:  { mode: 'calc', stem: '用直式算算看：309 × 3 ＝ ( ? )', a: '309', m: 3, product: '927', correct: '927', choices: ['927', '907', '972', '279'] },
+        6:  { mode: 'calc', stem: '用直式算算看：125 × 8 ＝ ( ? )', a: '125', m: 8, product: '1000', correct: '1000', choices: ['1000', '960', '900', '1060'] },
+        7:  { mode: 'calc', stem: '一箱運動飲料有 24 瓶，超商老闆進貨了 9 箱，一共有幾瓶運動飲料？', a: '24', m: 9, product: '216', correct: '216 瓶', choices: ['216 瓶', '206 瓶', '184 瓶', '225 瓶'],
+              iconMode: 'crate', iconCap: '貨架上 9 箱飲料，每箱 24 瓶 → 求 9 個 24，列式 24 × 9' },
+        8:  { mode: 'calc', stem: '一個精美鉛筆盒賣 95 元，老師買了 3 個當作期中考獎品，一共要付多少元？', a: '95', m: 3, product: '285', correct: '285 元', choices: ['285 元', '275 元', '295 元', '185 元'],
+              iconMode: 'shop', iconCap: '一個鉛筆盒 95 元，買 3 個 → 求 3 個 95，列式 95 × 3' },
+        9:  { mode: 'balance', stem: '在天平兩端放入算式，哪邊會比較重？在 □ 中填入正確符號：405 × 6 □ 405 × 7', correct: '＜', choices: ['＜', '＞', '＝'],
+              caps: ['天平左盤：405 × 6，就是 6 個 405', '天平右盤：405 × 7，就是 7 個 405', '右邊比左邊多 1 個 405 → 右盤下沉：405 × 6 ＜ 405 × 7'] },
+        10: { mode: 'calc', stem: '大雄的零用錢有 70 元，胖虎的零用錢是大雄的 3 倍，請問胖虎有多少元？', a: '70', m: 3, product: '210', correct: '210 元', choices: ['210 元', '73 元', '140 元', '270 元'],
+              iconMode: 'coins', iconCap: '「3 倍」就是 3 個 70，列式 70 × 3（不是 70 ＋ 3）' }
     };
 
     const PLACE_CN = ['個位', '十位', '百位', '千位'];
@@ -190,8 +201,41 @@
     let currentStep = 0;
     let selectedAns = null;
 
+    /* 逐位直式乘法步驟引擎：由個位往高位逐位演繹，自動生成步驟說明與進位氣泡 */
+    function computeSteps() {
+        const steps = [];
+        if (q.iconCap) steps.push({ type: 'icon', cap: q.iconCap });
+        const aDigits = q.a.split('');
+        let carry = 0;
+        for (let p = 0; p < q.product.length; p++) {
+            let digit, newCarry = 0, cap;
+            if (p < aDigits.length) {
+                const ad = Number(aDigits[aDigits.length - 1 - p]);
+                const val = ad * q.m + carry;
+                digit = val % 10;
+                newCarry = Math.floor(val / 10);
+                cap = `${PLACE_CN[p]}：${ad} × ${q.m} = ${val}`;
+                if (val >= 10) cap += `，寫 ${digit} 進 ${newCarry}`;
+            } else {
+                digit = carry;
+                cap = `把進位的 ${carry} 落下來`;
+            }
+            steps.push({ type: 'place', p, digit, carryOut: newCarry, cap, carryIn: carry });
+            carry = newCarry;
+        }
+        return steps;
+    }
+    const STEPS = q.mode === 'calc' ? computeSteps() : [];
+
     function totalSteps() {
-        return q.mode === 'calc' ? q.product.length : q.caps.length;
+        return q.mode === 'calc' ? STEPS.length : q.caps.length;
+    }
+
+    function setCap() {
+        const el = document.getElementById('stepCap');
+        if (currentStep === 0) { el.innerText = '按「一步一步看算理」開始演繹！'; return; }
+        if (q.mode === 'calc') el.innerText = STEPS[currentStep - 1].cap;
+        else el.innerText = q.caps[currentStep - 1];
     }
 
     function init() {
@@ -217,147 +261,245 @@
         });
     }
 
-    /* 逐位直式乘法引擎：由個位往高位逐位演繹，自動生成步驟說明與進位氣泡 */
-    function computeCalcSteps() {
-        const aDigits = q.a.split('');
-        const steps = [];
-        let carry = 0;
-        for (let s = 1; s <= totalSteps(); s++) {
-            const p = s - 1; // 位值：0=個位
-            let digit, newCarry = 0, cap;
-            if (p < aDigits.length) {
-                const ad = Number(aDigits[aDigits.length - 1 - p]);
-                const val = ad * q.m + carry;
-                digit = val % 10;
-                newCarry = Math.floor(val / 10);
-                cap = `${PLACE_CN[p]}：${ad} × ${q.m} = ${val}`;
-                if (val >= 10) cap += `，寫 ${digit} 進 ${newCarry}`;
-            } else {
-                digit = carry;
-                cap = `把進位的 ${carry} 落下來`;
-            }
-            steps.push({ p, digit, carryOut: newCarry, cap, carryIn: carry });
-            carry = newCarry;
+    /* ===== 模式 1：規律探索卡片鏈 ===== */
+    function renderPattern() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 160');
+        let svg = '';
+        q.cards.forEach((c, i) => {
+            const y = 14 + i * 38;
+            const shown = currentStep > i;
+            svg += `<rect x="30" y="${y}" width="180" height="30" rx="9" fill="${shown ? '#e8f7f1' : '#ffffff'}" stroke="${shown ? '#7bc9b2' : '#f0e6d8'}" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="${y + 21}" text-anchor="middle" class="${shown ? 'expr-reveal' : 'expr'}" style="font-size:16px">${c}</text>`;
+        });
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="152" text-anchor="middle" class="expr-coral" style="font-size:13px">積跟著擴大 100 倍 → 尾巴補 2 個 0</text>`;
         }
-        return steps;
+        layer.innerHTML = svg;
+        setCap();
     }
 
+    /* ===== 模式 2：乘數相同條形對比（免算比大小） ===== */
+    function renderBar() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 150');
+        let svg = '';
+        q.rows.forEach((r, i) => {
+            const y = 12 + i * 28;
+            svg += `<text x="8" y="${y + 15}" class="expr" style="font-size:12px">${r[0]}</text>`;
+            const w = Math.round((r[1] / 99) * 78);
+            svg += `<rect x="88" y="${y + 1}" width="${w}" height="18" rx="5" fill="${i === 0 ? '#ff8a65' : '#d8ccc0'}"/>`;
+            svg += `<text x="${88 + w + 5}" y="${y + 15}" class="place-label" style="font-size:9px">${r[1]}</text>`;
+        });
+        if (currentStep >= 1) {
+            svg += `<text x="120" y="132" text-anchor="middle" class="place-label" style="font-size:10px">乘數都是 6 →「6 個一數」</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="84" y="9" width="126" height="24" rx="7" fill="none" stroke="#ff8a65" stroke-width="2"/>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="120" y="147" text-anchor="middle" class="expr-coral" style="font-size:12px">99 最大 → 99 × 6 積最大！</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 3：數線估算尺 ===== */
+    function renderEstimate() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 150');
+        let svg = '';
+        const x = v => 20 + (v - 20) * (200 / 15);
+        svg += `<line x1="14" y1="40" x2="226" y2="40" class="hline" />`;
+        [20, 25, 30, 35].forEach(v => {
+            svg += `<line x1="${x(v)}" y1="34" x2="${x(v)}" y2="46" stroke="#8a7a66" stroke-width="1.5"/>`;
+            svg += `<text x="${x(v)}" y="60" text-anchor="middle" class="place-label" style="font-size:10px">${v}</text>`;
+        });
+        svg += `<circle cx="${x(29)}" cy="40" r="5" fill="#ff8a65" />`;
+        svg += `<text x="${x(29)}" y="24" text-anchor="middle" class="expr" style="font-size:12px">29</text>`;
+        if (currentStep >= 1) {
+            svg += `<path d="M ${x(29)} 40 q ${(x(30) - x(29)) / 2} -18 ${x(30) - x(29)} 0" fill="none" stroke="#7bc9b2" stroke-width="2" stroke-dasharray="4 3"/>`;
+            svg += `<circle cx="${x(30)}" cy="40" r="5" fill="#7bc9b2" />`;
+            svg += `<text x="${x(30)}" y="24" text-anchor="middle" class="expr-reveal" style="font-size:12px">30</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="92" text-anchor="middle" class="expr">30 × 5 = <tspan class="expr-reveal">150</tspan></text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<circle cx="120" cy="122" r="16" class="bubble-c" />`;
+            svg += `<text x="120" y="127" text-anchor="middle" class="bubble-t" style="font-size:13px">150</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 模式 4：改錯放大鏡（直式偵錯） ===== */
+    function renderDebug() {
+        const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        let svg = '';
+        svg += `<text x="108" y="13" text-anchor="middle" class="place-label">百位</text>`;
+        svg += `<text x="150" y="13" text-anchor="middle" class="place-label">十位</text>`;
+        svg += `<text x="192" y="13" text-anchor="middle" class="place-label">個位</text>`;
+        svg += `<text x="150" y="52" text-anchor="middle" class="digit">3</text>`;
+        svg += `<text x="192" y="52" text-anchor="middle" class="digit">3</text>`;
+        svg += `<text x="45" y="82" class="op">×</text>`;
+        svg += `<text x="192" y="82" text-anchor="middle" class="digit">4</text>`;
+        svg += `<line x1="40" y1="90" x2="216" y2="90" class="hline" />`;
+        // 小明的錯誤答案 122
+        svg += `<text x="108" y="124" text-anchor="middle" class="digit">1</text>`;
+        const tensCls = currentStep >= 4 ? 'digit-reveal' : (currentStep >= 1 ? 'digit-wrong' : 'digit');
+        svg += `<text x="150" y="124" text-anchor="middle" class="${tensCls}">${currentStep >= 4 ? 3 : 2}</text>`;
+        svg += `<text x="192" y="124" text-anchor="middle" class="digit">2</text>`;
+        if (currentStep >= 1 && currentStep < 4) {
+            svg += `<circle cx="150" cy="118" r="15" fill="none" stroke="#e57373" stroke-width="2" stroke-dasharray="4 3"/>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<circle cx="150" cy="70" r="10" class="bubble-c" />`;
+            svg += `<text x="150" y="74" class="bubble-t">1</text>`;
+        }
+        if (currentStep >= 4) {
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-coral" style="font-size:13px">正解：33 × 4 = 132</text>`;
+        }
+        layer.innerHTML = svg;
+        setCap();
+    }
+
+    /* ===== 生活情境圖示（模式 7/8/10 頂部插畫帶） ===== */
+    const ICONS = {
+        crate() {
+            let s = '';
+            for (let i = 0; i < 9; i++) {
+                const x = 6 + i * 26;
+                s += `<rect x="${x}" y="2" width="20" height="20" rx="3" fill="#ffe0b2" stroke="#c8a27a" stroke-width="1"/>`;
+                s += `<line x1="${x}" y1="13" x2="${x + 20}" y2="13" stroke="#c8a27a" stroke-width="1"/>`;
+                s += `<circle cx="${x + 6}" cy="8" r="2.2" fill="#7bc9b2"/><circle cx="${x + 14}" cy="8" r="2.2" fill="#7bc9b2"/>`;
+            }
+            s += `<text x="120" y="27" text-anchor="middle" class="place-label" style="font-size:10px">每箱 24 瓶 × 9 箱</text>`;
+            return s;
+        },
+        shop() {
+            let s = '';
+            for (let i = 0; i < 3; i++) {
+                const x = 10 + i * 58;
+                s += `<rect x="${x}" y="2" width="46" height="22" rx="6" fill="#dcedc8" stroke="#9dbb7a" stroke-width="1.2"/>`;
+                s += `<line x1="${x + 9}" y1="2" x2="${x + 9}" y2="24" stroke="#9dbb7a" stroke-width="1"/>`;
+                s += `<rect x="${x + 32}" y="10" width="8" height="6" rx="2" fill="#ff8a65"/>`;
+            }
+            s += `<rect x="178" y="4" width="56" height="18" rx="5" fill="#ffd166" stroke="#e0b84f" stroke-width="1"/>`;
+            s += `<text x="206" y="17" text-anchor="middle" style="font-size:11px;font-weight:bold;fill:#6b5b3e">95 元</text>`;
+            s += `<text x="120" y="27" text-anchor="middle" class="place-label" style="font-size:10px">鉛筆盒 1 個 95 元 × 3 個</text>`;
+            return s;
+        },
+        coins() {
+            let s = '';
+            const pile = (cx, cy) => {
+                let t = '';
+                for (let k = 0; k < 3; k++) t += `<ellipse cx="${cx}" cy="${cy - k * 5}" rx="11" ry="4" fill="#ffd166" stroke="#d8ab3e" stroke-width="1"/>`;
+                return t;
+            };
+            s += pile(45, 13);
+            s += `<text x="45" y="27" text-anchor="middle" class="place-label" style="font-size:10px">大雄 70 元</text>`;
+            for (let i = 0; i < 3; i++) s += pile(130 + i * 36, 13);
+            s += `<text x="166" y="27" text-anchor="middle" class="place-label" style="font-size:10px">胖虎：3 堆 70 元</text>`;
+            return s;
+        }
+    };
+
+    /* ===== 直式乘法計算台（模式 5/6/7/8/10 共用引擎） ===== */
     function renderCalc() {
         const layer = document.getElementById('drawLayer');
-        layer.innerHTML = '';
-        const aDigits = q.a.split('');
+        const svgEl = document.getElementById('svgCanvas');
+        const yOff = q.iconCap ? 28 : 0;
+        svgEl.setAttribute('viewBox', `0 0 240 ${150 + yOff}`);
+        svgEl.style.maxWidth = q.iconCap ? '200px' : '';
+        let svg = q.iconCap ? ICONS[q.iconMode]() : '';
         const prod = q.product.split('');
         const cols = prod.length;
         const colX = i => 195 - (cols - 1 - i) * 42; // i=0 最左欄
 
         // 欄位分隔虛線與位值標籤
-        let svg = '';
         for (let i = 1; i < cols; i++) {
             const x = colX(i) - 21;
-            svg += `<line x1="${x}" y1="18" x2="${x}" y2="140" class="grid-line" />`;
+            svg += `<line x1="${x}" y1="${18 + yOff}" x2="${x}" y2="${140 + yOff}" class="grid-line" />`;
         }
         for (let j = 0; j < cols; j++) {
-            svg += `<text x="${colX(j)}" y="13" text-anchor="middle" class="place-label">${PLACE_CHAR[cols - 1 - j]}</text>`;
+            svg += `<text x="${colX(j)}" y="${13 + yOff}" text-anchor="middle" class="place-label">${PLACE_CHAR[cols - 1 - j]}</text>`;
         }
 
         // 高亮當前演繹欄位
-        const allSteps = computeCalcSteps();
-        const cur = allSteps[currentStep - 1];
-        if (cur) {
+        const cur = STEPS[currentStep - 1];
+        if (cur && cur.type === 'place') {
             const j = cols - 1 - cur.p;
-            svg += `<rect x="${colX(j) - 20}" y="30" width="40" height="106" rx="6" class="hl-rect" />`;
+            svg += `<rect x="${colX(j) - 20}" y="${30 + yOff}" width="40" height="106" rx="6" class="hl-rect" />`;
         }
 
         // 被乘數（上排）
+        const aDigits = q.a.split('');
         for (let p = 0; p < aDigits.length; p++) {
             const j = cols - 1 - p;
-            svg += `<text x="${colX(j)}" y="60" text-anchor="middle" class="digit">${aDigits[aDigits.length - 1 - p]}</text>`;
+            svg += `<text x="${colX(j)}" y="${60 + yOff}" text-anchor="middle" class="digit">${aDigits[aDigits.length - 1 - p]}</text>`;
         }
 
         // 乘號與乘數（下排，對齊個位）
-        svg += `<text x="45" y="90" class="op">×</text>`;
-        svg += `<text x="${colX(cols - 1)}" y="90" text-anchor="middle" class="digit">${q.m}</text>`;
+        svg += `<text x="45" y="${90 + yOff}" class="op">×</text>`;
+        svg += `<text x="${colX(cols - 1)}" y="${90 + yOff}" text-anchor="middle" class="digit">${q.m}</text>`;
 
         // 底線
-        svg += `<line x1="40" y1="98" x2="216" y2="98" class="hline" />`;
+        svg += `<line x1="40" y1="${98 + yOff}" x2="216" y2="${98 + yOff}" class="hline" />`;
 
         // 積（由右至左逐位揭示）
         for (let p = 0; p < cols; p++) {
             if (currentStep >= p + 1) {
-                svg += `<text x="${colX(cols - 1 - p)}" y="132" text-anchor="middle" class="digit-reveal">${prod[cols - 1 - p]}</text>`;
+                svg += `<text x="${colX(cols - 1 - p)}" y="${132 + yOff}" text-anchor="middle" class="digit-reveal">${prod[cols - 1 - p]}</text>`;
             }
         }
 
         // 進位氣泡（珊瑚橘圓圈白字，漂浮於被進位欄上方）
         for (let s = 0; s < currentStep; s++) {
-            const st = allSteps[s];
-            if (st.carryOut > 0 && st.p + 1 < cols) {
+            const st = STEPS[s];
+            if (st.type === 'place' && st.carryOut > 0 && st.p + 1 < cols) {
                 const x = colX(cols - 1 - (st.p + 1));
-                svg += `<circle cx="${x}" cy="28" r="10" class="bubble-c" />`;
-                svg += `<text x="${x}" y="32" class="bubble-t">${st.carryOut}</text>`;
+                svg += `<circle cx="${x}" cy="${28 + yOff}" r="10" class="bubble-c" />`;
+                svg += `<text x="${x}" y="${32 + yOff}" class="bubble-t">${st.carryOut}</text>`;
             }
         }
 
         layer.innerHTML = svg;
-
-        // 步驟說明
-        const capEl = document.getElementById('stepCap');
-        capEl.innerText = currentStep === 0
-            ? '按「一步一步看算理」開始演繹！'
-            : allSteps[currentStep - 1].cap;
+        setCap();
     }
 
-    function renderCompare() {
+    /* ===== 模式 9：算式天平 ===== */
+    function renderBalance() {
         const layer = document.getElementById('drawLayer');
+        document.getElementById('svgCanvas').setAttribute('viewBox', '0 0 240 152');
+        const tilt = currentStep >= 3;
         let svg = '';
-        // 左式
-        svg += `<text x="14" y="72" class="expr">400 × 5</text>`;
-        svg += `<text x="104" y="76" class="box-mark">□</text>`;
-        // 右式
-        svg += `<text x="138" y="72" class="expr">500 × 4</text>`;
-        // 左積
-        if (currentStep >= 1) {
-            svg += `<rect x="14" y="86" width="86" height="36" rx="6" class="hl-rect" />`;
-            svg += `<text x="57" y="112" text-anchor="middle" class="expr-reveal">2000</text>`;
-        }
-        // 右積
-        if (currentStep >= 2) {
-            svg += `<rect x="138" y="86" width="86" height="36" rx="6" class="hl-rect" />`;
-            svg += `<text x="181" y="112" text-anchor="middle" class="expr-reveal">2000</text>`;
-        }
-        if (currentStep >= 3) {
-            svg += `<line x1="14" y1="128" x2="224" y2="128" class="hline" />`;
-            svg += `<text x="119" y="146" text-anchor="middle" class="expr-coral" style="font-size:13px">2000 ＝ 2000</text>`;
+        svg += `<rect x="113" y="72" width="14" height="50" rx="4" fill="#c8a27a"/>`;
+        svg += `<rect x="86" y="120" width="68" height="8" rx="4" fill="#c8a27a"/>`;
+        svg += `<g transform="rotate(${tilt ? 7 : 0} 120 70)">`;
+        svg += `<rect x="26" y="66" width="188" height="7" rx="3.5" fill="#a5825e"/>`;
+        svg += `<line x1="52" y1="73" x2="52" y2="92" stroke="#a5825e" stroke-width="1.5"/>`;
+        svg += `<line x1="188" y1="73" x2="188" y2="92" stroke="#a5825e" stroke-width="1.5"/>`;
+        svg += `<path d="M32 92 h40 l-7 13 h-26 z" fill="${currentStep === 1 ? '#ffd8cc' : '#e3d5c2'}" stroke="#c8b39a" stroke-width="1"/>`;
+        svg += `<text x="52" y="89" text-anchor="middle" class="expr" style="font-size:12px">405 × 6</text>`;
+        svg += `<path d="M168 92 h40 l-7 13 h-26 z" fill="${currentStep === 2 ? '#ffd8cc' : '#e3d5c2'}" stroke="#c8b39a" stroke-width="1"/>`;
+        svg += `<text x="188" y="89" text-anchor="middle" class="expr" style="font-size:12px">405 × 7</text>`;
+        svg += `</g>`;
+        if (tilt) {
+            svg += `<text x="120" y="147" text-anchor="middle" class="expr-coral" style="font-size:15px">405 × 6 ＜ 405 × 7</text>`;
         }
         layer.innerHTML = svg;
-        document.getElementById('stepCap').innerText =
-            currentStep === 0 ? '按「一步一步看算理」開始演繹！' : q.caps[currentStep - 1];
-    }
-
-    function renderEstimate() {
-        const layer = document.getElementById('drawLayer');
-        let svg = '';
-        if (currentStep >= 1) {
-            svg += `<text x="120" y="55" text-anchor="middle" class="expr">495 <tspan class="expr-coral">≈ 500</tspan></text>`;
-        } else {
-            svg += `<text x="120" y="55" text-anchor="middle" class="expr">495 × 6 ≈ ( ? )</text>`;
-        }
-        if (currentStep >= 2) {
-            svg += `<text x="120" y="95" text-anchor="middle" class="expr">500 × 6 = <tspan class="expr-reveal">3000</tspan></text>`;
-        }
-        if (currentStep >= 3) {
-            svg += `<circle cx="120" cy="123" r="17" class="bubble-c" />`;
-            svg += `<text x="120" y="128" text-anchor="middle" class="bubble-t" style="font-size:14px">3000</text>`;
-        }
-        layer.innerHTML = svg;
-        document.getElementById('stepCap').innerText =
-            currentStep === 0 ? '按「一步一步看算理」開始演繹！' : q.caps[currentStep - 1];
+        setCap();
     }
 
     function render() {
         if (q.mode === 'calc') renderCalc();
-        else if (q.mode === 'compare') renderCompare();
-        else renderEstimate();
+        else if (q.mode === 'pattern') renderPattern();
+        else if (q.mode === 'bar') renderBar();
+        else if (q.mode === 'estimate') renderEstimate();
+        else if (q.mode === 'debug') renderDebug();
+        else renderBalance();
     }
 
     function nextStep() {

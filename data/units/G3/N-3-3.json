@@ -3,135 +3,120 @@
   "title": "乘以一位數",
   "grade": 3,
   "question_count": 10,
-  "verified_source": "臺北市內湖國小 114-1/113-1/111-1 期中 ＋ 高雄市永安國小 114-1 期中",
+  "verified_source": "臺北市內湖國小 114-1/113-1/112-1/111-1 期中 ＋ 高雄市永安國小 114-1 期中",
   "questions": [
     {
       "id": "G3-N-3-3-Q01",
-      "exam_source": "臺北市內湖國小 113-1 期中",
-      "section": "三、用直式算算看",
-      "question_num": 1,
-      "title": "二位數乘一位數（十位進位）",
-      "stem": "用直式算算看：53 × 2 ＝ ( ? )",
-      "choices": [
-        "106",
-        "105",
-        "112",
-        "96"
-      ],
+      "exam_source": "臺北市內湖國小 112-1 期中",
+      "section": "二、填填看",
+      "question_num": 7,
+      "title": "位值倍數規律探索",
+      "stem": "觀察算式的規律：已知 9 × 7 ＝ 63，請問 900 × 7 ＝ ( ? )",
+      "choices": ["6300", "630", "63000", "63"],
       "answer_index": 0,
-      "answer_raw": "106",
+      "answer_raw": "6300",
+      "visual_mode": "pattern",
+      "final_check": "6300",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=1",
       "fallback_height": 420,
       "explanation": {
-        "concept": "二位數乘一位數直式（十位滿十進位）",
+        "concept": "位值倍數規律（積的變化）",
         "steps": [
-          "個位：3 × 2 = 6",
-          "十位：5 × 2 = 10，寫 0 進 1 到百位",
-          "百位：把進位的 1 落下來，得到 106"
+          "9 × 7 = 63，這是九九乘法的基本題",
+          "被乘數 9 擴大 10 倍變成 90，積也跟著擴大 10 倍：90 × 7 = 630",
+          "被乘數再擴大 10 倍變成 900，積就擴大 100 倍：900 × 7 = 6300"
         ],
-        "trap": "十位 5 × 2 = 10 滿十要進位，容易忘記百位的 1，誤答成 56 或直接寫 10。"
+        "trap": "被乘數尾巴多幾個 0，積就跟著補幾個 0，不用動筆硬乘；補成 63000 是多補了一個 0。"
       }
     },
     {
       "id": "G3-N-3-3-Q02",
-      "exam_source": "臺北市內湖國小 111-1 期中",
-      "section": "三、用直式算算看",
-      "question_num": 2,
-      "title": "二位數乘一位數（兩次進位）",
-      "stem": "用直式算算看：33 × 4 ＝ ( ? )",
-      "choices": [
-        "132",
-        "128",
-        "123",
-        "92"
-      ],
+      "exam_source": "高雄市永安國小 114-1 期中",
+      "section": "一、選擇題",
+      "question_num": 3,
+      "title": "乘數相同免算比大小",
+      "stem": "下面哪一個算式的答案最大？（動動腦：不用算出答案喔！）",
+      "choices": ["99 × 6", "98 × 6", "92 × 6", "84 × 6"],
       "answer_index": 0,
-      "answer_raw": "132",
+      "answer_raw": "99 × 6",
+      "visual_mode": "bar",
+      "final_check": "99 × 6",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=2",
       "fallback_height": 420,
       "explanation": {
-        "concept": "二位數乘一位數連續兩次進位",
+        "concept": "乘數相同時免計算比大小",
         "steps": [
-          "個位：3 × 4 = 12，寫 2 進 1",
-          "十位：3 × 4 + 1 = 13，寫 3 進 1",
-          "百位：把進位的 1 落下來，得到 132"
+          "四個算式的乘數都是 6，都是「6 個一數」",
+          "乘數相同時，被乘數越大，積就越大",
+          "被乘數 99 ＞ 98 ＞ 92 ＞ 84，所以 99 × 6 的答案最大"
         ],
-        "trap": "個位與十位都要進位，漏掉任何一次進位都會算錯，常誤得 122 或 112。"
+        "trap": "看到乘法就以為要逐題硬算，其實乘數相同時只要比被乘數的大小就能秒答。"
       }
     },
     {
       "id": "G3-N-3-3-Q03",
-      "exam_source": "高雄市永安國小 114-1 期中",
-      "section": "二、用直式算算看",
-      "question_num": 1,
-      "title": "二位數乘一位數（連續進位到百位）",
-      "stem": "用直式算算看：84 × 6 ＝ ( ? )",
-      "choices": [
-        "504",
-        "484",
-        "514",
-        "486"
-      ],
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "一、選擇題",
+      "question_num": 7,
+      "title": "生活估算抓概數",
+      "stem": "估算「29 × 5」，請選出最接近正確答案的選項：",
+      "choices": ["150", "100", "120", "130"],
       "answer_index": 0,
-      "answer_raw": "504",
+      "answer_raw": "150",
+      "visual_mode": "estimate",
+      "final_check": "150",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=3",
       "fallback_height": 420,
       "explanation": {
-        "concept": "二位數乘一位數連續進位（進到百位）",
+        "concept": "乘法估算（四捨五入到整十數）",
         "steps": [
-          "個位：4 × 6 = 24，寫 4 進 2",
-          "十位：8 × 6 + 2 = 50，寫 0 進 5",
-          "百位：把進位的 5 落下來，得到 504"
+          "把 29 看成最接近的整十數 30",
+          "用 30 × 5 = 150 估算",
+          "所以 29 × 5 的答案最接近 150"
         ],
-        "trap": "十位 8 × 6 + 2 = 50 滿五十要向百位進 5，忘記第二次進位就會少一位。"
+        "trap": "29 四捨五入要進位看成 30；不要看成 20 算出 100，也不用硬算 29 × 5 = 145。"
       }
     },
     {
       "id": "G3-N-3-3-Q04",
-      "exam_source": "臺北市內湖國小 114-1 期中",
-      "section": "三、用直式算算看",
-      "question_num": 3,
-      "title": "三位數乘一位數（一次進位）",
-      "stem": "用直式算算看：131 × 7 ＝ ( ? )",
-      "choices": [
-        "917",
-        "907",
-        "927",
-        "971"
-      ],
+      "exam_source": "臺北市內湖國小 111-1 期中",
+      "section": "四、直式陷阱分析",
+      "question_num": 1,
+      "title": "直式改錯小偵探",
+      "stem": "小明在直式計算 33 × 4 時，算出答案是 122，請問他哪裡算錯了？",
+      "choices": ["十位忘記加個位進位的 1", "個位 3×4 乘錯了", "十位 3×4 乘錯了", "百位少寫一個 1"],
       "answer_index": 0,
-      "answer_raw": "917",
+      "answer_raw": "十位忘記加個位進位的 1",
+      "visual_mode": "debug",
+      "final_check": "132",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=4",
       "fallback_height": 420,
       "explanation": {
-        "concept": "三位數乘一位數直式（十位進位到百位）",
+        "concept": "直式進位改錯（偵錯思維）",
         "steps": [
-          "個位：1 × 7 = 7",
-          "十位：3 × 7 = 21，寫 1 進 2",
-          "百位：1 × 7 + 2 = 9，得到 917"
+          "個位：3 × 4 = 12，寫 2 進 1（小明這步沒有錯）",
+          "十位：3 × 4 = 12，還要再加上個位進上來的 1，等於 13",
+          "小明忘記加進位的 1，把十位寫成 2，才會算出錯誤答案 122"
         ],
-        "trap": "百位 1 × 7 後容易忘記加十位進上來的 2，誤得 717。"
+        "trap": "「忘記加進位」是直式計算最經典的錯誤，正解應該是 132，小明算成 122。"
       }
     },
     {
       "id": "G3-N-3-3-Q05",
       "exam_source": "臺北市內湖國小 113-1 期中",
       "section": "三、用直式算算看",
-      "question_num": 4,
-      "title": "三位數乘一位數（中間有 0）",
+      "question_num": 1,
+      "title": "中間含 0 直式陷阱",
       "stem": "用直式算算看：309 × 3 ＝ ( ? )",
-      "choices": [
-        "927",
-        "907",
-        "977",
-        "279"
-      ],
+      "choices": ["927", "907", "972", "279"],
       "answer_index": 0,
       "answer_raw": "927",
+      "visual_mode": "calc",
+      "final_check": "927",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=5",
       "fallback_height": 420,
@@ -147,50 +132,18 @@
     },
     {
       "id": "G3-N-3-3-Q06",
-      "exam_source": "臺北市內湖國小 114-1 期中",
-      "section": "三、用直式算算看",
-      "question_num": 5,
-      "title": "三位數乘一位數（積進到千位）",
-      "stem": "用直式算算看：506 × 9 ＝ ( ? )",
-      "choices": [
-        "4554",
-        "4545",
-        "4514",
-        "4584"
-      ],
-      "answer_index": 0,
-      "answer_raw": "4554",
-      "component": "multiplication-lab",
-      "component_path": "components/multiplication_lab.html?q=6",
-      "fallback_height": 420,
-      "explanation": {
-        "concept": "三位數乘一位數（積為四位數）",
-        "steps": [
-          "個位：6 × 9 = 54，寫 4 進 5",
-          "十位：0 × 9 + 5 = 5",
-          "百位：5 × 9 = 45，寫 5 進 4",
-          "千位：把進位的 4 落下來，得到 4554"
-        ],
-        "trap": "三位數乘出四位數，兩次進位都要記得，千位的 4 最常被漏掉而誤答成 554。"
-      }
-    },
-    {
-      "id": "G3-N-3-3-Q07",
       "exam_source": "臺北市內湖國小 111-1 期中",
       "section": "三、用直式算算看",
-      "question_num": 6,
-      "title": "三位數乘一位數（連續進位到千位）",
+      "question_num": 2,
+      "title": "整千滿額連續進位",
       "stem": "用直式算算看：125 × 8 ＝ ( ? )",
-      "choices": [
-        "1000",
-        "960",
-        "900",
-        "1060"
-      ],
+      "choices": ["1000", "960", "900", "1060"],
       "answer_index": 0,
       "answer_raw": "1000",
+      "visual_mode": "calc",
+      "final_check": "1000",
       "component": "multiplication-lab",
-      "component_path": "components/multiplication_lab.html?q=7",
+      "component_path": "components/multiplication_lab.html?q=6",
       "fallback_height": 420,
       "explanation": {
         "concept": "連續進位乘法（積剛好進到千位）",
@@ -204,86 +157,103 @@
       }
     },
     {
-      "id": "G3-N-3-3-Q08",
+      "id": "G3-N-3-3-Q07",
       "exam_source": "高雄市永安國小 114-1 期中",
-      "section": "四、在□裡填入＞、＜或＝",
-      "question_num": 1,
-      "title": "乘法積比大小",
-      "stem": "在 □ 中填入 ＞、＜ 或 ＝：400 × 5 □ 500 × 4",
-      "choices": [
-        "＝",
-        "＞",
-        "＜"
-      ],
+      "section": "五、應用題",
+      "question_num": 3,
+      "title": "超商箱裝進貨",
+      "stem": "一箱運動飲料有 24 瓶，超商老闆進貨了 9 箱，一共有幾瓶運動飲料？",
+      "choices": ["216 瓶", "206 瓶", "184 瓶", "225 瓶"],
       "answer_index": 0,
-      "answer_raw": "＝",
+      "answer_raw": "216 瓶",
+      "visual_mode": "calc-crate",
+      "final_check": "216",
+      "component": "multiplication-lab",
+      "component_path": "components/multiplication_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "箱裝進貨乘法應用",
+        "steps": [
+          "每箱 24 瓶，進貨 9 箱，就是求 9 個 24",
+          "列式：24 × 9",
+          "個位 4 × 9 = 36，寫 6 進 3；十位 2 × 9 + 3 = 21，得到 216 瓶"
+        ],
+        "trap": "一箱一箱慢慢數太慢也容易漏，用「每箱數量 × 箱數」的乘法才是正解，不能 24 + 9。"
+      }
+    },
+    {
+      "id": "G3-N-3-3-Q08",
+      "exam_source": "臺北市內湖國小 113-1 期中",
+      "section": "一、選擇題",
+      "question_num": 8,
+      "title": "文具購物採買",
+      "stem": "一個精美鉛筆盒賣 95 元，老師買了 3 個當作期中考獎品，一共要付多少元？",
+      "choices": ["285 元", "275 元", "295 元", "185 元"],
+      "answer_index": 0,
+      "answer_raw": "285 元",
+      "visual_mode": "calc-shop",
+      "final_check": "285",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=8",
       "fallback_height": 420,
       "explanation": {
-        "concept": "乘法積的比較（比大小）",
+        "concept": "文具購物乘法應用",
         "steps": [
-          "先算左邊：400 × 5 = 2000",
-          "再算右邊：500 × 4 = 2000",
-          "2000 ＝ 2000，所以 □ 填 ＝"
+          "一個鉛筆盒 95 元，買 3 個就是求 3 個 95",
+          "列式：95 × 3",
+          "個位 5 × 3 = 15，寫 5 進 1；十位 9 × 3 + 1 = 28，一共要付 285 元"
         ],
-        "trap": "看到 400 和 500 不同就直覺填 ＞ 或 ＜，其實兩邊的積一樣大。"
+        "trap": "95 × 3 只有個位進一次 1；別把十位 9 × 3 硬乘錯，誤答成 275 或 295。"
       }
     },
     {
       "id": "G3-N-3-3-Q09",
       "exam_source": "臺北市內湖國小 114-1 期中",
-      "section": "一、選擇題",
-      "question_num": 5,
-      "title": "乘法估算（最接近的數）",
-      "stem": "495 × 6 的答案最接近下列哪一個數？",
-      "choices": [
-        "3000",
-        "2400",
-        "3600",
-        "1800"
-      ],
+      "section": "四、比大小",
+      "question_num": 3,
+      "title": "算式天平比大小",
+      "stem": "在天平兩端放入算式，哪邊會比較重？在 □ 中填入正確符號：405 × 6 □ 405 × 7",
+      "choices": ["＜", "＞", "＝"],
       "answer_index": 0,
-      "answer_raw": "3000",
+      "answer_raw": "＜",
+      "visual_mode": "balance",
+      "final_check": "＜",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=9",
       "fallback_height": 420,
       "explanation": {
-        "concept": "乘法估算（四捨五入到整百數）",
+        "concept": "算式天平比大小（被乘數相同）",
         "steps": [
-          "把 495 看成最接近的整百數 500",
-          "用 500 × 6 = 3000 估算",
-          "所以 495 × 6 最接近 3000"
+          "左盤 405 × 6 是 6 個 405，右盤 405 × 7 是 7 個 405",
+          "兩邊的被乘數都是 405，右邊比左邊多 1 個 405",
+          "右盤下沉，所以 405 × 6 ＜ 405 × 7"
         ],
-        "trap": "估算要把 495 看成 500，不是用 400 × 6 = 2400，也不是硬算 495 × 6。"
+        "trap": "不用算出 2430 和 2835，被乘數相同時，乘數大的積就大，看到「多 1 個 405」就能秒答。"
       }
     },
     {
       "id": "G3-N-3-3-Q10",
-      "exam_source": "臺北市內湖國小 113-1 期中",
-      "section": "五、應用題",
+      "exam_source": "臺北市內湖國小 114-1 期中",
+      "section": "七、應用題",
       "question_num": 2,
-      "title": "三倍關係應用題",
-      "stem": "弟弟有 200 元，哥哥買一架飛機模型，花的錢是弟弟的 3 倍，哥哥花了多少元？",
-      "choices": [
-        "600 元",
-        "203 元",
-        "180 元",
-        "630 元"
-      ],
+      "title": "零用錢倍數應用",
+      "stem": "大雄的零用錢有 70 元，胖虎的零用錢是大雄的 3 倍，請問胖虎有多少元？",
+      "choices": ["210 元", "73 元", "140 元", "270 元"],
       "answer_index": 0,
-      "answer_raw": "600 元",
+      "answer_raw": "210 元",
+      "visual_mode": "calc-coins",
+      "final_check": "210",
       "component": "multiplication-lab",
       "component_path": "components/multiplication_lab.html?q=10",
       "fallback_height": 420,
       "explanation": {
-        "concept": "倍數關係應用題（整百數乘法）",
+        "concept": "零用錢倍數應用",
         "steps": [
-          "「3 倍」就是 3 個 200",
-          "列式：200 × 3",
-          "算出 200 × 3 = 600（元）"
+          "「胖虎的零用錢是大雄的 3 倍」就是 3 個 70",
+          "列式：70 × 3",
+          "70 × 3 = 210，胖虎有 210 元"
         ],
-        "trap": "「花了弟弟的 3 倍」是乘法，看到「3」就做 200 + 3 = 203 是最經典陷阱。"
+        "trap": "「3 倍」是乘法不是加法，70 + 3 = 73 是最經典陷阱；70 × 2 = 140 是「2 倍」的答案。"
       }
     }
   ]
