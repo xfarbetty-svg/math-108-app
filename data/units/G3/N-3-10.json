@@ -1,0 +1,274 @@
+{
+  "code": "N-3-10",
+  "title": "一位小數",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-2/112-2/113-2/114-2 期末段考真題（十分位位值/0.1組成/位值反推/十六點八讀寫/鉛筆盒0.1換算/精準量尺毫米公分/數線跳數規律/天平比大小/直式小數加減/牛奶兩步驟應用題）",
+  "questions": [
+    {
+      "id": "G3-N-3-10-Q01",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "位值認識：10.6 中的數字 6 屬於哪個位值",
+      "stem": "10.6 中的數字 6 是屬於哪個位值？",
+      "choices": ["十位", "個位", "百位", "十分位"],
+      "answer_index": 3,
+      "answer_raw": "十分位",
+      "visual_mode": "place_value_intro",
+      "final_check": "小數點右邊第一位是十分位",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "一位小數定位板位值名稱",
+        "steps": [
+          "觀察小數點的位置：小數點「.」是用來分隔整數部分與小數部分",
+          "小數點左邊第一位是「個位」（數字 0 代表 0 個 1）",
+          "小數點左邊第二位是「十位」（數字 1 代表 1 個 10）",
+          "小數點右邊第一位是「十分位」（數字 6 代表 6 個 0.1） ✓"
+        ],
+        "trap": "容易把小數點右邊第一位誤認成個位或十位；小數點右邊第一位法定名稱為「十分位」。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q02",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "二、填填看",
+      "question_num": 1,
+      "title": "小數組成：2.6 是幾個 1 和幾個 0.1 合起來",
+      "stem": "2.6 是幾個 1 和幾個 0.1 合起來的？",
+      "choices": [
+        "2 個 1 和 6 個 0.1",
+        "6 個 1 和 2 個 0.1",
+        "26 個 1",
+        "2 個 1 和 0.6 個 0.1"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2 個 1 和 6 個 0.1",
+      "visual_mode": "decimal_composition",
+      "final_check": "2.6 ＝ 2個1 ＋ 6個0.1",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "小數的位值累積組成",
+        "steps": [
+          "看個位數字：個位是 2，表示有 2 個 1",
+          "看十分位數字：十分位是 6，表示有 6 個 0.1",
+          "合起來：2 個 1 加上 6 個 0.1，記作 2.6 ✓"
+        ],
+        "trap": "誤把十分位數字 6 當成 0.6 個 0.1；數字 6 本身就代表 6 個 0.1（即 0.6）。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q03",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "二、填填看",
+      "question_num": 2,
+      "title": "位值反推：十分位是 3，個位數是 6 的小數",
+      "stem": "十分位是 3，個位數是 6 的小數是多少？",
+      "choices": ["6.3", "3.6", "63", "0.63"],
+      "answer_index": 0,
+      "answer_raw": "6.3",
+      "visual_mode": "digit_reconstruct",
+      "final_check": "個位6與十分位3記作6.3",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "依位值描述重構小數",
+        "steps": [
+          "先確定個位位置：個位數在小數點左側，寫入 6",
+          "點上小數點「.」以區隔",
+          "再確定十分位位置：十分位在小數點右側第一位，寫入 3",
+          "組合成完整小數：6.3 ✓"
+        ],
+        "trap": "題目先說十分位再說個位，容易被題幹文字順序誤導寫成 3.6；務必依照「個位在左、十分位在右」的位值原則排列。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q04",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "二、填一填",
+      "question_num": 3,
+      "title": "小數讀寫與位值：十六點八的十分位數字",
+      "stem": "「十六點八」寫成小數是 16.8，這個小數的十分位數字是多少？",
+      "choices": ["8", "6", "1", "16"],
+      "answer_index": 0,
+      "answer_raw": "8",
+      "visual_mode": "read_write_decimal",
+      "final_check": "十六點八十分位數字為8",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "小數國字讀法轉換與各數位解析",
+        "steps": [
+          "國字轉記數：「十六點八」寫成數字為 16.8",
+          "解析數位：十位是 1、個位是 6、十分位是 8",
+          "本題詢問十分位數字，因此正解為 8 ✓"
+        ],
+        "trap": "將十分位與十位混淆（答成 1）；「十位」在整數部分，「十分位」在小數部分。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q05",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "二、填一填",
+      "question_num": 1,
+      "title": "具象盒裝：17 個 0.1 盒鉛筆合起來是多少盒",
+      "stem": "一盒鉛筆有 10 枝，17 個 0.1 盒鉛筆合起來是多少盒鉛筆？",
+      "choices": ["1.7 盒", "17 盒", "0.17 盒", "10.7 盒"],
+      "answer_index": 0,
+      "answer_raw": "1.7 盒",
+      "visual_mode": "pencil_boxes_decimal",
+      "final_check": "17個0.1盒＝1.7盒",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "0.1 的十進位滿十進一進位原理",
+        "steps": [
+          "每 10 個 0.1 盒可以換成 1 個完整盒：10 個 0.1 盒 ＝ 1 盒",
+          "剩下的 7 個 0.1 盒為 0.7 盒",
+          "1 盒與 0.7 盒合併：1 ＋ 0.7 ＝ 1.7 盒 ✓"
+        ],
+        "trap": "直覺把 17 寫成 17 盒或 0.17 盒；17 個 0.1 是 1.7。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q06",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "二、填填看",
+      "question_num": 6,
+      "title": "長度換算：2 公分 9 毫米換算成小數公分",
+      "stem": "2 公分 9 毫米＝( ? ) 公分。(請用小數回答)",
+      "choices": ["2.9 公分", "29 公分", "0.29 公分", "2.09 公分"],
+      "answer_index": 0,
+      "answer_raw": "2.9 公分",
+      "visual_mode": "precision_ruler",
+      "final_check": "2cm 9mm ＝ 2.9cm",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "公釐(毫米)與公分的小數單位換算",
+        "steps": [
+          "掌握公分與毫米關係：1 公分 ＝ 10 毫米，所以 1 毫米 ＝ 0.1 公分",
+          "9 毫米即為 9 個 0.1 公分 ＝ 0.9 公分",
+          "加上原本的 2 公分：2 ＋ 0.9 ＝ 2.9 公分 ✓"
+        ],
+        "trap": "誤以為是百進位寫成 2.09 公分；毫米與公分是十進位，9 毫米就是 0.9 公分。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q07",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 7,
+      "title": "數線跳數規律：4.7 到 5.1 連續遞增",
+      "stem": "想一想，數線規律中括弧裡依序要填入什麼數？ 4.7 → ( ? ) → ( ? ) → 5 → 5.1",
+      "choices": ["4.8、4.9", "4.6、4.5", "4.71、4.72", "4.9、4.8"],
+      "answer_index": 0,
+      "answer_raw": "4.8、4.9",
+      "visual_mode": "decimal_number_line",
+      "final_check": "4.7 每次加 0.1 依序為 4.8、4.9、5.0",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "一位小數數線每次增加 0.1 的連續跳數",
+        "steps": [
+          "觀察前後相鄰數：5 到 5.1 增加了 0.1，規律為每次遞增 0.1",
+          "4.7 增加 0.1 為 4.8",
+          "4.8 再增加 0.1 為 4.9",
+          "4.9 再增加 0.1 為 5.0（簡記為 5），完全吻合題目序列 ✓"
+        ],
+        "trap": "以為 4.9 下一個是 4.10；4.9 的十分位滿十進位到個位變成 5.0！"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q08",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "四、在□裡填入＞、＜或＝",
+      "question_num": 1,
+      "title": "大小比較：零點七與 0.6 比大小",
+      "stem": "在 □ 裡填入正確的符號：零點七 □ 0.6",
+      "choices": ["＞", "＜", "＝", "無法比較"],
+      "answer_index": 0,
+      "answer_raw": "＞",
+      "visual_mode": "balance_compare",
+      "final_check": "零點七(0.7) ＞ 0.6",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "中文讀法轉換與一位小數大小比較",
+        "steps": [
+          "中文小數轉記為數字：「零點七」即 0.7",
+          "比較個位數：兩者個位皆為 0",
+          "比較十分位數：0.7 的十分位是 7，0.6 的十分位是 6；7 ＞ 6",
+          "因此：0.7 ＞ 0.6 ✓"
+        ],
+        "trap": "受中文「零點」字樣干擾而猶豫，直接將兩者都寫成數字 0.7 與 0.6 比十分位即可。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q09",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "三、計算題(寫出直式)",
+      "question_num": 3,
+      "title": "直式計算：小數加法 1.7 ＋ 0.8 進位運算",
+      "stem": "請用直式算算看：1.7 ＋ 0.8 ＝ ( ? )",
+      "choices": ["2.5", "1.5", "2.15", "0.25"],
+      "answer_index": 0,
+      "answer_raw": "2.5",
+      "visual_mode": "vertical_decimal_calc",
+      "final_check": "1.7 ＋ 0.8 ＝ 2.5",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "小數直式加法對齊小數點與滿十進位",
+        "steps": [
+          "直式對齊：將小數點「.」、個位與十分位上下對齊排列",
+          "十分位相加：7 ＋ 8 ＝ 15，十分位寫 5，向個位進 1",
+          "個位相加：進位的 1 加上原本個位的 1 ＋ 0 ＝ 2",
+          "小數點落下：對齊原小數點位置點上，得到 2.5 ✓"
+        ],
+        "trap": "小數點沒對齊，或 7+8=15 寫成 1.15；十分位滿十必須向個位進 1。"
+      }
+    },
+    {
+      "id": "G3-N-3-10-Q10",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "六、應用題",
+      "question_num": 3,
+      "title": "生活應用：牛奶箱裝兩步驟小數加減",
+      "stem": "一箱牛奶有 10 瓶。媽媽買 5 箱牛奶，小新上星期喝了 1.5 箱，這星期喝了 1.3 箱，他一共喝了多少箱？還剩下多少箱？",
+      "choices": [
+        "一共喝了 2.8 箱，還剩下 2.2 箱",
+        "一共喝了 2.8 箱，還剩下 3.2 箱",
+        "一共喝了 1.8 箱，還剩下 3.2 箱",
+        "一共喝了 2.2 箱，還剩下 2.8 箱"
+      ],
+      "answer_index": 0,
+      "answer_raw": "一共喝了 2.8 箱，還剩下 2.2 箱",
+      "visual_mode": "milk_boxes_two_step",
+      "final_check": "喝掉 1.5＋1.3＝2.8箱，剩下 5－2.8＝2.2箱",
+      "component": "decimal-place-lab",
+      "component_path": "components/decimal_place_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "小數兩步驟應用問題（先加後減）",
+        "steps": [
+          "第一步（求總喝掉量）：上星期 1.5 箱 ＋ 這星期 1.3 箱 ＝ 2.8 箱",
+          "第二步（求剩餘量）：原本 5 箱 － 喝掉 2.8 箱 ＝ 2.2 箱",
+          "因此：一共喝了 2.8 箱，還剩下 2.2 箱 ✓"
+        ],
+        "trap": "計算 5 － 2.8 時忘記 5 相當於 5.0，減去 2.8 時十分位 0 減 8 需向個位借 1 變 10－8＝2，個位剩 4－2＝2，結果為 2.2。"
+      }
+    }
+  ]
+}

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-10 一位小數 擬物實驗台</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.3;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            display: block;
+        }
+        .expr { font-size: 14px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 14px; fill: var(--coral); font-weight: bold; }
+        .expr-mint { font-size: 13px; fill: var(--mint); font-weight: bold; }
+        .expr-red { font-size: 12.5px; fill: var(--error); font-weight: bold; }
+        .expr-purple { font-size: 13px; fill: var(--purple); font-weight: bold; }
+        .place-label { font-size: 9.5px; fill: var(--muted); font-weight: 600; }
+        .cap { font-size: 11.5px; min-height: 16px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.25; }
+        .controls { display: flex; flex-direction: column; gap: 4px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 6px 4px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-N-3-10 一位小數 擬物實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 240 170">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看小數動態</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    /* ===== 10 題實體段考真題資料庫（SSOT） ===== */
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "10.6 中的數字 6 是屬於哪個位值？",
+            options: ["十位", "個位", "百位", "十分位"],
+            answer_index: 3,
+            visual_mode: "place_value_intro",
+            final_reveal: "小數點右邊第一位是十分位",
+            total_steps: 3,
+            explanations: [
+                "小數點「.」分隔整數與小數部分",
+                "小數點左側：個位為 0，十位為 1",
+                "小數點右側第一位：法定名稱為「十分位」✓"
+            ],
+            feedback: "答對了！小數點右邊第一位就是「十分位」，代表有幾個 0.1！"
+        },
+        {
+            q: 2,
+            stem: "2.6 是幾個 1 和幾個 0.1 合起來的？",
+            options: [
+                "2 個 1 和 6 個 0.1",
+                "6 個 1 和 2 個 0.1",
+                "26 個 1",
+                "2 個 1 和 0.6 個 0.1"
+            ],
+            answer_index: 0,
+            visual_mode: "decimal_composition",
+            final_reveal: "2.6 ＝ 2個1 ＋ 6個0.1",
+            total_steps: 3,
+            explanations: [
+                "看個位：數字是 2，表示有 2 個 1",
+                "看十分位：數字是 6，表示有 6 個 0.1",
+                "合起來：2 個 1 和 6 個 0.1 組成 2.6 ✓"
+            ],
+            feedback: "答對了！2 個 1 加上 6 個 0.1 合起來就是 2.6！"
+        },
+        {
+            q: 3,
+            stem: "十分位是 3，個位數是 6 的小數是多少？",
+            options: ["6.3", "3.6", "63", "0.63"],
+            answer_index: 0,
+            visual_mode: "digit_reconstruct",
+            final_reveal: "個位6與十分位3合記作 6.3",
+            total_steps: 3,
+            explanations: [
+                "個位數在小數點左邊：填入 6",
+                "十分位在小數點右邊：填入 3",
+                "小數點定位：組合記作 6.3 ✓"
+            ],
+            feedback: "答對了！個位在左、十分位在右，合起來是 6.3，小心別倒反成 3.6 喔！"
+        },
+        {
+            q: 4,
+            stem: "「十六點八」寫成小數是 16.8，這個小數的十分位數字是多少？",
+            options: ["8", "6", "1", "16"],
+            answer_index: 0,
+            visual_mode: "read_write_decimal",
+            final_reveal: "十分位數字為 8",
+            total_steps: 3,
+            explanations: [
+                "國字記數：「十六點八」寫成 16.8",
+                "數位解析：十位 1、個位 6、十分位 8",
+                "本題詢問十分位數字，正解為 8 ✓"
+            ],
+            feedback: "答對了！16.8 的十分位數字就是 8，十位是 1，個位是 6！"
+        },
+        {
+            q: 5,
+            stem: "一盒鉛筆有 10 枝，17 個 0.1 盒鉛筆合起來是多少盒鉛筆？",
+            options: ["1.7 盒", "17 盒", "0.17 盒", "10.7 盒"],
+            answer_index: 0,
+            visual_mode: "pencil_boxes_decimal",
+            final_reveal: "17 個 0.1 盒 ＝ 1.7 盒",
+            total_steps: 3,
+            explanations: [
+                "10 個 0.1 盒剛好裝滿 1 盒",
+                "剩下的 7 個 0.1 盒是 0.7 盒",
+                "合起來：1 盒 ＋ 0.7 盒 ＝ 1.7 盒 ✓"
+            ],
+            feedback: "答對了！滿 10 個 0.1 盒進位成 1 盒，合起來是 1.7 盒！"
+        },
+        {
+            q: 6,
+            stem: "2 公分 9 毫米＝( ? ) 公分。(請用小數回答)",
+            options: ["2.9 公分", "29 公分", "0.29 公分", "2.09 公分"],
+            answer_index: 0,
+            visual_mode: "precision_ruler",
+            final_reveal: "2 公分 9 毫米 ＝ 2.9 公分",
+            total_steps: 3,
+            explanations: [
+                "1 公分 ＝ 10 毫米，所以 1 毫米 ＝ 0.1 公分",
+                "9 毫米即為 9 個 0.1 公分 ＝ 0.9 公分",
+                "2 公分 ＋ 0.9 公分 ＝ 2.9 公分 ✓"
+            ],
+            feedback: "答對了！1 毫米是 0.1 公分，9 毫米就是 0.9 公分，合起來 2.9 公分！"
+        },
+        {
+            q: 7,
+            stem: "想一想，數線規律中括弧裡依序要填入什麼數？ 4.7 → ( ? ) → ( ? ) → 5 → 5.1",
+            options: ["4.8、4.9", "4.6、4.5", "4.71、4.72", "4.9、4.8"],
+            answer_index: 0,
+            visual_mode: "decimal_number_line",
+            final_reveal: "依序為 4.8、4.9 (滿十進位到5.0)",
+            total_steps: 3,
+            explanations: [
+                "觀察序列：5 到 5.1 增加了 0.1，規律為每次 ＋0.1",
+                "4.7 ＋ 0.1 ＝ 4.8",
+                "4.8 ＋ 0.1 ＝ 4.9，再加 0.1 變成 5.0（記為 5）✓"
+            ],
+            feedback: "答對了！每次增加 0.1，依序是 4.8、4.9，接著滿十進位變成 5！"
+        },
+        {
+            q: 8,
+            stem: "在 □ 裡填入正確的符號：零點七 □ 0.6",
+            options: ["＞", "＜", "＝", "無法比較"],
+            answer_index: 0,
+            visual_mode: "balance_compare",
+            final_reveal: "零點七(0.7) ＞ 0.6",
+            total_steps: 3,
+            explanations: [
+                "漢字讀法轉記：「零點七」即 0.7",
+                "個位都是 0，比十分位：7 比 6 大",
+                "結論：0.7 ＞ 0.6（天平左傾）✓"
+            ],
+            feedback: "答對了！零點七就是 0.7，0.7 的十分位 7 比 0.6 的 6 大！"
+        },
+        {
+            q: 9,
+            stem: "請用直式算算看：1.7 ＋ 0.8 ＝ ( ? )",
+            options: ["2.5", "1.5", "2.15", "0.25"],
+            answer_index: 0,
+            visual_mode: "vertical_decimal_calc",
+            final_reveal: "1.7 ＋ 0.8 ＝ 2.5",
+            total_steps: 3,
+            explanations: [
+                "直式對齊：小數點、個位、十分位上下對齊",
+                "十分位相加：7 ＋ 8 ＝ 15，寫 5 向個位進 1",
+                "個位相加：進位 1 ＋ 1 ＋ 0 ＝ 2，點上小數點得 2.5 ✓"
+            ],
+            feedback: "答對了！小數點垂直對齊，7＋8＝15 滿十進位，答案是 2.5！"
+        },
+        {
+            q: 10,
+            stem: "一箱牛奶有 10 瓶。媽媽買 5 箱牛奶，小新上星期喝了 1.5 箱，這星期喝了 1.3 箱，他一共喝了多少箱？還剩下多少箱？",
+            options: [
+                "一共喝了 2.8 箱，還剩下 2.2 箱",
+                "一共喝了 2.8 箱，還剩下 3.2 箱",
+                "一共喝了 1.8 箱，還剩下 3.2 箱",
+                "一共喝了 2.2 箱，還剩下 2.8 箱"
+            ],
+            answer_index: 0,
+            visual_mode: "milk_boxes_two_step",
+            final_reveal: "喝掉 2.8 箱，還剩下 2.2 箱",
+            total_steps: 3,
+            explanations: [
+                "第一步：喝掉 1.5 ＋ 1.3 ＝ 2.8 箱",
+                "第二步：原有 5 箱 ＝ 5.0 箱",
+                "第三步：剩下 5.0 － 2.8 ＝ 2.2 箱 ✓"
+            ],
+            feedback: "答對了！兩步驟算理：先加出總喝量 2.8 箱，再用 5－2.8 算出剩餘 2.2 箱！"
+        }
+    ];
+
+    /* ===== 全局狀態管理 ===== */
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = null;
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function init() {
+        const qParam = parseInt(getQueryParam('q'), 10);
+        if (qParam >= 1 && qParam <= 10) currentQ = qParam;
+        renderQuestionUI();
+    }
+
+    function renderQuestionUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = 0;
+        selectedOption = null;
+
+        document.getElementById('questionBox').textContent = `Q${qData.q}. ${qData.stem}`;
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (0/${qData.total_steps})`;
+        document.getElementById('capText').textContent = "點擊「逐步算理」看小數動態";
+        
+        const feedbackBox = document.getElementById('feedbackBox');
+        feedbackBox.className = 'feedback';
+        feedbackBox.textContent = '';
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = '';
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+
+        drawVisual();
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = (currentStep + 1) % (qData.total_steps + 1);
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        
+        if (currentStep === 0) {
+            document.getElementById('capText').textContent = "點擊「逐步算理」看小數動態";
+        } else {
+            document.getElementById('capText').textContent = qData.explanations[currentStep - 1];
+        }
+        drawVisual();
+    }
+
+    function checkAnswer() {
+        const qData = QUESTIONS[currentQ - 1];
+        const feedbackBox = document.getElementById('feedbackBox');
+        if (selectedOption === null) {
+            feedbackBox.className = 'feedback show wrong';
+            feedbackBox.textContent = '請先選擇一個答案！';
+            return;
+        }
+
+        if (selectedOption === qData.answer_index) {
+            feedbackBox.className = 'feedback show correct';
+            feedbackBox.textContent = `🎉 ${qData.feedback}`;
+            currentStep = qData.total_steps;
+            document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+            document.getElementById('capText').textContent = `✅ 正解鎖定：${qData.final_reveal}`;
+            drawVisual();
+        } else {
+            feedbackBox.className = 'feedback show wrong';
+            feedbackBox.textContent = '再想一想，點擊「逐步算理」觀察小數位值與圖解喔！';
+        }
+    }
+
+    /* ===== 034 擬物 SVG 繪製核心 ===== */
+    function resetView() {
+        return `<defs>
+            <linearGradient id="gradCard" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#f8fafc"/>
+            </linearGradient>
+            <linearGradient id="gradMint" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#a7f3d0"/>
+                <stop offset="100%" stop-color="#10b981"/>
+            </linearGradient>
+            <linearGradient id="gradCoral" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fed7aa"/>
+                <stop offset="100%" stop-color="#f97316"/>
+            </linearGradient>
+            <linearGradient id="gradSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e0f2fe"/>
+                <stop offset="100%" stop-color="#38bdf8"/>
+            </linearGradient>
+            <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+            </filter>
+        </defs>`;
+    }
+
+    function drawVisual() {
+        switch (currentQ) {
+            case 1: renderPlaceValueIntro(); break;
+            case 2: renderDecimalComposition(); break;
+            case 3: renderDigitReconstruct(); break;
+            case 4: renderReadWriteDecimal(); break;
+            case 5: renderPencilBoxes(); break;
+            case 6: renderPrecisionRuler(); break;
+            case 7: renderDecimalNumberLine(); break;
+            case 8: renderBalanceCompare(); break;
+            case 9: renderVerticalDecimalCalc(); break;
+            case 10: renderMilkBoxes(); break;
+            default: renderPlaceValueIntro(); break;
+        }
+    }
+
+    /* ===== Q1: 10.6 中的 6 屬於哪個位值 ===== */
+    function renderPlaceValueIntro() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 位值台座
+        svg += `<rect x="15" y="25" width="210" height="95" rx="12" fill="url(#gradCard)" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)"/>`;
+        svg += `<line x1="15" y1="58" x2="225" y2="58" stroke="#cbd5e1" stroke-width="1.5"/>`;
+
+        // 數位欄位標籤
+        svg += `<text x="50" y="46" text-anchor="middle" class="place-label">十位</text>`;
+        svg += `<text x="95" y="46" text-anchor="middle" class="place-label">個位</text>`;
+        svg += `<text x="130" y="46" text-anchor="middle" class="place-label" style="fill:#ef4444">•</text>`;
+        svg += `<text x="175" y="46" text-anchor="middle" class="place-label" style="fill:#0ea5e9; font-weight:bold">十分位</text>`;
+
+        // 數字本體
+        svg += `<text x="50" y="94" text-anchor="middle" class="expr" style="font-size:22px">1</text>`;
+        svg += `<text x="95" y="94" text-anchor="middle" class="expr" style="font-size:22px">0</text>`;
+        svg += `<circle cx="130" cy="90" r="3.5" fill="#ef4444"/>`;
+        svg += `<text x="175" y="94" text-anchor="middle" class="expr-mint" style="font-size:24px; fill:#0ea5e9">6</text>`;
+
+        // 逐步算理標註
+        if (currentStep >= 1) {
+            svg += `<rect x="35" y="65" width="75" height="42" rx="6" fill="#e0e7ff" opacity="0.4" stroke="#6366f1" stroke-width="1"/>`;
+            svg += `<text x="72" y="112" text-anchor="middle" style="font-size:8.5px; fill:#4f46e5">整數部分 (10)</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<circle cx="130" cy="90" r="10" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="2 2"/>`;
+            svg += `<text x="130" y="114" text-anchor="middle" style="font-size:8.5px; fill:#ef4444">小數點</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="150" y="65" width="50" height="42" rx="8" fill="#e0f2fe" opacity="0.6" stroke="#0ea5e9" stroke-width="2"/>`;
+            svg += `<circle cx="175" cy="85" r="16" fill="none" stroke="#0284c7" stroke-width="2.5"/>`;
+            svg += `<line x1="187" y1="97" x2="198" y2="108" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>`;
+            svg += `<text x="120" y="145" text-anchor="middle" class="expr-mint" style="font-size:12.5px; fill:#0284c7">6 位於小數點右邊第一位 ＝ 十分位 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q2: 2.6 是幾個 1 和幾個 0.1 ===== */
+    function renderDecimalComposition() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 2 個 1 的大積木平板 (50x50)
+        svg += `<rect x="25" y="30" width="44" height="44" rx="6" fill="#60a5fa" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>`;
+        svg += `<text x="47" y="56" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">1</text>`;
+        svg += `<text x="47" y="86" text-anchor="middle" class="place-label">第1個1</text>`;
+
+        svg += `<rect x="75" y="30" width="44" height="44" rx="6" fill="#60a5fa" stroke="#2563eb" stroke-width="1.5" filter="url(#shadow)"/>`;
+        svg += `<text x="97" y="56" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">1</text>`;
+        svg += `<text x="97" y="86" text-anchor="middle" class="place-label">第2個1</text>`;
+
+        // 6 條 0.1 細長條 (8x44)
+        for (let i = 0; i < 6; i++) {
+            const bx = 135 + i * 14;
+            const fill = currentStep >= 2 ? '#34d399' : '#a7f3d0';
+            svg += `<rect x="${bx}" y="30" width="10" height="44" rx="2" fill="${fill}" stroke="#059669" stroke-width="1"/>`;
+        }
+        svg += `<text x="175" y="86" text-anchor="middle" class="place-label" style="fill:#059669">6 個 0.1</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<rect x="20" y="24" width="104" height="68" rx="8" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+            svg += `<text x="72" y="106" text-anchor="middle" style="font-size:11px; fill:#1d4ed8; font-weight:bold">個位：2 個 1</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<rect x="130" y="24" width="94" height="68" rx="8" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+            svg += `<text x="177" y="106" text-anchor="middle" style="font-size:11px; fill:#047857; font-weight:bold">十分位：6 個 0.1</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">2 個 1 和 6 個 0.1 合成 2.6 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q3: 十分位是 3，個位數是 6 ===== */
+    function renderDigitReconstruct() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 定位槽卡片
+        svg += `<rect x="30" y="30" width="80" height="70" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>`;
+        svg += `<text x="70" y="50" text-anchor="middle" class="place-label" style="fill:#1d4ed8">個位 (左)</text>`;
+        svg += `<text x="70" y="85" text-anchor="middle" class="expr" style="font-size:26px; fill:#1d4ed8">${currentStep >= 1 ? '6' : '?'}</text>`;
+
+        // 小數點
+        svg += `<circle cx="120" cy="80" r="4.5" fill="#ef4444"/>`;
+
+        svg += `<rect x="130" y="30" width="80" height="70" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>`;
+        svg += `<text x="170" y="50" text-anchor="middle" class="place-label" style="fill:#047857">十分位 (右)</text>`;
+        svg += `<text x="170" y="85" text-anchor="middle" class="expr-mint" style="font-size:26px">${currentStep >= 2 ? '3' : '?'}</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="70" y="114" text-anchor="middle" style="font-size:9.5px; fill:#1d4ed8">個位數是 6</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="170" y="114" text-anchor="middle" style="font-size:9.5px; fill:#047857">十分位是 3</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-coral" style="font-size:13px">組合寫作：6.3 ✓ (不是3.6)</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q4: 「十六點八」16.8 的十分位數字 ===== */
+    function renderReadWriteDecimal() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 木牌漢字
+        svg += `<rect x="25" y="24" width="190" height="34" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>`;
+        svg += `<text x="120" y="46" text-anchor="middle" style="font-size:15px; font-weight:bold; fill:#92400e; letter-spacing:2px">「 十 六 點 八 」</text>`;
+
+        // 位值三欄
+        svg += `<rect x="35" y="68" width="45" height="46" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>`;
+        svg += `<text x="57" y="82" text-anchor="middle" class="place-label">十位</text>`;
+        svg += `<text x="57" y="104" text-anchor="middle" class="expr" style="font-size:18px">1</text>`;
+
+        svg += `<rect x="85" y="68" width="45" height="46" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>`;
+        svg += `<text x="107" y="82" text-anchor="middle" class="place-label">個位</text>`;
+        svg += `<text x="107" y="104" text-anchor="middle" class="expr" style="font-size:18px">6</text>`;
+
+        svg += `<circle cx="136" cy="100" r="3.5" fill="#ef4444"/>`;
+
+        svg += `<rect x="144" y="68" width="60" height="46" rx="8" fill="${currentStep >= 2 ? '#e0f2fe' : '#f8fafc'}" stroke="${currentStep >= 2 ? '#0284c7' : '#cbd5e1'}" stroke-width="${currentStep >= 2 ? '2' : '1.2'}"/>`;
+        svg += `<text x="174" y="82" text-anchor="middle" class="place-label" style="fill:#0284c7; font-weight:bold">十分位</text>`;
+        svg += `<text x="174" y="104" text-anchor="middle" class="expr-coral" style="font-size:22px; fill:#0284c7">8</text>`;
+
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">十分位數字就是 8 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q5: 17 個 0.1 盒鉛筆合起來是多少盒 ===== */
+    function renderPencilBoxes() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 第 1 盒滿盒 (10枝裝)
+        svg += `<rect x="20" y="28" width="95" height="52" rx="6" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/>`;
+        for (let i = 0; i < 10; i++) {
+            const px = 24 + i * 8.8;
+            svg += `<rect x="${px}" y="32" width="6" height="44" rx="2" fill="#3b82f6"/>`;
+        }
+        svg += `<text x="67" y="93" text-anchor="middle" class="place-label" style="fill:#b45309">10枝滿盒 ＝ 1盒</text>`;
+
+        // 第 2 盒裝 7 枝
+        svg += `<rect x="125" y="28" width="95" height="52" rx="6" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>`;
+        for (let i = 0; i < 7; i++) {
+            const px = 129 + i * 8.8;
+            svg += `<rect x="${px}" y="32" width="6" height="44" rx="2" fill="#10b981"/>`;
+        }
+        for (let i = 7; i < 10; i++) {
+            const px = 129 + i * 8.8;
+            svg += `<rect x="${px}" y="32" width="6" height="44" rx="2" fill="none" stroke="#d1d5db" stroke-dasharray="2 2"/>`;
+        }
+        svg += `<text x="172" y="93" text-anchor="middle" class="place-label" style="fill:#047857">7枝 ＝ 0.7盒</text>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="67" y="22" text-anchor="middle" style="font-size:10px; fill:#1e40af; font-weight:bold">10 個 0.1 盒 ＝ 1 盒</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="172" y="22" text-anchor="middle" style="font-size:10px; fill:#065f46; font-weight:bold">7 個 0.1 盒 ＝ 0.7 盒</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">1 ＋ 0.7 ＝ 1.7 盒鉛筆 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q6: 2 公分 9 毫米＝2.9 公分 (034 精準量尺) ===== */
+    function renderPrecisionRuler() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 量尺主體
+        svg += `<rect x="15" y="38" width="210" height="46" rx="4" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>`;
+        // 刻度線：0 到 3 cm，每 cm 60px，每 mm 6px
+        for (let mm = 0; mm <= 30; mm++) {
+            const rx = 25 + mm * 6.3;
+            let len = 7;
+            if (mm % 10 === 0) len = 18;
+            else if (mm % 5 === 0) len = 12;
+            svg += `<line x1="${rx}" y1="38" x2="${rx}" y2="${38 + len}" stroke="#713f12" stroke-width="${mm % 10 === 0 ? '1.5' : '1'}"/>`;
+            if (mm % 10 === 0) {
+                svg += `<text x="${rx}" y="70" text-anchor="middle" font-size="10" font-weight="bold" fill="#713f12">${mm / 10}</text>`;
+            }
+        }
+        svg += `<text x="218" y="70" font-size="8" fill="#854d0e">cm</text>`;
+
+        // 游標指示在 2cm 9mm (25 + 29*6.3 = 207.7)
+        const targetX = 25 + 29 * 6.3;
+        svg += `<polygon points="${targetX},34 ${targetX - 5},22 ${targetX + 5},22" fill="#ef4444"/>`;
+        svg += `<line x1="${targetX}" y1="22" x2="${targetX}" y2="84" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2 2"/>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="80" y="24" text-anchor="middle" style="font-size:9.5px; fill:#854d0e">1 毫米 ＝ 0.1 公分</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="160" y="24" text-anchor="middle" style="font-size:9.5px; fill:#b91c1c; font-weight:bold">9 毫米 ＝ 0.9 公分</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="122" width="190" height="34" rx="10" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="143" text-anchor="middle" class="expr-mint" style="font-size:13px">2cm ＋ 0.9cm ＝ 2.9 公分 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q7: 4.7 到 5.1 連續遞增軌道數線 ===== */
+    function renderDecimalNumberLine() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 主軸數線
+        svg += `<line x1="20" y1="65" x2="220" y2="65" stroke="#475569" stroke-width="2.5" stroke-linecap="round"/>`;
+        svg += `<polygon points="224,65 216,61 216,69" fill="#475569"/>`;
+
+        const ticks = [
+            { x: 35, val: "4.7" },
+            { x: 75, val: currentStep >= 1 ? "4.8" : "( ? )", highlight: currentStep >= 1 },
+            { x: 115, val: currentStep >= 2 ? "4.9" : "( ? )", highlight: currentStep >= 2 },
+            { x: 155, val: "5" },
+            { x: 195, val: "5.1" }
+        ];
+
+        ticks.forEach(t => {
+            svg += `<line x1="${t.x}" y1="56" x2="${t.x}" y2="74" stroke="#334155" stroke-width="2"/>`;
+            const fill = t.highlight ? '#f97316' : '#1e293b';
+            const weight = t.highlight ? 'bold' : 'normal';
+            svg += `<text x="${t.x}" y="92" text-anchor="middle" font-size="11.5" font-weight="${weight}" fill="${fill}">${t.val}</text>`;
+        });
+
+        // 拋物線跳數弧線
+        for (let i = 0; i < 4; i++) {
+            const x1 = ticks[i].x;
+            const x2 = ticks[i + 1].x;
+            const mx = (x1 + x2) / 2;
+            const stroke = (i < currentStep) ? '#f97316' : '#cbd5e1';
+            svg += `<path d="M ${x1},54 Q ${mx},34 ${x2},54" fill="none" stroke="${stroke}" stroke-width="1.8"/>`;
+            svg += `<text x="${mx}" y="32" text-anchor="middle" font-size="8.5" fill="${stroke}">+0.1</text>`;
+        }
+
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="124" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="144" text-anchor="middle" class="expr-mint" style="font-size:13px">括弧填入 4.8、4.9 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q8: 零點七 □ 0.6 物理力矩天平比大小 ===== */
+    function renderBalanceCompare() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 天平底座與立柱
+        svg += `<polygon points="120,60 108,105 132,105" fill="#64748b"/>`;
+        svg += `<rect x="95" y="105" width="50" height="8" rx="2" fill="#334155"/>`;
+        svg += `<circle cx="120" cy="60" r="5" fill="#f59e0b"/>`;
+
+        // 橫梁角度：左盤 0.7 較重，順時針向左傾斜 (-6度)
+        const angle = currentStep >= 2 ? -8 : 0;
+        svg += `<g transform="rotate(${angle}, 120, 60)">`;
+        svg += `<rect x="35" y="58" width="170" height="5" rx="2" fill="#94a3b8"/>`;
+        // 左托盤
+        svg += `<line x1="55" y1="63" x2="55" y2="85" stroke="#64748b" stroke-width="1.5"/>`;
+        svg += `<ellipse cx="55" cy="85" rx="22" ry="5" fill="#38bdf8"/>`;
+        svg += `<rect x="42" y="66" width="26" height="18" rx="3" fill="#0284c7"/>`;
+        svg += `<text x="55" y="79" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">0.7</text>`;
+
+        // 右托盤
+        svg += `<line x1="185" y1="63" x2="185" y2="85" stroke="#64748b" stroke-width="1.5"/>`;
+        svg += `<ellipse cx="185" cy="85" rx="22" ry="5" fill="#38bdf8"/>`;
+        svg += `<rect x="173" y="70" width="24" height="14" rx="3" fill="#38bdf8"/>`;
+        svg += `<text x="185" y="81" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="bold">0.6</text>`;
+        svg += `</g>`;
+
+        if (currentStep >= 1) {
+            svg += `<text x="55" y="26" text-anchor="middle" class="place-label" style="fill:#0369a1">零點七 ＝ 0.7</text>`;
+            svg += `<text x="185" y="26" text-anchor="middle" class="place-label" style="fill:#0284c7">0.6</text>`;
+        }
+        if (currentStep >= 2) {
+            svg += `<text x="120" y="38" text-anchor="middle" class="expr-coral" style="font-size:20px; font-weight:bold">＞</text>`;
+            svg += `<text x="120" y="120" text-anchor="middle" class="place-label">十分位 7 ＞ 6（左盤較重向下傾）</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="128" width="190" height="30" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="148" text-anchor="middle" class="expr-mint" style="font-size:13px">零點七 (0.7) ＞ 0.6 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q9: 直式小數加法 1.7 ＋ 0.8 ＝ 2.5 ===== */
+    function renderVerticalDecimalCalc() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 直式定位卡
+        svg += `<rect x="40" y="20" width="160" height="100" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>`;
+        // 小數點垂直對齊虛線
+        svg += `<line x1="120" y1="26" x2="120" y2="114" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 2"/>`;
+
+        // 進位標記
+        if (currentStep >= 2) {
+            svg += `<circle cx="95" cy="32" r="7" fill="#ffedd5" stroke="#f97316" stroke-width="1.2"/>`;
+            svg += `<text x="95" y="36" text-anchor="middle" font-size="9" font-weight="bold" fill="#ea580c">1</text>`;
+        }
+
+        // 第 1 行：1.7
+        svg += `<text x="95" y="56" text-anchor="middle" class="expr" style="font-size:18px">1</text>`;
+        svg += `<circle cx="120" cy="53" r="2.5" fill="#ef4444"/>`;
+        svg += `<text x="145" y="56" text-anchor="middle" class="expr" style="font-size:18px">7</text>`;
+
+        // 第 2 行：＋ 0.8
+        svg += `<text x="65" y="78" text-anchor="middle" class="expr" style="font-size:16px">＋</text>`;
+        svg += `<text x="95" y="78" text-anchor="middle" class="expr" style="font-size:18px">0</text>`;
+        svg += `<circle cx="120" cy="75" r="2.5" fill="#ef4444"/>`;
+        svg += `<text x="145" y="78" text-anchor="middle" class="expr" style="font-size:18px">8</text>`;
+
+        // 橫等線
+        svg += `<line x1="55" y1="86" x2="185" y2="86" stroke="#475569" stroke-width="2"/>`;
+
+        // 結果行
+        if (currentStep >= 2) {
+            svg += `<text x="145" y="108" text-anchor="middle" class="expr-coral" style="font-size:19px">5</text>`;
+        }
+        if (currentStep >= 3) {
+            svg += `<text x="95" y="108" text-anchor="middle" class="expr-mint" style="font-size:19px">2</text>`;
+            svg += `<circle cx="120" cy="105" r="2.8" fill="#ef4444"/>`;
+            svg += `<rect x="25" y="126" width="190" height="32" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="146" text-anchor="middle" class="expr-mint" style="font-size:13px">1.7 ＋ 0.8 ＝ 2.5 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    /* ===== Q10: 牛奶箱裝兩步驟小數加減 ===== */
+    function renderMilkBoxes() {
+        let svg = resetView();
+        const layer = document.getElementById('drawLayer');
+        // 5 個牛奶箱 (每箱 34x42)
+        for (let i = 0; i < 5; i++) {
+            const bx = 22 + i * 40;
+            svg += `<rect x="${bx}" y="30" width="34" height="44" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>`;
+            svg += `<text x="${bx + 17}" y="56" text-anchor="middle" font-size="9" fill="#64748b">第${i+1}箱</text>`;
+        }
+
+        // 塗色標記已喝與剩餘
+        if (currentStep >= 1) {
+            // 上星期 1.5 箱 (第1箱滿 + 第2箱半)
+            svg += `<rect x="22" y="30" width="34" height="44" rx="4" fill="#fed7aa" opacity="0.8"/>`;
+            svg += `<rect x="62" y="30" width="17" height="44" fill="#fed7aa" opacity="0.8"/>`;
+            // 這星期 1.3 箱 (第2箱剩0.5中的0.5 + 第3箱0.8)
+            svg += `<rect x="79" y="30" width="17" height="44" fill="#fecdd3" opacity="0.8"/>`;
+            svg += `<rect x="102" y="30" width="27" height="44" fill="#fecdd3" opacity="0.8"/>`;
+            svg += `<text x="75" y="22" text-anchor="middle" style="font-size:9.5px; fill:#ea580c; font-weight:bold">喝掉 1.5 ＋ 1.3 ＝ 2.8 箱</text>`;
+        }
+
+        if (currentStep >= 2) {
+            // 剩餘 2.2 箱 (第3箱剩0.2 + 第4箱滿 + 第5箱滿)
+            svg += `<rect x="129" y="30" width="7" height="44" fill="#a7f3d0"/>`;
+            svg += `<rect x="142" y="30" width="34" height="44" rx="4" fill="#a7f3d0"/>`;
+            svg += `<rect x="182" y="30" width="34" height="44" rx="4" fill="#a7f3d0"/>`;
+            svg += `<text x="165" y="94" text-anchor="middle" style="font-size:9.5px; fill:#059669; font-weight:bold">剩餘：5 － 2.8 ＝ 2.2 箱</text>`;
+        }
+
+        if (currentStep >= 3) {
+            svg += `<rect x="25" y="118" width="190" height="38" rx="8" fill="#e8f7f1" stroke="#7bc9b2" stroke-width="1.5"/>`;
+            svg += `<text x="120" y="134" text-anchor="middle" class="expr-coral" style="font-size:11.5px">共喝 2.8 箱</text>`;
+            svg += `<text x="120" y="148" text-anchor="middle" class="expr-mint" style="font-size:11.5px">還剩下 2.2 箱 ✓</text>`;
+        }
+        layer.innerHTML = svg;
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

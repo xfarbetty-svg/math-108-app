@@ -153,7 +153,14 @@
   2. `fraction_lab.html` 日系擬物同分母分數實驗台：10 種視覺模式（fraction_compare/add_balance/cake_slices/pizza_detective/one_minus/dumplings/jelly_add/jelly_sub/fish_slices/one_equal）。
   3. 雙硬閘門全綠：`verify_n39.js`（資料契約＋逐題分數數學真值驗算）與 `verify_n39_cdp.js`（390px 實機 10/10 題 app 高度 364~391px ≤ 420px、零溢出、零 console 錯誤）。
   4. 課綱同步：`curriculum.json` N-3-9 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 20 條全綠，`verify_app_shell.js` G3 hero「已開放 9/24」。
-- [ ] 下一步：推進三年級第十單元 `N-3-10 一位小數` 或後續單元。
+- [x] Session 33 清真體檢與全面修復（徹底修復 N-3-6 Q09/Q10、N-3-9 Q08、N-3-7 Q02、N-3-5 Q02 全部拆題與造假比大小，全量雙硬閘門全綠）。
+- [x] Session 34 G3-N-3-10 一位小數 100% 落地閉環（已開放 10/24，全專案 21/131 條目）：
+  1. 10 題實體段考真題落地（`data/units/G3/N-3-10.json`，來源自臺北市內湖國小 111-2、112-2、113-2、114-2 期末真題）：位值辨識（十分位）、數的組成（2.6＝2個1＋6個0.1）、位值反推（十分位3個位6＝6.3）、讀寫轉換（十六點八十分位為8）、盒裝十進位換算（17個0.1盒＝1.7盒）、長度換算（2cm9mm＝2.9cm）、數線跳數規律（4.7->4.8->4.9->5->5.1）、大小比較（零點七＞0.6）、直式加法進位（1.7＋0.8＝2.5）、生活兩步驟應用（牛奶共喝2.8箱剩2.2箱）。
+  2. `decimal_place_lab.html` 034 擬物向量小數實驗台：四階光影、位值台座、積木平板細條、書法木牌、精密量尺、軌道數線、力矩天平、直式進位圈、牛奶箱槽。
+  3. 通道三（035 8把Key池）教育專家盲審 10/10 題 ALL PASS 准予採用。
+  4. 雙硬閘門全綠：`verify_n310.js` 與 `verify_n310_cdp.js`（390px 實機 10/10 題 app 高度 392~401px ≤ 420px、零溢出、零 console 錯誤）。
+  5. 課綱同步：`curriculum.json` N-3-10 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 21 條全綠，`verify_app_shell.js` G3 hero「已開放 10/24」。
+- [ ] 下一步：推進三年級第十一單元 `S-3-1 圓`（圓心、圓周、半徑、直徑、圓規）。
 
 
 ---
