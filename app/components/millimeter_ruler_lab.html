@@ -152,6 +152,10 @@
         .feedback.show { display: block; }
         .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
         .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        /* 當被 iframe 嵌入時，隱藏重複的確認答案按鈕，由 shell 底部的檢查按鈕統一代理 */
+        body.in-iframe .check-btn {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -390,6 +394,9 @@
     }
 
     function init() {
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
         const qParam = parseInt(getQueryParam('q'), 10);
         if (qParam >= 1 && qParam <= 10) currentQ = qParam;
         renderQuestionUI();
