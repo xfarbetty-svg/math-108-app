@@ -303,9 +303,9 @@
           "code": "N-3-1",
           "title": "一萬以內的數",
           "full_text": "一萬以內的數：含位值積木操作活動。結合點數、位值表徵、位值表。位值單位「千」。位值單位換算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "永安國小 114-1 期中（是非/選擇/跳數/讀寫/比大小）＋ 內湖國小 114-1 期中（卡牌/錢幣進千/差值/規律/位值進位）"
         },
         {
           "code": "N-3-2",
