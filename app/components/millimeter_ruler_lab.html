@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-12 長度（毫米） 擬物實驗台</title>
+    <style>
+        :root {
+            --bg: #fff9f0;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.3;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            display: block;
+        }
+        .expr { font-size: 13.5px; fill: var(--text-dark); font-weight: 600; }
+        .expr-coral { font-size: 13.5px; fill: var(--coral); font-weight: bold; }
+        .expr-mint { font-size: 13px; fill: var(--mint); font-weight: bold; }
+        .expr-red { font-size: 12.5px; fill: var(--error); font-weight: bold; }
+        .expr-sky { font-size: 13px; fill: var(--sky); font-weight: bold; }
+        .cap { font-size: 11.5px; min-height: 16px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.25; }
+        .controls { display: flex; flex-direction: column; gap: 4px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 6px 4px;
+            border-radius: 10px;
+            font-size: 11.5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-N-3-12 長度（毫米） 擬物實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 250 160">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看毫米動態</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    /* ===== 10 題實體段考真題資料庫（SSOT） ===== */
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "下面哪一項物品的厚度或長度，用「毫米」記錄比較適合？",
+            options: [
+                "操場跑道的長度",
+                "數學課本的厚度（約 8 毫米）",
+                "國旗竿的高度",
+                "欖仁樹的高度"
+            ],
+            answer_index: 1,
+            visual_mode: "sensible_thickness",
+            final_reveal: "課本厚度約 8 毫米 (mm)",
+            total_steps: 3,
+            explanations: [
+                "認識毫米：毫米是非常細微微小的長度單位",
+                "排查公尺級：跑道(200m)、旗竿(10m)、大樹(8m)都太大",
+                "生活量感：課本厚度約 8mm、硬幣厚度約 2mm 最合適 ✓"
+            ],
+            feedback: "答對了！毫米是用來測量薄物或微小長度的單位，課本厚度約 8 毫米！"
+        },
+        {
+            q: 2,
+            stem: "關於「公分」和「毫米」的關係，下列敘述何者正確？",
+            options: [
+                "1 公分跟 1 毫米是一樣的長度，只是說法不同",
+                "1 公分等於 10 毫米，70 毫米也就是 7 公分",
+                "1 毫米等於 10 公分",
+                "1 公分等於 100 毫米"
+            ],
+            answer_index: 1,
+            visual_mode: "ruler_scale_concept",
+            final_reveal: "1 公分 ＝ 10 毫米 (1cm = 10mm)",
+            total_steps: 3,
+            explanations: [
+                "觀察直尺：0 到 1 公分之間有 10 個等距小格",
+                "單位定義：每一小格就是 1 毫米（1 mm）",
+                "進率結論：1 公分 ＝ 10 毫米；70 毫米 ＝ 7 公分 ✓"
+            ],
+            feedback: "答對了！直尺上 1 大格分成 10 小格，1 公分等於 10 毫米！"
+        },
+        {
+            q: 3,
+            stem: "小美用直尺量一隻小甲蟲，發現牠的長度是 86 個 1 毫米。86 毫米也就是幾公分幾毫米？",
+            options: [
+                "8 公分 6 毫米",
+                "86 公分 0 毫米",
+                "80 公分 6 毫米",
+                "0 公分 86 毫米"
+            ],
+            answer_index: 0,
+            visual_mode: "converter_single_to_multi",
+            final_reveal: "86 毫米 ＝ 8 公分 6 毫米",
+            total_steps: 3,
+            explanations: [
+                "數值分拆：86 毫米 ＝ 80 毫米 ＋ 6 毫米",
+                "整十換算：80 毫米 ＝ 8 個 10 毫米 ＝ 8 公分",
+                "組合答案：8 公分 ＋ 6 毫米 ＝ 8 公分 6 毫米 ✓"
+            ],
+            feedback: "答對了！80 毫米等於 8 公分，加上 6 毫米就是 8 公分 6 毫米！"
+        },
+        {
+            q: 4,
+            stem: "一枝新蠟筆的長度是 6 公分 3 毫米，如果全部換算成「毫米」，是多少毫米？",
+            options: [
+                "603 毫米",
+                "63 毫米",
+                "9 毫米",
+                "36 毫米"
+            ],
+            answer_index: 1,
+            visual_mode: "converter_multi_to_single",
+            final_reveal: "6 公分 3 毫米 ＝ 63 毫米",
+            total_steps: 3,
+            explanations: [
+                "換算公分：1 公分 ＝ 10 毫米，6 公分 ＝ 60 毫米",
+                "加上零星：60 毫米 ＋ 3 毫米 ＝ 63 毫米",
+                "小心陷阱：不是 603 毫米（1 公分不是 100 毫米）✓"
+            ],
+            feedback: "答對了！6 公分等於 60 毫米，再加 3 毫米就是 63 毫米！"
+        },
+        {
+            q: 5,
+            stem: "把印章的一端對齊直尺的「0」刻度，另一端剛好指在「4 公分又往右數 7 個小格（毫米刻度）」。請問這個印章的長度是多少？",
+            options: [
+                "4 公分 7 毫米（也就是 47 毫米）",
+                "4 公分 2 毫米",
+                "7 公分 4 毫米",
+                "40 公分 7 毫米"
+            ],
+            answer_index: 0,
+            visual_mode: "ruler_reading_zero",
+            final_reveal: "4 公分 7 毫米 ＝ 47 毫米",
+            total_steps: 3,
+            explanations: [
+                "確認起點：印章左端對齊 0 刻度，無須扣除起點",
+                "觀察大刻度：右端超過整數 4 公分",
+                "細數小格：右數 7 小格即 7 毫米，合為 4cm 7mm (47mm) ✓"
+            ],
+            feedback: "答對了！起點對齊 0，終點在 4 公分過 7 小格，即 4 公分 7 毫米！"
+        },
+        {
+            q: 6,
+            stem: "小明拿一把起點磨損的斷尺測量橡皮擦，他把橡皮擦的左端對齊刻度「3 公分」，右端剛好落在刻度「8 公分 4 毫米」。請問這個橡皮擦的實際長度是多少？",
+            options: [
+                "8 公分 4 毫米",
+                "11 公分 4 毫米",
+                "5 公分 4 毫米",
+                "3 公分 4 毫米"
+            ],
+            answer_index: 2,
+            visual_mode: "broken_ruler_trap",
+            final_reveal: "8cm 4mm － 3cm ＝ 5cm 4mm",
+            total_steps: 3,
+            explanations: [
+                "警惕陷阱：起點在 3 公分而非 0 刻度！",
+                "計算公式：實際長度 ＝ 終點刻度 － 起點刻度",
+                "減法破招：8 公分 4 毫米 － 3 公分 ＝ 5 公分 4 毫米 ✓"
+            ],
+            feedback: "答對了！斷尺不能直接看終點，起點是 3 公分必須減掉，得到 5 公分 4 毫米！"
+        },
+        {
+            q: 7,
+            stem: "在下列長度比大小的題目中，何者填入的符號是正確的？",
+            options: [
+                "69 毫米 ＞ 9 公分 6 毫米",
+                "7 公分 2 毫米 ＝ 702 毫米",
+                "6 公分 7 毫米 ＞ 60 毫米",
+                "14 公分 ＜ 104 毫米"
+            ],
+            answer_index: 2,
+            visual_mode: "compare_length",
+            final_reveal: "6 公分 7 毫米 (67mm) ＞ 60 毫米",
+            total_steps: 3,
+            explanations: [
+                "統一度量衡：比大小前先把公分全部換成毫米",
+                "驗算選項：6 公分 7 毫米 ＝ 67 毫米",
+                "大小判定：67 毫米 ＞ 60 毫米，正確！✓"
+            ],
+            feedback: "答對了！6 公分 7 毫米等於 67 毫米，確實大於 60 毫米！"
+        },
+        {
+            q: 8,
+            stem: "算算看：「69 毫米 ＋ 8 公分 5 毫米」等於幾公分幾毫米？",
+            options: [
+                "14 公分 4 毫米",
+                "15 公分 4 毫米",
+                "14 公分 14 毫米",
+                "154 公分 0 毫米"
+            ],
+            answer_index: 1,
+            visual_mode: "addition_carry",
+            final_reveal: "15 公分 4 毫米",
+            total_steps: 3,
+            explanations: [
+                "複名數對齊：69 毫米 ＝ 6 公分 9 毫米",
+                "毫米相加：9 ＋ 5 ＝ 14 毫米（滿 10 毫米進 1 公分，留 4 毫米）",
+                "公分相加：6 ＋ 8 ＋ 進位 1 ＝ 15 公分，共 15 公分 4 毫米 ✓"
+            ],
+            feedback: "答對了！毫米位相加滿 10 毫米要向公分進 1，答案是 15 公分 4 毫米！"
+        },
+        {
+            q: 9,
+            stem: "算算看直式計算：「9 公分 3 毫米 － 1 公分 5 毫米」等於多少？",
+            options: [
+                "8 公分 2 毫米",
+                "7 公分 8 毫米",
+                "8 公分 8 毫米",
+                "7 公分 2 毫米"
+            ],
+            answer_index: 1,
+            visual_mode: "subtraction_borrow",
+            final_reveal: "7 公分 8 毫米",
+            total_steps: 3,
+            explanations: [
+                "毫米不夠減：3 毫米減 5 毫米不夠",
+                "退位借公分：從 9 公分借 1 公分（換成 10 毫米），9 變 8",
+                "計算毫米與公分：10 ＋ 3 － 5 ＝ 8 毫米，8 － 1 ＝ 7 公分 ✓"
+            ],
+            feedback: "答對了！借 1 公分當 10 毫米，13－5＝8 毫米，8－1＝7 公分，得 7 公分 8 毫米！"
+        },
+        {
+            q: 10,
+            stem: "黃色蠟筆長 32 毫米，紫色蠟筆比黃色蠟筆短 13 毫米。請問紫色蠟筆長多少毫米？也就是幾公分幾毫米？",
+            options: [
+                "19 毫米（也就是 1 公分 9 毫米）",
+                "45 毫米（也就是 4 公分 5 毫米）",
+                "21 毫米（也就是 2 公分 1 毫米）",
+                "18 毫米（也就是 1 公分 8 毫米）"
+            ],
+            answer_index: 0,
+            visual_mode: "crayon_difference",
+            final_reveal: "19 毫米 ＝ 1 公分 9 毫米",
+            total_steps: 3,
+            explanations: [
+                "列出算式：「比它短」用減法：32 － 13 ＝ 19 毫米",
+                "單位換算：19 毫米 ＝ 10 毫米 ＋ 9 毫米 ＝ 1 公分 9 毫米",
+                "檢驗確認：19 ＋ 13 ＝ 32 毫米，無誤 ✓"
+            ],
+            feedback: "答對了！32－13＝19 毫米，19 毫米換算就是 1 公分 9 毫米！"
+        }
+    ];
+
+    /* ===== 全局狀態管理 ===== */
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = null;
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function init() {
+        const qParam = parseInt(getQueryParam('q'), 10);
+        if (qParam >= 1 && qParam <= 10) currentQ = qParam;
+        renderQuestionUI();
+    }
+
+    function renderQuestionUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = 0;
+        selectedOption = null;
+
+        document.getElementById('questionBox').textContent = `Q${qData.q}. ${qData.stem}`;
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (0/${qData.total_steps})`;
+        document.getElementById('capText').textContent = "點擊「逐步算理」查看長度演繹";
+        
+        const fb = document.getElementById('feedbackBox');
+        fb.className = "feedback";
+        fb.textContent = "";
+
+        // 渲染 4 個選項按鈕
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = "";
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "option-btn";
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+
+        drawStage(0);
+        notifyParentHeight();
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach((b, i) => {
+            if (i === idx) b.classList.add('selected');
+            else b.classList.remove('selected');
+        });
+    }
+
+    function checkAnswer() {
+        const qData = QUESTIONS[currentQ - 1];
+        const fb = document.getElementById('feedbackBox');
+        if (selectedOption === null) {
+            fb.className = "feedback show wrong";
+            fb.textContent = "請先選擇一個選項再按確認！";
+            return;
+        }
+
+        if (selectedOption === qData.answer_index) {
+            fb.className = "feedback show correct";
+            fb.textContent = qData.feedback;
+            currentStep = qData.total_steps;
+            document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+            drawStage(currentStep);
+        } else {
+            fb.className = "feedback show wrong";
+            fb.textContent = "再仔細想想看喔！可以點擊「逐步算理演繹」看看提示！";
+        }
+        notifyParentHeight();
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = (currentStep + 1) % (qData.total_steps + 1);
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        
+        if (currentStep === 0) {
+            document.getElementById('capText').textContent = "點擊「逐步算理」查看長度演繹";
+        } else {
+            document.getElementById('capText').textContent = qData.explanations[currentStep - 1];
+        }
+        drawStage(currentStep);
+        notifyParentHeight();
+    }
+
+    function notifyParentHeight() {
+        setTimeout(() => {
+            const app = document.getElementById('app');
+            const h = app ? Math.min(app.offsetHeight + 10, 420) : 380;
+            window.parent.postMessage({ type: 'resize', height: h }, '*');
+        }, 50);
+    }
+
+    /* ===== 純向量 SVG 動態繪製 (10 種模式) ===== */
+    function drawStage(step) {
+        const layer = document.getElementById('drawLayer');
+        layer.innerHTML = "";
+        const qData = QUESTIONS[currentQ - 1];
+
+        switch (qData.visual_mode) {
+            case "sensible_thickness":
+                drawQ1(layer, step);
+                break;
+            case "ruler_scale_concept":
+                drawQ2(layer, step);
+                break;
+            case "converter_single_to_multi":
+                drawQ3(layer, step);
+                break;
+            case "converter_multi_to_single":
+                drawQ4(layer, step);
+                break;
+            case "ruler_reading_zero":
+                drawQ5(layer, step);
+                break;
+            case "broken_ruler_trap":
+                drawQ6(layer, step);
+                break;
+            case "compare_length":
+                drawQ7(layer, step);
+                break;
+            case "addition_carry":
+                drawQ8(layer, step);
+                break;
+            case "subtraction_borrow":
+                drawQ9(layer, step);
+                break;
+            case "crayon_difference":
+                drawQ10(layer, step);
+                break;
+        }
+    }
+
+    // Q1: 生活量感 (課本 vs 操場旗竿)
+    function drawQ1(g, step) {
+        g.innerHTML = `
+            <rect x="10" y="10" width="230" height="140" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+            <!-- 遠景淡化跑道與大樹 -->
+            <path d="M 20 120 Q 60 95 100 120" fill="none" stroke="#94a3b8" stroke-width="5" opacity="0.3"/>
+            <text x="30" y="110" font-size="9" fill="#94a3b8">操場 200m</text>
+            <rect x="80" y="50" width="6" height="50" fill="#a16207" opacity="0.4"/>
+            <circle cx="83" cy="45" r="16" fill="#15803d" opacity="0.4"/>
+            <text x="65" y="25" font-size="9" fill="#94a3b8">大樹 8m</text>
+
+            <!-- 放大鏡微觀課本 -->
+            <circle cx="170" cy="75" r="50" fill="#ffffff" stroke="#0284c7" stroke-width="3"/>
+            <line x1="205" y1="110" x2="230" y2="135" stroke="#0284c7" stroke-width="7" stroke-linecap="round"/>
+            
+            <g transform="translate(145, 50)">
+                <rect x="0" y="5" width="50" height="12" rx="2" fill="#38bdf8"/>
+                <rect x="0" y="17" width="50" height="25" fill="#fef08a" stroke="#ca8a04"/>
+                <line x1="-8" y1="5" x2="-8" y2="42" stroke="#ef4444" stroke-width="1.5"/>
+                <line x1="-11" y1="5" x2="-5" y2="5" stroke="#ef4444"/>
+                <line x1="-11" y1="42" x2="-5" y2="42" stroke="#ef4444"/>
+                <text x="-32" y="27" font-size="10" font-weight="bold" fill="#ef4444">8mm</text>
+                <text x="5" y="54" font-size="9" font-weight="bold" fill="#0369a1">課本厚度</text>
+            </g>
+            ${step >= 2 ? '<rect x="20" y="20" width="105" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/><text x="26" y="35" font-size="9.5" font-weight="bold" fill="#047857">薄物用毫米記 ✓</text>' : ''}
+        `;
+    }
+
+    // Q2: 刻度放大鏡 (1cm = 10mm)
+    function drawQ2(g, step) {
+        g.innerHTML = `
+            <!-- 擬物直尺 (0~3 cm) -->
+            <rect x="15" y="20" width="220" height="40" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+            <g stroke="#78350f">
+                <line x1="30" y1="20" x2="30" y2="40" stroke-width="1.5"/><text x="27" y="52" font-size="10" font-weight="bold">0</text>
+                <line x1="85" y1="20" x2="85" y2="40" stroke-width="1.5"/><text x="82" y="52" font-size="10" font-weight="bold">1</text>
+                <line x1="140" y1="20" x2="140" y2="40" stroke-width="1.5"/><text x="137" y="52" font-size="10" font-weight="bold">2</text>
+                <line x1="195" y1="20" x2="195" y2="40" stroke-width="1.5"/><text x="192" y="52" font-size="10" font-weight="bold">3</text>
+            </g>
+
+            <!-- 0 到 1cm 放大特寫 -->
+            <polygon points="30,20 85,20 220,75 30,75" fill="rgba(14, 165, 233, 0.1)" stroke="#38bdf8" stroke-dasharray="2 2"/>
+
+            <g transform="translate(30, 75)">
+                <rect x="0" y="0" width="190" height="65" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
+                <line x1="15" y1="0" x2="15" y2="25" stroke="#0284c7" stroke-width="2"/><text x="11" y="38" font-size="10" font-weight="bold" fill="#0284c7">0</text>
+                
+                <!-- 10小格 -->
+                <line x1="31" y1="0" x2="31" y2="12" stroke="#64748b"/>
+                <line x1="47" y1="0" x2="47" y2="12" stroke="#64748b"/>
+                <line x1="63" y1="0" x2="63" y2="12" stroke="#64748b"/>
+                <line x1="79" y1="0" x2="79" y2="12" stroke="#64748b"/>
+                <line x1="95" y1="0" x2="95" y2="18" stroke="#ea580c" stroke-width="1.5"/>
+                <line x1="111" y1="0" x2="111" y2="12" stroke="#64748b"/>
+                <line x1="127" y1="0" x2="127" y2="12" stroke="#64748b"/>
+                <line x1="143" y1="0" x2="143" y2="12" stroke="#64748b"/>
+                <line x1="159" y1="0" x2="159" y2="12" stroke="#64748b"/>
+                <line x1="175" y1="0" x2="175" y2="25" stroke="#0284c7" stroke-width="2"/><text x="165" y="38" font-size="10" font-weight="bold" fill="#0284c7">1cm</text>
+
+                <text x="95" y="52" font-size="11" font-weight="bold" fill="#ef4444" text-anchor="middle">1 公分 ＝ 10 毫米</text>
+            </g>
+        `;
+    }
+
+    // Q3: 單名數轉複名數 (86mm -> 8cm 6mm)
+    function drawQ3(g, step) {
+        g.innerHTML = `
+            <rect x="20" y="15" width="210" height="32" rx="4" fill="#f0fdf4" stroke="#86efac"/>
+            <text x="35" y="35" font-size="11.5" font-weight="bold" fill="#15803d">🪲 小甲蟲總長：86 毫米 (mm)</text>
+
+            <path d="M 80 50 L 60 70" stroke="#10b981" stroke-width="2" fill="none"/>
+            <path d="M 170 50 L 190 70" stroke="#f59e0b" stroke-width="2" fill="none"/>
+
+            <!-- 左側 80mm = 8cm -->
+            <g transform="translate(20, 72)">
+                <rect x="0" y="0" width="95" height="55" rx="6" fill="#ecfdf5" stroke="#10b981"/>
+                <text x="47" y="18" font-size="9.5" font-weight="bold" fill="#065f46" text-anchor="middle">80 毫米</text>
+                <text x="47" y="34" font-size="9" fill="#047857" text-anchor="middle">8個10毫米 ＝</text>
+                <text x="47" y="48" font-size="12" font-weight="bold" fill="#047857" text-anchor="middle">8 公分</text>
+            </g>
+
+            <text x="125" y="105" font-size="18" font-weight="bold" fill="#64748b" text-anchor="middle">＋</text>
+
+            <!-- 右側 6mm -->
+            <g transform="translate(135, 72)">
+                <rect x="0" y="0" width="95" height="55" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+                <text x="47" y="18" font-size="9.5" font-weight="bold" fill="#92400e" text-anchor="middle">6 毫米</text>
+                <text x="47" y="34" font-size="9" fill="#b45309" text-anchor="middle">零星毫米</text>
+                <text x="47" y="48" font-size="12" font-weight="bold" fill="#b45309" text-anchor="middle">6 毫米</text>
+            </g>
+            <text x="125" y="145" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">＝ 8 公分 6 毫米 ✓</text>
+        `;
+    }
+
+    // Q4: 複名數轉單名數 (6cm 3mm -> 63mm)
+    function drawQ4(g, step) {
+        g.innerHTML = `
+            <g transform="translate(25, 20)">
+                <polygon points="0,12 12,2 12,22" fill="#f43f5e"/>
+                <rect x="12" y="2" width="180" height="20" rx="2" fill="#fb7185" stroke="#e11d48"/>
+                <text x="40" y="16" font-size="11" font-weight="bold" fill="#881337">蠟筆：6 公分 3 毫米</text>
+            </g>
+
+            <g transform="translate(30, 55)">
+                <rect x="0" y="0" width="190" height="85" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="15" y="24" font-size="10.5" font-weight="bold" fill="#0284c7">① 6 公分 ＝ 6 × 10 ＝ 60 毫米</text>
+                <text x="15" y="46" font-size="10.5" font-weight="bold" fill="#d97706">② 加上 3 毫米：</text>
+                <text x="30" y="68" font-size="12.5" font-weight="bold" fill="#ef4444">60 ＋ 3 ＝ 63 毫米 ✓</text>
+            </g>
+        `;
+    }
+
+    // Q5: 直尺 0 刻度實測 (印章 4cm 7mm)
+    function drawQ5(g, step) {
+        g.innerHTML = `
+            <!-- 印章 -->
+            <g transform="translate(30, 20)">
+                <rect x="0" y="0" width="135" height="25" rx="3" fill="#a16207" stroke="#78350f"/>
+                <text x="40" y="17" font-size="10.5" font-weight="bold" fill="#ffffff">木質印章</text>
+                <line x1="0" y1="25" x2="0" y2="60" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <line x1="135" y1="25" x2="135" y2="60" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <text x="-10" y="10" font-size="9" fill="#ef4444">0cm</text>
+                <text x="120" y="10" font-size="9" fill="#ef4444">4cm7mm</text>
+            </g>
+
+            <!-- 直尺 (0~6cm, 每cm=28.7px) -->
+            <g transform="translate(30, 55)">
+                <rect x="0" y="0" width="190" height="45" rx="3" fill="#fef3c7" stroke="#d97706"/>
+                <line x1="0" y1="0" x2="0" y2="18" stroke="#78350f" stroke-width="1.5"/><text x="-3" y="30" font-size="9">0</text>
+                <line x1="29" y1="0" x2="29" y2="18" stroke="#78350f"/><text x="26" y="30" font-size="9">1</text>
+                <line x1="58" y1="0" x2="58" y2="18" stroke="#78350f"/><text x="55" y="30" font-size="9">2</text>
+                <line x1="86" y1="0" x2="86" y2="18" stroke="#78350f"/><text x="83" y="30" font-size="9">3</text>
+                <line x1="115" y1="0" x2="115" y2="18" stroke="#78350f"/><text x="112" y="30" font-size="9">4</text>
+                <line x1="144" y1="0" x2="144" y2="18" stroke="#78350f"/><text x="141" y="30" font-size="9">5</text>
+                
+                <!-- 4cm 7mm (115 + 20 = 135px) -->
+                <circle cx="135" cy="12" r="3" fill="#ef4444"/>
+            </g>
+            <text x="125" y="125" font-size="11.5" font-weight="bold" fill="#047857" text-anchor="middle">長度：4 公分 7 毫米（47 毫米）✓</text>
+        `;
+    }
+
+    // Q6: 斷尺非 0 起點實測破招
+    function drawQ6(g, step) {
+        g.innerHTML = `
+            <!-- 橡皮擦 (從 3cm=60px 到 8cm4mm=168px，寬度 108px) -->
+            <g transform="translate(20, 20)">
+                <path d="M 0 40 L 10 32 L 3 25 L 14 18 L 6 10 L 18 2 L 18 40 Z" fill="#e2e8f0"/>
+                <text x="0" y="8" font-size="8.5" fill="#ef4444" font-weight="bold">磨損斷尺！</text>
+                
+                <rect x="60" y="8" width="108" height="22" rx="3" fill="#67e8f9" stroke="#0891b2"/>
+                <text x="95" y="23" font-size="9.5" font-weight="bold" fill="#164e63">橡皮擦</text>
+                
+                <line x1="60" y1="30" x2="60" y2="50" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <line x1="168" y1="30" x2="168" y2="50" stroke="#ef4444" stroke-dasharray="2 2"/>
+
+                <!-- 直尺 (顯示 2~9 cm) -->
+                <g transform="translate(0, 42)">
+                    <rect x="18" y="0" width="195" height="38" rx="2" fill="#fef3c7" stroke="#d97706"/>
+                    <line x1="40" y1="0" x2="40" y2="15" stroke="#78350f"/><text x="37" y="26" font-size="8.5">2</text>
+                    <line x1="60" y1="0" x2="60" y2="18" stroke="#ef4444" stroke-width="1.5"/><text x="57" y="27" font-size="9" font-weight="bold" fill="#ef4444">3</text>
+                    <line x1="80" y1="0" x2="80" y2="12" stroke="#78350f"/><text x="77" y="26" font-size="8.5">4</text>
+                    <line x1="100" y1="0" x2="100" y2="12" stroke="#78350f"/><text x="97" y="26" font-size="8.5">5</text>
+                    <line x1="120" y1="0" x2="120" y2="12" stroke="#78350f"/><text x="117" y="26" font-size="8.5">6</text>
+                    <line x1="140" y1="0" x2="140" y2="12" stroke="#78350f"/><text x="137" y="26" font-size="8.5">7</text>
+                    <line x1="160" y1="0" x2="160" y2="15" stroke="#78350f"/><text x="157" y="26" font-size="8.5">8</text>
+                    <line x1="168" y1="0" x2="168" y2="18" stroke="#ef4444" stroke-width="1.5"/>
+                </g>
+            </g>
+
+            <g transform="translate(25, 110)">
+                <rect x="0" y="0" width="200" height="36" rx="4" fill="#fef2f2" stroke="#ef4444"/>
+                <text x="10" y="15" font-size="9" font-weight="bold" fill="#991b1b">⚠️ 破招：終點刻度 － 起點刻度</text>
+                <text x="10" y="29" font-size="11" font-weight="bold" fill="#dc2626">8cm 4mm － 3cm ＝ <tspan fill="#047857">5cm 4mm</tspan> ✓</text>
+            </g>
+        `;
+    }
+
+    // Q7: 長度比大小 (6cm 7mm vs 60mm)
+    function drawQ7(g, step) {
+        g.innerHTML = `
+            <g transform="translate(25, 20)">
+                <rect x="0" y="5" width="134" height="20" rx="3" fill="#a7f3d0" stroke="#059669"/>
+                <text x="10" y="19" font-size="10" font-weight="bold" fill="#065f46">6 公分 7 毫米 ＝ 67 mm</text>
+                <line x1="134" y1="0" x2="134" y2="60" stroke="#ef4444" stroke-dasharray="2 2"/>
+
+                <rect x="0" y="32" width="120" height="20" rx="3" fill="#fed7aa" stroke="#ea580c"/>
+                <text x="10" y="46" font-size="10" font-weight="bold" fill="#9a3412">60 毫米 ＝ 60 mm</text>
+            </g>
+
+            <g transform="translate(35, 85)">
+                <rect x="0" y="0" width="180" height="55" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="15" y="20" font-size="10" fill="#64748b">統一為毫米後比較：</text>
+                <text x="35" y="42" font-size="13" font-weight="bold" fill="#065f46">67 mm</text>
+                <text x="90" y="43" font-size="18" font-weight="bold" fill="#ef4444">＞</text>
+                <text x="115" y="42" font-size="13" font-weight="bold" fill="#9a3412">60 mm</text>
+            </g>
+        `;
+    }
+
+    // Q8: 長度加法進位
+    function drawQ8(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 15)">
+                <rect x="0" y="0" width="160" height="130" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="40" y="22" font-size="11" font-weight="bold" fill="#0284c7">公分</text>
+                <text x="100" y="22" font-size="11" font-weight="bold" fill="#d97706">毫米</text>
+                <line x1="15" y1="28" x2="145" y2="28" stroke="#cbd5e1"/>
+
+                <!-- 進位 ① -->
+                <circle cx="50" cy="38" r="6" fill="#ef4444"/>
+                <text x="50" y="42" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+
+                <text x="45" y="58" font-size="13" font-weight="bold">6</text>
+                <text x="105" y="58" font-size="13" font-weight="bold">9</text>
+
+                <text x="15" y="78" font-size="13" font-weight="bold">＋</text>
+                <text x="45" y="78" font-size="13" font-weight="bold">8</text>
+                <text x="105" y="78" font-size="13" font-weight="bold">5</text>
+                <line x1="15" y1="85" x2="145" y2="85" stroke="#333" stroke-width="1.5"/>
+
+                <text x="35" y="105" font-size="14" font-weight="bold" fill="#047857">15</text>
+                <text x="105" y="105" font-size="14" font-weight="bold" fill="#047857">4</text>
+                <text x="80" y="122" font-size="9" fill="#dc2626" text-anchor="middle">9+5=14 (進1留4)</text>
+            </g>
+        `;
+    }
+
+    // Q9: 長度減法退位
+    function drawQ9(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 15)">
+                <rect x="0" y="0" width="160" height="130" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="40" y="22" font-size="11" font-weight="bold" fill="#0284c7">公分</text>
+                <text x="100" y="22" font-size="11" font-weight="bold" fill="#d97706">毫米</text>
+                <line x1="15" y1="28" x2="145" y2="28" stroke="#cbd5e1"/>
+
+                <!-- 退位 8 與 10 -->
+                <text x="45" y="42" font-size="10" font-weight="bold" fill="#ef4444">8</text>
+                <line x1="42" y1="46" x2="52" y2="58" stroke="#ef4444"/>
+                <text x="100" y="42" font-size="10" font-weight="bold" fill="#ef4444">10</text>
+
+                <text x="45" y="58" font-size="13" font-weight="bold" fill="#94a3b8">9</text>
+                <text x="105" y="58" font-size="13" font-weight="bold">3</text>
+
+                <text x="15" y="78" font-size="13" font-weight="bold">－</text>
+                <text x="45" y="78" font-size="13" font-weight="bold">1</text>
+                <text x="105" y="78" font-size="13" font-weight="bold">5</text>
+                <line x1="15" y1="85" x2="145" y2="85" stroke="#333" stroke-width="1.5"/>
+
+                <text x="45" y="105" font-size="14" font-weight="bold" fill="#047857">7</text>
+                <text x="105" y="105" font-size="14" font-weight="bold" fill="#047857">8</text>
+                <text x="80" y="122" font-size="9" fill="#dc2626" text-anchor="middle">10+3-5 = 8mm</text>
+            </g>
+        `;
+    }
+
+    // Q10: 蠟筆生活差量比較
+    function drawQ10(g, step) {
+        g.innerHTML = `
+            <g transform="translate(25, 20)">
+                <polygon points="0,10 10,2 10,18" fill="#eab308"/>
+                <rect x="10" y="2" width="160" height="16" rx="2" fill="#fde047" stroke="#ca8a04"/>
+                <text x="25" y="14" font-size="9.5" font-weight="bold" fill="#854d0e">黃蠟筆：32 毫米</text>
+
+                <polygon points="0,32 10,24 10,40" fill="#7c3aed"/>
+                <rect x="10" y="24" width="95" height="16" rx="2" fill="#c4b5fd" stroke="#6d28d9"/>
+                <text x="20" y="36" font-size="9.5" font-weight="bold" fill="#4c1d95">紫蠟筆：？</text>
+
+                <line x1="170" y1="0" x2="170" y2="48" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <line x1="105" y1="20" x2="105" y2="48" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <rect x="105" y="24" width="65" height="16" rx="2" fill="none" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <text x="112" y="36" font-size="8.5" fill="#ef4444" font-weight="bold">短 13mm</text>
+            </g>
+
+            <g transform="translate(30, 80)">
+                <rect x="0" y="0" width="190" height="55" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="15" y="22" font-size="10.5" font-weight="bold" fill="#1e293b">💡 差量算式（用減法）：</text>
+                <text x="25" y="42" font-size="12" font-weight="bold" fill="#6d28d9">32 － 13 ＝ <tspan fill="#047857">19 毫米</tspan></text>
+                <text x="130" y="42" font-size="10.5" font-weight="bold" fill="#047857">(1cm 9mm) ✓</text>
+            </g>
+        `;
+    }
+
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'setQuestion') {
+            const q = parseInt(e.data.q, 10);
+            if (q >= 1 && q <= 10) {
+                currentQ = q;
+                renderQuestionUI();
+            }
+        }
+    });
+
+    window.addEventListener('load', init);
+    window.addEventListener('resize', notifyParentHeight);
+</script>
+</body>
+</html>

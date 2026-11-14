@@ -1,0 +1,314 @@
+{
+  "code": "N-3-12",
+  "title": "長度（「毫米」）",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-1/112-1/113-1/114-1 期中 ＆ 高雄市永安國小 114-1 期中段考真題",
+  "questions": [
+    {
+      "id": "G3-N-3-12-Q01",
+      "exam_source": "高雄市永安國小 114-1 期中二-4 ＆ 臺北市內湖國小 114-1 期中一-5",
+      "section": "選擇題",
+      "question_num": 1,
+      "title": "生活量感單位選擇",
+      "stem": "下面哪一項物品的厚度或長度，用「毫米」記錄比較適合？",
+      "choices": [
+        "操場跑道的長度",
+        "數學課本的厚度（約 8 毫米）",
+        "國旗竿的高度",
+        "欖仁樹的高度"
+      ],
+      "answer_index": 1,
+      "answer_raw": "數學課本的厚度（約 8 毫米）",
+      "visual_mode": "sensible_thickness",
+      "final_check": "8 毫米非常薄，非常適合課本或硬幣厚度；操場、旗竿、大樹皆以公尺或公分為單位。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=1",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "毫米的生活量感與單位選擇",
+        "steps": [
+          "「毫米」（mm）是非常小的長度單位，常用來測量很薄、很細或很短的物品。",
+          "例如：10 元硬幣厚度約 2 毫米、數學課本厚度約 8 毫米。",
+          "操場跑道（以公尺記）、國旗竿與大樹（以公尺記）都太大，不適合用毫米。"
+        ],
+        "trap": "不要把毫米（mm）和公分（cm）混淆，10 毫米才等於 1 公分。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q02",
+      "exam_source": "高雄市永安國小 114-1 期中一-5 ＆ 臺北市內湖國小 113-1 期中一-5",
+      "section": "觀念題",
+      "question_num": 2,
+      "title": "公分與毫米的關係",
+      "stem": "關於「公分」和「毫米」的關係，下列敘述何者正確？",
+      "choices": [
+        "1 公分跟 1 毫米是一樣的長度，只是說法不同",
+        "1 公分等於 10 毫米，70 毫米也就是 7 公分",
+        "1 毫米等於 10 公分",
+        "1 公分等於 100 毫米"
+      ],
+      "answer_index": 1,
+      "answer_raw": "1 公分等於 10 毫米，70 毫米也就是 7 公分",
+      "visual_mode": "ruler_scale_concept",
+      "final_check": "1cm = 10mm，70mm ÷ 10 = 7cm，敘述完全正確。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=2",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "公分與毫米的進率關係（1 公分 = 10 毫米）",
+        "steps": [
+          "直尺上相鄰兩個公分數字之間（例如 0 到 1），被平均分成了 10 個小格。",
+          "每一小格的長度就是「1 毫米（1 mm）」。",
+          "因此 1 公分 ＝ 10 毫米；70 毫米 ＝ 7 公分。"
+        ],
+        "trap": "容易誤以為 1 公分 = 1 毫米或 1 公分 = 100 毫米（1 公尺才是 100 公分）。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q03",
+      "exam_source": "臺北市內湖國小 113-1 期中二-6 ＆ 112-1 期中二-(4) ＆ 高雄市永安國小 114-1 期中三-7-(4)",
+      "section": "填空題",
+      "question_num": 3,
+      "title": "單名數化複名數",
+      "stem": "小美用直尺量一隻小甲蟲，發現牠的長度是 86 個 1 毫米。86 毫米也就是幾公分幾毫米？",
+      "choices": [
+        "8 公分 6 毫米",
+        "86 公分 0 毫米",
+        "80 公分 6 毫米",
+        "0 公分 86 毫米"
+      ],
+      "answer_index": 0,
+      "answer_raw": "8 公分 6 毫米",
+      "visual_mode": "converter_single_to_multi",
+      "final_check": "86 毫米 = 80 毫米 + 6 毫米 = 8 公分 6 毫米。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=3",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "單名數（毫米）轉換為複名數（公分與毫米）",
+        "steps": [
+          "86 毫米可以分解為 80 毫米 和 6 毫米。",
+          "因為 10 毫米 ＝ 1 公分，所以 80 毫米 ＝ 8 公分。",
+          "合起來就是「8 公分 6 毫米」。"
+        ],
+        "trap": "十位數「8」代表 8 個 10 毫米，也就是 8 公分；個位數「6」代表 6 毫米。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q04",
+      "exam_source": "高雄市永安國小 114-1 期中三-7-(2) ＆ 臺北市內湖國小 112-1 期中二-(3)",
+      "section": "填空題",
+      "question_num": 4,
+      "title": "複名數化單名數",
+      "stem": "一枝新蠟筆的長度是 6 公分 3 毫米，如果全部換算成「毫米」，是多少毫米？",
+      "choices": [
+        "603 毫米",
+        "63 毫米",
+        "9 毫米",
+        "36 毫米"
+      ],
+      "answer_index": 1,
+      "answer_raw": "63 毫米",
+      "visual_mode": "converter_multi_to_single",
+      "final_check": "6 公分 = 60 毫米，60 + 3 = 63 毫米。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=4",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "複名數（公分與毫米）轉換為單名數（毫米）",
+        "steps": [
+          "先將「公分」換算成「毫米」：1 公分 ＝ 10 毫米，所以 6 公分 ＝ 60 毫米。",
+          "再把剩下的毫米加進來：60 毫米 ＋ 3 毫米 ＝ 63 毫米。"
+        ],
+        "trap": "小心不要寫成 603 毫米（誤以為 1 公分 = 100 毫米）。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q05",
+      "exam_source": "臺北市內湖國小 114-1 期中二-8 ＆ 高雄市永安國小 114-1 期中五-3",
+      "section": "實測題",
+      "question_num": 5,
+      "title": "直尺刻度實測報讀",
+      "stem": "把印章的一端對齊直尺的「0」刻度，另一端剛好指在「4 公分又往右數 7 個小格（毫米刻度）」。請問這個印章的長度是多少？",
+      "choices": [
+        "4 公分 7 毫米（也就是 47 毫米）",
+        "4 公分 2 毫米",
+        "7 公分 4 毫米",
+        "40 公分 7 毫米"
+      ],
+      "answer_index": 0,
+      "answer_raw": "4 公分 7 毫米（也就是 47 毫米）",
+      "visual_mode": "ruler_reading_zero",
+      "final_check": "起點為 0，終點為 4 公分過 7 小格，即 4 公分 7 毫米 = 47 毫米。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=5",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "直尺對齊 0 刻度的長度報讀",
+        "steps": [
+          "測量時物體起點對齊直尺的「0」刻度。",
+          "觀察終點位置：超過整數大刻度「4 公分」，再細數小刻度有 7 小格。",
+          "每一小格代表 1 毫米，因此長度是「4 公分 7 毫米」，也就是 47 毫米。"
+        ],
+        "trap": "注意看清楚大刻度是公分、小刻度是毫米，不要把公分和毫米位置顛倒。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q06",
+      "exam_source": "臺北市內湖國小 112-1 期中二-(10) ＆ 高雄市永安國小 114-1 期中五-2",
+      "section": "實測陷阱題",
+      "question_num": 6,
+      "title": "斷尺非零起點實測破招",
+      "stem": "小明拿一把起點磨損的斷尺測量橡皮擦，他把橡皮擦的左端對齊刻度「3 公分」，右端剛好落在刻度「8 公分 4 毫米」。請問這個橡皮擦的實際長度是多少？",
+      "choices": [
+        "8 公分 4 毫米",
+        "11 公分 4 毫米",
+        "5 公分 4 毫米",
+        "3 公分 4 毫米"
+      ],
+      "answer_index": 2,
+      "answer_raw": "5 公分 4 毫米",
+      "visual_mode": "broken_ruler_trap",
+      "final_check": "8 公分 4 毫米 - 3 公分 = 5 公分 4 毫米。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=6",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "非 0 刻度起點（斷尺測量）的長度計算",
+        "steps": [
+          "當起點不是從「0」開始時，右端讀數「不能直接當作長度」！",
+          "實際長度 ＝ 右端終點刻度 － 左端起點刻度。",
+          "算式：8 公分 4 毫米 － 3 公分 ＝ 5 公分 4 毫米（也就是 54 毫米）。"
+        ],
+        "trap": "段考最大陷阱：直接看右邊寫 8 公分 4 毫米就中計了！起點在 3 公分必須減掉。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q07",
+      "exam_source": "臺北市內湖國小 113-1 期中三-6、7 ＆ 高雄市永安國小 114-1 期中四-3、4",
+      "section": "比大小題",
+      "question_num": 7,
+      "title": "長度單位比大小",
+      "stem": "在下列長度比大小的題目中，何者填入的符號是正確的？",
+      "choices": [
+        "69 毫米 ＞ 9 公分 6 毫米",
+        "7 公分 2 毫米 ＝ 702 毫米",
+        "6 公分 7 毫米 ＞ 60 毫米",
+        "14 公分 ＜ 104 毫米"
+      ],
+      "answer_index": 2,
+      "answer_raw": "6 公分 7 毫米 ＞ 60 毫米",
+      "visual_mode": "compare_length",
+      "final_check": "6 公分 7 毫米 = 67 毫米，67 毫米 > 60 毫米，正確。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=7",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "不同單位名數長度比大小（統一換算成毫米再比）",
+        "steps": [
+          "比大小時，先把公分全部化為毫米：",
+          "A項：9 公分 6 毫米 ＝ 96 毫米，69 毫米 ＜ 96 毫米（原式錯誤）。",
+          "B項：7 公分 2 毫米 ＝ 72 毫米，72 毫米 ＜ 702 毫米（原式錯誤）。",
+          "C項：6 公分 7 毫米 ＝ 67 毫米，67 毫米 ＞ 60 毫米（✓ 正確！）。",
+          "D項：14 公分 ＝ 140 毫米，140 毫米 ＞ 104 毫米（原式錯誤）。"
+        ],
+        "trap": "看到數字 69 和 96 容易眼花看錯；7 公分 2 毫米是 72 毫米不是 702 毫米。"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q08",
+      "exam_source": "臺北市內湖國小 114-1 期中四-⑥ ＆ 高雄市永安國小 114-1 期中五-6",
+      "section": "計算題",
+      "question_num": 8,
+      "title": "長度加法計算（進位）",
+      "stem": "算算看：「69 毫米 ＋ 8 公分 5 毫米」等於幾公分幾毫米？",
+      "choices": [
+        "14 公分 4 毫米",
+        "15 公分 4 毫米",
+        "14 公分 14 毫米",
+        "154 公分 0 毫米"
+      ],
+      "answer_index": 1,
+      "answer_raw": "15 公分 4 毫米",
+      "visual_mode": "addition_carry",
+      "final_check": "69 毫米 = 6 公分 9 毫米。6cm 9mm + 8cm 5mm = 14cm 14mm = 15cm 4mm。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=8",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "長度直式加法與滿 10 毫米進位",
+        "steps": [
+          "先把 69 毫米換算成複名數：6 公分 9 毫米。",
+          "毫米相加：9 毫米 ＋ 5 毫米 ＝ 14 毫米。",
+          "滿 10 毫米進 1 公分：14 毫米 ＝ 1 公分 4 毫米，毫米位留 4。",
+          "公分相加：6 ＋ 8 ＋ 1（進位）＝ 15 公分。",
+          "答案為「15 公分 4 毫米」。"
+        ],
+        "trap": "忘記滿 10 毫米要進位到公分，寫成 14 公分 14 毫米會被扣分！"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q09",
+      "exam_source": "臺北市內湖國小 113-1 期中四-1 ＆ 高雄市永安國小 114-1 期中五-5",
+      "section": "計算題",
+      "question_num": 9,
+      "title": "長度減法計算（退位）",
+      "stem": "算算看直式計算：「9 公分 3 毫米 － 1 公分 5 毫米」等於多少？",
+      "choices": [
+        "8 公分 2 毫米",
+        "7 公分 8 毫米",
+        "8 公分 8 毫米",
+        "7 公分 2 毫米"
+      ],
+      "answer_index": 1,
+      "answer_raw": "7 公分 8 毫米",
+      "visual_mode": "subtraction_borrow",
+      "final_check": "9cm 3mm - 1cm 5mm: 毫米 3-5 不夠，借 1cm (10mm)，13-5=8mm，公分 8-1=7cm。結果 7cm 8mm。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=9",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "長度直式減法與借 1 公分當 10 毫米退位",
+        "steps": [
+          "先看毫米位：3 毫米減 5 毫米不夠減。",
+          "從公分位借 1 公分：9 公分變成 8 公分，借來的 1 公分等於 10 毫米。",
+          "毫米位計算：10 ＋ 3 － 5 ＝ 8 毫米。",
+          "公分位計算：8 － 1 ＝ 7 公分。",
+          "答案為「7 公分 8 毫米」。"
+        ],
+        "trap": "退位借 1 公分是換成「10 毫米」，千萬不能倒過來用 5 - 3 = 2！"
+      }
+    },
+    {
+      "id": "G3-N-3-12-Q10",
+      "exam_source": "臺北市內湖國小 113-1 期中一-6 ＆ 114-1 期中五-3",
+      "section": "生活應用題",
+      "question_num": 10,
+      "title": "蠟筆長度生活應用比較",
+      "stem": "黃色蠟筆長 32 毫米，紫色蠟筆比黃色蠟筆短 13 毫米。請問紫色蠟筆長多少毫米？也就是幾公分幾毫米？",
+      "choices": [
+        "19 毫米（也就是 1 公分 9 毫米）",
+        "45 毫米（也就是 4 公分 5 毫米）",
+        "21 毫米（也就是 2 公分 1 毫米）",
+        "18 毫米（也就是 1 公分 8 毫米）"
+      ],
+      "answer_index": 0,
+      "answer_raw": "19 毫米（也就是 1 公分 9 毫米）",
+      "visual_mode": "crayon_difference",
+      "final_check": "32 毫米 - 13 毫米 = 19 毫米 = 1 公分 9 毫米。",
+      "component": "millimeter-ruler-lab",
+      "component_path": "components/millimeter_ruler_lab.html?q=10",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "長度比較應用問題與單位換算",
+        "steps": [
+          "「比黃色蠟筆短」代表長度比較少，要用減法計算。",
+          "算式：32 毫米 － 13 毫米 ＝ 19 毫米。",
+          "將 19 毫米換算成公分與毫米：19 毫米 ＝ 1 公分 9 毫米。"
+        ],
+        "trap": "看清楚題目是「短 13 毫米」（減法），不要誤看成加法算出 45 毫米。"
+      }
+    }
+  ]
+}
