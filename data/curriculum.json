@@ -311,9 +311,9 @@
           "code": "N-3-2",
           "title": "加減直式計算",
           "full_text": "加減直式計算：含加、減法多次進、退位。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 114-1/113-1/112-1 期中（直式進位加法/連續退位減法/情境應用題）"
         },
         {
           "code": "N-3-3",
