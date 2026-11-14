@@ -197,6 +197,11 @@
      - G3-N-3-15 容量（公升、毫升）（10題）：1L=1000mL、家庭號鮮奶2L量感、3L 4mL補0換算3004mL、4080mL千位分拆、量杯700mL讀數、容量比大小、加法滿千進位4L 200mL、減法借千退位720mL、檸檬紅茶混合、飲水差量450mL。
   3. 雙硬閘門全數秒通：`verify_n313.js` + `verify_n313_cdp.js`（高度 367~392px ≤ 420px）、`verify_n314.js` + `verify_n314_cdp.js`（高度 363~388px ≤ 420px）、`verify_n315.js` + `verify_n315_cdp.js`（高度 363~388px ≤ 420px），全部 30 題實機零溢出、零劇透、選項全滿 4 個。
   4. 全域守門員全綠：`tools/verify_curriculum_131.js`（28 ready 條目全綠）與 `tools/verify_app_shell.js`（G3 hero 顯示「已開放 17/24」）全數 Exit Code 0。
+- [x] Session 40 人類盲審驗收與進度記憶持久化閉環（Q5 刻度幾何精準修復 ＆ Shell localStorage 記憶落地，2026-11-15 06:05）：
+  1. 人類盲審抓出痛點並秒級修復：G3-N-3-15 第 5 題量杯藍色水面誤繪於 800 毫升上方，以及提前劇透「700 毫升 ✓」。已徹底重構刻度幾何（滿杯 1000mL 在 y=16，800mL 在 y=36，600mL 在 y=56，700mL 正中間刻度在 y=46，藍色水面頂部嚴格對齊 y=46），且在 step < 2 前刻度標記為 `?`，徹底拔除未作答前的劇透問題。
+  2. 落地使用者體驗核心痛點：在 `app/shell.js` 實裝 `localStorage` 進度持久化記憶機制（年級、單元、題號），使用者重新整理或下次打開手機，自動恢復到最後停留在的位置，再也不用每次重新從頭翻找！
+  3. 雙硬閘門全綠：`verify_n315.js`（ALL PASS）與 `verify_n315_cdp.js`（高度 363~388px ≤ 420px，ALL PASS）、`verify_curriculum_131.js` 與 `verify_app_shell.js` 全數 Exit Code 0。
+  4. 遠端全量同步：GitHub 與 Cloudflare Pages 部署完畢（https://math-108.pages.dev）。
 - [ ] 下一步：推進三年級第十六單元 `N-3-16 重量（「公斤」、「公克」）`。
 
 
