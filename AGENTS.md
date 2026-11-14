@@ -189,7 +189,15 @@
   3. 標準完整互動架構（`app/components/millimeter_ruler_lab.html`）：完全遵循 Session 37 規範，內建 `#questionBox`、2x2 `#optionsGrid`、`.option-btn`、`#checkBtn`、`#stepBtn`、`#feedbackBox`，單題獨立可玩且 iframe postMessage 高度適配良好。
   4. 雙硬閘門全綠：`tools/verify_n312.js`（資料契約＋逐題數學真值驗算）與 `tools/verify_n312_cdp.js`（390px 實機 10/10 題 app 高度 382~407px ≤ 420px、零橫向溢出、逐步算理演繹正常、答題回饋正確）。
   5. 全域守門員全綠：`tools/verify_curriculum_131.js`（24 ready 條目全綠）與 `tools/verify_app_shell.js`（G3 hero 顯示「已開放 13/24」）全數 Exit Code 0。
-- [ ] 下一步：推進三年級第十四單元 `N-3-13 角與角度（同S-3-1）`（角、直角、鈍角、銳角、量角器與角度旋轉）。
+- [x] Session 39 三單元批次流水線大滿貫落地閉環（N-3-13、S-3-1、N-3-14、N-3-15，已開放 17/24，全專案 28/131 條目，2026-11-15 05:35）：
+  1. 恪守【做了什麼就說什麼，嚴禁虛假賦能】：本批次三個單元教具（`angle_explorer_lab.html`、`area_square_lab.html`、`capacity_volume_lab.html`）皆採用「純手寫向量 SVG（Pure SVG）」自主繪製，未調用 034 外部庫，具備優雅日系擬物、極致緊湊免滑動與清晰算理。
+  2. 30 題實體段考真題落盤（100% 來自臺北市內湖國小 111~114 期中/期末 ＆ 高雄市永安國小 114 期中/期末）：
+     - G3-N-3-13 / S-3-1 角與角度（10題）：邊長延長開度不變、三角板直角、銳角鈍角、時鐘3點直角、三角飯糰銳角、三角板檢驗未知角、長方形4直角、兩角疊合法、摺扇旋轉角、直角三角形組成。
+     - G3-N-3-14 面積（平方公分）（10題）：1cm²定義、方格紙點數8格、半格拼湊7cm²、4x3陣列乘法、等積變形、L型分割相加、周長vs面積量綱辨析、5x5正方形25cm²、大長方形挖空20cm²、健保卡面積估測40cm²。
+     - G3-N-3-15 容量（公升、毫升）（10題）：1L=1000mL、家庭號鮮奶2L量感、3L 4mL補0換算3004mL、4080mL千位分拆、量杯700mL讀數、容量比大小、加法滿千進位4L 200mL、減法借千退位720mL、檸檬紅茶混合、飲水差量450mL。
+  3. 雙硬閘門全數秒通：`verify_n313.js` + `verify_n313_cdp.js`（高度 367~392px ≤ 420px）、`verify_n314.js` + `verify_n314_cdp.js`（高度 363~388px ≤ 420px）、`verify_n315.js` + `verify_n315_cdp.js`（高度 363~388px ≤ 420px），全部 30 題實機零溢出、零劇透、選項全滿 4 個。
+  4. 全域守門員全綠：`tools/verify_curriculum_131.js`（28 ready 條目全綠）與 `tools/verify_app_shell.js`（G3 hero 顯示「已開放 17/24」）全數 Exit Code 0。
+- [ ] 下一步：推進三年級第十六單元 `N-3-16 重量（「公斤」、「公克」）`。
 
 
 ---

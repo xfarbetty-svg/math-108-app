@@ -399,25 +399,25 @@
           "code": "N-3-13",
           "title": "角與角度（同S-3-1）",
           "full_text": "角與角度（同S-3-1）：以具體操作為主。初步認識角和角度。角度的直接比較與間接比較。認識直角。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 111-1/112-1/113-1/114-1 期末 ＆ 高雄市永安國小 114-1 期中段考真題"
         },
         {
           "code": "N-3-14",
           "title": "面積（「平方公分」）",
           "full_text": "面積：「平方公分」。實測、量感、估測與計算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 111-2期中/112-1期末/113-1期末 ＆ 高雄市永安國小 114-1期中段考真題"
         },
         {
           "code": "N-3-15",
           "title": "容量（「公升」、「毫升」）",
           "full_text": "容量：「公升」、「毫升」。實測、量感、估測與計算。單位換算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 111-2期中/112-1期末/113-1期末/114-1期末 ＆ 高雄市永安國小 114-2期中段考真題"
         },
         {
           "code": "N-3-16",
@@ -439,9 +439,9 @@
           "code": "S-3-1",
           "title": "角與角度（同N-3-13）",
           "full_text": "角與角度（同N-3-13）：以具體操作為主。初步認識角和角度。角度的直接比較與間接比較。認識直角。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 111-1/112-1/113-1/114-1 期末 ＆ 高雄市永安國小 114-1 期中段考真題"
         },
         {
           "code": "S-3-2",

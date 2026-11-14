@@ -1,0 +1,313 @@
+{
+  "code": "N-3-15",
+  "title": "容量（「公升」、「毫升」）",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-2期中/112-1期末/113-1期末/114-1期末 ＆ 高雄市永安國小 114-2期中段考真題",
+  "questions": [
+    {
+      "id": "G3-N-3-15-Q01",
+      "exam_source": "高雄市永安國小 114-2 期中一-2 ＆ 臺北市內湖國小 111-2 期中一-5",
+      "section": "單位代號與進率",
+      "question_num": 1,
+      "title": "公升與毫升的關係與英文代號",
+      "stem": "關於容量單位「公升」與「毫升」的英文代號與換算關係，下列敘述何者完全正確？",
+      "choices": [
+        "公升記作 mL，毫升記作 L",
+        "1 公升等於 100 毫升",
+        "公升記作 L，毫升記作 mL，且 1 公升等於 1000 毫升",
+        "1 毫升等於 10 公升"
+      ],
+      "answer_index": 2,
+      "answer_raw": "公升記作 L，毫升記作 mL，且 1 公升等於 1000 毫升",
+      "visual_mode": "liter_milliliter_def",
+      "final_check": "1 公升 (1L) = 1000 毫升 (1000mL)。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=1",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "容量單位的名稱、代號與十進位關係",
+        "steps": [
+          "「公升」英文記作 L，「毫升」英文記作 mL。",
+          "進率關係：1 公升 ＝ 1000 毫升（1 L ＝ 1000 mL）。",
+          "例如 10 瓶 100 毫升的養樂多合起來剛好就是 1 公升。"
+        ],
+        "trap": "不要把 1 公升誤算成 100 毫升（長度 1 公尺是 100 公分，但容量 1 公升是 1000 毫升）。"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q02",
+      "exam_source": "臺北市內湖國小 114-1 期末一-1 ＆ 高雄市永安國小 114-2 期中一-3",
+      "section": "生活量感題",
+      "question_num": 2,
+      "title": "生活常見容器容量量感",
+      "stem": "下列關於日常生活物品容量的描述，哪一個選項最合理？",
+      "choices": [
+        "一瓶便利商店常見的寶特瓶礦泉水大約是 600 公升",
+        "一瓶家庭號大鮮奶的容量大約是 2 公升（即 2000 毫升）",
+        "眼藥水每次滴入眼睛的量大約是 2 公升",
+        "家裡煮湯的大鐵鍋容量大約是 5 毫升"
+      ],
+      "answer_index": 1,
+      "answer_raw": "一瓶家庭號大鮮奶的容量大約是 2 公升（即 2000 毫升）",
+      "visual_mode": "capacity_sensible_life",
+      "final_check": "家庭號牛奶約 2L，礦泉水約 600mL，眼藥水約幾滴幾毫升，湯鍋約幾公升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=2",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "建立容量單位的生活量感",
+        "steps": [
+          "家庭號鮮奶瓶很大，容量約 2 公升（2000 毫升）。",
+          "普通礦泉水約 600 毫升（若 600 公升會比大水塔還大！）。",
+          "煮湯鍋子約數公升，眼藥水只有幾毫升。"
+        ],
+        "trap": "看清楚題目單位是「公升」還是「毫升」。"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q03",
+      "exam_source": "高雄市永安國小 114-2 期中一-4 ＆ 臺北市內湖國小 113-1 期末一-5",
+      "section": "複名數轉單名數",
+      "question_num": 3,
+      "title": "含零位值換算陷阱（3公升4毫升）",
+      "stem": "水壺裡有「3 公升 4 毫升」的水，如果全部換算成「毫升」，是多少毫升？",
+      "choices": [
+        "34 毫升",
+        "304 毫升",
+        "3040 毫升",
+        "3004 毫升"
+      ],
+      "answer_index": 3,
+      "answer_raw": "3004 毫升",
+      "visual_mode": "convert_multi_to_single_zero",
+      "final_check": "3L = 3000mL，3000 + 4 = 3004 毫升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=3",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "容量單位換算與千位十進位定位（百位、十位補 0）",
+        "steps": [
+          "3 公升 ＝ 3 × 1000 ＝ 3000 毫升。",
+          "再加上 4 毫升：3000 ＋ 4 ＝ 3004 毫升。",
+          "百位是 0、十位是 0、個位是 4，記作「3004 毫升」。"
+        ],
+        "trap": "段考最高頻陷阱：常有人漏補 0 誤選 34、304 或 3040！"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q04",
+      "exam_source": "臺北市內湖國小 113-1 期末一-3 ＆ 高雄市永安國小 114-2 期中二-4",
+      "section": "單名數轉複名數",
+      "question_num": 4,
+      "title": "單名數分拆為公升與毫升",
+      "stem": "果汁店調配了一桶「4080 毫升」的柳橙汁，也可以說是幾公升幾毫升？",
+      "choices": [
+        "40 公升 8 毫升",
+        "4 公升 80 毫升",
+        "4 公升 800 毫升",
+        "4 公升 8 毫升"
+      ],
+      "answer_index": 1,
+      "answer_raw": "4 公升 80 毫升",
+      "visual_mode": "convert_single_to_multi_split",
+      "final_check": "4080 毫升 = 4000 毫升 + 80 毫升 = 4 公升 80 毫升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=4",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "毫升化為公升與毫升（千位為公升）",
+        "steps": [
+          "千位數字是 4，代表 4000 毫升 ＝ 4 公升。",
+          "剩下的數字是 80，代表 80 毫升。",
+          "合起來是「4 公升 80 毫升」。"
+        ],
+        "trap": "80 不是 800，也不是 8，看清楚十位數是 8、個位數是 0。"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q05",
+      "exam_source": "臺北市內湖國小 111-2 期末一-3 ＆ 高雄市陽明國小 113-2 期中二",
+      "section": "量杯刻度報讀",
+      "question_num": 5,
+      "title": "擬物透明量杯液面刻度報讀",
+      "stem": "下圖是一個容量 1000 毫升的透明量杯。觀察量杯中的藍色水面位置，剛好停在 600 和 800 毫升正中間的中長刻度線。請問量杯裡有幾毫升的水？",
+      "choices": [
+        "650 毫升",
+        "700 毫升",
+        "750 毫升",
+        "800 毫升"
+      ],
+      "answer_index": 1,
+      "answer_raw": "700 毫升",
+      "visual_mode": "measuring_cup_reading",
+      "final_check": "600 與 800 正中間為 700 毫升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=5",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "量杯刻度的細分與報讀",
+        "steps": [
+          "先看大刻度：600 毫升到 800 毫升相差 200 毫升。",
+          "正中間的中刻度剛好把 200 毫升平均分成兩半（各 100 毫升）。",
+          "600 ＋ 100 ＝ 700 毫升。"
+        ],
+        "trap": "看清楚刻度間隔，平視液面最低處讀取數值。"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q06",
+      "exam_source": "臺北市內湖國小 112-1 期末二-2 ＆ 高雄市永安國小 114-2 期中三",
+      "section": "容量比大小",
+      "question_num": 6,
+      "title": "容量大小比較（單位換算）",
+      "stem": "在下列容量比大小的算式中，哪一個關係是正確的？",
+      "choices": [
+        "7 公升 43 毫升 ＝ 7430 毫升",
+        "4080 毫升 ＞ 4 公升 800 毫升",
+        "2 公升 20 毫升 ＝ 2020 毫升",
+        "3650 毫升 ＞ 37 公升"
+      ],
+      "answer_index": 2,
+      "answer_raw": "2 公升 20 毫升 ＝ 2020 毫升",
+      "visual_mode": "capacity_balance_compare",
+      "final_check": "2L 20mL = 2000 + 20 = 2020mL，完全相等。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=6",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "統一換算為相同單位（毫升）後比大小",
+        "steps": [
+          "A項：7 公升 43 毫升 ＝ 7043 毫升 ≠ 7430 毫升（錯誤）。",
+          "B項：4 公升 800 毫升 ＝ 4800 毫升，4080 ＜ 4800（符號相反，錯誤）。",
+          "C項：2 公升 20 毫升 ＝ 2000 ＋ 20 ＝ 2020 毫升（✓ 完全正確！）。",
+          "D項：37 公升 ＝ 37000 毫升，3650 ＜ 37000（錯誤）。"
+        ],
+        "trap": "37 公升是 37000 毫升，不要看到數字 37 比 3650 小就誤判！"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q07",
+      "exam_source": "臺北市內湖國小 114-1 期末二-③ ＆ 112-1 期末三-2",
+      "section": "直式加法進位",
+      "question_num": 7,
+      "title": "容量直式加法（滿1000毫升進1公升）",
+      "stem": "媽媽煮冬瓜茶，鍋裡原本有 2 公升 650 毫升，又倒入 1 公升 550 毫升。請問鍋裡現在一共有多少冬瓜茶？",
+      "choices": [
+        "3 公升 1200 毫升",
+        "4 公升 200 毫升",
+        "4 公升 120 毫升",
+        "3 公升 200 毫升"
+      ],
+      "answer_index": 1,
+      "answer_raw": "4 公升 200 毫升",
+      "visual_mode": "capacity_addition_carry",
+      "final_check": "650+550=1200mL，滿1000mL進1L留200mL，2+1+1=4L，得 4L 200mL。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=7",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "容量直式加法與滿 1000 毫升進 1 公分",
+        "steps": [
+          "毫升位計算：650 毫升 ＋ 550 毫升 ＝ 1200 毫升。",
+          "滿 1000 毫升向公分位進 1：1200 毫升 ＝ 1 公升 200 毫升，毫升位留 200。",
+          "公升位計算：2 ＋ 1 ＋ 1（進位）＝ 4 公升。",
+          "答案為「4 公升 200 毫升」。"
+        ],
+        "trap": "不能寫 3 公升 1200 毫升，毫升位滿千必須進位為公升！"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q08",
+      "exam_source": "臺北市內湖國小 113-1 期末三-4 ＆ 114-1 期末二-④",
+      "section": "直式減法退位",
+      "question_num": 8,
+      "title": "容量直式減法（借1公升換1000毫升）",
+      "stem": "爸爸把一個裝有「4 公升」熱水的水瓶拿去泡牛奶，泡完後水瓶裡還剩下「3280 毫升」。請問泡牛奶一共用掉了多少毫升的水？",
+      "choices": [
+        "180 毫升",
+        "720 毫升",
+        "820 毫升",
+        "1720 毫升"
+      ],
+      "answer_index": 1,
+      "answer_raw": "720 毫升",
+      "visual_mode": "capacity_subtraction_borrow",
+      "final_check": "4L = 4000mL，4000 - 3280 = 720 毫升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=8",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "容量直式減法與借 1 公升換 1000 毫升退位",
+        "steps": [
+          "先將 4 公升換算為 4000 毫升。",
+          "列出減法算式：4000 毫升 － 3280 毫升。",
+          "直式計算：4000 － 3280 ＝ 720 毫升。"
+        ],
+        "trap": "退位時 1 公升是換成「1000 毫升」，借位算清楚不要少減。"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q09",
+      "exam_source": "高雄市永安國小 114-2 期中三-3 ＆ 臺北市內湖國小 111-2 期中二",
+      "section": "混合調配應用題",
+      "question_num": 9,
+      "title": "生活飲品混合調配容量",
+      "stem": "阿姨自製檸檬紅茶，她把「90 毫升」的檸檬原汁，和「2 公升 60 毫升」的紅茶倒在一起混合。請問阿姨一共調配出了幾公升幾毫升的檸檬紅茶？",
+      "choices": [
+        "2 公升 150 毫升",
+        "2 公升 960 毫升",
+        "3 公升 50 毫升",
+        "2 公升 690 毫升"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2 公升 150 毫升",
+      "visual_mode": "beverage_mix_capacity",
+      "final_check": "60 毫升 + 90 毫升 = 150 毫升，合為 2 公升 150 毫升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=9",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "不同容器容量混合的加法算理",
+        "steps": [
+          "檸檬汁只有毫升：90 毫升。",
+          "紅茶有公升與毫升：2 公升 60 毫升。",
+          "毫升相加：60 毫升 ＋ 90 毫升 ＝ 150 毫升（未滿 1000 毫升，無須進位）。",
+          "加上公升：共「2 公升 150 毫升」。"
+        ],
+        "trap": "注意 60 + 90 = 150，不要把數字錯拼成 960。"
+      }
+    },
+    {
+      "id": "G3-N-3-15-Q10",
+      "exam_source": "高雄市永安國小 114-2 期中三-4 ＆ 臺北市內湖國小 114-1 期末三-4",
+      "section": "生活飲水比較應用題",
+      "question_num": 10,
+      "title": "飲水量比較與差量計算",
+      "stem": "小南今天喝了「2500 毫升」的水，小冬今天喝了「2 公升 50 毫升」的水。請問誰喝的水比較多？相差多少毫升？",
+      "choices": [
+        "小南喝得多，相差 450 毫升",
+        "小冬喝得多，相差 450 毫升",
+        "小南喝得多，相差 2450 毫升",
+        "兩個人喝的水一樣多"
+      ],
+      "answer_index": 0,
+      "answer_raw": "小南喝得多，相差 450 毫升",
+      "visual_mode": "drink_water_diff_compare",
+      "final_check": "小冬 2L 50mL = 2050mL。小南 2500mL > 2050mL。差量 2500 - 2050 = 450 毫升。",
+      "component": "capacity_volume_lab",
+      "component_path": "components/capacity_volume_lab.html?q=10",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "容量比較與差量計算",
+        "steps": [
+          "小冬喝水量換算：2 公升 50 毫升 ＝ 2050 毫升。",
+          "比較大小：小南 2500 毫升 ＞ 小冬 2050 毫升，所以「小南喝得多」。",
+          "計算差量：2500 － 2050 ＝ 450 毫升。",
+          "答案：小南喝得多，相差 450 毫升。"
+        ],
+        "trap": "小冬是 2050 毫升，不是 2500 毫升（2500 毫升是 2 公升 500 毫升）。"
+      }
+    }
+  ]
+}

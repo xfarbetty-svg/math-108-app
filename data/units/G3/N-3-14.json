@@ -1,0 +1,311 @@
+{
+  "code": "N-3-14",
+  "title": "面積（「平方公分」）",
+  "grade": 3,
+  "question_count": 10,
+  "verified_source": "臺北市內湖國小 111-2期中/112-1期末/113-1期末 ＆ 高雄市永安國小 114-1期中段考真題",
+  "questions": [
+    {
+      "id": "G3-N-3-14-Q01",
+      "exam_source": "臺北市內湖國小 111-2 期中一-1 ＆ 112-1 期末一",
+      "section": "定義量感題",
+      "question_num": 1,
+      "title": "1 平方公分的定義與量感",
+      "stem": "數學上規定「邊長 1 公分」的正方形，它的面積是多少？",
+      "choices": [
+        "1 公分",
+        "4 公分",
+        "1 平方公分",
+        "4 平方公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "1 平方公分",
+      "visual_mode": "unit_square_def",
+      "final_check": "邊長 1 公分的正方形面積為 1 平方公分（1 cm²）。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=1",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "面積單位「平方公分」的定義",
+        "steps": [
+          "長度用「公分」計量，面積用「平方公分」計量。",
+          "一個邊長剛好是 1 公分的正方形，它所覆蓋的面就是「1 平方公分」（英文記作 1 cm²）。",
+          "注意：正方形周長是 4 公分，但「面積」是 1 平方公分。"
+        ],
+        "trap": "容易把長度單位「公分」與面積單位「平方公分」混淆。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q02",
+      "exam_source": "臺北市內湖國小 112-1 期末二-1 ＆ 113-1 期末二",
+      "section": "方格點數題",
+      "question_num": 2,
+      "title": "方格紙點數圖形面積",
+      "stem": "下圖方格紙中，每個小方格的面積都是 1 平方公分。請問橘色圖形一共佔了幾個小方格？面積是多少平方公分？",
+      "choices": [
+        "7 個方格，7 平方公分",
+        "8 個方格，8 平方公分",
+        "9 個方格，9 平方公分",
+        "10 個方格，10 平方公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "8 個方格，8 平方公分",
+      "visual_mode": "grid_count_basic",
+      "final_check": "逐格點數共有 8 個完整方格，面積為 8 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=2",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "使用平方公分方格板點數面積",
+        "steps": [
+          "每一個小方格代表 1 平方公分。",
+          "在橘色圖形上依序標記數字 1、2、3、4、5、6、7、8。",
+          "一共涵蓋了 8 個小方格，因此面積是「8 平方公分」。"
+        ],
+        "trap": "細心逐格點數，不重複也不漏數。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q03",
+      "exam_source": "臺北市內湖國小 112-1 期末二-4 ＆ 113-1 期末三",
+      "section": "半格拼湊題",
+      "question_num": 3,
+      "title": "半格拼湊完整平方公分",
+      "stem": "下圖中，每個方格是 1 平方公分。圖形中有 5 個完整方格，另外還有「4 個三角形半格」。請問這個圖形的總面積是多少平方公分？",
+      "choices": [
+        "9 平方公分",
+        "7 平方公分",
+        "6 平方公分",
+        "8 平方公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "7 平方公分",
+      "visual_mode": "half_grid_combine",
+      "final_check": "5 個整格 + 4 個半格(2格) = 7 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=3",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "三角形半格拼成整格的面積計算法",
+        "steps": [
+          "每 2 個三角形半格，可以拼合成 1 個完整的 1 平方公分方格。",
+          "4 個半格 ＝ 4 ÷ 2 ＝ 2 個完整方格。",
+          "總面積 ＝ 5 個整格 ＋ 2 個整格 ＝ 7 平方公分。"
+        ],
+        "trap": "千萬不要把 4 個半格當成 4 平方公分，每兩個半格才是一整格！"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q04",
+      "exam_source": "臺北市內湖國小 111-2 期中一-4 ＆ 112-1 期末三",
+      "section": "矩形面積初步",
+      "question_num": 4,
+      "title": "長方形乘法陣列面積",
+      "stem": "下圖的長方形，橫的一排有 4 格，直的一排有 3 格（每格 1 平方公分）。請問這個長方形的面積是多少平方公分？",
+      "choices": [
+        "7 平方公分",
+        "12 平方公分",
+        "14 平方公分",
+        "16 平方公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "12 平方公分",
+      "visual_mode": "rect_array_multiply",
+      "final_check": "4 × 3 = 12 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=4",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "長方形面積的乘法算理（每排個數 × 排數）",
+        "steps": [
+          "橫的一排有 4 個方格，一共有 3 排。",
+          "算式：4 × 3 ＝ 12（個方格）。",
+          "每個方格是 1 平方公分，所以面積是「12 平方公分」。"
+        ],
+        "trap": "不要誤算成周長 4 + 3 = 7 或 (4+3)×2 = 14。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q05",
+      "exam_source": "臺北市內湖國小 112-1 期末一-2 ＆ 113-1 期末一",
+      "section": "等積變形題",
+      "question_num": 5,
+      "title": "形狀不同但面積相同（等積變形）",
+      "stem": "甲圖形是 2×6 的長方形，乙圖形是 3×4 的長方形。下列關於甲和乙的比較，何者正確？",
+      "choices": [
+        "甲圖形比較長，所以甲的面積比乙大",
+        "乙圖形比較寬，所以乙的面積比甲大",
+        "甲和乙的形狀雖然不同，但面積都是 12 平方公分，一樣大",
+        "形狀不同的圖形，面積絕對不可能一樣大"
+      ],
+      "answer_index": 2,
+      "answer_raw": "甲和乙的形狀雖然不同，但面積都是 12 平方公分，一樣大",
+      "visual_mode": "equivalent_area_shapes",
+      "final_check": "甲面積 2×6=12，乙面積 3×4=12，兩者面積相等。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=5",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "形狀不同但面積相等的等積概念",
+        "steps": [
+          "計算甲面積：2 × 6 ＝ 12 平方公分。",
+          "計算乙面積：3 × 4 ＝ 12 平方公分。",
+          "結論：圖形的「形狀」雖然看起來不同，但所包含的小方格總數相同，所以「面積一樣大」！"
+        ],
+        "trap": "段考核心概念：不能只憑視覺直覺覺得哪一個比較長就判定比較大。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q06",
+      "exam_source": "臺北市內湖國小 111-2 期中二 ＆ 113-1 期末二",
+      "section": "複合形分割題",
+      "question_num": 6,
+      "title": "L型複合圖形面積計算",
+      "stem": "下圖是一個 L 型的圖形（每格 1 平方公分）。把它切分成左右或上下兩個長方形來算，這個 L 型圖形的總面積是多少平方公分？",
+      "choices": [
+        "9 平方公分",
+        "10 平方公分",
+        "11 平方公分",
+        "12 平方公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "10 平方公分",
+      "visual_mode": "l_shape_split",
+      "final_check": "直長條 2×3=6，橫塊 2×2=4，合為 10 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=6",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "複合圖形分割法求面積",
+        "steps": [
+          "遇到不規則 L 型圖形，用一條虛線把它切成兩個簡單的長方形。",
+          "上方長方形：寬 2 格、高 3 格，面積 ＝ 2 × 3 ＝ 6 平方公分。",
+          "右下方塊：寬 2 格、高 2 格，面積 ＝ 2 × 2 ＝ 4 平方公分。",
+          "合併總面積：6 ＋ 4 ＝ 10 平方公分。"
+        ],
+        "trap": "分割時注意不要重複算重疊的角落方格。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q07",
+      "exam_source": "臺北市內湖國小 112-1 期末一-3 ＆ 高雄市永安國小 114-1 期中一",
+      "section": "周長與面積辨析題",
+      "question_num": 7,
+      "title": "周長與面積本質辨析",
+      "stem": "下列關於「周長」和「面積」的比較，何者敘述完全正確？",
+      "choices": [
+        "周長和面積是完全一樣的東西，只是名稱不同",
+        "「周長」是指圖形外圍一圈的長度（單位是公分），「面積」是指圖形平面的大小（單位是平方公分）",
+        "兩個圖形如果面積一樣大，周長也一定一模一樣長",
+        "邊長 1 公分正方形，周長比面積小"
+      ],
+      "answer_index": 1,
+      "answer_raw": "「周長」是指圖形外圍一圈的長度（單位是公分），「面積」是指圖形平面的大小（單位是平方公分）",
+      "visual_mode": "perimeter_vs_area",
+      "final_check": "周長為長度單位（公分），面積為面覆蓋單位（平方公分），兩者概念與量綱完全不同。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=7",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "周長與面積的本質區別",
+        "steps": [
+          "周長：圍成圖形外圍一圈「線的總長度」，單位是「公分（cm）」。",
+          "面積：圖形內部所佔「平面的大小」，單位是「平方公分（cm²）」。",
+          "面積相同的兩個圖形，周長「不一定」會一樣長！"
+        ],
+        "trap": "段考高頻陷阱：誤以為面積一樣，周長就必定相同。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q08",
+      "exam_source": "臺北市內湖國小 111-2 期中三 ＆ 113-1 期末三",
+      "section": "正方形面積計算",
+      "question_num": 8,
+      "title": "正方形面積公式初步",
+      "stem": "一個正方形的邊長是 5 公分。如果把它畫在 1 平方公分的方格紙上，它一共會佔多少個小方格？面積是多少？",
+      "choices": [
+        "20 個方格，20 平方公分",
+        "25 個方格，25 平方公分",
+        "10 個方格，10 平方公分",
+        "15 個方格，15 平方公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "25 個方格，25 平方公分",
+      "visual_mode": "square_5x5_area",
+      "final_check": "邊長 5 的正方形面積 = 5 × 5 = 25 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=8",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "正方形面積計算（每邊格數相乘）",
+        "steps": [
+          "正方形四邊等長，邊長 5 公分代表每邊可排 5 個 1 公分的方格。",
+          "橫排 5 個，直排 5 排。",
+          "算式：5 × 5 ＝ 25（個方格）。",
+          "面積是「25 平方公分」。"
+        ],
+        "trap": "不要和周長公式搞混：周長是 5 × 4 = 20 公分，面積是 5 × 5 = 25 平方公分。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q09",
+      "exam_source": "臺北市內湖國小 113-1 期末二-3 ＆ 112-1 期末二",
+      "section": "挖空相減求面積",
+      "question_num": 9,
+      "title": "大長方形內部挖空面積",
+      "stem": "大長方形原本由 6×4＝24 個方格組成，中間被挖掉了一個 2×2＝4 個方格的小正方形洞（每格 1 平方公分）。請問剩下著色部分的面積是多少平方公分？",
+      "choices": [
+        "24 平方公分",
+        "28 平方公分",
+        "20 平方公分",
+        "18 平方公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "20 平方公分",
+      "visual_mode": "hollow_subtract_area",
+      "final_check": "總面積 24 - 挖空 4 = 20 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=9",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "填補相減法求著色面積",
+        "steps": [
+          "先算完整大長方形的面積：6 × 4 ＝ 24 平方公分。",
+          "再算中間白色挖空部分的面積：2 × 2 ＝ 4 平方公分。",
+          "相減求著色部分：24 － 4 ＝ 20 平方公分。"
+        ],
+        "trap": "看清楚是「扣除挖空部分」，用減法而非加法。"
+      }
+    },
+    {
+      "id": "G3-N-3-14-Q10",
+      "exam_source": "臺北市內湖國小 111-2 期中一-1 ＆ 113-1 期末一-1",
+      "section": "生活實物面積估測",
+      "question_num": 10,
+      "title": "生活實物面積適當單位選擇",
+      "stem": "小華拿直尺量了一張健保卡的長大約 8 公分、寬大約 5 公分。請問這張健保卡的表面積大約是多少？",
+      "choices": [
+        "約 40 平方公分",
+        "約 40 公分",
+        "約 4 平方公分",
+        "約 400 平方公分"
+      ],
+      "answer_index": 0,
+      "answer_raw": "約 40 平方公分",
+      "visual_mode": "card_area_estimation",
+      "final_check": "長 8cm 寬 5cm，面積約 8 × 5 = 40 平方公分。",
+      "component": "area-square-lab",
+      "component_path": "components/area_square_lab.html?q=10",
+      "fallback_height": 380,
+      "explanation": {
+        "concept": "生活物品面積估測與乘法應用",
+        "steps": [
+          "健保卡長約 8 公分，寬約 5 公分，形狀近似長方形。",
+          "估算面積：長 × 寬 ＝ 8 × 5 ＝ 40 平方公分。",
+          "注意單位是「平方公分」，不能寫成「公分」。"
+        ],
+        "trap": "面積單位是平方公分，不是長度公分；不是 4 平方公分（4平方公分只有一小格硬幣大）。"
+      }
+    }
+  ]
+}

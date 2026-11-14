@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-15 容量（公升、毫升） 擬物實驗台</title>
+    <style>
+        :root {
+            --bg: #fffdf8;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.35;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 230px;
+            height: auto;
+            display: block;
+        }
+        .cap { font-size: 11px; min-height: 15px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.2; }
+        .controls { display: flex; flex-direction: column; gap: 3px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 4px 4px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px;
+            text-align: center;
+            line-height: 1.18;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        body.in-iframe .check-btn { display: none; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-N-3-15 容量（公升、毫升） 擬物實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 240 160">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看容量演繹</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "關於容量單位「公升」與「毫升」的英文代號與換算關係，下列敘述何者完全正確？",
+            options: [
+                "公升記作 mL，毫升記作 L",
+                "1 公升等於 100 毫升",
+                "公升記作 L，毫升記作 mL，且 1 公升等於 1000 毫升",
+                "1 毫升等於 10 公升"
+            ],
+            answer_index: 2,
+            visual_mode: "liter_milliliter_def",
+            total_steps: 3,
+            explanations: [
+                "英文代號：公升記作 L，毫升記作 mL",
+                "進率換算：1 公升 ＝ 1000 毫升",
+                "結論：1 L ＝ 1000 mL ✓"
+            ],
+            feedback: "答對了！公升代號為 L，毫升代號為 mL，1 公升等於 1000 毫升！"
+        },
+        {
+            q: 2,
+            stem: "下列關於日常生活物品容量的描述，哪一個選項最合理？",
+            options: [
+                "一瓶便利商店常見的寶特瓶礦泉水大約是 600 公升",
+                "一瓶家庭號大鮮奶的容量大約是 2 公升（即 2000 毫升）",
+                "眼藥水每次滴入眼睛的量大約是 2 公升",
+                "家裡煮湯的大鐵鍋容量大約是 5 毫升"
+            ],
+            answer_index: 1,
+            visual_mode: "capacity_sensible_life",
+            total_steps: 3,
+            explanations: [
+                "礦泉水約 600 毫升（非 600 公升）",
+                "家庭號鮮奶瓶很大，約 2 公升（2000 毫升）",
+                "眼藥水幾毫升、煮湯鍋約幾公升 ✓"
+            ],
+            feedback: "答對了！家庭號鮮奶容量約 2 公升（也就是 2000 毫升）！"
+        },
+        {
+            q: 3,
+            stem: "水壺裡有「3 公升 4 毫升」的水，如果全部換算成「毫升」，是多少毫升？",
+            options: ["34 毫升", "304 毫升", "3040 毫升", "3004 毫升"],
+            answer_index: 3,
+            visual_mode: "convert_multi_to_single_zero",
+            total_steps: 3,
+            explanations: [
+                "換算公升：3 公升 ＝ 3000 毫升",
+                "加上零星：3000 ＋ 4 ＝ 3004 毫升",
+                "注意百位與十位都是 0，記作 3004 毫升 ✓"
+            ],
+            feedback: "答對了！3 公升等於 3000 毫升，加上 4 毫升是 3004 毫升（小心補 0）！"
+        },
+        {
+            q: 4,
+            stem: "果汁店調配了一桶「4080 毫升」的柳橙汁，也可以說是幾公升幾毫升？",
+            options: ["40 公升 8 毫升", "4 公升 80 毫升", "4 公升 800 毫升", "4 公升 8 毫升"],
+            answer_index: 1,
+            visual_mode: "convert_single_to_multi_split",
+            total_steps: 3,
+            explanations: [
+                "千位定位：4000 毫升 ＝ 4 公升",
+                "剩下毫升：剩下 80 毫升",
+                "合起來是「4 公升 80 毫升」✓"
+            ],
+            feedback: "答對了！4000 毫升等於 4 公升，剩下 80 毫升，就是 4 公升 80 毫升！"
+        },
+        {
+            q: 5,
+            stem: "下圖是一個容量 1000 毫升的透明量杯。觀察量杯中的藍色水面位置，剛好停在 600 和 800 毫升正中間的中長刻度線。請問量杯裡有幾毫升的水？",
+            options: ["650 毫升", "700 毫升", "750 毫升", "800 毫升"],
+            answer_index: 1,
+            visual_mode: "measuring_cup_reading",
+            total_steps: 3,
+            explanations: [
+                "大刻度間隔：600 到 800 毫升相差 200 毫升",
+                "中線平分：一半是 100 毫升",
+                "刻度讀數：600 ＋ 100 ＝ 700 毫升 ✓"
+            ],
+            feedback: "答對了！600 和 800 毫升的正中間刻度就是 700 毫升！"
+        },
+        {
+            q: 6,
+            stem: "在下列容量比大小的算式中，哪一個關係是正確的？",
+            options: [
+                "7 公升 43 毫升 ＝ 7430 毫升",
+                "4080 毫升 ＞ 4 公升 800 毫升",
+                "2 公升 20 毫升 ＝ 2020 毫升",
+                "3650 毫升 ＞ 37 公升"
+            ],
+            answer_index: 2,
+            visual_mode: "capacity_balance_compare",
+            total_steps: 3,
+            explanations: [
+                "統一單位換算為毫升",
+                "2 公升 ＝ 2000 毫升",
+                "2000 ＋ 20 ＝ 2020 毫升（完全相等）✓"
+            ],
+            feedback: "答對了！2 公升 20 毫升等於 2020 毫升，兩者相等！"
+        },
+        {
+            q: 7,
+            stem: "媽媽煮冬瓜茶，鍋裡原本有 2 公升 650 毫升，又倒入 1 公升 550 毫升。請問鍋裡現在一共有多少冬瓜茶？",
+            options: ["3 公升 1200 毫升", "4 公升 200 毫升", "4 公升 120 毫升", "3 公升 200 毫升"],
+            answer_index: 1,
+            visual_mode: "capacity_addition_carry",
+            total_steps: 3,
+            explanations: [
+                "毫升相加：650 ＋ 550 ＝ 1200 毫升",
+                "滿千進位：1200 毫升 ＝ 1 公升 200 毫升（進 1 留 200）",
+                "公升相加：2 ＋ 1 ＋ 1 ＝ 4 公升，共 4 公升 200 毫升 ✓"
+            ],
+            feedback: "答對了！滿 1000 毫升進 1 公升，答案是 4 公升 200 毫升！"
+        },
+        {
+            q: 8,
+            stem: "爸爸把一個裝有「4 公升」熱水的水瓶拿去泡牛奶，泡完後水瓶裡還剩下「3280 毫升」。請問泡牛奶一共用掉了多少毫升的水？",
+            options: ["180 毫升", "720 毫升", "820 毫升", "1720 毫升"],
+            answer_index: 1,
+            visual_mode: "capacity_subtraction_borrow",
+            total_steps: 3,
+            explanations: [
+                "換算單位：4 公升 ＝ 4000 毫升",
+                "減法算式：4000 毫升 － 3280 毫升",
+                "直式計算：4000 － 3280 ＝ 720 毫升 ✓"
+            ],
+            feedback: "答對了！4 公升是 4000 毫升，扣掉剩下的 3280 毫升，用掉了 720 毫升！"
+        },
+        {
+            q: 9,
+            stem: "阿姨自製檸檬紅茶，她把「90 毫升」的檸檬原汁，和「2 公升 60 毫升」的紅茶倒在一起混合。請問阿姨一共調配出了幾公升幾毫升的檸檬紅茶？",
+            options: ["2 公升 150 毫升", "2 公升 960 毫升", "3 公升 50 毫升", "2 公升 690 毫升"],
+            answer_index: 0,
+            visual_mode: "beverage_mix_capacity",
+            total_steps: 3,
+            explanations: [
+                "紅茶原本：2 公升 60 毫升",
+                "毫升混合相加：60 ＋ 90 ＝ 150 毫升（未滿千不進位）",
+                "合併結果：2 公升 150 毫升 ✓"
+            ],
+            feedback: "答對了！60 毫升加 90 毫升是 150 毫升，合為 2 公升 150 毫升！"
+        },
+        {
+            q: 10,
+            stem: "小南今天喝了「2500 毫升」的水，小冬今天喝了「2 公升 50 毫升」的水。請問誰喝的水比較多？相差多少毫升？",
+            options: [
+                "小南喝得多，相差 450 毫升",
+                "小冬喝得多，相差 450 毫升",
+                "小南喝得多，相差 2450 毫升",
+                "兩個人喝的水一樣多"
+            ],
+            answer_index: 0,
+            visual_mode: "drink_water_diff_compare",
+            total_steps: 3,
+            explanations: [
+                "小冬換算：2 公升 50 毫升 ＝ 2050 毫升",
+                "比較水量：小南 2500 毫升 ＞ 小冬 2050 毫升",
+                "計算差量：2500 － 2050 ＝ 450 毫升 ✓"
+            ],
+            feedback: "答對了！小冬是 2050 毫升，小南 2500 毫升喝得多，相差 450 毫升！"
+        }
+    ];
+
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = null;
+
+    function getQueryParam(p) {
+        const u = new URLSearchParams(window.location.search);
+        return u.get(p);
+    }
+
+    function init() {
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        const qp = parseInt(getQueryParam('q'), 10);
+        if (qp >= 1 && qp <= 10) currentQ = qp;
+        renderQuestionUI();
+    }
+
+    function renderQuestionUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = 0;
+        selectedOption = null;
+
+        document.getElementById('questionBox').textContent = `Q${qData.q}. ${qData.stem}`;
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (0/${qData.total_steps})`;
+        document.getElementById('capText').textContent = "點擊「逐步算理」查看容量演繹";
+
+        const fb = document.getElementById('feedbackBox');
+        fb.className = "feedback";
+        fb.textContent = "";
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = "";
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "option-btn";
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+
+        drawStage(0);
+        notifyParentHeight();
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach((b, i) => {
+            if (i === idx) b.classList.add('selected');
+            else b.classList.remove('selected');
+        });
+    }
+
+    function checkAnswer() {
+        const qData = QUESTIONS[currentQ - 1];
+        const fb = document.getElementById('feedbackBox');
+        if (selectedOption === null) {
+            fb.className = "feedback show wrong";
+            fb.textContent = "請先選擇一個選項再按確認！";
+            return;
+        }
+
+        if (selectedOption === qData.answer_index) {
+            fb.className = "feedback show correct";
+            fb.textContent = qData.feedback;
+            currentStep = qData.total_steps;
+            document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+            drawStage(currentStep);
+        } else {
+            fb.className = "feedback show wrong";
+            fb.textContent = "再仔細想想看喔！可以點擊「逐步算理演繹」看看提示！";
+        }
+        notifyParentHeight();
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = (currentStep + 1) % (qData.total_steps + 1);
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        
+        if (currentStep === 0) {
+            document.getElementById('capText').textContent = "點擊「逐步算理」查看容量演繹";
+        } else {
+            document.getElementById('capText').textContent = qData.explanations[currentStep - 1];
+        }
+        drawStage(currentStep);
+        notifyParentHeight();
+    }
+
+    function notifyParentHeight() {
+        setTimeout(() => {
+            const app = document.getElementById('app');
+            const h = app ? Math.min(app.offsetHeight + 10, 420) : 380;
+            window.parent.postMessage({ type: 'resize', height: h }, '*');
+        }, 50);
+    }
+
+    function drawStage(step) {
+        const layer = document.getElementById('drawLayer');
+        layer.innerHTML = "";
+        const qData = QUESTIONS[currentQ - 1];
+
+        switch (qData.visual_mode) {
+            case "liter_milliliter_def":
+                drawQ1(layer, step);
+                break;
+            case "capacity_sensible_life":
+                drawQ2(layer, step);
+                break;
+            case "convert_multi_to_single_zero":
+                drawQ3(layer, step);
+                break;
+            case "convert_single_to_multi_split":
+                drawQ4(layer, step);
+                break;
+            case "measuring_cup_reading":
+                drawQ5(layer, step);
+                break;
+            case "capacity_balance_compare":
+                drawQ6(layer, step);
+                break;
+            case "capacity_addition_carry":
+                drawQ7(layer, step);
+                break;
+            case "capacity_subtraction_borrow":
+                drawQ8(layer, step);
+                break;
+            case "beverage_mix_capacity":
+                drawQ9(layer, step);
+                break;
+            case "drink_water_diff_compare":
+                drawQ10(layer, step);
+                break;
+        }
+    }
+
+    // Q1: 1L = 1000mL
+    function drawQ1(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 20)">
+                <!-- 1L 量杯 -->
+                <rect x="0" y="0" width="65" height="85" rx="3" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                <rect x="2" y="15" width="61" height="68" fill="#38bdf8" opacity="0.6"/>
+                <text x="32" y="55" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">1 L</text>
+            </g>
+            <text x="120" y="65" font-size="20" font-weight="bold" fill="#64748b" text-anchor="middle">＝</text>
+            <g transform="translate(135, 20)">
+                <!-- 1000mL 標記 -->
+                <rect x="0" y="0" width="65" height="85" rx="3" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                <rect x="2" y="15" width="61" height="68" fill="#34d399" opacity="0.6"/>
+                <text x="32" y="55" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle">1000 mL</text>
+            </g>
+            <rect x="35" y="120" width="170" height="22" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+            <text x="120" y="135" font-size="10.5" font-weight="bold" fill="#0284c7" text-anchor="middle">1 公升 (L) ＝ 1000 毫升 (mL) ✓</text>
+        `;
+    }
+
+    // Q2: 生活容量量感 (家庭號鮮奶 2L)
+    function drawQ2(g, step) {
+        g.innerHTML = `
+            <g transform="translate(40, 20)">
+                <!-- 家庭號牛奶 -->
+                <rect x="0" y="15" width="45" height="70" rx="4" fill="#ffffff" stroke="#0284c7" stroke-width="2"/>
+                <rect x="10" y="0" width="25" height="15" rx="2" fill="#38bdf8"/>
+                <text x="22" y="52" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">2 L</text>
+                <text x="22" y="98" font-size="9" fill="#0284c7" text-anchor="middle">家庭號牛奶</text>
+            </g>
+            <g transform="translate(140, 35)">
+                <!-- 養樂多 100mL -->
+                <rect x="0" y="10" width="28" height="45" rx="2" fill="#fed7aa" stroke="#ea580c"/>
+                <text x="14" y="35" font-size="8" font-weight="bold" fill="#9a3412" text-anchor="middle">100mL</text>
+                <text x="14" y="68" font-size="9" fill="#ea580c" text-anchor="middle">養樂多</text>
+            </g>
+            <rect x="35" y="120" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="135" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">家庭號鮮奶容量約 2 公升 ✓</text>
+        `;
+    }
+
+    // Q3: 3公升4毫升 = 3004毫升 (補0)
+    function drawQ3(g, step) {
+        g.innerHTML = `
+            <g transform="translate(30, 25)">
+                <rect x="0" y="0" width="180" height="75" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="20" y="25" font-size="11" font-weight="bold" fill="#0284c7">① 3 公升 ＝ 3000 毫升</text>
+                <text x="20" y="48" font-size="11" font-weight="bold" fill="#d97706">② 加上 4 毫升：</text>
+                <text x="35" y="68" font-size="12" font-weight="bold" fill="#ef4444">3000 ＋ 4 ＝ 3004 毫升 ✓</text>
+            </g>
+            <text x="120" y="125" font-size="10.5" font-weight="bold" fill="#dc2626" text-anchor="middle">⚠️ 百位與十位補 0，不是 34 或 304！</text>
+        `;
+    }
+
+    // Q4: 4080毫升 = 4公升80毫升
+    function drawQ4(g, step) {
+        g.innerHTML = `
+            <g transform="translate(35, 20)">
+                <rect x="0" y="0" width="170" height="30" rx="4" fill="#f0fdf4" stroke="#86efac"/>
+                <text x="85" y="20" font-size="11" font-weight="bold" fill="#15803d" text-anchor="middle">果汁總量：4080 毫升</text>
+            </g>
+            <path d="M 80 55 L 60 75" stroke="#10b981" stroke-width="2"/>
+            <path d="M 160 55 L 180 75" stroke="#f59e0b" stroke-width="2"/>
+            <g transform="translate(25, 78)">
+                <rect x="0" y="0" width="80" height="40" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+                <text x="40" y="18" font-size="9" fill="#047857" text-anchor="middle">4000 毫升 ＝</text>
+                <text x="40" y="32" font-size="11" font-weight="bold" fill="#047857" text-anchor="middle">4 公升</text>
+            </g>
+            <g transform="translate(135, 78)">
+                <rect x="0" y="0" width="80" height="40" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+                <text x="40" y="18" font-size="9" fill="#b45309" text-anchor="middle">剩下 80 毫升</text>
+                <text x="40" y="32" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">80 毫升</text>
+            </g>
+            <text x="120" y="138" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">合為：4 公升 80 毫升 ✓</text>
+        `;
+    }
+
+    // Q5: 1000mL 量杯 700 刻度
+    function drawQ5(g, step) {
+        g.innerHTML = `
+            <g transform="translate(85, 15)">
+                <!-- 量杯外框 -->
+                <rect x="0" y="0" width="70" height="95" rx="3" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                <!-- 水位 700mL (高度約 66.5px) -->
+                <rect x="2" y="28" width="66" height="65" fill="#38bdf8" opacity="0.6"/>
+                <!-- 刻度線 -->
+                <line x1="0" y1="15" x2="15" y2="15" stroke="#333"/><text x="18" y="18" font-size="8">1000</text>
+                <line x1="0" y1="35" x2="15" y2="35" stroke="#333"/><text x="18" y="38" font-size="8">800</text>
+                <!-- 700 中線 -->
+                <line x1="0" y1="45" x2="20" y2="45" stroke="#ef4444" stroke-width="2"/><text x="22" y="48" font-size="9" font-weight="bold" fill="#ef4444">700</text>
+                <line x1="0" y1="55" x2="15" y2="55" stroke="#333"/><text x="18" y="58" font-size="8">600</text>
+            </g>
+            <text x="120" y="130" font-size="11" font-weight="bold" fill="#0284c7" text-anchor="middle">水面在 600 與 800 正中間 ＝ 700 毫升 ✓</text>
+        `;
+    }
+
+    // Q6: 2L 20mL = 2020mL
+    function drawQ6(g, step) {
+        g.innerHTML = `
+            <g transform="translate(35, 30)">
+                <rect x="0" y="0" width="170" height="55" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="20" y="22" font-size="10" fill="#64748b">統一換算為毫升：</text>
+                <text x="20" y="42" font-size="12" font-weight="bold" fill="#0284c7">2L 20mL ＝ 2020 毫升</text>
+            </g>
+            <rect x="35" y="115" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">2 公升 20 毫升 ＝ 2020 毫升 ✓</text>
+        `;
+    }
+
+    // Q7: 容量加法進位
+    function drawQ7(g, step) {
+        g.innerHTML = `
+            <g transform="translate(50, 15)">
+                <rect x="0" y="0" width="140" height="100" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="30" y="18" font-size="10" font-weight="bold" fill="#0284c7">公升</text>
+                <text x="90" y="18" font-size="10" font-weight="bold" fill="#d97706">毫升</text>
+                <line x1="10" y1="23" x2="130" y2="23" stroke="#cbd5e1"/>
+
+                <!-- 進位 ① -->
+                <circle cx="38" cy="30" r="5" fill="#ef4444"/>
+                <text x="38" y="33" font-size="8" font-weight="bold" fill="#fff" text-anchor="middle">1</text>
+
+                <text x="35" y="45" font-size="11" font-weight="bold">2</text>
+                <text x="90" y="45" font-size="11" font-weight="bold">650</text>
+                <text x="12" y="62" font-size="11" font-weight="bold">＋</text>
+                <text x="35" y="62" font-size="11" font-weight="bold">1</text>
+                <text x="90" y="62" font-size="11" font-weight="bold">550</text>
+                <line x1="10" y1="68" x2="130" y2="68" stroke="#333" stroke-width="1.5"/>
+
+                <text x="35" y="85" font-size="12" font-weight="bold" fill="#047857">4</text>
+                <text x="90" y="85" font-size="12" font-weight="bold" fill="#047857">200</text>
+            </g>
+            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">滿 1000 毫升進 1 公升 ＝ 4L 200mL ✓</text>
+        `;
+    }
+
+    // Q8: 容量減法退位
+    function drawQ8(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 20)">
+                <rect x="0" y="0" width="150" height="70" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="15" y="22" font-size="10.5" font-weight="bold" fill="#0284c7">4 公升 ＝ 4000 毫升</text>
+                <text x="15" y="42" font-size="11" font-weight="bold" fill="#dc2626">4000 － 3280 ＝ 720 毫升</text>
+                <text x="15" y="60" font-size="9" fill="#64748b">(借 1 公升當 1000 毫升)</text>
+            </g>
+            <rect x="40" y="115" width="160" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">用掉熱水：720 毫升 ✓</text>
+        `;
+    }
+
+    // Q9: 檸檬紅茶混合
+    function drawQ9(g, step) {
+        g.innerHTML = `
+            <g transform="translate(30, 20)">
+                <rect x="0" y="0" width="180" height="60" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+                <text x="15" y="22" font-size="10" font-weight="bold" fill="#ea580c">檸檬汁 90mL ＋ 紅茶 2L 60mL</text>
+                <text x="15" y="42" font-size="11" font-weight="bold" fill="#047857">60 ＋ 90 ＝ 150 毫升</text>
+            </g>
+            <rect x="35" y="115" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">總量：2 公升 150 毫升 ✓</text>
+        `;
+    }
+
+    // Q10: 小南 vs 小冬飲水差量
+    function drawQ10(g, step) {
+        g.innerHTML = `
+            <g transform="translate(30, 15)">
+                <!-- 小南 2500mL -->
+                <rect x="0" y="10" width="130" height="20" rx="3" fill="#bae6fd" stroke="#0284c7"/>
+                <text x="10" y="24" font-size="9.5" font-weight="bold" fill="#0369a1">小南：2500 毫升</text>
+                <!-- 小冬 2L 50mL = 2050mL -->
+                <rect x="0" y="38" width="105" height="20" rx="3" fill="#fed7aa" stroke="#ea580c"/>
+                <text x="10" y="52" font-size="9.5" font-weight="bold" fill="#9a3412">小冬：2050 毫升</text>
+                <line x1="105" y1="38" x2="130" y2="38" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <text x="135" y="45" font-size="9" font-weight="bold" fill="#ef4444">多450</text>
+            </g>
+            <rect x="30" y="115" width="180" height="24" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="131" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">小南喝得多，多 450 毫升 ✓</text>
+        `;
+    }
+
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'setQuestion') {
+            const q = parseInt(e.data.q, 10);
+            if (q >= 1 && q <= 10) {
+                currentQ = q;
+                renderQuestionUI();
+            }
+        }
+    });
+
+    window.addEventListener('load', init);
+    window.addEventListener('resize', notifyParentHeight);
+</script>
+</body>
+</html>

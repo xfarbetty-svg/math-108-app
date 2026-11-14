@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-14 面積（平方公分） 擬物實驗台</title>
+    <style>
+        :root {
+            --bg: #fffdf8;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.35;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 230px;
+            height: auto;
+            display: block;
+        }
+        .cap { font-size: 11px; min-height: 15px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.2; }
+        .controls { display: flex; flex-direction: column; gap: 3px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 4px 4px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px;
+            text-align: center;
+            line-height: 1.18;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        body.in-iframe .check-btn { display: none; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-N-3-14 面積（平方公分） 擬物實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 240 160">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看面積演繹</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "數學上規定「邊長 1 公分」的正方形，它的面積是多少？",
+            options: ["1 公分", "4 公分", "1 平方公分", "4 平方公分"],
+            answer_index: 2,
+            visual_mode: "unit_square_def",
+            total_steps: 3,
+            explanations: [
+                "長度 vs 面積：邊長 1cm 是線的長度",
+                "面的大小：正方形覆蓋的平面大小",
+                "定義：邊長 1 公分的正方形面積為「1 平方公分 (cm²)」✓"
+            ],
+            feedback: "答對了！邊長 1 公分的正方形面積，規定就是 1 平方公分！"
+        },
+        {
+            q: 2,
+            stem: "下圖方格紙中，每個小方格的面積都是 1 平方公分。請問橘色圖形一共佔了幾個小方格？面積是多少平方公分？",
+            options: ["7 個方格，7 平方公分", "8 個方格，8 平方公分", "9 個方格，9 平方公分", "10 個方格，10 平方公分"],
+            answer_index: 1,
+            visual_mode: "grid_count_basic",
+            total_steps: 3,
+            explanations: [
+                "逐格點數：每格代表 1 平方公分",
+                "標記數字：依序數 1、2、3、4、5、6、7、8",
+                "結論：共有 8 個方格，面積為 8 平方公分 ✓"
+            ],
+            feedback: "答對了！逐格數一數共有 8 個小方格，面積就是 8 平方公分！"
+        },
+        {
+            q: 3,
+            stem: "下圖中，每個方格是 1 平方公分。圖形中有 5 個完整方格，另外還有「4 個三角形半格」。請問這個圖形的總面積是多少平方公分？",
+            options: ["9 平方公分", "7 平方公分", "6 平方公分", "8 平方公分"],
+            answer_index: 1,
+            visual_mode: "half_grid_combine",
+            total_steps: 3,
+            explanations: [
+                "整格部分：5 個完整方格 ＝ 5 平方公分",
+                "半格拼湊：每 2 個半格拼成 1 整格，4 個半格 ＝ 2 平方公分",
+                "合併計算：5 ＋ 2 ＝ 7 平方公分 ✓"
+            ],
+            feedback: "答對了！4 個半格等於 2 個整格，5＋2＝7 平方公分！"
+        },
+        {
+            q: 4,
+            stem: "下圖的長方形，橫的一排有 4 格，直的一排有 3 格（每格 1 平方公分）。請問這個長方形的面積是多少平方公分？",
+            options: ["7 平方公分", "12 平方公分", "14 平方公分", "16 平方公分"],
+            answer_index: 1,
+            visual_mode: "rect_array_multiply",
+            total_steps: 3,
+            explanations: [
+                "每排格數：橫排有 4 個 1 平方公分",
+                "直排排數：共有 3 排",
+                "乘法算理：4 × 3 ＝ 12 平方公分 ✓"
+            ],
+            feedback: "答對了！每排 4 格共 3 排，4×3＝12 平方公分！"
+        },
+        {
+            q: 5,
+            stem: "甲圖形是 2×6 的長方形，乙圖形是 3×4 的長方形。下列關於甲和乙的比較，何者正確？",
+            options: [
+                "甲圖形比較長，所以甲的面積比乙大",
+                "乙圖形比較寬，所以乙的面積比甲大",
+                "甲和乙的形狀雖然不同，但面積都是 12 平方公分，一樣大",
+                "形狀不同的圖形，面積絕對不可能一樣大"
+            ],
+            answer_index: 2,
+            visual_mode: "equivalent_area_shapes",
+            total_steps: 3,
+            explanations: [
+                "甲面積：2 × 6 ＝ 12 平方公分",
+                "乙面積：3 × 4 ＝ 12 平方公分",
+                "等積結論：形狀不同但面積相同，一樣大 ✓"
+            ],
+            feedback: "答對了！甲和乙雖然形狀不同，但都包含 12 個方格，面積都是 12 平方公分！"
+        },
+        {
+            q: 6,
+            stem: "下圖是一個 L 型的圖形（每格 1 平方公分）。把它切分成左右或上下兩個長方形來算，這個 L 型圖形的總面積是多少平方公分？",
+            options: ["9 平方公分", "10 平方公分", "11 平方公分", "12 平方公分"],
+            answer_index: 1,
+            visual_mode: "l_shape_split",
+            total_steps: 3,
+            explanations: [
+                "虛線分割：切成上下兩個長方形",
+                "上方塊：寬 2 格、高 3 格，2 × 3 ＝ 6 平方公分",
+                "右下方塊：寬 2 格、高 2 格，2 × 2 ＝ 4 平方公分，6＋4＝10 平方公分 ✓"
+            ],
+            feedback: "答對了！分割為 6 平方公分與 4 平方公分，合為 10 平方公分！"
+        },
+        {
+            q: 7,
+            stem: "下列關於「周長」和「面積」的比較，何者敘述完全正確？",
+            options: [
+                "周長和面積是完全一樣的東西，只是名稱不同",
+                "「周長」是指圖形外圍一圈的長度（單位是公分），「面積」是指圖形平面的大小（單位是平方公分）",
+                "兩個圖形如果面積一樣大，周長也一定一模一樣長",
+                "邊長 1 公分正方形，周長比面積小"
+            ],
+            answer_index: 1,
+            visual_mode: "perimeter_vs_area",
+            total_steps: 3,
+            explanations: [
+                "周長：邊緣一圈的「長度」，單位是「公分」",
+                "面積：面所覆蓋的「大小」，單位是「平方公分」",
+                "兩者概念完全不同，面積相同時周長不一定相同 ✓"
+            ],
+            feedback: "答對了！周長是一圈線的長度（公分），面積是平面大小（平方公分）！"
+        },
+        {
+            q: 8,
+            stem: "一個正方形的邊長是 5 公分。如果把它畫在 1 平方公分的方格紙上，它一共會佔多少個小方格？面積是多少？",
+            options: ["20 個方格，20 平方公分", "25 個方格，25 平方公分", "10 個方格，10 平方公分", "15 個方格，15 平方公分"],
+            answer_index: 1,
+            visual_mode: "square_5x5_area",
+            total_steps: 3,
+            explanations: [
+                "正方形每排有 5 個 1 公分方格",
+                "一共有 5 排",
+                "算式：5 × 5 ＝ 25 平方公分 ✓"
+            ],
+            feedback: "答對了！正方形邊長 5 公分，面積為 5×5＝25 平方公分！"
+        },
+        {
+            q: 9,
+            stem: "大長方形原本由 6×4＝24 個方格組成，中間被挖掉了一個 2×2＝4 個方格的小正方形洞（每格 1 平方公分）。請問剩下著色部分的面積是多少平方公分？",
+            options: ["24 平方公分", "28 平方公分", "20 平方公分", "18 平方公分"],
+            answer_index: 2,
+            visual_mode: "hollow_subtract_area",
+            total_steps: 3,
+            explanations: [
+                "完整大長方形面積：6 × 4 ＝ 24 平方公分",
+                "內部挖空小方塊：2 × 2 ＝ 4 平方公分",
+                "相減求剩餘：24 － 4 ＝ 20 平方公分 ✓"
+            ],
+            feedback: "答對了！大長方形 24 扣除挖空的 4，剩餘著色面積是 20 平方公分！"
+        },
+        {
+            q: 10,
+            stem: "小華拿直尺量了一張健保卡的長大約 8 公分、寬大約 5 公分。請問這張健保卡的表面積大約是多少？",
+            options: ["約 40 平方公分", "約 40 公分", "約 4 平方公分", "約 400 平方公分"],
+            answer_index: 0,
+            visual_mode: "card_area_estimation",
+            total_steps: 3,
+            explanations: [
+                "長約 8 公分、寬約 5 公分",
+                "矩形估算：長 × 寬 ＝ 8 × 5 ＝ 40",
+                "單位是「平方公分」：約 40 平方公分 ✓"
+            ],
+            feedback: "答對了！長 8 公分寬 5 公分，表面積約 8×5＝40 平方公分！"
+        }
+    ];
+
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = null;
+
+    function getQueryParam(p) {
+        const u = new URLSearchParams(window.location.search);
+        return u.get(p);
+    }
+
+    function init() {
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        const qp = parseInt(getQueryParam('q'), 10);
+        if (qp >= 1 && qp <= 10) currentQ = qp;
+        renderQuestionUI();
+    }
+
+    function renderQuestionUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = 0;
+        selectedOption = null;
+
+        document.getElementById('questionBox').textContent = `Q${qData.q}. ${qData.stem}`;
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (0/${qData.total_steps})`;
+        document.getElementById('capText').textContent = "點擊「逐步算理」查看面積演繹";
+
+        const fb = document.getElementById('feedbackBox');
+        fb.className = "feedback";
+        fb.textContent = "";
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = "";
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "option-btn";
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+
+        drawStage(0);
+        notifyParentHeight();
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach((b, i) => {
+            if (i === idx) b.classList.add('selected');
+            else b.classList.remove('selected');
+        });
+    }
+
+    function checkAnswer() {
+        const qData = QUESTIONS[currentQ - 1];
+        const fb = document.getElementById('feedbackBox');
+        if (selectedOption === null) {
+            fb.className = "feedback show wrong";
+            fb.textContent = "請先選擇一個選項再按確認！";
+            return;
+        }
+
+        if (selectedOption === qData.answer_index) {
+            fb.className = "feedback show correct";
+            fb.textContent = qData.feedback;
+            currentStep = qData.total_steps;
+            document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+            drawStage(currentStep);
+        } else {
+            fb.className = "feedback show wrong";
+            fb.textContent = "再仔細想想看喔！可以點擊「逐步算理演繹」看看提示！";
+        }
+        notifyParentHeight();
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = (currentStep + 1) % (qData.total_steps + 1);
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        
+        if (currentStep === 0) {
+            document.getElementById('capText').textContent = "點擊「逐步算理」查看面積演繹";
+        } else {
+            document.getElementById('capText').textContent = qData.explanations[currentStep - 1];
+        }
+        drawStage(currentStep);
+        notifyParentHeight();
+    }
+
+    function notifyParentHeight() {
+        setTimeout(() => {
+            const app = document.getElementById('app');
+            const h = app ? Math.min(app.offsetHeight + 10, 420) : 380;
+            window.parent.postMessage({ type: 'resize', height: h }, '*');
+        }, 50);
+    }
+
+    function drawStage(step) {
+        const layer = document.getElementById('drawLayer');
+        layer.innerHTML = "";
+        const qData = QUESTIONS[currentQ - 1];
+
+        switch (qData.visual_mode) {
+            case "unit_square_def":
+                drawQ1(layer, step);
+                break;
+            case "grid_count_basic":
+                drawQ2(layer, step);
+                break;
+            case "half_grid_combine":
+                drawQ3(layer, step);
+                break;
+            case "rect_array_multiply":
+                drawQ4(layer, step);
+                break;
+            case "equivalent_area_shapes":
+                drawQ5(layer, step);
+                break;
+            case "l_shape_split":
+                drawQ6(layer, step);
+                break;
+            case "perimeter_vs_area":
+                drawQ7(layer, step);
+                break;
+            case "square_5x5_area":
+                drawQ8(layer, step);
+                break;
+            case "hollow_subtract_area":
+                drawQ9(layer, step);
+                break;
+            case "card_area_estimation":
+                drawQ10(layer, step);
+                break;
+        }
+    }
+
+    // Q1: 1 平方公分定義
+    function drawQ1(g, step) {
+        g.innerHTML = `
+            <g transform="translate(85, 30)">
+                <rect x="0" y="0" width="70" height="70" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+                <text x="35" y="40" font-size="11" font-weight="bold" fill="#854d0e" text-anchor="middle">1 cm²</text>
+                <text x="35" y="-6" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">1 cm</text>
+                <text x="-12" y="40" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">1 cm</text>
+            </g>
+            <rect x="40" y="120" width="160" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="135" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">面積單位：1 平方公分 ✓</text>
+        `;
+    }
+
+    // Q2: 方格點數 8 格
+    function drawQ2(g, step) {
+        g.innerHTML = `
+            <g transform="translate(60, 20)">
+                <!-- 網格底 -->
+                <rect x="0" y="0" width="120" height="80" fill="#f8fafc" stroke="#cbd5e1"/>
+                <!-- 橘色 8 個方格 (2x4) -->
+                ${[0,1,2,3].map(c => [0,1].map(r => `
+                    <rect x="${c*25}" y="${r*25}" width="25" height="25" fill="#fed7aa" stroke="#ea580c"/>
+                    <text x="${c*25+12}" y="${r*25+17}" font-size="10" font-weight="bold" fill="#9a3412" text-anchor="middle">${r*4+c+1}</text>
+                `).join('')).join('')}
+            </g>
+            <text x="120" y="130" font-size="11" font-weight="bold" fill="#9a3412" text-anchor="middle">共 8 個小方格 ＝ 8 平方公分 ✓</text>
+        `;
+    }
+
+    // Q3: 5個整格 + 4個半格 = 7
+    function drawQ3(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 20)">
+                <!-- 5個整格 (綠) -->
+                <rect x="0" y="0" width="75" height="25" fill="#a7f3d0" stroke="#059669"/>
+                <rect x="0" y="25" width="50" height="25" fill="#a7f3d0" stroke="#059669"/>
+                <text x="25" y="17" font-size="9" font-weight="bold" fill="#065f46">整格×5</text>
+                
+                <!-- 4個三角形半格 (橘) -->
+                <polygon points="50,25 75,25 75,50" fill="#fed7aa" stroke="#ea580c"/>
+                <polygon points="50,50 75,50 50,75" fill="#fed7aa" stroke="#ea580c"/>
+                <polygon points="0,50 25,50 0,75" fill="#fed7aa" stroke="#ea580c"/>
+                <polygon points="25,50 25,75 50,75" fill="#fed7aa" stroke="#ea580c"/>
+                <text x="85" y="45" font-size="9" font-weight="bold" fill="#ea580c">半格×4</text>
+            </g>
+            <rect x="35" y="120" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="135" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">5 ＋ (4÷2) ＝ 7 平方公分 ✓</text>
+        `;
+    }
+
+    // Q4: 4x3 長方形乘法
+    function drawQ4(g, step) {
+        g.innerHTML = `
+            <g transform="translate(65, 20)">
+                <!-- 4x3 格子 -->
+                ${[0,1,2,3].map(c => [0,1,2].map(r => `
+                    <rect x="${c*26}" y="${r*26}" width="26" height="26" fill="#e0f2fe" stroke="#0284c7"/>
+                `).join('')).join('')}
+                <text x="52" y="-5" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">橫排 4 格</text>
+                <text x="-12" y="42" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">3 排</text>
+            </g>
+            <text x="120" y="130" font-size="11" font-weight="bold" fill="#0369a1" text-anchor="middle">算式：4 × 3 ＝ 12 平方公分 ✓</text>
+        `;
+    }
+
+    // Q5: 等積變形 (2x6 vs 3x4)
+    function drawQ5(g, step) {
+        g.innerHTML = `
+            <g transform="translate(25, 25)">
+                <!-- 甲: 2x6 (寬度 90, 高 30) -->
+                <rect x="0" y="0" width="80" height="30" fill="#fed7aa" stroke="#ea580c"/>
+                <text x="40" y="18" font-size="9.5" font-weight="bold" fill="#9a3412" text-anchor="middle">甲: 2×6＝12</text>
+            </g>
+            <g transform="translate(130, 20)">
+                <!-- 乙: 3x4 (寬度 55, 高 45) -->
+                <rect x="0" y="0" width="55" height="42" fill="#a7f3d0" stroke="#059669"/>
+                <text x="27" y="24" font-size="9.5" font-weight="bold" fill="#065f46" text-anchor="middle">乙: 3×4＝12</text>
+            </g>
+            <rect x="35" y="115" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="130" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">形狀不同，面積都是 12 cm² ✓</text>
+        `;
+    }
+
+    // Q6: L型分割 (6 + 4 = 10)
+    function drawQ6(g, step) {
+        g.innerHTML = `
+            <g transform="translate(80, 20)">
+                <!-- 上塊 2x3=6 -->
+                <rect x="0" y="0" width="40" height="50" fill="#fef08a" stroke="#ca8a04"/>
+                <text x="20" y="28" font-size="10" font-weight="bold" fill="#854d0e" text-anchor="middle">6 cm²</text>
+                <!-- 下塊 4x2 延伸 (右下 2x2=4) -->
+                <rect x="0" y="50" width="80" height="35" fill="#bae6fd" stroke="#0284c7"/>
+                <line x1="40" y1="50" x2="40" y2="85" stroke="#ef4444" stroke-dasharray="3 3"/>
+                <text x="58" y="70" font-size="10" font-weight="bold" fill="#0369a1" text-anchor="middle">4 cm²</text>
+            </g>
+            <text x="120" y="130" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">分割相加：6 ＋ 4 ＝ 10 平方公分 ✓</text>
+        `;
+    }
+
+    // Q7: 周長 vs 面積
+    function drawQ7(g, step) {
+        g.innerHTML = `
+            <g transform="translate(85, 25)">
+                <rect x="0" y="0" width="70" height="50" fill="#ecfdf5" stroke="#ef4444" stroke-width="3"/>
+                <text x="35" y="28" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">面積 (面)</text>
+                <text x="35" y="-8" font-size="9" font-weight="bold" fill="#ef4444" text-anchor="middle">周長 (外圍一圈線)</text>
+            </g>
+            <rect x="25" y="115" width="190" height="24" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
+            <text x="120" y="131" font-size="9.5" font-weight="bold" fill="#334155" text-anchor="middle">周長單位：公分 ｜ 面積單位：平方公分 ✓</text>
+        `;
+    }
+
+    // Q8: 5x5 正方形面積 25
+    function drawQ8(g, step) {
+        g.innerHTML = `
+            <g transform="translate(80, 15)">
+                <rect x="0" y="0" width="80" height="80" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                ${[1,2,3,4].map(i => `
+                    <line x1="${i*16}" y1="0" x2="${i*16}" y2="80" stroke="#d97706" opacity="0.4"/>
+                    <line x1="0" y1="${i*16}" x2="80" y2="${i*16}" stroke="#d97706" opacity="0.4"/>
+                `).join('')}
+                <text x="40" y="-5" font-size="10" font-weight="bold" fill="#b45309" text-anchor="middle">邊長 5 cm</text>
+            </g>
+            <text x="120" y="125" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">正方形面積：5 × 5 ＝ 25 平方公分 ✓</text>
+        `;
+    }
+
+    // Q9: 大長方形 24 格挖空 4 格 = 20
+    function drawQ9(g, step) {
+        g.innerHTML = `
+            <g transform="translate(65, 15)">
+                <!-- 大長方形 (6x4 = 110x70) -->
+                <rect x="0" y="0" width="110" height="70" fill="#fed7aa" stroke="#ea580c"/>
+                <text x="55" y="20" font-size="9" fill="#9a3412" text-anchor="middle">大長方形 24 cm²</text>
+                <!-- 挖空 2x2 -->
+                <rect x="35" y="25" width="40" height="30" fill="#ffffff" stroke="#ef4444" stroke-dasharray="2 2"/>
+                <text x="55" y="43" font-size="9" font-weight="bold" fill="#ef4444" text-anchor="middle">挖掉 4</text>
+            </g>
+            <text x="120" y="125" font-size="11" font-weight="bold" fill="#9a3412" text-anchor="middle">剩餘面積：24 － 4 ＝ 20 平方公分 ✓</text>
+        `;
+    }
+
+    // Q10: 健保卡表面積估測 40
+    function drawQ10(g, step) {
+        g.innerHTML = `
+            <g transform="translate(70, 20)">
+                <rect x="0" y="0" width="100" height="60" rx="4" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                <rect x="15" y="15" width="22" height="20" rx="2" fill="#fef08a"/>
+                <text x="65" y="35" font-size="10" font-weight="bold" fill="#ffffff">健保卡</text>
+                <text x="50" y="-5" font-size="9" font-weight="bold" fill="#0284c7" text-anchor="middle">長約 8 cm</text>
+                <text x="-14" y="32" font-size="9" font-weight="bold" fill="#0284c7" text-anchor="middle">寬 5</text>
+            </g>
+            <rect x="35" y="115" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="120" y="130" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">估算面積：8 × 5 ＝ 40 平方公分 ✓</text>
+        `;
+    }
+
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'setQuestion') {
+            const q = parseInt(e.data.q, 10);
+            if (q >= 1 && q <= 10) {
+                currentQ = q;
+                renderQuestionUI();
+            }
+        }
+    });
+
+    window.addEventListener('load', init);
+    window.addEventListener('resize', notifyParentHeight);
+</script>
+</body>
+</html>

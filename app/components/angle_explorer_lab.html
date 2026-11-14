@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-13 角與角度 擬物實驗台</title>
+    <style>
+        :root {
+            --bg: #fffdf8;
+            --card: #ffffff;
+            --coral: #ff8a65;
+            --mint: #7bc9b2;
+            --lemon: #ffd166;
+            --text-dark: #333;
+            --muted: #b0a08a;
+            --success: #7bc9b2;
+            --error: #e57373;
+            --sky: #4fc3f7;
+            --indigo: #5c6bc0;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: auto; min-height: auto; margin: 0; padding: 0; }
+        body {
+            padding: 6px;
+            font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        #app {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            min-height: auto;
+            background: transparent;
+            border: none;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .header {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: center;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .question-box {
+            background: var(--card);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.35;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            border-left: 4px solid var(--coral);
+        }
+        .calc-card {
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(149,117,76,0.08);
+            padding: 3px 6px 4px;
+        }
+        .calc-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        svg {
+            width: 100%;
+            max-width: 230px;
+            height: auto;
+            display: block;
+        }
+        .cap { font-size: 11px; min-height: 15px; text-align: center; color: var(--coral); font-weight: bold; line-height: 1.2; }
+        .controls { display: flex; flex-direction: column; gap: 3px; }
+        .step-btn, .check-btn {
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(149,117,76,0.15);
+            transition: all 0.2s ease;
+        }
+        .step-btn { background: var(--mint); }
+        .step-btn:hover { background: #66bb9a; }
+        .check-btn { background: var(--coral); }
+        .check-btn:hover { background: #ff7043; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .option-btn {
+            background: #fff;
+            border: 1.5px solid #ebd9c8;
+            color: var(--text-dark);
+            padding: 4px 4px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 30px;
+            text-align: center;
+            line-height: 1.18;
+        }
+        .option-btn:hover {
+            border-color: var(--coral);
+            background: #fff5ee;
+        }
+        .option-btn.selected {
+            background: var(--coral);
+            border-color: var(--coral);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(255,138,101,0.3);
+        }
+        .feedback {
+            display: none;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.35;
+            text-align: center;
+            font-weight: 500;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
+        .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        /* 當被 iframe 嵌入時，隱藏重複的確認答案按鈕，由外部 shell 底部的「檢查答案」統一代理由 */
+        body.in-iframe .check-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="header">✦ G3-N-3-13 角與角度 擬物實驗台 ✦</div>
+    <div class="question-box" id="questionBox">載入題目中...</div>
+    <div class="calc-card">
+        <div class="calc-area">
+            <svg id="drawSvg" viewBox="0 0 250 160">
+                <g id="drawLayer"></g>
+            </svg>
+        </div>
+        <div class="cap" id="capText">點擊「逐步算理」看角度演繹</div>
+    </div>
+    <div class="controls">
+        <button class="step-btn" id="stepBtn" onclick="nextStep()">🔍 逐步算理演繹 (0/3)</button>
+        <div class="options-grid" id="optionsGrid"></div>
+        <button class="check-btn" id="checkBtn" onclick="checkAnswer()">確認答案</button>
+        <div class="feedback" id="feedbackBox"></div>
+    </div>
+</div>
+
+<script>
+    const QUESTIONS = [
+        {
+            q: 1,
+            stem: "小明把一個角上的兩條邊用直尺畫得更長了。請問這個「角的大小」會發生什麼變化？",
+            options: ["角會變得更大", "角會變得更小", "角的大小完全不變", "角會變成直角"],
+            answer_index: 2,
+            visual_mode: "angle_arm_length",
+            total_steps: 3,
+            explanations: [
+                "觀察兩邊：角由頂點和兩條射線組成",
+                "延伸邊長：兩邊變長，但張開幅度完全沒變",
+                "結論：角的大小由開度決定，與邊長無關 ✓"
+            ],
+            feedback: "答對了！角的大小只看兩邊張開的程度，把邊畫長或畫短，角的大小完全不變！"
+        },
+        {
+            q: 2,
+            stem: "數學課堂上常用的兩種三角板中，每一個三角板裡面「最大的角」是什麼角？",
+            options: ["銳角", "直角", "鈍角", "平角"],
+            answer_index: 1,
+            visual_mode: "triangle_ruler_right",
+            total_steps: 3,
+            explanations: [
+                "觀察三角板：每塊三角板都有 3 個角",
+                "比較大小：另外兩個角都比較尖、比較小",
+                "結論：最大的角剛好呈正方形方角，就是「直角」✓"
+            ],
+            feedback: "答對了！三角板中最大的角一定是直角（90度），其餘兩角都是銳角！"
+        },
+        {
+            q: 3,
+            stem: "拿三角板的直角去量一個角，如果這個角「比直角還要大」，這個角叫作什麼角？",
+            options: ["銳角", "直角", "鈍角", "平角"],
+            answer_index: 2,
+            visual_mode: "acute_right_obtuse_compare",
+            total_steps: 3,
+            explanations: [
+                "基準角：三角板的直角（方正角落）",
+                "比直角小（尖銳）：叫作「銳角」",
+                "比直角大（開闊）：叫作「鈍角」✓"
+            ],
+            feedback: "答對了！比直角小的叫銳角，比直角大的叫鈍角！"
+        },
+        {
+            q: 4,
+            stem: "觀察客廳的時鐘，當指針指向「下午 3 點整」的時候，時針和分針所夾的角是什麼角？",
+            options: ["銳角", "直角", "鈍角", "平角"],
+            answer_index: 1,
+            visual_mode: "clock_3_oclock",
+            total_steps: 3,
+            explanations: [
+                "時針指向 3，分針指向 12",
+                "相差 3 個大格，兩針垂直",
+                "剛好吻合三角板直角，是「直角」✓"
+            ],
+            feedback: "答對了！3 點整時，時針與分針互相垂直，夾角是標準直角！"
+        },
+        {
+            q: 5,
+            stem: "超商賣的「三角飯糰」，三個角的開度都比三角板的直角還要小。請問這三個角分別是什麼角？",
+            options: ["三個都是銳角", "三個都是鈍角", "一個直角、兩個銳角", "兩個直角、一個鈍角"],
+            answer_index: 0,
+            visual_mode: "onigiri_angles",
+            total_steps: 3,
+            explanations: [
+                "三角飯糰三個角外觀尖尖的",
+                "拿三角板比對：每一個角都比直角小",
+                "比直角小的角就是銳角，所以三個都是銳角 ✓"
+            ],
+            feedback: "答對了！三角飯糰三個角都比直角小，全部都是尖尖的銳角！"
+        },
+        {
+            q: 6,
+            stem: "用三角板的直角去檢驗一個未知的角：把頂點對齊、一條邊完全疊合後，發現另一條邊「跑到三角板的外面去了（張得更開）」。請問這個角是什麼角？",
+            options: ["銳角", "直角", "鈍角", "不能確定"],
+            answer_index: 2,
+            visual_mode: "ruler_check_obtuse",
+            total_steps: 3,
+            explanations: [
+                "頂點對齊、一邊疊合三角板直角邊",
+                "觀察另一條邊：跑到三角板的外面",
+                "張開程度比直角大，所以是「鈍角」✓"
+            ],
+            feedback: "答對了！邊跑到三角板直角的外側，代表張得比直角更開，是鈍角！"
+        },
+        {
+            q: 7,
+            stem: "下圖是一個標準的「長方形」。請問長方形裡面一共有幾個直角？",
+            options: ["1 個", "2 個", "3 個", "4 個"],
+            answer_index: 3,
+            visual_mode: "rectangle_right_angles",
+            total_steps: 3,
+            explanations: [
+                "長方形有 4 個角落",
+                "每一個角落都方方正正，和三角板直角完全吻合",
+                "結論：長方形有「4 個直角」✓"
+            ],
+            feedback: "答對了！長方形和正方形的四個角，每一個都是標準的直角！"
+        },
+        {
+            q: 8,
+            stem: "要比較「角 A」和「角 B」哪一個比較大，下列哪一種操作方法最正確？",
+            options: [
+                "拿直尺量兩條邊的長度，邊比較長的角就比較大",
+                "把兩個角的頂點對齊，一條邊重疊，看另一條邊張開得比較大的角就比較大",
+                "看哪一個角畫得比較粗，比較粗的就比較大",
+                "角的大小無法直接比較"
+            ],
+            answer_index: 1,
+            visual_mode: "angle_overlay_compare",
+            total_steps: 3,
+            explanations: [
+                "比角度切忌量邊長或粗細",
+                "標準操作：頂點對頂點，一邊對一邊疊合",
+                "觀察另一條邊：張開在外面的角比較大 ✓"
+            ],
+            feedback: "答對了！角度比大小用疊合法：頂點對齊、一邊重疊，比另一邊的張開程度！"
+        },
+        {
+            q: 9,
+            stem: "小華拿出一把摺扇，扇子剛拿出來時兩端合攏。當他把扇子慢慢「張開」時，兩端所形成的角會如何變化？",
+            options: [
+                "角越來越小",
+                "角的大小不會變",
+                "角由小變大，可以從銳角變成直角，再變成鈍角",
+                "只會一直是銳角"
+            ],
+            answer_index: 2,
+            visual_mode: "folding_fan_rotation",
+            total_steps: 3,
+            explanations: [
+                "合攏時夾角最小",
+                "慢慢打開時，兩邊張開幅度持續變大",
+                "依序經歷：銳角 $\\rightarrow$ 直角 $\\rightarrow$ 鈍角 ✓"
+            ],
+            feedback: "答對了！扇子慢慢打開，角由小變大，會從銳角變成直角，再變成鈍角！"
+        },
+        {
+            q: 10,
+            stem: "下圖是一個「直角三角形」。請問直角三角形裡面，有幾個直角？有幾個銳角？",
+            options: ["1 個直角、2 個銳角", "2 個直角、1 個銳角", "3 個直角、0 個銳角", "1 個直角、2 個鈍角"],
+            answer_index: 0,
+            visual_mode: "right_triangle_anatomy",
+            total_steps: 3,
+            explanations: [
+                "直角三角形只有一個方正的角落是「直角」",
+                "另外兩個角比直角小，都是尖尖的「銳角」",
+                "結論：1 個直角、2 個銳角 ✓"
+            ],
+            feedback: "答對了！直角三角形含有一個直角與兩個銳角！"
+        }
+    ];
+
+    let currentQ = 1;
+    let currentStep = 0;
+    let selectedOption = null;
+
+    function getQueryParam(p) {
+        const u = new URLSearchParams(window.location.search);
+        return u.get(p);
+    }
+
+    function init() {
+        if (window.self !== window.top) {
+            document.body.classList.add('in-iframe');
+        }
+        const qp = parseInt(getQueryParam('q'), 10);
+        if (qp >= 1 && qp <= 10) currentQ = qp;
+        renderQuestionUI();
+    }
+
+    function renderQuestionUI() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = 0;
+        selectedOption = null;
+
+        document.getElementById('questionBox').textContent = `Q${qData.q}. ${qData.stem}`;
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (0/${qData.total_steps})`;
+        document.getElementById('capText').textContent = "點擊「逐步算理」查看角與角度演繹";
+
+        const fb = document.getElementById('feedbackBox');
+        fb.className = "feedback";
+        fb.textContent = "";
+
+        const grid = document.getElementById('optionsGrid');
+        grid.innerHTML = "";
+        qData.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "option-btn";
+            btn.textContent = opt;
+            btn.onclick = () => selectOption(idx);
+            grid.appendChild(btn);
+        });
+
+        drawStage(0);
+        notifyParentHeight();
+    }
+
+    function selectOption(idx) {
+        selectedOption = idx;
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach((b, i) => {
+            if (i === idx) b.classList.add('selected');
+            else b.classList.remove('selected');
+        });
+    }
+
+    function checkAnswer() {
+        const qData = QUESTIONS[currentQ - 1];
+        const fb = document.getElementById('feedbackBox');
+        if (selectedOption === null) {
+            fb.className = "feedback show wrong";
+            fb.textContent = "請先選擇一個選項再按確認！";
+            return;
+        }
+
+        if (selectedOption === qData.answer_index) {
+            fb.className = "feedback show correct";
+            fb.textContent = qData.feedback;
+            currentStep = qData.total_steps;
+            document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+            drawStage(currentStep);
+        } else {
+            fb.className = "feedback show wrong";
+            fb.textContent = "再仔細想想看喔！可以點擊「逐步算理演繹」看看提示！";
+        }
+        notifyParentHeight();
+    }
+
+    function nextStep() {
+        const qData = QUESTIONS[currentQ - 1];
+        currentStep = (currentStep + 1) % (qData.total_steps + 1);
+        document.getElementById('stepBtn').textContent = `🔍 逐步算理演繹 (${currentStep}/${qData.total_steps})`;
+        
+        if (currentStep === 0) {
+            document.getElementById('capText').textContent = "點擊「逐步算理」查看角與角度演繹";
+        } else {
+            document.getElementById('capText').textContent = qData.explanations[currentStep - 1];
+        }
+        drawStage(currentStep);
+        notifyParentHeight();
+    }
+
+    function notifyParentHeight() {
+        setTimeout(() => {
+            const app = document.getElementById('app');
+            const h = app ? Math.min(app.offsetHeight + 10, 420) : 380;
+            window.parent.postMessage({ type: 'resize', height: h }, '*');
+        }, 50);
+    }
+
+    function drawStage(step) {
+        const layer = document.getElementById('drawLayer');
+        layer.innerHTML = "";
+        const qData = QUESTIONS[currentQ - 1];
+
+        switch (qData.visual_mode) {
+            case "angle_arm_length":
+                drawQ1(layer, step);
+                break;
+            case "triangle_ruler_right":
+                drawQ2(layer, step);
+                break;
+            case "acute_right_obtuse_compare":
+                drawQ3(layer, step);
+                break;
+            case "clock_3_oclock":
+                drawQ4(layer, step);
+                break;
+            case "onigiri_angles":
+                drawQ5(layer, step);
+                break;
+            case "ruler_check_obtuse":
+                drawQ6(layer, step);
+                break;
+            case "rectangle_right_angles":
+                drawQ7(layer, step);
+                break;
+            case "angle_overlay_compare":
+                drawQ8(layer, step);
+                break;
+            case "folding_fan_rotation":
+                drawQ9(layer, step);
+                break;
+            case "right_triangle_anatomy":
+                drawQ10(layer, step);
+                break;
+        }
+    }
+
+    // Q1: 邊長延長 vs 開度不變
+    function drawQ1(g, step) {
+        g.innerHTML = `
+            <g transform="translate(40, 110)">
+                <!-- 原始兩邊 (實線) -->
+                <line x1="0" y1="0" x2="80" y2="0" stroke="#0284c7" stroke-width="3"/>
+                <line x1="0" y1="0" x2="60" y2="-60" stroke="#0284c7" stroke-width="3"/>
+                <circle cx="0" cy="0" r="4" fill="#ef4444"/>
+                <text x="-15" y="15" font-size="10" font-weight="bold" fill="#ef4444">頂點</text>
+                
+                <!-- 角度弧線 -->
+                <path d="M 30 0 A 30 30 0 0 0 21 -21" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+                <text x="35" y="-12" font-size="11" font-weight="bold" fill="#d97706">角大小</text>
+
+                <!-- 延長邊 (虛線) -->
+                ${step >= 1 ? `
+                    <line x1="80" y1="0" x2="160" y2="0" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3"/>
+                    <line x1="60" y1="-60" x2="120" y2="-120" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3"/>
+                    <text x="110" y="15" font-size="9" fill="#ef4444">邊畫得更長...</text>
+                ` : ''}
+            </g>
+            <rect x="50" y="130" width="150" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="125" y="145" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">開度沒變 ➔ 角大小不變 ✓</text>
+        `;
+    }
+
+    // Q2: 三角板上的直角
+    function drawQ2(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 20)">
+                <!-- 等腰直角三角板 (45-45-90) -->
+                <polygon points="0,100 100,100 0,0" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                <rect x="0" y="86" width="14" height="14" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="5" y="80" font-size="10" font-weight="bold" fill="#ef4444">直角 (最大)</text>
+                <text x="70" y="95" font-size="9" fill="#b45309">銳角</text>
+                <text x="8" y="25" font-size="9" fill="#b45309">銳角</text>
+            </g>
+            <g transform="translate(160, 30)">
+                <!-- 30-60-90 三角板 -->
+                <polygon points="0,90 52,90 0,0" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                <rect x="0" y="78" width="12" height="12" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="5" y="72" font-size="9" font-weight="bold" fill="#ef4444">直角</text>
+            </g>
+            <text x="125" y="145" font-size="11" font-weight="bold" fill="#0284c7" text-anchor="middle">三角板最大角都是「直角」✓</text>
+        `;
+    }
+
+    // Q3: 銳角/直角/鈍角三合一對比
+    function drawQ3(g, step) {
+        g.innerHTML = `
+            <!-- 銳角 -->
+            <g transform="translate(30, 80)">
+                <line x1="0" y1="0" x2="45" y2="0" stroke="#047857" stroke-width="2"/>
+                <line x1="0" y1="0" x2="32" y2="-32" stroke="#047857" stroke-width="2"/>
+                <path d="M 20 0 A 20 20 0 0 0 14 -14" fill="none" stroke="#10b981" stroke-width="2"/>
+                <text x="22" y="20" font-size="10" font-weight="bold" fill="#047857" text-anchor="middle">銳角</text>
+                <text x="22" y="32" font-size="8.5" fill="#64748b" text-anchor="middle">(比直角小)</text>
+            </g>
+            <!-- 直角 -->
+            <g transform="translate(110, 80)">
+                <line x1="0" y1="0" x2="45" y2="0" stroke="#0284c7" stroke-width="2"/>
+                <line x1="0" y1="0" x2="0" y2="-45" stroke="#0284c7" stroke-width="2"/>
+                <rect x="0" y="-12" width="12" height="12" fill="none" stroke="#0284c7" stroke-width="1.5"/>
+                <text x="22" y="20" font-size="10" font-weight="bold" fill="#0284c7" text-anchor="middle">直角</text>
+                <text x="22" y="32" font-size="8.5" fill="#64748b" text-anchor="middle">(方正角落)</text>
+            </g>
+            <!-- 鈍角 -->
+            <g transform="translate(195, 80)">
+                <line x1="0" y1="0" x2="45" y2="0" stroke="#ef4444" stroke-width="2"/>
+                <line x1="0" y1="0" x2="-25" y2="-35" stroke="#ef4444" stroke-width="2"/>
+                <path d="M 20 0 A 20 20 0 0 0 -10 -15" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="15" y="20" font-size="10" font-weight="bold" fill="#ef4444" text-anchor="middle">鈍角</text>
+                <text x="15" y="32" font-size="8.5" fill="#64748b" text-anchor="middle">(比直角大)</text>
+            </g>
+            <rect x="35" y="125" width="180" height="20" rx="4" fill="#fef2f2" stroke="#ef4444"/>
+            <text x="125" y="139" font-size="10" font-weight="bold" fill="#dc2626" text-anchor="middle">比直角還要大 ＝ 鈍角 ✓</text>
+        `;
+    }
+
+    // Q4: 時鐘 3 點整夾直角
+    function drawQ4(g, step) {
+        g.innerHTML = `
+            <g transform="translate(125, 65)">
+                <!-- 鐘面 -->
+                <circle cx="0" cy="0" r="48" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                <circle cx="0" cy="0" r="3" fill="#333"/>
+                <text x="0" y="-36" font-size="8" font-weight="bold" fill="#64748b" text-anchor="middle">12</text>
+                <text x="38" y="3" font-size="8" font-weight="bold" fill="#64748b" text-anchor="middle">3</text>
+                <text x="0" y="42" font-size="8" font-weight="bold" fill="#64748b" text-anchor="middle">6</text>
+                <text x="-38" y="3" font-size="8" font-weight="bold" fill="#64748b" text-anchor="middle">9</text>
+
+                <!-- 分針指向 12 -->
+                <line x1="0" y1="0" x2="0" y2="-35" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- 時針指向 3 -->
+                <line x1="0" y1="0" x2="26" y2="0" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round"/>
+
+                <!-- 直角標記 -->
+                <rect x="0" y="-12" width="12" height="12" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+            </g>
+            <text x="125" y="135" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">3 點整：分針與時針夾角為「直角」✓</text>
+        `;
+    }
+
+    // Q5: 三角飯糰三個銳角
+    function drawQ5(g, step) {
+        g.innerHTML = `
+            <g transform="translate(125, 20)">
+                <!-- 飯糰米白正三角形 -->
+                <polygon points="0,0 55,85 -55,85" rx="5" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+                <!-- 海苔 -->
+                <rect x="-20" y="60" width="40" height="25" fill="#1e293b" rx="2"/>
+                <!-- 3個角標註 -->
+                <circle cx="0" cy="8" r="6" fill="#fef08a"/>
+                <text x="0" y="24" font-size="9" font-weight="bold" fill="#b45309" text-anchor="middle">銳角</text>
+                <text x="-35" y="80" font-size="9" font-weight="bold" fill="#b45309">銳角</text>
+                <text x="20" y="80" font-size="9" font-weight="bold" fill="#b45309">銳角</text>
+            </g>
+            <rect x="40" y="125" width="170" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="125" y="140" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">三個角都比直角小 ＝ 銳角 ✓</text>
+        `;
+    }
+
+    // Q6: 三角板檢驗未知角 (鈍角外擴)
+    function drawQ6(g, step) {
+        g.innerHTML = `
+            <g transform="translate(70, 95)">
+                <!-- 被測鈍角 (黑線) -->
+                <line x1="0" y1="0" x2="80" y2="0" stroke="#1e293b" stroke-width="3"/>
+                <line x1="0" y1="0" x2="-35" y2="-65" stroke="#1e293b" stroke-width="3"/>
+
+                <!-- 三角板疊合 (淡黃色透明) -->
+                <polygon points="0,0 70,0 0,-70" fill="rgba(254, 240, 138, 0.4)" stroke="#d97706" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <rect x="0" y="-12" width="12" height="12" fill="none" stroke="#d97706"/>
+
+                <text x="15" y="-55" font-size="9" fill="#d97706">三角板直角邊</text>
+                <text x="-55" y="-40" font-size="9.5" font-weight="bold" fill="#ef4444">跑到外面！</text>
+                <path d="M 0 -25 A 25 25 0 0 0 -15 -20" fill="none" stroke="#ef4444" stroke-width="2"/>
+            </g>
+            <text x="125" y="140" font-size="11" font-weight="bold" fill="#ef4444" text-anchor="middle">張得比三角板直角大 ➔ 鈍角 ✓</text>
+        `;
+    }
+
+    // Q7: 長方形 4 個直角
+    function drawQ7(g, step) {
+        g.innerHTML = `
+            <g transform="translate(45, 25)">
+                <rect x="0" y="0" width="160" height="85" rx="2" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+                <!-- 4個角落的直角標記 -->
+                <rect x="0" y="0" width="14" height="14" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+                <rect x="146" y="0" width="14" height="14" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+                <rect x="0" y="71" width="14" height="14" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+                <rect x="146" y="71" width="14" height="14" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+                
+                <text x="80" y="48" font-size="12" font-weight="bold" fill="#15803d" text-anchor="middle">標準長方形</text>
+            </g>
+            <text x="125" y="138" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">長方形共有 4 個直角 ✓</text>
+        `;
+    }
+
+    // Q8: 兩角疊合法
+    function drawQ8(g, step) {
+        g.innerHTML = `
+            <g transform="translate(60, 100)">
+                <!-- 底邊重疊 -->
+                <line x1="0" y1="0" x2="110" y2="0" stroke="#333" stroke-width="3"/>
+                <circle cx="0" cy="0" r="4" fill="#333"/>
+                <text x="35" y="15" font-size="9" fill="#64748b">底邊疊合、頂點對齊</text>
+
+                <!-- 角 A -->
+                <line x1="0" y1="0" x2="80" y2="-50" stroke="#0284c7" stroke-width="2.5"/>
+                <text x="85" y="-50" font-size="10" font-weight="bold" fill="#0284c7">角 A</text>
+
+                <!-- 角 B (張得更開) -->
+                <line x1="0" y1="0" x2="60" y2="-75" stroke="#ef4444" stroke-width="2.5"/>
+                <text x="65" y="-75" font-size="10" font-weight="bold" fill="#ef4444">角 B (更大)</text>
+            </g>
+            <text x="125" y="140" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">頂點對齊、一邊疊合看另一邊 ✓</text>
+        `;
+    }
+
+    // Q9: 扇子張開動態旋轉角
+    function drawQ9(g, step) {
+        g.innerHTML = `
+            <g transform="translate(125, 95)">
+                <!-- 扇形展開面 -->
+                <path d="M 0 0 L -60 -30 A 70 70 0 0 1 60 -30 Z" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+                <!-- 扇骨 -->
+                <line x1="0" y1="0" x2="-60" y2="-30" stroke="#9a3412" stroke-width="2.5"/>
+                <line x1="0" y1="0" x2="60" y2="-30" stroke="#9a3412" stroke-width="2.5"/>
+                <circle cx="0" cy="0" r="5" fill="#7c2d12"/>
+
+                <path d="M -25 -12 A 28 28 0 0 1 25 -12" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="0" y="-45" font-size="10" font-weight="bold" fill="#9a3412" text-anchor="middle">張開扇子 ➔ 角度變大</text>
+            </g>
+            <text x="125" y="135" font-size="10.5" font-weight="bold" fill="#b45309" text-anchor="middle">角由小變大：銳角 ➔ 直角 ➔ 鈍角 ✓</text>
+        `;
+    }
+
+    // Q10: 直角三角形 (1直角 + 2銳角)
+    function drawQ10(g, step) {
+        g.innerHTML = `
+            <g transform="translate(60, 25)">
+                <polygon points="0,85 120,85 0,0" fill="#f0f9ff" stroke="#0284c7" stroke-width="2"/>
+                <!-- 直角標記 -->
+                <rect x="0" y="73" width="12" height="12" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="16" y="80" font-size="10" font-weight="bold" fill="#ef4444">1 個直角</text>
+
+                <!-- 2個銳角 -->
+                <text x="5" y="20" font-size="9" font-weight="bold" fill="#0369a1">銳角 ①</text>
+                <text x="85" y="78" font-size="9" font-weight="bold" fill="#0369a1">銳角 ②</text>
+            </g>
+            <rect x="35" y="125" width="180" height="22" rx="4" fill="#ecfdf5" stroke="#10b981"/>
+            <text x="125" y="140" font-size="10.5" font-weight="bold" fill="#047857" text-anchor="middle">直角三角形：1 個直角 ＋ 2 個銳角 ✓</text>
+        `;
+    }
+
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'setQuestion') {
+            const q = parseInt(e.data.q, 10);
+            if (q >= 1 && q <= 10) {
+                currentQ = q;
+                renderQuestionUI();
+            }
+        }
+    });
+
+    window.addEventListener('load', init);
+    window.addEventListener('resize', notifyParentHeight);
+</script>
+</body>
+</html>
