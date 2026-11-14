@@ -134,7 +134,12 @@
   2. `two_step_problem_lab.html` 日系擬物階梯式解題實驗台：10 種視覺模式（associate/compare/estimate/detective/wire_trap/boxes/oranges/apples/milk_toast/balloons）。
   3. 雙硬閘門全綠：`verify_n37.js`（資料契約＋逐題兩步驟數學真值驗算）與 `verify_n37_cdp.js`（390px 實機 10/10 題 app 高度 367~409px ≤ 420px、零溢出、零 console 錯誤）。
   4. 課綱同步：`curriculum.json` N-3-7 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 18 條全綠。
-- [ ] 下一步：推進三年級第八單元 `N-3-8 四則估算`（具體生活情境、較大位數之估算策略、估算檢驗合理性）。
+- [x] Session 30 G3-N-3-8 四則估算 100% 落地閉環（已開放 8/24，全專案 19/131 條目，批次 A 第四戰完工）：
+  1. 10 題多樣化四則估算真題落地（`data/units/G3/N-3-8.json`）：規律探索整百概數相加（507＋291最接近800）、秒殺取整百定位（495×6最接近3000）、培根麵包生活採買估算（48×7≈350元）、估算除錯小偵探合理性檢驗（495×6＝4970明顯太大不合理）、核心陷阱棒球帽預算高估法則（859×2＞850×2＝1700＞1500不夠買）、四位數千位概數相加（4903＋1991≈7000）、四位數千位概數相減（7150－1100≈6000）、三位數百位概數相減（907－289≈600）、二位數單價乘法估算（29×5≈150）、四位數大數合併估算（1930＋3130≈5000）。
+  2. `estimation_lab.html` 日系擬物四則估算實驗台：10 種視覺模式（round_add/radar_scale/bakery/detective/cap_budget/thousands_add/thousands_sub/hundreds_sub/snack_multiply/thousands_sum）。
+  3. 雙硬閘門全綠：`verify_n38.js`（資料契約＋逐題取概數數學真值驗算）與 `verify_n38_cdp.js`（390px 實機 10/10 題 app 高度 364~391px ≤ 420px、零溢出、零 console 錯誤）。
+  4. 課綱同步：`curriculum.json` N-3-8 標記 ready（question_count 10），`verify_curriculum_131.js` ready 清單 19 條全綠。
+- [ ] 下一步：推進三年級第九單元 `N-3-9 簡單同分母分數`（結合操作活動與整數經驗，簡單同分母分數比較、加、減的意義）。
 
 
 ---

@@ -12,11 +12,12 @@ import sys
 import time
 
 OPENCODE_DEFAULT_MODEL = "opencode/glm-5.3-flash-free"
+OPENCODE_FALLBACK_MODEL = "google/gemini-2.5-flash"
 
 def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT_MODEL, timeout: int = 300, channel: int = 1, auto_fallback: bool = True) -> int:
     """
     依據 Step-by-Step 規範以標準子進程呼叫 OpenCode CLI：
-    Channel 1: 本地 OpenCode CLI
+    Channel 1: 本地 OpenCode CLI (支援 GLM-free 額度耗盡自動切換 gemini-2.5-flash)
     Channel 2: A-SERVER SSH 遠端 OpenCode CLI
     """
     if channel == 2:
@@ -61,10 +62,15 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
             if proc.stderr:
                 print(proc.stderr.strip()[:500], file=sys.stderr)
             
-            # 若通道 1 失敗且開啟自動容錯，自動切換至通道 2
+            # 若通道 1 失敗且開啟自動容錯：
+            # 優先切換至本地備援模型 (gemini-2.5-flash)，維持本地工具落地能力
             if channel == 1 and auto_fallback:
-                print("[Worker Dispatch FAILOVER] ⚠️ 通道 1 異常或額度耗盡，自動毫秒級切換至通道 2 (A-SERVER SSH 備援)...")
-                return run_worker(prompt=prompt, task_file=task_file, model=model, timeout=timeout, channel=2, auto_fallback=False)
+                if model != OPENCODE_FALLBACK_MODEL:
+                    print(f"[Worker Dispatch FAILOVER] ⚠️ 通道 1 額度耗盡或異常，切換至本地備援模型 ({OPENCODE_FALLBACK_MODEL})...")
+                    return run_worker(prompt=prompt, task_file=task_file, model=OPENCODE_FALLBACK_MODEL, timeout=timeout, channel=1, auto_fallback=True)
+                else:
+                    print("[Worker Dispatch FAILOVER] ⚠️ 本地備援亦異常，自動切換至通道 2 (A-SERVER SSH 備援)...")
+                    return run_worker(prompt=prompt, task_file=task_file, model=model, timeout=timeout, channel=2, auto_fallback=False)
                 
             return proc.returncode
             

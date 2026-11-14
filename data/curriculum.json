@@ -359,9 +359,9 @@
           "code": "N-3-8",
           "title": "解題（四則估算）",
           "full_text": "解題：四則估算。具體生活情境。較大位數之估算策略。能用估算檢驗計算結果的合理性。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "臺北市內湖國小 112-1/113-1/114-1 期中（整百整千概數相加減/乘法定位/培根麵包採買/小丸子帽子預算夠不夠買高估法則/合理性檢驗除錯）[通道一: 本地 OpenCode (Gemini 2.5 Flash)]"
         },
         {
           "code": "N-3-9",
