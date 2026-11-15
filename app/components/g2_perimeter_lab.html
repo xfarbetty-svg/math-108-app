@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-S-2-4 平面圖形的邊長 · 概念小教室</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --sky-deep: #3f7fb5;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge { background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+.stage { border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3; overflow: hidden; max-height: 420px; }
+.stage svg { display: block; width: 100%; height: auto; }
+
+.tool-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.tool-btn {
+  background: #fdf6e9; border: 2px solid var(--line); border-radius: 999px;
+  padding: 8px 14px; font-size: 12.5px; font-weight: 800; color: var(--ink);
+  transition: all 0.15s;
+}
+.tool-btn.primary { background: var(--coral); border-color: var(--coral-deep); color: #ffffff; }
+.tool-btn.minty { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.tool-btn:active { transform: scale(0.96); }
+.tool-btn.active { background: var(--mint); border-color: var(--mint-deep); color: #ffffff; }
+
+/* Act 1 圖形 + 資訊雙欄 */
+.shape-row { display: flex; gap: 8px; align-items: stretch; }
+.shape-row .stage { flex: 1.5 1 0; min-width: 0; }
+.info-panel {
+  flex: 1 1 0; min-width: 0; background: #fdf6e9; border: 2px solid var(--line);
+  border-radius: 12px; padding: 8px 10px; font-size: 12px; line-height: 1.6;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.info-panel b { color: var(--mint-deep); }
+.info-list { font-weight: 800; color: var(--coral-deep); min-height: 2.6em; }
+
+/* Act 2 子分頁與滑桿 */
+.sub-tabs { display: flex; gap: 6px; }
+.sub-tab {
+  flex: 1 1 0; padding: 7px 4px; font-size: 12px; font-weight: 800;
+  border-radius: 999px; background: #fdf6e9; border: 2px solid var(--line); color: var(--ink-soft);
+}
+.sub-tab.active { background: var(--lemon); border-color: var(--lemon-deep); color: #7a5c1e; }
+.slider-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 800; }
+.slider-row input[type="range"] { flex: 1 1 auto; accent-color: #318a70; }
+.slider-val { min-width: 4.5em; color: var(--mint-deep); }
+
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+.choice-btn:disabled { opacity: 0.45; cursor: default; }
+.quiz-progress { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); text-align: center; }
+.trophy { font-size: 30px; text-align: center; filter: grayscale(1); opacity: 0.3; transition: all 0.4s; }
+.trophy.lit { filter: none; opacity: 1; transform: scale(1.12); }
+
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <div class="top-bar">
+    <div class="top-title">
+      平面圖形的邊長小教室
+      <small>二年級 · S-2-4 邊長與周長</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 邊角探險</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 邊長祕密</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 毛線周長</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🏆 挑戰</button>
+  </div>
+
+  <!-- Act 1: 幾何形狀邊角探險 -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('點點看！平面圖形是由一條一條直線的邊圍成的！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">幾何形狀邊角探險</div>
+      <div class="card-desc">選一個圖形，點點看它的每一條邊，右邊會記下你點過的邊長！</div>
+      <div class="tool-row">
+        <button class="tool-btn shape-btn active" data-shape="square" onclick="pickShape('square', this)">正方形</button>
+        <button class="tool-btn shape-btn" data-shape="rect" onclick="pickShape('rect', this)">長方形</button>
+        <button class="tool-btn shape-btn" data-shape="tri" onclick="pickShape('tri', this)">正三角形</button>
+        <button class="tool-btn shape-btn" data-shape="quad" onclick="pickShape('quad', this)">四邊形</button>
+      </div>
+      <div class="shape-row">
+        <div class="stage">
+          <svg id="act1-svg" viewBox="0 0 220 185" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="點選圖形邊的互動圖">
+            <g id="act1-shape"></g>
+            <g id="act1-labels"></g>
+          </svg>
+        </div>
+        <div class="info-panel" id="act1-info">
+          <div>圖形：<b id="act1-shape-name">正方形</b></div>
+          <div>已點：<b id="act1-count">0 / 4</b> 條邊</div>
+          <div>邊長：</div>
+          <div class="info-list" id="act1-list">還沒有喔，點點看！</div>
+        </div>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 點點看！平面圖形由一條條直線的邊圍成！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 正方形 vs 長方形的邊長祕密 -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('正方形四條邊都一樣長；長方形對面的兩條邊一樣長，叫做對邊相等！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">正方形 vs 長方形的邊長祕密</div>
+      <div class="sub-tabs">
+        <button class="sub-tab active" id="subtab-sq" onclick="showSub(1)">🟩 正方形</button>
+        <button class="sub-tab" id="subtab-rect" onclick="showSub(2)">🟧 長方形</button>
+      </div>
+      <div id="act2-sq-panel">
+        <div class="stage">
+          <svg id="act2-sq-svg" viewBox="0 0 358 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="正方形邊長滑桿圖"></svg>
+        </div>
+        <div class="slider-row">
+          邊長
+          <input type="range" id="sq-slider" min="3" max="8" value="5" step="1">
+          <span class="slider-val" id="sq-slider-val">5 公分</span>
+        </div>
+        <div class="tip-bubble">🌟 祕密：正方形 <b>4 條邊都一樣長</b>！</div>
+      </div>
+      <div id="act2-rect-panel" class="hidden">
+        <div class="stage">
+          <svg id="act2-rect-svg" viewBox="0 0 358 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="長方形對邊相等圖"></svg>
+        </div>
+        <div class="slider-row">
+          長
+          <input type="range" id="rect-l-slider" min="4" max="8" value="6" step="1">
+          <span class="slider-val" id="rect-l-val">6 公分</span>
+        </div>
+        <div class="slider-row">
+          寬
+          <input type="range" id="rect-w-slider" min="2" max="5" value="3" step="1">
+          <span class="slider-val" id="rect-w-val">3 公分</span>
+        </div>
+        <div class="tip-bubble">🌟 祕密：長方形<b>對面的兩條邊一樣長（對邊相等）</b>！</div>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 拖動滑桿，觀察邊長的變化與祕密！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 周長魔法毛線繩 -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('把圖形周圍所有的邊加起來，就是周長！看毛線被剪開拉直就知道！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">周長魔法毛線繩</div>
+      <div class="card-desc">圖形的外框是一圈毛線。按「解開毛線」，把毛線剪開拉直，加起來就是周長！</div>
+      <div class="tool-row">
+        <button class="tool-btn shape3-btn active" data-shape="tri" onclick="pickYarn('tri', this)">三角形 3・4・5</button>
+        <button class="tool-btn shape3-btn" data-shape="rect" onclick="pickYarn('rect', this)">長方形 4・2・4・2</button>
+      </div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 235" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="毛線解開拉直示意圖">
+          <g id="act3-yarn"></g>
+          <g id="act3-straight"></g>
+          <text id="act3-formula" x="179" y="228" text-anchor="middle" font-size="14" font-weight="800" fill="#f4694b" opacity="0"></text>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn primary" id="btn-untie" onclick="untieYarn()">🧶 解開毛線</button>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 把圖形周圍所有的邊加起來，就是「周長」！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 周長神算王 -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('周長神算王挑戰！把每一條邊通通加起來，答對三題點亮獎盃！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">周長神算王</div>
+      <div class="quiz-progress" id="act4-progress">第 1 / 3 題</div>
+      <div class="card-desc" id="act4-question"></div>
+      <div class="choice-row" id="act4-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+      <div class="trophy" id="act4-trophy">🏆</div>
+    </div>
+  </div>
+
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級平面圖形邊長小教室。點邊、拉滑桿、解毛線，一起算出圖形的周長！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+/* ==================== SVG 工具 ==================== */
+var SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var node = document.createElementNS(SVGNS, tag);
+  for (var k in attrs) node.setAttribute(k, attrs[k]);
+  return node;
+}
+function txt(x, y, content, size, color) {
+  var t = el("text", { x: x, y: y, "text-anchor": "middle", "font-size": size || 11, "font-weight": 800, fill: color || "#3d3a34" });
+  t.setAttribute("style", "paint-order:stroke;stroke:#ffffff;stroke-width:4px");
+  t.textContent = content;
+  return t;
+}
+
+/* ==================== Act 1：幾何形狀邊角探險 ==================== */
+var SHAPES = {
+  square: { name: "正方形", pts: [[46, 42], [134, 42], [134, 130], [46, 130]], lens: [4, 4, 4, 4], fill: "#e7f5f0" },
+  rect:   { name: "長方形", pts: [[28, 56], [160, 56], [160, 122], [28, 122]], lens: [6, 3, 6, 3], fill: "#fff4e8" },
+  tri:    { name: "正三角形", pts: [[46, 138], [134, 138], [90, 62]], lens: [4, 4, 4], fill: "#fff6df" },
+  quad:   { name: "四邊形", pts: [[36, 44], [102, 44], [166, 128], [84, 164]], lens: [3, 5, 4, 6], fill: "#eef4fb" }
+};
+var curShape = "square";
+var clickedEdges = [];
+
+function pickShape(key, btn) {
+  curShape = key;
+  document.querySelectorAll(".shape-btn").forEach(function (b) { b.classList.remove("active"); });
+  if (btn) btn.classList.add("active");
+  renderAct1();
+  speakText("這是" + SHAPES[key].name + ", 點點看它的每一條邊!");
+}
+function renderAct1() {
+  var shape = SHAPES[curShape];
+  var g = document.getElementById("act1-shape");
+  var labels = document.getElementById("act1-labels");
+  if (!g || !labels) return;
+  g.innerHTML = "";
+  labels.innerHTML = "";
+  clickedEdges = [];
+  updateAct1Info();
+  document.getElementById("act1-shape-name").textContent = shape.name;
+  document.getElementById("act1-bubble").innerHTML = "💡 點點看！平面圖形由一條條直線的邊圍成！";
+  var pts = shape.pts;
+  var poly = el("polygon", {
+    points: pts.map(function (p) { return p[0] + "," + p[1]; }).join(" "),
+    fill: shape.fill, stroke: "none", opacity: 0.9
+  });
+  g.appendChild(poly);
+  for (var i = 0; i < pts.length; i++) {
+    (function (idx) {
+      var a = pts[idx], b = pts[(idx + 1) % pts.length];
+      var line = el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: "#3d3a34", "stroke-width": 3, "stroke-linecap": "round" });
+      var hit = el("line", {
+        x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: "#000000", "stroke-opacity": 0,
+        "stroke-width": 16, "stroke-linecap": "round", cursor: "pointer"
+      });
+      hit.addEventListener("click", function () { clickEdge(idx, line, a, b); });
+      g.appendChild(line);
+      g.appendChild(hit);
+    })(i);
+  }
+}
+function clickEdge(idx, line, a, b) {
+  if (clickedEdges.indexOf(idx) >= 0) return;
+  clickedEdges.push(idx);
+  line.setAttribute("stroke", "#ff8a65");
+  line.setAttribute("stroke-width", 6);
+  var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+  var dx = b[0] - a[0], dy = b[1] - a[1];
+  var len = Math.sqrt(dx * dx + dy * dy) || 1;
+  var ox = (-dy / len) * 14, oy = (dx / len) * 14;
+  var labels = document.getElementById("act1-labels");
+  labels.appendChild(txt(mx + ox, my + oy, SHAPES[curShape].lens[idx] + " 公分", 11.5, "#f4694b"));
+  updateAct1Info();
+  if (clickedEdges.length === SHAPES[curShape].lens.length) {
+    var name = SHAPES[curShape].name;
+    document.getElementById("act1-bubble").innerHTML =
+      "🎉 太棒了！<b>" + name + "</b>有 <b>" + SHAPES[curShape].lens.length + " 條邊</b>，每一條都點過了！";
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+    speakText("太棒了! " + name + "的每一條邊都點過了, 它有 " + SHAPES[curShape].lens.length + " 條邊!");
+  }
+}
+function updateAct1Info() {
+  var shape = SHAPES[curShape];
+  var countEl = document.getElementById("act1-count");
+  var listEl = document.getElementById("act1-list");
+  if (!countEl || !listEl) return;
+  countEl.textContent = clickedEdges.length + " / " + shape.lens.length;
+  if (clickedEdges.length === 0) {
+    listEl.textContent = "還沒有喔，點點看！";
+  } else {
+    listEl.textContent = clickedEdges.map(function (i) { return shape.lens[i] + " 公分"; }).join("、");
+  }
+}
+function resetAct1() {
+  document.querySelectorAll(".shape-btn").forEach(function (b, i) { b.classList.toggle("active", i === 0); });
+  curShape = "square";
+  renderAct1();
+}
+
+/* ==================== Act 2：正方形 vs 長方形邊長祕密 ==================== */
+function showSub(n) {
+  document.getElementById("subtab-sq").classList.toggle("active", n === 1);
+  document.getElementById("subtab-rect").classList.toggle("active", n === 2);
+  document.getElementById("act2-sq-panel").classList.toggle("hidden", n !== 1);
+  document.getElementById("act2-rect-panel").classList.toggle("hidden", n !== 2);
+  document.getElementById("act2-bubble").innerHTML = "💡 拖動滑桿，觀察邊長的變化與祕密！";
+  stopSpeech();
+}
+function drawSquarePanel() {
+  var v = parseInt(document.getElementById("sq-slider").value, 10);
+  document.getElementById("sq-slider-val").textContent = v + " 公分";
+  var svg = document.getElementById("act2-sq-svg");
+  if (!svg) return;
+  svg.innerHTML = "";
+  var s = v * 22;
+  var x0 = (358 - s) / 2, y0 = (200 - s) / 2;
+  svg.appendChild(el("rect", { x: x0, y: y0, width: s, height: s, rx: 6, fill: "#e7f5f0", stroke: "#318a70", "stroke-width": 3 }));
+  svg.appendChild(txt(x0 + s / 2, y0 - 8, v + " 公分", 11.5, "#318a70"));
+  svg.appendChild(txt(x0 + s / 2, y0 + s + 18, v + " 公分", 11.5, "#318a70"));
+  var l = txt(x0 - 10, y0 + s / 2 + 4, v + " 公分", 11.5, "#318a70");
+  l.setAttribute("text-anchor", "end");
+  svg.appendChild(l);
+  var r = txt(x0 + s + 10, y0 + s / 2 + 4, v + " 公分", 11.5, "#318a70");
+  r.setAttribute("text-anchor", "start");
+  svg.appendChild(r);
+}
+function drawRectPanel() {
+  var L = parseInt(document.getElementById("rect-l-slider").value, 10);
+  var W = parseInt(document.getElementById("rect-w-slider").value, 10);
+  document.getElementById("rect-l-val").textContent = L + " 公分";
+  document.getElementById("rect-w-val").textContent = W + " 公分";
+  var svg = document.getElementById("act2-rect-svg");
+  if (!svg) return;
+  svg.innerHTML = "";
+  var w = L * 22, h = W * 22;
+  var x0 = (358 - w) / 2, y0 = (140 - h) / 2;
+  svg.appendChild(el("rect", { x: x0, y: y0, width: w, height: h, rx: 6, fill: "#fff4e8", stroke: "#3d3a34", "stroke-width": 2 }));
+  /* 上下邊：珊瑚橘 */
+  svg.appendChild(el("line", { x1: x0, y1: y0, x2: x0 + w, y2: y0, stroke: "#ff8a65", "stroke-width": 6, "stroke-linecap": "round" }));
+  svg.appendChild(el("line", { x1: x0, y1: y0 + h, x2: x0 + w, y2: y0 + h, stroke: "#ff8a65", "stroke-width": 6, "stroke-linecap": "round" }));
+  /* 左右邊：薄荷綠 */
+  svg.appendChild(el("line", { x1: x0, y1: y0, x2: x0, y2: y0 + h, stroke: "#7bc9b2", "stroke-width": 6, "stroke-linecap": "round" }));
+  svg.appendChild(el("line", { x1: x0 + w, y1: y0, x2: x0 + w, y2: y0 + h, stroke: "#7bc9b2", "stroke-width": 6, "stroke-linecap": "round" }));
+  svg.appendChild(txt(x0 + w / 2, y0 - 8, L + " 公分", 11.5, "#f4694b"));
+  svg.appendChild(txt(x0 + w / 2, y0 + h + 18, L + " 公分", 11.5, "#f4694b"));
+  var l = txt(x0 - 10, y0 + h / 2 + 4, W + " 公分", 11.5, "#318a70");
+  l.setAttribute("text-anchor", "end");
+  svg.appendChild(l);
+  var r = txt(x0 + w + 10, y0 + h / 2 + 4, W + " 公分", 11.5, "#318a70");
+  r.setAttribute("text-anchor", "start");
+  svg.appendChild(r);
+}
+function initAct2() {
+  var sq = document.getElementById("sq-slider");
+  var rl = document.getElementById("rect-l-slider");
+  var rw = document.getElementById("rect-w-slider");
+  function changed() {
+    drawSquarePanel();
+    drawRectPanel();
+    document.getElementById("act2-bubble").innerHTML =
+      "🌟 你發現了嗎？正方形 <b>4 條邊都一樣長</b>；長方形<b>對面的兩條邊一樣長</b>！";
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  }
+  if (sq) sq.addEventListener("input", changed);
+  if (rl) rl.addEventListener("input", changed);
+  if (rw) rw.addEventListener("input", changed);
+  drawSquarePanel();
+  drawRectPanel();
+}
+
+/* ==================== Act 3：周長魔法毛線繩 ==================== */
+var YARN = {
+  tri: {
+    name: "三角形", pts: [[56, 50], [56, 116], [144, 116]], lens: [3, 4, 5],
+    colors: ["#7bc9b2", "#ffd166", "#ff8a65"], formula: "3 + 4 + 5 = 12（公分）", total: 12
+  },
+  rect: {
+    name: "長方形", pts: [[60, 46], [148, 46], [148, 90], [60, 90]], lens: [4, 2, 4, 2],
+    colors: ["#7bc9b2", "#ff8a65", "#ffd166", "#7db8e8"], formula: "4 + 2 + 4 + 2 = 12（公分）", total: 12
+  }
+};
+var yarnShape = "tri";
+var yarnRafId = null;
+var yarnTimers = [];
+
+function pickYarn(key, btn) {
+  yarnShape = key;
+  document.querySelectorAll(".shape3-btn").forEach(function (b) { b.classList.remove("active"); });
+  if (btn) btn.classList.add("active");
+  resetAct3();
+  speakText(YARN[key].name + "的毛線準備好了, 按解開毛線算周長!");
+}
+function renderYarn() {
+  var data = YARN[yarnShape];
+  var g = document.getElementById("act3-yarn");
+  var straight = document.getElementById("act3-straight");
+  var formula = document.getElementById("act3-formula");
+  if (!g || !straight) return;
+  g.innerHTML = "";
+  straight.innerHTML = "";
+  if (formula) { formula.setAttribute("opacity", "0"); formula.textContent = ""; }
+  var pts = data.pts;
+  for (var i = 0; i < pts.length; i++) {
+    var a = pts[i], b = pts[(i + 1) % pts.length];
+    g.appendChild(el("line", {
+      x1: a[0], y1: a[1], x2: b[0], y2: b[1],
+      stroke: data.colors[i], "stroke-width": 7, "stroke-linecap": "round", id: "yarn-edge-" + i
+    }));
+  }
+  g.appendChild(txt(100, 30, data.name, 12, "#8a857b"));
+}
+function untieYarn() {
+  if (yarnRafId) return;
+  var data = YARN[yarnShape];
+  var straight = document.getElementById("act3-straight");
+  var formula = document.getElementById("act3-formula");
+  if (!straight) return;
+  straight.innerHTML = "";
+  var x = 40, baseY = 190;
+  var lensPx = data.lens.map(function (cm) { return cm * 22; });
+  var cumulative = [];
+  var acc = 0;
+  lensPx.forEach(function (px) { cumulative.push(acc); acc += px; });
+  var animIdx = 0;
+  function animateSegment() {
+    if (animIdx >= data.lens.length) {
+      var expr = data.lens.join(" + ");
+      if (formula) {
+        formula.textContent = data.formula;
+        formula.setAttribute("opacity", "1");
+      }
+      document.getElementById("act3-bubble").innerHTML =
+        "🎉 毛線拉直了！" + expr + " = <b>" + data.total + "（公分）</b>，周長就是 <b>" + data.total + " 公分</b>！";
+      if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+      speakText("把圖形周圍所有的邊加起來, 就是周長! " + expr + " 等於 " + data.total + " 公分!");
+      yarnRafId = null;
+      return;
+    }
+    var i = animIdx;
+    var edge = document.getElementById("yarn-edge-" + i);
+    if (edge) {
+      edge.setAttribute("stroke-dasharray", "6 6");
+      edge.setAttribute("opacity", "0.25");
+    }
+    var seg = el("line", {
+      x1: 40 + cumulative[i], y1: baseY, x2: 40 + cumulative[i], y2: baseY,
+      stroke: data.colors[i], "stroke-width": 7, "stroke-linecap": "round"
+    });
+    straight.appendChild(seg);
+    var t0 = null;
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      var k = Math.min(1, (ts - t0) / 300);
+      seg.setAttribute("x2", 40 + cumulative[i] + lensPx[i] * k);
+      if (k < 1) {
+        yarnRafId = requestAnimationFrame(frame);
+      } else {
+        straight.appendChild(txt(40 + cumulative[i] + lensPx[i] / 2, baseY - 12, data.lens[i] + "", 11.5, data.colors[i]));
+        straight.appendChild(txt(40 + cumulative[i] + lensPx[i] / 2, baseY + 18, data.lens[i] + " 公分", 10, "#8a857b"));
+        animIdx++;
+        animateSegment();
+      }
+    }
+    yarnRafId = requestAnimationFrame(frame);
+  }
+  animateSegment();
+}
+function resetAct3() {
+  if (yarnRafId) { cancelAnimationFrame(yarnRafId); yarnRafId = null; }
+  yarnTimers.forEach(function (t) { clearTimeout(t); });
+  yarnTimers = [];
+  renderYarn();
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 把圖形周圍所有的邊加起來，就是「周長」！";
+}
+
+/* ==================== Act 4：周長神算王 ==================== */
+var QUIZ = [
+  {
+    q: "正方形一邊是 3 公分，它的周長是幾公分？",
+    opts: ["6 公分", "9 公分", "12 公分"], ok: 2,
+    yes: "答對了！3 + 3 + 3 + 3 = 12，周長 12 公分！", no: "再想想看：正方形有 4 條邊，每條 3 公分，通通加起來！"
+  },
+  {
+    q: "長方形長 5 公分、寬 2 公分，周長是幾公分？",
+    opts: ["7 公分", "10 公分", "14 公分"], ok: 2,
+    yes: "答對了！5 + 2 + 5 + 2 = 14，周長 14 公分！", no: "提示：長方形有兩條長、兩條寬，5 + 2 + 5 + 2！"
+  },
+  {
+    q: "三角形三條邊分別是 4cm、4cm、4cm，周長是多少？",
+    opts: ["8 公分", "12 公分", "16 公分"], ok: 1,
+    yes: "答對了！4 + 4 + 4 = 12，周長 12 公分！", no: "再算算看：三條邊都是 4，通通加起來是多少？"
+  }
+];
+var qOrder = [], qIdx = 0, quizTimers = [];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+function buildQuiz() {
+  qOrder = shuffle([0, 1, 2]);
+  qIdx = 0;
+  quizTimers.forEach(function (t) { clearTimeout(t); });
+  quizTimers = [];
+  var trophy = document.getElementById("act4-trophy");
+  if (trophy) trophy.classList.remove("lit");
+  renderQuiz();
+}
+function renderQuiz() {
+  var item = QUIZ[qOrder[qIdx]];
+  var qEl = document.getElementById("act4-question");
+  var cEl = document.getElementById("act4-choices");
+  var pEl = document.getElementById("act4-progress");
+  var bubble = document.getElementById("act4-bubble");
+  if (!item || !qEl || !cEl) return;
+  pEl.textContent = "第 " + (qIdx + 1) + " / 3 題";
+  qEl.innerHTML = item.q;
+  bubble.innerHTML = "💪 選一個答案吧！";
+  cEl.innerHTML = "";
+  item.opts.forEach(function (opt, idx) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.addEventListener("click", function () { quizAnswer(b, idx, item); });
+    cEl.appendChild(b);
+  });
+}
+function quizAnswer(btn, idx, item) {
+  var bubble = document.getElementById("act4-bubble");
+  if (idx === item.ok) {
+    btn.classList.add("correct");
+    document.querySelectorAll("#act4-choices .choice-btn").forEach(function (b) { b.disabled = true; });
+    bubble.innerHTML = "🎉 " + item.yes;
+    speakText(item.yes);
+    qIdx++;
+    if (qIdx < 3) {
+      quizTimers.push(setTimeout(function () { renderQuiz(); }, 1400));
+    } else {
+      var trophy = document.getElementById("act4-trophy");
+      if (trophy) trophy.classList.add("lit");
+      document.getElementById("act4-progress").textContent = "挑戰成功！";
+      bubble.innerHTML = "🏆 三題全對！你是周長神算王！";
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+      speakText("三題全對! 你是周長神算王!");
+    }
+  } else {
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    bubble.innerHTML = "💡 " + item.no;
+    speakText(item.no);
+  }
+}
+
+/* ==================== 重置 ==================== */
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  drawSquarePanel();
+  drawRectPanel();
+  resetAct3();
+  buildQuiz();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== 初始化 ==================== */
+renderAct1();
+initAct2();
+renderYarn();
+buildQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

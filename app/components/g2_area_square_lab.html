@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2 面積實驗室 · 方格鋪滿大作戰 (S-2-5)</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.act-panel.hidden { display: none; }
+.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 動作按鈕列 */
+.action-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.action-btn {
+  background: var(--mint);
+  color: #ffffff;
+  border: 2px solid var(--mint-deep);
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+  padding: 8px 14px;
+  transition: all 0.15s;
+}
+.action-btn:active { transform: scale(0.95); }
+.action-btn.alt {
+  background: var(--coral);
+  border-color: var(--coral-deep);
+}
+.action-btn:disabled { opacity: 0.45; cursor: default; }
+
+/* 算式標示 */
+.formula-strip {
+  background: #e7f5f0;
+  border: 2px solid var(--mint);
+  border-radius: 12px;
+  padding: 8px 10px;
+  text-align: center;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--mint-deep);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: all 0.4s;
+}
+.formula-strip.show { opacity: 1; transform: translateY(0); }
+.formula-strip.gold {
+  background: #fff6df;
+  border-color: var(--lemon);
+  color: var(--lemon-deep);
+}
+
+/* Act 1 拖曳瓦片 */
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+
+/* Act 3 半格三角形拼合動畫（以自身中心為軸心） */
+.tri-anim {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.9s ease, opacity 0.35s ease;
+}
+
+/* Act 4 挑戰 */
+.quiz-progress { font-size: 11px; font-weight: 800; color: var(--ink-soft); }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.choice-btn:disabled { cursor: default; }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      面積實驗室 · 方格鋪滿大作戰
+      <small>二年級 · S-2-5 面積的具體操作</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 瓦片鋪滿</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 數格比大小</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 拼圖移補</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 方格瓦片鋪滿 -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText(A1_VOICE)">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">方格瓦片鋪滿</div>
+      <div class="card-desc">把 1 平方公分的小瓦片鋪滿 3×4 的底板：<b>鋪滿面、不重疊、不留空隙</b>！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 240" xmlns="http://www.w3.org/2000/svg" style="touch-action:none" role="img" aria-label="3乘4底板鋪瓦片教具">
+          <!-- 底板 -->
+          <rect x="18" y="36" width="196" height="150" rx="12" fill="#eef7f3" stroke="#3d3a34" stroke-width="2"></rect>
+          <g id="act1-cells"></g>
+          <text x="116" y="24" text-anchor="middle" font-size="12" font-weight="800" fill="#318a70">3 × 4 底板</text>
+          <!-- 瓦片堆 -->
+          <text x="286" y="24" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">瓦片堆</text>
+          <g id="act1-placed"></g>
+          <g id="act1-drag" class="drag-handle" transform="translate(286,110)">
+            <rect x="-16" y="-16" width="32" height="32" rx="6" fill="#7db8e8" stroke="#3d3a34" stroke-width="2"></rect>
+            <text x="0" y="5" text-anchor="middle" font-size="9" font-weight="800" fill="#ffffff">1cm²</text>
+          </g>
+          <text id="act1-count" x="286" y="180" text-anchor="middle" font-size="13" font-weight="800" fill="#f4694b">已鋪 0 / 12</text>
+        </svg>
+      </div>
+      <div class="action-row">
+        <button class="action-btn" id="btn-fill-all" onclick="fillAllTiles()">🪄 一鍵鋪滿</button>
+        <button class="action-btn alt" onclick="resetAct1()">🔁 重置</button>
+      </div>
+      <div class="formula-strip" id="act1-formula">3 × 4 = 12 塊瓦片（12 平方公分）</div>
+      <div class="tip-bubble" id="act1-bubble">💡 拖瓦片到空格，或按「一鍵鋪滿」。鋪滿面、不重疊、不留空隙！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 數格子比大小 -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText(A2_VOICE)">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">數格子比大小</div>
+      <div class="card-desc">形狀不一樣沒關係，用「數方格」來比面積！甲圖 8 格、乙圖 10 格。</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="甲圖L形與乙圖T形數格比較">
+          <g id="act2-shape-jia"></g>
+          <g id="act2-shape-yi"></g>
+          <text x="70" y="22" text-anchor="middle" font-size="12.5" font-weight="800" fill="#318a70">甲圖</text>
+          <text id="act2-count-jia" x="70" y="158" text-anchor="middle" font-size="13" font-weight="800" fill="#f4694b">點「數甲圖」開始</text>
+          <text x="252" y="22" text-anchor="middle" font-size="12.5" font-weight="800" fill="#d9910d">乙圖</text>
+          <text id="act2-count-yi" x="252" y="158" text-anchor="middle" font-size="13" font-weight="800" fill="#f4694b">點「數乙圖」開始</text>
+        </svg>
+      </div>
+      <div class="action-row">
+        <button class="action-btn" id="btn-count-jia" onclick="countShape('jia')">🔢 數甲圖</button>
+        <button class="action-btn" id="btn-count-yi" onclick="countShape('yi')">🔢 數乙圖</button>
+      </div>
+      <div class="formula-strip" id="act2-formula">乙圖 10 格 &gt; 甲圖 8 格 → 乙圖的面積比較大！</div>
+      <div class="tip-bubble" id="act2-bubble">💡 分別把兩個圖形的方格數一數，再比一比！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 拼圖移補大法（面積守恆） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText(A3_VOICE)">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">拼圖移補大法（面積守恆）</div>
+      <div class="card-desc">兩個半格小三角形，拼在一起會變成什麼？</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="兩個半格三角形拼合為一整格">
+          <text x="90" y="24" text-anchor="middle" font-size="12.5" font-weight="800" fill="#8a857b">兩個半格</text>
+          <g id="act3-tri-left" class="tri-anim">
+            <path d="M 40 115 L 100 115 L 40 55 Z" fill="#ff8a65" stroke="#3d3a34" stroke-width="2.5" stroke-linejoin="round"></path>
+            <text x="52" y="107" font-size="10.5" font-weight="800" fill="#ffffff">半格</text>
+          </g>
+          <g id="act3-tri-right" class="tri-anim">
+            <path d="M 130 55 L 130 115 L 190 115 Z" fill="#ffd166" stroke="#3d3a34" stroke-width="2.5" stroke-linejoin="round"></path>
+            <text x="140" y="107" font-size="10.5" font-weight="800" fill="#3d3a34">半格</text>
+          </g>
+          <text id="act3-result-text" x="179" y="90" text-anchor="middle" font-size="12.5" font-weight="800" fill="#318a70" opacity="0">1 整格</text>
+          <g id="act3-target" class="hidden">
+            <rect x="149" y="55" width="60" height="60" rx="6" fill="#7bc9b2" stroke="#3d3a34" stroke-width="2.5"></rect>
+            <text x="179" y="90" text-anchor="middle" font-size="12.5" font-weight="800" fill="#ffffff">1 整格</text>
+          </g>
+          <text x="272" y="24" text-anchor="middle" font-size="12.5" font-weight="800" fill="#318a70">拼合後</text>
+          <rect x="242" y="55" width="60" height="60" rx="6" fill="none" stroke="#d9910d" stroke-width="2" stroke-dasharray="5 4"></rect>
+          <text id="act3-target-label" x="272" y="90" text-anchor="middle" font-size="11" font-weight="800" fill="#d9910d">?</text>
+        </svg>
+      </div>
+      <div class="action-row">
+        <button class="action-btn" id="btn-merge" onclick="mergeHalves()">✨ 神奇拼合</button>
+        <button class="action-btn alt" onclick="resetAct3()">🔁 重置</button>
+      </div>
+      <div class="formula-strip" id="act3-formula">半格 + 半格 = 1 整格（總面積不變）</div>
+      <div class="tip-bubble" id="act3-bubble">💡 按下「神奇拼合」，看兩個半格怎麼變成一整格！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 面積挑戰賽 -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakQuiz()">🔊 聽一聽</button>
+        <span class="quiz-progress" id="quiz-progress">第 1 / 3 題</span>
+      </div>
+      <div class="card-title">面積挑戰賽</div>
+      <div class="card-desc" id="quiz-question"></div>
+      <div class="choice-row" id="quiz-choices"></div>
+      <div class="action-row">
+        <button class="action-btn" id="btn-quiz-next" hidden onclick="nextQuiz()">下一題 ▶</button>
+      </div>
+      <div class="tip-bubble" id="act4-bubble">💪 三題全答對，點亮獎盃！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+var A1_VOICE = "鋪滿面、不重疊、不留空隙, 數數看一共鋪了幾張瓦片!";
+var A2_VOICE = "形狀雖然不一樣, 但乙圖用了 10 個方格, 面積比甲圖大喔!";
+var A3_VOICE = "兩個半格合起來就是一整格! 形狀改變, 但總面積沒有變喔!";
+
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級面積實驗室。用小瓦片鋪滿面, 數格子比大小, 再玩拼圖移補, 最後挑戰三道題目!");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：方格瓦片鋪滿（3×4 = 12） ==================== */
+var CELL = 45, BOARD_X = 22, BOARD_Y = 40;
+var COLS = 4, ROWS = 3;
+var placedCount = 0;
+var DRAG = null, dragX = 286, dragY = 110, isDragging = false;
+var fillTimer = null;
+
+function cellCenter(col, row) {
+  return { x: BOARD_X + col * CELL + CELL / 2, y: BOARD_Y + row * CELL + CELL / 2 };
+}
+function isCellFilled(col, row) {
+  var el = document.getElementById("act1-cell-" + col + "-" + row);
+  return el && el.getAttribute("data-filled") === "1";
+}
+function placeTileAt(col, row) {
+  var cell = document.getElementById("act1-cell-" + col + "-" + row);
+  if (!cell || cell.getAttribute("data-filled") === "1") return false;
+  cell.setAttribute("data-filled", "1");
+  var c = cellCenter(col, row);
+  var tile = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  tile.setAttribute("x", c.x - 18);
+  tile.setAttribute("y", c.y - 18);
+  tile.setAttribute("width", 36);
+  tile.setAttribute("height", 36);
+  tile.setAttribute("rx", 6);
+  tile.setAttribute("fill", "#7db8e8");
+  tile.setAttribute("stroke", "#3d3a34");
+  tile.setAttribute("stroke-width", "2");
+  tile.setAttribute("class", "tile-landed");
+  document.getElementById("act1-placed").appendChild(tile);
+  placedCount++;
+  updateAct1Counter();
+  if (placedCount >= COLS * ROWS) completeAct1();
+  return true;
+}
+function updateAct1Counter() {
+  var label = document.getElementById("act1-count");
+  if (label) label.textContent = "已鋪 " + placedCount + " / 12";
+}
+function completeAct1() {
+  /* 鋪滿後高亮 12 塊瓦片 */
+  var tiles = document.querySelectorAll("#act1-placed rect");
+  tiles.forEach(function (t) {
+    t.setAttribute("fill", "#7bc9b2");
+    t.setAttribute("stroke", "#318a70");
+  });
+  var formula = document.getElementById("act1-formula");
+  if (formula) formula.classList.add("show");
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "🎉 鋪滿了！<b>3 × 4 = 12</b>，一共 12 塊瓦片 = <b>12 平方公分</b>！";
+  var btn = document.getElementById("btn-fill-all");
+  if (btn) btn.disabled = true;
+  speakText("鋪滿了! 3 乘 4 等於 12, 一共 12 塊瓦片, 就是 12 平方公分");
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+}
+function fillAllTiles() {
+  if (placedCount >= COLS * ROWS) return;
+  var btn = document.getElementById("btn-fill-all");
+  if (btn) btn.disabled = true;
+  var pending = [];
+  for (var r = 0; r < ROWS; r++) {
+    for (var c = 0; c < COLS; c++) {
+      if (!isCellFilled(c, r)) pending.push({ col: c, row: r });
+    }
+  }
+  var i = 0;
+  fillTimer = setInterval(function () {
+    if (i >= pending.length) { clearInterval(fillTimer); fillTimer = null; return; }
+    var p = pending[i++];
+    placeTileAt(p.col, p.row);
+  }, 90);
+}
+function resetAct1() {
+  if (fillTimer) { clearInterval(fillTimer); fillTimer = null; }
+  placedCount = 0;
+  var placed = document.getElementById("act1-placed");
+  if (placed) placed.innerHTML = "";
+  for (var r = 0; r < ROWS; r++) {
+    for (var c = 0; c < COLS; c++) {
+      var cell = document.getElementById("act1-cell-" + c + "-" + r);
+      if (cell) cell.setAttribute("data-filled", "0");
+    }
+  }
+  dragX = 286; dragY = 110;
+  if (DRAG) DRAG.setAttribute("transform", "translate(" + dragX + "," + dragY + ")");
+  updateAct1Counter();
+  var formula = document.getElementById("act1-formula");
+  if (formula) formula.classList.remove("show");
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 拖瓦片到空格，或按「一鍵鋪滿」。鋪滿面、不重疊、不留空隙！";
+  var btn = document.getElementById("btn-fill-all");
+  if (btn) btn.disabled = false;
+}
+function buildAct1Board() {
+  var g = document.getElementById("act1-cells");
+  if (!g) return;
+  g.innerHTML = "";
+  for (var r = 0; r < ROWS; r++) {
+    for (var c = 0; c < COLS; c++) {
+      var cell = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      cell.setAttribute("id", "act1-cell-" + c + "-" + r);
+      cell.setAttribute("x", BOARD_X + c * CELL + 3);
+      cell.setAttribute("y", BOARD_Y + r * CELL + 3);
+      cell.setAttribute("width", CELL - 6);
+      cell.setAttribute("height", CELL - 6);
+      cell.setAttribute("rx", 6);
+      cell.setAttribute("fill", "#ffffff");
+      cell.setAttribute("stroke", "#c9e8dd");
+      cell.setAttribute("stroke-width", "1.5");
+      cell.setAttribute("stroke-dasharray", "4 3");
+      cell.setAttribute("data-filled", "0");
+      g.appendChild(cell);
+    }
+  }
+}
+/* 真實指標事件拖曳 + 磁吸貼齊最近空格 */
+function svgPoint(evt) {
+  var svg = document.getElementById("act1-svg");
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+function applyDragTransform() {
+  if (DRAG) DRAG.setAttribute("transform", "translate(" + dragX + "," + dragY + ")");
+}
+function initTileDrag() {
+  DRAG = document.getElementById("act1-drag");
+  if (!DRAG) return;
+  var start = null;
+  DRAG.addEventListener("pointerdown", function (e) {
+    isDragging = true;
+    start = { x: e.clientX, y: e.clientY, ox: dragX, oy: dragY };
+    DRAG.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  DRAG.addEventListener("pointermove", function (e) {
+    if (!isDragging) return;
+    var svg = document.getElementById("act1-svg");
+    var scale = 358 / svg.getBoundingClientRect().width;
+    dragX = Math.max(16, Math.min(342, start.ox + (e.clientX - start.x) * scale));
+    dragY = Math.max(16, Math.min(224, start.oy + (e.clientY - start.y) * scale));
+    applyDragTransform();
+    e.preventDefault();
+  });
+  DRAG.addEventListener("pointerup", function (e) {
+    if (!isDragging) return;
+    isDragging = false;
+    /* 磁吸：找最近且在底板內的空格 */
+    var best = null, bestDist = 32;
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        if (isCellFilled(c, r)) continue;
+        var cc = cellCenter(c, r);
+        var d = Math.hypot(cc.x - dragX, cc.y - dragY);
+        if (d < bestDist) { bestDist = d; best = { col: c, row: r }; }
+      }
+    }
+    if (best) {
+      placeTileAt(best.col, best.row);
+      dragX = 286; dragY = 110; /* 瓦片堆補貨 */
+      applyDragTransform();
+    }
+    e.preventDefault();
+  });
+  DRAG.addEventListener("pointercancel", function () { isDragging = false; });
+}
+
+/* ==================== Act 2：數格子比大小（甲 8 格 L 形 vs 乙 10 格 T 形） ==================== */
+var CELL2 = 27;
+var JIA_CELLS = [ /* L 形：左直條 5 + 底橫條 4（角落共用）= 8 格 */
+  {c:0,r:0},{c:0,r:1},{c:0,r:2},{c:0,r:3},{c:0,r:4},
+  {c:1,r:4},{c:2,r:4},{c:3,r:4}
+];
+var YI_CELLS = [ /* T 形：上橫條 4 + 中央雙寬三列 6 = 10 格 */
+  {c:0,r:0},{c:1,r:0},{c:2,r:0},{c:3,r:0},
+  {c:1,r:1},{c:2,r:1},{c:1,r:2},{c:2,r:2},{c:1,r:3},{c:2,r:3}
+];
+var JIA_X = 8, JIA_Y = 34, YI_X = 200, YI_Y = 34;
+var countTimers = {};
+
+function buildAct2Shapes() {
+  var gj = document.getElementById("act2-shape-jia");
+  var gy = document.getElementById("act2-shape-yi");
+  if (!gj || !gy) return;
+  gj.innerHTML = ""; gy.innerHTML = "";
+  JIA_CELLS.forEach(function (p, i) {
+    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("id", "act2-jia-" + i);
+    rect.setAttribute("x", JIA_X + p.c * CELL2);
+    rect.setAttribute("y", JIA_Y + p.r * CELL2);
+    rect.setAttribute("width", CELL2 - 3);
+    rect.setAttribute("height", CELL2 - 3);
+    rect.setAttribute("rx", 5);
+    rect.setAttribute("fill", "#ffffff");
+    rect.setAttribute("stroke", "#7bc9b2");
+    rect.setAttribute("stroke-width", "2");
+    gj.appendChild(rect);
+  });
+  YI_CELLS.forEach(function (p, i) {
+    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("id", "act2-yi-" + i);
+    rect.setAttribute("x", YI_X + p.c * CELL2);
+    rect.setAttribute("y", YI_Y + p.r * CELL2);
+    rect.setAttribute("width", CELL2 - 3);
+    rect.setAttribute("height", CELL2 - 3);
+    rect.setAttribute("rx", 5);
+    rect.setAttribute("fill", "#ffffff");
+    rect.setAttribute("stroke", "#ffd166");
+    rect.setAttribute("stroke-width", "2");
+    gy.appendChild(rect);
+  });
+}
+function countShape(which) {
+  if (countTimers[which]) return; /* 動畫進行中 */
+  var cells = which === "jia" ? JIA_CELLS : YI_CELLS;
+  var prefix = "act2-" + which + "-";
+  var label = document.getElementById("act2-count-" + which);
+  var i = 0;
+  countTimers[which] = setInterval(function () {
+    if (i >= cells.length) {
+      clearInterval(countTimers[which]);
+      countTimers[which] = null;
+      if (label) label.textContent = "共 " + cells.length + " 格" + (which === "jia" ? " (藍綠)" : " (檸檬)");
+      checkBothCounted();
+      return;
+    }
+    var rect = document.getElementById(prefix + i);
+    if (rect) {
+      rect.setAttribute("fill", which === "jia" ? "#7bc9b2" : "#ffd166");
+      rect.setAttribute("stroke", "#3d3a34");
+    }
+    if (label) label.textContent = "數到第 " + (i + 1) + " 格…";
+    i++;
+  }, 260);
+}
+function checkBothCounted() {
+  if (countTimers["jia"] || countTimers["yi"]) return;
+  if (verifyState.act2) return;
+  var formula = document.getElementById("act2-formula");
+  var bubble = document.getElementById("act2-bubble");
+  var done = [];
+  var lj = document.getElementById("act2-count-jia");
+  var ly = document.getElementById("act2-count-yi");
+  if (lj && /共 8 格/.test(lj.textContent)) done.push("jia");
+  if (ly && /共 10 格/.test(ly.textContent)) done.push("yi");
+  if (done.length < 2) return;
+  if (formula) formula.classList.add("show");
+  if (bubble) bubble.innerHTML = "🌟 <b>10 格 &gt; 8 格</b>，乙圖的面積比甲圖大！形狀不同，用方格數就能比！";
+  speakText("乙圖 10 格, 大於甲圖 8 格, 乙圖的面積比較大!");
+  verifyState.act2 = true;
+  refreshStatusBar();
+}
+function resetAct2() {
+  ["jia", "yi"].forEach(function (which) {
+    if (countTimers[which]) { clearInterval(countTimers[which]); countTimers[which] = null; }
+    var cells = which === "jia" ? JIA_CELLS : YI_CELLS;
+    for (var i = 0; i < cells.length; i++) {
+      var rect = document.getElementById("act2-" + which + "-" + i);
+      if (rect) {
+        rect.setAttribute("fill", "#ffffff");
+        rect.setAttribute("stroke", which === "jia" ? "#7bc9b2" : "#ffd166");
+      }
+    }
+    var label = document.getElementById("act2-count-" + which);
+    if (label) label.textContent = which === "jia" ? "點「數甲圖」開始" : "點「數乙圖」開始";
+  });
+  var formula = document.getElementById("act2-formula");
+  if (formula) formula.classList.remove("show");
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 分別把兩個圖形的方格數一數，再比一比！";
+}
+
+/* ==================== Act 3：拼圖移補大法（半格 + 半格 = 1 整格） ==================== */
+var MERGE_VOICE_DONE = "半格加半格等於一整格! 形狀改變, 總面積沒有變喔!";
+function mergeHalves() {
+  var left = document.getElementById("act3-tri-left");
+  var right = document.getElementById("act3-tri-right");
+  var target = document.getElementById("act3-target");
+  var label = document.getElementById("act3-target-label");
+  if (!left || !right) return;
+  /* 兩個半格滑動＋旋轉，在目標格 (149,55)-(209,115) 沿對角線無縫拼合 */
+  left.style.transform = "translate(109px, 0px)";
+  right.style.transform = "translate(19px, 0px) rotate(180deg)";
+  setTimeout(function () {
+    var resultText = document.getElementById("act3-result-text");
+    if (resultText) resultText.setAttribute("opacity", "1");
+    if (label) label.textContent = "1 整格 ✓";
+    var formula = document.getElementById("act3-formula");
+    if (formula) formula.classList.add("show");
+    var bubble = document.getElementById("act3-bubble");
+    if (bubble) bubble.innerHTML = "🎉 天衣無縫！<b>半格 + 半格 = 1 整格</b>，形狀變了，總面積不變（面積守恆）！";
+    var btn = document.getElementById("btn-merge");
+    if (btn) btn.disabled = true;
+    speakText(MERGE_VOICE_DONE);
+    if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  }, 900);
+}
+function resetAct3() {
+  var left = document.getElementById("act3-tri-left");
+  var right = document.getElementById("act3-tri-right");
+  if (left) { left.style.transform = ""; left.style.opacity = "1"; }
+  if (right) { right.style.transform = ""; right.style.opacity = "1"; }
+  var resultText = document.getElementById("act3-result-text");
+  if (resultText) resultText.setAttribute("opacity", "0");
+  var target = document.getElementById("act3-target");
+  if (target) target.classList.add("hidden");
+  var label = document.getElementById("act3-target-label");
+  if (label) label.textContent = "?";
+  var formula = document.getElementById("act3-formula");
+  if (formula) formula.classList.remove("show");
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 按下「神奇拼合」，看兩個半格怎麼變成一整格！";
+  var btn = document.getElementById("btn-merge");
+  if (btn) btn.disabled = false;
+}
+
+/* ==================== Act 4：面積挑戰賽（3 題闖關） ==================== */
+var QUIZ = [
+  {
+    text: "一個圖形鋪滿了 <b>7 個</b> 1 平方公分的瓦片，它的面積是多少平方公分？",
+    speak: "一個圖形鋪滿了 7 個 1 平方公分的瓦片, 它的面積是多少平方公分?",
+    options: ["6 平方公分", "7 平方公分", "8 平方公分"],
+    ok: 1,
+    why: "鋪滿幾個 1 平方公分，面積就是幾平方公分！"
+  },
+  {
+    text: "甲圖有 <b>9 格</b>，乙圖有 <b>6 格</b>，甲圖比乙圖多幾格？",
+    speak: "甲圖有 9 格, 乙圖有 6 格, 甲圖比乙圖多幾格?",
+    options: ["3 格", "2 格", "4 格"],
+    ok: 0,
+    why: "9 − 6 = 3，甲圖比乙圖多 3 格！"
+  },
+  {
+    text: "圖形中有 <b>4 個整格</b>和 <b>2 個半格</b>，合起來一共是多少格？",
+    speak: "圖形中有 4 個整格和 2 個半格, 合起來一共是多少格?",
+    options: ["4 格", "5 格", "6 格"],
+    ok: 1,
+    why: "4 整格 + 2 個半格 = 4 + 1 = 5 整格！"
+  }
+];
+var quiz = { idx: 0, answered: false };
+
+function speakQuiz() {
+  var q = QUIZ[quiz.idx];
+  if (q) speakText("第 " + (quiz.idx + 1) + " 題, " + q.speak);
+}
+function renderQuiz() {
+  var q = QUIZ[quiz.idx];
+  var desc = document.getElementById("quiz-question");
+  var box = document.getElementById("quiz-choices");
+  var prog = document.getElementById("quiz-progress");
+  if (!q || !desc || !box) return;
+  quiz.answered = false;
+  if (desc) desc.innerHTML = "第 " + (quiz.idx + 1) + " / 3 題 · " + q.text;
+  if (prog) prog.textContent = "第 " + (quiz.idx + 1) + " / 3 題";
+  box.innerHTML = "";
+  q.options.forEach(function (opt, i) {
+    var btn = document.createElement("button");
+    btn.className = "choice-btn";
+    btn.textContent = opt;
+    btn.addEventListener("click", function () { pickAnswer(i, btn); });
+    box.appendChild(btn);
+  });
+  var nextBtn = document.getElementById("btn-quiz-next");
+  if (nextBtn) nextBtn.hidden = true;
+}
+function pickAnswer(idx, btn) {
+  var q = QUIZ[quiz.idx];
+  if (!q || quiz.answered) return;
+  quiz.answered = true;
+  var box = document.getElementById("quiz-choices");
+  var bubble = document.getElementById("act4-bubble");
+  var ok = idx === q.ok;
+  if (ok) {
+    btn.classList.add("correct");
+    if (bubble) bubble.innerHTML = "🎉 答對了！" + q.why;
+    speakText("答對了! " + q.why);
+    var nextBtn = document.getElementById("btn-quiz-next");
+    if (nextBtn) {
+      nextBtn.hidden = false;
+      nextBtn.textContent = quiz.idx < QUIZ.length - 1 ? "下一題 ▶" : "🏁 看成績";
+    }
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = "💡 再想想看！" + q.why;
+    speakText("再想想看, " + q.why);
+    quiz.answered = false; /* 答錯可重試 */
+  }
+}
+function nextQuiz() {
+  if (quiz.idx < QUIZ.length - 1) {
+    quiz.idx++;
+    renderQuiz();
+    var bubble = document.getElementById("act4-bubble");
+    if (bubble) bubble.innerHTML = "💪 三題全答對，點亮獎盃！";
+  } else {
+    /* 三題全過 → 獎盃 */
+    var bubble = document.getElementById("act4-bubble");
+    if (bubble) bubble.innerHTML = "🏆 <b>三題全過！面積小達人就是你！</b>🏆";
+    speakText("三題全過! 面積小達人就是你!");
+    var nextBtn = document.getElementById("btn-quiz-next");
+    if (nextBtn) nextBtn.hidden = true;
+    if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+  }
+}
+function resetAct4() {
+  quiz.idx = 0;
+  quiz.answered = false;
+  renderQuiz();
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 三題全答對，點亮獎盃！";
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1Board();
+initTileDrag();
+buildAct2Shapes();
+renderQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

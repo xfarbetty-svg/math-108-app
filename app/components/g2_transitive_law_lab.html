@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2 概念小教室：大小關係與遞移律</title>
+    <script src="../js/audio_manager.js"></script>
+    <style>
+        :root {
+            --mint: #7bc9b2;
+            --coral: #ff8a65;
+            --yellow: #ffd166;
+            --blue: #7db8e8;
+            --paper: #fff9f0;
+            --ink: #3d3a34;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #app-container {
+            width: 390px;
+            height: 100vh;
+            background-color: var(--paper);
+            border-left: 2px solid #ddd;
+            border-right: 2px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 頂部導航 */
+        .act-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: #fff;
+            border-bottom: 2px solid var(--ink);
+            z-index: 10;
+        }
+        .act-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 2px solid var(--ink);
+            background: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .act-btn.active {
+            background: var(--yellow);
+            transform: translateY(2px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 狀態列 */
+        #status-bar {
+            display: flex;
+            padding: 5px 15px;
+            gap: 8px;
+            background: rgba(255,255,255,0.5);
+        }
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid var(--ink);
+            background: white;
+        }
+        .progress-dot.done { background: var(--mint); }
+
+        /* 互動舞台 */
+        .stage {
+            flex: 1;
+            position: relative;
+            max-height: 420px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .act-panel {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: 0.3s ease-out;
+        }
+        .hidden { display: none !important; }
+
+        /* 繪本風組件 */
+        .bubble {
+            background: white;
+            border: 2px solid var(--ink);
+            border-radius: var(--radius);
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.4;
+            width: 90%;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.05);
+        }
+
+        /* Act 1: 蹺蹺板 */
+        .seesaw-container {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            margin-top: 40px;
+        }
+        .seesaw-base {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .seesaw-plank {
+            width: 260px;
+            height: 12px;
+            background: var(--coral);
+            border: 2px solid var(--ink);
+            border-radius: 6px;
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            transform-origin: center center;
+            transition: transform 0.8s cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        .animal {
+            position: absolute;
+            transition: transform 0.8s cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        /* Act 2: 遞移律卡片 */
+        .chain-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .logic-card {
+            background: white;
+            border: 2px solid var(--ink);
+            border-radius: 12px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.5s;
+        }
+        .logic-card.show { opacity: 1; transform: translateY(0); }
+        .logic-card.bridge { border: 3px solid var(--yellow); background: #fffdf0; }
+
+        /* Act 3: 積木 */
+        .block-area {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .bar {
+            height: 40px;
+            border: 2px solid var(--ink);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+            transition: width 1s ease, transform 1s ease;
+        }
+
+        /* Act 4: 測驗 */
+        .quiz-card {
+            width: 100%;
+            text-align: center;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .opt-btn {
+            padding: 12px;
+            border: 2px solid var(--ink);
+            border-radius: 12px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .opt-btn:active { background: var(--yellow); }
+
+        /* 控制按鈕 */
+        .ctrl-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--mint);
+            border: 2px solid var(--ink);
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #5da691;
+        }
+        .ctrl-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #5da691; }
+
+        .trophy { font-size: 60px; margin-top: 20px; display: none; }
+        .trophy.show { display: block; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <nav class="act-nav">
+        <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">蹺蹺板</button>
+        <button class="act-btn" id="tab-act2" onclick="switchAct(2)">遞移律</button>
+        <button class="act-btn" id="tab-act3" onclick="switchAct(3)">排排隊</button>
+        <button class="act-btn" id="tab-act4" onclick="switchAct(4)">小偵探</button>
+    </nav>
+
+    <div id="status-bar">
+        <div class="progress-dot" id="dot-1"></div>
+        <div class="progress-dot" id="dot-2"></div>
+        <div class="progress-dot" id="dot-3"></div>
+        <div class="progress-dot" id="dot-4"></div>
+    </div>
+
+    <div class="stage">
+        <!-- Act 1 -->
+        <div id="act-1-view" class="act-panel">
+            <div class="bubble" id="a1-msg">點擊按鈕看看誰比較重？</div>
+            <div class="seesaw-container">
+                <svg class="seesaw-base" width="60" height="40">
+                    <path d="M10 40 L30 0 L50 40 Z" fill="#999" stroke="#3d3a34" stroke-width="2"/>
+                </svg>
+                <div id="plank" class="seesaw-plank"></div>
+                <!-- 小熊 -->
+                <div id="bear" class="animal" style="left: 30px; top: 40px;">
+                    <svg width="60" height="60" viewBox="0 0 60 60">
+                        <circle cx="30" cy="35" r="22" fill="#8d6e63" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="15" cy="15" r="8" fill="#8d6e63" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="45" cy="15" r="8" fill="#8d6e63" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="22" cy="30" r="3" fill="#3d3a34"/>
+                        <circle cx="38" cy="30" r="3" fill="#3d3a34"/>
+                        <path d="M25 42 Q30 47 35 42" fill="none" stroke="#3d3a34" stroke-width="2"/>
+                    </svg>
+                </div>
+                <!-- 小兔 -->
+                <div id="rabbit" class="animal" style="left: 210px; top: 40px;">
+                    <svg width="50" height="60" viewBox="0 0 50 60">
+                        <ellipse cx="25" cy="40" rx="18" ry="18" fill="#fff" stroke="#3d3a34" stroke-width="2"/>
+                        <ellipse cx="18" cy="15" rx="6" ry="15" fill="#fff" stroke="#3d3a34" stroke-width="2"/>
+                        <ellipse cx="32" cy="15" rx="6" ry="15" fill="#fff" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="20" cy="38" r="2" fill="#3d3a34"/>
+                        <circle cx="30" cy="38" r="2" fill="#3d3a34"/>
+                        <path d="M22 45 Q25 48 28 45" fill="none" stroke="#3d3a34" stroke-width="2"/>
+                    </svg>
+                </div>
+                <!-- 小猴 -->
+                <div id="monkey" class="animal hidden" style="left: 210px; top: 40px;">
+                    <svg width="50" height="60" viewBox="0 0 50 60">
+                        <circle cx="25" cy="35" r="18" fill="#ffb74d" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="10" cy="30" r="6" fill="#ffb74d" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="40" cy="30" r="6" fill="#ffb74d" stroke="#3d3a34" stroke-width="2"/>
+                        <circle cx="20" cy="32" r="2" fill="#3d3a34"/>
+                        <circle cx="30" cy="32" r="2" fill="#3d3a34"/>
+                        <path d="M20 42 Q25 46 30 42" fill="none" stroke="#3d3a34" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="ctrl-btn" onclick="playAct1(1)">熊 vs 兔</button>
+                <button class="ctrl-btn" onclick="playAct1(2)">兔 vs 猴</button>
+            </div>
+        </div>
+
+        <!-- Act 2 -->
+        <div id="act-2-view" class="act-panel hidden">
+            <div class="bubble">看！小兔變成了橋樑...</div>
+            <div class="chain-container">
+                <div id="c1" class="logic-card">🐻 小熊 > 🐰 小兔</div>
+                <div id="c2" class="logic-card">🐰 小兔 > 🐵 小猴</div>
+                <div id="c3" class="logic-card bridge">🐻 小熊 > 🐵 小猴</div>
+            </div>
+            <button class="ctrl-btn" onclick="playAct2()">開始推導</button>
+        </div>
+
+        <!-- Act 3 -->
+        <div id="act-3-view" class="act-panel hidden">
+            <div class="bubble">紅比藍長，藍比綠長，誰最長？</div>
+            <div class="block-area">
+                <div id="bar-red" class="bar" style="width: 100px; background: var(--coral);">紅棒</div>
+                <div id="bar-blue" class="bar" style="width: 100px; background: var(--blue);">藍棒</div>
+                <div id="bar-green" class="bar" style="width: 100px; background: var(--mint);">綠棒</div>
+            </div>
+            <button class="ctrl-btn" onclick="playAct3()">一鍵排隊</button>
+        </div>
+
+        <!-- Act 4 -->
+        <div id="act-4-view" class="act-panel hidden">
+            <div id="quiz-container" class="quiz-card">
+                <div class="bubble" id="q-text">問題載入中...</div>
+                <div class="options" id="q-options"></div>
+            </div>
+            <div id="trophy" class="trophy">🏆</div>
+            <button id="reset-btn" class="ctrl-btn hidden" onclick="resetLab()">再玩一次</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentAct = 1;
+    let progress = [false, false, false, false];
+    let quizStep = 0;
+
+    const quizData = [
+        { q: "小明比小華高，小華比小美高，誰最高？", a: ["小明", "小華", "小美"], correct: 0 },
+        { q: "鉛筆比蠟筆長，蠟筆比橡皮擦長，誰最長？", a: ["鉛筆", "橡皮擦", "一樣長"], correct: 0 },
+        { q: "A瓶容量大於B瓶，B瓶大於C瓶，則：", a: ["A > C", "A < C", "A = C"], correct: 0 }
+    ];
+
+    function speakText(text) {
+        if (window.AudioManager) {
+            window.AudioManager.play(text);
+        } else {
+            const ut = new SpeechSynthesisUtterance(text);
+            ut.lang = 'zh-TW';
+            speechSynthesis.speak(ut);
+        }
+    }
+
+    function switchAct(act) {
+        currentAct = act;
+        document.querySelectorAll('.act-panel').forEach(p => p.classList.add('hidden'));
+        var target = document.getElementById('act-' + act + '-view');
+        if (target) target.classList.remove('hidden');
+        for (var i = 1; i <= 4; i++) {
+            var tab = document.getElementById('tab-act' + i);
+            if (tab) tab.classList.toggle('active', i === act);
+        }
+        
+        if (act === 4) loadQuiz();
+        
+        const intros = [
+            "我們來玩蹺蹺板，比比看誰比較重！",
+            "這就是神奇的遞移律！中間的小兔當橋樑，兩端就能直接比大小！",
+            "彩色積木排排隊，紅比藍長，藍又比綠長，所以紅棒一定比綠棒長！",
+            "邏輯小偵探出動！根據遞移律找出正確答案吧！"
+        ];
+        speakText(intros[act-1]);
+    }
+
+    // Act 1 Logic
+    function playAct1(scene) {
+        const plank = document.getElementById('plank');
+        const bear = document.getElementById('bear');
+        const rabbit = document.getElementById('rabbit');
+        const monkey = document.getElementById('monkey');
+        const msg = document.getElementById('a1-msg');
+
+        if (scene === 1) {
+            monkey.classList.add('hidden');
+            rabbit.classList.remove('hidden');
+            plank.style.transform = 'rotate(15deg)';
+            bear.style.transform = 'translateY(30px)';
+            rabbit.style.transform = 'translateY(-30px)';
+            msg.innerText = "小熊比小兔重！";
+            speakText("小熊比小兔重。");
+        } else {
+            bear.classList.add('hidden');
+            rabbit.classList.remove('hidden');
+            rabbit.style.left = "30px";
+            monkey.classList.remove('hidden');
+            plank.style.transform = 'rotate(15deg)';
+            rabbit.style.transform = 'translateY(30px)';
+            monkey.style.transform = 'translateY(-30px)';
+            msg.innerText = "小兔比小猴重！那小熊和小猴誰重呢？";
+            speakText("小兔又比小猴重，那小熊和小猴誰更重呢？");
+            markDone(1);
+        }
+    }
+
+    // Act 2 Logic
+    function playAct2() {
+        const cards = [document.getElementById('c1'), document.getElementById('c2'), document.getElementById('c3')];
+        cards.forEach(c => c.classList.remove('show'));
+        
+        setTimeout(() => { cards[0].classList.add('show'); }, 500);
+        setTimeout(() => { cards[1].classList.add('show'); }, 1500);
+        setTimeout(() => { 
+            cards[2].classList.add('show'); 
+            speakText("小熊大於小兔，小兔大於小猴，所以小熊大於小猴！");
+            markDone(2);
+        }, 3000);
+    }
+
+    // Act 3 Logic
+    function playAct3() {
+        const r = document.getElementById('bar-red');
+        const b = document.getElementById('bar-blue');
+        const g = document.getElementById('bar-green');
+        
+        // Initial random-ish
+        r.style.width = "280px";
+        b.style.width = "200px";
+        g.style.width = "120px";
+        
+        speakText("紅棒最長，綠棒最短！");
+        markDone(3);
+    }
+
+    // Act 4 Logic
+    function loadQuiz() {
+        if (quizStep >= quizData.length) {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('trophy').classList.add('show');
+            document.getElementById('reset-btn').classList.remove('hidden');
+            speakText("太棒了！你完成了所有挑戰！");
+            markDone(4);
+            return;
+        }
+        const data = quizData[quizStep];
+        document.getElementById('q-text').innerText = data.q;
+        const optContainer = document.getElementById('q-options');
+        optContainer.innerHTML = '';
+        data.a.forEach((text, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = text;
+            btn.onclick = () => checkAnswer(i);
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(idx) {
+        if (idx === quizData[quizStep].correct) {
+            speakText("答對了！好厲害！");
+            quizStep++;
+            setTimeout(loadQuiz, 1000);
+        } else {
+            speakText("再想一想喔！");
+        }
+    }
+
+    function markDone(act) {
+        progress[act-1] = true;
+        document.getElementById(`dot-${act}`).classList.add('done');
+    }
+
+    function resetLab() {
+        quizStep = 0;
+        progress = [false, false, false, false];
+        document.querySelectorAll('.progress-dot').forEach(d => d.classList.remove('done'));
+        document.getElementById('quiz-container').classList.remove('hidden');
+        document.getElementById('trophy').classList.remove('show');
+        document.getElementById('reset-btn').classList.add('hidden');
+        switchAct(1);
+    }
+
+    // CDP Hooks
+    window.G2_LAB_SELFTEST = {
+        switchAct: switchAct,
+        reset: resetLab,
+        state: () => ({ currentAct, progress, quizStep })
+    };
+
+    // Init
+    window.onload = () => {
+        // Initial setup
+        document.getElementById('bar-red').style.width = "180px";
+        document.getElementById('bar-blue').style.width = "240px";
+        document.getElementById('bar-green').style.width = "150px";
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-S-2-3 直尺操作 · 概念小教室</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --sky-deep: #3f7fb5;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge { background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+.stage { border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3; overflow: hidden; max-height: 420px; }
+.stage svg { display: block; width: 100%; height: auto; }
+
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+
+.tool-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.tool-btn {
+  background: #fdf6e9; border: 2px solid var(--line); border-radius: 999px;
+  padding: 8px 14px; font-size: 12.5px; font-weight: 800; color: var(--ink);
+  transition: all 0.15s;
+}
+.tool-btn.primary { background: var(--coral); border-color: var(--coral-deep); color: #ffffff; }
+.tool-btn.minty { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.tool-btn:active { transform: scale(0.96); }
+.tool-btn.active { background: var(--mint); border-color: var(--mint-deep); color: #ffffff; }
+
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+.choice-btn:disabled { opacity: 0.45; cursor: default; }
+.quiz-progress { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); text-align: center; }
+.trophy { font-size: 30px; text-align: center; filter: grayscale(1); opacity: 0.3; transition: all 0.4s; }
+.trophy.lit { filter: none; opacity: 1; transform: scale(1.12); }
+
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <div class="top-bar">
+    <div class="top-title">
+      直尺操作小教室
+      <small>二年級 · S-2-3 量長度・畫線段</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 對齊神探</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 定長畫線</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 斷尺解謎</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🏆 挑戰</button>
+  </div>
+
+  <!-- Act 1: 0 刻度對齊神探 -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('把直尺的刻度 0 對齊蠟筆的左端，再看右端指著幾，就是幾公分。')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">0 刻度對齊神探</div>
+      <div class="card-desc">拖一拖透明直尺，讓蠟筆左端切齊刻度 0，再讀出右端刻度！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="蠟筆與直尺對齊示意圖">
+          <g id="act1-crayon">
+            <rect x="100" y="42" width="160" height="20" rx="10" fill="#ff8a65" stroke="#3d3a34" stroke-width="2"></rect>
+            <rect x="248" y="46" width="8" height="12" rx="3" fill="#ffd166" stroke="#3d3a34" stroke-width="1.5"></rect>
+            <text x="180" y="56" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff">蠟筆</text>
+          </g>
+          <g id="act1-ruler" class="drag-handle" transform="translate(0,118)">
+            <rect x="25" y="0" width="330" height="48" rx="8" fill="#eef7f4" opacity="0.85" stroke="#3d3a34" stroke-width="2"></rect>
+            <rect id="act1-span" x="45" y="0" width="160" height="48" fill="#ffd166" opacity="0"></rect>
+            <g id="act1-ticks"></g>
+          </g>
+          <g id="act1-marks" opacity="0">
+            <line x1="100" y1="34" x2="100" y2="172" stroke="#f4694b" stroke-width="2" stroke-dasharray="4 3"></line>
+            <line x1="260" y1="34" x2="260" y2="172" stroke="#f4694b" stroke-width="2" stroke-dasharray="4 3"></line>
+            <text x="278" y="40" font-size="12" font-weight="800" fill="#f4694b">8 公分！</text>
+          </g>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn minty" onclick="alignZero()">🎯 對齊起點 0</button>
+        <button class="tool-btn primary" onclick="readLength()">📏 讀取長度</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 拖一拖直尺，或按「對齊起點 0」，讓蠟筆左端切齊刻度 0！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 定長畫線筆 -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('畫線時，鉛筆緊貼直尺邊緣，從刻度 0 出發，平穩畫到指定公分！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">定長畫線筆</div>
+      <div class="card-desc">先選目標長度，再按「開始畫線」，鉛筆會從刻度 0 平穩畫到目標刻度！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="鉛筆沿直尺畫線示意圖">
+          <rect x="20" y="18" width="318" height="64" rx="8" fill="#ffffff" stroke="#f0e7da" stroke-width="2"></rect>
+          <line id="act2-line" x1="55" y1="62" x2="55" y2="62" stroke="#ff8a65" stroke-width="5" stroke-linecap="round"></line>
+          <text id="act2-line-label" x="0" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#f4694b" opacity="0"></text>
+          <g transform="translate(10,96)">
+            <rect x="25" y="0" width="330" height="48" rx="8" fill="#eef7f4" opacity="0.9" stroke="#3d3a34" stroke-width="2"></rect>
+            <g id="act2-ticks"></g>
+          </g>
+          <g id="act2-pencil" transform="translate(55,62)">
+            <rect x="-6" y="-44" width="12" height="30" rx="3" fill="#ffd166" stroke="#3d3a34" stroke-width="1.5"></rect>
+            <rect x="-6" y="-50" width="12" height="7" rx="2" fill="#ff8a65" stroke="#3d3a34" stroke-width="1.5"></rect>
+            <polygon points="-6,-14 6,-14 0,0" fill="#e8c39a" stroke="#3d3a34" stroke-width="1.5"></polygon>
+            <polygon points="-2.5,-6 2.5,-6 0,0" fill="#3d3a34"></polygon>
+          </g>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn len-btn" data-cm="3" onclick="setTarget(3, this)">3 公分</button>
+        <button class="tool-btn len-btn active" data-cm="5" onclick="setTarget(5, this)">5 公分</button>
+        <button class="tool-btn len-btn" data-cm="7" onclick="setTarget(7, this)">7 公分</button>
+        <button class="tool-btn primary" id="btn-draw" onclick="startDraw()">✏️ 開始畫線</button>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 畫線時，鉛筆緊貼直尺邊緣，從 0 出發，平穩畫到指定公分！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 斷尺解謎 -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('就算沒有刻度 0 也不怕！用後面的刻度減前面的刻度，就能算出長度喔！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">斷尺解謎 · 刻度差算理</div>
+      <div class="card-desc">小兔的直尺前端摔斷了，沒有刻度 0！橡皮擦從刻度 3 放到刻度 9，它有多長？</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="斷尺測量橡皮擦示意圖">
+          <text id="act3-formula" x="179" y="26" text-anchor="middle" font-size="15" font-weight="800" fill="#f4694b" opacity="0">9 − 3 = 6（公分）</text>
+          <line x1="105" y1="38" x2="105" y2="128" stroke="#8a857b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+          <line x1="225" y1="38" x2="225" y2="128" stroke="#8a857b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+          <g id="act3-eraser">
+            <rect x="105" y="42" width="120" height="22" rx="7" fill="#7db8e8" stroke="#3d3a34" stroke-width="2"></rect>
+            <rect x="113" y="47" width="18" height="12" rx="3" fill="#ffffff" opacity="0.7"></rect>
+            <text x="176" y="58" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">橡皮擦</text>
+          </g>
+          <g transform="translate(0,132)">
+            <path d="M104,0 L350,0 L350,48 L104,48 L96,42 L104,36 L96,30 L104,24 L96,18 L104,12 L96,6 L104,0 Z"
+                  fill="#eef7f4" opacity="0.9" stroke="#3d3a34" stroke-width="2"></path>
+            <g id="act3-ticks"></g>
+            <g id="act3-count-spans"></g>
+          </g>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn minty" id="btn-count" onclick="countCells()">🔢 一格一格數</button>
+        <button class="tool-btn primary" onclick="showSubtraction()">➖ 減法算式</button>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 沒有刻度 0 也不怕！用後面的刻度減前面的刻度，就能算出長度喔！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 實戰小挑戰 -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('量長度小挑戰！答對三題，獎盃就會亮起來！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">實戰小挑戰</div>
+      <div class="quiz-progress" id="act4-progress">第 1 / 3 題</div>
+      <div class="card-desc" id="act4-question"></div>
+      <div class="choice-row" id="act4-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+      <div class="trophy" id="act4-trophy">🏆</div>
+    </div>
+  </div>
+
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級直尺操作小教室。對齊刻度 0 量長度，從 0 出發畫線段，斷尺用刻度差來算長度！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+/* ==================== SVG 直尺刻度產生器 ==================== */
+var SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs) {
+  var node = document.createElementNS(SVGNS, tag);
+  for (var k in attrs) node.setAttribute(k, attrs[k]);
+  return node;
+}
+/* 20px = 1 公分；x0 = 刻度 startCm 的位置；刻度畫在 y=0 往下 */
+function buildRulerTicks(group, startCm, endCm, x0, tickLen, numY) {
+  if (!group) return;
+  group.innerHTML = "";
+  for (var c = startCm; c <= endCm; c++) {
+    var x = x0 + c * 20;
+    group.appendChild(el("line", { x1: x, y1: 0, x2: x, y2: tickLen, stroke: "#3d3a34", "stroke-width": 2 }));
+    var t = el("text", { x: x, y: numY, "text-anchor": "middle", "font-size": 10, "font-weight": 800, fill: "#3d3a34" });
+    t.textContent = String(c);
+    group.appendChild(t);
+    if (c < endCm) {
+      for (var m = 1; m < 5; m++) {
+        var mx = x + m * 4;
+        group.appendChild(el("line", { x1: mx, y1: 0, x2: mx, y2: tickLen * 0.45, stroke: "#3d3a34", "stroke-width": 0.8, opacity: 0.6 }));
+      }
+    }
+  }
+}
+
+/* ==================== Act 1：0 刻度對齊神探 ==================== */
+var rulerX = 0;              /* 直尺 translate x */
+var ALIGNED_X = 55;          /* 蠟筆左端 100 = 刻度0(45) + tx */
+var isRulerDrag = false;
+
+function initAct1() {
+  var g = document.getElementById("act1-ticks");
+  if (g) buildRulerTicks(g, 0, 15, 45, 16, 34);
+  var ruler = document.getElementById("act1-ruler");
+  if (!ruler) return;
+  var start = null;
+  ruler.addEventListener("pointerdown", function (e) {
+    isRulerDrag = true;
+    var p = clientToSvg("act1-svg", e);
+    start = { sx: p.x, ox: rulerX };
+    ruler.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  ruler.addEventListener("pointermove", function (e) {
+    if (!isRulerDrag || !start) return;
+    var p = clientToSvg("act1-svg", e);
+    rulerX = Math.max(5, Math.min(105, start.ox + (p.x - start.sx)));
+    ruler.setAttribute("transform", "translate(" + rulerX + ",118)");
+    e.preventDefault();
+  });
+  ruler.addEventListener("pointerup", function () { isRulerDrag = false; });
+  ruler.addEventListener("pointercancel", function () { isRulerDrag = false; });
+}
+function clientToSvg(svgId, evt) {
+  var svg = document.getElementById(svgId);
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return { x: 0, y: 0 };
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+function alignZero() {
+  rulerX = ALIGNED_X;
+  document.getElementById("act1-ruler").setAttribute("transform", "translate(" + rulerX + ",118)");
+  document.getElementById("act1-bubble").innerHTML = "💡 對齊了！蠟筆左端切齊 <b>0</b>，右端指著 <b>8</b>，按「讀取長度」吧！";
+  speakText("對齊了! 蠟筆左端切齊刻度 0, 右端指著 8");
+}
+function readLength() {
+  var bubble = document.getElementById("act1-bubble");
+  if (Math.abs(rulerX - ALIGNED_X) > 8) {
+    bubble.innerHTML = "💡 蠟筆左端還沒切齊刻度 0 喔！拖一拖直尺，或按「對齊起點 0」。";
+    speakText("蠟筆左端還沒對齊刻度 0, 再試試看");
+    return;
+  }
+  rulerX = ALIGNED_X;
+  document.getElementById("act1-ruler").setAttribute("transform", "translate(" + rulerX + ",118)");
+  document.getElementById("act1-span").setAttribute("opacity", "0.35");
+  document.getElementById("act1-marks").setAttribute("opacity", "1");
+  bubble.innerHTML = "🎉 看！蠟筆一端對齊刻度 0，另一端指著 8，就是 <b>8 公分</b>！";
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  speakText("看! 蠟筆的一端對齊刻度 0, 另一端指著 8, 就是 8 公分!");
+}
+function resetAct1() {
+  rulerX = 0;
+  var ruler = document.getElementById("act1-ruler");
+  if (ruler) ruler.setAttribute("transform", "translate(0,118)");
+  var span = document.getElementById("act1-span");
+  if (span) span.setAttribute("opacity", "0");
+  var marks = document.getElementById("act1-marks");
+  if (marks) marks.setAttribute("opacity", "0");
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 拖一拖直尺，或按「對齊起點 0」，讓蠟筆左端切齊刻度 0！";
+}
+
+/* ==================== Act 2：定長畫線筆 ==================== */
+var targetCm = 5;
+var drawing = false;
+var drawRafId = null;
+
+function initAct2() {
+  var g = document.getElementById("act2-ticks");
+  if (g) buildRulerTicks(g, 0, 15, 45, 16, 34);
+}
+function setTarget(cm, btn) {
+  targetCm = cm;
+  document.querySelectorAll(".len-btn").forEach(function (b) { b.classList.remove("active"); });
+  if (btn) btn.classList.add("active");
+  resetAct2Line();
+  speakText("目標長度 " + cm + " 公分, 按開始畫線!");
+}
+function resetAct2Line() {
+  if (drawRafId) { cancelAnimationFrame(drawRafId); drawRafId = null; }
+  drawing = false;
+  var line = document.getElementById("act2-line");
+  var label = document.getElementById("act2-line-label");
+  var pencil = document.getElementById("act2-pencil");
+  if (line) { line.setAttribute("x2", 55); }
+  if (label) label.setAttribute("opacity", "0");
+  if (pencil) pencil.setAttribute("transform", "translate(55,62)");
+  var btn = document.getElementById("btn-draw");
+  if (btn) btn.disabled = false;
+}
+function startDraw() {
+  if (drawing) return;
+  drawing = true;
+  resetAct2Line();
+  drawing = true;
+  document.getElementById("btn-draw").disabled = true;
+  var line = document.getElementById("act2-line");
+  var pencil = document.getElementById("act2-pencil");
+  var x0 = 55, x1 = 55 + targetCm * 20;
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var k = Math.min(1, (ts - t0) / (targetCm * 140));
+    var x = x0 + (x1 - x0) * k;
+    line.setAttribute("x2", x);
+    pencil.setAttribute("transform", "translate(" + x + ",62)");
+    if (k < 1) {
+      drawRafId = requestAnimationFrame(frame);
+    } else {
+      drawing = false;
+      drawRafId = null;
+      var label = document.getElementById("act2-line-label");
+      if (label) {
+        label.setAttribute("x", (x0 + x1) / 2);
+        label.setAttribute("opacity", "1");
+        label.textContent = targetCm + " 公分";
+      }
+      document.getElementById("btn-draw").disabled = false;
+      document.getElementById("act2-bubble").innerHTML =
+        "🎉 畫好了！從 <b>0</b> 出發，平穩畫到 <b>" + targetCm + "</b>，這條線就是 <b>" + targetCm + " 公分</b>！";
+      if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+      speakText("畫好了! 從刻度 0 畫到 " + targetCm + ", 這條線就是 " + targetCm + " 公分長!");
+    }
+  }
+  drawRafId = requestAnimationFrame(frame);
+}
+
+/* ==================== Act 3：斷尺解謎 ==================== */
+var countTimers = [];
+function initAct3() {
+  var g = document.getElementById("act3-ticks");
+  if (g) buildRulerTicks(g, 3, 15, 45, 16, 34);
+}
+function clearCountTimers() {
+  countTimers.forEach(function (t) { clearTimeout(t); });
+  countTimers = [];
+}
+function countCells() {
+  clearCountTimers();
+  var holder = document.getElementById("act3-count-spans");
+  if (!holder) return;
+  holder.innerHTML = "";
+  var bubble = document.getElementById("act3-bubble");
+  for (var i = 0; i < 6; i++) {
+    (function (idx) {
+      countTimers.push(setTimeout(function () {
+        var c = 3 + idx;
+        var rect = el("rect", { x: 45 + c * 20, y: 0, width: 20, height: 48, fill: "#ff8a65", opacity: 0.35 });
+        holder.appendChild(rect);
+        var t = el("text", { x: 45 + c * 20 + 10, y: 62, "text-anchor": "middle", "font-size": 10, "font-weight": 800, fill: "#f4694b" });
+        t.textContent = "第 " + (idx + 1) + " 格";
+        holder.appendChild(t);
+        bubble.innerHTML = "💡 一格一格數：3 → 4 → 5 → 6 → 7 → 8 → 9，一共 <b>" + (idx + 1) + " 格</b>！";
+        if (idx === 5) {
+          bubble.innerHTML = "🎉 一格一格數，3 到 9 一共 <b>6 格</b>，橡皮擦就是 <b>6 公分</b>！";
+          speakText("一格一格數, 3 到 9 一共 6 格, 橡皮擦就是 6 公分!");
+        }
+      }, idx * 420));
+    })(i);
+  }
+  speakText("我們一格一格來數!");
+}
+function showSubtraction() {
+  clearCountTimers();
+  document.getElementById("act3-count-spans").innerHTML = "";
+  document.getElementById("act3-formula").setAttribute("opacity", "1");
+  document.getElementById("act3-bubble").innerHTML =
+    "🌟 末端刻度 <b>9</b> − 起點刻度 <b>3</b> = <b>6 公分</b>！沒有 0 也不怕！";
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  speakText("用後面的刻度減前面的刻度, 9 減 3 等於 6, 橡皮擦長 6 公分!");
+}
+function resetAct3() {
+  clearCountTimers();
+  var holder = document.getElementById("act3-count-spans");
+  if (holder) holder.innerHTML = "";
+  var f = document.getElementById("act3-formula");
+  if (f) f.setAttribute("opacity", "0");
+  document.getElementById("act3-bubble").innerHTML =
+    "💡 沒有刻度 0 也不怕！用後面的刻度減前面的刻度，就能算出長度喔！";
+}
+
+/* ==================== Act 4：實戰小挑戰 ==================== */
+var QUIZ = [
+  {
+    q: "觀察鉛筆測量：起點對準刻度 0，末端指在刻度 6，鉛筆長度是多少公分？",
+    opts: ["5 公分", "6 公分", "7 公分"], ok: 1,
+    yes: "答對了！從 0 到 6，就是 6 公分！", no: "再想想看：末端指著 6，起點是 0，數一數有幾格？"
+  },
+  {
+    q: "斷尺測量：玩具車從刻度 2cm 放到刻度 7cm，玩具車長度是幾公分？",
+    opts: ["7 公分", "5 公分", "9 公分"], ok: 1,
+    yes: "答對了！7 − 2 = 5，玩具車長 5 公分！", no: "提示：用後面刻度減前面刻度，7 減 2 是多少？"
+  },
+  {
+    q: "哪一條畫線方法是正確的？",
+    opts: ["從刻度 0 開始畫", "從尺的最左邊緣開始畫", "隨便找個地方畫"], ok: 0,
+    yes: "答對了！畫線要從刻度 0 出發，才好讀長度！", no: "再想想看：要貼著直尺，從哪個刻度出發最好讀呢？"
+  }
+];
+var qOrder = [], qIdx = 0, qDone = 0;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+function buildQuiz() {
+  qOrder = shuffle([0, 1, 2]);
+  qIdx = 0; qDone = 0;
+  var trophy = document.getElementById("act4-trophy");
+  if (trophy) trophy.classList.remove("lit");
+  renderQuiz();
+}
+function renderQuiz() {
+  var item = QUIZ[qOrder[qIdx]];
+  var qEl = document.getElementById("act4-question");
+  var cEl = document.getElementById("act4-choices");
+  var pEl = document.getElementById("act4-progress");
+  var bubble = document.getElementById("act4-bubble");
+  if (!item || !qEl || !cEl) return;
+  pEl.textContent = "第 " + (qIdx + 1) + " / 3 題";
+  qEl.innerHTML = item.q;
+  bubble.innerHTML = "💪 選一個答案吧！";
+  cEl.innerHTML = "";
+  item.opts.forEach(function (opt, idx) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.addEventListener("click", function () { quizAnswer(b, idx, item); });
+    cEl.appendChild(b);
+  });
+}
+function quizAnswer(btn, idx, item) {
+  var bubble = document.getElementById("act4-bubble");
+  if (idx === item.ok) {
+    btn.classList.add("correct");
+    document.querySelectorAll("#act4-choices .choice-btn").forEach(function (b) { b.disabled = true; });
+    qDone++;
+    bubble.innerHTML = "🎉 " + item.yes;
+    speakText(item.yes);
+    qIdx++;
+    if (qIdx < 3) {
+      countTimers.push(setTimeout(function () { renderQuiz(); }, 1400));
+    } else {
+      var trophy = document.getElementById("act4-trophy");
+      if (trophy) trophy.classList.add("lit");
+      document.getElementById("act4-progress").textContent = "挑戰成功！";
+      bubble.innerHTML = "🏆 三題全對！你是量長度小達人！";
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+      speakText("三題全對! 你是量長度小達人!");
+    }
+  } else {
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    bubble.innerHTML = "💡 " + item.no;
+    speakText(item.no);
+  }
+}
+
+/* ==================== 重置 ==================== */
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2Line();
+  resetAct3();
+  buildQuiz();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== 初始化 ==================== */
+initAct1();
+initAct2();
+initAct3();
+buildQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

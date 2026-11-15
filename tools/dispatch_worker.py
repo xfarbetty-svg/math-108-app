@@ -8,8 +8,10 @@ tools/dispatch_worker.py - 028-1 專屬工兵調用唯一標準入口 (遵循 St
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 
@@ -27,7 +29,7 @@ def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
     if task_file and os.path.isfile(task_file):
         try:
             with open(task_file, "r", encoding="utf-8") as f:
-                full_prompt = f"【任務卡內容】\n{f.read()}\n\n【執行指令】\n{prompt}"
+                full_prompt = f"【任務卡內容】\n{f.read()}\n\n【執行指令】\n{prompt}\n\n【重要要求】請務必輸出完整可運行的 HTML 檔案全文，包含完整的 CSS 與 JavaScript，嚴禁任何省略、註釋跳過或佔位符！"
         except Exception as e:
             print(f"[Worker Dispatch CH3] 讀取任務卡失敗: {e}", file=sys.stderr)
 
@@ -35,7 +37,7 @@ def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
     payload = {
         "model": "gemini-2.5-flash",
         "messages": [
-            {"role": "system", "content": "你是一個資深前端工程師，嚴格按照任務卡實作代碼。"},
+            {"role": "system", "content": "你是一個資深專業前端與互動教具工程師，嚴格按照任務卡實作代碼。只輸出繁體中文的 HTML 完整代碼，不要任何無關寒暄。"},
             {"role": "user", "content": full_prompt}
         ],
         "temperature": 0.2
@@ -47,13 +49,36 @@ def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
             headers={"Content-Type": "application/json"}
         )
         t0 = time.time()
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        with urllib.request.urlopen(req, timeout=120) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             elapsed = time.time() - t0
             print(f"[Worker Dispatch CH3] 成功完成，耗時 {elapsed:.2f}s，HTTP {resp.status}")
             output_text = data["choices"][0]["message"]["content"]
+            
+            # 尋找目標檔案路徑並原子寫入
+            target_match = re.search(r"app/components/[a-zA-Z0-9_\-]+\.html", full_prompt)
+            if target_match:
+                target_path = target_match.group(0)
+                code = output_text
+                code_match = re.search(r"```(?:html)?\s*([\s\S]*?)```", output_text, re.IGNORECASE)
+                if code_match:
+                    code = code_match.group(1).strip()
+                elif "<!DOCTYPE html>" in output_text:
+                    start = output_text.find("<!DOCTYPE html>")
+                    end = output_text.rfind("</html>")
+                    if end != -1:
+                        code = output_text[start:end+7].strip()
+
+                target_dir = os.path.dirname(target_path)
+                os.makedirs(target_dir, exist_ok=True)
+                fd, tmp_path = tempfile.mkstemp(dir=target_dir, suffix=".tmp")
+                with os.fdopen(fd, "w", encoding="utf-8") as f:
+                    f.write(code)
+                os.replace(tmp_path, target_path)
+                print(f"[Worker Dispatch CH3] ✅ 成功原子寫入目標檔案: {target_path} ({len(code)} bytes)")
+
             print("[Worker CH3 Output Preview]:")
-            for line in output_text.splitlines()[:10]:
+            for line in output_text.splitlines()[:5]:
                 print("  ", line[:120])
             return 0
     except Exception as e:

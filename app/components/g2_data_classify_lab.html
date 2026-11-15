@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2 概念小教室：分類與呈現</title>
+    <script src="../js/audio_manager.js"></script>
+    <style>
+        :root {
+            --mint: #7bc9b2;
+            --coral: #ff8a65;
+            --yellow: #ffd166;
+            --blue: #7db8e8;
+            --paper: #fff9f0;
+            --ink: #3d3a34;
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 390px;
+            height: 100vh;
+            background-color: var(--paper);
+            border-left: 2px solid var(--ink);
+            border-right: 2px solid var(--ink);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 導航欄 */
+        .act-nav {
+            display: flex;
+            background: #eee;
+            border-bottom: 2px solid var(--ink);
+            height: 50px;
+        }
+        .act-btn {
+            flex: 1;
+            border: none;
+            background: #eee;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .act-btn.active {
+            background: var(--mint);
+            color: white;
+        }
+
+        /* 舞台區域 */
+        .stage {
+            flex: 1;
+            position: relative;
+            height: 420px;
+            max-height: 420px;
+            overflow: hidden;
+        }
+
+        .act-panel {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .hidden { display: none !important; }
+
+        /* 繪本風格標題 */
+        .title-box {
+            background: white;
+            border: 2px solid var(--ink);
+            border-radius: 20px;
+            padding: 5px 15px;
+            margin-bottom: 10px;
+            box-shadow: 3px 3px 0 var(--ink);
+            font-weight: bold;
+            color: var(--ink);
+        }
+
+        /* Act 1: 分類 */
+        .stationery-area {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            border: 2px dashed var(--ink);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+        }
+        .item {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+        .boxes {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+        .box {
+            width: 100px;
+            height: 80px;
+            border: 2px solid var(--ink);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 5px;
+            background: white;
+            position: relative;
+        }
+        .box-label { font-size: 12px; font-weight: bold; margin-top: 5px; }
+        .count-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--coral);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 2px solid var(--ink);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        /* Act 2: 正字 */
+        .fruit-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 8px 0;
+            background: white;
+            padding: 10px;
+            border-radius: var(--radius);
+            border: 2px solid var(--ink);
+        }
+        .fruit-icon { width: 40px; height: 40px; margin-right: 10px; }
+        .tally-container {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+        }
+        .zheng-char {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+        .stroke {
+            stroke: var(--ink);
+            stroke-width: 4;
+            stroke-linecap: round;
+            fill: none;
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+        }
+        .stroke.draw { animation: drawStroke 0.3s forwards; }
+        @keyframes drawStroke { to { stroke-dashoffset: 0; } }
+
+        /* Act 3: 積木圖 */
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-bottom: 30px;
+            border-bottom: 3px solid var(--ink);
+            margin-top: 20px;
+        }
+        .bar-group {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            width: 60px;
+        }
+        .block {
+            width: 50px;
+            height: 20px;
+            border: 2px solid var(--ink);
+            margin-bottom: 2px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .block.active { transform: scale(1.1); filter: brightness(1.1); }
+        .bar-label { margin-top: 10px; font-weight: bold; }
+
+        /* Act 4: 測驗 */
+        .quiz-card {
+            background: white;
+            border: 2px solid var(--ink);
+            border-radius: var(--radius);
+            padding: 15px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .opt-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .opt-btn.correct { background: var(--mint); color: white; }
+        .opt-btn.wrong { background: #ffcccc; }
+
+        /* 控制按鈕 */
+        .ctrl-panel {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            background: #fff;
+            border-top: 2px solid var(--ink);
+        }
+        .main-btn {
+            background: var(--coral);
+            color: white;
+            border: 2px solid var(--ink);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 0 var(--ink);
+            cursor: pointer;
+        }
+        .main-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--ink); }
+
+        .trophy-container {
+            font-size: 50px;
+            margin-top: 20px;
+            display: none;
+            animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <nav class="act-nav">
+        <button id="tab-act1" class="act-btn active" onclick="switchAct(1)">分類</button>
+        <button id="tab-act2" class="act-btn" onclick="switchAct(2)">記號</button>
+        <button id="tab-act3" class="act-btn" onclick="switchAct(3)">圖表</button>
+        <button id="tab-act4" class="act-btn" onclick="switchAct(4)">挑戰</button>
+    </nav>
+
+    <main class="stage">
+        <!-- Act 1 -->
+        <div id="act-1-view" class="act-panel">
+            <div class="title-box">文具大整理</div>
+            <div class="stationery-area" id="drop-zone">
+                <!-- Items will be generated here -->
+            </div>
+            <div class="boxes">
+                <div class="box" id="box-pencil" style="background: #e3f2fd;">
+                    <div class="count-badge" id="count-pencil">0</div>
+                    <div class="box-label">鉛筆盒</div>
+                </div>
+                <div class="box" id="box-eraser" style="background: #fce4ec;">
+                    <div class="count-badge" id="count-eraser">0</div>
+                    <div class="box-label">橡皮擦盒</div>
+                </div>
+                <div class="box" id="box-ruler" style="background: #e8f5e9;">
+                    <div class="count-badge" id="count-ruler">0</div>
+                    <div class="box-label">直尺盒</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Act 2 -->
+        <div id="act-2-view" class="act-panel hidden">
+            <div class="title-box">正字記號計數</div>
+            <div class="fruit-row">
+                <svg class="fruit-icon" viewBox="0 0 100 100"><circle cx="50" cy="55" r="35" fill="#ff5252" stroke="#3d3a34" stroke-width="3"/><path d="M50 20 Q55 10 65 15" fill="none" stroke="#4caf50" stroke-width="4"/></svg>
+                <div class="tally-container" id="tally-apple"></div>
+                <div style="font-weight:bold; margin-left:10px;">7 個</div>
+            </div>
+            <div class="fruit-row">
+                <svg class="fruit-icon" viewBox="0 0 100 100"><path d="M30 20 Q50 20 70 80 Q40 70 30 20" fill="#ffd166" stroke="#3d3a34" stroke-width="3"/></svg>
+                <div class="tally-container" id="tally-banana"></div>
+                <div style="font-weight:bold; margin-left:10px;">5 個</div>
+            </div>
+            <div class="fruit-row">
+                <svg class="fruit-icon" viewBox="0 0 100 100"><path d="M50 85 L25 40 Q50 20 75 40 Z" fill="#ff8a65" stroke="#3d3a34" stroke-width="3"/></svg>
+                <div class="tally-container" id="tally-berry"></div>
+                <div style="font-weight:bold; margin-left:10px;">8 個</div>
+            </div>
+        </div>
+
+        <!-- Act 3 -->
+        <div id="act-3-view" class="act-panel hidden">
+            <div class="title-box">水果積木圖</div>
+            <div class="chart-container">
+                <div class="bar-group" id="bar-apple">
+                    <div class="bar-label">蘋果</div>
+                </div>
+                <div class="bar-group" id="bar-banana">
+                    <div class="bar-label">香蕉</div>
+                </div>
+                <div class="bar-group" id="bar-berry">
+                    <div class="bar-label">草莓</div>
+                </div>
+            </div>
+            <p style="font-size: 14px; color: #666; margin-top: 10px;">點擊積木看看數量！</p>
+        </div>
+
+        <!-- Act 4 -->
+        <div id="act-4-view" class="act-panel hidden">
+            <div class="title-box">統計小專家</div>
+            <div id="quiz-container" style="width: 100%;">
+                <!-- Q1 -->
+                <div class="quiz-card" id="q1">
+                    <div>1. 一個「正」字代表多少？</div>
+                    <div class="options">
+                        <button class="opt-btn" onclick="checkAns(this, 5, 'q1')">4</button>
+                        <button class="opt-btn" onclick="checkAns(this, 5, 'q1')">5</button>
+                        <button class="opt-btn" onclick="checkAns(this, 5, 'q1')">10</button>
+                    </div>
+                </div>
+                <!-- Q2 -->
+                <div class="quiz-card hidden" id="q2">
+                    <div>2. 「正 正 丅」是多少？</div>
+                    <div class="options">
+                        <button class="opt-btn" onclick="checkAns(this, 12, 'q2')">10</button>
+                        <button class="opt-btn" onclick="checkAns(this, 12, 'q2')">11</button>
+                        <button class="opt-btn" onclick="checkAns(this, 12, 'q2')">12</button>
+                    </div>
+                </div>
+                <!-- Q3 -->
+                <div class="quiz-card hidden" id="q3">
+                    <div>3. 哪種水果數量最多？</div>
+                    <div class="options">
+                        <button class="opt-btn" onclick="checkAns(this, '草莓', 'q3')">蘋果</button>
+                        <button class="opt-btn" onclick="checkAns(this, '草莓', 'q3')">香蕉</button>
+                        <button class="opt-btn" onclick="checkAns(this, '草莓', 'q3')">草莓</button>
+                    </div>
+                </div>
+            </div>
+            <div class="trophy-container" id="trophy">🏆</div>
+        </div>
+    </main>
+
+    <footer class="ctrl-panel">
+        <button class="main-btn" id="action-btn" onclick="handleMainAction()">一鍵分類</button>
+        <button class="main-btn" style="background: var(--blue);" onclick="resetLab()">重置</button>
+    </footer>
+</div>
+
+<script>
+    let currentAct = 1;
+    const audio = window.AudioManager || {
+        play: (t, cb) => { 
+            const s = new SpeechSynthesisUtterance(t);
+            s.lang = 'zh-TW';
+            if(cb && cb.onEnd) s.onend = cb.onEnd;
+            speechSynthesis.speak(s);
+        }
+    };
+
+    const state = {
+        act1Done: false,
+        act2Step: 0,
+        quizScore: 0
+    };
+
+    // 初始化 Act 1 文具
+    function initAct1() {
+        const zone = document.getElementById('drop-zone');
+        zone.innerHTML = '';
+        const types = ['pencil', 'eraser', 'ruler'];
+        const counts = { pencil: 4, eraser: 3, ruler: 3 };
+        
+        Object.keys(counts).forEach(type => {
+            for(let i=0; i<counts[type]; i++) {
+                const el = document.createElement('div');
+                el.className = `item ${type}`;
+                el.dataset.type = type;
+                el.style.left = Math.random() * 300 + 20 + 'px';
+                el.style.top = Math.random() * 100 + 20 + 'px';
+                el.style.transform = `rotate(${Math.random()*360}deg)`;
+                el.innerHTML = getSVG(type);
+                zone.appendChild(el);
+            }
+        });
+        document.querySelectorAll('.count-badge').forEach(b => b.style.opacity = 0);
+    }
+
+    function getSVG(type) {
+        if(type === 'pencil') return `<svg viewBox="0 0 40 40"><rect x="15" y="5" width="10" height="30" fill="#ffd166" stroke="#3d3a34" stroke-width="2"/><path d="M15 5 L20 0 L25 5 Z" fill="#3d3a34"/></svg>`;
+        if(type === 'eraser') return `<svg viewBox="0 0 40 40"><rect x="5" y="10" width="30" height="20" rx="5" fill="#ff8a65" stroke="#3d3a34" stroke-width="2"/></svg>`;
+        return `<svg viewBox="0 0 40 40"><rect x="5" y="15" width="30" height="10" fill="#7db8e8" stroke="#3d3a34" stroke-width="2"/><line x1="10" y1="15" x2="10" y2="20" stroke="#3d3a34" stroke-width="1"/></svg>`;
+    }
+
+    function switchAct(act) {
+        currentAct = act;
+        document.querySelectorAll('.act-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById(`act-${act}-view`).classList.remove('hidden');
+        document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-act${act}`).classList.add('active');
+
+        const btn = document.getElementById('action-btn');
+        if(act === 1) {
+            btn.innerText = "一鍵分類";
+            audio.play("按照特徵分門別類，雜亂的東西一下子就整理清楚了！");
+        } else if(act === 2) {
+            btn.innerText = "畫正字記號";
+            audio.play("一個完整的正字有 5 劃，表示 5 個，數起來又快又清楚！");
+            initAct2();
+        } else if(act === 3) {
+            btn.innerText = "堆疊積木";
+            audio.play("把數量變成積木堆疊起來，一眼就能看出誰最多、誰最少！");
+            initAct3();
+        } else {
+            btn.innerText = "開始挑戰";
+            audio.play("來當統計小專家，挑戰看看吧！");
+        }
+    }
+
+    function handleMainAction() {
+        if(currentAct === 1) {
+            const items = document.querySelectorAll('.item');
+            const targets = { pencil: 'box-pencil', eraser: 'box-eraser', ruler: 'box-ruler' };
+            const counts = { pencil: 0, eraser: 0, ruler: 0 };
+
+            items.forEach((item, idx) => {
+                setTimeout(() => {
+                    const type = item.dataset.type;
+                    const box = document.getElementById(targets[type]).getBoundingClientRect();
+                    const stage = document.querySelector('.stage').getBoundingClientRect();
+                    item.style.left = (box.left - stage.left + 30) + 'px';
+                    item.style.top = (box.top - stage.top + 20) + 'px';
+                    item.style.transform = 'rotate(0deg) scale(0.8)';
+                    counts[type]++;
+                    document.getElementById(`count-${type}`).innerText = counts[type];
+                    document.getElementById(`count-${type}`).style.opacity = 1;
+                }, idx * 150);
+            });
+        } else if(currentAct === 2) {
+            drawAllTally();
+        } else if(currentAct === 3) {
+            animateBlocks();
+        }
+    }
+
+    // Act 2: 正字繪製
+    function initAct2() {
+        ['apple', 'banana', 'berry'].forEach(id => document.getElementById(`tally-${id}`).innerHTML = '');
+    }
+
+    function drawAllTally() {
+        const data = { apple: 7, banana: 5, berry: 8 };
+        Object.keys(data).forEach(key => {
+            const container = document.getElementById(`tally-${key}`);
+            container.innerHTML = '';
+            const fullZheng = Math.floor(data[key] / 5);
+            const remain = data[key] % 5;
+
+            for(let i=0; i<fullZheng; i++) createZheng(container, 5);
+            if(remain > 0) createZheng(container, remain);
+        });
+    }
+
+    function createZheng(parent, strokes) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("class", "zheng-char");
+        svg.setAttribute("viewBox", "0 0 50 50");
+        const paths = [
+            "M10 15 L40 15", // 1
+            "M25 15 L25 35", // 2
+            "M10 35 L40 35", // 3
+            "M25 25 L10 25", // 4
+            "M10 15 L10 35"  // 5 (Simplified for visual)
+        ];
+        // 標準正字筆順：一(1) 豎(2) 一(3) 豎(4) 一(5)
+        const realPaths = [
+            "M10 10 H40", 
+            "M25 10 V25",
+            "M10 25 H25",
+            "M10 25 V40",
+            "M10 40 H40"
+        ];
+
+        for(let i=0; i<strokes; i++) {
+            const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            p.setAttribute("d", realPaths[i]);
+            p.setAttribute("class", "stroke draw");
+            p.style.animationDelay = (i * 0.2) + "s";
+            svg.appendChild(p);
+        }
+        parent.appendChild(svg);
+    }
+
+    // Act 3: 積木
+    function initAct3() {
+        const data = { apple: 7, banana: 5, berry: 8 };
+        const colors = { apple: '#ff5252', banana: '#ffd166', berry: '#ff8a65' };
+        Object.keys(data).forEach(key => {
+            const group = document.getElementById(`bar-${key}`);
+            group.querySelectorAll('.block').forEach(b => b.remove());
+            for(let i=0; i<data[key]; i++) {
+                const b = document.createElement('div');
+                b.className = 'block';
+                b.style.backgroundColor = colors[key];
+                b.style.opacity = 0;
+                b.onclick = () => {
+                    audio.play(`${key === 'apple' ? '蘋果' : key === 'banana' ? '香蕉' : '草莓'}有 ${data[key]} 個`);
+                    b.classList.add('active');
+                    setTimeout(() => b.classList.remove('active'), 500);
+                };
+                group.appendChild(b);
+            }
+        });
+    }
+
+    function animateBlocks() {
+        document.querySelectorAll('.block').forEach((b, idx) => {
+            setTimeout(() => {
+                b.style.opacity = 1;
+                b.style.transform = 'translateY(0)';
+            }, idx * 50);
+        });
+    }
+
+    // Act 4: 測驗
+    function checkAns(btn, correct, qId) {
+        if(btn.innerText == correct) {
+            btn.classList.add('correct');
+            audio.play("答對了！你好棒！");
+            setTimeout(() => {
+                document.getElementById(qId).classList.add('hidden');
+                const next = qId === 'q1' ? 'q2' : qId === 'q2' ? 'q3' : null;
+                if(next) {
+                    document.getElementById(next).classList.remove('hidden');
+                } else {
+                    document.getElementById('trophy').style.display = 'block';
+                    audio.play("恭喜你完成所有挑戰，你是統計小專家！");
+                }
+            }, 1000);
+        } else {
+            btn.classList.add('wrong');
+            audio.play("再想一想喔！");
+            setTimeout(() => btn.classList.remove('wrong'), 500);
+        }
+    }
+
+    function resetLab() {
+        state.act1Done = false;
+        state.quizScore = 0;
+        initAct1();
+        initAct2();
+        initAct3();
+        document.getElementById('trophy').style.display = 'none';
+        document.getElementById('q1').classList.remove('hidden');
+        document.getElementById('q2').classList.add('hidden');
+        document.getElementById('q3').classList.add('hidden');
+        document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('correct', 'wrong'));
+        switchAct(1);
+    }
+
+    // CDP Hooks
+    window.G2_LAB_SELFTEST = {
+        switchAct: switchAct,
+        reset: resetLab,
+        state: () => state
+    };
+
+    window.onload = () => {
+        initAct1();
+        audio.play("歡迎來到分類小教室！讓我們一起學習如何整理資料吧。");
+    };
+</script>
+
+</body>
+</html>

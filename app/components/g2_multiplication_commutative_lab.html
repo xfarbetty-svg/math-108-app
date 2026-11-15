@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2 乘法交換律小教室</title>
+    <script src="../js/audio_manager.js"></script>
+    <style>
+        :root {
+            --primary-mint: #7bc9b2;
+            --primary-coral: #ff8a65;
+            --primary-lemon: #ffd166;
+            --primary-sky: #7db8e8;
+            --bg-paper: #fff9f0;
+            --text-dark: #3d3a34;
+            --border-width: 2px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+        }
+
+        #app-container {
+            width: 390px;
+            height: 100vh;
+            background-color: var(--bg-paper);
+            border: 4px solid var(--text-dark);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 頂部導航 */
+        .act-nav {
+            display: flex;
+            background-color: var(--primary-mint);
+            border-bottom: 3px solid var(--text-dark);
+            z-index: 10;
+        }
+
+        .act-btn {
+            flex: 1;
+            padding: 10px 5px;
+            border: none;
+            border-right: 1px solid var(--text-dark);
+            background: transparent;
+            font-weight: bold;
+            color: var(--text-dark);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .act-btn.active {
+            background-color: var(--primary-lemon);
+        }
+
+        .act-btn:last-child {
+            border-right: none;
+        }
+
+        /* 內容面板 */
+        .act-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            position: relative;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .stage {
+            width: 100%;
+            height: 420px;
+            background: white;
+            border: 2px solid var(--text-dark);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .instruction {
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border: 2px dashed var(--primary-coral);
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-dark);
+            min-height: 60px;
+        }
+
+        /* Act 1: 旋轉 */
+        .strawberry-grid {
+            display: grid;
+            gap: 10px;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+        }
+        .strawberry {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* Act 2: 巧克力 */
+        .choco-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            align-items: center;
+        }
+        .choco-box-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .choco-box {
+            border: 2px solid var(--text-dark);
+            border-radius: 8px;
+            padding: 5px;
+            background: #fff;
+            display: flex;
+            gap: 3px;
+        }
+        .choco-piece {
+            width: 15px;
+            height: 15px;
+            background: #6d4c41;
+            border-radius: 3px;
+        }
+
+        /* Act 3: 乘法表 */
+        .multi-table {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            background: var(--text-dark);
+            border: 2px solid var(--text-dark);
+        }
+        .cell {
+            width: 32px;
+            height: 32px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .cell.header { background: var(--primary-sky); font-weight: bold; }
+        .cell.highlight { background: var(--primary-lemon); transform: scale(1.1); z-index: 2; }
+        .cell.mirror { background: var(--primary-coral); color: white; }
+
+        /* Act 4: 挑戰 */
+        .quiz-card {
+            text-align: center;
+            width: 100%;
+        }
+        .option-btn {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 12px;
+            border: 2px solid var(--text-dark);
+            border-radius: 20px;
+            background: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .option-btn:active { background: var(--primary-lemon); }
+
+        /* 通用元件 */
+        .btn-main {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: var(--primary-coral);
+            color: white;
+            border: 2px solid var(--text-dark);
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .formula-display {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #d32f2f;
+        }
+
+        .trophy-svg {
+            width: 100px;
+            height: 100px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <!-- 導航 -->
+    <div class="act-nav">
+        <button id="tab-act1" class="act-btn active" onclick="switchAct(1)">旋轉方陣</button>
+        <button id="tab-act2" class="act-btn" onclick="switchAct(2)">巧克力盒</button>
+        <button id="tab-act3" class="act-btn" onclick="switchAct(3)">鏡像對稱</button>
+        <button id="tab-act4" class="act-btn" onclick="switchAct(4)">挑戰賽</button>
+    </div>
+
+    <!-- Act 1 -->
+    <div id="act-1-view" class="act-panel">
+        <div class="stage">
+            <div id="strawberry-container" class="strawberry-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <!-- JS 動態生成 12 顆草莓 -->
+            </div>
+            <div id="formula-1" class="formula-display">3 × 4 = 12</div>
+            <button class="btn-main" onclick="rotateGrid()">神奇旋轉 90°</button>
+        </div>
+        <div class="instruction" id="inst-1">
+            橫著看：3 排，每排 4 顆。點擊旋轉看看會發生什麼事？
+        </div>
+    </div>
+
+    <!-- Act 2 -->
+    <div id="act-2-view" class="act-panel hidden">
+        <div class="stage">
+            <div class="choco-container">
+                <div id="choco-a-area">
+                    <div style="text-align:center; font-weight:bold; margin-bottom:5px;">盒子 A (2 × 5)</div>
+                    <div class="choco-box-row" id="choco-a-boxes"></div>
+                </div>
+                <div style="width: 80%; border-top: 2px dashed #ccc;"></div>
+                <div id="choco-b-area">
+                    <div style="text-align:center; font-weight:bold; margin-bottom:5px;">盒子 B (5 × 2)</div>
+                    <div class="choco-box-row" id="choco-b-boxes"></div>
+                </div>
+            </div>
+            <div id="formula-2" class="formula-display" style="font-size: 18px;">2 × 5 = 5 × 2 = 10</div>
+        </div>
+        <div class="instruction" id="inst-2">
+            比較看看，5盒各裝2顆，和2盒各裝5顆，總數是不是一樣多？
+        </div>
+    </div>
+
+    <!-- Act 3 -->
+    <div id="act-3-view" class="act-panel hidden">
+        <div class="stage">
+            <div class="multi-table" id="multi-table-grid"></div>
+            <div id="formula-3" class="formula-display" style="font-size: 18px; margin-top:15px;">點擊格子觀察對稱性</div>
+        </div>
+        <div class="instruction" id="inst-3">
+            在乘法表裡，對角線兩邊就像照鏡子一樣，背一題等於背兩題喔！
+        </div>
+    </div>
+
+    <!-- Act 4 -->
+    <div id="act-4-view" class="act-panel hidden">
+        <div class="stage" id="quiz-stage">
+            <!-- 挑戰賽內容 -->
+        </div>
+        <div class="instruction" id="inst-4">
+            準備好接受挑戰了嗎？點擊正確的答案！
+        </div>
+    </div>
+</div>
+
+<script>
+    // 語音輔助函式
+    function speakText(text) {
+        if (window.AudioManager) {
+            window.AudioManager.play(text);
+        } else {
+            const ut = new SpeechSynthesisUtterance(text);
+            ut.lang = 'zh-TW';
+            speechSynthesis.speak(ut);
+        }
+    }
+
+    function stopSpeech() {
+        if (window.AudioManager) {
+            // AudioManager 通常會自動處理單例
+        } else {
+            speechSynthesis.cancel();
+        }
+    }
+
+    // 全域狀態
+    let currentAct = 1;
+    let isRotated = false;
+    let quizStep = 0;
+
+    const strawberrySVG = `
+        <svg class="strawberry" viewBox="0 0 100 100">
+            <path d="M50 95 C 20 80 10 50 15 30 C 20 10 80 10 85 30 C 90 50 80 80 50 95" fill="#ff5252" stroke="#3d3a34" stroke-width="3"/>
+            <path d="M50 10 L 40 25 L 60 25 Z" fill="#4caf50" stroke="#3d3a34" stroke-width="2"/>
+            <circle cx="40" cy="45" r="2" fill="white"/>
+            <circle cx="60" cy="45" r="2" fill="white"/>
+            <circle cx="50" cy="65" r="2" fill="white"/>
+            <circle cx="35" cy="70" r="2" fill="white"/>
+            <circle cx="65" cy="70" r="2" fill="white"/>
+        </svg>
+    `;
+
+    // 初始化
+    function init() {
+        renderStrawberries();
+        renderChoco();
+        renderTable();
+        switchAct(1);
+    }
+
+    function switchAct(actNum) {
+        currentAct = actNum;
+        document.querySelectorAll('.act-panel').forEach(p => p.classList.add('hidden'));
+        document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(`act-${actNum}-view`).classList.remove('hidden');
+        document.getElementById(`tab-act${actNum}`).classList.add('active');
+        
+        stopSpeech();
+        if(actNum === 1) {
+            speakText("轉個角度看！排數和每排數量交換，草莓總數依然都是 12 顆！");
+        } else if(actNum === 2) {
+            speakText("乘數和被乘數對調位置，乘出來的積完全一樣，這就是乘法交換律！");
+        } else if(actNum === 3) {
+            speakText("在乘法表裡，對角線兩邊就像照鏡子一樣，背一題等於背兩題喔！");
+        } else if(actNum === 4) {
+            quizStep = 0;
+            renderQuiz();
+        }
+    }
+
+    // Act 1 邏輯
+    function renderStrawberries() {
+        const container = document.getElementById('strawberry-container');
+        container.innerHTML = '';
+        for(let i=0; i<12; i++) {
+            container.innerHTML += strawberrySVG;
+        }
+    }
+
+    function rotateGrid() {
+        const container = document.getElementById('strawberry-container');
+        const formula = document.getElementById('formula-1');
+        isRotated = !isRotated;
+        
+        if(isRotated) {
+            container.style.transform = 'rotate(90deg)';
+            container.style.gridTemplateColumns = 'repeat(4, 1fr)'; // 視覺上旋轉後會變 4排3列
+            formula.innerText = "4 × 3 = 12";
+            speakText("現在變成了 4 排，每排 3 顆，總數還是 12 顆！");
+        } else {
+            container.style.transform = 'rotate(0deg)';
+            formula.innerText = "3 × 4 = 12";
+            speakText("原本是 3 排，每排 4 顆，總數是 12 顆。");
+        }
+    }
+
+    // Act 2 邏輯
+    function renderChoco() {
+        const boxA = document.getElementById('choco-a-boxes');
+        const boxB = document.getElementById('choco-b-boxes');
+        
+        // 5 boxes of 2
+        for(let i=0; i<5; i++) {
+            boxA.innerHTML += `<div class="choco-box"><div class="choco-piece"></div><div class="choco-piece"></div></div>`;
+        }
+        // 2 boxes of 5
+        for(let i=0; i<2; i++) {
+            let pieces = '';
+            for(let j=0; j<5; j++) pieces += `<div class="choco-piece"></div>`;
+            boxB.innerHTML += `<div class="choco-box">${pieces}</div>`;
+        }
+    }
+
+    // Act 3 邏輯
+    function renderTable() {
+        const grid = document.getElementById('multi-table-grid');
+        grid.innerHTML = '';
+        for(let r=0; r<=9; r++) {
+            for(let c=0; c<=9; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                if(r===0 && c===0) cell.innerText = '×';
+                else if(r===0) { cell.innerText = c; cell.classList.add('header'); }
+                else if(c===0) { cell.innerText = r; cell.classList.add('header'); }
+                else {
+                    cell.innerText = r * c;
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+                    cell.onclick = () => highlightSymmetry(r, c);
+                }
+                grid.appendChild(cell);
+            }
+        }
+    }
+
+    function highlightSymmetry(r, c) {
+        document.querySelectorAll('.cell').forEach(el => el.classList.remove('highlight', 'mirror'));
+        const target = document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+        const mirror = document.querySelector(`.cell[data-r="${c}"][data-c="${r}"]`);
+        
+        target.classList.add('highlight');
+        mirror.classList.add('mirror');
+        
+        document.getElementById('formula-3').innerText = `${r} × ${c} = ${r*c} ↔ ${c} × ${r} = ${c*r}`;
+        speakText(`${r} 乘以 ${c} 等於 ${r*c}，交換過來 ${c} 乘以 ${r} 也是 ${c*r}`);
+    }
+
+    // Act 4 邏輯
+    const quizData = [
+        { q: "4 × 6 = 24，那麼 6 × 4 等於多少？", options: ["24", "20", "28"], correct: 0 },
+        { q: "哪一道算式和 3 × 8 的結果相同？", options: ["8 × 3", "3 + 8", "8 - 3"], correct: 0 },
+        { q: "5盒各裝3個布丁，和3盒各裝5個布丁，總數一樣多嗎？", options: ["一樣多都是15個", "5盒比較多", "3盒比較多"], correct: 0 }
+    ];
+
+    function renderQuiz() {
+        const stage = document.getElementById('quiz-stage');
+        if(quizStep >= quizData.length) {
+            stage.innerHTML = `
+                <svg class="trophy-svg" viewBox="0 0 100 100">
+                    <path d="M30 30 L30 50 C30 65 40 75 50 75 C60 75 70 65 70 50 L70 30 Z" fill="#ffd166" stroke="#3d3a34" stroke-width="3"/>
+                    <path d="M30 35 L20 35 L20 45 L30 45" fill="none" stroke="#3d3a34" stroke-width="3"/>
+                    <path d="M70 35 L80 35 L80 45 L70 45" fill="none" stroke="#3d3a34" stroke-width="3"/>
+                    <rect x="40" y="75" width="20" height="10" fill="#ffd166" stroke="#3d3a34" stroke-width="3"/>
+                    <rect x="30" y="85" width="40" height="5" fill="#ffd166" stroke="#3d3a34" stroke-width="3"/>
+                </svg>
+                <h2 style="color:var(--primary-coral)">太棒了！全對！</h2>
+                <button class="btn-main" onclick="resetLab()">再玩一次</button>
+            `;
+            speakText("太棒了！你已經完全掌握乘法交換律囉！");
+            return;
+        }
+
+        const data = quizData[quizStep];
+        stage.innerHTML = `
+            <div class="quiz-card">
+                <p style="font-size:18px; font-weight:bold; padding:0 20px;">${data.q}</p>
+                ${data.options.map((opt, i) => `
+                    <button class="option-btn" onclick="checkAnswer(${i})">${opt}</button>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function checkAnswer(idx) {
+        if(idx === quizData[quizStep].correct) {
+            speakText("答對了！好厲害！");
+            quizStep++;
+            setTimeout(renderQuiz, 1000);
+        } else {
+            speakText("再想一想喔，乘法交換位置結果是不變的。");
+        }
+    }
+
+    function resetLab() {
+        isRotated = false;
+        quizStep = 0;
+        switchAct(1);
+        renderStrawberries();
+        document.getElementById('strawberry-container').style.transform = 'rotate(0deg)';
+        document.getElementById('formula-1').innerText = "3 × 4 = 12";
+    }
+
+    // CDP 測試勾子
+    window.G2_LAB_SELFTEST = {
+        switchAct: switchAct,
+        reset: resetLab,
+        state: () => ({
+            currentAct,
+            isRotated,
+            quizStep
+        })
+    };
+
+    window.onload = init;
+</script>
+
+</body>
+</html>

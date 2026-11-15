@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2 概念小教室 R-2-2 加法交換律與結合律</title>
+    <script src="../js/audio_manager.js"></script>
+    <style>
+        :root {
+            --mint: #7bc9b2;
+            --coral: #ff8a65;
+            --lemon: #ffd166;
+            --sky: #7db8e8;
+            --paper: #fff9f0;
+            --ink: #3d3a34;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+        }
+
+        #app-container {
+            width: 390px;
+            height: 100vh;
+            background-color: var(--paper);
+            border-left: 2px solid #ddd;
+            border-right: 2px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 頂部導航 */
+        .act-nav {
+            display: flex;
+            justify-content: space-around;
+            background: var(--white);
+            padding: 10px 5px;
+            border-bottom: 2px solid var(--mint);
+            z-index: 10;
+        }
+        .act-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 2px solid var(--mint);
+            background: var(--white);
+            color: var(--mint);
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .act-btn.active {
+            background: var(--mint);
+            color: var(--white);
+        }
+
+        /* 狀態列 */
+        #status-bar {
+            height: 30px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 12px;
+            color: #666;
+            border-bottom: 1px solid #ddd;
+        }
+        .progress-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #ccc; margin-right: 8px;
+        }
+        .progress-dot.done { background: var(--mint); }
+
+        /* 互動舞台 */
+        .stage {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            max-height: 420px;
+        }
+        .act-panel {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.4s ease-out;
+        }
+        .hidden { display: none !important; }
+
+        /* 繪本風格元素 */
+        .bubble {
+            background: var(--white);
+            border: 2px solid var(--ink);
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.4;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+        }
+        .formula-box {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--ink);
+            margin: 15px 0;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            border: 2px dashed var(--mint);
+        }
+
+        /* Act 1: 算珠 */
+        .bead-tray {
+            width: 280px;
+            height: 120px;
+            background: #e0c9a6;
+            border: 4px solid #8d6e63;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bead-group { display: flex; gap: 4px; }
+        .bead {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 2px solid var(--ink);
+        }
+        .bead.yellow { background: var(--lemon); }
+        .bead.blue { background: var(--sky); }
+
+        /* Act 2: 積木 */
+        .block-container { display: flex; gap: 15px; align-items: flex-end; height: 150px; }
+        .block {
+            width: 50px; border: 2px solid var(--ink); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 20px; transition: all 0.5s;
+        }
+        .block-3 { height: 60px; background: var(--coral); }
+        .block-7 { height: 100px; background: var(--mint); }
+        .block-4 { height: 80px; background: var(--sky); }
+        .block-10 { height: 140px; background: #ffd700; box-shadow: 0 0 15px #ffd700; }
+
+        /* Act 3: 公車 */
+        .bus-scene { width: 300px; height: 180px; position: relative; }
+        .bus-body {
+            width: 240px; height: 100px; background: var(--lemon);
+            border: 3px solid var(--ink); border-radius: 20px 40px 10px 10px;
+            position: absolute; bottom: 30px; left: 30px;
+        }
+        .wheel {
+            width: 30px; height: 30px; background: #333; border-radius: 50%;
+            position: absolute; bottom: 15px; border: 3px solid #fff;
+        }
+        .passenger-count {
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            font-size: 28px; font-weight: bold;
+        }
+
+        /* Act 4: 挑戰 */
+        .quiz-card {
+            width: 100%; background: var(--white); border-radius: 15px;
+            padding: 15px; border: 2px solid var(--sky);
+        }
+        .opt-btn {
+            width: 100%; padding: 12px; margin: 8px 0;
+            border: 2px solid #eee; border-radius: 10px;
+            background: #f9f9f9; font-size: 16px; cursor: pointer;
+            text-align: left;
+        }
+        .opt-btn:active { background: #e3f2fd; }
+        .opt-btn.correct { background: #c8e6c9; border-color: #4caf50; }
+        .opt-btn.wrong { background: #ffcdd2; border-color: #f44336; }
+
+        /* 按鈕樣式 */
+        .main-action {
+            margin-top: 20px; padding: 12px 30px;
+            background: var(--coral); color: white;
+            border: none; border-radius: 25px;
+            font-size: 18px; font-weight: bold;
+            box-shadow: 0 4px 0 #d84315; cursor: pointer;
+        }
+        .main-action:active { transform: translateY(2px); box-shadow: 0 2px 0 #d84315; }
+
+        .highlight { color: var(--coral); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <!-- 狀態列 -->
+    <div id="status-bar">
+        <div class="progress-dot" id="dot-1"></div>
+        <div class="progress-dot" id="dot-2"></div>
+        <div class="progress-dot" id="dot-3"></div>
+        <div class="progress-dot" id="dot-4"></div>
+        <span id="status-text">準備開始探索...</span>
+    </div>
+
+    <!-- 導航 -->
+    <div class="act-nav">
+        <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">交換律</button>
+        <button class="act-btn" id="tab-act2" onclick="switchAct(2)">湊十法</button>
+        <button class="act-btn" id="tab-act3" onclick="switchAct(3)">結合律</button>
+        <button class="act-btn" id="tab-act4" onclick="switchAct(4)">挑戰賽</button>
+    </div>
+
+    <!-- 舞台 -->
+    <div class="stage">
+        <!-- Act 1 -->
+        <div class="act-panel" id="act-1-view">
+            <div class="bubble">點擊按鈕，看看算珠左右對調後，總數會變嗎？</div>
+            <div class="bead-tray" id="tray-1">
+                <div class="bead-group" id="group-left">
+                    <div class="bead yellow"></div><div class="bead yellow"></div><div class="bead yellow"></div>
+                </div>
+                <div style="width: 2px; height: 80%; background: #8d6e63;"></div>
+                <div class="bead-group" id="group-right">
+                    <div class="bead blue"></div><div class="bead blue"></div><div class="bead blue"></div><div class="bead blue"></div><div class="bead blue"></div>
+                </div>
+            </div>
+            <div class="formula-box" id="formula-1">3 + 5 = 8</div>
+            <button class="main-action" onclick="toggleCommutative()">左右對調</button>
+        </div>
+
+        <!-- Act 2 -->
+        <div class="act-panel hidden" id="act-2-view">
+            <div class="bubble">三個數相加，先找「好朋友」湊成 10 更好算喔！</div>
+            <div class="block-container">
+                <div class="block block-3" id="blk-3">3</div>
+                <div class="block block-7" id="blk-7">7</div>
+                <div class="block block-4" id="blk-4">4</div>
+            </div>
+            <div class="formula-box" id="formula-2">3 + 7 + 4 = ?</div>
+            <button class="main-action" id="magic-btn" onclick="runMakeTen()">湊十魔法手</button>
+        </div>
+
+        <!-- Act 3 -->
+        <div class="act-panel hidden" id="act-3-view">
+            <div class="bubble">公車上有 4 人，來了兩批乘客。先加哪一邊都一樣！</div>
+            <div class="bus-scene">
+                <div class="bus-body">
+                    <div class="passenger-count" id="bus-num">4</div>
+                </div>
+                <div class="wheel" style="left: 60px;"></div>
+                <div class="wheel" style="right: 60px;"></div>
+            </div>
+            <div class="formula-box" id="formula-3" style="font-size: 18px;">(4 + 6) + 5 = 15</div>
+            <div style="display: flex; gap: 10px;">
+                <button class="act-btn" onclick="showBusPath('A')">方式 A</button>
+                <button class="act-btn" onclick="showBusPath('B')">方式 B</button>
+            </div>
+        </div>
+
+        <!-- Act 4 -->
+        <div class="act-panel hidden" id="act-4-view">
+            <div id="quiz-container" class="quiz-card">
+                <div id="quiz-q" style="font-weight: bold; margin-bottom: 15px;">載入中...</div>
+                <div id="quiz-options"></div>
+            </div>
+            <div id="trophy" class="hidden" style="text-align: center; margin-top: 20px;">
+                <span style="font-size: 60px;">🏆</span>
+                <p style="font-weight: bold; color: var(--coral);">速算小神童！</p>
+                <button class="act-btn" onclick="resetLab()">重新挑戰</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 語音單例備份
+    const speakText = (text, callback) => {
+        if (window.AudioManager) {
+            window.AudioManager.play(text, { onEnd: callback });
+        } else {
+            const ut = new SpeechSynthesisUtterance(text);
+            ut.lang = 'zh-TW';
+            ut.onend = callback;
+            speechSynthesis.speak(ut);
+        }
+    };
+
+    let currentAct = 1;
+    let actDone = [false, false, false, false];
+
+    function switchAct(n) {
+        currentAct = n;
+        document.querySelectorAll('.act-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById(`act-${n}-view`).classList.remove('hidden');
+        document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-act${n}`).classList.add('active');
+        
+        updateStatus();
+        if (n === 1) speakText("兩個數相加，交換前後順序，加出來的和完全不變！");
+        if (n === 2) {
+            resetAct2();
+            speakText("遇到三個數相加，先找好朋友湊成 10，算起來又快又準！");
+        }
+        if (n === 3) speakText("不管先加前面還是先加後面，加法的結果都一樣！");
+        if (n === 4) initQuiz();
+    }
+
+    function updateStatus() {
+        actDone.forEach((done, i) => {
+            const dot = document.getElementById(`dot-${i+1}`);
+            if (done) dot.classList.add('done');
+            else dot.classList.remove('done');
+        });
+        document.getElementById('status-text').innerText = `正在探索：第 ${currentAct} 幕`;
+    }
+
+    // Act 1 邏輯
+    let isSwapped = false;
+    function toggleCommutative() {
+        const tray = document.getElementById('tray-1');
+        const formula = document.getElementById('formula-1');
+        isSwapped = !isSwapped;
+        tray.style.transform = isSwapped ? 'rotate(180deg)' : 'rotate(0deg)';
+        
+        // 修正文字旋轉
+        document.querySelectorAll('.bead-group').forEach(g => {
+            g.style.transform = isSwapped ? 'rotate(-180deg)' : 'rotate(0deg)';
+        });
+
+        setTimeout(() => {
+            formula.innerHTML = isSwapped ? 
+                `<span class="highlight">5 + 3 = 8</span>` : 
+                `<span class="highlight">3 + 5 = 8</span>`;
+            actDone[0] = true;
+            updateStatus();
+        }, 300);
+    }
+
+    // Act 2 邏輯
+    function resetAct2() {
+        const b3 = document.getElementById('blk-3');
+        const b7 = document.getElementById('blk-7');
+        const b4 = document.getElementById('blk-4');
+        b3.style.display = 'flex'; b3.className = 'block block-3'; b3.innerText = '3';
+        b7.style.display = 'flex'; b7.className = 'block block-7'; b7.innerText = '7';
+        b4.style.display = 'flex'; b4.className = 'block block-4'; b4.innerText = '4';
+        document.getElementById('formula-2').innerText = '3 + 7 + 4 = ?';
+        document.getElementById('magic-btn').disabled = false;
+    }
+
+    function runMakeTen() {
+        const b3 = document.getElementById('blk-3');
+        const b7 = document.getElementById('blk-7');
+        const b4 = document.getElementById('blk-4');
+        const formula = document.getElementById('formula-2');
+        
+        document.getElementById('magic-btn').disabled = true;
+        
+        // Step 1: 3 and 7 merge
+        b3.style.transform = 'translateX(35px)';
+        b7.style.transform = 'translateX(-35px)';
+        
+        setTimeout(() => {
+            b3.style.display = 'none';
+            b7.className = 'block block-10';
+            b7.innerText = '10';
+            b7.style.transform = 'translateX(0)';
+            formula.innerHTML = `(<span class="highlight">3 + 7</span>) + 4 = <span class="highlight">10</span> + 4`;
+            
+            setTimeout(() => {
+                // Step 2: 10 and 4 merge
+                b7.style.transform = 'translateX(35px)';
+                b4.style.transform = 'translateX(-35px)';
+                setTimeout(() => {
+                    b4.style.display = 'none';
+                    b7.innerText = '14';
+                    b7.style.transform = 'translateX(0)';
+                    formula.innerHTML = `10 + 4 = <span class="highlight">14</span>`;
+                    actDone[1] = true;
+                    updateStatus();
+                }, 600);
+            }, 1000);
+        }, 600);
+    }
+
+    // Act 3 邏輯
+    function showBusPath(type) {
+        const busNum = document.getElementById('bus-num');
+        const formula = document.getElementById('formula-3');
+        if (type === 'A') {
+            formula.innerHTML = `(<span class="highlight">4 + 6</span>) + 5 = 10 + 5 = 15`;
+            busNum.innerText = "10";
+            setTimeout(() => busNum.innerText = "15", 800);
+        } else {
+            formula.innerHTML = `4 + (<span class="highlight">6 + 5</span>) = 4 + 11 = 15`;
+            busNum.innerText = "4";
+            setTimeout(() => busNum.innerText = "15", 800);
+        }
+        actDone[2] = true;
+        updateStatus();
+    }
+
+    // Act 4 邏輯
+    const questions = [
+        { q: "8 + 6 和哪一道算式的結果一樣？", a: ["6 + 8", "8 - 6", "6 + 6"], correct: 0 },
+        { q: "計算 2 + 8 + 5，先算哪兩個數湊成 10 最快？", a: ["2 + 8", "8 + 5", "2 + 5"], correct: 0 },
+        { q: "4 + 9 + 6 的最快算法是 (4+6)+9，答案是多少？", a: ["19", "18", "20"], correct: 0 }
+    ];
+    let quizIdx = 0;
+
+    function initQuiz() {
+        quizIdx = 0;
+        document.getElementById('trophy').classList.add('hidden');
+        document.getElementById('quiz-container').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = questions[quizIdx];
+        document.getElementById('quiz-q').innerText = `Q${quizIdx+1}: ${q.q}`;
+        const optContainer = document.getElementById('quiz-options');
+        optContainer.innerHTML = '';
+        q.a.forEach((text, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = text;
+            btn.onclick = () => checkAnswer(i);
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(idx) {
+        const q = questions[quizIdx];
+        const btns = document.querySelectorAll('.opt-btn');
+        if (idx === q.correct) {
+            btns[idx].classList.add('correct');
+            speakText("答對了！你好棒！");
+            setTimeout(() => {
+                quizIdx++;
+                if (quizIdx < questions.length) showQuestion();
+                else {
+                    document.getElementById('quiz-container').classList.add('hidden');
+                    document.getElementById('trophy').classList.remove('hidden');
+                    actDone[3] = true;
+                    updateStatus();
+                    speakText("恭喜你完成所有挑戰！你是速算小神童！");
+                }
+            }, 1000);
+        } else {
+            btns[idx].classList.add('wrong');
+            speakText("再想一想喔！");
+        }
+    }
+
+    function resetLab() {
+        actDone = [false, false, false, false];
+        isSwapped = false;
+        switchAct(1);
+    }
+
+    // 全域測試勾子
+    window.G2_LAB_SELFTEST = {
+        switchAct: switchAct,
+        reset: resetLab,
+        state: () => ({ currentAct, actDone })
+    };
+
+    // 初始化
+    window.onload = () => {
+        updateStatus();
+        speakText("歡迎來到加法魔法教室！讓我們一起探索加法的秘密吧！");
+    };
+</script>
+
+</body>
+</html>

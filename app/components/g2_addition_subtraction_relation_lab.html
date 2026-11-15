@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, user-scalable=no">
+    <title>G2 概念小教室 R-2-4 加法與減法的關係</title>
+    <script src="../js/audio_manager.js"></script>
+    <style>
+        :root {
+            --mint: #7bc9b2;
+            --coral: #ff8a65;
+            --yellow: #ffd166;
+            --blue: #7db8e8;
+            --paper: #fff9f0;
+            --ink: #3d3a34;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            width: 390px;
+            height: 100vh;
+            background-color: var(--paper);
+            font-family: "Microsoft JhengHei", sans-serif;
+            color: var(--ink);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 導航欄 */
+        .act-nav {
+            display: flex;
+            justify-content: space-around;
+            background: var(--white);
+            padding: 10px 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        .act-btn {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 2px solid var(--ink);
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .act-btn.active {
+            background: var(--yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 0 var(--ink);
+        }
+
+        /* 舞台容器 */
+        .stage {
+            flex: 1;
+            position: relative;
+            width: 390px;
+            max-height: 420px;
+            overflow: hidden;
+        }
+
+        .act-panel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 0.3s;
+        }
+        .hidden { display: none !important; }
+
+        /* 繪本風組件 */
+        .card {
+            background: var(--white);
+            border: 3px solid var(--ink);
+            border-radius: 16px;
+            padding: 15px;
+            width: 100%;
+            box-shadow: 4px 4px 0 rgba(61,58,52,0.1);
+            margin-bottom: 10px;
+        }
+
+        .title-box {
+            background: var(--mint);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 2px solid var(--ink);
+        }
+
+        .equation-display {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .btn-action {
+            background: var(--coral);
+            color: white;
+            border: 2px solid var(--ink);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--ink);
+            margin-top: 10px;
+        }
+        .btn-action:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--ink); }
+
+        /* Act 1: 天平 */
+        .balance-container { width: 300px; height: 180px; position: relative; margin-top: 20px; }
+        .apple { transition: all 0.5s ease-in-out; }
+
+        /* Act 2: 幸運草 */
+        .clover-svg { width: 220px; height: 220px; }
+        .leaf-text { font-size: 24px; font-weight: bold; fill: var(--ink); }
+        .family-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        .family-item { 
+            background: var(--blue); color: white; padding: 8px; border-radius: 10px; 
+            text-align: center; font-size: 16px; border: 2px solid var(--ink);
+            opacity: 0; transform: scale(0.8); transition: all 0.4s;
+        }
+        .family-item.show { opacity: 1; transform: scale(1); }
+
+        /* Act 3: 驗算 */
+        .shop-scene { width: 100%; height: 150px; position: relative; }
+        .coin { width: 30px; height: 30px; position: absolute; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* Act 4: 闖關 */
+        .quiz-card { width: 100%; text-align: center; }
+        .option-btn {
+            width: 100%; padding: 12px; margin: 8px 0; border: 2px solid var(--ink);
+            border-radius: 12px; background: var(--white); font-size: 16px; cursor: pointer;
+        }
+        .option-btn.correct { background: var(--mint); color: white; }
+        .option-btn.wrong { background: #ffcccc; }
+
+        .trophy { font-size: 60px; margin-top: 20px; display: none; animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    </style>
+</head>
+<body>
+
+    <nav class="act-nav">
+        <button id="tab-act1" class="act-btn active" onclick="switchAct(1)">天平體驗</button>
+        <button id="tab-act2" class="act-btn" onclick="switchAct(2)">算式家族</button>
+        <button id="tab-act3" class="act-btn" onclick="switchAct(3)">驗算神探</button>
+        <button id="tab-act4" class="act-btn" onclick="switchAct(4)">算式闖關</button>
+    </nav>
+
+    <div class="stage">
+        <!-- Act 1: 天平加減互逆 -->
+        <div id="act-1-view" class="act-panel">
+            <div class="title-box">加減互逆：天平實驗</div>
+            <div class="balance-container">
+                <svg viewBox="0 0 300 180" width="300" height="180">
+                    <!-- 天平支架 -->
+                    <path d="M150 160 L150 140 M130 170 L170 170" stroke="#3d3a34" stroke-width="6" stroke-linecap="round"/>
+                    <!-- 天平橫桿 -->
+                    <g id="balance-beam" style="transition: transform 0.5s; transform-origin: 150px 140px;">
+                        <line x1="50" y1="140" x2="250" y2="140" stroke="#3d3a34" stroke-width="4"/>
+                        <!-- 左盤 -->
+                        <g id="left-plate">
+                            <path d="M20 140 L80 140 Q50 180 20 140" fill="#ffd166" stroke="#3d3a34" stroke-width="2"/>
+                            <g id="apples-group"></g>
+                        </g>
+                        <!-- 右盤 -->
+                        <g id="right-plate">
+                            <path d="M220 140 L280 140 Q250 180 220 140" fill="#7db8e8" stroke="#3d3a34" stroke-width="2"/>
+                            <text id="weight-text" x="250" y="130" text-anchor="middle" font-weight="bold" font-size="18">13</text>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div id="act1-eq" class="equation-display">8 + 5 = 13</div>
+            <button id="act1-toggle" class="btn-action" onclick="toggleAct1()">拿走 5 顆青蘋果</button>
+        </div>
+
+        <!-- Act 2: 幸運草家族 -->
+        <div id="act-2-view" class="act-panel hidden">
+            <div class="title-box">算式家族：三位一體</div>
+            <svg class="clover-svg" viewBox="0 0 200 200">
+                <path d="M100 100 L100 180" stroke="#7bc9b2" stroke-width="8" stroke-linecap="round"/>
+                <!-- 葉子 -->
+                <circle cx="100" cy="60" r="35" fill="#ff8a65" stroke="#3d3a34" stroke-width="3"/>
+                <circle cx="60" cy="110" r="35" fill="#7bc9b2" stroke="#3d3a34" stroke-width="3"/>
+                <circle cx="140" cy="110" r="35" fill="#7bc9b2" stroke="#3d3a34" stroke-width="3"/>
+                <text x="100" y="70" text-anchor="middle" class="leaf-text">15</text>
+                <text x="60" y="120" text-anchor="middle" class="leaf-text">9</text>
+                <text x="140" y="120" text-anchor="middle" class="leaf-text">6</text>
+            </svg>
+            <div class="family-list">
+                <div class="family-item" id="f-1">9 + 6 = 15</div>
+                <div class="family-item" id="f-2">6 + 9 = 15</div>
+                <div class="family-item" id="f-3">15 - 9 = 6</div>
+                <div class="family-item" id="f-4">15 - 6 = 9</div>
+            </div>
+            <button class="btn-action" onclick="showFamily()">讓家族盛開！</button>
+        </div>
+
+        <!-- Act 3: 減法驗算 -->
+        <div id="act-3-view" class="act-panel hidden">
+            <div class="title-box">減法驗算：小神探</div>
+            <div class="card">
+                <div style="display:flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 40px;">🐱</div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 14px;">買魚花 17 元，給 50 元</div>
+                        <div style="font-size: 20px; font-weight: bold;">找回 33 元？</div>
+                    </div>
+                </div>
+                <div id="act3-eq" style="text-align: center; font-size: 24px; margin: 10px 0;">50 - 17 = 33</div>
+            </div>
+            <div class="shop-scene" id="coin-stage">
+                <!-- 錢幣會在這裡動畫 -->
+            </div>
+            <button class="btn-action" onclick="startVerify()">動態驗算</button>
+        </div>
+
+        <!-- Act 4: 闖關賽 -->
+        <div id="act-4-view" class="act-panel hidden">
+            <div class="title-box">家族算式闖關賽</div>
+            <div id="quiz-container" class="quiz-card">
+                <h3 id="question-text">載入中...</h3>
+                <div id="options-box"></div>
+            </div>
+            <div id="trophy" class="trophy">🏆</div>
+        </div>
+    </div>
+
+    <script>
+        let currentAct = 1;
+        let act1State = 'add'; // 'add' or 'sub'
+        let quizStep = 0;
+
+        const quizData = [
+            { q: "已知 25 + 18 = 43，那麼 43 - 18 等於？", a: ["25", "35", "18"], correct: 0 },
+            { q: "如果 60 - 24 = 36，可以用哪道算式驗算？", a: ["36 + 24 = 60", "60 + 24 = 84", "60 - 36 = 24"], correct: 0 },
+            { q: "數字 7、8、15，哪道算式「不屬於」這個家族？", a: ["15 - 8 = 7", "7 + 8 = 15", "8 - 7 = 1"], correct: 2 }
+        ];
+
+        // 初始化
+        window.onload = () => {
+            renderApples();
+            switchAct(1);
+        };
+
+        function speakText(text) {
+            if (window.AudioManager) {
+                window.AudioManager.play(text);
+            } else {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-TW';
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function switchAct(n) {
+            currentAct = n;
+            document.querySelectorAll('.act-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`act-${n}-view`).classList.remove('hidden');
+            document.getElementById(`tab-act${n}`).classList.add('active');
+
+            if (n === 1) {
+                speakText("加法和減法就像一對好兄弟！合起來是加法，拿走一部分就是減法！");
+            } else if (n === 2) {
+                resetAct2();
+                speakText("三個數字能組成兩道加法和兩道減法，它們是一家人喔！");
+            } else if (n === 3) {
+                resetAct3();
+                speakText("用加法來檢查減法，答案加減數等於被減數，驗算成功！");
+            } else if (n === 4) {
+                quizStep = 0;
+                showQuiz();
+                speakText("來挑戰看看，你對加減關係了解多少呢？");
+            }
+        }
+
+        // Act 1 邏輯
+        function renderApples() {
+            const group = document.getElementById('apples-group');
+            group.innerHTML = '';
+            // 8 紅
+            for(let i=0; i<8; i++) {
+                const x = 30 + (i % 4) * 10;
+                const y = 110 + Math.floor(i / 4) * 10;
+                group.innerHTML += `<circle class="apple red-apple" cx="${x}" cy="${y}" r="4" fill="#ff8a65" stroke="#3d3a34" stroke-width="1"/>`;
+            }
+            // 5 青
+            for(let i=0; i<5; i++) {
+                const x = 45 + (i % 3) * 10;
+                const y = 130 + Math.floor(i / 3) * 10;
+                group.innerHTML += `<circle class="apple green-apple" cx="${x}" cy="${y}" r="4" fill="#7bc9b2" stroke="#3d3a34" stroke-width="1"/>`;
+            }
+        }
+
+        function toggleAct1() {
+            const btn = document.getElementById('act1-toggle');
+            const eq = document.getElementById('act1-eq');
+            const weight = document.getElementById('weight-text');
+            const greens = document.querySelectorAll('.green-apple');
+
+            if (act1State === 'add') {
+                greens.forEach(a => a.style.opacity = '0');
+                weight.textContent = '8';
+                eq.textContent = '13 - 5 = 8';
+                btn.textContent = '放回 5 顆青蘋果';
+                act1State = 'sub';
+                speakText("拿走 5 顆，13 減 5 等於 8！");
+            } else {
+                greens.forEach(a => a.style.opacity = '1');
+                weight.textContent = '13';
+                eq.textContent = '8 + 5 = 13';
+                btn.textContent = '拿走 5 顆青蘋果';
+                act1State = 'add';
+                speakText("放回來，8 加 5 等於 13！");
+            }
+        }
+
+        // Act 2 邏輯
+        function resetAct2() {
+            document.querySelectorAll('.family-item').forEach(item => item.classList.remove('show'));
+        }
+
+        function showFamily() {
+            let delay = 0;
+            document.querySelectorAll('.family-item').forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('show');
+                    if(index === 3) speakText("看！這就是加減家族的四個算式。");
+                }, delay);
+                delay += 600;
+            });
+        }
+
+        // Act 3 邏輯
+        function resetAct3() {
+            const stage = document.getElementById('coin-stage');
+            stage.innerHTML = '';
+            document.getElementById('act3-eq').textContent = '50 - 17 = 33';
+            document.getElementById('act3-eq').style.color = 'var(--ink)';
+        }
+
+        function startVerify() {
+            const stage = document.getElementById('coin-stage');
+            stage.innerHTML = '';
+            // 產生 33 元 (藍色) 與 17 元 (橘色)
+            for(let i=0; i<5; i++) {
+                createCoin(stage, 'var(--blue)', 20 + i*15, 20, '找回的33');
+                createCoin(stage, 'var(--coral)', 200 + i*15, 20, '花掉的17');
+            }
+            
+            setTimeout(() => {
+                const coins = document.querySelectorAll('.coin');
+                coins.forEach((c, idx) => {
+                    c.style.left = '150px';
+                    c.style.top = '80px';
+                });
+                document.getElementById('act3-eq').textContent = '33 + 17 = 50';
+                document.getElementById('act3-eq').style.color = 'var(--mint)';
+                speakText("把找回的 33 元加回花掉的 17 元，剛好是原來的 50 元！驗算成功！");
+            }, 1000);
+        }
+
+        function createCoin(parent, color, x, y, label) {
+            const div = document.createElement('div');
+            div.className = 'coin';
+            div.style.left = x + 'px';
+            div.style.top = y + 'px';
+            div.style.background = color;
+            div.style.borderRadius = '50%';
+            div.style.border = '2px solid var(--ink)';
+            parent.appendChild(div);
+        }
+
+        // Act 4 邏輯
+        function showQuiz() {
+            const container = document.getElementById('quiz-container');
+            const trophy = document.getElementById('trophy');
+            if (quizStep >= quizData.length) {
+                container.innerHTML = "<h2>太棒了！你是加減大師！</h2>";
+                trophy.style.display = 'block';
+                speakText("恭喜你完成所有挑戰！你真棒！");
+                return;
+            }
+            trophy.style.display = 'none';
+            const data = quizData[quizStep];
+            document.getElementById('question-text').textContent = `Q${quizStep+1}: ${data.q}`;
+            const optionsBox = document.getElementById('options-box');
+            optionsBox.innerHTML = '';
+            data.a.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx, btn) {
+            const data = quizData[quizStep];
+            if (idx === data.correct) {
+                btn.classList.add('correct');
+                speakText("答對了！好厲害！");
+                setTimeout(() => {
+                    quizStep++;
+                    showQuiz();
+                }, 1500);
+            } else {
+                btn.classList.add('wrong');
+                speakText("再想一想喔！");
+                setTimeout(() => btn.classList.remove('wrong'), 1000);
+            }
+        }
+
+        function resetLab() {
+            act1State = 'add';
+            quizStep = 0;
+            renderApples();
+            switchAct(1);
+        }
+
+        // CDP 測試勾子
+        window.G2_LAB_SELFTEST = {
+            switchAct: switchAct,
+            reset: resetLab,
+            state: () => ({ currentAct, quizStep, act1State })
+        };
+    </script>
+</body>
+</html>
