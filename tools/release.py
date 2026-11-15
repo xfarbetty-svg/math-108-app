@@ -12,6 +12,7 @@ tools/release.py — 028-1 專屬一鍵實體發布硬閘門（鋼鐵閉環版�
 
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -26,12 +27,17 @@ for _stream in (sys.stdout, sys.stderr):
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def run_cmd(cmd, check=True):
-    cmd_str = ' '.join(cmd) if isinstance(cmd, list) else cmd
-    print(f"▶ 執行: {cmd_str}")
+    if isinstance(cmd, list):
+        exe = shutil.which(cmd[0])
+        exec_cmd = [exe] + cmd[1:] if exe else cmd
+        cmd_display = subprocess.list2cmdline(cmd)
+    else:
+        exec_cmd = cmd
+        cmd_display = cmd
+    print(f"▶ 執行: {cmd_display}")
     proc = subprocess.run(
-        cmd,
+        exec_cmd,
         cwd=ROOT,
-        shell=isinstance(cmd, str),
         capture_output=True,
         text=True,
         encoding="utf-8",
