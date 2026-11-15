@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2 黃金標準樣板 · 概念探索實驗室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 2 拖曳 */
+.drag-handle {
+  cursor: grab;
+  touch-action: none;
+}
+.drag-handle:active { cursor: grabbing; }
+
+/* Act 3 數列卡片 */
+.seq-row { display: flex; gap: 8px; justify-content: center; }
+.num-card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+.num-card.mystery {
+  border-color: var(--coral);
+  color: var(--coral-deep);
+  background: #fff4ef;
+}
+.diff-bubble {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+}
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      概念探索實驗室
+      <small>二年級 · G2 黃金標準樣板</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（具象化觀察） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('把 12 顆糖果，每 3 顆裝進一袋，可以裝滿幾袋？')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 看一看</div>
+      <div class="card-desc">12 顆糖果排排站，每 3 顆圈成一袋。數一數，可以圈出幾個袋子？</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="12 顆糖果分袋示意圖">
+          <g id="act1-candies"></g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 觀察看看：每 3 顆裝一袋，一共可以裝成 <b>4</b> 袋！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（觸控拖曳） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('用手指把糖果一顆一顆拖進袋子裡，拖滿 3 顆就裝成一袋！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 拖一拖</div>
+      <div class="card-desc">用手指把糖果拖進袋子，每滿 3 顆就會自動裝成一袋！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 170" xmlns="http://www.w3.org/2000/svg" style="touch-action:none">
+          <rect id="act2-bag" x="248" y="35" width="86" height="110" rx="14"
+                fill="#fff6df" stroke="#ffd166" stroke-width="3"></rect>
+          <text id="act2-bag-label" x="291" y="98" text-anchor="middle" font-size="13" font-weight="800" fill="#d9910d">0 / 3</text>
+          <g id="act2-draggable" class="drag-handle" transform="translate(60,80)">
+            <circle r="16" fill="#ff8a65" stroke="#f4694b" stroke-width="3"></circle>
+            <circle cx="-5" cy="-5" r="4" fill="#ffd0c2"></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 拖曳糖果到袋子裡，體驗「每 3 顆裝一袋」。</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（數學抽象與連結） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('3、6、9、12，每次都多 3！這就是 3 的乘法規律。')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 想一想</div>
+      <div class="card-desc">裝好的袋數與糖果顆數藏著一個規律，按下去找出來！</div>
+      <div class="seq-row" id="seq-container"></div>
+      <button class="btn-tts" id="btn-reveal" style="align-self:center" onclick="revealDiff()">🔎 揭示規律</button>
+      <div class="tip-bubble" id="act3-bubble">💡 3、6、9、12……每往後一步就 <b>多 3</b>！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（互動即時驗證） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('12 顆糖果，每 3 顆裝一袋，可以裝成幾袋？')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 試一試</div>
+      <div class="card-desc">12 顆糖果，每 3 顆裝一袋，可以裝成 <b>幾袋</b>？</div>
+      <div class="choice-row">
+        <button class="choice-btn" data-ok="0" onclick="answer(this)">2 袋</button>
+        <button class="choice-btn" data-ok="1" onclick="answer(this)">4 袋</button>
+        <button class="choice-btn" data-ok="0" onclick="answer(this)">6 袋</button>
+      </div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級概念探索實驗室。現在進行第 " + currentAct + " 幕。跟著四個關卡，一步一步探索數學的奧秘！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  buildAct1();
+  resetAct2();
+  buildAct3(true);
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：糖果分袋示意（12 顆圈成 4 袋） ==================== */
+function buildAct1() {
+  var g = document.getElementById("act1-candies");
+  if (!g) return;
+  g.innerHTML = "";
+  var cols = 6, r = 10;
+  for (var i = 0; i < 12; i++) {
+    var cx = 24 + (i % cols) * 50 + ((i % cols) >= 3 ? 16 : 0);
+    var cy = 38 + Math.floor(i / cols) * 62;
+    var bagIdx = Math.floor(i / 3);
+    var colors = ["#7bc9b2", "#ffd166", "#ff8a65", "#7db8e8"];
+    var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    c.setAttribute("cx", cx);
+    c.setAttribute("cy", cy);
+    c.setAttribute("r", r);
+    c.setAttribute("fill", colors[bagIdx]);
+    c.setAttribute("stroke", "#ffffff");
+    c.setAttribute("stroke-width", "2");
+    g.appendChild(c);
+    if (i % 3 === 2) {
+      var ring = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+      ring.setAttribute("cx", (cx - 34 + cx) / 2 + 3);
+      ring.setAttribute("cy", cy);
+      ring.setAttribute("rx", 40);
+      ring.setAttribute("ry", 26);
+      ring.setAttribute("fill", "none");
+      ring.setAttribute("stroke", colors[bagIdx]);
+      ring.setAttribute("stroke-width", "2");
+      ring.setAttribute("stroke-dasharray", "5 4");
+      g.insertBefore(ring, g.children[g.children.length - 3]);
+    }
+  }
+  verifyState.act1 = true; /* 觀察即完成 */
+  refreshStatusBar();
+}
+
+/* ==================== Act 2：物理拖曳（真實 pointer 事件） ==================== */
+var dragX = 60, dragY = 80, isDragging = false, bagCount = 0;
+var DRAG_GROUP = null;
+
+function applyDragTransform() {
+  if (DRAG_GROUP) DRAG_GROUP.setAttribute("transform", "translate(" + dragX + "," + dragY + ")");
+}
+function svgPoint(evt) {
+  var svg = document.getElementById("act2-svg");
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+function initDrag() {
+  DRAG_GROUP = document.getElementById("act2-draggable");
+  if (!DRAG_GROUP) return;
+  var start = null;
+  DRAG_GROUP.addEventListener("pointerdown", function (e) {
+    isDragging = true;
+    start = { x: e.clientX, y: e.clientY, ox: dragX, oy: dragY };
+    DRAG_GROUP.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  DRAG_GROUP.addEventListener("pointermove", function (e) {
+    if (!isDragging) return;
+    var scale = 358 / DRAG_GROUP.getBoundingClientRect().width;
+    dragX = Math.max(16, Math.min(340, start.ox + (e.clientX - start.x) * scale));
+    dragY = Math.max(16, Math.min(154, start.oy + (e.clientY - start.y) * scale));
+    applyDragTransform();
+    e.preventDefault();
+  });
+  DRAG_GROUP.addEventListener("pointerup", function (e) {
+    if (!isDragging) return;
+    isDragging = false;
+    /* 磁吸貼齊：落入袋子範圍則計數 */
+    if (dragX >= 240 && dragX <= 340 && dragY >= 30 && dragY <= 150) {
+      bagCount = Math.min(3, bagCount + 1);
+      dragX = 291; dragY = 78;
+      applyDragTransform();
+      updateBag();
+    }
+    e.preventDefault();
+  });
+  DRAG_GROUP.addEventListener("pointercancel", function () { isDragging = false; });
+}
+function updateBag() {
+  var label = document.getElementById("act2-bag-label");
+  var bubble = document.getElementById("act2-bubble");
+  if (label) label.textContent = bagCount + " / 3";
+  if (bagCount >= 3 && bubble) {
+    bubble.innerHTML = "🎉 裝滿一袋了！<b>3 顆 = 1 袋</b>，這就是「每 3 個一數」！";
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  }
+}
+function resetAct2() {
+  dragX = 60; dragY = 80; bagCount = 0;
+  applyDragTransform();
+  updateBag();
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 拖曳糖果到袋子裡，體驗「每 3 顆裝一袋」。";
+}
+
+/* ==================== Act 3：規律大發現（3, 6, 9, 12） ==================== */
+function buildAct3(reset) {
+  var container = document.getElementById("seq-container");
+  if (!container) return;
+  container.innerHTML = "";
+  var seq = [3, 6, 9, 12];
+  seq.forEach(function (v, idx) {
+    var card = document.createElement("div");
+    card.className = "num-card" + (idx === 3 ? " mystery" : "");
+    card.textContent = idx === 3 ? "?" : String(v);
+    container.appendChild(card);
+  });
+  var bubbles = document.getElementById("act3-bubbles");
+  if (bubbles) bubbles.remove();
+  if (reset) {
+    verifyState.act3 = false;
+    var bubble = document.getElementById("act3-bubble");
+    if (bubble) bubble.innerHTML = "💡 3、6、9、12……每往後一步就 <b>多 3</b>！";
+    var btn = document.getElementById("btn-reveal");
+    if (btn) btn.disabled = false;
+  }
+  refreshStatusBar();
+}
+function revealDiff() {
+  var container = document.getElementById("seq-container");
+  if (!container) return;
+  var cards = container.querySelectorAll(".num-card");
+  if (cards.length < 4) return;
+  cards[3].textContent = "12";
+  /* 差值氣泡揭示 */
+  var old = document.getElementById("act3-bubbles");
+  if (old) old.remove();
+  var row = document.createElement("div");
+  row.className = "seq-row";
+  row.id = "act3-bubbles";
+  for (var i = 0; i < 3; i++) {
+    var b = document.createElement("span");
+    b.className = "diff-bubble";
+    b.textContent = "+3";
+    row.appendChild(b);
+  }
+  container.parentNode.insertBefore(row, container.nextSibling);
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "🌟 揭示成功！<b>3 → 6 → 9 → 12</b>，規律就是每次 <b>+3</b>（3 的乘法）！";
+  var btn = document.getElementById("btn-reveal");
+  if (btn) btn.disabled = true;
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  speakText("3, 6, 9, 12, 每次都多 3, 這就是 3 的乘法規律");
+}
+
+/* ==================== Act 4：小小挑戰賽 ==================== */
+function resetAct4() {
+  document.querySelectorAll("#act-4-view .choice-btn").forEach(function (b) {
+    b.classList.remove("correct", "wrong");
+  });
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+  verifyState.act4 = false;
+  refreshStatusBar();
+}
+function answer(btn) {
+  var ok = btn.getAttribute("data-ok") === "1";
+  btn.classList.add(ok ? "correct" : "wrong");
+  var bubble = document.getElementById("act4-bubble");
+  if (ok) {
+    if (bubble) bubble.innerHTML = "🎉 答對了！12 ÷ 3 = <b>4</b>，可以裝成 4 袋！";
+    if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+    speakText("答對了! 12 除以 3 等於 4, 可以裝成 4 袋");
+  } else {
+    if (bubble) bubble.innerHTML = "💡 再想想看：每 3 顆一袋，12 裡面有幾個 3 呢？";
+    speakText("再想想看, 每 3 顆一袋, 12 裡面有幾個 3 呢");
+  }
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1();
+initDrag();
+buildAct3(false);
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>
