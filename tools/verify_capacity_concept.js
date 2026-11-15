@@ -1,5 +1,5 @@
 /**
- * tools/verify_capacity_concept.js — 驗證容量概念小教室在 390px 手機實機渲染、互動與零錯誤
+ * tools/verify_capacity_concept.js — 驗證 108 課綱活動一、活動二、活動三與沙盒實機互動
  */
 'use strict';
 const { spawn } = require('node:child_process');
@@ -86,8 +86,8 @@ function connect(wsUrl) {
 
 async function main() {
   const chromePath = findChrome();
-  const cdpPort = 9477;
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-cap-concept-'));
+  const cdpPort = 9478;
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-act-concept-'));
 
   const { server, port: httpPort } = await startServer();
   const chromeProc = spawn(chromePath, [
@@ -142,41 +142,46 @@ async function main() {
     if (overflow) throw new Error('手機 390px 出現橫向溢出！');
     console.log('PASS 390px 視口零橫向溢出');
 
-    // 2. 初始容量為 0
-    const initCap = await evaluate(`document.getElementById("meter-primary").textContent.trim()`);
-    if (!initCap.includes('0 公升 0 毫升')) throw new Error('初始容量未歸零: ' + initCap);
-    console.log(`PASS 初始容量正確: ${initCap}`);
+    // 2. 活動一：點擊倒水 4 次裝滿 400mL
+    await evaluate(`act1AddCup(); act1AddCup(); act1AddCup(); act1AddCup();`);
+    await new Promise((r) => setTimeout(r, 200));
+    const act1Stat = await evaluate(`document.getElementById("act1-stat").textContent.trim()`);
+    if (!act1Stat.includes('4 杯 ＝ 400 毫升')) throw new Error('活動一倒滿 4 杯失敗: ' + act1Stat);
+    console.log(`PASS 活動一（水壺實測）：4 杯 ＝ 400 毫升成功！`);
 
-    // 3. 點擊水壺 (index 2: +400mL) 和 大鮮奶 (index 5: +1000mL)
-    await evaluate(`document.querySelectorAll(".item-btn")[2].click()`);
-    await new Promise((r) => setTimeout(r, 100));
-    await evaluate(`document.querySelectorAll(".item-btn")[5].click()`);
-    await new Promise((r) => setTimeout(r, 100));
+    // 3. 活動二：切換至活動二，點擊喝水 5 次
+    await evaluate(`switchAct(2)`);
+    await new Promise((r) => setTimeout(r, 200));
+    await evaluate(`act2DrinkBottle(); act2DrinkBottle(); act2DrinkBottle(); act2DrinkBottle(); act2DrinkBottle();`);
+    await new Promise((r) => setTimeout(r, 200));
+    const act2Stat = await evaluate(`document.getElementById("act2-stat").textContent.trim()`);
+    if (!act2Stat.includes('5 壺 ＝ 2000 毫升')) throw new Error('活動二喝水 5 壺失敗: ' + act2Stat);
+    console.log(`PASS 活動二（1800mL 喝水任務）：5 壺 ＝ 2000 毫升達成！`);
 
-    const capUpdated = await evaluate(`document.getElementById("meter-primary").textContent.trim()`);
-    if (!capUpdated.includes('1 公升 400 毫升')) throw new Error('容量計算不正確: ' + capUpdated);
-    console.log(`PASS 水壺與大鮮奶累加容量正確: ${capUpdated}`);
+    // 4. 活動三：切換至活動三，點擊拆解切換
+    await evaluate(`switchAct(3)`);
+    await new Promise((r) => setTimeout(r, 200));
+    await evaluate(`act3ToggleDemo()`);
+    await new Promise((r) => setTimeout(r, 200));
+    const act3Stat = await evaluate(`document.getElementById("act3-stat").textContent.trim()`);
+    if (!act3Stat.includes('3.4 公升')) throw new Error('活動三小數切換失敗: ' + act3Stat);
+    console.log(`PASS 活動三（2.7L / 3.4L 小數橋樑）：切換拆解成功！`);
 
-    // 4. 倒光重來
-    await evaluate(`document.querySelector(".btn-reset").click()`);
-    await new Promise((r) => setTimeout(r, 100));
-    const capReset = await evaluate(`document.getElementById("meter-primary").textContent.trim()`);
-    if (!capReset.includes('0 公升 0 毫升')) throw new Error('倒光重來失敗: ' + capReset);
-    console.log('PASS 倒光重來正確');
-
-    // 5. 秘笈卡切換
-    await evaluate(`document.getElementById("dot-2").click()`);
-    await new Promise((r) => setTimeout(r, 100));
-    const cardTitle = await evaluate(`document.querySelector(".fc-title").textContent.trim()`);
-    if (!cardTitle.includes('小心「十位與百位補 0」陷阱')) throw new Error('秘笈卡切換失敗: ' + cardTitle);
-    console.log(`PASS 秘笈卡切換正確: ${cardTitle}`);
+    // 5. 活動四：切換至自由沙盒
+    await evaluate(`switchAct(4)`);
+    await new Promise((r) => setTimeout(r, 200));
+    await evaluate(`sbAdd(400, '水壺')`);
+    await new Promise((r) => setTimeout(r, 200));
+    const sbStat = await evaluate(`document.getElementById("sb-stat").textContent.trim()`);
+    if (!sbStat.includes('400 毫升')) throw new Error('沙盒倒水失敗: ' + sbStat);
+    console.log(`PASS 活動四（自由沙盒）：倒水 400mL 成功！`);
 
     if (consoleErrors.length > 0) throw new Error('Console 錯誤: ' + consoleErrors.join('; '));
     console.log('PASS Console 錯誤數 = 0');
 
     close();
     cleanup();
-    console.log('CAPACITY_CONCEPT_VERIFIED — ALL PASS (Exit 0)');
+    console.log('CAPACITY_108_ACTIVITIES_VERIFIED — ALL PASS (Exit 0)');
     process.exit(0);
   } catch (err) {
     console.error('[FAILED]', err.message);
