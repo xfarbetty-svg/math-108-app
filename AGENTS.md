@@ -280,9 +280,15 @@
   1. 人類盲審抓出 R-3-2 跳跳蛙不能跳與找規律數列空白：精準定位 `<script>` 遺失業務函數根因，完成外科手術式修復（青蛙拋物線跳躍、SVG 虛線弧線、火柴棒公式疊加、數列初始卡片渲染、差值氣泡揭示、S-3-2 四邊標記、3D 摺紙對摺、面積鋪格）。
   2. 守門員全面升級為深度 CDP 點擊斷言：`tools/verify_g3_remaining_concepts.js` 真實模擬點擊按鈕，斷言 DOM 位移與狀態改變，16 套概念小教室全部 Exit Code 0 全綠！
   3. 實體發布線上生效：執行 `python tools/release.py`（Build 20261115_185028），GitHub 與 Cloudflare Pages（https://math-108.pages.dev）發布完成，遠端 HTTPS 探測確認生效。
+- [x] Session 48 語音技術債全面收攏至 AudioManager 單例 ＆ 鋼鐵硬門禁 v2.0 落地閉環（2026-11-15 21:50）：
+  1. 遵照 025 盲點批判，將 PR 守門體系升級為「五大鋼鐵硬門禁 v2.0」（作用域防劇透、幾何公式參數化、通用互動合約、音訊單例、內容指紋快取破除）。
+  2. 建立全站唯一 `app/js/audio_manager.js`：微軟 Edge-TTS 曉臻自然女聲 (`zh-TW-HsiaoChenNeural`) 優先、三級雙通道平滑降級、全域硬性互斥鎖、文字清洗。
+  3. 全量 71 套組件（含 23 套概念小教室）全面重構：裸調原生 `speechSynthesis.speak` 處數嚴格為 0！iframe 一律向外層 Shell 發送 `TTS_SPEAK` / `TTS_STOP`，徹底根絕雙聲道搶話與手機機械音。
+  4. 落地 Gate 4 守門員 `tools/verify_audio_singleton.js`（零外部依賴 Chrome CDP 實機驗證，ALL PASS Exit 0），並登記至 `release.py` S1 七大門禁。
+  5. 算力通道架構鋼鐵修復：通道一 (本地) ➔ 通道二 (A-SERVER SSH 獨立配額) ➔ 通道三 (035 8把 Key 池) 三級自動 Failover 鋼鐵閉環實測全綠。
+  6. 實體發布線上生效：執行 `tools/release.py`（Build `20261115_214911`），Cloudflare Pages 邊緣探針確認同步生效！
 - [ ] 下一步：
-  - 【待修復】概念小教室語音升級：目前概念小教室內部使用 `window.speechSynthesis`（手機原生機械音），下個 Session 將全面替換對齊為外層測驗使用的 Cloudflare Edge-TTS 端點 (`/api/tts?text=...` 台灣自然女聲 `zh-TW-HsiaoChenNeural`)。
-  - 【單元推進】三年級 24/24 全量大滿貫已收官，接續推進二年級（G2）核心單元。
+  - 【單元推進】三年級 24/24 大滿貫與語音技術債已全部收官，下次開工正式啟動二年級（G2）核心單元推進！
 
 
 
