@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-2 加減算式與直式計算 · 概念探索實驗室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --blue: #7db8e8;
+  --blue-deep: #4a90c4;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800;
+  padding: 2px 8px; border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3;
+  overflow: hidden; max-height: 420px;
+  display: flex; flex-direction: column; gap: 8px; padding: 8px 6px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 2 拖曳 */
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+
+/* 模式切換按鈕 */
+.mode-row { display: flex; gap: 8px; }
+.mode-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 12px; font-weight: 800;
+  border-radius: 999px; border: 2px solid var(--line); background: #fdf6e9; color: var(--ink-soft);
+  transition: all 0.15s; white-space: nowrap;
+}
+.mode-btn.active { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+
+/* Act 1 對齊說明標籤 */
+.a1-fade { opacity: 0.45; }
+.a1-hint { font-size: 10.5px; font-weight: 800; fill: var(--ink-soft); }
+
+/* Act 3 分步直式 */
+.vgrid { display: grid; grid-template-columns: repeat(3, 46px); gap: 4px; justify-content: center; }
+.vc {
+  height: 34px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: var(--ink); border-radius: 8px;
+}
+.vc.op { color: var(--mint-deep); }
+.vc.small { height: 22px; font-size: 13px; color: var(--coral-deep); }
+.vc.result { color: var(--mint-deep); }
+.vc.blank { background: #fff4ef; color: var(--coral-deep); }
+.vc.hit { background: #e7f5f0; color: var(--mint-deep); animation: popIn 0.3s ease; }
+.vc s { color: var(--ink-soft); margin-right: 2px; font-size: 15px; }
+.vline { grid-column: 1 / span 3; height: 3px; background: var(--ink); border-radius: 2px; }
+@keyframes popIn { from { transform: scale(0.4); opacity: 0.2; } to { transform: scale(1); opacity: 1; } }
+.step-row { display: flex; align-items: center; gap: 8px; }
+.step-btn {
+  flex: 1 1 0; background: #fdf6e9; border: 2px solid var(--line); border-radius: 999px;
+  padding: 8px 4px; font-size: 12.5px; font-weight: 800; color: var(--ink);
+}
+.step-btn:disabled { opacity: 0.4; cursor: default; }
+.step-btn:active:not(:disabled) { transform: scale(0.96); }
+.step-label { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); min-width: 66px; text-align: center; }
+
+/* Act 4 挑戰 */
+.vmini { display: grid; grid-template-columns: repeat(3, 42px); gap: 3px; justify-content: center; }
+.vmini .vc { height: 30px; font-size: 18px; }
+.vmini .vc.small { height: 20px; font-size: 12px; }
+.q-text { font-size: 12.5px; font-weight: 700; line-height: 1.5; color: #4a5568; text-align: center; }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      直式加減計算實驗室
+      <small>二年級 · G2-N-2-2 加減算式與直式計算</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（位值對齊與算柱結構） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('個位對齊個位, 十位對齊十位, 這是直式計算的第一法則')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 直式的第一法則</div>
+      <div class="card-desc">橫式 <b>38 + 25</b> 要怎麼排成直式？看數字們飛進位值算柱：藍色是十位、橘色是個位。</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="38 加 25 直式位值對齊示意圖">
+          <text x="20" y="24" class="a1-hint">橫式：38 + 25</text>
+          <!-- 直式框架 -->
+          <rect x="118" y="102" width="64" height="96" rx="10" fill="none" stroke="#e8dcc8" stroke-width="2" stroke-dasharray="6 5"></rect>
+          <rect x="220" y="102" width="64" height="96" rx="10" fill="none" stroke="#e8dcc8" stroke-width="2" stroke-dasharray="6 5"></rect>
+          <text x="150" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="#8a857b">十位</text>
+          <text x="252" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="#8a857b">個位</text>
+          <text x="84" y="186" text-anchor="middle" font-size="22" font-weight="800" fill="#318a70">+</text>
+          <line x1="64" y1="206" x2="312" y2="206" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"></line>
+          <text x="150" y="244" text-anchor="middle" font-size="22" font-weight="800" fill="#c9bfae" class="a1-fade">?</text>
+          <text x="252" y="244" text-anchor="middle" font-size="22" font-weight="800" fill="#c9bfae" class="a1-fade">?</text>
+          <!-- 飛入數字籌碼（位置由 JS 控制） -->
+          <g id="a1-t3" style="transition: transform 0.7s cubic-bezier(.22,1,.36,1)">
+            <rect width="44" height="34" rx="9" fill="#7db8e8" stroke="#4a90c4" stroke-width="2"></rect>
+            <text x="22" y="25" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">3</text>
+          </g>
+          <g id="a1-o8" style="transition: transform 0.7s cubic-bezier(.22,1,.36,1)">
+            <rect width="44" height="34" rx="9" fill="#ff8a65" stroke="#f4694b" stroke-width="2"></rect>
+            <text x="22" y="25" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">8</text>
+          </g>
+          <g id="a1-t2" style="transition: transform 0.7s cubic-bezier(.22,1,.36,1)">
+            <rect width="44" height="34" rx="9" fill="#7db8e8" stroke="#4a90c4" stroke-width="2"></rect>
+            <text x="22" y="25" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">2</text>
+          </g>
+          <g id="a1-o5" style="transition: transform 0.7s cubic-bezier(.22,1,.36,1)">
+            <rect width="44" height="34" rx="9" fill="#ff8a65" stroke="#f4694b" stroke-width="2"></rect>
+            <text x="22" y="25" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">5</text>
+          </g>
+        </svg>
+      </div>
+      <button class="btn-tts" id="a1-toggle" style="align-self:center" onclick="toggleAssemble()">🔁 再看一次拆解飛入</button>
+      <div class="tip-bubble" id="act1-bubble">💡 看看橫式 <b>38 + 25</b> 怎麼變成直式：個位對齊個位、十位對齊十位！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（滿十進一 / 借一當十） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('滿十進一, 十個一換一個十; 借一當十, 一個十拆成十個一')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 進位與退位</div>
+      <div class="card-desc">用手指拖曳算珠：加法把 <b>10 顆橘點</b>拖進十位融合成 1 顆藍點（滿十進一）；減法把 <b>1 顆藍點</b>拖回個位拆成 10 顆橘點（借一當十）。</div>
+      <div class="mode-row">
+        <button class="mode-btn active" id="a2-btn-add" onclick="setDragMode('add')">➕ 加法進位</button>
+        <button class="mode-btn" id="a2-btn-borrow" onclick="setDragMode('borrow')">➖ 減法退位</button>
+      </div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 300" xmlns="http://www.w3.org/2000/svg" style="touch-action:none">
+          <text x="84" y="52" text-anchor="middle" font-size="11.5" font-weight="800" fill="#4a90c4">十位算柱</text>
+          <text x="259" y="52" text-anchor="middle" font-size="11.5" font-weight="800" fill="#f4694b">個位盤</text>
+          <rect x="36" y="62" width="96" height="184" rx="14" fill="#eef5fc" stroke="#7db8e8" stroke-width="2.5"></rect>
+          <rect x="196" y="62" width="126" height="184" rx="14" fill="#fff4ef" stroke="#ffab91" stroke-width="2.5"></rect>
+          <!-- 進位小標記（融合成功後亮起） -->
+          <g id="a2-carry" style="opacity:0; transition: opacity 0.4s ease">
+            <circle cx="84" cy="24" r="13" fill="#ffd166" stroke="#d9910d" stroke-width="2"></circle>
+            <text x="84" y="29" text-anchor="middle" font-size="14" font-weight="800" fill="#7a5c1e">1</text>
+          </g>
+          <!-- 融合後的藍色十位珠 -->
+          <g id="a2-merged" style="opacity:0; transition: opacity 0.4s ease">
+            <circle cx="84" cy="150" r="16" fill="#7db8e8" stroke="#4a90c4" stroke-width="3"></circle>
+            <circle cx="79" cy="145" r="4" fill="#d6ebfa"></circle>
+          </g>
+          <!-- 可拖曳算珠（JS 動態生成） -->
+          <g id="a2-dots"></g>
+          <!-- 計數文字 -->
+          <text id="a2-tens-count" x="84" y="272" text-anchor="middle" font-size="12.5" font-weight="800" fill="#4a90c4">0 個十</text>
+          <text id="a2-ones-count" x="259" y="272" text-anchor="middle" font-size="12.5" font-weight="800" fill="#f4694b">10 個一</text>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 拖一顆橘點向左進十位算柱，看 10 顆橘點融合成 1 顆藍點！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（分步直式動態計算機） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('一步一步算直式, 個位先算, 滿十進一, 再算十位')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 分步直式計算機</div>
+      <div class="card-desc">按「下一步」一格一格算：個位先算、滿十進一、再算十位。也可以切換成減法退位版！</div>
+      <div class="stage">
+        <div class="mode-row">
+          <button class="mode-btn active" id="a3-btn-add" onclick="setCalcMode('add')">➕ 38 + 25</button>
+          <button class="mode-btn" id="a3-btn-sub" onclick="setCalcMode('sub')">➖ 63 − 28</button>
+        </div>
+        <div class="vgrid" id="a3-vgrid"></div>
+        <div class="step-row">
+          <button class="step-btn" id="a3-prev" onclick="calcPrev()">⬅️ 上一步</button>
+          <span class="step-label" id="a3-step-label">第 0 步</span>
+          <button class="step-btn" id="a3-next" onclick="calcNext()">下一步 ➡️</button>
+        </div>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 按「下一步」，看直式一步一步怎麼算！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（直式填空互動挑戰） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('直式填空挑戰! 個位先算, 滿十進一, 再算十位')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 直式填空</div>
+      <div class="card-desc">把 <b>47 + 36</b> 的直式一步一步填完整：個位數、進位小標記、十位數，全答對就過關！</div>
+      <div class="stage">
+        <div class="vmini" id="a4-vmini"></div>
+        <div class="q-text" id="a4-qtext"></div>
+      </div>
+      <div class="choice-row" id="a4-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選出正確的數字吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級直式加減計算實驗室。現在進行第 " + currentAct + " 幕。跟著四個關卡，一步一步學會直式計算！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態（物件屬性原地改寫，保持 SELFTEST.state 參考有效） ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+function clearVerifyState() {
+  verifyState.act1 = false; verifyState.act2 = false;
+  verifyState.act3 = false; verifyState.act4 = false;
+}
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  clearVerifyState();
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：橫式拆解飛入直式（位值對齊） ==================== */
+var A1_CHIPS = [
+  { id: "a1-t3", hx: 48,  hy: 36, tx: 128, ty: 112 },
+  { id: "a1-o8", hx: 100, hy: 36, tx: 230, ty: 112 },
+  { id: "a1-t2", hx: 186, hy: 36, tx: 128, ty: 158 },
+  { id: "a1-o5", hx: 238, hy: 36, tx: 230, ty: 158 }
+];
+var a1Assembled = false;
+
+function applyA1Positions() {
+  A1_CHIPS.forEach(function (c) {
+    var el = document.getElementById(c.id);
+    if (!el) return;
+    var x = a1Assembled ? c.tx : c.hx;
+    var y = a1Assembled ? c.ty : c.hy;
+    el.style.transform = "translate(" + x + "px," + y + "px)";
+  });
+}
+function updateA1Bubble() {
+  var bubble = document.getElementById("act1-bubble");
+  if (!bubble) return;
+  if (a1Assembled) {
+    bubble.innerHTML = "🌟 拆解完成！<b>8 和 5</b> 都站在個位欄、<b>3 和 2</b> 都站在十位欄——這就是直式計算的第一法則！";
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  } else {
+    bubble.innerHTML = "💡 看看橫式 <b>38 + 25</b> 怎麼變成直式：個位對齊個位、十位對齊十位！";
+  }
+}
+function toggleAssemble() {
+  a1Assembled = !a1Assembled;
+  applyA1Positions();
+  updateA1Bubble();
+  if (a1Assembled) speakText("個位對齊個位, 十位對齊十位, 這是直式計算的第一法則");
+}
+function resetAct1() {
+  a1Assembled = false;
+  applyA1Positions();
+  updateA1Bubble();
+  var btn = document.getElementById("a1-toggle");
+  if (btn) btn.textContent = "▶ 看直式怎麼排";
+}
+
+/* ==================== Act 2：滿十進一 / 借一當十（真實 pointer 拖曳） ==================== */
+var A2_TENS_ZONE = { x: 36, y: 62, w: 96, h: 184 };
+var A2_ONES_ZONE = { x: 196, y: 62, w: 126, h: 184 };
+var a2Mode = "add";
+var a2Dots = [];          /* 目前場上的算珠 group 清單 */
+var a2Drag = null;        /* { el, gx, gy } 抓取偏移（SVG 使用者單位） */
+var a2Busy = false;       /* 融合/碎裂動畫進行中，禁止再抓 */
+
+function a2SvgPoint(evt) {
+  var svg = document.getElementById("act2-svg");
+  if (!svg) return null;
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+function inZone(p, z) {
+  return p.x >= z.x && p.x <= z.x + z.w && p.y >= z.y && p.y <= z.y + z.h;
+}
+function clampPos(x, y) {
+  return {
+    x: Math.max(14, Math.min(344, x)),
+    y: Math.max(14, Math.min(286, y))
+  };
+}
+function makeA2Dot(opt) {
+  /* opt: { x, y, r, fill, stroke, draggable, kind } */
+  var NS = "http://www.w3.org/2000/svg";
+  var g = document.createElementNS(NS, "g");
+  g.setAttribute("class", opt.draggable ? "drag-handle a2-dot" : "a2-dot");
+  var c = document.createElementNS(NS, "circle");
+  c.setAttribute("cx", 0); c.setAttribute("cy", 0); c.setAttribute("r", opt.r);
+  c.setAttribute("fill", opt.fill);
+  c.setAttribute("stroke", opt.stroke);
+  c.setAttribute("stroke-width", "2");
+  g.appendChild(c);
+  if (opt.r >= 12) {
+    var hi = document.createElementNS(NS, "circle");
+    hi.setAttribute("cx", -opt.r * 0.3); hi.setAttribute("cy", -opt.r * 0.3); hi.setAttribute("r", opt.r * 0.28);
+    hi.setAttribute("fill", "rgba(255,255,255,0.75)");
+    g.appendChild(hi);
+  }
+  g.style.transform = "translate(" + opt.x + "px," + opt.y + "px)";
+  g.style.transition = "transform 0.35s ease, opacity 0.35s ease";
+  var home = { x: opt.x, y: opt.y };
+  if (opt.draggable) attachA2Drag(g, home, opt.kind);
+  document.getElementById("a2-dots").appendChild(g);
+  a2Dots.push(g);
+  return g;
+}
+function attachA2Drag(g, home, kind) {
+  g.addEventListener("pointerdown", function (e) {
+    if (a2Busy) return;
+    var p = a2SvgPoint(e);
+    if (!p) return;
+    a2Drag = { el: g, gx: p.x - home.x, gy: p.y - home.y };
+    g.style.transition = "none";
+    try { g.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  g.addEventListener("pointermove", function (e) {
+    if (!a2Drag || a2Drag.el !== g) return;
+    var p = a2SvgPoint(e);
+    if (!p) return;
+    var c = clampPos(p.x - a2Drag.gx, p.y - a2Drag.gy);
+    home.x = c.x; home.y = c.y;
+    g.style.transform = "translate(" + c.x + "px," + c.y + "px)";
+    e.preventDefault();
+  });
+  g.addEventListener("pointerup", function (e) {
+    if (!a2Drag || a2Drag.el !== g) return;
+    a2Drag = null;
+    g.style.transition = "transform 0.35s ease, opacity 0.35s ease";
+    var p = a2SvgPoint(e);
+    if (p && a2Mode === "add" && inZone(p, A2_TENS_ZONE)) {
+      a2Merge();
+    } else if (p && a2Mode === "borrow" && kind === "ten" && inZone(p, A2_ONES_ZONE)) {
+      a2Split(g);
+    } else {
+      /* 磁吸彈回家位 */
+      g.style.transform = "translate(" + home.x + "px," + home.y + "px)";
+    }
+    e.preventDefault();
+  });
+  g.addEventListener("pointercancel", function () { a2Drag = null; });
+}
+function a2SetCounts(tensText, onesText) {
+  var t = document.getElementById("a2-tens-count");
+  var o = document.getElementById("a2-ones-count");
+  if (t) t.textContent = tensText;
+  if (o) o.textContent = onesText;
+}
+function a2ShowCarry(show) {
+  var carry = document.getElementById("a2-carry");
+  var merged = document.getElementById("a2-merged");
+  if (carry) carry.style.opacity = show ? "1" : "0";
+  if (merged) merged.style.opacity = show ? "1" : "0";
+}
+function a2Merge() {
+  if (a2Busy) return;
+  a2Busy = true;
+  a2Dots.forEach(function (g) {
+    g.style.transition = "transform 0.5s ease, opacity 0.5s ease";
+    g.style.transform = "translate(84px,150px) scale(0.2)";
+    g.style.opacity = "0";
+  });
+  setTimeout(function () {
+    var layer = document.getElementById("a2-dots");
+    if (layer) layer.innerHTML = "";
+    a2Dots = [];
+    a2ShowCarry(true);
+    a2SetCounts("1 個十（滿十進一）", "0 個一");
+    var bubble = document.getElementById("act2-bubble");
+    if (bubble) bubble.innerHTML = "🎉 融合成功！<b>10 顆橘點 = 1 顆藍點</b>，頭上亮起進位的小「1」——滿十進一！";
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+    speakText("滿十進一! 十個一, 換一個十, 進位的一寫在十位頭上");
+    a2Busy = false;
+  }, 520);
+}
+function a2Split(draggedDot) {
+  if (a2Busy) return;
+  a2Busy = true;
+  draggedDot.style.transition = "transform 0.45s ease, opacity 0.45s ease";
+  draggedDot.style.transform = "translate(259px,150px) scale(0.3)";
+  draggedDot.style.opacity = "0";
+  var others = a2Dots.filter(function (g) { return g !== draggedDot; });
+  setTimeout(function () {
+    /* 被拖的藍點碎裂消失 */
+    var layer = document.getElementById("a2-dots");
+    a2Dots = others;
+    if (draggedDot.parentNode) draggedDot.parentNode.removeChild(draggedDot);
+    /* 十位計數劃線減 1 */
+    var t = document.getElementById("a2-tens-count");
+    if (t) t.innerHTML = '<tspan text-decoration="line-through">3</tspan><tspan> → 2 個十</tspan>';
+    /* 個位盤長出 10 顆橘點（2 顆原有 + 10 顆新拆） */
+    var newOnes = [];
+    for (var i = 0; i < 10; i++) {
+      var col = i % 5, row = Math.floor(i / 5);
+      var x = 211 + col * 24, y = 168 + row * 26;
+      var g = makeA2Dot({ x: 259, y: 150, r: 5.5, fill: "#ff8a65", stroke: "#f4694b", draggable: false });
+      g.style.transform = "translate(259px,150px) scale(0)";
+      newOnes.push({ g: g, x: x, y: y });
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        newOnes.forEach(function (d, i) {
+          d.g.style.transition = "transform 0.4s ease " + (i * 30) + "ms";
+          d.g.style.transform = "translate(" + d.x + "px," + d.y + "px) scale(1)";
+        });
+      });
+    });
+    a2SetCounts("2 個十", "2 + 10 = 12 個一");
+    var bubble = document.getElementById("act2-bubble");
+    if (bubble) bubble.innerHTML = "🎉 碎裂成功！<b>1 顆藍點 = 10 顆橘點</b>，十位劃掉 1、個位加上 10——借一當十！";
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+    speakText("借一當十! 從十位借一, 拆成十個一, 個位就夠減了");
+    a2Busy = false;
+  }, 470);
+}
+function buildA2Dots() {
+  var layer = document.getElementById("a2-dots");
+  if (!layer) return;
+  layer.innerHTML = "";
+  a2Dots = [];
+  a2ShowCarry(false);
+  if (a2Mode === "add") {
+    a2SetCounts("0 個十", "10 個一");
+    for (var i = 0; i < 10; i++) {
+      var col = i % 5, row = Math.floor(i / 5);
+      makeA2Dot({ x: 211 + col * 24, y: 116 + row * 34, r: 9, fill: "#ff8a65", stroke: "#f4694b", draggable: true, kind: "one" });
+    }
+  } else {
+    a2SetCounts("3 個十", "2 個一");
+    for (var j = 0; j < 3; j++) {
+      makeA2Dot({ x: 84, y: 112 + j * 40, r: 13, fill: "#7db8e8", stroke: "#4a90c4", draggable: true, kind: "ten" });
+    }
+    makeA2Dot({ x: 233, y: 126, r: 9, fill: "#ff8a65", stroke: "#f4694b", draggable: false, kind: "one" });
+    makeA2Dot({ x: 285, y: 126, r: 9, fill: "#ff8a65", stroke: "#f4694b", draggable: false, kind: "one" });
+  }
+}
+function setDragMode(mode) {
+  if (a2Busy) return;
+  a2Mode = mode;
+  var bAdd = document.getElementById("a2-btn-add");
+  var bBorrow = document.getElementById("a2-btn-borrow");
+  if (bAdd) bAdd.classList.toggle("active", mode === "add");
+  if (bBorrow) bBorrow.classList.toggle("active", mode === "borrow");
+  buildA2Dots();
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.innerHTML = mode === "add"
+      ? "💡 拖一顆橘點向左進十位算柱，看 10 顆橘點融合成 1 顆藍點！"
+      : "💡 拖一顆藍點向右進個位盤，看它碎裂成 10 顆橘點！";
+  }
+}
+function resetAct2() {
+  a2Busy = false;
+  a2Drag = null;
+  buildA2Dots();
+  setDragMode("add");
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 拖一顆橘點向左進十位算柱，看 10 顆橘點融合成 1 顆藍點！";
+}
+
+/* ==================== Act 3：分步直式動態計算機 ==================== */
+var A3_MODELS = {
+  add: {
+    op: "+",
+    top: ["3", "8"], bot: ["2", "5"],
+    steps: [
+      { carry: "", res: ["", ""], bubble: "💡 按「下一步」，先從個位算起！", voice: "直式加法, 先從個位算起" },
+      { carry: "1", res: ["", "3"], bubble: "✏️ 第 1 步：個位 <b>8 + 5 = 13</b>，個位寫 3，進位的小「1」亮起飛到十位頭上！", voice: "第一步, 個位, 八加五等於十三, 個位寫三, 進位一" },
+      { carry: "1", res: ["6", "3"], bubble: "✏️ 第 2 步：十位 <b>3 + 2 + 進位 1 = 6</b>，十位寫 6！", voice: "第二步, 十位, 三加二加進位一等於六, 十位寫六" },
+      { carry: "1", res: ["6", "3"], done: true, bubble: "🎉 完成！<b>38 + 25 = 63</b>，個位先算、滿十進一，你都會了！", voice: "完成! 三十八加二十五等於六十三" }
+    ]
+  },
+  sub: {
+    op: "−",
+    top: ["6", "3"], bot: ["2", "8"],
+    steps: [
+      { carry: "", res: ["", ""], bubble: "💡 這是減法退位版：63 − 28，按「下一步」開始！", voice: "減法直式, 六十三減二十八, 先看個位" },
+      { carry: "", res: ["", ""], borrow: true, bubble: "✏️ 第 1 步：個位 <b>3 減 8 不夠減</b>，向十位借一當十——十位 6 劃掉變 5，個位變 13！", voice: "個位三減八不夠減, 向十位借一當十, 十位變五, 個位變十三" },
+      { carry: "", res: ["", "5"], borrow: true, bubble: "✏️ 第 2 步：個位 <b>13 − 8 = 5</b>，個位寫 5！", voice: "第二步, 個位, 十三減八等於五, 個位寫五" },
+      { carry: "", res: ["3", "5"], borrow: true, done: true, bubble: "🎉 完成！<b>63 − 28 = 35</b>，不夠減就借一當十，你都會了！", voice: "完成! 六十三減二十八等於三十五" }
+    ]
+  }
+};
+var a3Mode = "add";
+var a3Step = 0;
+
+function a3Cell(cls, txt) {
+  return { cls: cls || "", txt: txt === undefined ? "" : String(txt) };
+}
+function a3BuildModel(mode, step) {
+  var def = A3_MODELS[mode];
+  var s = def.steps[step] || def.steps[0];
+  var topT = a3Cell("", def.top[0]);
+  var topO = a3Cell("", def.top[1]);
+  if (s.borrow) {
+    topT = a3Cell("", "<s>" + def.top[0] + "</s>" + (mode === "sub" ? "5" : ""));
+    topO = a3Cell("", "13");
+  }
+  return {
+    op: def.op,
+    carry: a3Cell("small" + (s.carry ? " hit" : ""), s.carry),
+    topT: topT, topO: topO,
+    botT: a3Cell("", def.bot[0]),
+    botO: a3Cell("", def.bot[1]),
+    resT: a3Cell("result" + (s.res[0] === "" ? " blank" : ""), s.res[0] === "" ? "?" : s.res[0]),
+    resO: a3Cell("result" + (s.res[1] === "" ? " blank" : ""), s.res[1] === "" ? "?" : s.res[1]),
+    done: !!s.done
+  };
+}
+function a3Render() {
+  var grid = document.getElementById("a3-vgrid");
+  if (!grid) return;
+  var m = a3BuildModel(a3Mode, a3Step);
+  var stepMax = A3_MODELS[a3Mode].steps.length - 1;
+  grid.innerHTML = "";
+  var cells = [
+    a3Cell("", ""), m.carry, a3Cell("", ""),
+    a3Cell("", ""), m.topT, m.topO,
+    a3Cell("op", m.op), m.botT, m.botO
+  ];
+  cells.forEach(function (c) {
+    var div = document.createElement("div");
+    div.className = "vc " + c.cls;
+    div.innerHTML = c.txt;
+    grid.appendChild(div);
+  });
+  var line = document.createElement("div");
+  line.className = "vline";
+  grid.appendChild(line);
+  [m.resT, m.resO].forEach(function (c, idx) {
+    var div = document.createElement("div");
+    div.className = "vc " + c.cls;
+    div.innerHTML = c.txt;
+    if (a3Step >= 1 && idx === (a3Step === 1 ? 1 : 0) && c.txt !== "?") div.classList.add("hit");
+    grid.appendChild(div);
+  });
+  var label = document.getElementById("a3-step-label");
+  if (label) label.textContent = "第 " + a3Step + " 步";
+  var prev = document.getElementById("a3-prev");
+  var next = document.getElementById("a3-next");
+  if (prev) prev.disabled = a3Step === 0;
+  if (next) next.disabled = a3Step >= stepMax;
+  var bubble = document.getElementById("act3-bubble");
+  var s = A3_MODELS[a3Mode].steps[a3Step];
+  if (bubble && s) bubble.innerHTML = s.bubble;
+}
+function setCalcMode(mode) {
+  a3Mode = mode;
+  a3Step = 0;
+  var bAdd = document.getElementById("a3-btn-add");
+  var bSub = document.getElementById("a3-btn-sub");
+  if (bAdd) bAdd.classList.toggle("active", mode === "add");
+  if (bSub) bSub.classList.toggle("active", mode === "sub");
+  a3Render();
+}
+function calcNext() {
+  var max = A3_MODELS[a3Mode].steps.length - 1;
+  if (a3Step >= max) return;
+  a3Step++;
+  a3Render();
+  var s = A3_MODELS[a3Mode].steps[a3Step];
+  if (s && s.voice) speakText(s.voice);
+  if (a3Step === max && !verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+}
+function calcPrev() {
+  if (a3Step <= 0) return;
+  a3Step--;
+  a3Render();
+}
+function resetAct3() {
+  a3Mode = "add";
+  a3Step = 0;
+  setCalcMode("add");
+}
+
+/* ==================== Act 4：直式填空挑戰 ==================== */
+var A4_QS = [
+  { blank: "ones",  q: "第 1 題：個位 <b>7 + 6 = 13</b>，直式的個位要寫多少？", ans: "3", opts: ["1", "3", "7", "13"], hint: "個位只寫 13 裡的個位數字喔！", voice: "答對了! 個位寫三" },
+  { blank: "carry", q: "第 2 題：個位滿十了，十位頭上的進位小標記是多少？", ans: "1", opts: ["0", "1", "2", "3"], hint: "個位 13 滿十，要進 1 到十位！", voice: "答對了! 進位一" },
+  { blank: "tens",  q: "第 3 題：十位 <b>4 + 3 + 進位 1</b> = ？十位要寫多少？", ans: "8", opts: ["6", "7", "8", "9"], hint: "別忘了加上進位的 1 喔！", voice: "答對了! 十位寫八, 四十七加三十六等於八十三" }
+];
+var a4QIndex = 0;
+var a4Filled = { ones: "", carry: "", tens: "" };
+
+function a4RenderMini() {
+  var mini = document.getElementById("a4-vmini");
+  if (!mini) return;
+  var q = A4_QS[a4QIndex];
+  mini.innerHTML = "";
+  var carryTxt = a4Filled.carry === "" ? (q.blank === "carry" ? "?" : "") : a4Filled.carry;
+  var resT = a4Filled.tens === "" ? (q.blank === "tens" ? "?" : "") : a4Filled.tens;
+  var resO = a4Filled.ones === "" ? (q.blank === "ones" ? "?" : "") : a4Filled.ones;
+  var cells = [
+    a3Cell("", ""), a3Cell("small" + (q.blank === "carry" ? " blank" : ""), carryTxt), a3Cell("", ""),
+    a3Cell("", ""), a3Cell("", "4"), a3Cell("", "7"),
+    a3Cell("op", "+"), a3Cell("", "3"), a3Cell("", "6")
+  ];
+  cells.forEach(function (c) {
+    var div = document.createElement("div");
+    div.className = "vc " + c.cls;
+    div.innerHTML = c.txt;
+    mini.appendChild(div);
+  });
+  var line = document.createElement("div");
+  line.className = "vline";
+  mini.appendChild(line);
+  [[resT, "tens"], [resO, "ones"]].forEach(function (pair) {
+    var div = document.createElement("div");
+    var isBlank = pair[1] === q.blank;
+    div.className = "vc result" + (pair[0] === "" || isBlank ? " blank" : "");
+    div.innerHTML = pair[0] === "" ? "" : pair[0];
+    mini.appendChild(div);
+  });
+  var qt = document.getElementById("a4-qtext");
+  if (qt) qt.innerHTML = q.q;
+}
+function a4RenderChoices() {
+  var row = document.getElementById("a4-choices");
+  if (!row) return;
+  row.innerHTML = "";
+  A4_QS[a4QIndex].opts.forEach(function (v) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = v;
+    b.addEventListener("click", function () { a4Answer(b, v); });
+    row.appendChild(b);
+  });
+}
+function a4Answer(btn, val) {
+  var q = A4_QS[a4QIndex];
+  var ok = val === q.ans;
+  btn.classList.add(ok ? "correct" : "wrong");
+  var bubble = document.getElementById("act4-bubble");
+  if (ok) {
+    a4Filled[q.blank] = val;
+    if (bubble) bubble.innerHTML = "🎉 答對了！" + q.voice.replace("答對了! ", "") + "！";
+    speakText(q.voice);
+    a4QIndex++;
+    if (a4QIndex >= A4_QS.length) {
+      if (bubble) bubble.innerHTML = "🏆 挑戰成功！<b>47 + 36 = 83</b>，個位、進位、十位全都會了！";
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+      a4QIndex = A4_QS.length - 1;
+      a4RenderMini();
+      var row = document.getElementById("a4-choices");
+      if (row) row.innerHTML = "";
+      return;
+    }
+    setTimeout(function () { a4RenderMini(); a4RenderChoices(); }, 700);
+  } else {
+    if (bubble) bubble.innerHTML = "💡 再想想看：" + q.hint;
+    speakText("再想想看, " + q.hint);
+  }
+}
+function resetAct4() {
+  a4QIndex = 0;
+  a4Filled = { ones: "", carry: "", tens: "" };
+  a4RenderMini();
+  a4RenderChoices();
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 選出正確的數字吧！";
+}
+
+/* ==================== 初始化 ==================== */
+resetAct1();
+buildA2Dots();
+resetAct2();
+a3Render();
+a4RenderMini();
+a4RenderChoices();
+refreshStatusBar();
+
+/* Act 1 開場自動拆解飛入 */
+setTimeout(function () {
+  if (!a1Assembled) {
+    a1Assembled = true;
+    applyA1Positions();
+    updateA1Bubble();
+    var btn = document.getElementById("a1-toggle");
+    if (btn) btn.textContent = "🔁 再看一次拆解飛入";
+  }
+}, 600);
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

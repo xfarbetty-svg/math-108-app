@@ -127,6 +127,8 @@ async function openUnit(code, initialQIndex = 0) {
 
 /* ---------- 單元內建模式切換（概念小教室 vs 真題測驗） ---------- */
 const CONCEPT_COMPONENTS = {
+  "N-2-1": "components/g2_place_value_1000_lab.html",
+  "N-2-2": "components/g2_vertical_addition_subtraction_lab.html",
   "N-3-1": "components/number_10000_concept_lab.html",
   "N-3-2": "components/vertical_calc_concept_lab.html",
   "N-3-3": "components/multiplication_concept_lab.html",
