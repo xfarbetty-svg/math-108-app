@@ -225,7 +225,14 @@
   3. G3-S-3-3「圓」概念小教室 100% 落地 (`app/components/circle_concept_lab.html`)：四幕式純 2D 向量擬物探索（Act 1 圓心/圓周/半徑/直徑波紋定義、Act 2 360°指針等長與 180° 對向直徑兩倍展開、Act 3 等腰剛體圓規順時針 100% 同向畫圓沙箱、Act 4 迷思直線挑戰直徑為圓內最長線段）。
   4. 體驗細節修復：全面拔除點選部位、完成畫圓、挑選線段時的擅自自動播音，播放權限 100% 歸還給使用者手動點擊「🔊 聽導讀」，並支援 Toggle 隨時點擊「⏹ 停止」。
   5. 雙硬閘門與線上節點實測驗真：`verify_curriculum_131.js`、`verify_app_shell.js`、`verify_circle_concept.js`、`test_tts_endpoint.py` 全部 Exit Code 0，Cloudflare Pages 線上節點確認生效 (Build 20261115_123531)。
-- [ ] 下一步：推進三年級批次化第二戰（G3-N-3-9 簡單同分母分數 ➔ G3-N-3-10 一位小數 ➔ G3-N-3-12 長度毫米 mm）。
+- [x] Session 44 概念小教室批次化第二戰 100% 落地閉環（分數、小數、毫米）＆ 實體發布生效（2026-11-15 14:35）：
+  1. 遵循 `/plan` 規範調度通道三（035 金鑰池 Gemini 2.5 Pro 大腦）完成第二戰施工藍圖，落盤 `FIX_PLAN.md` 與 `reports/PLAN_20261115_135255.md`。
+  2. G3-N-3-9 簡單同分母分數概念小教室落地 (`app/components/fraction_concept_lab.html`, 43KB, 1149行)：Act 1 平分圓盤與分數命名、Act 2 巧克力長條與單位分數累加、Act 3 雙軌長條同分母比大小、Act 4 拼塊合併拿走同分母加減。
+  3. G3-N-3-10 一位小數概念小教室落地 (`app/components/decimal_concept_lab.html`, 44KB, 1176行)：Act 1 十等分方格與 0.1 誕生、Act 2 一位小數位值計數盒滿十進位、Act 3 公尺直尺數線放大鏡、Act 4 比大小與小數點對齊加減。
+  4. G3-N-3-12 長度（毫米 mm）概念小教室落地 (`app/components/millimeter_concept_lab.html`, 40KB, 966行)：Act 1 直尺微距放大鏡 (1cm=10mm)、Act 2 生活微物對齊測量 (硬幣/訂書針/迴紋針/橡皮擦)、Act 3 複名數換算板 (3cm 5mm=35mm)、Act 4 測量迷思除錯小偵探。
+  5. 總入口串接與自動化守門員：`app/shell.js` 之 `CONCEPT_COMPONENTS` 登錄 `N-3-9`、`N-3-10`、`N-3-12`，支援「💡 概念小教室 ｜ 📝 真題測驗」雙模式；新增 `tools/verify_g3_new_concepts.js` 與 `tools/verify_millimeter_concept.js`，390px 視口零溢出、四大活動切換、Console 0 報錯全部通過。
+  6. 實體發布線上生效：執行 `.\deploy.ps1` 觸發 S0~S4 鋼鐵閉環，GitHub 倉庫與 Cloudflare Pages（https://math-108.pages.dev）發布完成，HTTPS 探針確認 Build `20261115_143425` 100% 生效！
+- [ ] 下一步：下一框全面啟動三年級全量剩餘單元概念小教室派工閉環，實現三年級概念小教室大滿貫！
 
 
 ---
