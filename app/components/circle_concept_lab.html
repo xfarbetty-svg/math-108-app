@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-S-3-3 圓概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  max-height: 172px;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn[data-part="center"].active { background: #ef4444; border-color: #ef4444; }
+.part-btn[data-part="rim"].active   { background: #d9910d; border-color: #d9910d; }
+.part-btn[data-part="radius"].active{ background: #2563eb; border-color: #2563eb; }
+.part-btn[data-part="diameter"].active{ background: #16a34a; border-color: #16a34a; }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--sky-deep);
+  min-width: 0;
+}
+.slider-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  white-space: nowrap;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🔴 活動一 · 認識部位</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">📏 活動二 · 半徑等長</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🧭 活動三 · 圓規畫圓</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🕵️ 活動四 · 直徑偵探</button>
+  </nav>
+
+  <!-- ==================== 活動一：認識圓的部位（圓心、圓周、半徑、直徑） ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 S-3-3 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🔴 活動一：認識圓的部位</div>
+    <div class="card-desc">
+      圓有四個重要的部位：<b>圓心</b>、<b>圓周</b>、<b>半徑</b>、<b>直徑</b>。點點看下面的膠囊按鈕，找出它們藏在哪裡！
+    </div>
+
+    <!-- 視覺畫布：圓與部位高亮 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <!-- 圓本體（暖米背景、精緻圓周外廓） -->
+        <circle id="c1-body" cx="150" cy="88" r="62" fill="#fff7ed" stroke="#d6c9b6" stroke-width="3"/>
+        <!-- 圓周高亮層 -->
+        <circle id="c1-rim-glow" cx="150" cy="88" r="62" fill="none" stroke="#d9910d" stroke-width="5" opacity="0" style="transition: opacity 0.3s;"/>
+        <!-- 半徑線段（藍） -->
+        <line id="c1-radius-line" x1="150" y1="88" x2="212" y2="88" stroke="#2563eb" stroke-width="4" stroke-linecap="round" opacity="0"/>
+        <text id="c1-radius-label" x="184" y="78" font-size="13" font-weight="900" fill="#2563eb" opacity="0">r</text>
+        <!-- 直徑線段（綠，貫穿圓心） -->
+        <line id="c1-diameter-line" x1="88" y1="88" x2="212" y2="88" stroke="#16a34a" stroke-width="4" stroke-linecap="round" opacity="0"/>
+        <text id="c1-diameter-label" x="196" y="108" font-size="13" font-weight="900" fill="#16a34a" opacity="0">d</text>
+        <!-- 圓心紅點與同心波紋 -->
+        <circle id="c1-ripple" cx="150" cy="88" r="10" fill="none" stroke="#ef4444" stroke-width="2" opacity="0"/>
+        <circle id="c1-center-dot" cx="150" cy="88" r="5" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5" style="transition: r 0.2s;"/>
+        <text id="c1-part-name" x="150" y="165" font-size="12.5" font-weight="900" fill="#57534e" text-anchor="middle">點上面的按鈕，認識圓的部位！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn" data-part="center" onclick="selectPart('center')">🔴 圓心</button>
+        <button class="part-btn" data-part="rim" onclick="selectPart('rim')">⭕ 圓周</button>
+        <button class="part-btn" data-part="radius" onclick="selectPart('radius')">📏 半徑</button>
+        <button class="part-btn" data-part="diameter" onclick="selectPart('diameter')">📐 直徑</button>
+      </div>
+      <div class="info-bubble" id="act1-bubble">
+        💡 圓正中間固定不動的點叫做<b>圓心</b>！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：半徑處處等長 ＆ 直徑＝半徑×2 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 S-3-3 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📏 活動二：半徑處處等長 ＆ 直徑＝半徑×2</div>
+    <div class="card-desc">
+      轉動藍色指針，不管轉到哪個角度，長度永遠是 <b>5 cm</b>！打開對向半徑，兩條半徑剛好接成一條直徑！
+    </div>
+
+    <!-- 視覺畫布：旋轉半徑指針 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="88" r="62" fill="#fff7ed" stroke="#d6c9b6" stroke-width="3"/>
+        <!-- 對向半徑（珊瑚色） -->
+        <g id="c2-opposite" style="display:none;">
+          <line x1="150" y1="88" x2="212" y2="88" stroke="#f4694b" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+        <!-- 主半徑指針（藍，可旋轉） -->
+        <g id="c2-pointer" transform="rotate(0, 150, 88)">
+          <line x1="150" y1="88" x2="212" y2="88" stroke="#2563eb" stroke-width="4.5" stroke-linecap="round"/>
+          <circle cx="212" cy="88" r="4" fill="#2563eb"/>
+          <text x="184" y="80" font-size="12" font-weight="900" fill="#2563eb">5cm</text>
+        </g>
+        <!-- 直徑提示（開啟對向時顯示） -->
+        <text id="c2-d-tag" x="150" y="18" font-size="11.5" font-weight="900" fill="#16a34a" text-anchor="middle" style="display:none;">直徑 10cm ＝ 5cm ＋ 5cm</text>
+        <!-- 圓心 -->
+        <circle cx="150" cy="88" r="5" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+        <text id="c2-angle-tag" x="150" y="165" font-size="12.5" font-weight="900" fill="#57534e" text-anchor="middle">角度：0° · 長度依然是 5 cm（半徑處處等長！）</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="slider-row">
+        <span class="slider-label">🔄 轉動角度</span>
+        <input type="range" id="c2-slider" min="0" max="360" value="0" step="5" oninput="setPointerAngle(this.value)">
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="spinPointer()">🌀 旋轉一圈</button>
+        <button class="btn-action" id="btn-opposite" onclick="toggleOpposite()">↔️ 展開對向半徑</button>
+      </div>
+      <div class="info-bubble" id="act2-bubble">
+        💡 指針轉到哪，長度都是 <b>5 cm</b>！半徑從圓心出發，處處等長！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：圓規畫圓擬物互動（兩腳張開就是半徑） ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 S-3-3 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧭 活動三：圓規畫圓 · 兩腳張開就是半徑</div>
+    <div class="card-desc">
+      金屬針固定在圓心，鉛筆腳張開的距離就是<b>半徑</b>！滑動調整張開距離，按下開始畫圓，轉一圈就畫出飽滿的圓！
+    </div>
+
+    <!-- 視覺畫布：日系擬物圓規 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- 畫紙 -->
+        <rect x="20" y="14" width="260" height="150" rx="8" fill="#ffffff" stroke="#e8dfd1" stroke-width="2"/>
+        <!-- 鉛筆軌跡（漸進描繪的彩色圓） -->
+        <circle id="c3-trace" cx="150" cy="97" r="0" fill="none" stroke="url(#c3-rainbow)" stroke-width="4" stroke-linecap="round"
+                pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90, 150, 97)"/>
+        <defs>
+          <linearGradient id="c3-rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f472b6"/>
+            <stop offset="50%" stop-color="#facc15"/>
+            <stop offset="100%" stop-color="#38bdf8"/>
+          </linearGradient>
+        </defs>
+        <!-- 圓規本體（整組繞針尖旋轉） -->
+        <g id="c3-compass" transform="rotate(0, 150, 97)">
+          <!-- 鉛筆腳 -->
+          <line id="c3-pencil-leg" x1="150" y1="34" x2="202" y2="97" stroke="#8d6e63" stroke-width="6" stroke-linecap="round"/>
+          <circle id="c3-pencil-tip" cx="202" cy="97" r="4.5" fill="#1e293b"/>
+          <!-- 金屬針腳 -->
+          <line x1="150" y1="34" x2="150" y2="97" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+          <!-- 圓規頭 -->
+          <circle cx="150" cy="30" r="8" fill="#64748b" stroke="#334155" stroke-width="2"/>
+          <circle cx="150" cy="30" r="3" fill="#cbd5e1"/>
+        </g>
+        <!-- 針尖固定點（圓心） -->
+        <circle cx="150" cy="97" r="5" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+        <!-- 底部尺規刻度 -->
+        <line x1="55" y1="170" x2="245" y2="170" stroke="#94a3b8" stroke-width="2"/>
+        <g id="c3-ticks" font-size="9" font-weight="800" fill="#64748b" text-anchor="middle">
+          <line x1="85"  y1="165" x2="85"  y2="175" stroke="#94a3b8" stroke-width="1.5"/><text x="85"  y="163">2</text>
+          <line x1="115" y1="166" x2="115" y2="174" stroke="#94a3b8" stroke-width="1.5"/><text x="115" y="163">3</text>
+          <line x1="145" y1="165" x2="145" y2="175" stroke="#94a3b8" stroke-width="1.5"/><text x="145" y="163">4</text>
+          <line x1="175" y1="166" x2="175" y2="174" stroke="#94a3b8" stroke-width="1.5"/><text x="175" y="163">5</text>
+          <line x1="205" y1="165" x2="205" y2="175" stroke="#94a3b8" stroke-width="1.5"/><text x="205" y="163">6</text>
+        </g>
+        <circle id="c3-marker" cx="145" cy="170" r="4.5" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="slider-row">
+        <span class="slider-label">📐 張開距離</span>
+        <input type="range" id="c3-slider" min="2" max="6" value="4" step="0.5" oninput="setCompassOpening(this.value)">
+      </div>
+      <div class="panel-stat" id="act3-stat">圓規張開 4 cm ＝ 半徑 r = 4 cm</div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-c3-draw" onclick="drawCircle()">✏️ 開始畫圓</button>
+      </div>
+      <div class="info-bubble warn" id="act3-bubble">
+        ⚠️ 段考必考：題目說「圓規張開 4 公分畫圓」，畫出的圓<b>半徑就是 4 公分</b>，直徑是 8 公分！圓規張開的距離是半徑，不是直徑！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：迷思小偵探（哪條才是直徑？） ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 S-3-3 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🕵️ 活動四：迷思小偵探 · 哪條才是直徑？</div>
+    <div class="card-desc">
+      圓裡有 A、B、C、D 四條線段，只有一條是<b>真正的直徑</b>！想一想直徑的兩個條件，再點選答案！
+    </div>
+
+    <!-- 視覺畫布：四線段偵探盤 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="85" r="62" fill="#fff7ed" stroke="#d6c9b6" stroke-width="3"/>
+        <circle cx="150" cy="85" r="4.5" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+
+        <!-- 線A 紫色弦（兩端在圓周，沒過圓心，6cm） -->
+        <line x1="98" y1="46" x2="98" y2="124" stroke="#8b5cf6" stroke-width="5" stroke-linecap="round"/>
+        <line x1="98" y1="46" x2="98" y2="124" stroke="transparent" stroke-width="18" style="cursor:pointer;" onclick="pickLine('A')"/>
+        <text x="80" y="85" font-size="12" font-weight="900" fill="#8b5cf6">A</text>
+
+        <!-- 線B 黃色（從圓心出發但沒到圓周，3.5cm） -->
+        <line x1="150" y1="85" x2="110.6" y2="107.8" stroke="#eab308" stroke-width="5" stroke-linecap="round"/>
+        <line x1="150" y1="85" x2="110.6" y2="107.8" stroke="transparent" stroke-width="18" style="cursor:pointer;" onclick="pickLine('B')"/>
+        <text x="112" y="126" font-size="12" font-weight="900" fill="#d9910d">B</text>
+
+        <!-- 線C 綠色（穿過圓心、兩端在圓周，10cm＝真直徑） -->
+        <line id="c4-lineC" x1="88" y1="85" x2="212" y2="85" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+        <line x1="88" y1="85" x2="212" y2="85" stroke="transparent" stroke-width="18" style="cursor:pointer;" onclick="pickLine('C')"/>
+        <text x="214" y="74" font-size="12" font-weight="900" fill="#16a34a">C</text>
+
+        <!-- 線D 灰色（穿過圓心但兩端突出圓外） -->
+        <line x1="110" y1="154.3" x2="190" y2="15.7" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+        <line x1="110" y1="154.3" x2="190" y2="15.7" stroke="transparent" stroke-width="18" style="cursor:pointer;" onclick="pickLine('D')"/>
+        <text x="192" y="30" font-size="12" font-weight="900" fill="#64748b">D</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act4-stat">哪一條才是真正的直徑？請點選！</div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="pickLine('A')">點線 A</button>
+        <button class="btn-action" onclick="pickLine('B')">點線 B</button>
+        <button class="btn-action" onclick="pickLine('C')">點線 C</button>
+        <button class="btn-action" onclick="pickLine('D')">點線 D</button>
+      </div>
+      <div class="info-bubble" id="act4-bubble">
+        💡 提示：直徑要<b>通過圓心</b>，而且<b>兩端都要在圓周上</b>！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 挑戰真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：認識圓的部位 ==================== */
+const ACT1_PART_INFO = {
+  center:   { name: "圓心", text: "圓正中間固定不動的點叫做<b>圓心</b>，它像圓的家一樣，固定不動！", voice: "圓正中間固定不動的點叫做圓心，它像圓的家一樣，固定不動喔！" },
+  rim:      { name: "圓周", text: "圓最外圍封閉平滑的曲線叫做<b>圓周</b>，沿著它走一圈就繞了圓一整圈！", voice: "圓最外圍封閉平滑的曲線叫做圓周，沿著它走一圈，就繞了圓一整圈喔！" },
+  radius:   { name: "半徑", text: "從<b>圓心</b>連接到<b>圓周</b>任一點的線段叫做<b>半徑 r</b>！", voice: "從圓心連接到圓周任何一點的線段，叫做半徑！" },
+  diameter: { name: "直徑", text: "<b>通過圓心</b>且<b>兩端都在圓周上</b>的線段叫做<b>直徑 d</b>！", voice: "通過圓心，而且兩端都在圓周上的線段，叫做直徑！" }
+};
+function selectPart(part) {
+  const info = ACT1_PART_INFO[part];
+  if (!info) return;
+  document.querySelectorAll("#act-1-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.part === part));
+
+  const ripple = document.getElementById("c1-ripple");
+  const dot = document.getElementById("c1-center-dot");
+  const rimGlow = document.getElementById("c1-rim-glow");
+  const rLine = document.getElementById("c1-radius-line");
+  const rLabel = document.getElementById("c1-radius-label");
+  const dLine = document.getElementById("c1-diameter-line");
+  const dLabel = document.getElementById("c1-diameter-label");
+  const nameTag = document.getElementById("c1-part-name");
+  const bubble = document.getElementById("act1-bubble");
+
+  // 全部歸零
+  if (ripple) { ripple.style.opacity = "0"; ripple.setAttribute("r", "10"); }
+  if (dot) dot.setAttribute("r", "5");
+  if (rimGlow) rimGlow.style.opacity = "0";
+  if (rLine) rLine.style.opacity = "0";
+  if (rLabel) rLabel.style.opacity = "0";
+  if (dLine) dLine.style.opacity = "0";
+  if (dLabel) dLabel.style.opacity = "0";
+
+  if (part === "center") {
+    if (dot) dot.setAttribute("r", "8");
+    if (ripple) {
+      ripple.style.opacity = "0.8";
+      // 波紋動畫：半徑 10 → 34 淡出
+      let rr = 10;
+      clearInterval(window._c1RippleTimer);
+      window._c1RippleTimer = setInterval(() => {
+        rr += 2;
+        if (rr >= 36) { rr = 10; }
+        if (ripple) { ripple.setAttribute("r", String(rr)); ripple.style.opacity = String(Math.max(0, 0.8 - (rr - 10) / 40)); }
+      }, 60);
+    }
+    nameTag.textContent = "這是圓心";
+    nameTag.setAttribute("fill", "#ef4444");
+  } else if (part === "rim") {
+    if (rimGlow) rimGlow.style.opacity = "1";
+    nameTag.textContent = "這一圈就是圓周";
+    nameTag.setAttribute("fill", "#d9910d");
+  } else if (part === "radius") {
+    if (rLine) rLine.style.opacity = "1";
+    if (rLabel) rLabel.style.opacity = "1";
+    nameTag.textContent = "圓心 → 圓周 ＝ 半徑 r";
+    nameTag.setAttribute("fill", "#2563eb");
+  } else if (part === "diameter") {
+    if (dLine) dLine.style.opacity = "1";
+    if (dLabel) dLabel.style.opacity = "1";
+    nameTag.textContent = "通過圓心、兩端在圓周 ＝ 直徑 d";
+    nameTag.setAttribute("fill", "#16a34a");
+  }
+  if (bubble) bubble.innerHTML = "💡 " + info.text;
+  playVoiceText(info.voice);
+}
+
+/* ==================== 活動二：半徑處處等長 ＆ 直徑＝半徑×2 ==================== */
+let c2Angle = 0;
+let c2OppositeOn = false;
+let c2Spinning = false;
+
+function setPointerAngle(deg) {
+  c2Angle = ((deg % 360) + 360) % 360;
+  const pointer = document.getElementById("c2-pointer");
+  const slider = document.getElementById("c2-slider");
+  const angleTag = document.getElementById("c2-angle-tag");
+  const bubble = document.getElementById("act2-bubble");
+  if (pointer) pointer.setAttribute("transform", `rotate(${c2Angle}, 150, 88)`);
+  if (slider && slider.value !== String(deg)) slider.value = String(Math.round(c2Angle));
+  if (angleTag) angleTag.textContent = `角度：${Math.round(c2Angle)}° · 長度依然是 5 cm（半徑處處等長！）`;
+  if (bubble) {
+    if (c2OppositeOn) {
+      bubble.innerHTML = `💡 藍色半徑 ${Math.round(c2Angle)}° ＋ 珊瑚色半徑（對向 180°）→ <b>半徑 5cm ＋ 半徑 5cm ＝ 直徑 10cm（直徑 ＝ 半徑 × 2）</b>！`;
+    } else {
+      bubble.innerHTML = `💡 指針轉到 <b>${Math.round(c2Angle)}°</b>，長度依然是 <b>5 cm</b>！半徑從圓心出發，處處等長！`;
+    }
+  }
+}
+
+function spinPointer() {
+  if (c2Spinning) return;
+  c2Spinning = true;
+  let steps = 72; // 5°/步 × 72 = 360°
+  const timer = setInterval(() => {
+    if (steps <= 0) { clearInterval(timer); c2Spinning = false; return; }
+    setPointerAngle(c2Angle + 5);
+    steps--;
+  }, 40);
+}
+
+function toggleOpposite() {
+  c2OppositeOn = !c2OppositeOn;
+  const opp = document.getElementById("c2-opposite");
+  const dTag = document.getElementById("c2-d-tag");
+  const btn = document.getElementById("btn-opposite");
+  if (opp) opp.style.display = c2OppositeOn ? "block" : "none";
+  if (dTag) dTag.style.display = c2OppositeOn ? "block" : "none";
+  if (btn) btn.classList.toggle("active", c2OppositeOn);
+  const bubble = document.getElementById("act2-bubble");
+  if (c2OppositeOn && bubble) {
+    bubble.innerHTML = "💡 藍色半徑 5cm ＋ 珊瑚色半徑 5cm 剛好連成一條直線！<b>半徑 5cm ＋ 半徑 5cm ＝ 直徑 10cm（直徑 ＝ 半徑 × 2）</b>！";
+  }
+  setPointerAngle(c2Angle);
+}
+
+/* ==================== 活動三：圓規畫圓 ==================== */
+const C3_PX_PER_CM = 13;   // cm → px 縮放
+const C3_CENTER_X = 150;
+const C3_CENTER_Y = 97;
+const C3_LEG_LEN = 95;     // 圓規腳固定長度
+
+let c3Opening = 4;
+let c3Drawing = false;
+
+function setCompassOpening(cm) {
+  c3Opening = parseFloat(cm);
+  const rPx = c3Opening * C3_PX_PER_CM;
+  const pencilLeg = document.getElementById("c3-pencil-leg");
+  const pencilTip = document.getElementById("c3-pencil-tip");
+  const stat = document.getElementById("act3-stat");
+  const marker = document.getElementById("c3-marker");
+  const bubble = document.getElementById("act3-bubble");
+
+  // 鉛筆腳頂點（圓規頭）位置：隨張開距離調整，腳長固定
+  const apexY = C3_CENTER_Y - Math.sqrt(Math.max(C3_LEG_LEN * C3_LEG_LEN - rPx * rPx, 400));
+  if (pencilLeg) { pencilLeg.setAttribute("x1", C3_CENTER_X); pencilLeg.setAttribute("y1", apexY.toFixed(1)); pencilLeg.setAttribute("x2", (C3_CENTER_X + rPx).toFixed(1)); pencilLeg.setAttribute("y2", C3_CENTER_Y); }
+  if (pencilTip) { pencilTip.setAttribute("cx", (C3_CENTER_X + rPx).toFixed(1)); pencilTip.setAttribute("cy", C3_CENTER_Y); }
+  // 圓規頭同步移動
+  const compassHead = document.querySelector("#c3-compass circle");
+  if (compassHead) { compassHead.setAttribute("cy", (apexY - 4).toFixed(1)); }
+
+  // 尺規紅色標記：2cm→x=85, 6cm→x=205（每 cm 30px）
+  if (marker) marker.setAttribute("cx", String(55 + c3Opening * 30));
+  if (stat) stat.textContent = `圓規張開 ${c3Opening} cm ＝ 半徑 r = ${c3Opening} cm`;
+  if (bubble) bubble.innerHTML = `⚠️ 圓規張開 <b>${c3Opening} 公分</b>，畫出的圓<b>半徑就是 ${c3Opening} 公分</b>，直徑是 <b>${(c3Opening * 2)} 公分</b>！圓規張開的距離是半徑，不是直徑！`;
+
+  // 重設軌跡
+  resetTrace();
+}
+
+function resetTrace() {
+  const trace = document.getElementById("c3-trace");
+  if (trace) {
+    trace.setAttribute("r", String(c3Opening * C3_PX_PER_CM));
+    trace.setAttribute("stroke-dashoffset", "1");
+  }
+}
+
+function drawCircle() {
+  if (c3Drawing) return;
+  c3Drawing = true;
+  stopSpeech();
+  const btn = document.getElementById("btn-c3-draw");
+  if (btn) btn.classList.add("active");
+
+  resetTrace();
+  const compass = document.getElementById("c3-compass");
+  const trace = document.getElementById("c3-trace");
+  const steps = 90;
+  let i = 0;
+  const timer = setInterval(() => {
+    i++;
+    const ratio = i / steps;
+    if (compass) compass.setAttribute("transform", `rotate(${-ratio * 360}, ${C3_CENTER_X}, ${C3_CENTER_Y})`);
+    if (trace) trace.setAttribute("stroke-dashoffset", String(Math.max(0, 1 - ratio)));
+    if (i >= steps) {
+      clearInterval(timer);
+      c3Drawing = false;
+      if (compass) compass.setAttribute("transform", `rotate(0, ${C3_CENTER_X}, ${C3_CENTER_Y})`);
+      if (btn) btn.classList.remove("active");
+      const bubble = document.getElementById("act3-bubble");
+      if (bubble) {
+        bubble.innerHTML = `🎉 畫好了！這個圓的<b>半徑 ${c3Opening} 公分</b>、<b>直徑 ${(c3Opening * 2)} 公分</b>（直徑 ＝ 半徑 × 2）！`;
+      }
+      playVoiceText(`畫好了！圓規張開${c3Opening}公分，畫出的圓半徑就是${c3Opening}公分，直徑是${c3Opening * 2}公分！`);
+    }
+  }, 22);
+}
+
+/* ==================== 活動四：迷思小偵探 ==================== */
+const ACT4_FEEDBACK = {
+  A: { ok: false, text: "❌ 線 A 只是<b>弦</b>：兩端雖然在圓周上，但是<b>沒有通過圓心</b>！長度只有 6 cm。", voice: "線A兩端在圓周上，可是沒有通過圓心，它只是弦，不是直徑喔！" },
+  B: { ok: false, text: "❌ 線 B 從<b>圓心</b>出發，但<b>一端沒有到達圓周</b>！長度只有 3.5 cm，它其實是一條比較短的半徑。", voice: "線B從圓心出發，可是有一端沒有到達圓周，長度不夠，不是直徑喔！" },
+  C: { ok: true,  text: "✅ <b>答對了！</b>線 C <b>兩端都在圓周上，且通過圓心</b>！長度 10 cm 是<b>圓內最長的一條線段</b>，它就是直徑！", voice: "答對了！線C兩端都在圓周上，而且通過圓心，長度十公分，是圓內最長的線段，它就是直徑！" },
+  D: { ok: false, text: "❌ 線 D 雖然<b>通過圓心</b>，但是<b>兩端都突出圓外</b>，沒有剛好落在圓周上！", voice: "線D雖然通過圓心，可是兩端都突出圓外，沒有落在圓周上，不是直徑喔！" }
+};
+function pickLine(key) {
+  const fb = ACT4_FEEDBACK[key];
+  if (!fb) return;
+  const stat = document.getElementById("act4-stat");
+  const bubble = document.getElementById("act4-bubble");
+  const lineC = document.getElementById("c4-lineC");
+
+  document.querySelectorAll("#act-4-view .btn-action").forEach(b => b.classList.remove("active"));
+  const btn = Array.from(document.querySelectorAll("#act-4-view .btn-action")).find(b => b.textContent === "點線 " + key);
+  if (btn) btn.classList.add("active");
+
+  // 線C 高亮答對效果
+  if (lineC) lineC.setAttribute("stroke-width", key === "C" ? "7" : "5");
+
+  if (stat) stat.textContent = key === "C" ? "🎉 線 C 就是直徑（10 cm）！" : `線 ${key} 不是直徑，再想想！`;
+  if (bubble) {
+    bubble.classList.toggle("warn", !fb.ok);
+    if (fb.ok) bubble.classList.remove("warn");
+    bubble.innerHTML = "💡 " + fb.text;
+  }
+  playVoiceText(fb.voice);
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：認識圓的部位。點點看四顆按鈕：圓心是圓正中間的點，圓周是最外圍的曲線，半徑從圓心連到圓周，直徑通過圓心、兩端都在圓周上喔！",
+  2: "活動二：半徑處處等長。轉動指針，不管轉到哪個角度，長度都是五公分。打開對向半徑，兩條半徑接成一條直徑，直徑等於半徑乘以二喔！",
+  3: "活動三：圓規畫圓。金屬針固定在圓心，鉛筆腳張開的距離就是半徑。調好張開距離，按下開始畫圓，轉一圈就畫出漂亮的圓囉！",
+  4: "活動四：迷思小偵探。圓裡有四條線段，只有一條是真正的直徑。直徑要通過圓心，兩端都要在圓周上，仔細找找看吧！"
+};
+function playVoice(actNum) {
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+setPointerAngle(0);
+setCompassOpening(4);
+</script>
+</body>
+</html>

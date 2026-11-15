@@ -75,9 +75,13 @@ function renderGrade() {
 
   const cards = g.units.map((u) => {
     const ready = u.status === "ready";
+    let codeLabel = u.code;
+    if (g.grade === 3 && (u.code === "N-3-13" || u.code === "S-3-1")) {
+      codeLabel = `${u.code} · 同義整合`;
+    }
     return `
       <button class="unit-card ${ready ? "ready" : "locked"}" ${ready ? "" : "disabled"} data-code="${u.code}">
-        <span class="code">${u.code}</span>
+        <span class="code">${codeLabel}</span>
         <h3>${u.title}</h3>
         <p class="desc">${u.full_text}</p>
         <span class="hint">${ready ? (u.question_count + " 題真題 · 具象教具互動 · 已驗真") : UPCOMING_HINT}</span>
@@ -126,7 +130,8 @@ const CONCEPT_COMPONENTS = {
   "N-3-13": "components/angle_concept_lab.html",
   "S-3-1": "components/angle_concept_lab.html",
   "N-3-14": "components/area_concept_lab.html",
-  "N-3-15": "components/capacity_concept_lab.html"
+  "N-3-15": "components/capacity_concept_lab.html",
+  "S-3-3": "components/circle_concept_lab.html"
 };
 
 let currentUnitMode = "exam"; // "concept" | "exam"
