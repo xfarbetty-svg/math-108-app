@@ -10,97 +10,122 @@
             --wood-dark: #5d4037;
             --wood-light: #8d6e63;
             --accent: #d32f2f;
-            --ruler-alpha: rgba(255, 255, 255, 0.4);
+            --ruler-alpha: rgba(255, 255, 255, 0.5);
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
-            font-family: "Microsoft JhengHei", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
             background-color: #d7ccc8;
             display: flex; justify-content: center; align-items: flex-start;
             height: 100vh; overflow: hidden;
+            user-select: none;
         }
         #app-container {
             width: 390px; height: 420px;
             background: var(--bg-paper);
-            border: 8px solid var(--wood-dark);
+            border: 6px solid var(--wood-dark);
             position: relative; overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         /* Tabs Navigation */
         nav {
-            display: flex; background: var(--wood-dark); height: 36px;
+            display: flex; background: var(--wood-dark); height: 38px;
         }
         .tab {
-            flex: 1; color: #fff; font-size: 12px; border: none;
-            background: none; cursor: pointer; opacity: 0.7;
-            transition: 0.3s; border-bottom: 3px solid transparent;
+            flex: 1; color: #fff; font-size: 13px; border: none;
+            background: none; cursor: pointer; opacity: 0.75;
+            transition: 0.2s; border-bottom: 3px solid transparent;
         }
-        .tab.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: bold; }
+        .tab.active { opacity: 1; border-bottom: 3px solid #ffeb3b; font-weight: bold; }
 
         /* View Management */
         .view { 
-            display: none; width: 100%; height: 340px; 
+            display: none; width: 100%; height: 345px; 
             position: relative; padding: 10px;
         }
         .view.active { display: block; }
 
         /* Common Elements */
-        .shape { position: absolute; border: 2px solid #333; transition: 0.3s; }
-        .label { position: absolute; font-size: 12px; color: var(--wood-dark); pointer-events: none; }
+        .shape { position: absolute; border: 2.5px solid #333; transition: 0.2s; cursor: pointer; }
+        .shape:active { transform: scale(0.98); }
+        .label { position: absolute; font-size: 13px; font-weight: bold; color: var(--wood-dark); pointer-events: none; }
         .btn-action {
-            position: absolute; bottom: 10px; right: 10px;
-            padding: 6px 12px; background: var(--wood-light);
-            color: white; border: none; border-radius: 4px; cursor: pointer;
+            position: absolute; bottom: 12px; right: 14px;
+            padding: 8px 16px; background: var(--wood-light);
+            color: white; border: none; border-radius: 18px; cursor: pointer;
+            font-size: 13px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
+        .btn-action:active { transform: translateY(1px); }
 
         /* Act 1: Observation */
-        #act-1-view .square { width: 80px; height: 80px; left: 50px; top: 80px; background: #fffde7; }
-        #act-1-view .rect { width: 120px; height: 80px; left: 200px; top: 80px; background: #e3f2fd; }
-        .tick { position: absolute; background: var(--accent); }
-        .tick-v { width: 2px; height: 10px; }
-        .tick-h { width: 10px; height: 2px; }
+        #act-1-view .square { width: 84px; height: 84px; left: 45px; top: 75px; background: #fffde7; border-radius: 2px; }
+        #act-1-view .rect { width: 126px; height: 84px; left: 195px; top: 75px; background: #e3f2fd; border-radius: 2px; }
+        .tick-mark {
+            position: absolute; background: var(--accent); border-radius: 1px;
+        }
+        .tm-v { width: 3px; height: 12px; transform: translateX(-50%); }
+        .tm-h { height: 3px; width: 12px; transform: translateY(-50%); }
 
         /* Act 2: Triangle Ruler */
         #ruler {
-            position: absolute; width: 100px; height: 100px;
+            position: absolute; width: 90px; height: 90px; left: 140px; top: 180px;
             cursor: move; z-index: 100; touch-action: none;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
-        }
-        .corner-marker {
-            position: absolute; width: 15px; height: 15px;
-            border: 2px dashed #999; border-radius: 50%;
+            filter: drop-shadow(2px 3px 5px rgba(0,0,0,0.3));
         }
 
         /* Act 3: Folding */
-        .fold-paper {
-            width: 160px; height: 100px; background: #e1f5fe;
-            margin: 40px auto; position: relative; border: 2px solid #0288d1;
-            transform-style: preserve-3d; transition: transform 1s;
+        #paper-container {
+            perspective: 800px; margin: 30px auto 0 auto; width: 160px; height: 120px;
         }
-        .fold-paper.folded { transform: rotateX(-180deg); transform-origin: top; }
+        .fold-paper {
+            width: 160px; height: 120px; background: #e1f5fe;
+            position: relative; border: 2px solid #0288d1; border-radius: 4px;
+            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top center;
+        }
+        .fold-paper.folded {
+            transform: rotateX(-180deg);
+        }
+        .fold-paper::after {
+            content: '摺痕'; position: absolute; top: 0; left: 0; right: 0;
+            border-top: 2px dashed #e91e63; font-size: 10px; color: #e91e63; text-align: right;
+            padding-right: 4px; display: none;
+        }
+        .fold-paper.folded::after { display: block; }
 
         /* Act 4: Grid */
         #grid-container {
-            display: grid; grid-template-columns: repeat(5, 30px);
-            grid-template-rows: repeat(3, 30px);
-            gap: 1px; background: #ccc; width: 156px; margin: 40px auto;
+            display: grid; grid-template-columns: repeat(5, 32px);
+            grid-template-rows: repeat(3, 32px);
+            gap: 2px; background: #b0bec5; width: 168px; margin: 25px auto 10px auto;
+            padding: 2px; border-radius: 4px;
         }
-        .grid-cell { width: 30px; height: 30px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-        .grid-cell.filled { background: #ffcc80; animation: pop 0.3s; }
+        .grid-cell {
+            width: 32px; height: 32px; background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: bold; color: #555;
+            transition: all 0.2s;
+        }
+        .grid-cell.filled {
+            background: #ffb74d; color: #d84315; animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes popIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         /* Audio Control */
         #audio-ctrl {
-            position: absolute; bottom: 5px; left: 5px;
-            background: rgba(255,255,255,0.8); border-radius: 50%;
-            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 18px; z-index: 200;
+            position: absolute; bottom: 8px; left: 10px;
+            background: rgba(255,255,255,0.9); border-radius: 50%;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 18px; z-index: 200; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         .hint-text {
-            position: absolute; top: 45px; width: 100%; text-align: center;
-            font-size: 14px; color: #555; font-weight: bold;
+            position: absolute; top: 44px; width: 100%; text-align: center;
+            font-size: 13px; color: #3e2723; font-weight: bold;
         }
     </style>
 </head>
@@ -108,14 +133,14 @@
 
 <div id="app-container">
     <nav>
-        <button class="tab active" id="tab-act1" onclick="switchAct(1)">1.觀察</button>
-        <button class="tab" id="tab-act2" onclick="switchAct(2)">2.直角</button>
-        <button class="tab" id="tab-act3" onclick="switchAct(3)">3.對邊</button>
-        <button class="tab" id="tab-act4" onclick="switchAct(4)">4.面積</button>
+        <button class="tab active" id="tab-act1" onclick="switchAct(1)">1. 邊長</button>
+        <button class="tab" id="tab-act2" onclick="switchAct(2)">2. 直角</button>
+        <button class="tab" id="tab-act3" onclick="switchAct(3)">3. 對邊</button>
+        <button class="tab" id="tab-act4" onclick="switchAct(4)">4. 面積</button>
     </nav>
 
     <div id="audio-ctrl" onclick="toggleMute()">🔊</div>
-    <div class="hint-text" id="hint">觀察圖形，點擊邊看看！</div>
+    <div class="hint-text" id="hint">點擊圖形，看看邊長的秘密！</div>
 
     <!-- Act 1 -->
     <div id="act-1-view" class="view active">
@@ -125,36 +150,36 @@
         <div class="shape rect" onclick="markSides('rt')">
             <div id="rt-marks"></div>
         </div>
-        <div class="label" style="left: 70px; top: 170px;">正方形</div>
-        <div class="label" style="left: 235px; top: 170px;">長方形</div>
+        <div class="label" style="left: 65px; top: 170px;">正方形 (四邊等長)</div>
+        <div class="label" style="left: 205px; top: 170px;">長方形 (對邊等長)</div>
     </div>
 
     <!-- Act 2 -->
     <div id="act-2-view" class="view">
-        <div class="shape square" style="left:40px; top:100px; width:80px; height:80px;"></div>
-        <div class="shape rect" style="left:180px; top:100px; width:120px; height:80px;"></div>
+        <div class="shape square" style="left:40px; top:80px; width:84px; height:84px; background:#fffde7;"></div>
+        <div class="shape rect" style="left:180px; top:80px; width:126px; height:84px; background:#e3f2fd;"></div>
         <svg id="ruler" viewBox="0 0 100 100">
-            <path d="M 0 100 L 100 100 L 0 0 Z" fill="var(--ruler-alpha)" stroke="var(--wood-dark)" stroke-width="2"/>
-            <rect x="2" y="88" width="10" height="10" fill="none" stroke="red" stroke-width="1" />
+            <path d="M 0 100 L 100 100 L 0 0 Z" fill="var(--ruler-alpha)" stroke="var(--wood-dark)" stroke-width="2.5"/>
+            <rect x="2" y="86" width="12" height="12" fill="none" stroke="#d32f2f" stroke-width="2" />
         </svg>
-        <div class="label" style="bottom: 50px; width:100%; text-align:center;">拖曳三角板檢查四個角</div>
+        <div class="label" style="bottom: 50px; width:100%; text-align:center;">拖曳三角板的直角，貼齊比對 4 個角</div>
     </div>
 
     <!-- Act 3 -->
     <div id="act-3-view" class="view">
-        <div id="paper-container" style="perspective: 600px; margin-top: 60px;">
+        <div id="paper-container">
             <div id="paper" class="fold-paper">
-                <div style="position:absolute; top:-20px; width:100%; text-align:center; font-size:12px;">邊 A</div>
-                <div style="position:absolute; bottom:-20px; width:100%; text-align:center; font-size:12px;">邊 B</div>
+                <div style="position:absolute; top:-22px; width:100%; text-align:center; font-size:12px; font-weight:bold; color:#0288d1;">上邊 (長度相同)</div>
+                <div style="position:absolute; bottom:-22px; width:100%; text-align:center; font-size:12px; font-weight:bold; color:#0288d1;">下邊 (完全重合)</div>
             </div>
         </div>
-        <button class="btn-action" onclick="animateFold()">開始摺紙</button>
+        <button class="btn-action" id="fold-btn" onclick="animateFold()">開始對摺</button>
     </div>
 
     <!-- Act 4 -->
     <div id="act-4-view" class="view">
         <div id="grid-container"></div>
-        <div class="label" id="grid-info" style="bottom: 60px; width:100%; text-align:center;">長 5cm, 寬 3cm</div>
+        <div class="label" id="grid-info" style="bottom: 55px; width:100%; text-align:center;">長 5cm，寬 3cm 的長方形</div>
         <button class="btn-action" onclick="fillGrid()">鋪設方格</button>
     </div>
 </div>
@@ -162,14 +187,14 @@
 <script>
     let isMuted = false;
     const hints = [
-        "正方形四邊等長，長方形對邊等長。",
-        "使用三角板的直角，檢查圖形的四個角。",
-        "對摺後邊緣重合，代表對邊一樣長。",
-        "數一數，長方形裡面可以排多少個 1公分正方形？"
+        "正方形四邊一樣長，長方形對邊一樣長！",
+        "使用三角板的直角，檢查四個角是不是都是直角。",
+        "對摺後上下邊緣完全重合，代表對邊一樣長！",
+        "數一數，長方形一共可以鋪設多少個 1平方公分？"
     ];
 
     function speak(text) {
-        if (isMuted) return;
+        if (isMuted || !window.speechSynthesis) return;
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'zh-TW';
@@ -184,39 +209,150 @@
     function switchAct(actNum) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        const targetView = document.getElementById("act-" + actNum + "-view") || document.getElementById("act" + actNum);
+        const targetView = document.getElementById("act-" + actNum + "-view");
         if (targetView) targetView.classList.add('active');
-        const targetTab = document.getElementById("tab-act" + actNum) || document.querySelector(".tab:nth-child(" + actNum + ")");
+        const targetTab = document.getElementById("tab-act" + actNum);
         if (targetTab) targetTab.classList.add('active');
+        document.getElementById('hint').innerText = hints[actNum - 1];
         speak(hints[actNum - 1]);
     }
 
-    // Act 2: 三角板拖曳與磁吸邏輯
-    const ruler = document.getElementById('ruler') || document.getElementById('setsquare');
+    // Act 1: 邊長標記
+    let sqMarked = false;
+    let rtMarked = false;
+
+    function markSides(type) {
+        if (type === 'sq') {
+            sqMarked = !sqMarked;
+            const container = document.getElementById('sq-marks');
+            container.innerHTML = '';
+            if (sqMarked) {
+                // 四邊各一個標記
+                container.innerHTML = `
+                    <div class="tick-mark tm-h" style="top: -2px; left: 36px;"></div>
+                    <div class="tick-mark tm-h" style="bottom: -2px; left: 36px;"></div>
+                    <div class="tick-mark tm-v" style="left: -2px; top: 36px;"></div>
+                    <div class="tick-mark tm-v" style="right: -2px; top: 36px;"></div>
+                `;
+                speak('正方形：四條邊都有相同記號，代表四邊等長！');
+            }
+        } else if (type === 'rt') {
+            rtMarked = !rtMarked;
+            const container = document.getElementById('rt-marks');
+            container.innerHTML = '';
+            if (rtMarked) {
+                // 上下雙標記，左右單標記
+                container.innerHTML = `
+                    <div class="tick-mark tm-h" style="top: -4px; left: 56px;"></div>
+                    <div class="tick-mark tm-h" style="top: 0px; left: 56px;"></div>
+                    <div class="tick-mark tm-h" style="bottom: -4px; left: 56px;"></div>
+                    <div class="tick-mark tm-h" style="bottom: 0px; left: 56px;"></div>
+                    <div class="tick-mark tm-v" style="left: -2px; top: 36px;"></div>
+                    <div class="tick-mark tm-v" style="right: -2px; top: 36px;"></div>
+                `;
+                speak('長方形：上下對邊兩條線、左右對邊一條線，對邊等長！');
+            }
+        }
+    }
+
+    // Act 2: 三角板拖曳
+    const ruler = document.getElementById('ruler');
     if (ruler) {
         let isDragging = false;
         let offset = { x: 0, y: 0 };
+        const getCoord = (e) => {
+            const touch = e.touches ? e.touches[0] : e;
+            return { x: touch.clientX, y: touch.clientY };
+        };
         const startDrag = (e) => {
             isDragging = true;
-            const cx = e.touches ? e.touches[0].clientX : e.clientX;
-            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            const coord = getCoord(e);
             const rect = ruler.getBoundingClientRect();
-            offset.x = cx - rect.left; offset.y = cy - rect.top;
+            offset.x = coord.x - rect.left;
+            offset.y = coord.y - rect.top;
         };
         ruler.addEventListener('mousedown', startDrag);
         ruler.addEventListener('touchstart', startDrag, { passive: false });
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            const cx = e.touches ? e.touches[0].clientX : e.clientX;
-            const cy = e.touches ? e.touches[0].clientY : e.clientY;
-            ruler.style.left = (cx - offset.x) + 'px';
-            ruler.style.top = (cy - offset.y) + 'px';
+            const coord = getCoord(e);
+            const parentRect = document.getElementById('app-container').getBoundingClientRect();
+            let newX = coord.x - parentRect.left - offset.x;
+            let newY = coord.y - parentRect.top - offset.y;
+            ruler.style.left = newX + 'px';
+            ruler.style.top = newY + 'px';
         });
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const coord = getCoord(e);
+            const parentRect = document.getElementById('app-container').getBoundingClientRect();
+            let newX = coord.x - parentRect.left - offset.x;
+            let newY = coord.y - parentRect.top - offset.y;
+            ruler.style.left = newX + 'px';
+            ruler.style.top = newY + 'px';
+        }, { passive: false });
         window.addEventListener('mouseup', () => isDragging = false);
         window.addEventListener('touchend', () => isDragging = false);
     }
 
-    switchAct(1);
+    // Act 3: 摺紙檢驗
+    let isFolded = false;
+    function animateFold() {
+        const paper = document.getElementById('paper');
+        const btn = document.getElementById('fold-btn');
+        isFolded = !isFolded;
+        if (isFolded) {
+            paper.classList.add('folded');
+            btn.innerText = '展開紙張';
+            speak('對摺後上下邊完全重合，證明對邊一樣長！');
+        } else {
+            paper.classList.remove('folded');
+            btn.innerText = '開始對摺';
+            speak('展開紙張，觀察摺痕');
+        }
+    }
+
+    // Act 4: 面積方格鋪設
+    let isFilling = false;
+    function initGrid() {
+        const grid = document.getElementById('grid-container');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 15; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.id = 'cell-' + i;
+            cell.innerText = i;
+            grid.appendChild(cell);
+        }
+    }
+
+    async function fillGrid() {
+        if (isFilling) return;
+        isFilling = true;
+        initGrid();
+        const info = document.getElementById('grid-info');
+        info.innerText = '正在逐格鋪設 1cm² 方格...';
+
+        for (let i = 1; i <= 15; i++) {
+            const cell = document.getElementById('cell-' + i);
+            if (cell) cell.classList.add('filled');
+            info.innerText = `已鋪設 ${i} 塊方格 (5 × 3 ＝ 15)`;
+            await new Promise(r => setTimeout(r, 60));
+        }
+
+        info.innerHTML = `<b>鋪滿 15 塊方格！長 5 × 寬 3 ＝ 面積 15 平方公分</b>`;
+        speak('每排 5 個，有 3 排，一共有 15 個 1 平方公分！');
+        isFilling = false;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        initGrid();
+        switchAct(1);
+    });
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initGrid();
+    }
 </script>
 </body>
 </html>

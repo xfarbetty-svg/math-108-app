@@ -187,6 +187,47 @@ async function main() {
         console.log(`PASS Act ${act} 切換正常`);
       }
 
+      // 針對具象教具深度點擊斷言
+      if (lab.file === 'pattern_reasoning_lab.html') {
+        await evaluate(`switchAct(1); frogJump();`);
+        await new Promise((r) => setTimeout(r, 300));
+        const frogMoved = await evaluate(`document.getElementById('frog').style.transform.includes('translate')`);
+        const hasArc = await evaluate(`document.querySelectorAll('#frog-svg-layer path').length > 0`);
+        if (!frogMoved || !hasArc) throw new Error('pattern_reasoning_lab: 青蛙跳躍或弧線生成失敗！');
+        console.log('PASS R-3-2 跳跳蛙拋物線位移與弧線驗證通過');
+
+        await evaluate(`switchAct(2); addSquare();`);
+        const sqCount = await evaluate(`document.querySelectorAll('#match-group .match-square').length`);
+        if (sqCount !== 2) throw new Error('pattern_reasoning_lab: 火柴棒拼排正方形數量未更新！');
+        console.log('PASS R-3-2 火柴棒拼排正方形生成驗證通過');
+
+        await evaluate(`switchAct(3);`);
+        const cardCount = await evaluate(`document.querySelectorAll('#seq-container .num-card').length`);
+        if (cardCount !== 5) throw new Error('pattern_reasoning_lab: Act 3 數列卡片空白或數量不對！');
+        await evaluate(`revealDiff();`);
+        const bubbleCount = await evaluate(`document.querySelectorAll('#diff-bubbles-container .diff-bubble').length`);
+        if (bubbleCount === 0) throw new Error('pattern_reasoning_lab: 揭示規律差值氣泡未生成！');
+        console.log('PASS R-3-2 Act 3 找規律數列卡片非空白與差值氣泡驗證通過');
+      }
+
+      if (lab.file === 'square_rectangle_lab.html') {
+        await evaluate(`switchAct(1); markSides('sq');`);
+        const markCount = await evaluate(`document.querySelectorAll('#sq-marks .tick-mark').length`);
+        if (markCount !== 4) throw new Error('square_rectangle_lab: 正方形四邊等長標記未生成！');
+        console.log('PASS S-3-2 Act 1 四邊等長標記驗證通過');
+
+        await evaluate(`switchAct(3); animateFold();`);
+        const isFolded = await evaluate(`document.getElementById('paper').classList.contains('folded')`);
+        if (!isFolded) throw new Error('square_rectangle_lab: 3D 摺紙對摺動畫失敗！');
+        console.log('PASS S-3-2 Act 3 3D 摺紙對摺重合驗證通過');
+
+        await evaluate(`switchAct(4); fillGrid();`);
+        await new Promise((r) => setTimeout(r, 300));
+        const gridUpdated = await evaluate(`document.getElementById('grid-info').innerText.includes('鋪設') || document.getElementById('grid-info').innerText.includes('鋪滿')`);
+        if (!gridUpdated) throw new Error('square_rectangle_lab: 面積方格鋪設計數未更新！');
+        console.log('PASS S-3-2 Act 4 面積方格鋪設驗證通過');
+      }
+
       if (consoleErrors.length > 0) throw new Error(`${lab.file} Console 錯誤: ` + consoleErrors.join('; '));
       console.log(`PASS ${lab.file} 0 console errors`);
     }

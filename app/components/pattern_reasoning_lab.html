@@ -9,84 +9,147 @@
             --forest-green: #2d5a27;
             --leaf-green: #7fb069;
             --wood-brown: #8b5a2b;
-            --sky-blue: #e0f7fa;
+            --sky-blue: #e8f5e9;
             --frog-color: #4caf50;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
             width: 390px; height: 420px;
-            font-family: "Microsoft JhengHei", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
             background: var(--sky-blue);
             overflow: hidden;
             display: flex; flex-direction: column;
+            user-select: none;
         }
 
         /* 導航標籤 */
         .nav-tabs {
-            display: flex; background: var(--forest-green); height: 40px;
+            display: flex; background: var(--forest-green); height: 40px; min-height: 40px;
         }
         .tab {
             flex: 1; color: white; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; cursor: pointer; border-bottom: 3px solid transparent; opacity: 0.7;
+            font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent; opacity: 0.75;
+            transition: 0.2s;
         }
-        .tab.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: bold; }
+        .tab.active { opacity: 1; border-bottom: 3px solid #ffeb3b; font-weight: bold; }
 
         /* 視圖容器 */
-        .view-container { flex: 1; position: relative; overflow: hidden; padding: 10px; }
-        .view { display: none; height: 100%; flex-direction: column; align-items: center; }
+        .view-container { flex: 1; position: relative; overflow: hidden; padding: 10px 12px; }
+        .view { display: none; height: 100%; flex-direction: column; align-items: center; justify-content: flex-start; }
         .view.active { display: flex; }
 
         /* 通用元件 */
-        .title { font-size: 16px; color: var(--forest-green); margin-bottom: 8px; font-weight: bold; }
+        .title { font-size: 15px; color: var(--forest-green); margin-bottom: 8px; font-weight: bold; text-align: center; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
         .btn {
-            background: var(--leaf-green); color: white; border: none; padding: 6px 12px;
-            border-radius: 15px; cursor: pointer; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background: var(--leaf-green); color: white; border: none; padding: 8px 16px;
+            border-radius: 18px; cursor: pointer; font-size: 13px; font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15); display: flex; align-items: gap; gap: 4px;
         }
-        .btn:active { transform: translateY(2px); }
+        .btn:active { transform: translateY(1px); }
+        .btn.secondary { background: #78909c; }
 
         /* Act 1: 跳跳蛙 */
-        #frog-path { width: 100%; height: 120px; position: relative; border-bottom: 2px solid var(--wood-brown); margin-top: 20px; }
-        .lilypad { position: absolute; bottom: -10px; width: 40px; height: 15px; background: #45a049; border-radius: 50%; text-align: center; font-size: 10px; color: white; }
-        #frog { 
-            position: absolute; width: 30px; height: 30px; bottom: 5px; left: 5px; 
-            transition: all 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95); z-index: 10;
-            font-size: 24px; display: flex; align-items: center; justify-content: center;
+        #frog-path-stage {
+            width: 100%; height: 160px; position: relative;
+            background: #ffffff; border-radius: 12px; border: 1.5px solid #c8e6c9;
+            overflow: hidden; margin-top: 4px;
         }
-        .arc { 
-            position: absolute; border: 2px dashed var(--leaf-green); border-radius: 50% 50% 0 0; 
-            border-bottom: none; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+        #frog-svg-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+        }
+        #baseline {
+            position: absolute; bottom: 42px; left: 10px; right: 10px; height: 3px;
+            background: var(--wood-brown); border-radius: 2px;
+        }
+        #frog { 
+            position: absolute; width: 34px; height: 34px; bottom: 40px; left: 12px; 
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10; font-size: 26px; display: flex; align-items: center; justify-content: center;
+        }
+        .lilypad-node {
+            position: absolute; bottom: 20px; width: 32px; height: 20px;
+            background: #66bb6a; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: bold; color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); transform: translateX(-50%);
         }
 
         /* Act 2: 火柴棒 */
-        #match-stage { height: 100px; display: flex; align-items: flex-end; gap: 2px; margin: 10px 0; }
-        .square-group { position: relative; width: 40px; height: 40px; }
-        .match { position: absolute; background: #d2691e; border-radius: 2px; }
-        .match::after { content: ''; position: absolute; width: 6px; height: 6px; background: #800; border-radius: 50%; }
-        .m-top { width: 40px; height: 4px; top: 0; left: 0; }
-        .m-bottom { width: 40px; height: 4px; bottom: 0; left: 0; }
-        .m-left { width: 4px; height: 40px; left: 0; top: 0; }
-        .m-right { width: 4px; height: 40px; right: 0; top: 0; }
-        .formula-box { background: rgba(255,255,255,0.8); padding: 8px; border-radius: 8px; font-size: 14px; text-align: center; }
+        #match-stage {
+            height: 90px; width: 100%; display: flex; align-items: center; justify-content: center;
+            background: white; border-radius: 12px; border: 1.5px solid #c8e6c9;
+            margin: 6px 0; overflow-x: auto; padding: 10px;
+        }
+        .match-group { display: flex; align-items: center; }
+        .match-square {
+            width: 48px; height: 48px; position: relative; margin-right: -4px; flex-shrink: 0;
+        }
+        .match-bar { position: absolute; background: #d84315; border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .match-bar::after {
+            content: ''; position: absolute; width: 6px; height: 6px; background: #bf360c; border-radius: 50%;
+        }
+        .mb-top { width: 48px; height: 4px; top: 0; left: 0; }
+        .mb-bottom { width: 48px; height: 4px; bottom: 0; left: 0; }
+        .mb-left { width: 4px; height: 48px; left: 0; top: 0; }
+        .mb-right { width: 4px; height: 48px; right: 0; top: 0; }
+        .sq-badge {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: bold; color: #2e7d32; pointer-events: none;
+        }
+        .formula-box {
+            background: white; padding: 10px 14px; border-radius: 10px; font-size: 13px;
+            text-align: center; border: 1px solid #c8e6c9; width: 100%; line-height: 1.5; color: #37474f;
+        }
 
         /* Act 3: 找規律 */
-        .sequence-box { display: flex; gap: 8px; margin: 20px 0; }
+        .seq-wrap {
+            position: relative; width: 100%; height: 110px; display: flex;
+            align-items: center; justify-content: center; background: white;
+            border-radius: 12px; border: 1.5px solid #c8e6c9; margin: 8px 0;
+        }
+        .sequence-box { display: flex; gap: 10px; align-items: center; }
         .num-card { 
-            width: 45px; height: 45px; background: white; border: 2px solid var(--leaf-green);
-            display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 8px;
+            width: 46px; height: 46px; background: #f1f8e9; border: 2px solid var(--leaf-green);
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
+            font-weight: bold; color: #1b5e20; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.06);
             position: relative;
         }
-        .diff-hint { position: absolute; top: -25px; font-size: 12px; color: #e91e63; font-weight: bold; opacity: 0; transition: 0.3s; }
+        .num-card.unknown { background: #fffde7; border-color: #fbc02d; color: #f57f17; }
+        .diff-bubble {
+            position: absolute; top: 12px; background: #e91e63; color: white;
+            font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(233,30,99,0.3); transform: translateX(-50%);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: translateX(-50%) scale(0); opacity: 0; }
+            to { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
 
         /* Act 4: 挑戰 */
-        .challenge-card { background: white; padding: 15px; border-radius: 12px; width: 90%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .challenge-card {
+            background: white; padding: 14px; border-radius: 12px; width: 100%;
+            border: 1.5px solid #c8e6c9; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .quest-title { font-size: 14px; font-weight: bold; color: #2e7d32; line-height: 1.5; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+        .opt-btn {
+            background: #f1f8e9; border: 1.5px solid #a5d6a7; padding: 8px 4px;
+            border-radius: 8px; font-size: 13px; font-weight: bold; color: #2e7d32;
+            cursor: pointer; text-align: center;
+        }
+        .opt-btn:active { background: #c8e6c9; }
+        .opt-btn.correct { background: #4caf50; color: white; border-color: #388e3c; }
+        .opt-btn.wrong { background: #ef5350; color: white; border-color: #d32f2f; }
 
         /* 底部控制 */
         .controls {
-            height: 40px; background: #eee; display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
+            height: 36px; min-height: 36px; background: #dcedc8; display: flex;
+            align-items: center; justify-content: space-between; padding: 0 14px;
         }
-        .voice-btn { font-size: 20px; cursor: pointer; }
+        .voice-btn { font-size: 18px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -95,59 +158,68 @@
         <div id="tab-act1" class="tab active" onclick="switchAct(1)">🐸 跳跳蛙</div>
         <div id="tab-act2" class="tab" onclick="switchAct(2)">🥢 火柴棒</div>
         <div id="tab-act3" class="tab" onclick="switchAct(3)">🔍 找規律</div>
-        <div id="tab-act4" class="tab" onclick="switchAct(4)">🏆 尋寶</div>
+        <div id="tab-act4" class="tab" onclick="switchAct(4)">🏆 挑戰</div>
     </div>
 
     <div class="view-container">
         <!-- Act 1 -->
         <div id="act-1-view" class="view active">
-            <div class="title">等差數線：每次跳 +4</div>
-            <div id="frog-path">
+            <div class="title" id="frog-title">等差數線：每次跳 +4</div>
+            <div id="frog-path-stage">
+                <svg id="frog-svg-layer"></svg>
+                <div id="baseline"></div>
                 <div id="frog">🐸</div>
-                <!-- Lilypads generated by JS -->
+                <div id="nodes-container"></div>
             </div>
-            <div style="margin-top: 20px;">
+            <div class="btn-group">
                 <button class="btn" onclick="frogJump()">🐸 跳一下</button>
-                <button class="btn" style="background:#999" onclick="resetAct1()">重置</button>
+                <button class="btn secondary" onclick="resetAct1()">重置</button>
             </div>
         </div>
 
         <!-- Act 2 -->
         <div id="act-2-view" class="view">
-            <div class="title">圖形規律：拼正方形</div>
-            <div id="match-stage"></div>
+            <div class="title">圖形規律：拼排正方形</div>
+            <div id="match-stage">
+                <div class="match-group" id="match-group"></div>
+            </div>
             <div class="formula-box" id="match-info">
                 正方形：1 個，火柴：4 根<br>
                 規律：4 + 3 × (n - 1)
             </div>
-            <div style="margin-top: 10px;">
+            <div class="btn-group">
                 <button class="btn" onclick="addSquare()">＋ 增加一個</button>
-                <button class="btn" style="background:#999" onclick="resetAct2()">重置</button>
+                <button class="btn secondary" onclick="resetAct2()">重置</button>
             </div>
         </div>
 
         <!-- Act 3 -->
         <div id="act-3-view" class="view">
-            <div class="title">破招：找出隱藏的差值</div>
-            <div class="sequence-box" id="seq-container"></div>
-            <button class="btn" onclick="revealDiff()">🔍 揭示規律</button>
-            <button class="btn" style="margin-top:10px; background:#666" onclick="nextSeq()">下一題</button>
+            <div class="title">破招：找出相鄰隱藏的差值</div>
+            <div class="seq-wrap">
+                <div class="sequence-box" id="seq-container"></div>
+                <div id="diff-bubbles-container"></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn" onclick="revealDiff()">🔍 揭示規律</button>
+                <button class="btn secondary" onclick="nextSeq()">下一題</button>
+            </div>
         </div>
 
         <!-- Act 4 -->
         <div id="act-4-view" class="view">
-            <div class="title">規律尋寶：第 10 個是多少？</div>
+            <div class="title">規律尋寶：推算第 10 個數字</div>
             <div class="challenge-card">
-                <div id="quest-text" style="font-size:15px; line-height:1.5;">數列：3, 8, 13, 18...<br>請問第 10 個數字是？</div>
+                <div class="quest-title" id="quest-text">數列：3, 7, 11, 15...<br>請問第 10 個數字是多少？</div>
                 <div class="options" id="quest-options"></div>
             </div>
-            <div id="feedback" style="margin-top:10px; font-weight:bold;"></div>
+            <div id="feedback" style="margin-top:8px; font-size:12px; font-weight:bold; color:#e65100;"></div>
         </div>
     </div>
 
     <div class="controls">
         <div class="voice-btn" onclick="toggleMute()">🔊</div>
-        <div style="font-size: 12px; color: #666;">R-3-2 數量模式與推理</div>
+        <div style="font-size: 11px; color: #558b2f; font-weight: bold;">R-3-2 數量模式與推理</div>
     </div>
 
     <script>
@@ -156,7 +228,7 @@
         const synth = window.speechSynthesis;
 
         function speak(text) {
-            if (isMuted) return;
+            if (isMuted || !synth) return;
             synth.cancel();
             const utter = new SpeechSynthesisUtterance(text);
             utter.lang = 'zh-TW';
@@ -172,21 +244,238 @@
             currentAct = act;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            const targetTab = document.getElementById("tab-act" + act) || document.getElementById("tab" + act);
-            const targetView = document.getElementById("act-" + act + "-view") || document.getElementById("view" + act);
+            const targetTab = document.getElementById("tab-act" + act);
+            const targetView = document.getElementById("act-" + act + "-view");
             if (targetTab) targetTab.classList.add('active');
             if (targetView) targetView.classList.add('active');
             
             const msgs = [
-                '青蛙跳躍：觀察等差規律跳數！',
-                '火柴拼排：每增加一個正方形多3根火柴！',
-                '找規律：觀察數字之間的差距！',
-                '尋寶挑戰：歸納通則秒殺解題！'
+                '青蛙跳躍：觀察等差數線跳數規律！',
+                '火柴拼排：每多拼一個正方形，多用三根火柴！',
+                '找規律：計算相鄰數字之間的差距！',
+                '尋寶挑戰：利用通則推算後面的數字！'
             ];
             speak(msgs[act - 1] || '找規律');
+
+            if (act === 3 && document.getElementById('seq-container').children.length === 0) {
+                initAct3();
+            }
+            if (act === 4 && document.getElementById('quest-options').children.length === 0) {
+                initAct4();
+            }
         }
 
-        switchAct(1);
+        // ==================== Act 1: 🐸 跳跳蛙 ====================
+        const frogStep = 4;
+        let frogHopCount = 0;
+        const maxHops = 6;
+        const hopDistance = 54;
+        const startX = 26;
+
+        function initAct1() {
+            const container = document.getElementById('nodes-container');
+            container.innerHTML = '';
+            for (let i = 0; i <= maxHops; i++) {
+                const node = document.createElement('div');
+                node.className = 'lilypad-node';
+                node.style.left = (startX + i * hopDistance) + 'px';
+                node.innerText = i * frogStep;
+                container.appendChild(node);
+            }
+            resetAct1();
+        }
+
+        function frogJump() {
+            if (frogHopCount >= maxHops) {
+                speak('已經跳到終點囉！');
+                return;
+            }
+            const currentX = startX + frogHopCount * hopDistance;
+            const nextX = startX + (frogHopCount + 1) * hopDistance;
+            const jumpHeight = 35;
+            const svgLayer = document.getElementById('frog-svg-layer');
+
+            // 繪製拋物線弧線
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            const d = `M ${currentX} 118 Q ${(currentX + nextX) / 2} ${118 - jumpHeight} ${nextX} 118`;
+            path.setAttribute("d", d);
+            path.setAttribute("stroke", "#ff7043");
+            path.setAttribute("stroke-width", "2.5");
+            path.setAttribute("stroke-dasharray", "4,3");
+            path.setAttribute("fill", "none");
+            svgLayer.appendChild(path);
+
+            // 青蛙位移動畫
+            const frog = document.getElementById('frog');
+            frog.style.transform = `translate(${nextX - startX}px, -24px)`;
+            setTimeout(() => {
+                frog.style.transform = `translate(${nextX - startX}px, 0px)`;
+                frogHopCount++;
+                const nextVal = frogHopCount * frogStep;
+                speak('跳到 ' + nextVal);
+            }, 220);
+        }
+
+        function resetAct1() {
+            frogHopCount = 0;
+            const frog = document.getElementById('frog');
+            frog.style.transform = `translate(0px, 0px)`;
+            document.getElementById('frog-svg-layer').innerHTML = '';
+        }
+
+        // ==================== Act 2: 🥢 火柴棒 ====================
+        let squareNum = 1;
+
+        function renderMatches() {
+            const group = document.getElementById('match-group');
+            group.innerHTML = '';
+            for (let i = 1; i <= squareNum; i++) {
+                const sq = document.createElement('div');
+                sq.className = 'match-square';
+                // 第一個正方形需要左邊一根，後面共用左邊
+                let bars = `
+                    <div class="match-bar mb-top"></div>
+                    <div class="match-bar mb-bottom"></div>
+                    <div class="match-bar mb-right"></div>
+                    <div class="sq-badge">${i}</div>
+                `;
+                if (i === 1) {
+                    bars += `<div class="match-bar mb-left"></div>`;
+                }
+                sq.innerHTML = bars;
+                group.appendChild(sq);
+            }
+            const totalMatches = 4 + 3 * (squareNum - 1);
+            document.getElementById('match-info').innerHTML = `
+                正方形：<b>${squareNum}</b> 個，火柴棒：<b>${totalMatches}</b> 根<br>
+                算式規律：4 ＋ 3 × (${squareNum} - 1) ＝ <b>${totalMatches}</b>
+            `;
+        }
+
+        function addSquare() {
+            if (squareNum >= 6) {
+                speak('螢幕放不下囉，請按重置！');
+                return;
+            }
+            squareNum++;
+            renderMatches();
+            speak('增加一個正方形，多三根火柴');
+        }
+
+        function resetAct2() {
+            squareNum = 1;
+            renderMatches();
+        }
+
+        // ==================== Act 3: 🔍 找規律 ====================
+        const seqPresets = [
+            { start: 3, diff: 4 },
+            { start: 5, diff: 5 },
+            { start: 2, diff: 6 },
+            { start: 10, diff: 3 },
+            { start: 7, diff: 8 }
+        ];
+        let seqIndex = 0;
+        let isDiffRevealed = false;
+
+        function initAct3() {
+            const preset = seqPresets[seqIndex % seqPresets.length];
+            const container = document.getElementById('seq-container');
+            const bubbleContainer = document.getElementById('diff-bubbles-container');
+            container.innerHTML = '';
+            bubbleContainer.innerHTML = '';
+            isDiffRevealed = false;
+
+            for (let i = 0; i < 5; i++) {
+                const card = document.createElement('div');
+                card.className = 'num-card' + (i === 4 ? ' unknown' : '');
+                card.id = 'seq-card-' + i;
+                card.innerText = (i === 4) ? '？' : (preset.start + i * preset.diff);
+                container.appendChild(card);
+            }
+        }
+
+        function revealDiff() {
+            if (isDiffRevealed) return;
+            isDiffRevealed = true;
+            const preset = seqPresets[seqIndex % seqPresets.length];
+            const container = document.getElementById('seq-container');
+            const bubbleContainer = document.getElementById('diff-bubbles-container');
+            bubbleContainer.innerHTML = '';
+
+            const cards = container.children;
+            for (let i = 0; i < cards.length - 1; i++) {
+                const leftCard = cards[i].getBoundingClientRect();
+                const rightCard = cards[i+1].getBoundingClientRect();
+                const wrapRect = document.querySelector('.seq-wrap').getBoundingClientRect();
+                const midX = (leftCard.right + rightCard.left) / 2 - wrapRect.left;
+
+                const bubble = document.createElement('div');
+                bubble.className = 'diff-bubble';
+                bubble.innerText = `+${preset.diff}`;
+                bubble.style.left = midX + 'px';
+                bubbleContainer.appendChild(bubble);
+            }
+
+            // 揭示最後一張卡片
+            const lastCard = document.getElementById('seq-card-4');
+            const answer = preset.start + 4 * preset.diff;
+            lastCard.innerText = answer;
+            lastCard.classList.remove('unknown');
+            speak(`相鄰相差加 ${preset.diff}，問號是 ${answer}`);
+        }
+
+        function nextSeq() {
+            seqIndex++;
+            initAct3();
+        }
+
+        // ==================== Act 4: 🏆 挑戰 ====================
+        function initAct4() {
+            const q = {
+                text: '數列：3, 7, 11, 15...<br>規律每次加 4，請問<b>第 10 個</b>數字是？',
+                ans: 39,
+                options: [36, 39, 40, 43],
+                hint: '第 1 個是 3，第 10 個要加 9 次 4：3 + 4 × 9 = 39'
+            };
+            document.getElementById('quest-text').innerHTML = q.text;
+            const optBox = document.getElementById('quest-options');
+            optBox.innerHTML = '';
+            document.getElementById('feedback').innerText = '';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('div');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if (opt === q.ans) {
+                        btn.className = 'opt-btn correct';
+                        document.getElementById('feedback').innerText = '🎉 答對了！' + q.hint;
+                        speak('太棒了！答對了！');
+                    } else {
+                        btn.className = 'opt-btn wrong';
+                        document.getElementById('feedback').innerText = '❌ 再想想看，要加 9 次差值喔！';
+                        speak('不對喔，再想想看！');
+                    }
+                };
+                optBox.appendChild(btn);
+            });
+        }
+
+        // 初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            initAct1();
+            renderMatches();
+            initAct3();
+            initAct4();
+            switchAct(1);
+        });
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initAct1();
+            renderMatches();
+            initAct3();
+            initAct4();
+        }
     </script>
 </body>
 </html>

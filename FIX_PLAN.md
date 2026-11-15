@@ -86,5 +86,59 @@
   - [x] 編寫 `tools/verify_g3_remaining_concepts.js` (CDP 390px 實機 9/9 全綠 Exit Code 0)
   - [x] 更新 `tools/release.py` 納入守門員清單
 - [ ] **Batch 5 (實體發布與雲端驗真)**:
-  - [ ] 執行 `.\deploy.ps1`
-  - [ ] Cloudflare Pages 邊緣探測 HTTP 200 生效驗證
+  - [x] 執行 `.\deploy.ps1` (已發布至 Cloudflare Pages)
+  - [x] Cloudflare Pages 邊緣探測 HTTP 200 生效驗證
+
+---
+
+## 3. 🚨 專案微創修復計畫：R-3-2 與 S-3-2 互動缺失修復 (Plan-PR 閉環)
+
+> 生成時間：2026-11-15 18:45:00  
+> 觸發指令：`/plan-pr 不能動`  
+> 統籌監督：Antigravity (AGY)  
+> 規劃大腦：通道三 (035 Gemini 2.5 Pro)  
+> 施工單位：通道一 (本地 OpenCode CLI / Agent 外骨骼)  
+
+### A. 現況診斷與根因分析 (Root Cause)
+1. **R-3-2 `pattern_reasoning_lab.html` (數量模式與推理)**：
+   - **Act 1「跳跳蛙」**：點擊「🐸 跳一下」按鈕無動作。根因為先前腳本截斷修復時，`<script>` 遺失了 `frogJump()` 與 `resetAct1()` 實作函數。
+   - **Act 2「火柴棒」**：點擊「＋ 增加一個」按鈕無動作，缺少 `addSquare()` 與 `resetAct2()`。
+   - **Act 3「找規律」**：實機畫面中央空白（如使用者截圖），缺少 `#seq-container` 卡片初始渲染函數及 `nextSeq()`、`revealDiff()`。
+2. **S-3-2 `square_rectangle_lab.html` (正方形與長方形的特徵)**：
+   - **Act 1**：缺少 `markSides()`。
+   - **Act 3**：點擊「開始摺紙」無反應，缺少 `animateFold()`。
+   - **Act 4**：點擊「鋪設方格」無反應，缺少 `fillGrid()`。
+
+### B. 規格藍圖 (Given-When-Then)
+- **F-01 (R-3-2 Act 1 跳跳蛙動態)**:
+  - Given: 青蛙在數線起點 (0)。
+  - When: 點擊「🐸 跳一下」。
+  - Then: 青蛙執行 CSS `transform: translate(endX, -20px) -> translate(endX, 0)` 拋物線跳躍；數線上動態繪製 SVG 拋物線弧線；生成對應荷葉刻度標籤 (+4, +8...)。
+- **F-02 (R-3-2 Act 2 火柴棒拼排)**:
+  - Given: 使用者在火柴棒視圖。
+  - When: 點擊「＋ 增加一個」。
+  - Then: 舞台動態增加 1 個正方形（多 3 根火柴），文字即時更新公式 `4 + 3 × (n - 1) = 總數 根`。
+- **F-03 (R-3-2 Act 3 找規律數列與差值)**:
+  - Given: 進入 Act 3。
+  - When: 頁面切換或載入。
+  - Then: 數列容器立即渲染 5 張數字卡片（末張為 `?`），不再空白；點擊「🔍 揭示規律」浮現紅色差值氣泡（如 `+4`）並翻開最後一張卡片；點擊「下一題」生成新數列。
+- **F-04 (S-3-2 幾何動態操作)**:
+  - Given: 進入 S-3-2 實驗室。
+  - When: 點擊各 Act 按鈕。
+  - Then: Act 1 高亮四邊/對邊；Act 3 執行 `rotateY(-180deg)` 3D 摺紙對摺重合動畫；Act 4 逐格非同步鋪滿 15 格並即時計數。
+
+### C. 機械化驗收門禁 (Gate 0 / Gate D)
+1. 編寫專屬自動化測試腳本 `tools/verify_interactive_labs.js`：
+   - 啟動 Playwright CDP 無頭瀏覽器。
+   - 真實觸發點擊「🐸 跳一下」，斷言 `#frog` 之 `style.transform` 包含 `translate`，且 `#frog-path` 內含有 `path` 弧線。
+   - 切換 Act 3，斷言 `#seq-container .num-card` 數量為 5，點擊「揭示規律」斷言出現 `.diff-bubble`。
+   - 測試 `square_rectangle_lab.html` 點擊「開始摺紙」與「鋪設方格」，斷言 DOM 狀態與格數改變。
+2. 執行全域 `tools/verify_curriculum_131.js` 與 `tools/verify_app_shell.js` 確認全部 Exit Code 0。
+3. 執行 `python tools/release.py` 自動部署至 Cloudflare Pages。
+
+---
+
+## 🛑 雙簽煞車線 (Mutual Consent Gate)
+本計畫書已附加至 `FIX_PLAN.md`。嚴格遵循 `plan-pr` 協議：
+在向使用者報告並取得明確同意（例如「確認執行」）前，**嚴禁修改任何正式前端代碼**。
+
