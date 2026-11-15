@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>概念探索小教室 · 028-1 國小數學</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --mint: #7bc9b2;
+  --mint-deep: #48a88b;
+  --sky: #7db8e8;
+  --sky-deep: #4a94d4;
+  --lemon: #ffd166;
+  --lemon-deep: #e09f18;
+  --line: #f0e7da;
+  --shadow: 0 8px 24px rgba(120, 90, 40, 0.08);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html {
+  height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+body {
+  min-height: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 209, 102, 0.18), transparent 36%),
+    radial-gradient(circle at 90% 92%, rgba(123, 200, 178, 0.16), transparent 38%),
+    var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 12px 12px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.app-wrapper {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== 頂部導航與單元切換 ===== */
+.header-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.brand-badge {
+  background: var(--coral);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+.btn-back-home {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 膠囊單元切換按鈕 */
+.module-tabs {
+  display: flex;
+  background: #ede6d8;
+  padding: 4px;
+  border-radius: 999px;
+  gap: 4px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.tab-btn.active {
+  background: #ffffff;
+  color: var(--coral-deep);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* ===== 卡片通用風格 ===== */
+.card-section {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-tts {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff5ee;
+  border: 1px solid #ffd8c7;
+  color: var(--coral-deep);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: transform 0.15s;
+}
+.btn-tts:active { transform: scale(0.96); }
+
+/* ===== 故事情境導讀 ===== */
+.story-box {
+  background: linear-gradient(135deg, #fff9f0 0%, #fff4e3 100%);
+  border: 1.5px dashed #ffd166;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #5a4a32;
+}
+.story-lead {
+  font-weight: 800;
+  color: #b56c00;
+  margin-bottom: 4px;
+}
+.magic-code {
+  display: inline-block;
+  background: #ffffff;
+  border: 1.5px solid var(--lemon);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  color: #c46e00;
+  margin-top: 6px;
+}
+
+/* ===== 自由探索沙盒 (Sandbox) ===== */
+.sandbox-card {
+  gap: 14px;
+}
+.visual-stage {
+  width: 100%;
+  background: #faf7f2;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.svg-canvas-wrap {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  justify-content: center;
+}
+.svg-canvas-wrap svg {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+}
+
+/* 沙盒即時儀表看板 */
+.measure-meter {
+  width: 100%;
+  background: #ffffff;
+  border: 2px solid var(--mint);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(123, 200, 178, 0.15);
+}
+.meter-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.meter-value-big {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--mint-deep);
+  letter-spacing: 0.5px;
+}
+.meter-value-sub {
+  font-size: 13px;
+  font-weight: 700;
+  color: #557b6f;
+}
+.speech-bubble {
+  background: #eef8f5;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #2e6858;
+  font-weight: 700;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+/* 物品互動按鈕托盤 */
+.items-rack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.rack-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.item-btn {
+  background: #fdfaf6;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+.item-btn:hover {
+  background: #fff;
+  border-color: var(--coral);
+}
+.item-btn:active {
+  transform: scale(0.95);
+  background: #fff2ed;
+}
+.item-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.item-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.item-weight-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--coral-deep);
+  background: #ffebe5;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+/* 沙盒動作控制列 */
+.sandbox-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.action-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  transition: transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.action-btn:active { transform: scale(0.97); }
+.btn-reset {
+  background: #f0ebe4;
+  color: var(--ink);
+}
+.btn-random {
+  background: #eef6fd;
+  color: var(--sky-deep);
+  border: 1px solid #c9e2fa;
+}
+
+/* ===== 3 張生活實戰秘笈小卡 (Flashcards) ===== */
+.flashcards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.flashcard-nav {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+.dot-btn {
+  width: 24px;
+  height: 6px;
+  border-radius: 999px;
+  background: #e0d7c7;
+  transition: all 0.2s;
+}
+.dot-btn.active {
+  background: var(--coral);
+  width: 32px;
+}
+.flashcard {
+  background: #fdfaf6;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.25s ease;
+}
+.card-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+.badge-blue { background: #e3f2fd; color: #1976d2; }
+.badge-orange { background: #fff3e0; color: #e65100; }
+.badge-red { background: #ffebee; color: #c62828; }
+.flashcard-content {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #4a453e;
+}
+.flashcard-formula {
+  background: #ffffff;
+  border: 1px solid #eedec7;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 800;
+  color: #9c5200;
+  font-size: 13.5px;
+  margin-top: 4px;
+}
+
+/* ===== 信心出發按鈕 ===== */
+.start-quiz-btn {
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 900;
+  box-shadow: 0 8px 20px rgba(244, 105, 75, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.start-quiz-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(244, 105, 75, 0.25);
+}
+
+/* 指針動態旋轉過渡 */
+#scale-needle {
+  transform-origin: 150px 140px;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#water-surface {
+  transition: y 0.5s cubic-bezier(0.25, 1, 0.5, 1), height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+</style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- 頂部品牌與模式切換 -->
+  <header class="header-nav">
+    <div class="brand-bar">
+      <div class="brand-title">
+        <span>🌱</span>
+        <span>單元概念探險艙</span>
+        <span class="brand-badge">前導先修</span>
+      </div>
+      <a href="index.html" class="btn-back-home">
+        <span>🏠</span>
+        <span>回大廳</span>
+      </a>
+    </div>
+
+    <!-- 膠囊雙模式切換 -->
+    <div class="module-tabs">
+      <button class="tab-btn active" id="tab-weight" onclick="switchModule('weight')">
+        <span>⚖️</span>
+        <span>重量小教室 (kg / g)</span>
+      </button>
+      <button class="tab-btn" id="tab-capacity" onclick="switchModule('capacity')">
+        <span>🧪</span>
+        <span>容量小教室 (L / mL)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 1. 故事冒險導讀 -->
+  <section class="card-section">
+    <div class="section-title-row">
+      <div class="section-title">
+        <span id="story-emoji">⚖️</span>
+        <span id="story-title">生活重量大冒險</span>
+      </div>
+      <button class="btn-tts" onclick="playVoiceGuide()">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+
+    <div class="story-box" id="story-text-box">
+      <!-- 動態填入故事文本 -->
+    </div>
+  </section>
+
+  <!-- 2. 自由探索沙盒 (Zero-Pressure Sandbox) -->
+  <section class="card-section sandbox-card">
+    <div class="section-title-row">
+      <div class="section-title">
+        <span>🎮</span>
+        <span id="sandbox-title">動手玩秤盤 · 找量感</span>
+      </div>
+      <span style="font-size: 11px; font-weight: 700; color: var(--ink-soft);">零壓力自由探索</span>
+    </div>
+
+    <!-- 視覺操作畫布 -->
+    <div class="visual-stage">
+      <div class="svg-canvas-wrap" id="svg-container">
+        <!-- SVG 內容動態切換 -->
+      </div>
+    </div>
+
+    <!-- 即時儀表板 -->
+    <div class="measure-meter">
+      <div class="meter-label" id="meter-label">目前秤盤總重量</div>
+      <div class="meter-value-big" id="meter-value-primary">0 公斤 0 公克</div>
+      <div class="meter-value-sub" id="meter-value-secondary">＝ 0 公克 (g)</div>
+      <div class="speech-bubble" id="meter-bubble">💡 點點看下方物品，放上秤盤看指針轉動！</div>
+    </div>
+
+    <!-- 互動按鈕架 -->
+    <div class="items-rack">
+      <div class="rack-title">
+        <span id="rack-label">點擊將物品放上秤盤：</span>
+        <span style="font-size: 11px; color: var(--coral-deep);" id="rack-hint">可多次點選累加</span>
+      </div>
+      <div class="items-grid" id="items-grid-container">
+        <!-- 動態物品按鈕 -->
+      </div>
+    </div>
+
+    <!-- 沙盒動作按鈕 -->
+    <div class="sandbox-actions">
+      <button class="action-btn btn-reset" onclick="resetSandbox()">
+        <span>🔄</span>
+        <span id="btn-reset-text">清空秤盤</span>
+      </button>
+      <button class="action-btn btn-random" onclick="randomFillSandbox()">
+        <span>🎲</span>
+        <span id="btn-random-text">隨機搭配</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 3. 三張生活實戰秘笈小卡 (Flashcards) -->
+  <section class="card-section">
+    <div class="section-title-row">
+      <div class="section-title">
+        <span>💡</span>
+        <span>30 秒掌握三大核心秘笈</span>
+      </div>
+      <div class="flashcard-nav">
+        <button class="dot-btn active" id="dot-0" onclick="showCard(0)"></button>
+        <button class="dot-btn" id="dot-1" onclick="showCard(1)"></button>
+        <button class="dot-btn" id="dot-2" onclick="showCard(2)"></button>
+      </div>
+    </div>
+
+    <div class="flashcards-container" id="cards-container">
+      <!-- 動態卡片內容 -->
+    </div>
+  </section>
+
+  <!-- 4. 信心啟航按鈕 -->
+  <button class="start-quiz-btn" onclick="startChallenge()">
+    <span>🚀</span>
+    <span id="start-btn-text">我懂了！出發挑戰段考真題</span>
+  </button>
+
+</div>
+
+<script>
+// ===== 單元資料庫 SSOT =====
+const MODULES = {
+  weight: {
+    code: "G3-N-3-16",
+    name: "重量小教室",
+    unitA: "公斤",
+    unitA_en: "kg",
+    unitB: "公克",
+    unitB_en: "g",
+    rate: 1000,
+    storyTitle: "奇幻秤重烘焙坊大冒險",
+    storyEmoji: "⚖️",
+    storyLead: "你好呀小主廚！歡迎來到秤重魔法烘焙坊！",
+    storyText: "生活中有的東西輕飄飄，有的東西重甸甸。我們測量「很輕的小東西」（例如草莓、雞蛋、鉛筆）會使用<b>「公克 (g)」</b>；測量「重重的大東西」（例如大書包、西瓜、自己的體重）會使用<b>「公斤 (kg)」</b>！",
+    magicCode: "🔑 通關密碼：1 公斤 (kg) ＝ 1000 公克 (g)",
+    sandboxTitle: "動手玩秤盤 · 找量感",
+    meterLabel: "目前秤盤總重量",
+    meterUnitPrimary: "公斤",
+    meterUnitSub: "公克",
+    btnResetText: "清空秤盤",
+    btnRandomText: "隨機放食材",
+    rackLabel: "點擊把食材放上磅秤：",
+    maxCapacity: 3000, // 3kg 秤盤
+    items: [
+      { id: "strawberry", name: "草莓", icon: "🍓", val: 20, tag: "+20g" },
+      { id: "egg", name: "雞蛋", icon: "🥚", val: 50, tag: "+50g" },
+      { id: "apple", name: "蘋果", icon: "🍎", val: 250, tag: "+250g" },
+      { id: "flour", name: "袋裝麵粉", icon: "🌾", val: 500, tag: "+500g" },
+      { id: "sugar", name: "特砂包", icon: "🧂", val: 1000, tag: "+1kg" },
+      { id: "bag", name: "大書包", icon: "🎒", val: 1800, tag: "+1.8kg" },
+      { id: "melon", name: "大西瓜", icon: "🍉", val: 2400, tag: "+2.4kg" },
+      { id: "cat", name: "店長小橘貓", icon: "🐱", val: 3000, tag: "+3kg" }
+    ],
+    cards: [
+      {
+        badge: "📏 生活量感指南",
+        badgeClass: "badge-blue",
+        title: "什麼時候用公克？什麼時候用公斤？",
+        desc: "輕的東西用公克：羽毛 1g、草莓 20g、雞蛋 50g。<br>重的東西用公斤：大書包約 3kg、三年級小朋友體重約 28~35kg、大象好幾千公斤！",
+        formula: "💡 提示：1 顆雞蛋大約 50 公克，20 顆雞蛋加起來就差不多是 1 公斤囉！"
+      },
+      {
+        badge: "🔑 進率通關密碼",
+        badgeClass: "badge-orange",
+        title: "千位對齊法：1 公斤 ＝ 1000 公克",
+        desc: "公斤在千位，公克在百十個位。<br>例如：3 公斤 450 公克 ＝ 3450 公克。<br>看秤盤時，指針每轉完一整圈就是 1 公斤！",
+        formula: "📐 公式：1 kg = 1000 g ； 5000 g = 5 kg"
+      },
+      {
+        badge: "🕵️ 避坑除錯小偵探",
+        badgeClass: "badge-red",
+        title: "小心「十位與百位補 0」陷阱！",
+        desc: "考卷最常考：<b>2 公斤 50 公克</b> 是多少公克？<br>❌ 錯誤答案：2500 公克（這是 500 公克不是 50！）<br>⭕ 正確答案：<b>2050 公克</b>（百位沒有要補 0）！",
+        formula: "⚠️ 必記：2 公斤 5 公克 ＝ 2005 公克（十位百位都要補 0！）"
+      }
+    ]
+  },
+  capacity: {
+    code: "G3-N-3-15",
+    name: "容量小教室",
+    unitA: "公升",
+    unitA_en: "L",
+    unitB: "毫升",
+    unitB_en: "mL",
+    rate: 1000,
+    storyTitle: "魔法藥水調配屋大冒險",
+    storyEmoji: "🧪",
+    storyLead: "哈囉小魔藥師！歡迎來到奇幻量杯調配屋！",
+    storyText: "容器裝得下多少液體叫做「容量」。倒幾滴眼藥水、喝一小瓶養樂多或布丁杯用<b>「毫升 (mL)」</b>；家庭號大鮮奶、洗衣精、甚至是浴室浴缸的水用<b>「公升 (L)」</b>！",
+    magicCode: "🔑 通關密碼：1 公升 (L) ＝ 1000 毫升 (mL)",
+    sandboxTitle: "動手倒藥水 · 觀測刻度",
+    meterLabel: "目前量杯水位容量",
+    meterUnitPrimary: "公升",
+    meterUnitSub: "毫升",
+    btnResetText: "倒光重來",
+    btnRandomText: "隨機調配",
+    rackLabel: "點擊把魔法液體倒進量杯：",
+    maxCapacity: 2000, // 2000mL 量杯
+    items: [
+      { id: "eyedrop", name: "神奇眼藥水", icon: "💧", val: 10, tag: "+10mL" },
+      { id: "spoon", name: "止咳糖漿匙", icon: "🥄", val: 25, tag: "+25mL" },
+      { id: "yakult", name: "活力多多", icon: "🧃", val: 100, tag: "+100mL" },
+      { id: "cup", name: "魔法馬克杯", icon: "☕", val: 250, tag: "+250mL" },
+      { id: "tea", name: "珍珠奶茶", icon: "🥤", val: 500, tag: "+500mL" },
+      { id: "water", name: "礦泉水瓶", icon: "🍶", val: 600, tag: "+600mL" },
+      { id: "milk", name: "家庭號鮮奶", icon: "🥛", val: 1000, tag: "+1L" },
+      { id: "pot", name: "熬湯大陶鍋", icon: "🍲", val: 2000, tag: "+2L" }
+    ],
+    cards: [
+      {
+        badge: "📏 生活量感指南",
+        badgeClass: "badge-blue",
+        title: "什麼時候用毫升？什麼時候用公升？",
+        desc: "少的用毫升：眼藥水 5mL、養樂多 100mL、鋁箔包飲料 250mL。<br>多的用公升：寶特瓶大飲料 2L、大鐵鍋 5L、加油站加油 40L！",
+        formula: "💡 提示：10 瓶 100 毫升的多多倒在一起，剛好就是 1 公升！"
+      },
+      {
+        badge: "🔑 進率通關密碼",
+        badgeClass: "badge-orange",
+        title: "量杯平視法：1 公升 ＝ 1000 毫升",
+        desc: "讀取量杯水位時，眼睛一定要<b>平平地看著水面</b>。<br>先看有沒有滿 1000mL（滿 1000 就是 1 公升），再看多出幾大格幾小格！",
+        formula: "📐 公式：1 L = 1000 mL ； 2400 mL = 2 L 400 mL"
+      },
+      {
+        badge: "🕵️ 避坑除錯小偵探",
+        badgeClass: "badge-red",
+        title: "小心「十位與百位補 0」陷阱！",
+        desc: "考卷最常考：<b>3 公升 8 毫升</b> 是多少毫升？<br>❌ 錯誤答案：3800 毫升 或 380 毫升！<br>⭕ 正確答案：<b>3008 毫升</b>（十位百位都補 0）！",
+        formula: "⚠️ 必記：3 公升 80 毫升 ＝ 3080 毫升（百位補一個 0）！"
+      }
+    ]
+  }
+};
+
+let currentMod = "weight";
+let currentVal = 0;
+let currentCardIdx = 0;
+
+// ===== 初始化 =====
+function init() {
+  renderModule(currentMod);
+}
+
+// 切換單元
+function switchModule(modKey) {
+  if (currentMod === modKey) return;
+  currentMod = modKey;
+  currentVal = 0;
+  currentCardIdx = 0;
+  
+  document.getElementById("tab-weight").classList.toggle("active", modKey === "weight");
+  document.getElementById("tab-capacity").classList.toggle("active", modKey === "capacity");
+  
+  renderModule(modKey);
+}
+
+// 渲染當前單元內容
+function renderModule(modKey) {
+  const m = MODULES[modKey];
+  
+  // 1. 故事導讀
+  document.getElementById("story-emoji").textContent = m.storyEmoji;
+  document.getElementById("story-title").textContent = m.storyTitle;
+  document.getElementById("story-text-box").innerHTML = `
+    <div class="story-lead">${m.storyLead}</div>
+    <div>${m.storyText}</div>
+    <div class="magic-code">${m.magicCode}</div>
+  `;
+  
+  // 2. 沙盒標題與控制
+  document.getElementById("sandbox-title").textContent = m.sandboxTitle;
+  document.getElementById("meter-label").textContent = m.meterLabel;
+  document.getElementById("btn-reset-text").textContent = m.btnResetText;
+  document.getElementById("btn-random-text").textContent = m.btnRandomText;
+  document.getElementById("rack-label").textContent = m.rackLabel;
+  
+  // 3. 渲染 SVG 畫布
+  renderCanvas(modKey);
+  
+  // 4. 渲染物品按鈕架
+  const grid = document.getElementById("items-grid-container");
+  grid.innerHTML = m.items.map(it => `
+    <button class="item-btn" onclick="addItem(${it.val}, '${it.name}', '${it.icon}')">
+      <span class="item-icon">${it.icon}</span>
+      <span class="item-name">${it.name}</span>
+      <span class="item-weight-tag">${it.tag}</span>
+    </button>
+  `).join("");
+  
+  // 5. 渲染秘笈卡片
+  showCard(0);
+  
+  // 6. 更新度量與指針
+  updateMeterDisplay();
+  
+  // 7. 按鈕文本更新
+  document.getElementById("start-btn-text").textContent = `我懂了！出發挑戰【${m.name}】段考真題`;
+}
+
+// 渲染 SVG 畫布
+function renderCanvas(modKey) {
+  const container = document.getElementById("svg-container");
+  if (modKey === "weight") {
+    // 日系擬物彈簧磅秤 (3kg 盤面)
+    container.innerHTML = `
+      <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- 陰影 -->
+        <ellipse cx="150" cy="225" rx="100" ry="10" fill="#e8dfd1"/>
+        
+        <!-- 秤身底座 -->
+        <path d="M70,220 L90,140 L210,140 L230,220 Z" fill="#ffffff" stroke="#e0d6c8" stroke-width="3"/>
+        <path d="M70,220 Q150,230 230,220 L215,226 Q150,236 85,226 Z" fill="#d9cbba"/>
+
+        <!-- 秤盤立柱與頂部金屬托盤 -->
+        <rect x="142" y="24" width="16" height="32" fill="#d6c6b2" rx="3" stroke="#bfa991" stroke-width="2"/>
+        <ellipse cx="150" cy="24" rx="85" ry="14" fill="#faf6f0" stroke="#bfa991" stroke-width="3"/>
+        <ellipse cx="150" cy="22" rx="76" ry="10" fill="#ffffff"/>
+        
+        <!-- 托盤放置物品的動態圖示槽 -->
+        <g id="scale-plate-items">
+          <text id="plate-items-text" x="150" y="22" font-size="20" text-anchor="middle" dominant-baseline="central"></text>
+        </g>
+
+        <!-- 圓形指針錶盤本體 -->
+        <circle cx="150" cy="140" r="68" fill="#ffffff" stroke="#48a88b" stroke-width="6"/>
+        <circle cx="150" cy="140" r="62" fill="#fafdfb" stroke="#d5ebe3" stroke-width="1.5"/>
+
+        <!-- 刻度與數字 (3kg 秤面: 0, 1kg, 2kg, 3kg) -->
+        <!-- 0 / 3kg 頂部 -->
+        <line x1="150" y1="78" x2="150" y2="88" stroke="#f4694b" stroke-width="3"/>
+        <text x="150" y="99" font-size="11" font-weight="900" fill="#f4694b" text-anchor="middle">0 / 3kg</text>
+        
+        <!-- 1kg 右下 120度 -->
+        <line x1="203.6" y1="171" x2="195" y2="166" stroke="#3d3a34" stroke-width="2.5"/>
+        <text x="186" y="166" font-size="11" font-weight="800" fill="#3d3a34" text-anchor="middle">1kg</text>
+        
+        <!-- 2kg 左下 240度 -->
+        <line x1="96.4" y1="171" x2="105" y2="166" stroke="#3d3a34" stroke-width="2.5"/>
+        <text x="114" y="166" font-size="11" font-weight="800" fill="#3d3a34" text-anchor="middle">2kg</text>
+
+        <!-- 中間細分刻度 (500g, 1500g, 2500g) -->
+        <!-- 500g (60度) -->
+        <line x1="203.6" y1="109" x2="196" y2="113.5" stroke="#7bc9b2" stroke-width="2"/>
+        <!-- 1500g (180度底部) -->
+        <line x1="150" y1="202" x2="150" y2="193" stroke="#7bc9b2" stroke-width="2"/>
+        <text x="150" y="188" font-size="9" font-weight="700" fill="#48a88b" text-anchor="middle">1.5kg</text>
+        <!-- 2500g (300度) -->
+        <line x1="96.4" y1="109" x2="104" y2="113.5" stroke="#7bc9b2" stroke-width="2"/>
+
+        <!-- 中心固定轉軸 -->
+        <circle cx="150" cy="140" r="7" fill="#f4694b" stroke="#ffffff" stroke-width="2"/>
+
+        <!-- 旋轉指針 (預設垂直朝上 指向 0) -->
+        <g id="scale-needle">
+          <polygon points="147,140 150,82 153,140 150,147" fill="#f4694b"/>
+          <circle cx="150" cy="140" r="3.5" fill="#ffffff"/>
+        </g>
+      </svg>
+    `;
+  } else {
+    // 日系擬物透明量杯 (2000mL 大量杯)
+    container.innerHTML = `
+      <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- 陰影 -->
+        <ellipse cx="145" cy="225" rx="80" ry="8" fill="#e8dfd1"/>
+        
+        <!-- 量杯把手 -->
+        <path d="M190,70 C240,70 240,180 190,190" fill="none" stroke="#b0d4f1" stroke-width="12" stroke-linecap="round"/>
+        <path d="M190,70 C240,70 240,180 190,190" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+
+        <!-- 量杯玻璃杯身 -->
+        <rect x="90" y="40" width="110" height="175" rx="10" fill="#f2f8fc" stroke="#7db8e8" stroke-width="4"/>
+        <path d="M90,40 L80,35 L90,50 Z" fill="#7db8e8"/> <!-- 倒水口 -->
+
+        <!-- 藍色液體 (水) -->
+        <g clip-path="url(#cup-clip)">
+          <rect id="water-surface" x="90" y="215" width="110" height="0" fill="#7db8e8" opacity="0.75"/>
+          <!-- 水面漣漪波浪頂部 -->
+          <ellipse id="water-wave" cx="145" cy="215" rx="55" ry="6" fill="#4a94d4" opacity="0.6"/>
+        </g>
+
+        <!-- 裁剪區域保持在杯身內部 -->
+        <clipPath id="cup-clip">
+          <rect x="92" y="42" width="106" height="171" rx="8"/>
+        </clipPath>
+
+        <!-- 刻度線與數值 (每500mL大刻度, 每100mL中刻度) -->
+        <!-- 2000 mL (2L) -->
+        <line x1="92" y1="55" x2="115" y2="55" stroke="#f4694b" stroke-width="2.5"/>
+        <text x="120" y="59" font-size="11" font-weight="900" fill="#f4694b">2000 mL (2L)</text>
+
+        <!-- 1500 mL -->
+        <line x1="92" y1="95" x2="110" y2="95" stroke="#3d3a34" stroke-width="2"/>
+        <text x="115" y="99" font-size="10" font-weight="800" fill="#3d3a34">1500 mL</text>
+
+        <!-- 1000 mL (1L 核心) -->
+        <line x1="92" y1="135" x2="120" y2="135" stroke="#48a88b" stroke-width="3"/>
+        <text x="125" y="139" font-size="11" font-weight="900" fill="#48a88b">1000 mL (1L)</text>
+
+        <!-- 500 mL -->
+        <line x1="92" y1="175" x2="110" y2="175" stroke="#3d3a34" stroke-width="2"/>
+        <text x="115" y="179" font-size="10" font-weight="800" fill="#3d3a34">500 mL</text>
+
+        <!-- 玻璃高光反光條 -->
+        <rect x="96" y="46" width="10" height="160" rx="4" fill="#ffffff" opacity="0.45"/>
+      </svg>
+    `;
+  }
+}
+
+// 物品放入沙盒
+let currentItemsOnPlate = [];
+function addItem(val, name, icon) {
+  const m = MODULES[currentMod];
+  if (currentVal + val > m.maxCapacity) {
+    // 溫和提示滿了
+    document.getElementById("meter-bubble").textContent = `⚠️ 已經裝滿 ${m.maxCapacity} ${m.unitB_en} 囉！先清空再重新玩玩看！`;
+    return;
+  }
+  currentVal += val;
+  currentItemsOnPlate.push(icon);
+  if (currentItemsOnPlate.length > 5) currentItemsOnPlate.shift();
+  updateMeterDisplay(name, val);
+}
+
+// 清空沙盒
+function resetSandbox() {
+  currentVal = 0;
+  currentItemsOnPlate = [];
+  updateMeterDisplay();
+  const m = MODULES[currentMod];
+  document.getElementById("meter-bubble").textContent = `💡 已清空！點點看下方物品，放上${currentMod === 'weight' ? '秤盤' : '量杯'}試試看！`;
+}
+
+// 隨機放幾樣
+function randomFillSandbox() {
+  const m = MODULES[currentMod];
+  resetSandbox();
+  const pickCount = Math.floor(Math.random() * 2) + 2; // 2~3樣
+  for (let i = 0; i < pickCount; i++) {
+    const item = m.items[Math.floor(Math.random() * (m.items.length - 2))]; // 挑中小物品
+    if (currentVal + item.val <= m.maxCapacity) {
+      currentVal += item.val;
+      currentItemsOnPlate.push(item.icon);
+    }
+  }
+  updateMeterDisplay("隨機驚喜組合", currentVal);
+}
+
+// 更新儀表板與視覺動畫
+function updateMeterDisplay(lastItemName, addedVal) {
+  const m = MODULES[currentMod];
+  const rate = m.rate;
+  const major = Math.floor(currentVal / rate);
+  const minor = currentVal % rate;
+
+  // 1. 數值更新
+  document.getElementById("meter-value-primary").textContent = `${major} ${m.unitA} ${minor} ${m.unitB}`;
+  document.getElementById("meter-value-secondary").textContent = `＝ ${currentVal} ${m.unitB} (${m.unitB_en})`;
+
+  // 2. 趣味文字泡泡回饋
+  const bubble = document.getElementById("meter-bubble");
+  if (currentVal === 0) {
+    bubble.textContent = `💡 點點看下方物品，放上${currentMod === 'weight' ? '秤盤' : '量杯'}看指針轉動！`;
+  } else if (lastItemName) {
+    if (major > 0 && minor === 0) {
+      bubble.textContent = `🎉 太神奇了！剛好整整 ${major} ${m.unitA}（也就是 ${currentVal} ${m.unitB}）！`;
+    } else if (major > 0) {
+      bubble.textContent = `✨ 放上【${lastItemName}】，現在超過 ${major} ${m.unitA} 了，指針指向 ${major} ${m.unitA} 又 ${minor} ${m.unitB}！`;
+    } else {
+      bubble.textContent = `👍 放上【${lastItemName}】(+${addedVal}${m.unitB_en})，現在是 ${minor} ${m.unitB}！`;
+    }
+  }
+
+  // 3. 視覺動態更新
+  if (currentMod === "weight") {
+    // 旋轉指針 (3000g = 360度)
+    const deg = (currentVal / 3000) * 360;
+    const needle = document.getElementById("scale-needle");
+    if (needle) {
+      needle.style.transform = `rotate(${deg}deg)`;
+    }
+    const plateText = document.getElementById("plate-items-text");
+    if (plateText) {
+      plateText.textContent = currentItemsOnPlate.slice(-4).join(" ");
+    }
+  } else {
+    // 容量水面高度 (0 mL = y215 h0, 2000 mL = y55 h160)
+    const water = document.getElementById("water-surface");
+    const wave = document.getElementById("water-wave");
+    if (water && wave) {
+      const maxHeight = 160;
+      const h = (currentVal / 2000) * maxHeight;
+      const y = 215 - h;
+      water.setAttribute("y", y);
+      water.setAttribute("height", h);
+      wave.setAttribute("cy", y);
+    }
+  }
+}
+
+// ===== 秘笈小卡展示 =====
+function showCard(idx) {
+  currentCardIdx = idx;
+  const m = MODULES[currentMod];
+  const cardData = m.cards[idx];
+  
+  // 更新圓點狀態
+  for (let i = 0; i < 3; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    if (dot) dot.classList.toggle("active", i === idx);
+  }
+  
+  const container = document.getElementById("cards-container");
+  container.innerHTML = `
+    <div class="flashcard">
+      <div class="card-header-badge ${cardData.badgeClass}">${cardData.badge}</div>
+      <div style="font-size: 14px; font-weight: 800; color: var(--ink); margin-top: 2px;">${cardData.title}</div>
+      <div class="flashcard-content">${cardData.desc}</div>
+      <div class="flashcard-formula">${cardData.formula}</div>
+    </div>
+  `;
+}
+
+// ===== 語音導讀 (Web Speech API 臺灣腔 zh-TW) =====
+function playVoiceGuide() {
+  const m = MODULES[currentMod];
+  const textToRead = `${m.storyTitle}。${m.storyLead}。${m.storyText.replace(/<[^>]+>/g, '')}。${m.magicCode}`;
+  
+  if (!("speechSynthesis" in window)) {
+    alert("您的瀏覽器暫不支援自動語音播放，請閱讀卡片導讀文字喔！");
+    return;
+  }
+  
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(textToRead);
+  utter.lang = "zh-TW";
+  utter.rate = 0.92; // 稍慢、親切
+  utter.pitch = 1.1; // 輕快親切兒少口吻
+  window.speechSynthesis.speak(utter);
+}
+
+// ===== 信心挑戰按鈕 =====
+function startChallenge() {
+  const m = MODULES[currentMod];
+  if (currentMod === "capacity") {
+    // 跳轉到已上線的容量單元
+    window.location.href = `index.html#${m.code}`;
+  } else {
+    // 重量單元先彈出自信過關鼓勵
+    alert(`🎉 太棒了！你已經掌握了【${m.name}】的核心量感與 $1\\text{kg}=1000\\text{g}$ 的通關密碼！\n\n現在你已經具備滿滿的信心，準備好進入真題修煉囉！`);
+  }
+}
+
+// 頁面載入啟動
+window.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
