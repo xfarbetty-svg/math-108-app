@@ -325,9 +325,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <div class="stage-canvas">
       <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
         <circle cx="150" cy="88" r="62" fill="#fff7ed" stroke="#d6c9b6" stroke-width="3"/>
-        <!-- 對向半徑（珊瑚色） -->
-        <g id="c2-opposite" style="display:none;">
-          <line x1="150" y1="88" x2="212" y2="88" stroke="#f4694b" stroke-width="4.5" stroke-linecap="round"/>
+        <!-- 對向半徑（珊瑚色，初始在 180° 方向，往左） -->
+        <g id="c2-opposite" style="display:none;" transform="rotate(0, 150, 88)">
+          <line x1="150" y1="88" x2="88" y2="88" stroke="#f4694b" stroke-width="4.5" stroke-linecap="round"/>
+          <circle cx="88" cy="88" r="4" fill="#f4694b"/>
+          <text x="116" y="80" font-size="12" font-weight="900" fill="#f4694b">5cm</text>
         </g>
         <!-- 主半徑指針（藍，可旋轉） -->
         <g id="c2-pointer" transform="rotate(0, 150, 88)">
@@ -375,12 +377,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
     <!-- 視覺畫布：日系擬物圓規 -->
     <div class="stage-canvas">
-      <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
         <!-- 畫紙 -->
-        <rect x="20" y="14" width="260" height="150" rx="8" fill="#ffffff" stroke="#e8dfd1" stroke-width="2"/>
-        <!-- 鉛筆軌跡（漸進描繪的彩色圓） -->
-        <circle id="c3-trace" cx="150" cy="97" r="0" fill="none" stroke="url(#c3-rainbow)" stroke-width="4" stroke-linecap="round"
-                pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90, 150, 97)"/>
+        <rect x="20" y="10" width="260" height="158" rx="8" fill="#ffffff" stroke="#e8dfd1" stroke-width="2"/>
+        <!-- 鉛筆軌跡（從正右方 0° 開始順時針精準繪製） -->
+        <circle id="c3-trace" cx="150" cy="98" r="0" fill="none" stroke="url(#c3-rainbow)" stroke-width="4.5" stroke-linecap="round"
+                pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(0, 150, 98)"/>
         <defs>
           <linearGradient id="c3-rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#f472b6"/>
@@ -388,29 +390,30 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
             <stop offset="100%" stop-color="#38bdf8"/>
           </linearGradient>
         </defs>
-        <!-- 圓規本體（整組繞針尖旋轉） -->
-        <g id="c3-compass" transform="rotate(0, 150, 97)">
-          <!-- 鉛筆腳 -->
-          <line id="c3-pencil-leg" x1="150" y1="34" x2="202" y2="97" stroke="#8d6e63" stroke-width="6" stroke-linecap="round"/>
-          <circle id="c3-pencil-tip" cx="202" cy="97" r="4.5" fill="#1e293b"/>
-          <!-- 金屬針腳 -->
-          <line x1="150" y1="34" x2="150" y2="97" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
-          <!-- 圓規頭 -->
-          <circle cx="150" cy="30" r="8" fill="#64748b" stroke="#334155" stroke-width="2"/>
-          <circle cx="150" cy="30" r="3" fill="#cbd5e1"/>
+        <!-- 圓規本體（整組以圓心針尖為軸順時針旋轉，筆尖初始在正右方） -->
+        <g id="c3-compass" transform="rotate(0, 150, 98)">
+          <!-- 金屬針腳 (從頂部軸心連到圓心) -->
+          <line id="c3-needle-leg" x1="172" y1="20" x2="150" y2="98" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+          <!-- 鉛筆腳 (從頂部軸心連到鉛筆尖) -->
+          <line id="c3-pencil-leg" x1="172" y1="20" x2="194" y2="98" stroke="#8d6e63" stroke-width="5.5" stroke-linecap="round"/>
+          <!-- 圓規頂部轉軸關節 (永遠居中高於圓頂) -->
+          <circle id="c3-head-outer" cx="172" cy="20" r="8" fill="#64748b" stroke="#334155" stroke-width="2"/>
+          <circle id="c3-head-inner" cx="172" cy="20" r="3" fill="#cbd5e1"/>
+          <!-- 鉛筆尖黑芯 (隨張開距離對齊圓周) -->
+          <circle id="c3-pencil-tip" cx="194" cy="98" r="4.5" fill="#1e293b"/>
         </g>
-        <!-- 針尖固定點（圓心） -->
-        <circle cx="150" cy="97" r="5" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+        <!-- 針尖固定點（圓心紅點） -->
+        <circle cx="150" cy="98" r="5" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
         <!-- 底部尺規刻度 -->
-        <line x1="55" y1="170" x2="245" y2="170" stroke="#94a3b8" stroke-width="2"/>
+        <line x1="55" y1="176" x2="245" y2="176" stroke="#94a3b8" stroke-width="2"/>
         <g id="c3-ticks" font-size="9" font-weight="800" fill="#64748b" text-anchor="middle">
-          <line x1="85"  y1="165" x2="85"  y2="175" stroke="#94a3b8" stroke-width="1.5"/><text x="85"  y="163">2</text>
-          <line x1="115" y1="166" x2="115" y2="174" stroke="#94a3b8" stroke-width="1.5"/><text x="115" y="163">3</text>
-          <line x1="145" y1="165" x2="145" y2="175" stroke="#94a3b8" stroke-width="1.5"/><text x="145" y="163">4</text>
-          <line x1="175" y1="166" x2="175" y2="174" stroke="#94a3b8" stroke-width="1.5"/><text x="175" y="163">5</text>
-          <line x1="205" y1="165" x2="205" y2="175" stroke="#94a3b8" stroke-width="1.5"/><text x="205" y="163">6</text>
+          <line x1="85"  y1="171" x2="85"  y2="181" stroke="#94a3b8" stroke-width="1.5"/><text x="85"  y="169">2</text>
+          <line x1="115" y1="172" x2="115" y2="180" stroke="#94a3b8" stroke-width="1.5"/><text x="115" y="169">3</text>
+          <line x1="145" y1="171" x2="145" y2="181" stroke="#94a3b8" stroke-width="1.5"/><text x="145" y="169">4</text>
+          <line x1="175" y1="172" x2="175" y2="180" stroke="#94a3b8" stroke-width="1.5"/><text x="175" y="169">5</text>
+          <line x1="205" y1="171" x2="205" y2="181" stroke="#94a3b8" stroke-width="1.5"/><text x="205" y="169">6</text>
         </g>
-        <circle id="c3-marker" cx="145" cy="170" r="4.5" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
+        <circle id="c3-marker" cx="145" cy="176" r="4.5" fill="#ef4444" stroke="#b91c1c" stroke-width="1"/>
       </svg>
     </div>
 
@@ -583,10 +586,12 @@ let c2Spinning = false;
 function setPointerAngle(deg) {
   c2Angle = ((deg % 360) + 360) % 360;
   const pointer = document.getElementById("c2-pointer");
+  const opp = document.getElementById("c2-opposite");
   const slider = document.getElementById("c2-slider");
   const angleTag = document.getElementById("c2-angle-tag");
   const bubble = document.getElementById("act2-bubble");
   if (pointer) pointer.setAttribute("transform", `rotate(${c2Angle}, 150, 88)`);
+  if (opp) opp.setAttribute("transform", `rotate(${c2Angle}, 150, 88)`);
   if (slider && slider.value !== String(deg)) slider.value = String(Math.round(c2Angle));
   if (angleTag) angleTag.textContent = `角度：${Math.round(c2Angle)}° · 長度依然是 5 cm（半徑處處等長！）`;
   if (bubble) {
@@ -625,10 +630,10 @@ function toggleOpposite() {
 }
 
 /* ==================== 活動三：圓規畫圓 ==================== */
-const C3_PX_PER_CM = 13;   // cm → px 縮放
+const C3_PX_PER_CM = 11;   // cm → px 縮放：2cm=22px, 6cm=66px
 const C3_CENTER_X = 150;
-const C3_CENTER_Y = 97;
-const C3_LEG_LEN = 95;     // 圓規腳固定長度
+const C3_CENTER_Y = 98;
+const C3_LEG_LEN = 95;     // 圓規腿長
 
 let c3Opening = 4;
 let c3Drawing = false;
@@ -636,19 +641,48 @@ let c3Drawing = false;
 function setCompassOpening(cm) {
   c3Opening = parseFloat(cm);
   const rPx = c3Opening * C3_PX_PER_CM;
+  const needleLeg = document.getElementById("c3-needle-leg");
   const pencilLeg = document.getElementById("c3-pencil-leg");
+  const headOuter = document.getElementById("c3-head-outer");
+  const headInner = document.getElementById("c3-head-inner");
   const pencilTip = document.getElementById("c3-pencil-tip");
   const stat = document.getElementById("act3-stat");
   const marker = document.getElementById("c3-marker");
   const bubble = document.getElementById("act3-bubble");
 
-  // 鉛筆腳頂點（圓規頭）位置：隨張開距離調整，腳長固定
-  const apexY = C3_CENTER_Y - Math.sqrt(Math.max(C3_LEG_LEN * C3_LEG_LEN - rPx * rPx, 400));
-  if (pencilLeg) { pencilLeg.setAttribute("x1", C3_CENTER_X); pencilLeg.setAttribute("y1", apexY.toFixed(1)); pencilLeg.setAttribute("x2", (C3_CENTER_X + rPx).toFixed(1)); pencilLeg.setAttribute("y2", C3_CENTER_Y); }
-  if (pencilTip) { pencilTip.setAttribute("cx", (C3_CENTER_X + rPx).toFixed(1)); pencilTip.setAttribute("cy", C3_CENTER_Y); }
-  // 圓規頭同步移動
-  const compassHead = document.querySelector("#c3-compass circle");
-  if (compassHead) { compassHead.setAttribute("cy", (apexY - 4).toFixed(1)); }
+  // 圓規軸心 (apex)：位於圓心 (150, 98) 與鉛筆尖 (150+rPx, 98) 正上方，形成自然等腰姿態
+  const halfR = rPx / 2;
+  const apexX = C3_CENTER_X + halfR;
+  const apexY = C3_CENTER_Y - Math.sqrt(Math.max(C3_LEG_LEN * C3_LEG_LEN - halfR * halfR, 400));
+
+  // 金屬針腳 (從 apex 到圓心)
+  if (needleLeg) {
+    needleLeg.setAttribute("x1", apexX.toFixed(1));
+    needleLeg.setAttribute("y1", apexY.toFixed(1));
+    needleLeg.setAttribute("x2", C3_CENTER_X);
+    needleLeg.setAttribute("y2", C3_CENTER_Y);
+  }
+  // 鉛筆腳 (從 apex 到鉛筆尖)
+  if (pencilLeg) {
+    pencilLeg.setAttribute("x1", apexX.toFixed(1));
+    pencilLeg.setAttribute("y1", apexY.toFixed(1));
+    pencilLeg.setAttribute("x2", (C3_CENTER_X + rPx).toFixed(1));
+    pencilLeg.setAttribute("y2", C3_CENTER_Y);
+  }
+  // 圓規頭軸心 (與兩腳頂點完美聚合)
+  if (headOuter) {
+    headOuter.setAttribute("cx", apexX.toFixed(1));
+    headOuter.setAttribute("cy", apexY.toFixed(1));
+  }
+  if (headInner) {
+    headInner.setAttribute("cx", apexX.toFixed(1));
+    headInner.setAttribute("cy", apexY.toFixed(1));
+  }
+  // 鉛筆尖黑芯 (對齊半徑端點)
+  if (pencilTip) {
+    pencilTip.setAttribute("cx", (C3_CENTER_X + rPx).toFixed(1));
+    pencilTip.setAttribute("cy", C3_CENTER_Y);
+  }
 
   // 尺規紅色標記：2cm→x=85, 6cm→x=205（每 cm 30px）
   if (marker) marker.setAttribute("cx", String(55 + c3Opening * 30));
@@ -682,7 +716,9 @@ function drawCircle() {
   const timer = setInterval(() => {
     i++;
     const ratio = i / steps;
-    if (compass) compass.setAttribute("transform", `rotate(${-ratio * 360}, ${C3_CENTER_X}, ${C3_CENTER_Y})`);
+    // 圓規順時針旋轉 360°，筆尖與彩虹軌跡 100% 同向貼合！
+    const deg = ratio * 360;
+    if (compass) compass.setAttribute("transform", `rotate(${deg}, ${C3_CENTER_X}, ${C3_CENTER_Y})`);
     if (trace) trace.setAttribute("stroke-dashoffset", String(Math.max(0, 1 - ratio)));
     if (i >= steps) {
       clearInterval(timer);
