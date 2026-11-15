@@ -212,7 +212,14 @@
      - 活動四【量杯沙箱】：2000mL 擬物量杯自由倒水與單位換算。
   4. 導航抗破版升級：頂部活動選單升級為自適應水平滑動膠囊（Horizontal Scroll），文字永不折行切字，完美支援未來活動五、活動六之無上限擴充。
   5. 雙硬閘門全數秒通：`verify_curriculum_131.js`、`verify_app_shell.js`、`verify_capacity_concept.js`、`verify_n315.js`、`verify_n315_cdp.js` 全綠（Exit 0），Cloudflare Pages 部署完畢。
-- [ ] 下一步：推進三年級第十六單元 `N-3-16 重量（「公斤」、「公克」）`（實測、量感、估測與計算、單位換算）。
+- [x] Session 42 升級 Edge-TTS 台灣曉臻自然語音 ＆ 落地 G3-N-3-13(角) 與 G3-N-3-14(面積) 概念小教室（2026-11-15 10:55）：
+  1. 語音系統全量升級 Edge-TTS（曉臻台灣自然音色）：建立 `functions/api/tts.js`，包含 Sec-MS-GEC v2 動態簽章直連微軟 Edge-TTS，正式掛載 Cloudflare Pages Functions；前端具備三級雙通道平滑降級，徹底告別機械合成音。
+  2. G3-N-3-13 / S-3-1「角與角度」概念小教室落地（`app/components/angle_concept_lab.html`）：四幕活動（紙條旋轉頂點與邊、三角板找直角與45度旋轉、銳角直角鈍角裁判疊合、邊長沙箱破解長度迷思）。
+  3. G3-N-3-14「面積（平方公分）」概念小教室落地（`app/components/area_concept_lab.html`）：四幕活動（郵票密鋪、1cm²指甲生活量感、3×4方格板矩陣乘法點數、變形拼圖沙箱實證面積相同但周長改變）。
+  4. 三年級核心三單元（13角、14面積、15容量）概念小教室全線連通與掛載。
+  5. 雙硬閘門全數秒通：`verify_angle_concept.js`、`verify_area_concept.js`、`verify_capacity_concept.js`、`test_tts_endpoint.py`、`verify_app_shell.js`、`verify_n313_cdp.js`、`verify_n314_cdp.js`、`verify_n315_cdp.js` 全綠（Exit 0）。
+  6. 遠端部署生效：GitHub 與 Cloudflare Pages（https://math-108.pages.dev）發布完成，手機實機盲審完全通過！
+- [ ] 下一步：進入批次化生產流程（回推 1~12 單元概念小教室，或繼續推進三年級剩餘 upcoming 單元）。
 
 
 ---
