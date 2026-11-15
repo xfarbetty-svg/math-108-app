@@ -56,9 +56,11 @@
   - 課綱活動: 直式算柱位值對齊、滿十進一動態融合、不夠減借十退位拆解、分步引導計算機
   - 驗證結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
   - 施工通道: 通道一/通道二自動容災協同 ($0)
-- [ ] **Step 4: G2-N-2-5 幣值與錢幣換算 (`g2_money_change_lab.html`)**
-  - 課綱活動: 100元、500元、1000元紙鈔與硬幣找零、超市自動收銀機撲滿。
-  - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-5`
+- [x] **Step 4: G2-N-2-5 幣值與錢幣換算 (`g2_money_change_lab.html`)**
+  - 產出檔案: `app/components/g2_money_change_lab.html` (39KB), 更新 `app/shell.js`
+  - 課綱活動: 新台幣面額大解剖（千元/五百元/百元/銅板）、自動換幣機拖曳兌換、超市付錢與找零計算
+  - 驗證結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
 - [ ] **Step 5: G2-N-2-6 乘法啟蒙 (`g2_multiplication_intro_lab.html`)**
   - 課綱活動: 盤子裝蘋果幾個幾、連加算式與乘號動態誕生、倍數階梯。
   - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-6`

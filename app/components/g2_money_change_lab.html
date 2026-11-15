@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-5 幣值與錢幣換算 · 概念探索實驗室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 1 面額選擇 */
+.denom-group { cursor: pointer; }
+.denom-highlight { stroke: #ffbf00; stroke-width: 4; }
+
+/* Act 2 拖曳與模式 */
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+.mode-row { display: flex; gap: 6px; }
+.mode-btn {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.mode-btn.active {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+
+/* Act 3 操作按鈕 */
+.pay-row { display: flex; gap: 8px; }
+.pay-btn {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.pay-btn:disabled { opacity: 0.45; cursor: default; }
+.pay-btn:not(:disabled):active { transform: scale(0.96); }
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.q-progress { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      概念探索實驗室
+      <small>二年級 · N-2-5 幣值與錢幣換算</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（新台幣面額大解剖） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('點一點鈔票和硬幣，看看它們之間的換算關係！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 新台幣面額大解剖</div>
+      <div class="card-desc">點一點鈔票和硬幣，看看它們之間藏著什麼換算關係！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="新台幣鈔票與硬幣面額圖">
+          <g id="act1-denoms"></g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 點一點上面的鈔票或硬幣，看看等價換算！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（自動換錢機） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('把鈔票拖進自動換錢機，集滿目標張數，機器就會吐出大鈔！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 自動換錢機</div>
+      <div class="card-desc">先選兌換模式，再把錢拖進換錢機，集滿就會吐出新鈔！</div>
+      <div class="mode-row" id="mode-row">
+        <button class="mode-btn active" data-mode="to1000" onclick="setMode('to1000', this)">10張100 → 1000</button>
+        <button class="mode-btn" data-mode="to500" onclick="setMode('to500', this)">5張100 → 500</button>
+        <button class="mode-btn" data-mode="break1000" onclick="setMode('break1000', this)">1張1000 → 找開</button>
+      </div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 252" xmlns="http://www.w3.org/2000/svg" style="touch-action:none">
+          <!-- 錢包與零錢箱 -->
+          <rect x="8" y="20" width="112" height="212" rx="12" fill="#f4ede0" stroke="#d9cbb2" stroke-width="2"></rect>
+          <text x="64" y="42" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a857b">錢包</text>
+          <!-- 自動換錢機 -->
+          <rect id="act2-machine" x="132" y="20" width="98" height="212" rx="12" fill="#eef2f7" stroke="#9fb4cc" stroke-width="2.5"></rect>
+          <rect x="146" y="28" width="70" height="10" rx="5" fill="#7d8fa5"></rect>
+          <text x="181" y="56" text-anchor="middle" font-size="10.5" font-weight="800" fill="#5a6b80">自動換錢機</text>
+          <text id="act2-count-label" x="181" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#318a70">已投入 0 張</text>
+          <!-- 兌換出鈔口 -->
+          <rect x="242" y="20" width="108" height="212" rx="12" fill="#fff6df" stroke="#ffd166" stroke-width="2"></rect>
+          <rect x="254" y="178" width="84" height="16" rx="8" fill="#d9910d"></rect>
+          <text x="296" y="42" text-anchor="middle" font-size="11.5" font-weight="800" fill="#d9910d">出鈔口</text>
+          <g id="act2-outlet"></g>
+          <!-- 可拖曳：100 元鈔票 -->
+          <g id="act2-drag-100" class="drag-handle" transform="translate(28,64)"></g>
+          <!-- 可拖曳：1000 元鈔票 -->
+          <g id="act2-drag-1000" class="drag-handle" transform="translate(28,168)"></g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 把 100 元鈔票拖進換錢機，集滿 10 張就能換 1 張 1000 元大鈔！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（超市聰明付錢法） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('買 365 元的文具組，怎麼付錢最聰明？付 500 元會找多少零錢？')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 超市聰明付錢法</div>
+      <div class="card-desc">文具組一份 365 元。先看看「最少鈔票硬幣」的聰明付法，再試試付 500 元會找多少零錢！</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="超市文具組 365 元付款情境">
+          <!-- 櫃台 -->
+          <rect x="8" y="118" width="342" height="34" rx="8" fill="#e8ddc9" stroke="#d9cbb2" stroke-width="2"></rect>
+          <!-- 文具組禮盒 -->
+          <rect x="22" y="46" width="92" height="72" rx="10" fill="#e7f5f0" stroke="#318a70" stroke-width="2.5"></rect>
+          <line x1="34" y1="66" x2="102" y2="66" stroke="#7bc9b2" stroke-width="4" stroke-linecap="round"></line>
+          <line x1="34" y1="82" x2="102" y2="82" stroke="#ffd166" stroke-width="4" stroke-linecap="round"></line>
+          <line x1="34" y1="98" x2="86" y2="98" stroke="#ff8a65" stroke-width="4" stroke-linecap="round"></line>
+          <!-- 價格標籤 -->
+          <circle cx="104" cy="52" r="15" fill="#ff8a65" stroke="#f4694b" stroke-width="2"></circle>
+          <text x="104" y="57" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">365</text>
+          <text x="68" y="134" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4a30">文具組一份 365 元</text>
+          <!-- 收銀員 -->
+          <circle cx="300" cy="70" r="17" fill="#ffd0c2" stroke="#f4694b" stroke-width="2"></circle>
+          <rect x="286" y="90" width="28" height="26" rx="8" fill="#7bc9b2" stroke="#318a70" stroke-width="2"></rect>
+          <text x="300" y="134" text-anchor="middle" font-size="12" font-weight="800" fill="#5a4a30">收銀台</text>
+          <!-- 付款／找零出鈔區 -->
+          <g id="act3-output"></g>
+        </svg>
+      </div>
+      <div class="pay-row">
+        <button class="pay-btn" id="btn-break" onclick="showBreakdown()">🧮 聰明付法拆解</button>
+        <button class="pay-btn" id="btn-pay500" onclick="payWith500()">💵 拿 500 元付款</button>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 先按「聰明付法拆解」，再按「拿 500 元付款」看找零！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（收銀員找零挑戰） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakQuestion()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 收銀員找零挑戰 <span class="q-progress" id="q-progress">第 1 / 3 題</span></div>
+      <div class="card-desc" id="act4-question">題目載入中……</div>
+      <div class="stage">
+        <svg id="act4-svg" viewBox="0 0 358 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="收銀機情境圖">
+          <rect x="8" y="16" width="342" height="88" rx="12" fill="#f4ede0" stroke="#d9cbb2" stroke-width="2"></rect>
+          <rect x="24" y="34" width="86" height="54" rx="8" fill="#eef2f7" stroke="#9fb4cc" stroke-width="2"></rect>
+          <text id="act4-register-price" x="67" y="58" text-anchor="middle" font-size="13" font-weight="800" fill="#318a70">$ 0</text>
+          <text id="act4-register-note" x="67" y="76" text-anchor="middle" font-size="9.5" font-weight="700" fill="#8a857b">收銀機</text>
+          <g id="act4-register-money" transform="translate(140,40)"></g>
+        </svg>
+      </div>
+      <div class="choice-row" id="choice-container"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級幣值與錢幣換算實驗室。現在進行第 " + currentAct + " 幕。跟著四個關卡，一步一步認識新台幣！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  buildAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== SVG 共用工具 ==================== */
+var SVG_NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, parent) {
+  var el = document.createElementNS(SVG_NS, tag);
+  for (var k in attrs) el.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+function svgText(x, y, str, size, fill, parent, weight) {
+  var t = svgEl("text", {
+    x: x, y: y, "text-anchor": "middle",
+    "font-size": size, "font-weight": weight || 800, fill: fill
+  }, parent);
+  t.textContent = str;
+  return t;
+}
+
+/* 鈔票繪製：1000 藍、500 咖啡棕、100 紅 */
+var BILL_COLORS = {
+  1000: { body: "#7db8e8", deep: "#3f7fb8", label: "#ffffff" },
+  500:  { body: "#b08a63", deep: "#7d5c3a", label: "#ffffff" },
+  100:  { body: "#f58a7a", deep: "#c94a3d", label: "#ffffff" }
+};
+function drawBill(parent, x, y, w, h, value) {
+  var c = BILL_COLORS[value] || BILL_COLORS[100];
+  var g = svgEl("g", { transform: "translate(" + x + "," + y + ")" }, parent);
+  svgEl("rect", { x: 0, y: 0, width: w, height: h, rx: 6, fill: c.body, stroke: c.deep, "stroke-width": 2.5 }, g);
+  svgEl("rect", { x: 4, y: 4, width: w - 8, height: h - 8, rx: 4, fill: "none", stroke: c.deep, "stroke-width": 1, "stroke-dasharray": "3 3" }, g);
+  svgEl("circle", { cx: w / 2, cy: h / 2, r: Math.min(h / 2 - 5, 13), fill: "rgba(255,255,255,0.35)" }, g);
+  svgText(w / 2, h / 2 + 4, String(value), Math.max(10, h / 3.4), c.label, g);
+  return g;
+}
+/* 硬幣繪製：50 金、10 銀、5 小銀、1 銅 */
+var COIN_COLORS = {
+  50: { body: "#f2c14e", deep: "#c08a1a", text: "#7a5210" },
+  10: { body: "#cfd6dd", deep: "#8d99a4", text: "#5a646e" },
+  5:  { body: "#dde3e8", deep: "#9aa5ae", text: "#5a646e" },
+  1:  { body: "#d99a6c", deep: "#a06a3e", text: "#6e4520" }
+};
+function drawCoin(parent, cx, cy, r, value) {
+  var c = COIN_COLORS[value] || COIN_COLORS[1];
+  var g = svgEl("g", {}, parent);
+  svgEl("circle", { cx: cx, cy: cy + 2, r: r, fill: "rgba(120,90,40,0.15)" }, g);
+  svgEl("circle", { cx: cx, cy: cy, r: r, fill: c.body, stroke: c.deep, "stroke-width": 2.5 }, g);
+  svgEl("circle", { cx: cx, cy: cy, r: r - 4, fill: "none", stroke: c.deep, "stroke-width": 1, "stroke-dasharray": "2 3" }, g);
+  svgText(cx, cy + r * 0.32, String(value), r * 0.9, c.text, g);
+  return g;
+}
+
+/* ==================== Act 1：新台幣面額大解剖 ==================== */
+var ACT1_EQUIV = {
+  1000: "1 張 1000 元 = 2 張 500 元 = 10 張 100 元！大鈔可以換成很多小鈔。",
+  500: "1 張 500 元 = 5 張 100 元 = 10 枚 50 元硬幣！",
+  100: "1 張 100 元 = 10 枚 10 元硬幣 = 2 枚 50 元硬幣！",
+  50: "1 枚 50 元 = 5 個 10 元 = 50 個 1 元！金色的它最值錢。",
+  10: "1 個 10 元 = 2 個 5 元 = 10 個 1 元！",
+  5: "1 個 5 元 = 5 個 1 元！",
+  1: "1 元是最小的基本單位，集滿 10 個就能換 1 個 10 元！"
+};
+var selectedDenom = null;
+function buildAct1() {
+  var g = document.getElementById("act1-denoms");
+  if (!g) return;
+  g.innerHTML = "";
+  /* 三張紙鈔（上排） */
+  var bills = [1000, 500, 100];
+  bills.forEach(function (v, i) {
+    var x = 12 + i * 116;
+    var grp = drawBill(g, x, 24, 100, 52, v);
+    grp.setAttribute("class", "denom-group");
+    grp.setAttribute("data-value", String(v));
+    svgText(x + 50, 94, v + " 元紙鈔", 10.5, "#8a857b", g);
+    grp.addEventListener("click", function () { pickDenom(v); });
+  });
+  /* 四枚硬幣（下排） */
+  var coins = [
+    { v: 50, cx: 52, r: 22 },
+    { v: 10, cx: 130, r: 20 },
+    { v: 5, cx: 200, r: 17 },
+    { v: 1, cx: 262, r: 15 }
+  ];
+  coins.forEach(function (c) {
+    var grp = drawCoin(g, c.cx, 140, c.r, c.v);
+    grp.setAttribute("class", "denom-group");
+    grp.setAttribute("data-value", String(c.v));
+    svgText(c.cx, 178, c.v + " 元硬幣", 10.5, "#8a857b", g);
+    grp.addEventListener("click", function () { pickDenom(c.v); });
+  });
+  svgText(179, 214, "① 點擊鈔票或硬幣 → ② 看換算關係", 11, "#b0a894", g, 700);
+  clearDenomHighlight();
+}
+function clearDenomHighlight() {
+  var g = document.getElementById("act1-denoms");
+  if (!g) return;
+  g.querySelectorAll(".denom-group").forEach(function (grp) {
+    var shapes = grp.querySelectorAll("rect, circle");
+    shapes.forEach(function (s) {
+      if (s.getAttribute("data-original-stroke") !== null) {
+        s.setAttribute("stroke", s.getAttribute("data-original-stroke"));
+        s.setAttribute("stroke-width", s.getAttribute("data-original-sw"));
+        s.removeAttribute("data-original-stroke");
+        s.removeAttribute("data-original-sw");
+      }
+    });
+  });
+}
+function highlightDenom(value) {
+  var g = document.getElementById("act1-denoms");
+  if (!g) return;
+  g.querySelectorAll('.denom-group[data-value="' + value + '"]').forEach(function (grp) {
+    var shapes = grp.querySelectorAll("rect, circle");
+    var main = shapes[0];
+    if (!main) return;
+    main.setAttribute("data-original-stroke", main.getAttribute("stroke") || "none");
+    main.setAttribute("data-original-sw", main.getAttribute("stroke-width") || "1");
+    main.setAttribute("stroke", "#ffbf00");
+    main.setAttribute("stroke-width", "4.5");
+  });
+}
+function pickDenom(value) {
+  selectedDenom = value;
+  clearDenomHighlight();
+  highlightDenom(value);
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 <b>" + ACT1_EQUIV[value] + "</b>";
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  speakText(ACT1_EQUIV[value]);
+}
+
+/* ==================== Act 2：自動換錢機（真實 pointer 拖曳） ==================== */
+var exchangeMode = "to1000";
+var inserted100 = 0;
+var drag = {
+  active: false,
+  which: null,
+  startX: 0, startY: 0,
+  origX: 0, origY: 0,
+  x: 0, y: 0
+};
+var HOME = { "100": { x: 28, y: 64 }, "1000": { x: 28, y: 168 } };
+
+function setMode(mode, btn) {
+  exchangeMode = mode;
+  var row = document.getElementById("mode-row");
+  if (row) {
+    row.querySelectorAll(".mode-btn").forEach(function (b) { b.classList.remove("active"); });
+  }
+  if (btn) btn.classList.add("active");
+  updateCountLabel();
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    if (mode === "to1000") bubble.innerHTML = "💡 把 100 元鈔票拖進換錢機，集滿 <b>10 張</b>就能換 1 張 1000 元大鈔！";
+    if (mode === "to500") bubble.innerHTML = "💡 把 100 元鈔票拖進換錢機，集滿 <b>5 張</b>就能換 1 張 500 元鈔票！";
+    if (mode === "break1000") bubble.innerHTML = "💡 把 <b>1000 元大鈔</b>拖進換錢機，機器會把它找開成 2 張 500 元（或 10 張 100 元）！";
+  }
+}
+function updateCountLabel() {
+  var label = document.getElementById("act2-count-label");
+  if (!label) return;
+  if (exchangeMode === "break1000") {
+    label.textContent = "投入 1000 元找開";
+    label.setAttribute("fill", "#5a6b80");
+  } else {
+    var need = exchangeMode === "to1000" ? 10 : 5;
+    label.textContent = "已投入 " + inserted100 + " / " + need + " 張";
+    label.setAttribute("fill", "#318a70");
+  }
+}
+
+function buildDragBill(which) {
+  /* 100 元鈔票拖曳體（錢包裡永遠補一張）；1000 元鈔票單張 */
+  var g = document.getElementById(which === "100" ? "act2-drag-100" : "act2-drag-1000");
+  if (!g) return;
+  g.innerHTML = "";
+  if (which === "100") {
+    /* 一疊 100 元（多層位移表現「很多張」） */
+    drawBill(g, 6, -6, 66, 32, 100);
+    drawBill(g, 3, -3, 66, 32, 100);
+    drawBill(g, 0, 0, 66, 32, 100);
+    svgText(33, 46, "100 元 ×很多張", 10, "#8a857b", g, 700);
+  } else {
+    drawBill(g, 0, 0, 78, 36, 1000);
+    svgText(39, 50, "1000 元 ×1 張", 10, "#8a857b", g, 700);
+  }
+}
+function applyDragTransform(which, x, y) {
+  var g = document.getElementById(which === "100" ? "act2-drag-100" : "act2-drag-1000");
+  if (g) g.setAttribute("transform", "translate(" + x + "," + y + ")");
+}
+function svgPoint(svg, evt) {
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+function initDrag() {
+  ["100", "1000"].forEach(function (which) {
+    var g = document.getElementById(which === "100" ? "act2-drag-100" : "act2-drag-1000");
+    var svg = document.getElementById("act2-svg");
+    if (!g || !svg) return;
+    g.addEventListener("pointerdown", function (e) {
+      var p = svgPoint(svg, e);
+      if (!p) return;
+      drag.active = true;
+      drag.which = which;
+      drag.startX = e.clientX; drag.startY = e.clientY;
+      /* 目前 transform 平移量即為位置 */
+      var m = /^translate\((-?[\d.]+),\s*(-?[\d.]+)\)$/.exec(g.getAttribute("transform") || "");
+      drag.origX = m ? parseFloat(m[1]) : HOME[which].x;
+      drag.origY = m ? parseFloat(m[2]) : HOME[which].y;
+      drag.x = drag.origX; drag.y = drag.origY;
+      try { g.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    });
+    g.addEventListener("pointermove", function (e) {
+      if (!drag.active || drag.which !== which) return;
+      var scale = 358 / g.getBoundingClientRect().width;
+      drag.x = Math.max(-10, Math.min(300, drag.origX + (e.clientX - drag.startX) * scale));
+      drag.y = Math.max(-10, Math.min(220, drag.origY + (e.clientY - drag.startY) * scale));
+      applyDragTransform(which, drag.x, drag.y);
+      e.preventDefault();
+    });
+    g.addEventListener("pointerup", function (e) {
+      if (!drag.active || drag.which !== which) return;
+      drag.active = false;
+      /* 磁吸貼齊：落入換錢機範圍 */
+      if (drag.x + 30 >= 134 && drag.x <= 228 && drag.y + 16 >= 24 && drag.y <= 228) {
+        dropIntoMachine(which);
+      }
+      applyDragTransform(which, HOME[which].x, HOME[which].y);
+      e.preventDefault();
+    });
+    g.addEventListener("pointercancel", function () { drag.active = false; });
+  });
+}
+function dropIntoMachine(which) {
+  var bubble = document.getElementById("act2-bubble");
+  flashMachine();
+  if (exchangeMode === "break1000") {
+    if (which === "1000") {
+      eject(["b500", "b500"]);
+      if (bubble) bubble.innerHTML = "🎉 換好了！<b>1 張 1000 元 = 2 張 500 元</b>，也可以換成 10 張 100 元！";
+      if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+      speakText("一張一千元等於兩張五百元, 也可以換成十張一百元");
+    } else if (bubble) {
+      bubble.innerHTML = "💡 現在是「找開 1000 元」模式，請把 <b>1000 元大鈔</b>拖進機器！";
+      speakText("請把一千元大鈔拖進機器");
+    }
+    updateCountLabel();
+    return;
+  }
+  if (which !== "100") {
+    if (bubble) bubble.innerHTML = "💡 這個模式要收 <b>100 元</b>鈔票，1000 元請用「找開」模式！";
+    speakText("這個模式要收一百元鈔票");
+    return;
+  }
+  inserted100++;
+  updateCountLabel();
+  var need = exchangeMode === "to1000" ? 10 : 5;
+  if (inserted100 >= need) {
+    if (exchangeMode === "to1000") {
+      eject(["b1000"]);
+      if (bubble) bubble.innerHTML = "🎉 集滿 10 張 100 元！機器吐出 <b>1 張全新 1000 元大鈔</b>！";
+      speakText("集滿十張一百元, 換到一張一千元大鈔");
+    } else {
+      eject(["b500"]);
+      if (bubble) bubble.innerHTML = "🎉 集滿 5 張 100 元！機器吐出 <b>1 張 500 元鈔票</b>！";
+      speakText("集滿五張一百元, 換到一張五百元鈔票");
+    }
+    inserted100 = 0;
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  } else if (bubble) {
+    bubble.innerHTML = "💡 再丟 <b>" + (need - inserted100) + "</b> 張 100 元就湊够了！";
+  }
+  updateCountLabel();
+}
+function flashMachine() {
+  var m = document.getElementById("act2-machine");
+  if (!m) return;
+  m.setAttribute("fill", "#fff3c2");
+  setTimeout(function () { m.setAttribute("fill", "#eef2f7"); }, 500);
+}
+function eject(tokens) {
+  var outlet = document.getElementById("act2-outlet");
+  if (!outlet) return;
+  outlet.innerHTML = "";
+  var y = 62;
+  tokens.forEach(function (tk) {
+    if (tk === "b1000") { drawBill(outlet, 258, y, 78, 34, 1000); y += 42; }
+    if (tk === "b500") { drawBill(outlet, 258, y, 78, 34, 500); y += 42; }
+    if (tk === "c50") { drawCoin(outlet, 296, y + 14, 15, 50); y += 36; }
+    if (tk === "c10") { drawCoin(outlet, 296, y + 12, 13, 10); y += 30; }
+    if (tk === "c5") { drawCoin(outlet, 296, y + 11, 11, 5); y += 28; }
+  });
+  if (y > 170) {
+    /* 超出出鈔口時改為緊湊疊放 */
+    outlet.innerHTML = "";
+    var yy = 58;
+    tokens.forEach(function (tk) {
+      if (tk === "b1000") { drawBill(outlet, 258, yy, 76, 32, 1000); yy += 34; }
+      if (tk === "b500") { drawBill(outlet, 258, yy, 76, 32, 500); yy += 34; }
+    });
+  }
+}
+function resetAct2() {
+  inserted100 = 0;
+  drag.active = false;
+  drag.which = null;
+  applyDragTransform("100", HOME["100"].x, HOME["100"].y);
+  applyDragTransform("1000", HOME["1000"].x, HOME["1000"].y);
+  buildDragBill("100");
+  buildDragBill("1000");
+  var outlet = document.getElementById("act2-outlet");
+  if (outlet) outlet.innerHTML = "";
+  var modeRow = document.getElementById("mode-row");
+  if (modeRow) {
+    var first = modeRow.querySelector('.mode-btn[data-mode="to1000"]');
+    setMode("to1000", first);
+  } else {
+    setMode("to1000", null);
+  }
+}
+
+/* ==================== Act 3：超市聰明付錢法 ==================== */
+function clearOutput(svgId, groupId) {
+  var g = document.getElementById(groupId);
+  if (g) g.innerHTML = "";
+}
+function showBreakdown() {
+  clearOutput("act3-svg", "act3-output");
+  var g = document.getElementById("act3-output");
+  var bubble = document.getElementById("act3-bubble");
+  if (g) {
+    svgText(179, 24, "365 = 300 + 60 + 5", 13, "#318a70", g);
+    svgText(179, 44, "300 → 3 張 100 元", 11.5, "#c94a3d", g);
+    svgText(179, 62, "60 → 1 枚 50 元 + 1 個 10 元", 11.5, "#c08a1a", g);
+    svgText(179, 80, "5 → 1 個 5 元", 11.5, "#5a646e", g);
+    svgText(179, 104, "① 最少鈔票硬幣：3張100＋1枚50＋1個10＋1個5", 10.5, "#5a4a30", g, 700);
+    drawBill(g, 8, 112, 52, 24, 100);
+    drawCoin(g, 86, 124, 11, 50);
+    drawCoin(g, 122, 124, 10, 10);
+    drawCoin(g, 154, 124, 9, 5);
+    drawBill(g, 186, 112, 52, 24, 100);
+    drawBill(g, 250, 112, 52, 24, 100);
+  }
+  var btn = document.getElementById("btn-break");
+  if (btn) btn.disabled = true;
+  if (bubble) bubble.innerHTML = "🌟 聰明付法：<b>3 張 100 元 + 1 枚 50 元 + 1 個 10 元 + 1 個 5 元</b>，張數枚數最少！";
+  speakText("三百六十五元, 最聰明的付法是三張一百元, 一枚五十元, 一個十元, 和一個五元");
+}
+function payWith500() {
+  clearOutput("act3-svg", "act3-output");
+  var g = document.getElementById("act3-output");
+  var bubble = document.getElementById("act3-bubble");
+  if (g) {
+    svgText(179, 24, "500 − 365 = 135", 14, "#f4694b", g);
+    svgText(179, 44, "找零 135 元 = 1 張 100 + 3 個 10 + 1 個 5", 11.5, "#318a70", g);
+    drawBill(g, 40, 58, 76, 36, 100);
+    drawCoin(g, 156, 80, 13, 10);
+    drawCoin(g, 190, 80, 13, 10);
+    drawCoin(g, 224, 80, 13, 10);
+    drawCoin(g, 262, 80, 11, 5);
+    svgText(179, 118, "💰 收銀員從出鈔口吐出 135 元找零！", 11, "#5a4a30", g, 700);
+    drawBill(g, 100, 126, 56, 26, 100);
+    svgText(230, 143, "+3 個10 +1 個5", 10, "#8a857b", g, 700);
+  }
+  var btn = document.getElementById("btn-pay500");
+  if (btn) btn.disabled = true;
+  if (bubble) bubble.innerHTML = "🎉 <b>500 − 365 = 135</b>，找零 <b>1 張 100 元 + 3 個 10 元 + 1 個 5 元</b>！";
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  speakText("五百減三百六十五等於一百三十五, 找零一張一百元, 三個十元, 和一個五元");
+}
+function resetAct3() {
+  clearOutput("act3-svg", "act3-output");
+  var b1 = document.getElementById("btn-break");
+  var b2 = document.getElementById("btn-pay500");
+  if (b1) b1.disabled = false;
+  if (b2) b2.disabled = false;
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 先按「聰明付法拆解」，再按「拿 500 元付款」看找零！";
+}
+
+/* ==================== Act 4：收銀員找零挑戰（3 題） ==================== */
+var CHALLENGES = [
+  {
+    price: "50 元",
+    question: "買一個 45 元的玩具，收銀員收了你 1 張 50 元，要找你多少錢？",
+    choices: ["5 元", "15 元", "45 元"],
+    answer: 0,
+    explain: "🎉 50 − 45 = 5，找你 5 元，剛好 1 個 5 元硬幣！",
+    hint: "💡 再想想：50 元付出去，玩具只花 45 元，剩下的呢？",
+    ttsQ: "買一個四十五元的玩具, 付一張五十元, 要找多少錢",
+    ttsOk: "答對了, 五十減四十五等於五, 找你五元",
+    ttsNo: "再想想看, 五十減四十五是多少呢",
+    money: { bill: 50, coins: [5] }
+  },
+  {
+    price: "125 元",
+    question: "買 125 元的文具組，哪一種付法用的鈔票硬幣「最少」？",
+    choices: ["1張100＋2個10＋1個5", "1張100＋1個50", "2張50＋3個10"],
+    answer: 0,
+    explain: "🎉 125 = 100 + 10 + 10 + 5，1 張 100 + 2 個 10 + 1 個 5 最少！",
+    hint: "💡 提示：125 元沒有 20 和 50 的零頭，第二種付不出剛好的 125！",
+    ttsQ: "買一百二十五元的文具組, 哪一種付法用的錢幣最少",
+    ttsOk: "答對了, 一張一百元加兩個十元加一個五元, 剛好一百二十五元",
+    ttsNo: "再想想看, 一百二十五元要怎麼付剛好呢",
+    money: { bill: 100, coins: [10, 10, 5] }
+  },
+  {
+    price: "365 元",
+    question: "買 365 元的書包，拿 1 張 500 元付款，收銀員要找多少錢？",
+    choices: ["135 元", "145 元", "235 元"],
+    answer: 0,
+    explain: "🎉 500 − 365 = 135，找 1 張 100 + 3 個 10 + 1 個 5！",
+    hint: "💡 再算一次：500 − 365，先減 300 再減 65 试试看！",
+    ttsQ: "買三百六十五元的書包, 拿五百元付款, 要找多少錢",
+    ttsOk: "答對了, 五百減三百六十五等於一百三十五",
+    ttsNo: "再算算看, 五百減三百六十五是多少呢",
+    money: { bill: 100, coins: [10, 10, 10, 5] }
+  }
+];
+var qIndex = 0;
+function drawRegisterMoney() {
+  var g = document.getElementById("act4-register-money");
+  if (!g) return;
+  g.innerHTML = "";
+  var q = CHALLENGES[qIndex];
+  if (!q) return;
+  if (q.money.bill) drawBill(g, 0, 4, 68, 30, q.money.bill);
+  q.money.coins.forEach(function (c, i) {
+    drawCoin(g, 90 + i * 28, 22, c === 5 ? 10 : 12, c);
+  });
+}
+function loadQuestion() {
+  var q = CHALLENGES[qIndex];
+  var desc = document.getElementById("act4-question");
+  var progress = document.getElementById("q-progress");
+  var price = document.getElementById("act4-register-price");
+  var note = document.getElementById("act4-register-note");
+  var container = document.getElementById("choice-container");
+  var bubble = document.getElementById("act4-bubble");
+  if (!q || !container) return;
+  if (desc) desc.innerHTML = "Q" + (qIndex + 1) + "：" + q.question;
+  if (progress) progress.textContent = "第 " + (qIndex + 1) + " / 3 題";
+  if (price) price.textContent = "$ " + q.price;
+  if (note) note.textContent = "收銀機";
+  drawRegisterMoney();
+  container.innerHTML = "";
+  q.choices.forEach(function (label, idx) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.setAttribute("data-ok", idx === q.answer ? "1" : "0");
+    b.textContent = label;
+    b.addEventListener("click", function () { answerChoice(b); });
+    container.appendChild(b);
+  });
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+}
+function answerChoice(btn) {
+  var ok = btn.getAttribute("data-ok") === "1";
+  var bubble = document.getElementById("act4-bubble");
+  var q = CHALLENGES[qIndex];
+  btn.classList.add(ok ? "correct" : "wrong");
+  if (ok) {
+    if (bubble) bubble.innerHTML = q.explain;
+    speakText(q.ttsOk);
+    if (qIndex >= CHALLENGES.length - 1) {
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+      if (bubble) bubble.innerHTML = "🏆 三題全對！你已經是金牌收銀員了！";
+    } else {
+      /* 綠色慶祝後進入下一題 */
+      setTimeout(function () {
+        if (currentAct !== 4) return;
+        qIndex++;
+        loadQuestion();
+      }, 1400);
+    }
+  } else {
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText(q.ttsNo);
+  }
+}
+function resetAct4() {
+  qIndex = 0;
+  var container = document.getElementById("choice-container");
+  if (container) container.innerHTML = "";
+  loadQuestion();
+}
+function speakQuestion() {
+  var q = CHALLENGES[qIndex];
+  if (q) speakText(q.ttsQ);
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1();
+buildDragBill("100");
+buildDragBill("1000");
+initDrag();
+resetAct2();
+resetAct3();
+resetAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>
