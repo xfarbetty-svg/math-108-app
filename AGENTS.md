@@ -219,7 +219,13 @@
   4. 三年級核心三單元（13角、14面積、15容量）概念小教室全線連通與掛載。
   5. 雙硬閘門全數秒通：`verify_angle_concept.js`、`verify_area_concept.js`、`verify_capacity_concept.js`、`test_tts_endpoint.py`、`verify_app_shell.js`、`verify_n313_cdp.js`、`verify_n314_cdp.js`、`verify_n315_cdp.js` 全綠（Exit 0）。
   6. 遠端部署生效：GitHub 與 Cloudflare Pages（https://math-108.pages.dev）發布完成，手機實機盲審完全通過！
-- [ ] 下一步：進入批次化生產流程（回推 1~12 單元概念小教室，或繼續推進三年級剩餘 upcoming 單元）。
+- [x] Session 43 實體部署流程鋼鐵重構 ＆ 落地 G3-S-3-3「圓」概念小教室 ＆ 角度雙條目收攏（2026-11-15 13:45）：
+  1. 實體發布流程鋼鐵重構：建立 `.git/hooks/pre-push` 物理硬門禁（git push 自動攔截並觸發 Cloudflare Pages 部署，失敗即中斷 push）、升級 `tools/release.py`（自動注入版本號破除手機快取、守門員全檢、Git 鋼印推送、Cloudflare 部署、遠端 HTTPS 探測閉環驗真）、新增 `deploy.ps1` 一鍵指令。
+  2. 單元收攏與架構定錨：將 `N-3-13` 與 `S-3-1` 明確收攏為「同義整合」，維持 108 課綱 131 條目守門員全綠並消除 UI 重複；確立法典級規範「平面幾何一律保持純 2D 向量 SVG、嚴禁硬套 034 等角透視以防圓形透視變形」。
+  3. G3-S-3-3「圓」概念小教室 100% 落地 (`app/components/circle_concept_lab.html`)：四幕式純 2D 向量擬物探索（Act 1 圓心/圓周/半徑/直徑波紋定義、Act 2 360°指針等長與 180° 對向直徑兩倍展開、Act 3 等腰剛體圓規順時針 100% 同向畫圓沙箱、Act 4 迷思直線挑戰直徑為圓內最長線段）。
+  4. 體驗細節修復：全面拔除點選部位、完成畫圓、挑選線段時的擅自自動播音，播放權限 100% 歸還給使用者手動點擊「🔊 聽導讀」，並支援 Toggle 隨時點擊「⏹ 停止」。
+  5. 雙硬閘門與線上節點實測驗真：`verify_curriculum_131.js`、`verify_app_shell.js`、`verify_circle_concept.js`、`test_tts_endpoint.py` 全部 Exit Code 0，Cloudflare Pages 線上節點確認生效 (Build 20261115_123531)。
+- [ ] 下一步：推進三年級批次化第二戰（G3-N-3-9 簡單同分母分數 ➔ G3-N-3-10 一位小數 ➔ G3-N-3-12 長度毫米 mm）。
 
 
 ---
