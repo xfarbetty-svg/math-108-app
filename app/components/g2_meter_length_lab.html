@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-11 長度（公分與公尺）· 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge { background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage { border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3; overflow: hidden; max-height: 420px; }
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 操作工具列 */
+.tool-row { display: flex; gap: 8px; }
+.tool-btn {
+  flex: 1 1 0; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 13px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.tool-btn:active { transform: scale(0.96); }
+.tool-btn.primary { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.tool-btn:disabled { opacity: 0.45; cursor: default; }
+
+/* Act 2 拖曳 */
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+.readout {
+  background: #f4f9f7; border: 1px solid #d8ebe4; border-radius: 12px;
+  padding: 8px 10px; font-size: 12.5px; line-height: 1.65; color: var(--ink);
+}
+.readout b { color: var(--mint-deep); }
+.readout .ro-formula { color: #4a5568; font-size: 12px; }
+
+/* Act 3 物品晶片 */
+.item-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.item-chip {
+  flex: 1 1 44%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 8px 6px; font-size: 12.5px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.item-chip.selected { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.rule-bubble {
+  background: #e7f5f0; border: 1px solid #c9e8dd; border-radius: 12px;
+  padding: 8px 10px; font-size: 12.5px; font-weight: 800; color: var(--mint-deep); text-align: center; line-height: 1.5;
+}
+
+/* Act 4 挑戰 */
+.q-progress { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+
+/* Act 1 金色融合特效 */
+@keyframes goldGlow {
+  0% { filter: drop-shadow(0 0 0px rgba(255, 200, 60, 0)); }
+  50% { filter: drop-shadow(0 0 10px rgba(255, 200, 60, 0.95)); }
+  100% { filter: drop-shadow(0 0 4px rgba(255, 200, 60, 0.6)); }
+}
+.gold-fused { animation: goldGlow 1.1s ease-in-out 2; }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      長度實驗室 · 公分與公尺
+      <small>二年級 · N-2-11 概念小教室</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（10 個 10 公分 = 1 公尺） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('10 個 10 公分是 100 公分, 100 公分就是 1 公尺')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 拼一把 1 公尺尺</div>
+      <div class="card-desc">每一段短尺都是 <b>10 公分</b>。按下去拼拼看，要幾段才能拼成 <b>1 公尺</b>？</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="10 公分短尺拼接成 1 公尺標尺">
+          <text id="act1-caption" x="179" y="24" text-anchor="middle" font-size="13" font-weight="800" fill="#3d3a34">0 / 10 段 · 還是 0 公分</text>
+          <rect x="24" y="70" width="310" height="40" rx="6" fill="#fdf6e9" stroke="#f0e7da" stroke-width="2"></rect>
+          <g id="act1-ticks"></g>
+          <g id="act1-segments"></g>
+          <g id="act1-gold" style="display:none"></g>
+          <text id="act1-total" x="179" y="140" text-anchor="middle" font-size="13" font-weight="800" fill="#d9910d">目前長度：0 公分</text>
+          <text id="act1-fusion-text" x="179" y="168" text-anchor="middle" font-size="15" font-weight="800" fill="#b8860b" style="display:none">🌟 融合成功：1 公尺 = 100 公分！</text>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn primary" id="btn-add-seg" onclick="addSegment()">🧩 拼接一段 (+10cm)</button>
+        <button class="tool-btn" id="btn-fill-seg" onclick="autoFill()">⚡ 自動排滿</button>
+        <button class="tool-btn" id="btn-clear-seg" onclick="resetAct1()">🔄 重拼</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 每段 10 公分，拼 10 段看看會變成什麼！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（伸縮捲尺拖拉） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" id="btn-act2-speak" onclick="speakAct2Length()">🔊 朗讀長度</button>
+      </div>
+      <div class="card-title">物理探索器 · 捲尺拉拉看</div>
+      <div class="card-desc">用手指抓住橘色拉環，把捲尺從 0 拉到 <b>200 公分</b>，看公分和公尺怎麼變換！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 210" xmlns="http://www.w3.org/2000/svg" style="touch-action:none">
+          <!-- 捲尺外殼 -->
+          <rect x="8" y="76" width="64" height="64" rx="14" fill="#ffd166" stroke="#d9910d" stroke-width="3"></rect>
+          <circle cx="40" cy="108" r="14" fill="#fdf6e9" stroke="#d9910d" stroke-width="2"></circle>
+          <circle cx="40" cy="108" r="4" fill="#d9910d"></circle>
+          <text x="40" y="158" text-anchor="middle" font-size="11" font-weight="800" fill="#d9910d">捲尺</text>
+          <!-- 尺帶軌道 -->
+          <rect x="72" y="92" width="270" height="36" rx="4" fill="#fffdf6" stroke="#f0e7da" stroke-width="2"></rect>
+          <g id="act2-tape"></g>
+          <g id="act2-handle-group" class="drag-handle">
+            <circle id="act2-handle" cx="72" cy="110" r="13" fill="#ff8a65" stroke="#f4694b" stroke-width="3"></circle>
+            <circle cx="68" cy="105" r="3.5" fill="#ffd0c2"></circle>
+          </g>
+          <text id="act2-hint" x="200" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#8a857b">⬅ 拉動橘色拉環，尺帶會伸出來喔！</text>
+        </svg>
+      </div>
+      <div class="readout" id="act2-readout">
+        <div>📏 單名數：<b id="ro-single">0 公分</b></div>
+        <div>🧮 複名數：<b id="ro-complex">0 公分</b></div>
+        <div class="ro-formula" id="ro-formula">把尺拉出來，就會看到換算算式！</div>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 100 公分 = 1 公尺。拉到 145 公分，就是 1 公尺 45 公分！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（生活量感大比對） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('量長長的東西用公尺, 量短短的東西用公分')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 量感大比對</div>
+      <div class="card-desc">點點看生活物品，量尺會自動貼齊測量，找出「用公尺還是用公分」的祕密！</div>
+      <div class="item-row">
+        <button class="item-chip" data-idx="0" onclick="pickItem(this, 0)">🏫 黑板</button>
+        <button class="item-chip" data-idx="1" onclick="pickItem(this, 1)">🧒 小學生</button>
+        <button class="item-chip" data-idx="2" onclick="pickItem(this, 2)">🪑 課桌</button>
+        <button class="item-chip" data-idx="3" onclick="pickItem(this, 3)">✏️ 鉛筆</button>
+      </div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="生活物品長度量感比對尺">
+          <g id="act3-item"></g>
+          <!-- 0~300 公分量尺 -->
+          <rect x="20" y="106" width="318" height="34" rx="6" fill="#fdf6e9" stroke="#f0e7da" stroke-width="2"></rect>
+          <g id="act3-ticks"></g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 點選一個物品，量尺會自動測量它！</div>
+      <div class="rule-bubble">🌟 量<b>長長的</b>東西用「公尺」，量<b>短短的</b>東西用「公分」！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（長度大師測驗） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <span class="q-progress" id="q-progress">第 1 / 3 題</span>
+      </div>
+      <div class="card-title">小小挑戰賽 · 長度大師</div>
+      <div class="card-desc" id="q-stem">題目載入中…</div>
+      <div class="choice-row" id="q-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("長度實驗室。100 公分就是 1 公尺。跟著四個關卡，一起認識公分和公尺！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態（原地變異，保持 SELFTEST 參照） ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+function markAct(key) {
+  if (!verifyState[key]) { verifyState[key] = true; refreshStatusBar(); }
+}
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 長度大師誕生，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState.act1 = false;
+  verifyState.act2 = false;
+  verifyState.act3 = false;
+  verifyState.act4 = false;
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==========================================================
+   Act 1：觀念大解剖（10 段 10 公分 → 金色 1 公尺標尺）
+   ========================================================== */
+var segCount = 0;
+var SEG_COLORS = ["#7bc9b2", "#ffd166", "#ff8a65", "#7db8e8", "#c9a7e8",
+                  "#7bc9b2", "#ffd166", "#ff8a65", "#7db8e8", "#c9a7e8"];
+var SEG_X0 = 24, SEG_W = 31, SEG_H = 40, SEG_Y = 70;
+
+function buildAct1Ticks() {
+  var g = document.getElementById("act1-ticks");
+  if (!g) return;
+  g.innerHTML = "";
+  for (var i = 0; i <= 10; i++) {
+    var x = SEG_X0 + i * SEG_W;
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x); line.setAttribute("x2", x);
+    line.setAttribute("y1", SEG_Y + SEG_H); line.setAttribute("y2", SEG_Y + SEG_H + 6);
+    line.setAttribute("stroke", "#b8ad9c"); line.setAttribute("stroke-width", "1.5");
+    g.appendChild(line);
+    var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", SEG_Y + SEG_H + 18);
+    t.setAttribute("text-anchor", i === 0 ? "start" : (i === 10 ? "end" : "middle"));
+    t.setAttribute("font-size", "9"); t.setAttribute("font-weight", "700");
+    t.setAttribute("fill", i === 10 ? "#b8860b" : "#8a857b");
+    t.textContent = i === 10 ? "100cm(1m)" : String(i * 10);
+    g.appendChild(t);
+  }
+}
+
+function renderAct1() {
+  var segs = document.getElementById("act1-segments");
+  var gold = document.getElementById("act1-gold");
+  var caption = document.getElementById("act1-caption");
+  var total = document.getElementById("act1-total");
+  var fusion = document.getElementById("act1-fusion-text");
+  if (!segs || !gold || !caption || !total || !fusion) return;
+  segs.innerHTML = "";
+  gold.innerHTML = "";
+  fusion.style.display = "none";
+  gold.style.display = "none";
+
+  for (var i = 0; i < segCount; i++) {
+    var r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("x", SEG_X0 + i * SEG_W);
+    r.setAttribute("y", SEG_Y);
+    r.setAttribute("width", SEG_W);
+    r.setAttribute("height", SEG_H);
+    r.setAttribute("fill", SEG_COLORS[i]);
+    r.setAttribute("stroke", "#ffffff");
+    r.setAttribute("stroke-width", "2");
+    segs.appendChild(r);
+    var lab = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    lab.setAttribute("x", SEG_X0 + i * SEG_W + SEG_W / 2);
+    lab.setAttribute("y", SEG_Y + 25);
+    lab.setAttribute("text-anchor", "middle");
+    lab.setAttribute("font-size", "10");
+    lab.setAttribute("font-weight", "800");
+    lab.setAttribute("fill", "#ffffff");
+    lab.textContent = "10";
+    segs.appendChild(lab);
+  }
+  /* 未拼滿的虛線座位提示 */
+  for (var j = segCount; j < 10; j++) {
+    var ghost = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    ghost.setAttribute("x", SEG_X0 + j * SEG_W);
+    ghost.setAttribute("y", SEG_Y);
+    ghost.setAttribute("width", SEG_W);
+    ghost.setAttribute("height", SEG_H);
+    ghost.setAttribute("fill", "none");
+    ghost.setAttribute("stroke", "#e4d9c6");
+    ghost.setAttribute("stroke-width", "1.5");
+    ghost.setAttribute("stroke-dasharray", "4 3");
+    segs.appendChild(ghost);
+  }
+
+  var cm = segCount * 10;
+  caption.textContent = segCount + " / 10 段 · 目前 " + cm + " 公分";
+  total.textContent = "目前長度：" + cm + " 公分";
+
+  if (segCount >= 10) {
+    /* 金色 1 公尺標尺融合特效 */
+    var gr = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    gr.setAttribute("x", SEG_X0); gr.setAttribute("y", SEG_Y - 4);
+    gr.setAttribute("width", SEG_W * 10); gr.setAttribute("height", SEG_H + 8);
+    gr.setAttribute("rx", "8");
+    gr.setAttribute("fill", "#ffd86b");
+    gr.setAttribute("stroke", "#b8860b");
+    gr.setAttribute("stroke-width", "3");
+    gold.appendChild(gr);
+    var gl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    gl.setAttribute("x", SEG_X0 + SEG_W * 5); gl.setAttribute("y", SEG_Y + 25);
+    gl.setAttribute("text-anchor", "middle");
+    gl.setAttribute("font-size", "17");
+    gl.setAttribute("font-weight", "900");
+    gl.setAttribute("fill", "#8a5a00");
+    gl.textContent = "1 公尺 (1m) = 100 公分";
+    gold.appendChild(gl);
+    gold.style.display = "";
+    gr.classList.add("gold-fused");
+    fusion.style.display = "";
+    caption.textContent = "10 / 10 段 · 融合成金色 1 公尺標尺！";
+    total.textContent = "10 個 10 公分是 100 公分，100 公分就是 1 公尺！";
+    markAct("act1");
+  }
+}
+
+function addSegment() {
+  if (segCount >= 10) return;
+  segCount++;
+  renderAct1();
+  if (segCount < 10) {
+    speakText("現在 " + (segCount * 10) + " 公分");
+  } else {
+    speakText("10個10公分是100公分, 100公分就是1公尺");
+    var bubble = document.getElementById("act1-bubble");
+    if (bubble) bubble.innerHTML = "🌟 融合成功！<b>10 個 10 公分是 100 公分，100 公分就是 1 公尺（1m = 100cm）</b>！";
+  }
+}
+
+var filling = false;
+function autoFill() {
+  if (filling || segCount >= 10) return;
+  filling = true;
+  setSegBtns(true);
+  var step = function () {
+    if (segCount < 10) {
+      segCount++;
+      renderAct1();
+      if (segCount < 10) { setTimeout(step, 140); return; }
+      speakText("10個10公分是100公分, 100公分就是1公尺");
+      var bubble = document.getElementById("act1-bubble");
+      if (bubble) bubble.innerHTML = "🌟 融合成功！<b>10 個 10 公分是 100 公分，100 公分就是 1 公尺（1m = 100cm）</b>！";
+    }
+    filling = false;
+    setSegBtns(false);
+  };
+  step();
+}
+
+function setSegBtns(disabled) {
+  ["btn-add-seg", "btn-fill-seg"].forEach(function (id) {
+    var b = document.getElementById(id);
+    if (b) b.disabled = disabled;
+  });
+}
+
+function resetAct1() {
+  filling = false;
+  segCount = 0;
+  setSegBtns(false);
+  renderAct1();
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 每段 10 公分，拼 10 段看看會變成什麼！";
+}
+
+/* ==========================================================
+   Act 2：物理探索器（伸縮捲尺 0~200cm，真實 pointer 事件）
+   ========================================================== */
+var TAPE_X0 = 72, TAPE_PX_PER_CM = 270 / 200, TAPE_MAX_CM = 200;
+var pullCm = 0;
+var HANDLE_GROUP = null;
+
+function tapeEndX() { return TAPE_X0 + pullCm * TAPE_PX_PER_CM; }
+
+function renderAct2() {
+  var tape = document.getElementById("act2-tape");
+  var handle = document.getElementById("act2-handle");
+  var hint = document.getElementById("act2-hint");
+  if (!tape || !handle) return;
+  tape.innerHTML = "";
+
+  var endX = tapeEndX();
+  if (pullCm > 0) {
+    var body = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    body.setAttribute("x", TAPE_X0); body.setAttribute("y", 92);
+    body.setAttribute("width", endX - TAPE_X0); body.setAttribute("height", 36);
+    body.setAttribute("fill", "#fef3c7");
+    body.setAttribute("stroke", "#d9910d");
+    body.setAttribute("stroke-width", "2");
+    tape.appendChild(body);
+
+    for (var cm = 10; cm <= TAPE_MAX_CM; cm += 10) {
+      var x = TAPE_X0 + cm * TAPE_PX_PER_CM;
+      if (x > endX - 1) break;
+      var isMeter = cm % 100 === 0;
+      var isHalf = cm % 50 === 0;
+      var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x); line.setAttribute("x2", x);
+      line.setAttribute("y1", 92);
+      line.setAttribute("y2", isMeter ? 128 : (isHalf ? 124 : 118));
+      line.setAttribute("stroke", isMeter ? "#f4694b" : "#b8ad9c");
+      line.setAttribute("stroke-width", isMeter ? "2.5" : "1.2");
+      tape.appendChild(line);
+      if (isHalf || isMeter) {
+        var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", x); t.setAttribute("y", 86);
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("font-size", "9.5");
+        t.setAttribute("font-weight", "800");
+        t.setAttribute("fill", isMeter ? "#f4694b" : "#8a857b");
+        t.textContent = isMeter ? cm + "cm=1m×" + (cm / 100) : String(cm);
+        tape.appendChild(t);
+      }
+    }
+  }
+
+  /* 拉環固定 cx=72，透過 group translate 平移到尺帶末端 */
+  var hg = document.getElementById("act2-handle-group");
+  if (hg) hg.setAttribute("transform", "translate(" + (endX - TAPE_X0) + ",0)");
+  if (hint) {
+    hint.textContent = pullCm === 0
+      ? "⬅ 拉動橘色拉環，尺帶會伸出來喔！"
+      : "已拉出 " + Math.round(pullCm) + " 公分";
+  }
+  updateAct2Readout();
+}
+
+function updateAct2Readout() {
+  var cm = Math.round(pullCm);
+  var m = Math.floor(cm / 100);
+  var rest = cm % 100;
+  var single = document.getElementById("ro-single");
+  var complex = document.getElementById("ro-complex");
+  var formula = document.getElementById("ro-formula");
+  if (single) single.textContent = cm + " 公分";
+  var complexText;
+  if (cm === 0) complexText = "0 公分";
+  else if (m === 0) complexText = rest + " 公分";
+  else if (rest === 0) complexText = m + " 公尺";
+  else complexText = m + " 公尺 " + rest + " 公分";
+  if (complex) complex.textContent = complexText;
+  if (formula) {
+    if (cm === 0) formula.textContent = "把尺拉出來，就會看到換算算式！";
+    else if (cm < 100) formula.textContent = cm + " 公分還不到 1 公尺，繼續拉拉看！";
+    else if (rest === 0) formula.textContent = cm + " 公分 = " + m + " 個 100 公分 = " + m + " 公尺";
+    else formula.textContent = cm + " 公分 = 100 公分 + " + rest + " 公分 = " + m + " 公尺 " + rest + " 公分";
+  }
+}
+
+function speakAct2Length() {
+  var cm = Math.round(pullCm);
+  var m = Math.floor(cm / 100);
+  var rest = cm % 100;
+  var text;
+  if (cm === 0) text = "快把捲尺拉出來看看";
+  else if (cm < 100) text = cm + " 公分";
+  else if (rest === 0) text = cm + " 公分就是 " + m + " 公尺";
+  else text = cm + " 公分, 就是 " + m + " 公尺 " + rest + " 公分";
+  speakText(text);
+}
+
+function svgPointX(evt, svg) {
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return p.x;
+}
+
+function initTapeDrag() {
+  HANDLE_GROUP = document.getElementById("act2-handle-group");
+  var svg = document.getElementById("act2-svg");
+  if (!HANDLE_GROUP || !svg) return;
+  var dragging = false;
+
+  HANDLE_GROUP.addEventListener("pointerdown", function (e) {
+    dragging = true;
+    HANDLE_GROUP.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  HANDLE_GROUP.addEventListener("pointermove", function (e) {
+    if (!dragging) return;
+    var x = svgPointX(e, svg);
+    if (x === null) return;
+    var cm = (x - TAPE_X0) / TAPE_PX_PER_CM;
+    pullCm = Math.max(0, Math.min(TAPE_MAX_CM, cm));
+    renderAct2();
+    if (pullCm > 5) markAct("act2");
+    e.preventDefault();
+  });
+  var endDrag = function () {
+    if (!dragging) return;
+    dragging = false;
+    pullCm = Math.round(pullCm); /* 磁吸貼齊：整數公分 */
+    renderAct2();
+  };
+  HANDLE_GROUP.addEventListener("pointerup", endDrag);
+  HANDLE_GROUP.addEventListener("pointercancel", endDrag);
+}
+
+function resetAct2() {
+  pullCm = 0;
+  renderAct2();
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 100 公分 = 1 公尺。拉到 145 公分，就是 1 公尺 45 公分！";
+}
+
+/* ==========================================================
+   Act 3：規律大發現（生活量感大比對）
+   ========================================================== */
+var ACT3_ITEMS = [
+  { name: "黑板",   cm: 300, label: "約 3 公尺（300 公分）", color: "#5f8d4e", sense: "好長！量長長的黑板，用「公尺」最方便。", tts: "黑板大約3公尺, 量長長的東西用公尺" },
+  { name: "小學生", cm: 120, label: "約 1 公尺 20 公分",     color: "#7db8e8", sense: "比 1 公尺再多 20 公分，用「公尺」說最順口。", tts: "小學生身高大約1公尺20公分" },
+  { name: "課桌",   cm: 60,  label: "約 60 公分",           color: "#c9a7e8", sense: "不到 1 公尺，用「公分」量剛剛好。", tts: "課桌大約60公分, 量短短的東西用公分" },
+  { name: "鉛筆",   cm: 15,  label: "約 15 公分",           color: "#ff8a65", sense: "短短的！用「公分」量最清楚。", tts: "鉛筆大約15公分, 量短短的東西用公分" }
+];
+var ACT3_RULER_X0 = 20, ACT3_PX_PER_CM = 318 / 300;
+
+function buildAct3Ticks() {
+  var g = document.getElementById("act3-ticks");
+  if (!g) return;
+  g.innerHTML = "";
+  for (var cm = 0; cm <= 300; cm += 50) {
+    var x = ACT3_RULER_X0 + cm * ACT3_PX_PER_CM;
+    var isMeter = cm % 100 === 0;
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x); line.setAttribute("x2", x);
+    line.setAttribute("y1", 106);
+    line.setAttribute("y2", isMeter ? 140 : 134);
+    line.setAttribute("stroke", isMeter ? "#f4694b" : "#b8ad9c");
+    line.setAttribute("stroke-width", isMeter ? "2.5" : "1.2");
+    g.appendChild(line);
+    var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", x); t.setAttribute("y", 155);
+    t.setAttribute("text-anchor", cm === 0 ? "start" : (cm === 300 ? "end" : "middle"));
+    t.setAttribute("font-size", "9.5");
+    t.setAttribute("font-weight", "800");
+    t.setAttribute("fill", isMeter ? "#f4694b" : "#8a857b");
+    t.textContent = isMeter ? (cm / 100) + "m" : String(cm);
+    g.appendChild(t);
+  }
+}
+
+function pickItem(btn, idx) {
+  var item = ACT3_ITEMS[idx];
+  if (!item) return;
+  var chips = document.querySelectorAll(".item-chip");
+  chips.forEach(function (c) { c.classList.remove("selected"); });
+  if (btn) btn.classList.add("selected");
+
+  var g = document.getElementById("act3-item");
+  if (g) {
+    g.innerHTML = "";
+    var w = item.cm * ACT3_PX_PER_CM;
+    var bar = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bar.setAttribute("x", ACT3_RULER_X0);
+    bar.setAttribute("y", 66);
+    bar.setAttribute("width", w);
+    bar.setAttribute("height", 26);
+    bar.setAttribute("rx", "6");
+    bar.setAttribute("fill", item.color);
+    bar.setAttribute("opacity", "0.9");
+    g.appendChild(bar);
+    var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", ACT3_RULER_X0 + Math.max(w / 2, 40));
+    t.setAttribute("y", 84);
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("font-size", "12");
+    t.setAttribute("font-weight", "900");
+    t.setAttribute("fill", "#ffffff");
+    t.textContent = item.name + " " + item.label;
+    g.appendChild(t);
+    /* 端點對齊線 */
+    var align = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    align.setAttribute("x1", ACT3_RULER_X0 + w); align.setAttribute("x2", ACT3_RULER_X0 + w);
+    align.setAttribute("y1", 66); align.setAttribute("y2", 106);
+    align.setAttribute("stroke", item.color);
+    align.setAttribute("stroke-width", "2");
+    align.setAttribute("stroke-dasharray", "4 3");
+    g.appendChild(align);
+  }
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "📏 <b>" + item.name + "</b>" + item.label + " → " + item.sense;
+  speakText(item.tts);
+  markAct("act3");
+}
+
+function resetAct3() {
+  var g = document.getElementById("act3-item");
+  if (g) g.innerHTML = "";
+  var chips = document.querySelectorAll(".item-chip");
+  chips.forEach(function (c) { c.classList.remove("selected"); });
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 點選一個物品，量尺會自動測量它！";
+}
+
+/* ==========================================================
+   Act 4：小小挑戰賽（長度大師測驗）
+   ========================================================== */
+var QUIZZES = [
+  {
+    stem: "小明身高 1 公尺 35 公分，合起來是幾公分？",
+    options: ["35 公分", "135 公分", "1000 公分"],
+    answer: 1,
+    hint: "💡 1 公尺 = 100 公分，100 + 35 = ？",
+    praise: "🎉 答對了！100 公分 + 35 公分 = 135 公分！",
+    praiseTts: "答對了, 100公分加35公分等於135公分"
+  },
+  {
+    stem: "教室大門高約 2（　）？填入適當的單位。",
+    options: ["公分", "公尺", "公升"],
+    answer: 1,
+    hint: "💡 想想看：2 公分只有鉛筆一段那麼長，門會這麼矮嗎？",
+    praise: "🎉 答對了！大門高高的，約 2 公尺！",
+    praiseTts: "答對了, 大門高高的, 大約2公尺"
+  },
+  {
+    stem: "300 公分是幾公尺？",
+    options: ["3 公尺", "30 公尺", "300 公尺"],
+    answer: 0,
+    hint: "💡 100 公分 = 1 公尺，300 裡面有幾個 100？",
+    praise: "🎉 答對了！300 公分 = 3 個 100 公分 = 3 公尺！",
+    praiseTts: "答對了, 300公分等於3公尺"
+  }
+];
+var qIndex = 0;
+var qCorrect = [false, false, false];
+
+function renderQuestion() {
+  var q = QUIZZES[qIndex];
+  if (!q) return;
+  var stem = document.getElementById("q-stem");
+  var choices = document.getElementById("q-choices");
+  var progress = document.getElementById("q-progress");
+  var bubble = document.getElementById("act4-bubble");
+  if (stem) stem.innerHTML = q.stem;
+  if (progress) progress.textContent = "第 " + (qIndex + 1) + " / 3 題";
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+  if (!choices) return;
+  choices.innerHTML = "";
+  q.options.forEach(function (opt, i) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.addEventListener("click", function () { answerChoice(b, i); });
+    choices.appendChild(b);
+  });
+}
+
+function answerChoice(btn, idx) {
+  var q = QUIZZES[qIndex];
+  var bubble = document.getElementById("act4-bubble");
+  if (idx === q.answer) {
+    btn.classList.add("correct");
+    if (bubble) bubble.innerHTML = q.praise;
+    speakText(q.praiseTts);
+    qCorrect[qIndex] = true;
+    if (qCorrect.every(Boolean)) markAct("act4");
+    /* 答對後 0.9 秒自動進入下一題 */
+    if (qIndex < QUIZZES.length - 1) {
+      setTimeout(function () { qIndex++; renderQuestion(); }, 900);
+    } else {
+      if (bubble) bubble.innerHTML = "🏆 全部答對！你是<b>長度大師</b>！" ;
+      speakText("全部答對, 你是長度大師");
+    }
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText("再想想看");
+  }
+}
+
+function resetAct4() {
+  qIndex = 0;
+  qCorrect = [false, false, false];
+  renderQuestion();
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1Ticks();
+renderAct1();
+initTapeDrag();
+renderAct2();
+buildAct3Ticks();
+renderQuestion();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

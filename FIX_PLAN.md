@@ -50,7 +50,6 @@
   - 課綱活動: 百格千塊立體積木、千位進位翻牌器、三位數數線放大鏡、滿 10 個百合體金千立方體
   - 驗證結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
   - 施工通道: 通道一/通道二自動容災協同 ($0)
-- [ ] **Step 3: G2-N-2-2 加減算式與直式計算 (`g2_vertical_addition_subtraction_lab.html`)**
 - [x] **Step 3: G2-N-2-2 加減算式與直式計算 (`g2_vertical_addition_subtraction_lab.html`)**
   - 產出檔案: `app/components/g2_vertical_addition_subtraction_lab.html` (38KB), 更新 `app/shell.js`
   - 課綱活動: 直式算柱位值對齊、滿十進一動態融合、不夠減借十退位拆解、分步引導計算機
@@ -61,15 +60,21 @@
   - 課綱活動: 新台幣面額大解剖（千元/五百元/百元/銅板）、自動換幣機拖曳兌換、超市付錢與找零計算
   - 驗證結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
   - 施工通道: 通道一 (本地 OpenCode CLI $0)
-- [ ] **Step 5: G2-N-2-6 乘法啟蒙 (`g2_multiplication_intro_lab.html`)**
-  - 課綱活動: 盤子裝蘋果幾個幾、連加算式與乘號動態誕生、倍數階梯。
-  - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-6`
-- [ ] **Step 6: G2-N-2-7 九九乘法表 (`g2_multiplication_table_lab.html`)**
-  - 課綱活動: 點子陣列矩陣、乘法表斜對角規律、動態滾輪九九歌。
-  - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-7`
-- [ ] **Step 7: G2-N-2-11 長度（公分與公尺） (`g2_meter_length_lab.html`)**
-  - 課綱活動: 100公分拼接成長尺、伸縮捲尺拉出1公尺、人體身高比對。
-  - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-11`
+- [x] **Step 5: G2-N-2-6 乘法啟蒙 (`g2_multiplication_intro_lab.html`)**
+  - 產出檔案: `app/components/g2_multiplication_intro_lab.html` (37KB), 更新 `app/shell.js`
+  - 課綱活動: 盤子裝蘋果幾個幾、連加算式與乘號動態誕生、倍數階梯青蛙跳
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一/通道二自動容災協同 ($0)
+- [x] **Step 6: G2-N-2-7 九九乘法表 (`g2_multiplication_table_lab.html`)**
+  - 產出檔案: `app/components/g2_multiplication_table_lab.html` (31KB), 更新 `app/shell.js`
+  - 課綱活動: 點子陣列矩陣動態框選、乘法表斜對角對稱規律、翻牌九九歌
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 7: G2-N-2-11 長度（公分與公尺） (`g2_meter_length_lab.html`)**
+  - 產出檔案: `app/components/g2_meter_length_lab.html` (35KB), 更新 `app/shell.js`
+  - 課綱活動: 100公分拼接成長尺、伸縮捲尺拉出1公尺與雙單位即時轉換、生活量感大比對
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一/通道二自動容災協同 ($0)
 
 ### 🌊 第二波 (Wave 2: 數與量進階與應用 6 單元)
 - [ ] **Step 8: G2-N-2-3 加減應用問題 (`g2_addition_subtraction_word_lab.html`)**

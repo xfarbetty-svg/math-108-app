@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-6 乘法啟蒙 · 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* ===== 控制列 ===== */
+.ctrl-row { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fdf6e9;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+.stepper b { min-width: 20px; text-align: center; font-size: 15px; color: var(--ink); }
+.step-btn {
+  width: 27px;
+  height: 27px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--mint-deep);
+  line-height: 1;
+}
+.step-btn:active { transform: scale(0.92); }
+.btn-main {
+  background: var(--mint);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  box-shadow: 0 3px 8px rgba(49, 138, 112, 0.25);
+  transition: all 0.15s;
+}
+.btn-main:active { transform: scale(0.96); }
+.btn-main:disabled { opacity: 0.45; box-shadow: none; }
+.btn-sub {
+  background: #fdf6e9;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-weight: 800;
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: 999px;
+}
+.btn-sub:active { transform: scale(0.96); }
+.plate-hit { cursor: pointer; }
+
+/* ===== Act 2 連加算式動畫 ===== */
+.eq-part { opacity: 0; transition: opacity 0.35s ease; }
+.eq-part.show { opacity: 1; }
+.plus-sign {
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.plus-sign.rot { transform: rotate(45deg); }
+.eq-labels { display: none; gap: 5px; justify-content: center; flex-wrap: wrap; }
+.eq-labels.show { display: flex; }
+.eq-chip { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; line-height: 1.4; }
+.eq-chip.mint { background: #e7f5f0; color: var(--mint-deep); }
+.eq-chip.coral { background: #fff0eb; color: var(--coral-deep); }
+.eq-chip.lemon { background: #fff6df; color: var(--lemon-deep); }
+
+/* ===== Act 3 規律發現 ===== */
+.mode-chip {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  color: var(--ink-soft);
+  transition: all 0.15s;
+}
+.mode-chip.active {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.stair-row { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+.stair-chip {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fdf6e9;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  transition: all 0.25s;
+}
+.stair-chip.lit {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+  transform: translateY(-1px);
+}
+
+/* ===== Act 4 挑戰 ===== */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+  opacity: 0.7;
+}
+.q-progress {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  background: #fdf6e9;
+  border-radius: 999px;
+  padding: 2px 10px;
+  align-self: center;
+}
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      乘法啟蒙小教室
+      <small>二年級 · N-2-6 幾個幾與乘號誕生</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 幾個幾</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 魔法誕生</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 跳跳規律</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（盤子裝蘋果：幾個幾） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" id="btn-act1-say" onclick="sayAct1()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 盤子裝蘋果</div>
+      <div class="card-desc">調整盤數和每盤的蘋果數，數數看「幾個幾」！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 340 175" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="盤子裝蘋果：幾個幾示意圖">
+          <text id="act1-total" x="170" y="26" text-anchor="middle" font-size="15" font-weight="800" fill="#318a70"></text>
+          <g id="act1-plates"></g>
+        </svg>
+      </div>
+      <div class="ctrl-row">
+        <span class="stepper">
+          <button class="step-btn" id="btn-plates-minus" onclick="adjustCfg('plates',-1)">－</button>
+          盤數 <b id="lbl-plates">3</b>
+          <button class="step-btn" id="btn-plates-plus" onclick="adjustCfg('plates',1)">＋</button>
+        </span>
+        <span class="stepper">
+          <button class="step-btn" id="btn-per-minus" onclick="adjustCfg('per',-1)">－</button>
+          每盤 <b id="lbl-per">4</b>
+          <button class="step-btn" id="btn-per-plus" onclick="adjustCfg('per',1)">＋</button>
+        </span>
+      </div>
+      <div class="tip-bubble" id="act1-bubble"></div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（連加到乘法的魔法誕生） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="sayAct2Intro()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 乘法魔法誕生</div>
+      <div class="card-desc">先把每盤蘋果展開成連加算式，再讓加號轉一圈變成乘號！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 340 195" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="連加算式變身乘法算式動畫">
+          <g id="act2-plates"></g>
+          <g id="act2-eq"></g>
+        </svg>
+      </div>
+      <div class="ctrl-row">
+        <button class="btn-main" id="btn-expand" onclick="expandAddition()">🧮 展開連加</button>
+        <button class="btn-main" id="btn-magic" onclick="magicTransform()" disabled>✨ 魔法變身</button>
+      </div>
+      <div class="eq-labels" id="eq-labels">
+        <span class="eq-chip mint" id="chip-a"></span>
+        <span class="eq-chip coral" id="chip-b"></span>
+        <span class="eq-chip lemon" id="chip-c"></span>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 按「展開連加」，看看一盤一盤加起來的算式。</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（青蛙跳跳階梯 / 倍數數線） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="sayAct3Intro()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 青蛙跳跳數線</div>
+      <div class="card-desc">選一個倍數，讓小青蛙一格一格跳，點亮乘法階梯！</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="青蛙沿數線跳倍數弧線">
+          <g id="act3-world"></g>
+        </svg>
+      </div>
+      <div class="ctrl-row">
+        <button class="mode-chip" id="chip-step-2" onclick="setFrogStep(2)">2 的倍數</button>
+        <button class="mode-chip active" id="chip-step-3" onclick="setFrogStep(3)">3 的倍數</button>
+        <button class="mode-chip" id="chip-step-5" onclick="setFrogStep(5)">5 的倍數</button>
+      </div>
+      <div class="ctrl-row">
+        <button class="btn-main" id="btn-jump" onclick="frogJump()">🐸 跳一下</button>
+        <button class="btn-sub" onclick="resetAct3()">🔁 重新開始</button>
+      </div>
+      <div class="stair-row" id="stair-row"></div>
+      <div class="tip-bubble" id="act3-bubble">💡 每一次跳躍都多 3，這就是倍數與乘法的規律！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（乘法生活辨識挑戰） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="sayAct4Intro()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 生活乘法辨識</div>
+      <span class="q-progress" id="q-progress">第 1 / 3 題</span>
+      <div class="card-desc" id="q-text"></div>
+      <div class="choice-row" id="q-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager（禁用 speechSynthesis） ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級乘法啟蒙小教室。現在進行第 " + currentAct + " 幕。跟著四個關卡, 一起認識幾個幾和乘法!");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+/* ==================== 共用狀態：盤數 x 每盤數量 ==================== */
+var cfg = { plates: 3, per: 4 };
+function totalApples() { return cfg.plates * cfg.per; }
+function act1Phrase() {
+  return cfg.per + "的" + cfg.plates + "倍, 就是" + cfg.plates + "個" + cfg.per + ", 一共有" + totalApples() + "顆蘋果";
+}
+
+/* ==================== SVG 繪圖小工具 ==================== */
+var SVG_NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, parent) {
+  var el = document.createElementNS(SVG_NS, tag);
+  if (attrs) {
+    for (var k in attrs) {
+      if (Object.prototype.hasOwnProperty.call(attrs, k)) el.setAttribute(k, attrs[k]);
+    }
+  }
+  if (parent) parent.appendChild(el);
+  return el;
+}
+function drawApple(parent, cx, cy, r) {
+  var rad = r || 9;
+  svgEl("circle", { cx: cx, cy: cy, r: rad, fill: "#f4694b" }, parent);
+  svgEl("circle", { cx: cx - rad * 0.35, cy: cy - rad * 0.35, r: rad * 0.28, fill: "#ffd0c2" }, parent);
+  svgEl("rect", { x: cx - 1, y: cy - rad - 4, width: 2, height: 4.5, rx: 1, fill: "#8a5a2b" }, parent);
+  svgEl("ellipse", {
+    cx: cx + 4.5, cy: cy - rad - 3, rx: 5, ry: 2.4, fill: "#7bc9b2",
+    transform: "rotate(-28 " + (cx + 4.5) + " " + (cy - rad - 3) + ")"
+  }, parent);
+}
+function drawPlate(parent, cx, cy, rx, ry) {
+  svgEl("ellipse", { cx: cx, cy: cy + 3, rx: rx + 2, ry: ry + 2, fill: "#efe4cd" }, parent);
+  svgEl("ellipse", { cx: cx, cy: cy, rx: rx, ry: ry, fill: "#ffffff", stroke: "#e8d5ae", "stroke-width": 2.5 }, parent);
+  svgEl("ellipse", { cx: cx, cy: cy - ry * 0.28, rx: rx * 0.7, ry: ry * 0.55, fill: "#fdf3e0" }, parent);
+}
+
+/* ==================== Act 1：幾個幾（盤子裝蘋果） ==================== */
+function renderAct1() {
+  var g = document.getElementById("act1-plates");
+  if (!g) return;
+  g.innerHTML = "";
+  var n = cfg.plates, per = cfg.per;
+  var spacing = 66;
+  var startX = (340 - (n - 1) * spacing) / 2;
+  for (var i = 0; i < n; i++) {
+    var px = startX + i * spacing;
+    var pg = svgEl("g", { "class": "plate-hit", transform: "translate(" + px + ",0)" }, g);
+    drawPlate(pg, 0, 126, 30, 13);
+    for (var j = 0; j < per; j++) {
+      var dx = (j % 2 === 0 ? -10 : 10);
+      var dy = (j < 2 ? -4 : -20);
+      drawApple(pg, dx, 120 + dy, 9);
+    }
+    var lbl = svgEl("text", {
+      x: 0, y: 158, "text-anchor": "middle", "font-size": 12,
+      "font-weight": 800, fill: "#8a857b"
+    }, pg);
+    lbl.textContent = "第" + (i + 1) + "盤";
+    pg.addEventListener("click", onPlateClick);
+  }
+  var total = document.getElementById("act1-total");
+  if (total) total.textContent = "「" + per + " 的 " + n + " 倍」一共 " + totalApples() + " 顆蘋果";
+  var lblPlates = document.getElementById("lbl-plates");
+  var lblPer = document.getElementById("lbl-per");
+  if (lblPlates) lblPlates.textContent = String(n);
+  if (lblPer) lblPer.textContent = String(per);
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) {
+    bubble.innerHTML = "💡 " + n + " 盤，每盤 " + per + " 顆：這是「<b>" + per + " 的 " + n + " 倍</b>」「<b>"
+      + n + " 個 " + per + "</b>」「<b>" + per + " 有 " + n + " 個</b>」，一共 <b>" + totalApples() + "</b> 顆蘋果。";
+  }
+}
+function adjustCfg(key, delta) {
+  var limits = { plates: [1, 5], per: [2, 4] };
+  var v = cfg[key] + delta;
+  if (v < limits[key][0] || v > limits[key][1]) return;
+  cfg[key] = v;
+  renderAct1();
+  markAct1();
+  speakText(act1Phrase());
+}
+function onPlateClick() {
+  markAct1();
+  speakText(act1Phrase());
+}
+function markAct1() {
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+}
+function sayAct1() {
+  markAct1();
+  speakText(act1Phrase());
+}
+
+/* ==================== Act 2：連加到乘法的魔法誕生 ==================== */
+var act2 = { expanded: false, transformed: false, timers: [], eq: null };
+
+function renderAct2() {
+  var g = document.getElementById("act2-plates");
+  if (!g) return;
+  g.innerHTML = "";
+  var n = cfg.plates, per = cfg.per;
+  var spacing = 42;
+  var startX = (340 - (n - 1) * spacing) / 2;
+  for (var i = 0; i < n; i++) {
+    var px = startX + i * spacing;
+    var pg = svgEl("g", { transform: "translate(" + px + ",0)" }, g);
+    drawPlate(pg, 0, 96, 20, 9);
+    for (var j = 0; j < per; j++) {
+      var dx = (j % 2 === 0 ? -7 : 7);
+      var dy = (j < 2 ? -3 : -14);
+      drawApple(pg, dx, 92 + dy, 5.5);
+    }
+  }
+  buildEquation();
+}
+
+function buildEquation() {
+  var g = document.getElementById("act2-eq");
+  if (!g) return;
+  g.innerHTML = "";
+  var n = cfg.plates, per = cfg.per;
+  var startX = Math.max(30, (210 - (n - 1) * 40) / 2);
+  var refs = { addends: [], pluses: [], mult: null, result: null };
+  for (var i = 0; i < n; i++) {
+    var t = svgEl("text", {
+      x: startX + i * 40, y: 172, "text-anchor": "middle",
+      "font-size": 27, "font-weight": 800, fill: i === 0 ? "#318a70" : "#3d3a34",
+      "class": "eq-part"
+    }, g);
+    t.textContent = String(per);
+    refs.addends.push(t);
+    if (i < n - 1) {
+      var p = svgEl("text", {
+        x: startX + i * 40 + 20, y: 172, "text-anchor": "middle",
+        "font-size": 27, "font-weight": 800, fill: "#8a857b",
+        "class": "eq-part plus-sign"
+      }, g);
+      p.textContent = "+";
+      refs.pluses.push(p);
+    }
+  }
+  var r = svgEl("text", {
+    x: 280, y: 172, "text-anchor": "middle",
+    "font-size": 27, "font-weight": 800, fill: "#d9910d",
+    "class": "eq-part"
+  }, g);
+  r.textContent = "= " + totalApples();
+  refs.result = r;
+  var m = svgEl("text", {
+    x: startX + 60, y: 172, "text-anchor": "middle",
+    "font-size": 27, "font-weight": 800, fill: "#f4694b",
+    "class": "eq-part"
+  }, g);
+  refs.mult = m;
+  act2.eq = refs;
+}
+
+function expandAddition() {
+  if (act2.expanded || !act2.eq) return;
+  act2.expanded = true;
+  var refs = act2.eq;
+  var parts = [];
+  for (var i = 0; i < refs.addends.length; i++) {
+    parts.push(refs.addends[i]);
+    if (refs.pluses[i]) parts.push(refs.pluses[i]);
+  }
+  parts.push(refs.result);
+  parts.forEach(function (el, idx) {
+    var t = setTimeout(function () {
+      if (el) el.classList.add("show");
+    }, idx * 200);
+    act2.timers.push(t);
+  });
+  var magicBtn = document.getElementById("btn-magic");
+  if (magicBtn) magicBtn.disabled = false;
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.innerHTML = "💡 " + cfg.per + " + " + cfg.per + " + … 一共 " + cfg.plates + " 個 " + cfg.per
+      + "。按「魔法變身」讓加號轉一圈！";
+  }
+  speakText(cfg.per + " 加 " + cfg.per + " 再加 " + cfg.per + ", " + cfg.plates + "個" + cfg.per + "連加起來等於" + totalApples());
+}
+
+function magicTransform() {
+  if (!act2.expanded || act2.transformed || !act2.eq) return;
+  act2.transformed = true;
+  var refs = act2.eq;
+  var n = cfg.plates, per = cfg.per;
+  /* 加號旋轉 45 度變乘號 */
+  if (refs.pluses[0]) refs.pluses[0].classList.add("rot");
+  /* 多餘的加號與被乘數淡出 */
+  for (var i = 1; i < refs.pluses.length; i++) refs.pluses[i].classList.remove("show");
+  for (var j = 1; j < refs.addends.length; j++) refs.addends[j].classList.remove("show");
+  /* 乘數（盤數）現身 */
+  var m = refs.mult;
+  if (m) {
+    m.textContent = n === 1 ? "× 1" : String(n);
+    var t1 = setTimeout(function () { if (m) m.classList.add("show"); }, 320);
+    act2.timers.push(t1);
+  }
+  /* 積靠近新算式 */
+  if (refs.result) refs.result.setAttribute("x", String(Math.max(30, (210 - (n - 1) * 40) / 2) + 105));
+  /* 彩色標籤標註部件意義 */
+  var labels = document.getElementById("eq-labels");
+  if (labels) labels.classList.add("show");
+  var chipA = document.getElementById("chip-a");
+  var chipB = document.getElementById("chip-b");
+  var chipC = document.getElementById("chip-c");
+  if (chipA) chipA.textContent = per + "＝被乘數：每盤有 " + per + " 顆";
+  if (chipB) chipB.textContent = "× " + n + "＝乘數：有 " + n + " 盤";
+  if (chipC) chipC.textContent = "= " + totalApples() + "＝積：全部 " + totalApples() + " 顆";
+  var magicBtn = document.getElementById("btn-magic");
+  if (magicBtn) magicBtn.disabled = true;
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.innerHTML = "🎉 變身成功！<b>" + per + " × " + n + " = " + totalApples() + "</b>"
+      + "：" + per + " 的 " + n + " 倍就是 " + n + " 個 " + per + "！";
+  }
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  speakText("加號轉一轉變成乘號, " + n + "個" + per + "寫成 " + per + "乘以" + n + "等於" + totalApples());
+}
+
+function sayAct2Intro() {
+  speakText("先把每盤蘋果展開成連加算式, 再讓加號轉一圈變成乘號, 乘法就是連加的好朋友!");
+}
+
+function resetAct2() {
+  act2.timers.forEach(function (t) { clearTimeout(t); });
+  act2.timers = [];
+  act2.expanded = false;
+  act2.transformed = false;
+  renderAct2();
+  var magicBtn = document.getElementById("btn-magic");
+  if (magicBtn) magicBtn.disabled = true;
+  var labels = document.getElementById("eq-labels");
+  if (labels) labels.classList.remove("show");
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 按「展開連加」，看看一盤一盤加起來的算式。";
+}
+
+/* ==================== Act 3：青蛙跳跳階梯（倍數數線） ==================== */
+var frog = { step: 3, jumpIndex: 0, animating: false };
+var FROG_MAX_JUMPS = { 2: 10, 3: 8, 5: 5 };
+var FROG_GROUND = 150;
+var FROG_ARCS = [];
+
+function xFor(v) { return 24 + v * 11.8; }
+
+function buildFrogWorld() {
+  var g = document.getElementById("act3-world");
+  if (!g) return;
+  g.innerHTML = "";
+  FROG_ARCS = [];
+  /* 數線主軸 */
+  svgEl("line", {
+    x1: xFor(0) - 8, y1: FROG_GROUND, x2: xFor(25) + 8, y2: FROG_GROUND,
+    stroke: "#c9b98f", "stroke-width": 3, "stroke-linecap": "round"
+  }, g);
+  /* 刻度與倍數標籤 */
+  for (var v = 0; v <= 25; v++) {
+    var isMult = v % frog.step === 0;
+    svgEl("line", {
+      x1: xFor(v), y1: FROG_GROUND - (isMult ? 7 : 4), x2: xFor(v), y2: FROG_GROUND + (isMult ? 7 : 4),
+      stroke: isMult ? "#318a70" : "#ddcfa8", "stroke-width": isMult ? 2.5 : 1.5
+    }, g);
+    if (isMult) {
+      var t = svgEl("text", {
+        x: xFor(v), y: FROG_GROUND + 22, "text-anchor": "middle",
+        "font-size": 10.5, "font-weight": 800, fill: "#318a70"
+      }, g);
+      t.textContent = String(v);
+    }
+  }
+  buildStairs();
+  placeFrog(0);
+}
+
+function buildFrog() {
+  var g = document.getElementById("act3-world");
+  if (!g) return null;
+  var fg = svgEl("g", { id: "frog-sprite" }, g);
+  svgEl("ellipse", { cx: 0, cy: -9, rx: 13, ry: 10, fill: "#7bc9b2", stroke: "#318a70", "stroke-width": 2 }, fg);
+  svgEl("circle", { cx: -5, cy: -19, r: 4.5, fill: "#ffffff", stroke: "#318a70", "stroke-width": 1.5 }, fg);
+  svgEl("circle", { cx: 5, cy: -19, r: 4.5, fill: "#ffffff", stroke: "#318a70", "stroke-width": 1.5 }, fg);
+  svgEl("circle", { cx: -5, cy: -19, r: 1.8, fill: "#3d3a34" }, fg);
+  svgEl("circle", { cx: 5, cy: -19, r: 1.8, fill: "#3d3a34" }, fg);
+  svgEl("ellipse", { cx: -4, cy: -7, rx: 3, ry: 2, fill: "#e7f5f0" }, fg);
+  svgEl("path", { d: "M -3 -13 Q 0 -10 3 -13", stroke: "#318a70", "stroke-width": 1.5, fill: "none" }, fg);
+  svgEl("ellipse", { cx: -9, cy: 0, rx: 4, ry: 2, fill: "#5aab93" }, fg);
+  svgEl("ellipse", { cx: 9, cy: 0, rx: 4, ry: 2, fill: "#5aab93" }, fg);
+  return fg;
+}
+
+function placeFrog(atV) {
+  var g = document.getElementById("act3-world");
+  if (!g) return;
+  var old = document.getElementById("frog-sprite");
+  if (old) old.remove();
+  var fg = buildFrog();
+  if (fg) fg.setAttribute("transform", "translate(" + xFor(atV) + "," + FROG_GROUND + ")");
+}
+
+function buildStairs() {
+  var row = document.getElementById("stair-row");
+  if (!row) return;
+  row.innerHTML = "";
+  var max = FROG_MAX_JUMPS[frog.step] || 8;
+  for (var i = 1; i <= max; i++) {
+    var chip = document.createElement("span");
+    chip.className = "stair-chip";
+    chip.textContent = frog.step + " × " + i + " = " + frog.step * i;
+    row.appendChild(chip);
+  }
+  lightStairs();
+}
+function lightStairs() {
+  var row = document.getElementById("stair-row");
+  if (!row) return;
+  var chips = row.querySelectorAll(".stair-chip");
+  for (var i = 0; i < chips.length; i++) {
+    chips[i].classList.toggle("lit", i < frog.jumpIndex);
+  }
+}
+
+function setFrogStep(s) {
+  if (frog.animating) return;
+  frog.step = s;
+  frog.jumpIndex = 0;
+  ["2", "3", "5"].forEach(function (k) {
+    var chip = document.getElementById("chip-step-" + k);
+    if (chip) chip.classList.toggle("active", Number(k) === s);
+  });
+  buildFrogWorld();
+  var jumpBtn = document.getElementById("btn-jump");
+  if (jumpBtn) jumpBtn.disabled = false;
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 小青蛙每次跳 " + s + " 格，落在 " + s + "、" + (s * 2) + "、"
+    + (s * 3) + "……這就是「" + s + " 的倍數」！";
+  speakText("換成" + s + "的倍數, 青蛙每次跳" + s + "格, 落在" + s + ", " + (s * 2) + ", " + (s * 3) + ", 每次都多" + s);
+}
+
+function frogJump() {
+  if (frog.animating) return;
+  var max = FROG_MAX_JUMPS[frog.step] || 8;
+  if (frog.jumpIndex >= max) return;
+  var from = frog.step * frog.jumpIndex;
+  var to = frog.step * (frog.jumpIndex + 1);
+  frog.animating = true;
+  var g = document.getElementById("act3-world");
+  var fg = document.getElementById("frog-sprite");
+  if (!g || !fg) { frog.animating = false; return; }
+  /* 留下本跳的拋物線弧跡 */
+  FROG_ARCS.forEach(function (p) { p.setAttribute("opacity", "0.3"); });
+  var arc = svgEl("path", {
+    d: "M " + xFor(from) + " " + (FROG_GROUND - 12)
+     + " Q " + ((xFor(from) + xFor(to)) / 2) + " 38 "
+     + xFor(to) + " " + (FROG_GROUND - 12),
+    stroke: "#f4694b", "stroke-width": 2.5, fill: "none",
+    "stroke-dasharray": "6 5", "stroke-linecap": "round", opacity: "0.9"
+  }, g);
+  FROG_ARCS.push(arc);
+  if (FROG_ARCS.length > 4) {
+    var stale = FROG_ARCS.shift();
+    if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+  }
+  /* 真實弧線動畫：requestAnimationFrame 沿拋物線移動 */
+  var x0 = xFor(from), x1 = xFor(to);
+  var duration = 560;
+  var start = null;
+  function frame(ts) {
+    if (start === null) start = ts;
+    var t = Math.min(1, (ts - start) / duration);
+    var ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    var x = x0 + (x1 - x0) * ease;
+    var lift = Math.sin(Math.PI * ease) * 72;
+    fg.setAttribute("transform", "translate(" + x + "," + (FROG_GROUND - lift) + ")");
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      fg.setAttribute("transform", "translate(" + x1 + "," + FROG_GROUND + ")");
+      frog.animating = false;
+      frog.jumpIndex += 1;
+      lightStairs();
+      updateFrogBubble(to);
+      if (frog.jumpIndex >= 4 && !verifyState.act3) {
+        verifyState.act3 = true;
+        refreshStatusBar();
+      }
+      if (frog.jumpIndex >= max) {
+        var btn = document.getElementById("btn-jump");
+        if (btn) btn.disabled = true;
+        speakText("太厲害了! 你跳完了" + frog.step + "的倍數, 從" + frog.step + "一路跳到" + to + "!");
+      } else {
+        speakText(to + "! 每一次都多" + frog.step);
+      }
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+function updateFrogBubble(landed) {
+  var bubble = document.getElementById("act3-bubble");
+  if (!bubble) return;
+  var max = FROG_MAX_JUMPS[frog.step] || 8;
+  if (frog.jumpIndex >= max) {
+    bubble.innerHTML = "🌟 全部跳完！<b>" + frog.step + " × " + frog.jumpIndex + " = " + landed + "</b>"
+      + "，每一次跳躍都多 " + frog.step + "，這就是倍數與乘法的規律！";
+  } else {
+    bubble.innerHTML = "💡 落在 <b>" + landed + "</b>！階梯點亮了 <b>" + frog.step + " × " + frog.jumpIndex
+      + " = " + landed + "</b>，每一次都多 " + frog.step + "。";
+  }
+}
+
+function sayAct3Intro() {
+  speakText("小青蛙每次跳" + frog.step + "格, 落在" + frog.step + ", " + (frog.step * 2) + ", " + (frog.step * 3) + ", 每一次都多" + frog.step + ", 這就是" + frog.step + "的倍數!");
+}
+
+function resetAct3() {
+  frog.jumpIndex = 0;
+  frog.animating = false;
+  buildFrogWorld();
+  var jumpBtn = document.getElementById("btn-jump");
+  if (jumpBtn) jumpBtn.disabled = false;
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 每一次跳躍都多 " + frog.step + "，這就是倍數與乘法的規律！";
+}
+
+/* ==================== Act 4：小小挑戰賽（生活乘法辨識） ==================== */
+var QUIZZES = [
+  {
+    q: "一輛三輪車有 3 個輪子，4 輛三輪車共有幾個輪子？",
+    opts: ["7 個", "12 個", "16 個"],
+    ok: 1,
+    hint: "再想想看：每輛 3 個輪子，4 輛就是「3 個 4」？不對喔，是「4 個 3」，3、6、9、12 地數！",
+    sayOk: "答對了! 3乘4等於12, 4輛三輪車共有12個輪子",
+    sayNo: "再數數看, 每輛車3個輪子, 4輛就是4個3, 3, 6, 9, 12"
+  },
+  {
+    q: "一盒彩色筆有 5 枝，3 盒共有幾枝？",
+    opts: ["8 枝", "10 枝", "15 枝"],
+    ok: 2,
+    hint: "再想想看：一盒 5 枝，3 盒就是「3 個 5」，5、10、15 地數！",
+    sayOk: "答對了! 5乘3等於15, 3盒彩色筆共有15枝",
+    sayNo: "再數數看, 一盒5枝, 3盒就是3個5, 5, 10, 15"
+  },
+  {
+    q: "「3 + 3 + 3 + 3 = 12」可以寫成哪一個乘法算式？",
+    opts: ["4 × 3 = 12", "3 × 4 = 12", "3 + 4 = 7"],
+    ok: 1,
+    hint: "再想想看：連加式裡是「3」有 4 個，被乘數是每份的 3，所以是 3 × 4！",
+    sayOk: "答對了! 3有4個, 寫成3乘以4等於12",
+    sayNo: "再想想看, 3有4個, 被乘數是3, 所以是3乘以4等於12"
+  }
+];
+var qIndex = 0;
+
+function renderQuestion() {
+  if (qIndex >= QUIZZES.length) return;
+  var item = QUIZZES[qIndex];
+  var progress = document.getElementById("q-progress");
+  var qText = document.getElementById("q-text");
+  var row = document.getElementById("q-choices");
+  var bubble = document.getElementById("act4-bubble");
+  if (progress) progress.textContent = "第 " + (qIndex + 1) + " / " + QUIZZES.length + " 題";
+  if (qText) qText.innerHTML = item.q;
+  if (row) {
+    row.innerHTML = "";
+    item.opts.forEach(function (opt, idx) {
+      var b = document.createElement("button");
+      b.className = "choice-btn";
+      b.textContent = opt;
+      b.setAttribute("data-ok", idx === item.ok ? "1" : "0");
+      b.addEventListener("click", function () { answerQ(b); });
+      row.appendChild(b);
+    });
+  }
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+}
+
+function answerQ(btn) {
+  var ok = btn.getAttribute("data-ok") === "1";
+  var bubble = document.getElementById("act4-bubble");
+  if (ok) {
+    btn.classList.add("correct");
+    var row = document.getElementById("q-choices");
+    if (row) {
+      row.querySelectorAll(".choice-btn").forEach(function (b) {
+        if (b !== btn) b.disabled = true;
+      });
+    }
+    if (bubble) bubble.innerHTML = "🎉 答對了！";
+    speakText(QUIZZES[qIndex].sayOk);
+    var t = setTimeout(function () {
+      qIndex += 1;
+      if (qIndex < QUIZZES.length) {
+        renderQuestion();
+      } else {
+        if (bubble) bubble.innerHTML = "🏆 3 題全對！你已經學會「幾個幾」和乘法算式了！";
+        speakText("太棒了, 3題全對, 你已經學會幾個幾和乘法算式了!");
+      }
+    }, 1400);
+    act4Timers.push(t);
+    if (!verifyState.act4 && qIndex === QUIZZES.length - 1) {
+      /* 第 3 題答對才算全部完成 */
+    }
+  } else {
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    if (bubble) bubble.innerHTML = "💡 " + QUIZZES[qIndex].hint;
+    speakText(QUIZZES[qIndex].sayNo);
+  }
+  /* 全部答對時（qIndex 已是最後一題且答對） */
+  if (ok && qIndex === QUIZZES.length - 1 && !verifyState.act4) {
+    verifyState.act4 = true;
+    refreshStatusBar();
+  }
+}
+var act4Timers = [];
+
+function sayAct4Intro() {
+  speakText("小小挑戰賽開始! 用乘法算一算生活中的幾個幾, 加油!");
+}
+
+function resetAct4() {
+  act4Timers.forEach(function (t) { clearTimeout(t); });
+  act4Timers = [];
+  qIndex = 0;
+  verifyState.act4 = false;
+  renderQuestion();
+}
+
+/* ==================== 重置全部 ==================== */
+function resetLab() {
+  stopSpeech();
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  cfg = { plates: 3, per: 4 };
+  frog.step = 3;
+  ["2", "3", "5"].forEach(function (k) {
+    var chip = document.getElementById("chip-step-" + k);
+    if (chip) chip.classList.toggle("active", k === "3");
+  });
+  renderAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== 初始化 ==================== */
+renderAct1();
+renderAct2();
+buildFrogWorld();
+resetAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

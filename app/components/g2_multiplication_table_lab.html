@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-7 九九乘法表 · 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --gold: #f7b32b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav { display: flex; gap: 4px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 2px; font-size: 11px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800;
+  padding: 2px 8px; border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.btn-tts:disabled { opacity: 0.45; cursor: default; }
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.55; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3;
+  overflow: hidden; max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 1 步進控制器 */
+.stepper-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.stepper { display: inline-flex; align-items: center; gap: 4px; background: #fdf6e9; border: 1px solid var(--line); border-radius: 999px; padding: 3px 6px; }
+.stepper b { font-size: 13px; min-width: 18px; text-align: center; }
+.stepper small { font-size: 10.5px; font-weight: 800; color: var(--ink-soft); }
+.step-btn {
+  width: 26px; height: 26px; border-radius: 999px; background: #ffffff;
+  border: 1px solid var(--line); font-size: 14px; font-weight: 800; color: var(--mint-deep);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.step-btn:active { transform: scale(0.92); }
+.rotate-btn {
+  background: #fff4ef; border: 1px solid var(--coral); color: var(--coral-deep);
+  font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.rotate-btn:active { transform: scale(0.95); }
+#act1-array-group { transition: transform 0.6s ease; }
+
+/* Act 2 棋盤格 */
+#act2-svg .cell-hit { cursor: pointer; }
+#act2-svg .cell-rect { transition: fill 0.15s; }
+
+/* Act 3 段數標籤與翻牌卡片 */
+.seg-nav { display: flex; gap: 4px; justify-content: center; }
+.seg-btn {
+  flex: 1 1 0; max-width: 42px; padding: 6px 0; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; background: #fdf6e9; border: 1px solid var(--line); color: var(--ink-soft);
+}
+.seg-btn.active { background: var(--lemon); border-color: var(--lemon-deep); color: #7a5c1e; }
+.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px; }
+.flip-card { perspective: 500px; height: 56px; cursor: pointer; }
+.flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
+.flip-card.revealed .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px;
+}
+.flip-front { background: #ffffff; border: 2px solid var(--line); color: var(--ink); }
+.flip-back { background: #e7f5f0; border: 2px solid var(--mint); color: var(--mint-deep); transform: rotateY(180deg); flex-direction: column; gap: 1px; }
+.flip-back small { font-size: 9.5px; font-weight: 700; color: var(--ink-soft); }
+.flip-card.hot .flip-front { border-color: var(--coral); background: #fff4ef; color: var(--coral-deep); }
+.flip-card.hot .flip-back { box-shadow: 0 0 0 3px rgba(255, 138, 101, 0.35); }
+.diff-bubbles { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+.diff-bubble {
+  background: #e7f5f0; color: var(--mint-deep); border-radius: 999px;
+  font-size: 11px; font-weight: 800; padding: 2px 9px;
+  visibility: hidden;
+}
+.diff-bubble.show { visibility: visible; }
+
+/* Act 4 挑戰 */
+.challenge-item { display: flex; flex-direction: column; gap: 6px; }
+.challenge-q { font-size: 13.5px; font-weight: 800; }
+.challenge-q .blank { color: var(--coral-deep); border-bottom: 3px solid var(--coral); padding: 0 8px; }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 28%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 8px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn:disabled { cursor: default; }
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      九九乘法表 · 概念小教室
+      <small>二年級 · N-2-7 乘法表與對稱規律</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 點子陣列</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 對稱之鏡</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 乘法歌</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 神算手</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（點子矩陣探險 / 陣列框選器） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakAct1()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 點子矩陣探險</div>
+      <div class="card-desc">調整行與列，框出點子陣列；橫看、直看，再旋轉 90 度看看——總數會變嗎？</div>
+      <div class="stepper-row">
+        <span class="stepper"><small>行(橫)</small>
+          <button class="step-btn" onclick="stepRows(-1)" aria-label="行數減一">−</button>
+          <b id="act1-rows">3</b>
+          <button class="step-btn" onclick="stepRows(1)" aria-label="行數加一">＋</button>
+        </span>
+        <span class="stepper"><small>列(直)</small>
+          <button class="step-btn" onclick="stepCols(-1)" aria-label="列數減一">−</button>
+          <b id="act1-cols">4</b>
+          <button class="step-btn" onclick="stepCols(1)" aria-label="列數加一">＋</button>
+        </span>
+        <button class="rotate-btn" id="btn-rotate" onclick="rotateArray()">🔄 旋轉 90°</button>
+      </div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 276" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="點子矩陣陣列框選器">
+          <g id="act1-array-group"></g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act1-bubble"></div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（九九乘法大棋盤 / 斜對角對稱之鏡） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakAct2()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 斜對角對稱之鏡</div>
+      <div class="card-desc">金色斜對角線穿過平方數。點任何一格，看看鏡子另一邊的對稱格！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="九九乘法大棋盤">
+          <g id="act2-board"></g>
+          <g id="act2-overlay"></g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 點擊棋盤上任何一格，找出它的對稱好兄弟！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（滾輪速算九九歌 / 節奏卡片） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" id="btn-auto" onclick="autoRead()">▶️ 自動朗讀</button>
+      </div>
+      <div class="card-title">規律大發現 · 節奏乘法歌</div>
+      <div class="card-desc">選一段，點卡片翻牌看答案，或按「自動朗讀」跟著唱！</div>
+      <div class="seg-nav" id="seg-nav"></div>
+      <div class="stage">
+        <div class="card-grid" id="act3-grid"></div>
+      </div>
+      <div class="diff-bubbles" id="act3-diffs"></div>
+      <div class="tip-bubble" id="act3-bubble">💡 每往後一張卡片，答案就會多 <b id="act3-step">5</b>！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（九九乘法神算手） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('三道九九乘法挑戰題, 把空格裡的數字找出來')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 九九乘法神算手</div>
+      <div class="challenge-item">
+        <div class="challenge-q">第 1 題：<b>6 × <span class="blank">▢</span> = 42</b></div>
+        <div class="choice-row">
+          <button class="choice-btn" onclick="answer(this, 0, 1)">6</button>
+          <button class="choice-btn" data-ok="1" onclick="answer(this, 0, 1)">7</button>
+          <button class="choice-btn" onclick="answer(this, 0, 1)">8</button>
+        </div>
+      </div>
+      <div class="challenge-item">
+        <div class="challenge-q">第 2 題：<b>8 × 7 = <span class="blank">?</span></b></div>
+        <div class="choice-row">
+          <button class="choice-btn" onclick="answer(this, 1, 1)">54</button>
+          <button class="choice-btn" onclick="answer(this, 1, 1)">64</button>
+          <button class="choice-btn" data-ok="1" onclick="answer(this, 1, 1)">56</button>
+        </div>
+      </div>
+      <div class="challenge-item">
+        <div class="challenge-q">第 3 題：<b><span class="blank">▢</span> × 9 = 36</b></div>
+        <div class="choice-row">
+          <button class="choice-btn" data-ok="1" onclick="answer(this, 2, 1)">4</button>
+          <button class="choice-btn" onclick="answer(this, 2, 1)">5</button>
+          <button class="choice-btn" onclick="answer(this, 2, 1)">6</button>
+        </div>
+      </div>
+      <div class="tip-bubble" id="act4-bubble">💪 三題全答對，就是九九乘法神算手！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+var autoToken = 0; /* 自動朗讀令牌：切幕/重置即作廢 */
+
+function speakText(rawText, opts) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, opts || {});
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  if (opts && typeof opts.onEnd === "function") opts.onEnd();
+}
+function stopSpeech() {
+  autoToken++;
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級九九乘法表概念小教室。現在進行第 " + currentAct + " 幕。點子陣列、對稱之鏡、乘法歌，跟著四個關卡探索乘法！", {
+    onStart: function () { setSpeechBtnState(true); },
+    onEnd: function () { setSpeechBtnState(false); },
+    onError: function () { setSpeechBtnState(false); }
+  });
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+  resetAutoBtn();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+var act4correct = [false, false, false];
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  /* 就地重置，保持 selftest.state 參考有效 */
+  verifyState.act1 = false; verifyState.act2 = false;
+  verifyState.act3 = false; verifyState.act4 = false;
+  act4correct = [false, false, false];
+  stopSpeech();
+  resetAutoBtn();
+  state1.rows = 3; state1.cols = 4; rotating = false;
+  renderAct1();
+  buildBoard();
+  state3.seg = 5;
+  renderSegNav();
+  renderCards();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：點子矩陣探險（陣列框選器） ==================== */
+var state1 = { rows: 3, cols: 4 };
+var rotating = false;
+var ACT1_S = 26;         /* 點距 */
+var ACT1_R = 7;          /* 點半徑 */
+var ACT1_W = 358, ACT1_H = 276;
+var SVG_NS = "http://www.w3.org/2000/svg";
+
+function el(name, attrs) {
+  var e = document.createElementNS(SVG_NS, name);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+function renderAct1() {
+  var g = document.getElementById("act1-array-group");
+  if (!g) return;
+  g.innerHTML = "";
+  g.style.transition = "none";
+  g.style.transform = "";
+
+  var rows = state1.rows, cols = state1.cols;
+  var gw = cols * ACT1_S, gh = rows * ACT1_S;
+  var ox = (ACT1_W - gw) / 2;
+  var oy = (ACT1_H - gh) / 2;
+  var total = rows * cols;
+
+  /* 背景淡點：完整 9×9 參考陣列 */
+  for (var r = 1; r <= 9; r++) {
+    for (var c = 1; c <= 9; c++) {
+      g.appendChild(el("circle", {
+        cx: (ACT1_W - 9 * ACT1_S) / 2 + (c - 0.5) * ACT1_S,
+        cy: (ACT1_H - 9 * ACT1_S) / 2 + (r - 0.5) * ACT1_S,
+        r: ACT1_R - 3, fill: "#c9bfa8", opacity: "0.25"
+      }));
+    }
+  }
+
+  /* 框選高亮矩形 */
+  g.appendChild(el("rect", {
+    x: ox, y: oy, width: gw, height: gh, rx: 8,
+    fill: "rgba(123,201,178,0.16)", stroke: "#318a70",
+    "stroke-width": "2.5", "stroke-dasharray": "6 4"
+  }));
+
+  /* 框內實心點子 */
+  for (var rr = 0; rr < rows; rr++) {
+    for (var cc = 0; cc < cols; cc++) {
+      g.appendChild(el("circle", {
+        cx: ox + (cc + 0.5) * ACT1_S,
+        cy: oy + (rr + 0.5) * ACT1_S,
+        r: ACT1_R, fill: "#ff8a65", stroke: "#f4694b", "stroke-width": "2"
+      }));
+    }
+  }
+
+  /* 中心總數標示 */
+  var label = el("text", {
+    x: ACT1_W / 2, y: ACT1_H - 8, "text-anchor": "middle",
+    "font-size": "13", "font-weight": "800", fill: "#3d3a34"
+  });
+  label.textContent = "橫看 " + rows + " 行 × 每行 " + cols + " 顆 = " + total + " 顆";
+  g.appendChild(label);
+
+  var rOut = document.getElementById("act1-rows");
+  var cOut = document.getElementById("act1-cols");
+  if (rOut) rOut.textContent = String(rows);
+  if (cOut) cOut.textContent = String(cols);
+
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) {
+    bubble.innerHTML =
+      "💡 橫看：<b>" + rows + "</b> 行，每行 <b>" + cols + "</b> 顆 ➔ " + cols + " × " + rows + " = " + total +
+      "<br>直看：<b>" + cols + "</b> 列，每列 <b>" + rows + "</b> 顆 ➔ " + rows + " × " + cols + " = " + total +
+      "　總數一樣！";
+  }
+}
+
+function stepRows(d) { state1.rows = Math.max(1, Math.min(9, state1.rows + d)); renderAct1(); }
+function stepCols(d) { state1.cols = Math.max(1, Math.min(9, state1.cols + d)); renderAct1(); }
+
+function rotateArray() {
+  if (rotating) return;
+  rotating = true;
+  var g = document.getElementById("act1-array-group");
+  if (!g) { rotating = false; return; }
+  var rows = state1.rows, cols = state1.cols;
+  g.style.transformOrigin =
+    ((ACT1_W - cols * ACT1_S) / 2 + cols * ACT1_S / 2) + "px " +
+    ((ACT1_H - rows * ACT1_S) / 2 + rows * ACT1_S / 2) + "px";
+  g.style.transition = "transform 0.6s ease";
+  g.style.transform = "rotate(90deg)";
+  setTimeout(function () {
+    /* 旋轉後行列互換，總數不變 */
+    var t = state1.rows; state1.rows = state1.cols; state1.cols = t;
+    renderAct1();
+    rotating = false;
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+    speakText(rows + "行" + cols + "列共有" + (rows * cols) + "個點, 旋轉90度, 橫看直看總數都一樣");
+  }, 640);
+}
+
+function speakAct1() {
+  speakText(state1.rows + "行" + state1.cols + "列共有" + (state1.rows * state1.cols) + "個點, 橫看直看總數都一樣");
+}
+
+/* ==================== Act 2：九九乘法大棋盤（斜對角對稱之鏡） ==================== */
+var CS = 32;             /* 格尺寸 */
+var B_X0 = 38, B_Y0 = 38;
+var DIGCN = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+
+function buildBoard() {
+  var g = document.getElementById("act2-board");
+  if (!g) return;
+  g.innerHTML = "";
+  var overlay = document.getElementById("act2-overlay");
+  if (overlay) overlay.innerHTML = "";
+
+  /* 表頭：直欄數字 1~9 */
+  for (var c = 1; c <= 9; c++) {
+    var th = el("text", {
+      x: B_X0 + (c - 0.5) * CS, y: B_Y0 - 9, "text-anchor": "middle",
+      "font-size": "11", "font-weight": "800", fill: "#8a857b"
+    });
+    th.textContent = String(c);
+    g.appendChild(th);
+    var tv = el("text", {
+      x: B_X0 - 11, y: B_Y0 + (c - 0.5) * CS + 4, "text-anchor": "middle",
+      "font-size": "11", "font-weight": "800", fill: "#8a857b"
+    });
+    tv.textContent = String(c);
+    g.appendChild(tv);
+  }
+
+  /* 金色斜對角底線 */
+  g.appendChild(el("line", {
+    x1: B_X0, y1: B_Y0, x2: B_X0 + 9 * CS, y2: B_Y0 + 9 * CS,
+    stroke: "#f7b32b", "stroke-width": "4", opacity: "0.85", "stroke-linecap": "round"
+  }));
+
+  /* 81 格 */
+  for (var r = 1; r <= 9; r++) {
+    for (var cc = 1; cc <= 9; cc++) {
+      (function (rr, c2) {
+        var cell = el("g", { "class": "cell-hit" });
+        var diag = rr === c2;
+        var rect = el("rect", {
+          x: B_X0 + (c2 - 1) * CS, y: B_Y0 + (rr - 1) * CS,
+          width: CS, height: CS,
+          fill: diag ? "#ffe9b3" : "#ffffff",
+          stroke: "#f0e7da", "stroke-width": "1", "class": "cell-rect"
+        });
+        var txt = el("text", {
+          x: B_X0 + (c2 - 0.5) * CS, y: B_Y0 + (rr - 0.5) * CS + 4,
+          "text-anchor": "middle", "font-size": diag ? "12" : "11",
+          "font-weight": "800", fill: diag ? "#d9910d" : "#3d3a34"
+        });
+        txt.textContent = String(rr * c2);
+        cell.appendChild(rect);
+        cell.appendChild(txt);
+        cell.addEventListener("click", function () { onCellPick(rr, c2, rect); });
+        g.appendChild(cell);
+      })(r, cc);
+    }
+  }
+}
+
+function onCellPick(r, c, rect) {
+  var overlay = document.getElementById("act2-overlay");
+  if (!overlay) return;
+  overlay.innerHTML = "";
+  var p = r * c;
+  var cx1 = B_X0 + (c - 0.5) * CS, cy1 = B_Y0 + (r - 0.5) * CS;
+  var cx2 = B_X0 + (r - 0.5) * CS, cy2 = B_Y0 + (c - 0.5) * CS;
+
+  rect.setAttribute("fill", "#c9eadf");
+  rect.setAttribute("stroke", "#318a70");
+  rect.setAttribute("stroke-width", "2");
+
+  if (r !== c) {
+    /* 對稱格高亮 */
+    var mirrorCell = document.querySelectorAll("#act2-board .cell-hit")[(c - 1) * 9 + (r - 1)];
+    if (mirrorCell) {
+      var mrect = mirrorCell.querySelector("rect");
+      if (mrect) { mrect.setAttribute("fill", "#c9eadf"); mrect.setAttribute("stroke", "#318a70"); mrect.setAttribute("stroke-width", "2"); }
+    }
+    /* 對稱光芒連線 */
+    overlay.appendChild(el("line", {
+      x1: cx1, y1: cy1, x2: cx2, y2: cy2,
+      stroke: "#ff8a65", "stroke-width": "3", "stroke-dasharray": "5 4",
+      "stroke-linecap": "round", opacity: "0.95"
+    }));
+  }
+  overlay.appendChild(el("circle", { cx: cx1, cy: cy1, r: 3.5, fill: "#ff8a65" }));
+  overlay.appendChild(el("circle", { cx: cx2, cy: cy2, r: 3.5, fill: "#ff8a65" }));
+
+  var bubble = document.getElementById("act2-bubble");
+  var say;
+  if (r === c) {
+    say = r + "乘" + c + "等於" + p + ", 這是對角線上的平方數!";
+    if (bubble) bubble.innerHTML = "⭐ " + r + " × " + c + " = " + p + "，剛好在<b>金色斜對角線</b>上，這就是平方數！";
+  } else {
+    say = r + "乘" + c + "等於" + p + ", " + c + "乘" + r + "也等於" + p + ", 對稱的兩格積都一樣!";
+    if (bubble) bubble.innerHTML = "✨ " + r + " × " + c + " = " + p + " 和 " + c + " × " + r + " = " + p +
+      " 對稱，積都是 <b>" + p + "</b>！";
+  }
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  speakText(say);
+}
+
+function speakAct2() {
+  speakText("點任何一格, 例如3乘7等於21, 它的對稱格7乘3也等於21, 乘法的積在斜對角兩邊是對稱的!");
+}
+
+/* ==================== Act 3：滾輪速算九九歌（節奏卡片） ==================== */
+var state3 = { seg: 5, revealed: {} };
+
+function numCN(n) {
+  if (n < 10) return DIGCN[n];
+  var t = Math.floor(n / 10), o = n % 10;
+  return (t > 1 ? DIGCN[t] : "") + "十" + (o ? DIGCN[o] : "");
+}
+function kouJue(a, b) {
+  var p = a * b;
+  return DIGCN[a] + DIGCN[b] + (p < 10 ? "得" + DIGCN[p] : numCN(p));
+}
+
+function renderSegNav() {
+  var nav = document.getElementById("seg-nav");
+  if (!nav) return;
+  nav.innerHTML = "";
+  for (var s = 2; s <= 9; s++) {
+    (function (seg) {
+      var b = document.createElement("button");
+      b.className = "seg-btn" + (seg === state3.seg ? " active" : "");
+      b.textContent = seg + "的段";
+      b.addEventListener("click", function () {
+        stopSpeech();
+        resetAutoBtn();
+        state3.seg = seg;
+        renderSegNav();
+        renderCards();
+      });
+      nav.appendChild(b);
+    })(s);
+  }
+}
+
+function renderCards() {
+  var grid = document.getElementById("act3-grid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  state3.revealed = {};
+  var seg = state3.seg;
+  for (var i = 1; i <= 9; i++) {
+    (function (idx) {
+      var card = document.createElement("div");
+      card.className = "flip-card";
+      card.id = "act3-card-" + idx;
+      card.innerHTML =
+        '<div class="flip-inner">' +
+          '<div class="flip-face flip-front">' + seg + " × " + idx + '</div>' +
+          '<div class="flip-face flip-back"><span>' + (seg * idx) + "</span><small>" + kouJue(seg, idx) + "</small></div>" +
+        "</div>";
+      card.addEventListener("click", function () { flipCard(idx, true); });
+      grid.appendChild(card);
+    })(i);
+  }
+  var stepTxt = document.getElementById("act3-step");
+  if (stepTxt) stepTxt.textContent = String(seg);
+  renderDiffs();
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 每往後一張卡片，答案就會多 <b>" + seg + "</b>！";
+}
+
+function renderDiffs() {
+  var box = document.getElementById("act3-diffs");
+  if (!box) return;
+  box.innerHTML = "";
+  for (var i = 2; i <= 9; i++) {
+    var b = document.createElement("span");
+    b.className = "diff-bubble";
+    b.id = "act3-diff-" + i;
+    b.textContent = "+" + state3.seg;
+    box.appendChild(b);
+  }
+}
+
+function flipCard(idx, byUser) {
+  var card = document.getElementById("act3-card-" + idx);
+  if (!card || state3.revealed[idx]) return;
+  state3.revealed[idx] = true;
+  card.classList.add("revealed", "hot");
+  document.querySelectorAll("#act3-grid .flip-card.hot").forEach(function (c) {
+    if (c !== card) c.classList.remove("hot");
+  });
+  var diff = document.getElementById("act3-diff-" + idx);
+  if (diff) diff.classList.add("show");
+  var seg = state3.seg;
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    bubble.innerHTML = "🌟 " + seg + " × " + idx + " = <b>" + (seg * idx) + "</b>" +
+      (idx > 1 ? "，比上一個多 <b>+" + seg + "</b>！" : "！") +
+      "<br>口訣：<b>" + kouJue(seg, idx) + "</b>";
+  }
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  if (byUser) speakText(kouJue(seg, idx));
+}
+
+function resetAutoBtn() {
+  var btn = document.getElementById("btn-auto");
+  if (btn) { btn.disabled = false; btn.textContent = "▶️ 自動朗讀"; }
+}
+
+function autoRead() {
+  stopSpeech();
+  resetAutoBtn();
+  var btn = document.getElementById("btn-auto");
+  if (btn) { btn.disabled = true; btn.textContent = "⏸️ 朗讀中…"; }
+  var token = ++autoToken;
+  var i = 1;
+  function next() {
+    if (token !== autoToken) { resetAutoBtn(); return; }
+    if (i > 9) { resetAutoBtn(); return; }
+    flipCard(i, false);
+    speakText(kouJue(state3.seg, i), {
+      onEnd: function () {
+        if (token !== autoToken) { resetAutoBtn(); return; }
+        setTimeout(function () { if (token === autoToken) { i++; next(); } }, 250);
+      },
+      onError: function () {
+        if (token !== autoToken) { resetAutoBtn(); return; }
+        i++;
+        setTimeout(next, 400);
+      }
+    });
+  }
+  next();
+}
+
+/* ==================== Act 4：小小挑戰賽（九九乘法神算手） ==================== */
+var ACT4_FEEDBACK = [
+  { ok: "🎉 答對了！6 × 7 = 42，七六四十二！", ng: "💡 再想想：42 裡面有幾個 6 呢？" },
+  { ok: "🎉 答對了！8 × 7 = 56，七八五十六！", ng: "💡 再想想：七八幾十幾？往 7 的段想一想！" },
+  { ok: "🎉 答對了！4 × 9 = 36，四九三十六！", ng: "💡 再想想：36 裡面有幾個 9 呢？" }
+];
+
+function resetAct4() {
+  document.querySelectorAll("#act-4-view .choice-btn").forEach(function (b) {
+    b.classList.remove("correct", "wrong");
+    b.disabled = false;
+  });
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 三題全答對，就是九九乘法神算手！";
+}
+
+function answer(btn, qIdx, _unused) {
+  var ok = btn.getAttribute("data-ok") === "1";
+  var row = btn.parentNode;
+  row.querySelectorAll(".choice-btn").forEach(function (b) { b.disabled = true; });
+  btn.classList.add(ok ? "correct" : "wrong");
+  if (!ok) {
+    row.querySelectorAll(".choice-btn").forEach(function (b) {
+      if (b !== btn) b.disabled = false;
+    });
+  }
+  var bubble = document.getElementById("act4-bubble");
+  var fb = ACT4_FEEDBACK[qIdx];
+  if (ok) {
+    act4correct[qIdx] = true;
+    if (bubble) bubble.innerHTML = fb.ok;
+    speakText(fb.ok.replace(/[!！]/g, " "));
+  } else {
+    if (bubble) bubble.innerHTML = fb.ng;
+    speakText("再想想看");
+    return;
+  }
+  if (act4correct[0] && act4correct[1] && act4correct[2]) {
+    if (bubble) bubble.innerHTML = "🏆 三題全對！你就是<b>九九乘法神算手</b>！";
+    if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+    speakText("三題全對, 你就是九九乘法神算手!");
+  }
+}
+
+/* ==================== 初始化 ==================== */
+renderAct1();
+buildBoard();
+renderSegNav();
+renderCards();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState,
+  getCurrentAct: function () { return currentAct; },
+  getArray: function () { return { rows: state1.rows, cols: state1.cols }; }
+};
+</script>
+</body>
+</html>
