@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-4 簡單加減估算 · 概念探索實驗室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 1 數線磁吸 */
+#act1-svg { touch-action: none; }
+#nline-pointer { cursor: grab; }
+#nline-pointer:active { cursor: grabbing; }
+.magnet { transition: all 0.25s; }
+.magnet.hot { fill: var(--lemon); stroke: var(--coral-deep); }
+.num-btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.num-btn {
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.num-btn:active { transform: scale(0.94); }
+
+/* Act 2 超市貨架 */
+.shop-item { cursor: pointer; }
+.shop-item .sel-ring, .shop-item .pick-mark { opacity: 0; transition: opacity 0.2s; }
+.shop-item.picked .sel-ring, .shop-item.picked .pick-mark { opacity: 1; }
+.cart-summary {
+  background: #f2fbf7;
+  border: 1px solid #cfe9df;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--mint-deep);
+  font-weight: 700;
+}
+.btn-check {
+  width: 100%;
+  background: var(--mint);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13.5px;
+  padding: 10px;
+  border-radius: 12px;
+}
+.btn-check:active { transform: scale(0.97); }
+.light-result {
+  border-radius: 12px;
+  padding: 9px 10px;
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+.light-result.ok { background: #e7f5f0; color: var(--mint-deep); border: 1.5px solid var(--mint); }
+.light-result.no { background: #fff0eb; color: var(--coral-deep); border: 1.5px solid var(--coral); }
+
+/* Act 3 策略秘笈 */
+.strat-row { display: flex; gap: 8px; }
+.strat-tab {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+.strat-tab.active { border-color: var(--mint); color: var(--mint-deep); background: #e7f5f0; }
+.strat-expr { font-size: 13.5px; font-weight: 800; line-height: 1.6; }
+.strat-expr b { color: var(--mint-deep); }
+#strat-svg rect { transition: width 0.5s ease; }
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.quiz-next {
+  align-self: center;
+  background: var(--lemon);
+  color: #7a5c1e;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--lemon-deep);
+}
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      簡單加減估算實驗室
+      <small>二年級 · G2-N-2-4 四幕概念小教室</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（數線磁吸儀 / 最接近幾十） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('看個位數, 離哪一個整十比較近, 指針就會被磁鐵吸過去')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 數線磁吸儀</div>
+      <div class="card-desc">把指針放到數線上，離哪個「整十」比較近，就被哪個磁鐵吸過去！按按鈕或拖拖看。</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="0 到 100 的數線磁吸儀">
+          <line x1="24" y1="150" x2="334" y2="150" stroke="#b9ac93" stroke-width="3" stroke-linecap="round"></line>
+          <polygon points="334,144 348,150 334,156" fill="#b9ac93"></polygon>
+          <polygon points="24,144 10,150 24,156" fill="#b9ac93"></polygon>
+          <g id="nline-ticks"></g>
+          <g id="nline-magnets"></g>
+          <g id="nline-pointer" transform="translate(141.8,150)">
+            <polygon points="-11,-36 11,-36 0,-2" fill="#ff8a65" stroke="#f4694b" stroke-width="2"></polygon>
+            <text id="nline-val" y="-44" text-anchor="middle" font-size="15" font-weight="800" fill="#f4694b" style="paint-order:stroke" stroke="#ffffff" stroke-width="4">38</text>
+          </g>
+        </svg>
+      </div>
+      <div class="num-btn-row">
+        <button class="num-btn" onclick="presetValue(38)">38</button>
+        <button class="num-btn" onclick="presetValue(62)">62</button>
+        <button class="num-btn" onclick="presetValue(75)">75</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 按按鈕或直接拖指針，看看它被哪個整十吸走！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（超市購物估算器 / 帶錢夠不夠） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('點商品放進購物車, 先把每樣東西估成整十, 再算大約多少錢')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 超市購物估算器</div>
+      <div class="card-desc">點貨架上的商品放進購物車，先用「估算眼睛」快速算，再考驗口袋的 100 元！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 185" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="超市貨架：麵包 38 元、鮮奶 41 元、蘋果 19 元、餅乾 62 元">
+          <!-- 貨架板 -->
+          <rect x="16" y="142" width="326" height="9" rx="4.5" fill="#d9c9a8"></rect>
+          <!-- 麵包 38 -->
+          <g class="shop-item" data-idx="0" transform="translate(50,0)">
+            <circle class="sel-ring" cx="0" cy="112" r="40" fill="none" stroke="#d9910d" stroke-width="2.5" stroke-dasharray="6 5"></circle>
+            <ellipse cx="0" cy="118" rx="30" ry="20" fill="#f4b04a" stroke="#d98f2b" stroke-width="2"></ellipse>
+            <path d="M -14,112 q 7,-6 14,0" fill="none" stroke="#d98f2b" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M 2,112 q 7,-6 14,0" fill="none" stroke="#d98f2b" stroke-width="2" stroke-linecap="round"></path>
+            <text class="pick-mark" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#318a70">✔</text>
+            <rect x="-26" y="156" width="52" height="21" rx="10.5" fill="#ffffff" stroke="#f0e7da" stroke-width="1.5"></rect>
+            <text y="171" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">38 元</text>
+          </g>
+          <!-- 鮮奶 41 -->
+          <g class="shop-item" data-idx="1" transform="translate(136,0)">
+            <circle class="sel-ring" cx="0" cy="112" r="40" fill="none" stroke="#d9910d" stroke-width="2.5" stroke-dasharray="6 5"></circle>
+            <polygon points="-19,88 0,70 19,88" fill="#7db8e8"></polygon>
+            <rect x="-19" y="86" width="38" height="52" rx="4" fill="#ffffff" stroke="#7db8e8" stroke-width="2"></rect>
+            <text y="116" text-anchor="middle" font-size="11" font-weight="800" fill="#4a7fb5">鮮奶</text>
+            <text class="pick-mark" y="58" text-anchor="middle" font-size="16" font-weight="800" fill="#318a70">✔</text>
+            <rect x="-26" y="156" width="52" height="21" rx="10.5" fill="#ffffff" stroke="#f0e7da" stroke-width="1.5"></rect>
+            <text y="171" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">41 元</text>
+          </g>
+          <!-- 蘋果 19 -->
+          <g class="shop-item" data-idx="2" transform="translate(222,0)">
+            <circle class="sel-ring" cx="0" cy="112" r="40" fill="none" stroke="#d9910d" stroke-width="2.5" stroke-dasharray="6 5"></circle>
+            <path d="M 0,100 q 2,-10 7,-13" fill="none" stroke="#8a5a2a" stroke-width="2.5" stroke-linecap="round"></path>
+            <ellipse cx="10" cy="92" rx="7" ry="4" fill="#7bc9b2" transform="rotate(-30 10 92)"></ellipse>
+            <circle cx="0" cy="118" r="22" fill="#ff8a65" stroke="#f4694b" stroke-width="2"></circle>
+            <circle cx="-7" cy="111" r="4" fill="#ffd0c2"></circle>
+            <text class="pick-mark" y="58" text-anchor="middle" font-size="16" font-weight="800" fill="#318a70">✔</text>
+            <rect x="-26" y="156" width="52" height="21" rx="10.5" fill="#ffffff" stroke="#f0e7da" stroke-width="1.5"></rect>
+            <text y="171" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">19 元</text>
+          </g>
+          <!-- 餅乾 62 -->
+          <g class="shop-item" data-idx="3" transform="translate(308,0)">
+            <circle class="sel-ring" cx="0" cy="112" r="40" fill="none" stroke="#d9910d" stroke-width="2.5" stroke-dasharray="6 5"></circle>
+            <circle cx="0" cy="118" r="22" fill="#e8b04c" stroke="#c98f2e" stroke-width="2"></circle>
+            <circle cx="-7" cy="112" r="3" fill="#8a5a2a"></circle>
+            <circle cx="7" cy="117" r="3" fill="#8a5a2a"></circle>
+            <circle cx="-1" cy="126" r="3" fill="#8a5a2a"></circle>
+            <text class="pick-mark" y="58" text-anchor="middle" font-size="16" font-weight="800" fill="#318a70">✔</text>
+            <rect x="-26" y="156" width="52" height="21" rx="10.5" fill="#ffffff" stroke="#f0e7da" stroke-width="1.5"></rect>
+            <text y="171" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">62 元</text>
+          </g>
+        </svg>
+      </div>
+      <div class="cart-summary" id="cart-summary">🛒 購物車是空的，點貨架上的商品加入！</div>
+      <button class="btn-check" id="btn-check" onclick="checkBudget()">💰 口袋有 100 元，夠不夠付？</button>
+      <div class="light-result" id="act2-light" hidden></div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（加法與減法估算策略秘笈） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakCurrentStrategy()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 估算策略秘笈</div>
+      <div class="strat-row">
+        <button class="strat-tab active" id="strat-tab-add" onclick="showStrategy('add')">➕ 加法估算</button>
+        <button class="strat-tab" id="strat-tab-sub" onclick="showStrategy('sub')">➖ 減法估算</button>
+      </div>
+      <div class="strat-expr" id="strat-expr"></div>
+      <div class="stage">
+        <svg id="strat-svg" viewBox="0 0 358 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="精確值與估算值比較條形圖">
+          <text x="52" y="31" text-anchor="end" font-size="12" font-weight="800" fill="#8a857b">精確</text>
+          <text x="52" y="69" text-anchor="end" font-size="12" font-weight="800" fill="#8a857b">估算</text>
+          <rect id="bar-exact" x="60" y="16" width="0" height="22" rx="11" fill="#7bc9b2"></rect>
+          <rect id="bar-est" x="60" y="54" width="0" height="22" rx="11" fill="#ffd166"></rect>
+          <text id="val-exact" x="70" y="31" font-size="12" font-weight="800" fill="#318a70"></text>
+          <text id="val-est" x="70" y="69" font-size="12" font-weight="800" fill="#d9910d"></text>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 兩張秘笈都點開看看，規律就會現身！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（生活估算大師考驗） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakQuizDesc()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 生活估算大師</div>
+      <div class="card-desc" id="quiz-desc"></div>
+      <div class="choice-row" id="quiz-choices"></div>
+      <button class="quiz-next" id="btn-quiz-next" hidden onclick="nextQuiz()">下一題 ▶</button>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級簡單加減估算小教室。現在進行第 " + currentAct + " 幕。用數線磁鐵和超市購物, 一起練成估算大師！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：數線磁吸儀（真實 pointer 拖曳 + 磁吸貼齊） ==================== */
+var LINE_X0 = 24, LINE_STEP = 3.1; /* x = 24 + 值 * 3.1，值 0~100 */
+var pointerVal = 38, isPointerDragging = false, dragStart = null;
+var POINTER_GROUP = null;
+
+function valueToX(val) { return LINE_X0 + val * LINE_STEP; }
+
+function applyPointer(animate) {
+  if (!POINTER_GROUP) return;
+  POINTER_GROUP.style.transition = animate ? "transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)" : "none";
+  POINTER_GROUP.setAttribute("transform", "translate(" + valueToX(pointerVal) + ",150)");
+}
+
+function nearestTenOf(val) {
+  if (val % 10 === 0) return val;
+  var low = Math.floor(val / 10) * 10;
+  var high = low + 10;
+  return (high - val <= val - low) ? high : low; /* 距離相同時四捨五入進位 */
+}
+
+function updateNearest(speak) {
+  var valText = document.getElementById("nline-val");
+  if (valText) valText.textContent = pointerVal;
+  var near = nearestTenOf(pointerVal);
+  var magnets = document.querySelectorAll("#nline-magnets .magnet");
+  magnets.forEach(function (m) {
+    m.classList.toggle("hot", Number(m.getAttribute("data-t")) === near);
+  });
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) {
+    if (pointerVal % 10 === 0) {
+      bubble.innerHTML = "💡 <b>" + pointerVal + "</b> 剛好站在整十上，大約就是 <b>" + pointerVal + "</b>！";
+    } else {
+      var low = Math.floor(pointerVal / 10) * 10, high = low + 10;
+      bubble.innerHTML = "💡 <b>" + pointerVal + "</b> 離 " + low + " 差 " + (pointerVal - low) +
+        "，離 " + high + " 差 " + (high - pointerVal) +
+        " → 離 <b>" + near + "</b> 比較近，大約是 <b>" + near + "</b>！";
+    }
+  }
+  if (speak) {
+    speakText("看個位數, 離哪一個整十比較近, " + pointerVal + "離" + near + "比較近, 大約是" + near);
+  }
+}
+
+function completeAct1() {
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+}
+
+function presetValue(v) {
+  pointerVal = Math.max(0, Math.min(100, v));
+  applyPointer(true);
+  updateNearest(true);
+  completeAct1();
+}
+
+function buildAct1() {
+  var gTicks = document.getElementById("nline-ticks");
+  var gMag = document.getElementById("nline-magnets");
+  if (!gTicks || !gMag) return;
+  var NS = "http://www.w3.org/2000/svg";
+  for (var t = 0; t <= 100; t += 10) {
+    var x = valueToX(t);
+    var tick = document.createElementNS(NS, "line");
+    tick.setAttribute("x1", x); tick.setAttribute("y1", 150);
+    tick.setAttribute("x2", x); tick.setAttribute("y2", 161);
+    tick.setAttribute("stroke", "#b9ac93");
+    tick.setAttribute("stroke-width", "2");
+    gTicks.appendChild(tick);
+    var label = document.createElementNS(NS, "text");
+    label.setAttribute("x", x); label.setAttribute("y", 178);
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("font-size", "10.5");
+    label.setAttribute("font-weight", "700");
+    label.setAttribute("fill", "#8a857b");
+    label.textContent = t;
+    gTicks.appendChild(label);
+    var mag = document.createElementNS(NS, "circle");
+    mag.setAttribute("cx", x); mag.setAttribute("cy", 150);
+    mag.setAttribute("r", "7");
+    mag.setAttribute("fill", "#ffffff");
+    mag.setAttribute("stroke", "#d8cdbb");
+    mag.setAttribute("stroke-width", "2");
+    mag.setAttribute("class", "magnet");
+    mag.setAttribute("data-t", t);
+    gMag.appendChild(mag);
+  }
+  POINTER_GROUP = document.getElementById("nline-pointer");
+  applyPointer(false);
+  updateNearest(false);
+}
+
+function initAct1Drag() {
+  var svg = document.getElementById("act1-svg");
+  if (!POINTER_GROUP || !svg) return;
+  POINTER_GROUP.addEventListener("pointerdown", function (e) {
+    isPointerDragging = true;
+    dragStart = { x: e.clientX, ov: pointerVal };
+    try { POINTER_GROUP.setPointerCapture(e.pointerId); } catch (err) { /* 忽略 */ }
+    e.preventDefault();
+  });
+  POINTER_GROUP.addEventListener("pointermove", function (e) {
+    if (!isPointerDragging) return;
+    var scale = 358 / svg.getBoundingClientRect().width;
+    var nv = dragStart.ov + (e.clientX - dragStart.x) * scale / LINE_STEP;
+    pointerVal = Math.round(Math.max(0, Math.min(100, nv)));
+    applyPointer(false);
+    updateNearest(false);
+    e.preventDefault();
+  });
+  POINTER_GROUP.addEventListener("pointerup", function (e) {
+    if (!isPointerDragging) return;
+    isPointerDragging = false;
+    pointerVal = nearestTenOf(pointerVal); /* 磁吸貼齊最近整十 */
+    applyPointer(true);
+    updateNearest(true);
+    completeAct1();
+    e.preventDefault();
+  });
+  POINTER_GROUP.addEventListener("pointercancel", function () { isPointerDragging = false; });
+}
+
+function resetAct1() {
+  pointerVal = 38;
+  isPointerDragging = false;
+  applyPointer(false);
+  updateNearest(false);
+}
+
+/* ==================== Act 2：超市購物估算器（帶錢夠不夠） ==================== */
+var SHOP_ITEMS = [
+  { name: "麵包", price: 38, est: 40 },
+  { name: "鮮奶", price: 41, est: 40 },
+  { name: "蘋果", price: 19, est: 20 },
+  { name: "餅乾", price: 62, est: 60 }
+];
+var cartFlags = [false, false, false, false];
+
+function initShop() {
+  document.querySelectorAll("#act2-svg .shop-item").forEach(function (g) {
+    g.addEventListener("click", function () { toggleItem(g); });
+  });
+}
+
+function toggleItem(g) {
+  var idx = Number(g.getAttribute("data-idx"));
+  cartFlags[idx] = !cartFlags[idx];
+  g.classList.toggle("picked", cartFlags[idx]);
+  renderCart();
+}
+
+function selectedItems() {
+  return SHOP_ITEMS.filter(function (_it, i) { return cartFlags[i]; });
+}
+
+function renderCart() {
+  var el = document.getElementById("cart-summary");
+  if (!el) return;
+  var sel = selectedItems();
+  var light = document.getElementById("act2-light");
+  if (light) light.hidden = true;
+  if (sel.length === 0) {
+    el.innerHTML = "🛒 購物車是空的，點貨架上的商品加入！";
+    return;
+  }
+  var exact = 0, est = 0;
+  sel.forEach(function (it) { exact += it.price; est += it.est; });
+  el.innerHTML = "🛒 已選：" + sel.map(function (it) { return it.name + " " + it.price + " 元"; }).join("、") +
+    "<br>精確合計 <b>" + exact + " 元</b> · 快速估算 <b>" + est + " 元</b>（" +
+    sel.map(function (it) { return it.est; }).join(" + ") + "）";
+}
+
+function checkBudget() {
+  var sel = selectedItems();
+  var light = document.getElementById("act2-light");
+  if (!light) return;
+  if (sel.length === 0) {
+    light.hidden = false;
+    light.className = "light-result no";
+    light.innerHTML = "🛒 先點貨架上的商品，放進購物車再結帳！";
+    speakText("先點貨架上的商品, 放進購物車再結帳");
+    return;
+  }
+  var exact = 0, est = 0;
+  sel.forEach(function (it) { exact += it.price; est += it.est; });
+  var ok = est <= 100;
+  light.hidden = false;
+  light.className = "light-result " + (ok ? "ok" : "no");
+  if (est === 100) {
+    light.innerHTML = "🟢 <b>剛好夠付！</b>估算 100 元 = 口袋 100 元（精確 " + exact + " 元更省）";
+  } else if (ok) {
+    light.innerHTML = "🟢 <b>一定夠付！</b>估算 " + est + " 元 &lt; 100 元（精確 " + exact + " 元也夠）";
+  } else {
+    light.innerHTML = "🔴 <b>可能不夠！</b>估算 " + est + " 元 &gt; 100 元，帶多一點才安全。";
+  }
+  var speech = sel.map(function (it) { return it.name + "約" + it.est; }).join(", ") +
+    ", 合計大約" + est + "元, " +
+    (est < 100 ? "沒有超過100元, 一定夠付" : (est === 100 ? "剛好100元, 剛好夠付" : "超過100元, 可能不夠, 要帶多一點"));
+  speakText(speech);
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+}
+
+function resetAct2() {
+  cartFlags = [false, false, false, false];
+  document.querySelectorAll("#act2-svg .shop-item").forEach(function (g) {
+    g.classList.remove("picked");
+  });
+  renderCart();
+}
+
+/* ==================== Act 3：估算策略秘笈（加法估大 / 減法找整十） ==================== */
+var STRATEGIES = {
+  add: {
+    expr: "29 + 48 = 77 元 → 先估成 <b>30 + 50 = 80 元</b>",
+    tip: "💡 買東西帶錢，要<b>估大一點</b>才安全！",
+    exact: 77, est: 80,
+    speech: "加法估算, 買東西帶錢要估大一點才安全, 29 加 48 等於 77, 先估成 30 加 50, 大約 80 元"
+  },
+  sub: {
+    expr: "89 − 31 = 58 元 → 先估成 <b>90 − 30 = 60 元</b>",
+    tip: "💡 算還剩多少，找<b>最接近的整十</b>來估！",
+    exact: 58, est: 60,
+    speech: "減法估算, 找最接近的整十, 89 減 31 等於 58, 先估成 90 減 30, 大約 60 元"
+  }
+};
+var currentStrategy = "add";
+var seenStrategies = { add: false, sub: false };
+
+function showStrategy(mode, silent) {
+  var data = STRATEGIES[mode];
+  if (!data) return;
+  currentStrategy = mode;
+  var exprEl = document.getElementById("strat-expr");
+  if (exprEl) exprEl.innerHTML = data.expr;
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = data.tip;
+  var tabAdd = document.getElementById("strat-tab-add");
+  var tabSub = document.getElementById("strat-tab-sub");
+  if (tabAdd) tabAdd.classList.toggle("active", mode === "add");
+  if (tabSub) tabSub.classList.toggle("active", mode === "sub");
+  /* 條形圖：寬度 = 值 * 2.5（100 → 250px，358 viewBox 內安全） */
+  var barExact = document.getElementById("bar-exact");
+  var barEst = document.getElementById("bar-est");
+  var valExact = document.getElementById("val-exact");
+  var valEst = document.getElementById("val-est");
+  if (barExact) barExact.setAttribute("width", data.exact * 2.5);
+  if (barEst) barEst.setAttribute("width", data.est * 2.5);
+  if (valExact) {
+    valExact.setAttribute("x", 60 + data.exact * 2.5 + 8);
+    valExact.textContent = data.exact + " 元";
+  }
+  if (valEst) {
+    valEst.setAttribute("x", 60 + data.est * 2.5 + 8);
+    valEst.textContent = data.est + " 元";
+  }
+  if (!silent) {
+    speakText(data.speech);
+    seenStrategies[mode] = true;
+    if (seenStrategies.add && seenStrategies.sub && !verifyState.act3) {
+      verifyState.act3 = true;
+      refreshStatusBar();
+    }
+  }
+}
+
+function speakCurrentStrategy() {
+  speakText(STRATEGIES[currentStrategy].speech);
+}
+
+function resetAct3() {
+  seenStrategies = { add: false, sub: false };
+  showStrategy("add", true);
+}
+
+/* ==================== Act 4：小小挑戰賽（生活估算大師考驗） ==================== */
+var QUIZ = [
+  {
+    text: "小明有 89 元，買文具花了 38 元，<b>大約還剩幾十元</b>？",
+    opts: ["40 元", "50 元", "60 元"], ok: 1,
+    hint: "💡 先估算：89 約 90、38 約 40，那 90 − 40 是幾十呢？",
+    win: "🎉 答對了！89 約 90、38 約 40，<b>90 − 40 = 50</b>，大約還剩 50 元！",
+    hintSpeech: "再想想看, 89 約 90, 38 約 40, 90 減 40 是幾十元呢",
+    winSpeech: "答對了! 89 約 90, 38 約 40, 90 減 40 等於 50, 大約還剩 50 元"
+  },
+  {
+    text: "帶 150 元，想買 68 元和 71 元的兩個玩具，<b>夠不夠</b>？",
+    opts: ["一定夠", "一定不夠", "剛剛好"], ok: 0,
+    hint: "💡 先估算：68 約 70、71 約 70，兩個 70 加起來是多少？",
+    win: "🎉 答對了！68 約 70、71 約 70，<b>70 + 70 = 140</b>，140 小於 150，一定夠！",
+    hintSpeech: "先估算, 68 約 70, 71 約 70, 兩個 70 加起來是多少呢",
+    winSpeech: "答對了! 68 約 70, 71 約 70, 70 加 70 等於 140, 小於 150, 一定夠"
+  },
+  {
+    text: "一盒餅乾 42 元，買 2 盒，<b>大約要幾十元</b>？",
+    opts: ["60 元", "80 元", "90 元"], ok: 1,
+    hint: "💡 42 約 40，一盒約 40 元，兩盒就是兩個 40 喔！",
+    win: "🎉 答對了！42 約 40，<b>40 × 2 = 80</b>，大約要 80 元！",
+    hintSpeech: "42 約 40, 一盒約 40, 兩盒就是兩個 40 喔",
+    winSpeech: "答對了! 42 約 40, 40 乘 2 等於 80, 大約要 80 元"
+  }
+];
+var quiz = { idx: 0, answered: false };
+
+function speakQuizDesc() {
+  var q = QUIZ[quiz.idx];
+  if (q) speakText("第 " + (quiz.idx + 1) + " 題, " + q.text.replace(/<b>|<\/b>/g, ""));
+}
+
+function renderQuiz() {
+  var q = QUIZ[quiz.idx];
+  if (!q) return;
+  quiz.answered = false;
+  var desc = document.getElementById("quiz-desc");
+  if (desc) desc.innerHTML = "第 " + (quiz.idx + 1) + " / 3 題 · " + q.text;
+  var box = document.getElementById("quiz-choices");
+  if (!box) return;
+  box.innerHTML = "";
+  q.opts.forEach(function (opt, i) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.setAttribute("data-ok", i === q.ok ? "1" : "0");
+    b.addEventListener("click", function () { answerQuiz(b); });
+    box.appendChild(b);
+  });
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+  var nextBtn = document.getElementById("btn-quiz-next");
+  if (nextBtn) nextBtn.hidden = true;
+}
+
+function answerQuiz(btn) {
+  var q = QUIZ[quiz.idx];
+  if (!q || quiz.answered) return;
+  var bubble = document.getElementById("act4-bubble");
+  if (btn.getAttribute("data-ok") === "1") {
+    quiz.answered = true;
+    btn.classList.add("correct");
+    if (bubble) bubble.innerHTML = q.win;
+    speakText(q.winSpeech);
+    var nextBtn = document.getElementById("btn-quiz-next");
+    if (nextBtn) {
+      nextBtn.textContent = quiz.idx < QUIZ.length - 1 ? "下一題 ▶" : "🏁 看成績";
+      nextBtn.hidden = false;
+    }
+    if (quiz.idx === QUIZ.length - 1 && !verifyState.act4) {
+      verifyState.act4 = true;
+      refreshStatusBar();
+    }
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText(q.hintSpeech);
+  }
+}
+
+function nextQuiz() {
+  var nextBtn = document.getElementById("btn-quiz-next");
+  if (quiz.idx < QUIZ.length - 1) {
+    quiz.idx++;
+    renderQuiz();
+  } else {
+    if (nextBtn) nextBtn.hidden = true;
+    var bubble = document.getElementById("act4-bubble");
+    if (bubble) bubble.innerHTML = "🏆 3 題全攻略！你就是生活估算大師！";
+    speakText("3 題全攻略, 你就是生活估算大師");
+  }
+}
+
+function resetAct4() {
+  quiz.idx = 0;
+  quiz.answered = false;
+  renderQuiz();
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1();
+initAct1Drag();
+initShop();
+renderCart();
+showStrategy("add", true);
+renderQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

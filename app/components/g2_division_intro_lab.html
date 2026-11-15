@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-9 分裝與平分 · 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800;
+  padding: 2px 8px; border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3;
+  overflow: hidden; max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 飛行動畫（糖果 / 蘋果） */
+.flyer { transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.3, 1), opacity 0.25s ease 0.35s; will-change: transform; }
+
+/* 動作按鈕 */
+.action-btn {
+  align-self: center; min-width: 160px;
+  background: linear-gradient(135deg, var(--mint), var(--mint-deep));
+  color: #fff; font-size: 14px; font-weight: 800; letter-spacing: 1px;
+  padding: 10px 22px; border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  transition: transform 0.15s, opacity 0.2s;
+}
+.action-btn:active { transform: scale(0.95); }
+.action-btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+
+/* 連減算式帶 */
+.eq-strip {
+  display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
+  font-size: 12px; font-weight: 800; color: var(--ink-soft);
+}
+.eq-chip {
+  background: #f4ede0; border-radius: 8px; padding: 3px 8px; color: var(--ink);
+}
+.eq-chip.latest { background: #e7f5f0; color: var(--mint-deep); }
+
+/* 總結面板 */
+.summary-panel {
+  background: #e7f5f0; border: 2px solid var(--mint); border-radius: 12px;
+  padding: 9px 12px; font-size: 12.5px; line-height: 1.55; font-weight: 700;
+  color: var(--mint-deep); text-align: center;
+}
+.summary-panel.hidden { display: none; }
+
+/* Act 3 雙面對照鏡 */
+.vs-row { display: flex; gap: 8px; align-items: stretch; }
+.vs-card {
+  flex: 1 1 0; min-width: 0; text-align: center; display: flex; flex-direction: column; gap: 5px;
+  background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px; padding: 8px 6px;
+  transition: all 0.2s;
+}
+.vs-card.active { border-color: var(--mint); background: #eefaf5; box-shadow: 0 3px 10px rgba(49,138,112,0.15); }
+.vs-card h4 { font-size: 13px; font-weight: 800; }
+.vs-card p { font-size: 11px; line-height: 1.45; color: #5c5648; }
+.vs-card .mini-svg { width: 100%; height: auto; border-radius: 8px; background: #fff; }
+
+/* Act 4 挑戰 */
+.quiz-progress { font-size: 11px; font-weight: 800; color: var(--ink-soft); }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      分裝與平分小教室
+      <small>二年級 · N-2-9 除法前置體驗</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 分裝機</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 平分秤</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 對照鏡</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（糖果物理分裝機 / 包含除連減體驗） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('12 顆糖果, 每 3 顆裝進一袋, 可以裝滿幾袋? 我們一起裝裝看!')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 糖果分裝機</div>
+      <div class="card-desc">12 顆糖果排排站，<b>每 3 顆裝一袋</b>。按「裝一袋」，看看糖果怎麼飛進袋子裡！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="12 顆糖果分裝機，每 3 顆裝一袋">
+          <text x="179" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">🍬 糖果池（還剩幾顆？）</text>
+          <g id="act1-pool"></g>
+          <g id="act1-bags"></g>
+        </svg>
+      </div>
+      <div class="eq-strip" id="act1-eq"><span class="eq-chip">12 顆糖果待分裝</span></div>
+      <button class="action-btn" id="btn-pack" onclick="packOneBag()">🛍️ 裝一袋</button>
+      <div class="summary-panel hidden" id="act1-summary"></div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（一人分一顆 / 等分除公平秤） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('12 顆蘋果, 要平分給 3 個盤子, 我們輪流一人分一顆, 公平又好玩!')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 輪流分一顆</div>
+      <div class="card-desc">12 顆紅蘋果，平分給 3 個盤子。按「輪流分一顆」，一輪每盤各得 1 顆！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="12 顆蘋果輪流平分給 3 個盤子">
+          <text x="179" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">🍎 蘋果籃</text>
+          <g id="act2-pool"></g>
+          <g id="act2-plates"></g>
+        </svg>
+      </div>
+      <div class="eq-strip" id="act2-eq"><span class="eq-chip">第 0 輪 · 每盤 0 顆</span></div>
+      <button class="action-btn" id="btn-share" onclick="shareOneRound()">🔁 輪流分一顆</button>
+      <div class="summary-panel hidden" id="act2-summary"></div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（分裝 vs 平分 雙面對照鏡） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('分裝是知道每袋有幾個, 問可以裝幾袋; 平分是知道有幾個人, 問每人分到幾個!')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 雙面對照鏡</div>
+      <div class="card-desc">點一點下面的卡片，比一比「分裝」和「平分」哪裡不一樣！</div>
+      <div class="vs-row">
+        <button class="vs-card" id="vs-pack" onclick="pickSide('pack')">
+          <h4>📦 分裝（包含除）</h4>
+          <svg class="mini-svg" viewBox="0 0 150 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g id="vs-pack-dots"></g>
+          </svg>
+          <p>知道「<b>每袋有幾個</b>」<br>問「可以裝<b>幾袋</b>？」</p>
+        </button>
+        <button class="vs-card" id="vs-share" onclick="pickSide('share')">
+          <h4>🍽️ 平分（等分除）</h4>
+          <svg class="mini-svg" viewBox="0 0 150 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g id="vs-share-dots"></g>
+          </svg>
+          <p>知道「<b>有幾個人要分</b>」<br>問「<b>每人</b>分到幾個？」</p>
+        </button>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 都是 12 顆，分法不同，問的問題也不同！點卡片聽聽看。</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（公平分糖大師） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <span class="quiz-progress" id="quiz-progress">第 1 / 3 題</span>
+      </div>
+      <div class="card-title">小小挑戰賽 · 公平分糖大師</div>
+      <div class="card-desc" id="quiz-question"></div>
+      <div class="choice-row" id="quiz-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級分裝與平分小教室。現在進行第 " + currentAct + " 幕。分裝是每幾個裝一袋, 平分是輪流一人一顆, 跟著四個關卡一起探索!");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+/* ==================== SVG 造型工廠 ==================== */
+var SVG_NS = "http://www.w3.org/2000/svg";
+var CANDY_COLORS = ["#7bc9b2", "#ffd166", "#ff8a65", "#7db8e8"];
+
+function el(name, attrs, parent) {
+  var node = document.createElementNS(SVG_NS, name);
+  for (var k in attrs) node.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(node);
+  return node;
+}
+/* 可愛糖果：圓糖 + 扭結包裝紙 */
+function makeCandy(parent, color) {
+  var g = el("g", { "class": "flyer" }, parent);
+  el("path", { d: "M -15 -3 L -19 -7 L -19 7 L -15 3 Z", fill: color, stroke: "rgba(0,0,0,0.08)", "stroke-width": 1 }, g);
+  el("path", { d: "M 15 -3 L 19 -7 L 19 7 L 15 3 Z", fill: color, stroke: "rgba(0,0,0,0.08)", "stroke-width": 1 }, g);
+  el("circle", { r: 11, fill: color, stroke: "#ffffff", "stroke-width": 2.5 }, g);
+  el("circle", { cx: -4, cy: -4, r: 3.5, fill: "rgba(255,255,255,0.75)" }, g);
+  return g;
+}
+/* 可愛蘋果：紅蘋果 + 葉片 */
+function makeApple(parent) {
+  var g = el("g", { "class": "flyer" }, parent);
+  el("path", { d: "M 0 -10 Q -2 -17 3 -19", stroke: "#7a5230", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }, g);
+  el("path", { d: "M 3 -16 Q 11 -19 12 -12 Q 5 -10 3 -16 Z", fill: "#6fcf7c" }, g);
+  el("circle", { r: 11, fill: "#ff6b6b", stroke: "#e14b4b", "stroke-width": 2 }, g);
+  el("circle", { cx: -4, cy: -4, r: 3.5, fill: "rgba(255,255,255,0.7)" }, g);
+  return g;
+}
+/* 池子格位座標：6 欄 x 2 列 */
+function poolPos(i) {
+  return { x: 34 + (i % 6) * 58, y: 48 + Math.floor(i / 6) * 52 };
+}
+function place(g, x, y) {
+  g.style.transform = "translate(" + x + "px, " + y + "px)";
+}
+
+/* ==================== Act 1：糖果物理分裝機（包含除連減） ==================== */
+var a1 = { remaining: 12, bags: 0, busy: false, steps: [] };
+var BAG_X = [52, 136, 220, 304];
+
+function buildAct1() {
+  var pool = document.getElementById("act1-pool");
+  var bags = document.getElementById("act1-bags");
+  if (!pool || !bags) return;
+  pool.innerHTML = ""; bags.innerHTML = "";
+  a1 = { remaining: 12, bags: 0, busy: false, steps: [] };
+  for (var i = 0; i < 12; i++) {
+    var p = poolPos(i);
+    var c = makeCandy(pool, CANDY_COLORS[i % 4]);
+    place(c, p.x, p.y);
+  }
+  for (var b = 0; b < 4; b++) {
+    var g = el("g", { transform: "translate(" + BAG_X[b] + ",196)" }, bags);
+    g.id = "act1-bag-" + b;
+    el("path", { d: "M -14 -36 Q 0 -48 14 -36 L 10 -24 L -10 -24 Z", fill: "#f3e3c3", stroke: "#d9910d", "stroke-width": 2 }, g);
+    el("rect", { x: -28, y: -24, width: 56, height: 52, rx: 12, fill: "#fffdf6", stroke: "#e0d2b8", "stroke-width": 2.5, "stroke-dasharray": "6 4" }, g);
+    el("text", { y: 44, "text-anchor": "middle", "font-size": 11, "font-weight": 800, fill: "#8a857b" }, g).textContent = "? 袋";
+  }
+  var eq = document.getElementById("act1-eq");
+  if (eq) eq.innerHTML = '<span class="eq-chip">12 顆糖果待分裝</span>';
+  var summary = document.getElementById("act1-summary");
+  if (summary) { summary.classList.add("hidden"); summary.innerHTML = ""; }
+  var btn = document.getElementById("btn-pack");
+  if (btn) { btn.disabled = false; btn.textContent = "🛍️ 裝一袋"; }
+}
+
+function packOneBag() {
+  if (a1.busy || a1.bags >= 4 || a1.remaining <= 0) return;
+  a1.busy = true;
+  var btn = document.getElementById("btn-pack");
+  if (btn) btn.disabled = true;
+
+  var pool = document.getElementById("act1-pool");
+  var poolCandies = pool ? pool.querySelectorAll(".flyer") : [];
+  var bagIdx = a1.bags;
+  var before = a1.remaining;
+  var landed = 0;
+
+  /* 3 顆糖果依序飛入袋子 */
+  for (var k = 0; k < 3; k++) {
+    (function (k) {
+      var c = poolCandies[a1.remaining - 1 - k];
+      if (!c) return;
+      var tx = BAG_X[bagIdx] - 12 + k * 12;
+      setTimeout(function () {
+        place(c, tx, 188);
+        setTimeout(function () {
+          c.style.opacity = "0";
+          landed++;
+          if (landed === 3) finishPack(before, bagIdx);
+        }, 620);
+      }, k * 160);
+    })(k);
+  }
+}
+
+function finishPack(before, bagIdx) {
+  a1.remaining -= 3;
+  a1.bags += 1;
+  var after = a1.remaining;
+  a1.steps.push(before + " − 3 = " + after);
+
+  /* 袋子填充 */
+  var bag = document.getElementById("act1-bag-" + bagIdx);
+  if (bag) {
+    var rect = bag.querySelector("rect");
+    if (rect) {
+      rect.setAttribute("fill", "#fff6df");
+      rect.setAttribute("stroke", CANDY_COLORS[bagIdx % 4]);
+      rect.setAttribute("stroke-dasharray", "none");
+      rect.setAttribute("stroke-width", "3");
+    }
+    for (var m = 0; m < 3; m++) {
+      el("circle", {
+        cx: -12 + m * 12, cy: m === 2 ? 6 : -6, r: 6,
+        fill: CANDY_COLORS[bagIdx % 4], stroke: "#ffffff", "stroke-width": 1.5
+      }, bag);
+    }
+    var label = bag.querySelector("text");
+    if (label) label.textContent = "第 " + (bagIdx + 1) + " 袋";
+  }
+
+  /* 連減旁白 */
+  var eq = document.getElementById("act1-eq");
+  if (eq) {
+    var html = a1.steps.map(function (s, i) {
+      return '<span class="eq-chip' + (i === a1.steps.length - 1 ? " latest" : "") + '">' + s + "</span>";
+    });
+    eq.innerHTML = html.join('<span style="color:#c9beab">→</span>');
+  }
+
+  var btn = document.getElementById("btn-pack");
+  if (a1.bags >= 4) {
+    var summary = document.getElementById("act1-summary");
+    if (summary) {
+      summary.innerHTML = "🎉 <b>12 顆糖果，每 3 顆裝一袋，可以裝成 4 袋！剛好分完！</b><br>連減 12−3−3−3−3 = 0，這就是「分裝」！";
+      summary.classList.remove("hidden");
+    }
+    if (btn) btn.textContent = "✅ 全部裝完！";
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+    speakText("12 顆糖果, 每 3 顆裝一袋, 可以裝成 4 袋, 剛好分完, 這就是分裝");
+  } else {
+    if (btn) btn.disabled = false;
+  }
+  a1.busy = false;
+}
+
+/* ==================== Act 2：輪流平分一顆（等分除公平秤） ==================== */
+var a2 = { nextApple: 0, round: 0, busy: false, plateCounts: [0, 0, 0] };
+var PLATE_X = [70, 179, 288];
+var PLATE_EMOJI = ["🐻 小熊", "🐰 小兔", "🐱 小貓"];
+
+function buildAct2() {
+  var pool = document.getElementById("act2-pool");
+  var plates = document.getElementById("act2-plates");
+  if (!pool || !plates) return;
+  pool.innerHTML = ""; plates.innerHTML = "";
+  a2 = { nextApple: 0, round: 0, busy: false, plateCounts: [0, 0, 0] };
+  for (var i = 0; i < 12; i++) {
+    var p = poolPos(i);
+    var a = makeApple(pool);
+    place(a, p.x, p.y);
+  }
+  for (var pl = 0; pl < 3; pl++) {
+    var g = el("g", { transform: "translate(" + PLATE_X[pl] + ",196)" }, plates);
+    g.id = "act2-plate-" + pl;
+    el("ellipse", { cx: 0, cy: 0, rx: 48, ry: 15, fill: "#fdf1e0", stroke: "#e8c9a0", "stroke-width": 2.5 }, g);
+    el("text", { y: -24, "text-anchor": "middle", "font-size": 12, "font-weight": 800, fill: "#8a857b" }, g).textContent = PLATE_EMOJI[pl];
+    el("text", { y: 36, "text-anchor": "middle", "font-size": 11, "font-weight": 800, fill: "#8a857b", id: "act2-count-" + pl }, g).textContent = "0 顆";
+  }
+  var eq = document.getElementById("act2-eq");
+  if (eq) eq.innerHTML = '<span class="eq-chip">第 0 輪 · 每盤 0 顆</span>';
+  var summary = document.getElementById("act2-summary");
+  if (summary) { summary.classList.add("hidden"); summary.innerHTML = ""; }
+  var btn = document.getElementById("btn-share");
+  if (btn) { btn.disabled = false; btn.textContent = "🔁 輪流分一顆"; }
+}
+
+function shareOneRound() {
+  if (a2.busy || a2.round >= 4) return;
+  a2.busy = true;
+  var btn = document.getElementById("btn-share");
+  if (btn) btn.disabled = true;
+  a2.round += 1;
+
+  var pool = document.getElementById("act2-pool");
+  var poolApples = pool ? pool.querySelectorAll(".flyer") : [];
+  var landedThisRound = 0;
+
+  for (var pl = 0; pl < 3; pl++) {
+    (function (pl) {
+      var apple = poolApples[a2.nextApple];
+      a2.nextApple += 1;
+      if (!apple) return;
+      var slot = a2.plateCounts[pl];
+      var ox = (slot % 2 === 0) ? -15 : 15;
+      var oy = slot < 2 ? -10 : -26;
+      setTimeout(function () {
+        place(apple, PLATE_X[pl] + ox, 190 + oy);
+        setTimeout(function () {
+          apple.style.opacity = "0";
+          a2.plateCounts[pl] += 1;
+          landedThisRound++;
+          var count = document.getElementById("act2-count-" + pl);
+          if (count) count.textContent = a2.plateCounts[pl] + " 顆";
+          if (landedThisRound === 3) finishRound();
+        }, 620);
+      }, pl * 200);
+    })(pl);
+  }
+}
+
+function finishRound() {
+  var eq = document.getElementById("act2-eq");
+  if (eq) {
+    eq.innerHTML = '<span class="eq-chip latest">第 ' + a2.round + " 輪 · 每盤 " + a2.plateCounts[0] + " 顆</span>";
+  }
+  var btn = document.getElementById("btn-share");
+  if (a2.round >= 4) {
+    var summary = document.getElementById("act2-summary");
+    if (summary) {
+      summary.innerHTML = "🎉 <b>12 顆蘋果平分給 3 人，每人分到 4 顆！大家都一樣多！</b><br>輪流一人一顆，分了 4 輪，這就是「平分」！";
+      summary.classList.remove("hidden");
+    }
+    if (btn) btn.textContent = "✅ 公平分完了！";
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+    speakText("12 顆蘋果平分給 3 人, 每人分到 4 顆, 大家都一樣多, 這就是平分");
+  } else {
+    if (btn) btn.disabled = false;
+  }
+  a2.busy = false;
+}
+
+/* ==================== Act 3：分裝 vs 平分 雙面對照鏡 ==================== */
+var a3 = { pack: false, share: false };
+
+function buildAct3Minis() {
+  var pack = document.getElementById("vs-pack-dots");
+  if (pack) {
+    pack.innerHTML = "";
+    /* 12 顆糖圈成 4 袋（每袋 3 顆） */
+    for (var b = 0; b < 4; b++) {
+      var cx = 21 + b * 36;
+      el("ellipse", { cx: cx, cy: 24, rx: 15, ry: 20, fill: "none", stroke: CANDY_COLORS[b % 4], "stroke-width": 2, "stroke-dasharray": "4 3" }, pack);
+      for (var d = 0; d < 3; d++) {
+        el("circle", { cx: cx - 6 + (d % 2) * 12, cy: d < 2 ? 18 : 31, r: 4.5, fill: CANDY_COLORS[b % 4] }, pack);
+      }
+      el("text", { x: cx, y: 60, "text-anchor": "middle", "font-size": 10, "font-weight": 800, fill: "#8a857b" }, pack).textContent = "袋" + (b + 1);
+    }
+  }
+  var share = document.getElementById("vs-share-dots");
+  if (share) {
+    share.innerHTML = "";
+    /* 3 個人各分到 4 顆 */
+    for (var r = 0; r < 3; r++) {
+      var cy = 12 + r * 20;
+      el("ellipse", { cx: 75, cy: cy, rx: 62, ry: 9, fill: "none", stroke: "#e8c9a0", "stroke-width": 1.5 }, share);
+      for (var d2 = 0; d2 < 4; d2++) {
+        el("circle", { cx: 33 + d2 * 28, cy: cy - 4, r: 5, fill: "#ff6b6b" }, share);
+      }
+      el("text", { x: 8, y: cy + 1, "text-anchor": "middle", "font-size": 10 }, share).textContent = ["🐻", "🐰", "🐱"][r];
+    }
+  }
+}
+
+function pickSide(side) {
+  var card = document.getElementById(side === "pack" ? "vs-pack" : "vs-share");
+  if (card) card.classList.add("active");
+  a3[side] = true;
+  var bubble = document.getElementById("act3-bubble");
+  if (side === "pack") {
+    if (bubble) bubble.innerHTML = "📦 <b>分裝</b>：知道「每袋有幾個」，問「可以裝幾袋？」<br>12 顆糖，每 3 顆一袋 → 12 ÷ 3 = <b>4 袋</b>";
+    speakText("分裝是知道每袋有幾個, 問可以裝幾袋, 12 顆糖每 3 顆一袋, 可以裝成 4 袋");
+  } else {
+    if (bubble) bubble.innerHTML = "🍽️ <b>平分</b>：知道「有幾個人要分」，問「每人分到幾個？」<br>12 顆蘋果分給 3 人 → 12 ÷ 3 = <b>每人 4 顆</b>";
+    speakText("平分是知道有幾個人要分, 問每人分到幾個, 12 顆蘋果分給 3 人, 每人分到 4 顆");
+  }
+  if (a3.pack && a3.share && !verifyState.act3) {
+    verifyState.act3 = true;
+    refreshStatusBar();
+    if (bubble) bubble.innerHTML += "<br>🌟 兩面都看過了！式子都是 <b>12 ÷ 3 = 4</b>，但問的問題不同！";
+  }
+}
+
+/* ==================== Act 4：小小挑戰賽（公平分糖大師） ==================== */
+var QUIZZES = [
+  {
+    text: "🍓 15 顆草莓，<b>每 5 顆裝一盤</b>，可以裝幾盤？",
+    choices: ["2 盤", "3 盤", "5 盤"],
+    answer: 1,
+    hint: "💡 再想想：15 裡面有幾個 5 呢？5、10、15……",
+    ok: "🎉 答對了！15 ÷ 5 = 3，可以裝成 3 盤！這是「分裝」！",
+    okVoice: "答對了, 15 除以 5 等於 3, 可以裝成 3 盤, 這是分裝",
+    hintVoice: "再想想看, 15 裡面有幾個 5 呢"
+  },
+  {
+    text: "🖍️ 16 枝彩色筆，<b>平分給 4 個人</b>，每人得幾枝？",
+    choices: ["3 枝", "4 枝", "5 枝"],
+    answer: 1,
+    hint: "💡 把 16 枝筆輪流分給 4 個人，一人一次一枝，分 4 輪試試看！",
+    ok: "🎉 答對了！16 ÷ 4 = 4，每人分到 4 枝！這是「平分」！",
+    okVoice: "答對了, 16 除以 4 等於 4, 每人分到 4 枝, 這是平分",
+    hintVoice: "把 16 枝筆輪流分給 4 個人, 一人一次一枝, 試試看"
+  },
+  {
+    text: "🔮 20 顆彈珠，<b>每 4 顆裝一包</b>，這是「分裝」還是「平分」？",
+    choices: ["📦 分裝", "🍽️ 平分"],
+    answer: 0,
+    hint: "💡 題目說「每 4 顆裝一包」——知道每包有幾個，是哪一種呢？",
+    ok: "🎉 答對了！知道「每包有幾個」就是<b>分裝（包含除）</b>！",
+    okVoice: "答對了, 知道每包有幾個, 就是分裝",
+    hintVoice: "題目說每 4 顆裝一包, 知道每包有幾個, 是哪一種呢"
+  }
+];
+var a4 = { idx: 0, doneCount: 0, locked: false };
+
+function buildAct4() {
+  a4 = { idx: 0, doneCount: 0, locked: false };
+  renderQuiz();
+}
+
+function renderQuiz() {
+  var q = QUIZZES[a4.idx];
+  var questionEl = document.getElementById("quiz-question");
+  var choicesEl = document.getElementById("quiz-choices");
+  var progressEl = document.getElementById("quiz-progress");
+  var bubble = document.getElementById("act4-bubble");
+  if (progressEl) progressEl.textContent = "第 " + (a4.idx + 1) + " / 3 題";
+  if (questionEl) questionEl.innerHTML = q.text;
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+  if (choicesEl) {
+    choicesEl.innerHTML = "";
+    q.choices.forEach(function (label, i) {
+      var b = document.createElement("button");
+      b.className = "choice-btn";
+      b.textContent = label;
+      b.addEventListener("click", function () { answerQuiz(b, i); });
+      choicesEl.appendChild(b);
+    });
+  }
+}
+
+function answerQuiz(btn, choiceIdx) {
+  if (a4.locked) return;
+  var q = QUIZZES[a4.idx];
+  var bubble = document.getElementById("act4-bubble");
+  var ok = choiceIdx === q.answer;
+  if (ok) {
+    btn.classList.add("correct");
+    a4.locked = true;
+    a4.doneCount += 1;
+    if (bubble) bubble.innerHTML = q.ok;
+    speakText(q.okVoice);
+    if (!verifyState.act4 && a4.doneCount >= 3) {
+      verifyState.act4 = true;
+      refreshStatusBar();
+    }
+    setTimeout(function () {
+      if (a4.idx < QUIZZES.length - 1) {
+        a4.idx += 1;
+        a4.locked = false;
+        renderQuiz();
+      } else {
+        var prog = document.getElementById("quiz-progress");
+        if (prog) prog.textContent = "🏁 完成 3 / 3 題";
+        if (bubble) bubble.innerHTML = "🏆 全部答對，你是<b>公平分糖大師</b>！分裝、平分都難不倒你！";
+        speakText("全部答對, 你是公平分糖大師");
+      }
+    }, 1100);
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText(q.hintVoice);
+    setTimeout(function () { btn.classList.remove("wrong"); }, 900);
+  }
+}
+
+/* ==================== 重置 ==================== */
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  a3 = { pack: false, share: false };
+  stopSpeech();
+  buildAct1();
+  buildAct2();
+  buildAct3Minis();
+  ["vs-pack", "vs-share"].forEach(function (id) {
+    var c = document.getElementById(id);
+    if (c) c.classList.remove("active");
+  });
+  var b3 = document.getElementById("act3-bubble");
+  if (b3) b3.innerHTML = "💡 都是 12 顆，分法不同，問的問題也不同！點卡片聽聽看。";
+  buildAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1();
+buildAct2();
+buildAct3Minis();
+buildAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

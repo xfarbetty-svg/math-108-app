@@ -76,13 +76,37 @@
   - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
   - 施工通道: 通道一/通道二自動容災協同 ($0)
 
-### 🌊 第二波 (Wave 2: 數與量進階與應用 6 單元)
-- [ ] **Step 8: G2-N-2-3 加減應用問題 (`g2_addition_subtraction_word_lab.html`)**
-- [ ] **Step 9: G2-N-2-4 簡單加減估算 (`g2_estimation_lab.html`)**
-- [ ] **Step 10: G2-N-2-8 兩步驟應用問題（加減乘） (`g2_two_step_math_lab.html`)**
-- [ ] **Step 11: G2-N-2-9 分裝與平分 (`g2_division_intro_lab.html`)**
-- [ ] **Step 12: G2-N-2-10 單位分數的認識 (`g2_fraction_unit_lab.html`)**
-- [ ] **Step 13: G2-N-2-12 容量、重量、面積感官比較 (`g2_measure_compare_lab.html`)**
+### 🌊 第二波 (Wave 2: 數與量進階與應用 6 單元) —— 100% 落地完工
+- [x] **Step 8: G2-N-2-3 加減應用問題 (`g2_addition_subtraction_word_lab.html`)**
+  - 產出檔案: `app/components/g2_addition_subtraction_word_lab.html` (44KB), 更新 `app/shell.js`
+  - 課綱活動: 條形線段圖 (Bar Model) 解剖器、動態線段拉伸機、四大題型指南針
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 9: G2-N-2-4 簡單加減估算 (`g2_estimation_lab.html`)**
+  - 產出檔案: `app/components/g2_estimation_lab.html` (34KB), 更新 `app/shell.js`
+  - 課綱活動: 數線磁吸最接近幾十、超市買菜預算估算器、加減估算策略秘笈
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 10: G2-N-2-8 兩步驟應用問題（加減乘） (`g2_two_step_math_lab.html`)**
+  - 產出檔案: `app/components/g2_two_step_math_lab.html` (34KB), 更新 `app/shell.js`
+  - 課綱活動: 工廠流水線兩步驟輸送帶、先乘後減/先乘後加雙模式探索、尋找中繼站金字塔
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 11: G2-N-2-9 分裝與平分 (`g2_division_intro_lab.html`)**
+  - 產出檔案: `app/components/g2_division_intro_lab.html` (31KB), 更新 `app/shell.js`
+  - 課綱活動: 糖果連減分裝機 (包含除)、一人輪流分一顆公平秤 (等分除)、分裝 vs 平分對照鏡
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 12: G2-N-2-10 單位分數的認識 (`g2_fraction_unit_lab.html`)**
+  - 產出檔案: `app/components/g2_fraction_unit_lab.html` (37KB), 更新 `app/shell.js`
+  - 課綱活動: 披薩動態切片 (1/2, 1/4, 1/8)、公平天平檢驗平分靈魂、分母越大每份越小
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 13: G2-N-2-12 容量、重量、面積感官比較 (`g2_measure_compare_lab.html`)**
+  - 產出檔案: `app/components/g2_measure_compare_lab.html` (41KB), 更新 `app/shell.js`
+  - 課綱活動: 水杯互倒容量比較、天平蹺蹺板秤重大師 (破除體積迷思)、面積疊合與積木方塊鋪排
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
 
 ### 🌊 第三波 (Wave 3: 時間與空間幾何 6 單元)
 - [ ] **Step 14: G2-N-2-13 鐘面的時刻 (`g2_clock_time_lab.html`)**

@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-3 加減應用問題 · 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --blue: #7db8e8;
+  --blue-deep: #3d7fb8;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+.tip-bubble.ok {
+  background: #e7f5f0;
+  border: 1px dashed var(--mint-deep);
+  color: var(--mint-deep);
+}
+.tip-bubble.retry {
+  background: #fff0eb;
+  border: 1px dashed var(--coral-deep);
+  color: var(--coral-deep);
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 算式展示列 */
+.eq-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 30px;
+}
+.eq-text {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--blue-deep);
+  background: #eef5fc;
+  border: 1px solid #cfe3f5;
+  border-radius: 10px;
+  padding: 4px 14px;
+}
+.eq-text.plus { color: var(--mint-deep); background: #e7f5f0; border-color: #c9e8dd; }
+.eq-text.minus { color: var(--coral-deep); background: #fff4ef; border-color: #ffd0c2; }
+
+/* 模式切換鈕 */
+.mode-row { display: flex; gap: 8px; }
+.mode-btn {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.mode-btn.on {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.mode-btn:active { transform: scale(0.97); }
+
+/* Act 2 情境操作 */
+.scen-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.scen-label .tag {
+  background: #eef5fc;
+  color: var(--blue-deep);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 10.5px;
+}
+.action-btn {
+  align-self: flex-start;
+  background: #fff4ef;
+  border: 2px solid var(--coral);
+  color: var(--coral-deep);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 800;
+  transition: all 0.15s;
+}
+.action-btn:active { transform: scale(0.96); }
+.action-btn:disabled { opacity: 0.45; }
+
+/* Act 3 題型卡片 */
+.type-grid { display: flex; gap: 6px; }
+.type-btn {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 2px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+  line-height: 1.35;
+}
+.type-btn small { display: block; font-size: 10px; color: var(--ink-soft); font-weight: 700; }
+.type-btn.on { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.type-btn.on small { color: var(--mint-deep); }
+.type-btn:active { transform: scale(0.96); }
+
+/* Act 4 挑戰 */
+.q-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.q-dot-row { display: flex; gap: 5px; }
+.q-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #f0e7da;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.q-dot.cur { background: var(--lemon); color: #7a5c1e; }
+.q-dot.done { background: var(--mint); color: #ffffff; }
+.q-arrow {
+  background: #fdf6e9;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+.q-arrow:disabled { opacity: 0.35; }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.choice-btn:disabled { cursor: default; }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+
+/* SVG 動態樣式 */
+.fade-in { animation: fadeIn 0.5s ease both; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.glow-ring {
+  animation: glowPulse 1.2s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes glowPulse {
+  from { filter: drop-shadow(0 0 1px rgba(217,145,13,0.4)); }
+  to { filter: drop-shadow(0 0 6px rgba(217,145,13,0.9)); }
+}
+.bar-transition { transition: width 0.9s ease; }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      加減應用問題小教室
+      <small>二年級 · N-2-3 線段圖解應用</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（線段圖解剖器） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('用線段圖看, 算相差用減法, 算全部合起來用加法')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 線段圖解剖器</div>
+      <div class="card-desc">小明有 <b>28</b> 塊積木，小華有 <b>15</b> 塊。用線段圖看得清清楚楚！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="小明與小華積木線段圖">
+          <text x="28" y="24" font-size="11" font-weight="800" fill="#3d7fb8">小明的積木</text>
+          <rect x="28" y="30" width="210" height="32" rx="6" fill="#7db8e8" stroke="#3d7fb8" stroke-width="2"></rect>
+          <text x="133" y="52" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">28</text>
+
+          <text x="28" y="102" font-size="11" font-weight="800" fill="#f4694b">小華的積木</text>
+          <rect x="28" y="108" width="112" height="32" rx="6" fill="#ff9e80" stroke="#f4694b" stroke-width="2"></rect>
+          <text x="84" y="130" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">15</text>
+
+          <!-- 相差段 (?) -->
+          <rect id="act1-diff" x="140" y="108" width="98" height="32" rx="6"
+                fill="#fff4ef" stroke="#f4694b" stroke-width="2" stroke-dasharray="5 4"></rect>
+          <text id="act1-diff-q" x="189" y="130" text-anchor="middle" font-size="15" font-weight="800" fill="#f4694b">?</text>
+
+          <!-- 對齊虛線 -->
+          <line x1="28" y1="26" x2="28" y2="158" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>
+          <line x1="238" y1="26" x2="238" y2="158" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>
+
+          <!-- 合起來大括號 -->
+          <g id="act1-brace" style="opacity:0" pointer-events="none">
+            <path d="M 250 32 C 258 32 260 38 260 48 L 260 76 C 260 84 264 88 270 88 C 264 88 260 92 260 100 L 260 128 C 260 138 258 144 250 144"
+                  fill="none" stroke="#318a70" stroke-width="2.5" stroke-linecap="round"></path>
+            <text x="284" y="93" text-anchor="middle" font-size="16" font-weight="800" fill="#318a70">?</text>
+            <text x="284" y="112" text-anchor="middle" font-size="10" font-weight="800" fill="#318a70">全部</text>
+          </g>
+        </svg>
+      </div>
+      <div class="eq-row"><span class="eq-text" id="act1-eq" style="visibility:hidden">28 − 15 = 13</span></div>
+      <div class="mode-row">
+        <button class="mode-btn" id="btn-act1-diff" onclick="act1ShowDiff()">📏 算相差多少</button>
+        <button class="mode-btn" id="btn-act1-total" onclick="act1ShowTotal()">🧮 算兩人合起來</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 點下面的按鈕，看看線段圖怎麼「說」數學！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（動態線段拉伸機） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('線段變長用加法, 線段變短用減法')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 線段拉伸機</div>
+      <div class="card-desc">線段「變長」就是加法，「變短」就是減法。按按看！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="線段變長與變短示意圖">
+          <!-- 情境 A：添加型 -->
+          <text x="40" y="20" font-size="11" font-weight="800" fill="#318a70">情境 A · 添加型（變長 ➔ 加法）</text>
+          <rect x="40" y="28" width="108" height="30" rx="6" fill="#7bc9b2" stroke="#318a70" stroke-width="2"></rect>
+          <text x="94" y="48" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">18</text>
+          <text x="156" y="48" font-size="10.5" font-weight="800" fill="#318a70" id="act2-a-base-label">顆糖</text>
+          <rect id="act2-grow" class="bar-transition" x="148" y="28" width="0" height="30" rx="6"
+                fill="#a8dfcd" stroke="#318a70" stroke-width="2"></rect>
+          <text id="act2-grow-label" x="184" y="48" text-anchor="middle" font-size="13" font-weight="800"
+                fill="#318a70" style="opacity:0">+12</text>
+          <line id="act2-a-end" x1="220" y1="22" x2="220" y2="64" stroke="#b8b0a4"
+                stroke-width="1.5" stroke-dasharray="4 3" style="opacity:0"></line>
+          <text id="act2-a-total" x="240" y="48" font-size="13" font-weight="800" fill="#318a70" style="opacity:0">30 顆</text>
+
+          <line x1="30" y1="88" x2="330" y2="88" stroke="#f0e7da" stroke-width="2"></line>
+
+          <!-- 情境 B：拿走型 -->
+          <text x="40" y="110" font-size="11" font-weight="800" fill="#f4694b">情境 B · 拿走型（變短 ➔ 減法）</text>
+          <rect x="40" y="118" width="210" height="30" rx="6" fill="#7db8e8" stroke="#3d7fb8" stroke-width="2"></rect>
+          <text x="100" y="138" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">35</text>
+          <rect id="act2-spent" x="160" y="118" width="90" height="30" rx="6"
+                fill="#ff9e80" stroke="#f4694b" stroke-width="2"></rect>
+          <text id="act2-spent-label" x="205" y="138" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">15</text>
+          <text id="act2-scissors" x="160" y="170" font-size="16" fill="#f4694b" style="opacity:0">✂️</text>
+          <rect id="act2-remain-glow" x="38" y="116" width="124" height="34" rx="8"
+                fill="none" stroke="#d9910d" stroke-width="3.5" style="opacity:0"></rect>
+          <text id="act2-b-remain" x="70" y="176" font-size="11" font-weight="800" fill="#d9910d" style="opacity:0">剩下 20 元</text>
+          <text id="act2-b-cut" x="205" y="176" font-size="11" font-weight="800" fill="#f4694b" style="opacity:0">花掉 15 元</text>
+        </svg>
+      </div>
+      <div class="scen-label">
+        <span class="tag">情境 A</span> 原本有 18 顆糖
+        <button class="action-btn" id="btn-act2-buy" onclick="act2Buy()">🛒 又買了 12 顆</button>
+      </div>
+      <div class="scen-label">
+        <span class="tag">情境 B</span> 原本有 35 元
+        <button class="action-btn" id="btn-act2-spend" onclick="act2Spend()">✂️ 花掉了 15 元</button>
+      </div>
+      <div class="eq-row"><span class="eq-text" id="act2-eq" style="visibility:hidden">18 + 12 = 30</span></div>
+      <div class="tip-bubble" id="act2-bubble">💡 按操作按鈕，看線段怎麼變長、變短！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（四大題型解題指南針） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('併加型用加法, 添加型用加法, 拿走型用減法, 比較型用減法')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 四大題型指南針</div>
+      <div class="card-desc">點題型卡片，看圖解、背口訣，解題不用怕！</div>
+      <div class="type-grid">
+        <button class="type-btn" id="type-merge" data-type="merge" onclick="act3Pick('merge')">🧮 併加型<small>合起來 ➔ +</small></button>
+        <button class="type-btn" id="type-add" data-type="add" onclick="act3Pick('add')">🌱 添加型<small>又增加 ➔ +</small></button>
+        <button class="type-btn" id="type-take" data-type="take" onclick="act3Pick('take')"> ✂️ 拿走型<small>被拿走 ➔ −</small></button>
+        <button class="type-btn" id="type-comp" data-type="comp" onclick="act3Pick('comp')">⚖️ 比較型<small>比多比少 ➔ −</small></button>
+      </div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="題型圖解">
+          <g id="act3-diagram">
+            <text x="179" y="78" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">↑ 點上面的題型卡片看圖解</text>
+          </g>
+        </svg>
+      </div>
+      <div class="eq-row"><span class="eq-text" id="act3-eq" style="visibility:hidden">20 + 15 = 35</span></div>
+      <div class="tip-bubble" id="act3-bubble">💡 四大題型：兩個加法、兩個減法，口訣背起來！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（小偵探線段圖配對賽） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" id="btn-act4-tts" onclick="speakText('小偵探, 看線段圖, 選出正確的算式')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 線段圖配對賽</div>
+      <div class="q-nav">
+        <button class="q-arrow" id="btn-q-prev" onclick="act4Nav(-1)">⬅️ 上一題</button>
+        <div class="q-dot-row" id="q-dots"></div>
+        <button class="q-arrow" id="btn-q-next" onclick="act4Nav(1)">下一題 ➡️</button>
+      </div>
+      <div class="card-desc" id="act4-q-text"></div>
+      <div class="stage">
+        <svg id="act4-svg" viewBox="0 0 358 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="題目示意線段圖">
+          <g id="act4-diagram"></g>
+        </svg>
+      </div>
+      <div class="choice-row" id="act4-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 小偵探，看圖選出正確的算式！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級加減應用問題小教室。現在進行第 " + currentAct + " 幕。用線段圖看懂加法和減法！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：線段圖解剖器（相差 vs 合起來） ==================== */
+function act1SetMode(mode) {
+  var diff = document.getElementById("act1-diff");
+  var diffQ = document.getElementById("act1-diff-q");
+  var brace = document.getElementById("act1-brace");
+  var eq = document.getElementById("act1-eq");
+  var bubble = document.getElementById("act1-bubble");
+  var btnDiff = document.getElementById("btn-act1-diff");
+  var btnTotal = document.getElementById("btn-act1-total");
+  if (!diff || !brace || !eq || !bubble) return;
+
+  btnDiff.classList.toggle("on", mode === "diff");
+  btnTotal.classList.toggle("on", mode === "total");
+
+  if (mode === "diff") {
+    diff.setAttribute("fill", "#ffe9b8");
+    diff.setAttribute("stroke", "#d9910d");
+    diff.setAttribute("stroke-width", "3");
+    diff.setAttribute("stroke-dasharray", "none");
+    diff.classList.add("glow-ring");
+    diffQ.setAttribute("fill", "#d9910d");
+    brace.style.opacity = "0";
+    eq.textContent = "28 − 15 = 13";
+    eq.className = "eq-text minus";
+    eq.style.visibility = "visible";
+    bubble.className = "tip-bubble";
+    bubble.innerHTML = "📏 <b>算相差多少</b>：虛線對齊後，多出來的那一段就是差 ➔ <b>大數減小數</b>，28 − 15 = 13！";
+    speakText("算相差多少, 用線段圖看, 大數減小數, 28 減 15 等於 13");
+  } else if (mode === "total") {
+    diff.setAttribute("fill", "#fff4ef");
+    diff.setAttribute("stroke", "#f4694b");
+    diff.setAttribute("stroke-width", "2");
+    diff.setAttribute("stroke-dasharray", "5 4");
+    diff.classList.remove("glow-ring");
+    diffQ.setAttribute("fill", "#f4694b");
+    brace.style.opacity = "1";
+    brace.classList.add("fade-in");
+    eq.textContent = "28 + 15 = 43";
+    eq.className = "eq-text plus";
+    eq.style.visibility = "visible";
+    bubble.className = "tip-bubble";
+    bubble.innerHTML = "🧮 <b>算兩人合起來</b>：大括號把兩段包起來 ➔ <b>全部合起來用加法</b>，28 + 15 = 43！";
+    speakText("算兩人合起來, 用線段圖看, 全部合起來用加法, 28 加 15 等於 43");
+  }
+}
+function act1ShowDiff() {
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  act1SetMode("diff");
+}
+function act1ShowTotal() {
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  act1SetMode("total");
+}
+function resetAct1() {
+  var diff = document.getElementById("act1-diff");
+  var diffQ = document.getElementById("act1-diff-q");
+  var brace = document.getElementById("act1-brace");
+  var eq = document.getElementById("act1-eq");
+  var bubble = document.getElementById("act1-bubble");
+  if (diff) {
+    diff.setAttribute("fill", "#fff4ef");
+    diff.setAttribute("stroke", "#f4694b");
+    diff.setAttribute("stroke-width", "2");
+    diff.setAttribute("stroke-dasharray", "5 4");
+    diff.classList.remove("glow-ring");
+  }
+  if (diffQ) diffQ.setAttribute("fill", "#f4694b");
+  if (brace) { brace.style.opacity = "0"; brace.classList.remove("fade-in"); }
+  if (eq) eq.style.visibility = "hidden";
+  if (bubble) {
+    bubble.className = "tip-bubble";
+    bubble.innerHTML = "💡 點下面的按鈕，看看線段圖怎麼「說」數學！";
+  }
+  var btnDiff = document.getElementById("btn-act1-diff");
+  var btnTotal = document.getElementById("btn-act1-total");
+  if (btnDiff) btnDiff.classList.remove("on");
+  if (btnTotal) btnTotal.classList.remove("on");
+}
+
+/* ==================== Act 2：動態線段拉伸機 ==================== */
+function act2Buy() {
+  var grow = document.getElementById("act2-grow");
+  var growLabel = document.getElementById("act2-grow-label");
+  var aEnd = document.getElementById("act2-a-end");
+  var aTotal = document.getElementById("act2-a-total");
+  var eq = document.getElementById("act2-eq");
+  var bubble = document.getElementById("act2-bubble");
+  var btn = document.getElementById("btn-act2-buy");
+  if (!grow) return;
+  btn.disabled = true;
+  grow.style.width = "72px";           /* 12 顆 × 6px */
+  if (growLabel) { growLabel.style.opacity = "1"; growLabel.classList.add("fade-in"); }
+  if (aEnd) { aEnd.style.opacity = "1"; aEnd.classList.add("fade-in"); }
+  if (aTotal) { aTotal.style.opacity = "1"; aTotal.classList.add("fade-in"); }
+  if (eq) {
+    eq.textContent = "18 + 12 = 30";
+    eq.className = "eq-text plus";
+    eq.style.visibility = "visible";
+  }
+  if (bubble) {
+    bubble.className = "tip-bubble ok";
+    bubble.innerHTML = "🌱 線段<b>變長</b>了！又買了 12 顆接在後面 ➔ 加法：<b>18 + 12 = 30</b>！";
+  }
+  speakText("又買了 12 顆, 線段變長, 用加法, 18 加 12 等於 30");
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+}
+function act2Spend() {
+  var spent = document.getElementById("act2-spent");
+  var spentLabel = document.getElementById("act2-spent-label");
+  var scissors = document.getElementById("act2-scissors");
+  var glow = document.getElementById("act2-remain-glow");
+  var bRemain = document.getElementById("act2-b-remain");
+  var bCut = document.getElementById("act2-b-cut");
+  var eq = document.getElementById("act2-eq");
+  var bubble = document.getElementById("act2-bubble");
+  var btn = document.getElementById("btn-act2-spend");
+  if (!spent) return;
+  btn.disabled = true;
+  spent.setAttribute("fill", "none");
+  spent.setAttribute("stroke", "#f4694b");
+  spent.setAttribute("stroke-dasharray", "6 5");
+  spent.setAttribute("stroke-width", "2");
+  spent.style.opacity = "0.45";
+  if (spentLabel) spentLabel.style.opacity = "0.35";
+  if (scissors) { scissors.style.opacity = "1"; scissors.classList.add("fade-in"); }
+  if (glow) { glow.style.opacity = "1"; glow.classList.add("glow-ring"); }
+  if (bRemain) { bRemain.style.opacity = "1"; bRemain.classList.add("fade-in"); }
+  if (bCut) { bCut.style.opacity = "1"; bCut.classList.add("fade-in"); }
+  if (eq) {
+    eq.textContent = "35 − 15 = 20";
+    eq.className = "eq-text minus";
+    eq.style.visibility = "visible";
+  }
+  if (bubble) {
+    bubble.className = "tip-bubble ok";
+    bubble.innerHTML = "✂️ 線段<b>變短</b>了！花掉的 15 元被切掉 ➔ 減法：<b>35 − 15 = 20</b>！";
+  }
+  speakText("花掉了 15 元, 線段變短, 用減法, 35 減 15 等於 20");
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+}
+function resetAct2() {
+  var grow = document.getElementById("act2-grow");
+  if (grow) grow.style.width = "0px";
+  ["act2-grow-label", "act2-a-end", "act2-a-total", "act2-scissors", "act2-remain-glow",
+   "act2-b-remain", "act2-b-cut"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) { el.style.opacity = "0"; el.classList.remove("fade-in", "glow-ring"); }
+  });
+  var spent = document.getElementById("act2-spent");
+  if (spent) {
+    spent.setAttribute("fill", "#ff9e80");
+    spent.setAttribute("stroke", "#f4694b");
+    spent.setAttribute("stroke-width", "2");
+    spent.setAttribute("stroke-dasharray", "none");
+    spent.style.opacity = "1";
+  }
+  var spentLabel = document.getElementById("act2-spent-label");
+  if (spentLabel) spentLabel.style.opacity = "1";
+  var eq = document.getElementById("act2-eq");
+  if (eq) eq.style.visibility = "hidden";
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.className = "tip-bubble";
+    bubble.innerHTML = "💡 按操作按鈕，看線段怎麼變長、變短！";
+  }
+  var b1 = document.getElementById("btn-act2-buy");
+  var b2 = document.getElementById("btn-act2-spend");
+  if (b1) b1.disabled = false;
+  if (b2) b2.disabled = false;
+}
+
+/* ==================== Act 3：四大題型解題指南針 ==================== */
+var ACT3_TYPES = {
+  merge: {
+    eq: "20 + 15 = 35",
+    bubble: "🧮 <b>併加型</b>：兩個部分合為整體 ➔ 加法 (+)。口訣：合起來，就相加！",
+    speech: "併加型, 兩個部分合起來, 用加法, 20 加 15 等於 35",
+    svg:
+      '<text x="28" y="30" font-size="11" font-weight="800" fill="#3d7fb8">草莓 20</text>' +
+      '<rect x="28" y="36" width="120" height="28" rx="6" fill="#7db8e8" stroke="#3d7fb8" stroke-width="2"></rect>' +
+      '<text x="88" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">20</text>' +
+      '<text x="28" y="90" font-size="11" font-weight="800" fill="#f4694b">盒子裡 15</text>' +
+      '<rect x="28" y="96" width="90" height="28" rx="6" fill="#ff9e80" stroke="#f4694b" stroke-width="2"></rect>' +
+      '<text x="73" y="115" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">15</text>' +
+      '<path d="M 248 38 C 256 38 258 44 258 54 L 258 62 C 258 68 261 71 266 71 C 261 71 258 74 258 80 L 258 112 C 258 122 256 126 248 126" fill="none" stroke="#318a70" stroke-width="2.5" stroke-linecap="round"></path>' +
+      '<text x="286" y="66" font-size="15" font-weight="800" fill="#318a70">?</text>' +
+      '<text x="286" y="86" font-size="10" font-weight="800" fill="#318a70">全部</text>' +
+      '<text x="290" y="108" font-size="12" font-weight="800" fill="#318a70">= 35</text>'
+  },
+  add: {
+    eq: "18 + 12 = 30",
+    bubble: "🌱 <b>添加型</b>：原本有的又增加 ➔ 加法 (+)。口訣：又增加，就相加！",
+    speech: "添加型, 原本有的又增加, 用加法, 18 加 12 等於 30",
+    svg:
+      '<text x="28" y="30" font-size="11" font-weight="800" fill="#318a70">原本 18 顆糖</text>' +
+      '<rect x="28" y="36" width="108" height="28" rx="6" fill="#7bc9b2" stroke="#318a70" stroke-width="2"></rect>' +
+      '<text x="82" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">18</text>' +
+      '<rect x="136" y="36" width="72" height="28" rx="6" fill="#a8dfcd" stroke="#318a70" stroke-width="2" stroke-dasharray="5 4"></rect>' +
+      '<text x="172" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#318a70">+12</text>' +
+      '<line x1="28" y1="30" x2="28" y2="70" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>' +
+      '<line x1="208" y1="30" x2="208" y2="70" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>' +
+      '<text x="226" y="55" font-size="12" font-weight="800" fill="#318a70">= 30 顆</text>' +
+      '<text x="28" y="110" font-size="11" font-weight="800" fill="#318a70">又買 12 顆接上去 ➔ 線段變長 ➔ 加法！</text>'
+  },
+  take: {
+    eq: "35 − 15 = 20",
+    bubble: "✂️ <b>拿走型</b>：原本有的被拿走或吃掉 ➔ 減法 (−)。口訣：拿走了，就減掉！",
+    speech: "拿走型, 原本有的被拿走, 用減法, 35 減 15 等於 20",
+    svg:
+      '<text x="28" y="30" font-size="11" font-weight="800" fill="#3d7fb8">原本 35 元</text>' +
+      '<rect x="28" y="36" width="210" height="28" rx="6" fill="#7db8e8" stroke="#3d7fb8" stroke-width="2"></rect>' +
+      '<text x="70" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">35</text>' +
+      '<rect x="148" y="36" width="90" height="28" rx="6" fill="none" stroke="#f4694b" stroke-width="2" stroke-dasharray="6 5" style="opacity:0.55"></rect>' +
+      '<text x="193" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#f4694b">−15</text>' +
+      '<text x="148" y="86" font-size="14" fill="#f4694b">✂️</text>' +
+      '<rect x="26" y="34" width="124" height="32" rx="8" fill="none" stroke="#d9910d" stroke-width="3"></rect>' +
+      '<text x="28" y="112" font-size="11" font-weight="800" fill="#d9910d">剩下 20 元</text>' +
+      '<text x="240" y="112" font-size="11" font-weight="800" fill="#f4694b">花掉 15 元 ➔ 減法！</text>'
+  },
+  comp: {
+    eq: "28 − 15 = 13",
+    bubble: "⚖️ <b>比較型</b>：比多、比少、求差量 ➔ 減法 (−)。口訣：比多比少，大減小！",
+    speech: "比較型, 比多比少, 大數減小數, 28 減 15 等於 13",
+    svg:
+      '<text x="28" y="30" font-size="11" font-weight="800" fill="#3d7fb8">小明 28</text>' +
+      '<rect x="28" y="36" width="168" height="28" rx="6" fill="#7db8e8" stroke="#3d7fb8" stroke-width="2"></rect>' +
+      '<text x="112" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">28</text>' +
+      '<text x="28" y="90" font-size="11" font-weight="800" fill="#f4694b">小華 15</text>' +
+      '<rect x="28" y="96" width="90" height="28" rx="6" fill="#ff9e80" stroke="#f4694b" stroke-width="2"></rect>' +
+      '<text x="73" y="115" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">15</text>' +
+      '<rect x="118" y="96" width="78" height="28" rx="6" fill="#ffe9b8" stroke="#d9910d" stroke-width="2.5"></rect>' +
+      '<text x="157" y="115" text-anchor="middle" font-size="13" font-weight="800" fill="#d9910d">? 相差</text>' +
+      '<line x1="196" y1="30" x2="196" y2="130" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>' +
+      '<text x="256" y="80" font-size="11" font-weight="800" fill="#d9910d">大數減小數</text>'
+  }
+};
+
+function act3Pick(type) {
+  var cfg = ACT3_TYPES[type];
+  if (!cfg) return;
+  var g = document.getElementById("act3-diagram");
+  if (g) g.innerHTML = cfg.svg;
+  var eq = document.getElementById("act3-eq");
+  if (eq) {
+    eq.textContent = cfg.eq;
+    eq.className = "eq-text " + (type === "merge" || type === "add" ? "plus" : "minus");
+    eq.style.visibility = "visible";
+  }
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) { bubble.className = "tip-bubble"; bubble.innerHTML = cfg.bubble; }
+  ["merge", "add", "take", "comp"].forEach(function (t) {
+    var btn = document.getElementById("type-" + t);
+    if (btn) btn.classList.toggle("on", t === type);
+  });
+  speakText(cfg.speech);
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+}
+function resetAct3() {
+  var g = document.getElementById("act3-diagram");
+  if (g) {
+    g.innerHTML = '<text x="179" y="78" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">↑ 點上面的題型卡片看圖解</text>';
+  }
+  var eq = document.getElementById("act3-eq");
+  if (eq) eq.style.visibility = "hidden";
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    bubble.className = "tip-bubble";
+    bubble.innerHTML = "💡 四大題型：兩個加法、兩個減法，口訣背起來！";
+  }
+  ["merge", "add", "take", "comp"].forEach(function (t) {
+    var btn = document.getElementById("type-" + t);
+    if (btn) btn.classList.remove("on");
+  });
+}
+
+/* ==================== Act 4：小偵探線段圖配對賽 ==================== */
+var ACT4_QUESTIONS = [
+  {
+    text: "🌸 花園裡有 <b>32</b> 朵紅花，黃花比紅花<b>少 8</b> 朵，黃花有幾朵？",
+    options: ["32 + 8 = 40", "32 − 8 = 24", "32 ÷ 8 = 4"],
+    correct: 1,
+    hint: "黃花「比少」，求比 32 少 8 的數 ➔ 減法！",
+    speechOk: "答對了, 比少用減法, 32 減 8 等於 24, 黃花有 24 朵",
+    speechRetry: "再想想看, 黃花比紅花少, 要用減法喔",
+    svg:
+      '<text x="28" y="28" font-size="11" font-weight="800" fill="#f4694b">紅花 32 朵</text>' +
+      '<rect x="28" y="34" width="192" height="26" rx="6" fill="#ff9e80" stroke="#f4694b" stroke-width="2"></rect>' +
+      '<text x="124" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">32</text>' +
+      '<text x="28" y="88" font-size="11" font-weight="800" fill="#318a70">黃花 ? 朵</text>' +
+      '<rect x="28" y="94" width="126" height="26" rx="6" fill="#a8dfcd" stroke="#318a70" stroke-width="2" stroke-dasharray="5 4"></rect>' +
+      '<text x="91" y="112" text-anchor="middle" font-size="13" font-weight="800" fill="#318a70">?</text>' +
+      '<rect x="154" y="94" width="66" height="26" rx="6" fill="#ffe9b8" stroke="#d9910d" stroke-width="2"></rect>' +
+      '<text x="187" y="112" text-anchor="middle" font-size="11" font-weight="800" fill="#d9910d">少 8</text>' +
+      '<line x1="220" y1="28" x2="220" y2="126" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>'
+  },
+  {
+    text: "🚌 車上有 <b>25</b> 人，到站又<b>上來 13</b> 人，現在車上共有幾人？",
+    options: ["25 − 13 = 12", "25 + 13 = 38", "25 + 3 = 28"],
+    correct: 1,
+    hint: "人數「又增加」，線段變長 ➔ 加法！",
+    speechOk: "答對了, 又上來人要用加法, 25 加 13 等於 38",
+    speechRetry: "再想想看, 又上來 13 人, 人數變多了, 要用加法喔",
+    svg:
+      '<text x="28" y="28" font-size="11" font-weight="800" fill="#3d7fb8">原本 25 人</text>' +
+      '<rect x="28" y="34" width="150" height="26" rx="6" fill="#7db8e8" stroke="#3d7fb8" stroke-width="2"></rect>' +
+      '<text x="103" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">25</text>' +
+      '<rect x="178" y="34" width="78" height="26" rx="6" fill="#a8dfcd" stroke="#318a70" stroke-width="2" stroke-dasharray="5 4"></rect>' +
+      '<text x="217" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#318a70">+13</text>' +
+      '<line x1="256" y1="28" x2="256" y2="66" stroke="#b8b0a4" stroke-width="1.5" stroke-dasharray="4 3"></line>' +
+      '<text x="274" y="52" font-size="12" font-weight="800" fill="#318a70">? 人</text>' +
+      '<text x="28" y="112" font-size="11" font-weight="800" fill="#318a70">上來 13 人 ➔ 線段變長 ➔ 合起來算</text>'
+  },
+  {
+    text: "🍎 籃子裡有 <b>14</b> 顆蘋果和 <b>9</b> 顆柳丁，水果總共有幾顆？",
+    options: ["14 + 9 = 23", "14 − 9 = 5", "14 + 4 = 18"],
+    correct: 0,
+    hint: "兩種水果「合起來」，求全部 ➔ 加法！",
+    speechOk: "答對了, 合起來用加法, 14 加 9 等於 23",
+    speechRetry: "再想想看, 要求全部合起來, 要用加法喔",
+    svg:
+      '<text x="28" y="28" font-size="11" font-weight="800" fill="#f4694b">蘋果 14</text>' +
+      '<rect x="28" y="34" width="84" height="26" rx="6" fill="#ff9e80" stroke="#f4694b" stroke-width="2"></rect>' +
+      '<text x="70" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">14</text>' +
+      '<text x="28" y="88" font-size="11" font-weight="800" fill="#318a70">柳丁 9</text>' +
+      '<rect x="28" y="94" width="54" height="26" rx="6" fill="#a8dfcd" stroke="#318a70" stroke-width="2"></rect>' +
+      '<text x="55" y="112" text-anchor="middle" font-size="13" font-weight="800" fill="#318a70">9</text>' +
+      '<path d="M 172 36 C 180 36 182 42 182 52 L 182 58 C 182 64 185 67 190 67 C 185 67 182 70 182 76 L 182 108 C 182 116 180 120 172 120" fill="none" stroke="#318a70" stroke-width="2.5" stroke-linecap="round"></path>' +
+      '<text x="212" y="62" font-size="15" font-weight="800" fill="#318a70">?</text>' +
+      '<text x="212" y="82" font-size="10" font-weight="800" fill="#318a70">全部</text>' +
+      '<text x="212" y="104" font-size="12" font-weight="800" fill="#318a70">顆</text>'
+  }
+];
+
+var act4Index = 0;
+var act4Solved = [false, false, false];
+
+function act4RenderDots() {
+  var row = document.getElementById("q-dots");
+  if (!row) return;
+  row.innerHTML = "";
+  ACT4_QUESTIONS.forEach(function (_q, i) {
+    var d = document.createElement("span");
+    d.className = "q-dot" + (i === act4Index ? " cur" : (act4Solved[i] ? " done" : ""));
+    d.textContent = String(i + 1);
+    row.appendChild(d);
+  });
+  var prev = document.getElementById("btn-q-prev");
+  var next = document.getElementById("btn-q-next");
+  if (prev) prev.disabled = (act4Index === 0);
+  if (next) next.disabled = (act4Index === ACT4_QUESTIONS.length - 1);
+}
+
+function act4RenderQuestion() {
+  var q = ACT4_QUESTIONS[act4Index];
+  var qText = document.getElementById("act4-q-text");
+  var diagram = document.getElementById("act4-diagram");
+  var choices = document.getElementById("act4-choices");
+  var bubble = document.getElementById("act4-bubble");
+  if (!q || !qText || !diagram || !choices) return;
+
+  qText.innerHTML = q.text;
+  diagram.innerHTML = q.svg;
+  choices.innerHTML = "";
+  q.options.forEach(function (opt, i) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.addEventListener("click", function () { act4Answer(b, i); });
+    choices.appendChild(b);
+  });
+  if (act4Solved[act4Index]) {
+    var btns = choices.querySelectorAll(".choice-btn");
+    if (btns[q.correct]) btns[q.correct].classList.add("correct");
+    btns.forEach(function (b) { b.disabled = true; });
+    if (bubble) {
+      bubble.className = "tip-bubble ok";
+      bubble.innerHTML = "🎉 已解開！<b>" + q.options[q.correct] + "</b> " + q.hint;
+    }
+  } else if (bubble) {
+    bubble.className = "tip-bubble";
+    bubble.innerHTML = "💪 小偵探，看圖選出正確的算式！";
+  }
+  act4RenderDots();
+  var tts = document.getElementById("btn-act4-tts");
+  if (tts) tts.setAttribute("onclick", "speakText('" + q.text.replace(/<[^>]*>/g, "").replace(/'/g, "") + "')");
+}
+
+function act4Answer(btn, idx) {
+  var q = ACT4_QUESTIONS[act4Index];
+  var bubble = document.getElementById("act4-bubble");
+  if (act4Solved[act4Index]) return;
+  if (idx === q.correct) {
+    btn.classList.add("correct");
+    document.querySelectorAll("#act4-choices .choice-btn").forEach(function (b) { b.disabled = true; });
+    act4Solved[act4Index] = true;
+    if (bubble) {
+      bubble.className = "tip-bubble ok";
+      bubble.innerHTML = "🎉 答對了！<b>" + q.options[q.correct] + "</b> " + q.hint;
+    }
+    speakText(q.speechOk);
+    if (act4Solved.every(Boolean)) {
+      var tail = document.getElementById("act4-bubble");
+      if (tail) tail.innerHTML += "<br>🏆 三題全解開，你是線段圖小偵探！";
+      speakText("三題全答對了, 你是線段圖小偵探");
+    }
+    refreshStatusBar();
+    act4RenderDots();
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) {
+      bubble.className = "tip-bubble retry";
+      bubble.innerHTML = "💡 溫和提示：" + q.hint + " 再選一次！";
+    }
+    speakText(q.speechRetry);
+    setTimeout(function () { btn.classList.remove("wrong"); }, 900);
+  }
+}
+
+function act4Nav(delta) {
+  var next = act4Index + delta;
+  if (next < 0 || next >= ACT4_QUESTIONS.length) return;
+  act4Index = next;
+  act4RenderQuestion();
+}
+
+function resetAct4() {
+  act4Index = 0;
+  act4Solved = [false, false, false];
+  act4RenderQuestion();
+}
+
+/* ==================== 初始化 ==================== */
+resetAct1();
+resetAct2();
+resetAct3();
+resetAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

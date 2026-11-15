@@ -1,28 +1,23 @@
 # 斷點交接日誌 (Handoff Log)
 
-## ⏯️ 目前做到哪（Session 49：2026-11-16 00:30）
+## ⏯️ 目前做到哪（Session 49 接續：2026-11-16 05:00）
 
-本 Session 遵照使用者最高指示，接續推進二年級 (G2) 概念探索優先戰略，順利完成 **Wave 1（數與量基礎核心 6 單元）大滿貫收官**（全程嚴格遵循 AGY 決策監工、手腳上鎖不寫業務代碼、通道一/二 $0 算力自動容災派工與微軟曉臻高音質自然語音標準）：
+本 Session 遵照使用者最高指示，推進二年級 (G2) 概念探索優先戰略，順利達成 **Wave 1 與 Wave 2 雙波大滿貫收官（12 / 24 單元完工，進度達 50%）**！全程嚴格遵循 AGY 決策監工、手腳上鎖不寫業務代碼、全自動通道一 $0 算力派工與微軟曉臻高音質自然語音標準：
 
-1. **Step 5：G2-N-2-6 乘法啟蒙 概念小教室落地**：
-   - 產出 `app/components/g2_multiplication_intro_lab.html` (37.1 KB)。
-   - 四幕活動：盤子裝蘋果可調盤數與個數（幾個幾）、連加算式「4+4+4=12」動態旋轉「+」號變身「×」誕生乘法「4×3=12」、倍數階梯小青蛙拋物線跳躍、生活乘法辨識挑戰。
-   - 更新 `app/shell.js` 註冊 `N-2-6`。CDP 單檔實測通過，Exit Code 0。
+1. **Wave 1 成果回顧**：
+   - `N-2-1` (一千以內的數)、`N-2-2` (直式加減)、`N-2-5` (幣值換算)、`N-2-6` (乘法啟蒙)、`N-2-7` (九九乘法表)、`N-2-11` (長度：公分與公尺) 6 大單元完工。
 
-2. **Step 6：G2-N-2-7 九九乘法表 概念小教室落地**：
-   - 產出 `app/components/g2_multiplication_table_lab.html` (31.3 KB)。
-   - 四幕活動：點子矩陣陣列動態框選（Row × Col）與 90 度旋轉視角、9×9 乘法大棋盤點擊展示斜對角對稱之鏡（3×7 與 7×3 同步鏡像高亮）、2~9 段數翻牌速算九九歌、九九乘法神算手挑戰。
-   - 更新 `app/shell.js` 註冊 `N-2-7`。CDP 單檔實測通過，Exit Code 0。
+2. **Wave 2 成果全覽（本次接續完成 6 單元）**：
+   - **Step 8: G2-N-2-3 加減應用問題** (`g2_addition_subtraction_word_lab.html` / 44KB)：條形線段圖 (Bar Model) 解剖器、動態線段增減幾何拉伸機、四大題型指南針（併加/添加/拿走/比較）、小偵探挑戰。
+   - **Step 9: G2-N-2-4 簡單加減估算** (`g2_estimation_lab.html` / 34KB)：數線磁吸最接近幾十、超市買菜預算估算器、加減估算策略秘笈、生活情境估算挑戰。
+   - **Step 10: G2-N-2-8 兩步驟應用問題** (`g2_two_step_math_lab.html` / 34KB)：工廠流水線兩步驟輸送帶、先乘後減/先乘後加雙模式探索、尋找中繼站解題金字塔、兩步驟情境挑戰。
+   - **Step 11: G2-N-2-9 分裝與平分** (`g2_division_intro_lab.html` / 31KB)：糖果連減分裝機 (包含除)、一人輪流分一顆公平秤 (等分除)、分裝 vs 平分對照鏡、公平分糖挑戰。
+   - **Step 12: G2-N-2-10 單位分數的認識** (`g2_fraction_unit_lab.html` / 37KB)：披薩動態切片 (1/2, 1/4, 1/8)、公平天平檢驗平分靈魂、分數結構大解剖（分母越大每份越小）、分數小法官挑戰。
+   - **Step 13: G2-N-2-12 容量、重量、面積感官比較** (`g2_measure_compare_lab.html` / 41KB)：水杯互倒容量比較、天平蹺蹺板秤重大師（破除體積迷思）、面積疊合與積木方塊鋪排、度量三合一挑戰。
 
-3. **Step 7：G2-N-2-11 長度（公分與公尺） 概念小教室落地**：
-   - 產出 `app/components/g2_meter_length_lab.html` (35.4 KB)。
-   - 四幕活動：10 條 10 公分短尺逐步拼接至 100 公分滿百合體融合成「金色 1 公尺標尺」、黃色伸縮捲尺拖曳拉動即時單/複名數雙向動態換算（例如 145cm = 1m 45cm）、黑板/身高/課桌生活量感大比對、長度大師挑戰。
-   - 更新 `app/shell.js` 註冊 `N-2-11`。CDP 單檔實測通過，Exit Code 0。
-
-4. **全量 7 套 CDP 實機測量大滿貫全綠**：
+3. **全量 13 套 CDP 實機測量大滿貫全綠**：
    - 執行 `node tools/verify_g2_concept_labs.js`。
-   - 驗證名單：`g2_template_lab.html`, `g2_place_value_1000_lab.html`, `g2_vertical_addition_subtraction_lab.html`, `g2_money_change_lab.html`, `g2_multiplication_intro_lab.html`, `g2_multiplication_table_lab.html`, `g2_meter_length_lab.html`。
-   - 7 套實驗室：390px 視口零橫溢 (scrollWidth=390)、4 幕按鈕連動流暢、AudioManager 自然語音接口完備、最大 stage 高度 $\le 420\text{px}$、Console 0 報錯，全部 Exit Code 0 驗真！
+   - 13 套實驗室：390px 視口零橫溢 (scrollWidth=390)、4 幕按鈕連動流暢、AudioManager 自然語音接口完備、最大 stage 高度 $\le 420\text{px}$、Console 0 報錯，全部 Exit Code 0 驗真！
 
 ---
 
@@ -30,26 +25,21 @@
 
 - **可運行狀態**：全站與 G2 概念實驗室完美可運行，純前端離線可用。
 - **已註冊路由**：
-  - `N-2-1`: `components/g2_place_value_1000_lab.html`
-  - `N-2-2`: `components/g2_vertical_addition_subtraction_lab.html`
-  - `N-2-5`: `components/g2_money_change_lab.html`
-  - `N-2-6`: `components/g2_multiplication_intro_lab.html`
-  - `N-2-7`: `components/g2_multiplication_table_lab.html`
-  - `N-2-11`: `components/g2_meter_length_lab.html`
-- **施工進度**：Wave 1（數與量基礎核心 6 單元）100% 完工！
+  - `N-2-1`, `N-2-2`, `N-2-3`, `N-2-4`, `N-2-5`, `N-2-6`, `N-2-7`, `N-2-8`, `N-2-9`, `N-2-10`, `N-2-11`, `N-2-12` 全部在 `app/shell.js` 中註冊完畢。
+- **施工進度**：Wave 1 & Wave 2 共 12 單元 100% 完工！
 
 ---
 
 ## ➡️ 下一步（Next Session 目標）
 
-1. **依據 `FIX_PLAN.md` 推進 Wave 2 (數與量進階與應用 6 單元)**：
-   - Step 8: `G2-N-2-3 加減應用問題` (`g2_addition_subtraction_word_lab.html`) —— 線段圖、基準量與比較量。
-   - Step 9: `G2-N-2-4 簡單加減估算` (`g2_estimation_lab.html`) —— 四捨五入大約多少、超市買菜預算。
-   - Step 10: `G2-N-2-8 兩步驟應用問題（加減乘）` (`g2_two_step_math_lab.html`) —— 流程圖、先乘後加/先減後乘。
-   - Step 11: `G2-N-2-9 分裝與平分` (`g2_division_intro_lab.html`) —— 分糖果、包含除與等分除物理分裝。
-   - Step 12: `G2-N-2-10 單位分數的認識` (`g2_fraction_unit_lab.html`) —— 披薩/巧克力等分切片、二分之一與四分之一。
-   - Step 13: `G2-N-2-12 容量、重量、面積感官比較` (`g2_measure_compare_lab.html`) —— 天平秤重、水杯倒水、色紙覆蓋。
-2. **跑通全量 CDP 驗證後，推進 Wave 3**。
+1. **依據 `FIX_PLAN.md` 推進 Wave 3 (時間與空間幾何 6 單元)**：
+   - Step 14: `G2-N-2-13 鐘面的時刻` (`g2_clock_time_lab.html`) —— 齒輪時鐘轉動、幾點幾分與半時。
+   - Step 15: `G2-N-2-14 時間（年、月、星期、日）` (`g2_calendar_lab.html`) —— 月曆翻牌、大月小月拳頭歌、連續日期。
+   - Step 16: `G2-S-2-1 物體之幾何特徵` (`g2_solid_features_lab.html`) —— 滾動 vs 滑動、平面 vs 曲面。
+   - Step 17: `G2-S-2-2 簡單幾何形體` (`g2_shapes_lab.html`) —— 正方體、長方體、圓柱、球的面與頂點。
+   - Step 18: `G2-S-2-3 直尺操作` (`g2_ruler_drawing_lab.html`) —— 直尺畫線、量線段長度。
+   - Step 19: `G2-S-2-4 平面圖形的邊長` (`g2_perimeter_lab.html`) —— 三角形與四邊形的邊、角、周長初步。
+2. **跑通全量 CDP 驗證後，推進 Wave 4**。
 
 ---
 
@@ -57,10 +47,10 @@
 
 - **語音規範**：所有新建實驗室必須 `<script src="../js/audio_manager.js"></script>` 並使用 `AudioManager.play(text)`，禁止呼叫原生 `speechSynthesis`。
 - **算力排程**：通道一 (OpenCode CLI) 帶真實工具施工；若超時自動容災至通道二 (A-SERVER SSH)，AGY 嚴禁動手寫業務代碼。
-- **真題資產儲備**：028 庫存 497 題 G2 題目已確認完好，待概念探索全部攻克後，再執行第二階段資料映射。
+- **對話輪數警戒**：目前已累積 13 輪對話，建議下一波開新對話框或使用 `/compact` 保持最佳額度效益。
 
 ---
 
 ## 🕐 最後更新
-- **時間**：2026-11-16 00:30 (Session 49)
+- **時間**：2026-11-16 05:00 (Session 49)
 - **更新者**：Antigravity (AGY) @ DESKTOP-6ELKIRH

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-12 容量、重量、面積感官比較 · 概念小教室</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav { display: flex; gap: 4px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 2px; font-size: 11px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 9px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge { background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.5; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage { border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3; overflow: hidden; max-height: 420px; }
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 操作按鈕列 */
+.op-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.op-btn {
+  flex: 1 1 30%; background: #e7f5f0; border: 2px solid #c9e8dd; color: var(--mint-deep);
+  border-radius: 12px; padding: 8px 4px; font-size: 12.5px; font-weight: 800;
+  transition: all 0.15s; min-width: 0;
+}
+.op-btn:active { transform: scale(0.96); }
+.op-btn:disabled { opacity: 0.45; cursor: default; }
+.op-btn.mode-active { background: var(--mint-deep); color: #fff; border-color: var(--mint-deep); }
+.op-btn.warm { background: #fff4ef; border-color: #ffd0c2; color: var(--coral-deep); }
+
+/* Act 3 圖形卡高亮 */
+.shape-card {
+  background: #fdf6e9; border: 2px solid var(--line); border-radius: 10px;
+  padding: 5px 8px; font-size: 11.5px; font-weight: 800; color: var(--ink);
+}
+.shape-card.hl { border-color: var(--lemon-deep); background: #fff6df; color: #7a5c1e; }
+
+/* Act 2 物品鍵 */
+.item-key {
+  background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 7px 4px; font-size: 12px; font-weight: 800; color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0;
+}
+.item-key small { font-size: 9.5px; font-weight: 700; color: var(--ink-soft); }
+.item-key.placed-l { border-color: var(--mint); background: #e7f5f0; color: var(--mint-deep); }
+.item-key.placed-r { border-color: var(--coral); background: #fff4ef; color: var(--coral-deep); }
+.item-key svg { touch-action: manipulation; }
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 13.5px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+.q-progress { font-size: 11px; font-weight: 800; color: var(--ink-soft); }
+
+/* 底部狀態列 */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+
+/* 倒水水滴動畫 */
+@keyframes splashUp {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  70%  { transform: translateY(-14px) scale(0.8); opacity: 0.9; }
+  100% { transform: translateY(2px) scale(0.5); opacity: 0; }
+}
+.splash-drop { animation: splashUp 0.8s ease-out infinite; }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      度量感官比較實驗室
+      <small>二年級 · G2-N-2-12 容量・重量・面積</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 倒水比容量</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 天平比重量</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 疊合比面積</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- ============ Act 1：容量倒水實驗室 ============ -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('把裝滿的水倒過去, 溢出來代表原本的水比較多, 容量比較大')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">容量倒水實驗室 · 水杯大比小</div>
+      <div class="card-desc">高瘦杯 A 和矮胖杯 B 誰的容量比較大？先裝滿 A，再把水倒進 B 看看！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 246" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="高瘦杯 A 與矮胖杯 B 倒水比較實驗">
+          <defs>
+            <clipPath id="clipA"><path d="M74 62 L98 62 L96 186 L76 186 Z"/></clipPath>
+            <clipPath id="clipB"><rect x="216" y="128" width="104" height="58" rx="3"/></clipPath>
+          </defs>
+          <!-- 桌面 -->
+          <rect x="14" y="186" width="330" height="8" rx="4" fill="#e8dcc8"/>
+          <!-- 杯 A（高瘦） -->
+          <g id="cupA">
+            <path d="M74 62 L98 62 L96 186 L76 186 Z" fill="#eaf6fb" stroke="#5aa7c7" stroke-width="3"/>
+            <rect id="waterA" x="74" y="62" width="24" height="124" fill="#7fc8ec" clip-path="url(#clipA)"/>
+            <text x="86" y="50" text-anchor="middle" font-size="12" font-weight="800" fill="#3d7ea3">高瘦杯 A</text>
+            <text x="86" y="204" text-anchor="middle" font-size="10" font-weight="700" fill="#8a857b" id="labelA">空的</text>
+          </g>
+          <!-- 杯 B（矮胖） -->
+          <g id="cupB">
+            <rect x="216" y="128" width="104" height="58" rx="3" fill="#eaf6fb" stroke="#5aa7c7" stroke-width="3"/>
+            <rect id="waterB" x="216" y="186" width="104" height="0" fill="#7fc8ec" clip-path="url(#clipB)"/>
+            <text x="268" y="118" text-anchor="middle" font-size="12" font-weight="800" fill="#3d7ea3">矮胖杯 B</text>
+            <text x="268" y="204" text-anchor="middle" font-size="10" font-weight="700" fill="#8a857b" id="labelB">空的</text>
+          </g>
+          <!-- 倒水水柱與溢出水花 -->
+          <path id="pourStream" d="" stroke="#7fc8ec" stroke-width="5" stroke-linecap="round" fill="none" opacity="0"/>
+          <g id="splashGroup" transform="translate(268,124)"></g>
+        </svg>
+      </div>
+      <div class="op-row">
+        <button class="op-btn warm" id="btn-fillA" onclick="fillCupA()">🚰 裝滿 A</button>
+        <button class="op-btn" id="btn-pour" onclick="pourAtoB()" disabled>🫗 把 A 倒進 B</button>
+        <button class="op-btn" onclick="resetAct1()">🧹 清空重來</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 把水倒過去，溢出來表示原本的水比較多，容量比較大！</div>
+    </div>
+  </div>
+
+  <!-- ============ Act 2：天平秤重大師 ============ -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('點物品放上托盤, 下沉的一端比較重, 上升的一端比較輕, 平衡就是一樣重')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">天平秤重大師 · 重量直接比較</div>
+      <div class="card-desc">點物品放上左右托盤：下沉的一端比較重，上升的一端比較輕，水平就是一樣重！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 262" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="雙盤天平即時傾斜比較重量" style="touch-action:manipulation">
+          <!-- 支架 -->
+          <rect x="171" y="52" width="16" height="180" rx="6" fill="#c9b48f"/>
+          <rect x="60" y="228" width="238" height="10" rx="5" fill="#e8dcc8"/>
+          <polygon points="179,52 172,64 186,64" fill="#8a7a5c"/>
+          <!-- 指針刻度 -->
+          <path d="M179 40 L179 26" stroke="#8a7a5c" stroke-width="3" stroke-linecap="round"/>
+          <path d="M167 32 L173 28 M191 32 L185 28 M157 40 L163 34 M201 40 L195 34" stroke="#c9b48f" stroke-width="2" stroke-linecap="round"/>
+          <!-- 樑與雙盤（JS 控制傾斜） -->
+          <g id="beamGroup">
+            <rect x="49" y="74" width="260" height="8" rx="4" fill="#a58d63"/>
+            <circle cx="179" cy="78" r="7" fill="#8a7a5c"/>
+            <!-- 左吊盤 -->
+            <g id="hangerL">
+              <line x1="49" y1="82" x2="49" y2="104" stroke="#8a7a5c" stroke-width="2"/>
+              <path d="M27 104 L71 104 L64 126 L34 126 Z" fill="#fff6df" stroke="#d9910d" stroke-width="2.5"/>
+              <g id="trayL-items"></g>
+            </g>
+            <!-- 右吊盤 -->
+            <g id="hangerR">
+              <line x1="309" y1="82" x2="309" y2="104" stroke="#8a7a5c" stroke-width="2"/>
+              <path d="M287 104 L331 104 L324 126 L294 126 Z" fill="#fff6df" stroke="#d9910d" stroke-width="2.5"/>
+              <g id="trayR-items"></g>
+            </g>
+          </g>
+          <!-- 物品架（點選放置） -->
+          <g id="shelfRow"></g>
+        </svg>
+      </div>
+      <div class="op-row" id="item-keys"></div>
+      <div class="tip-bubble" id="act2-bubble">💡 點物品輪流放到「左盤 → 右盤 → 收回」，看天平怎麼傾斜。棉花很大包，一定比較重嗎？試試看！</div>
+    </div>
+  </div>
+
+  <!-- ============ Act 3：面積疊合與方格鋪排 ============ -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('疊合對齊看誰凸出來, 或鋪滿小方塊數格數, 格數多的面積比較大')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">面積疊合與方格鋪排 · 面積量感</div>
+      <div class="card-desc">長方形 A 和 L 型圖形 B 誰的面積比較大？兩種方法都比比看！</div>
+      <div class="op-row">
+        <button class="op-btn mode-active" id="btn-mode-overlay" onclick="setAreaMode('overlay')">① 疊合法</button>
+        <button class="op-btn" id="btn-mode-tiles" onclick="setAreaMode('tiles')">② 積木鋪排法</button>
+        <button class="op-btn" id="btn-area-run" onclick="runAreaMethod()">▶ 開始比較</button>
+      </div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 212" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="長方形 A 與 L 型圖形 B 的面積比較">
+          <g id="areaScene"></g>
+        </svg>
+      </div>
+      <div class="op-row" id="area-cards"></div>
+      <div class="tip-bubble" id="act3-bubble">💡 先猜猜看誰比較大，再按「開始比較」驗證！</div>
+    </div>
+  </div>
+
+  <!-- ============ Act 4：度量三合一大挑戰 ============ -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <span class="q-progress" id="q-progress">第 1 / 3 題</span>
+      </div>
+      <div class="card-title">小小挑戰賽 · 度量三合一</div>
+      <div class="card-desc" id="q-text"></div>
+      <div class="choice-row" id="choice-row"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("度量感官比較實驗室。容量用倒水比, 重量用天平比, 面積用疊合與鋪方塊比。現在進行第 " + currentAct + " 幕。");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ================================================================== */
+/* Act 1：容量倒水實驗室（A 容量 12 單位 > B 容量 10 單位 → 溢出）        */
+/* ================================================================== */
+var ACT1 = {
+  A_CAP: 12, B_CAP: 10,
+  A_FULL_H: 124, B_FULL_H: 58,
+  aWater: 0,          // 杯 A 內水量（單位）
+  busy: false,
+  timer: null
+};
+
+function setWaterA(units) {
+  var h = ACT1.A_FULL_H * (units / ACT1.A_CAP);
+  var top = 62 + (ACT1.A_FULL_H - h);
+  var w = document.getElementById("waterA");
+  w.setAttribute("y", String(top));
+  w.setAttribute("height", String(h));
+  var label = document.getElementById("labelA");
+  if (label) label.textContent = units >= ACT1.A_CAP ? "裝滿了！" : (units > 0 ? "有水" : "空的");
+}
+function setWaterB(units) {
+  var h = ACT1.B_FULL_H * (units / ACT1.B_CAP);
+  var top = 186 - h;
+  var w = document.getElementById("waterB");
+  w.setAttribute("y", String(top));
+  w.setAttribute("height", String(h));
+  var label = document.getElementById("labelB");
+  if (label) label.textContent = units >= ACT1.B_CAP ? "滿了，裝不下了！" : (units > 0 ? "有水" : "空的");
+}
+function setPourStream(show) {
+  var s = document.getElementById("pourStream");
+  if (!s) return;
+  if (show) {
+    s.setAttribute("d", "M92 96 C 140 110, 200 128, 252 136");
+    s.setAttribute("opacity", "1");
+  } else {
+    s.setAttribute("opacity", "0");
+  }
+}
+function showSplash(show) {
+  var g = document.getElementById("splashGroup");
+  if (!g) return;
+  if (!show) { g.innerHTML = ""; return; }
+  var colors = ["#7fc8ec", "#a8d8ef", "#5aa7c7"];
+  var html = "";
+  for (var i = 0; i < 6; i++) {
+    var dx = -20 + i * 8;
+    html += '<circle class="splash-drop" cx="' + dx + '" cy="' + (i % 2) * 4 + '" r="4" fill="' + colors[i % 3] + '" style="animation-delay:' + (i * 0.12) + 's"></circle>';
+  }
+  g.innerHTML = html;
+}
+
+function fillCupA() {
+  if (ACT1.busy) return;
+  ACT1.busy = true;
+  var btn = document.getElementById("btn-fillA");
+  if (btn) btn.disabled = true;
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💧 正在把杯 A 裝滿水……";
+  speakText("先把高瘦杯 A 裝滿水");
+  var t0 = null;
+  function step(ts) {
+    if (t0 === null) t0 = ts;
+    var p = Math.min(1, (ts - t0) / 700);
+    setWaterA(ACT1.A_CAP * p);
+    if (p < 1) { requestAnimationFrame(step); return; }
+    ACT1.aWater = ACT1.A_CAP;
+    ACT1.busy = false;
+    var pourBtn = document.getElementById("btn-pour");
+    if (pourBtn) pourBtn.disabled = false;
+    if (bubble) bubble.innerHTML = "💡 杯 A 裝滿了！現在按「把 A 倒進 B」，看看會發生什麼事？";
+  }
+  requestAnimationFrame(step);
+}
+
+function pourAtoB() {
+  if (ACT1.busy || ACT1.aWater <= 0) return;
+  ACT1.busy = true;
+  var pourBtn = document.getElementById("btn-pour");
+  var fillBtn = document.getElementById("btn-fillA");
+  if (pourBtn) pourBtn.disabled = true;
+  if (fillBtn) fillBtn.disabled = true;
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "🫗 水正在倒進杯 B……仔細看會不會溢出來！";
+  speakText("把水倒過去, 溢出來代表原本的水比較多, 容量比較大");
+  setPourStream(true);
+  var t0 = null;
+  function step(ts) {
+    if (t0 === null) t0 = ts;
+    var p = Math.min(1, (ts - t0) / 1600);
+    var poured = ACT1.A_CAP * p;
+    setWaterA(Math.max(0, ACT1.A_CAP - poured));
+    var inB = Math.min(ACT1.B_CAP, poured);
+    setWaterB(inB);
+    showSplash(poured > ACT1.B_CAP);
+    if (p < 1) { requestAnimationFrame(step); return; }
+    setPourStream(false);
+    showSplash(true);
+    ACT1.busy = false;
+    ACT1.aWater = 0;
+    if (bubble) {
+      bubble.innerHTML = "🌟 溢出來了！倒進 B 裝不下，代表 <b>杯 A 的容量比杯 B 大</b>（A 能裝的水比較多）！";
+    }
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  }
+  requestAnimationFrame(step);
+}
+
+function resetAct1() {
+  if (ACT1.timer) { clearInterval(ACT1.timer); ACT1.timer = null; }
+  ACT1.busy = false;
+  ACT1.aWater = 0;
+  setWaterA(0);
+  setWaterB(0);
+  setPourStream(false);
+  showSplash(false);
+  var fillBtn = document.getElementById("btn-fillA");
+  var pourBtn = document.getElementById("btn-pour");
+  if (fillBtn) fillBtn.disabled = false;
+  if (pourBtn) pourBtn.disabled = true;
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 把水倒過去，溢出來表示原本的水比較多，容量比較大！";
+}
+
+/* ================================================================== */
+/* Act 2：天平秤重大師（點選物品輪流上左盤 / 右盤 / 收回，即時傾斜）      */
+/* ================================================================== */
+var ITEMS = [
+  { id: "melon",   name: "西瓜",   weight: 6, note: "大又重" },
+  { id: "iron",    name: "鐵球",   weight: 3, note: "小但沉" },
+  { id: "cotton",  name: "棉花",   weight: 2, note: "超大包" },
+  { id: "apple",   name: "蘋果",   weight: 1, note: "小而輕" }
+];
+var ACT2 = { place: {}, angle: 0, target: 0, raf: null };
+
+function itemIconSVG(kind, scale) {
+  var s = scale || 1;
+  if (kind === "melon") {
+    return '<circle r="' + 15 * s + '" fill="#7bc9b2" stroke="#318a70" stroke-width="2.5"/>' +
+      '<path d="M ' + (-9 * s) + ' ' + (-7 * s) + ' Q 0 ' + (7 * s) + ' ' + (9 * s) + ' ' + (-7 * s) + ' M ' + (-4 * s) + ' ' + (-13 * s) + ' Q ' + (2 * s) + ' ' + (2 * s) + ' ' + (6 * s) + ' ' + (-11 * s) + '" stroke="#2a7a5f" stroke-width="1.6" fill="none"/>';
+  }
+  if (kind === "iron") {
+    return '<circle r="' + 10 * s + '" fill="#8d99a6" stroke="#5c6975" stroke-width="2.5"/>' +
+      '<circle cx="' + (-3 * s) + '" cy="' + (-3 * s) + '" r="' + 3 * s + '" fill="#c8d2dc"/>';
+  }
+  if (kind === "cotton") {
+    return '<g fill="#ffffff" stroke="#c9b48f" stroke-width="2">' +
+      '<circle cx="' + (-7 * s) + '" cy="' + (2 * s) + '" r="' + 7 * s + '"/>' +
+      '<circle cx="' + (7 * s) + '" cy="' + (2 * s) + '" r="' + 7 * s + '"/>' +
+      '<circle cx="0" cy="' + (-4 * s) + '" r="' + 8 * s + '"/></g>';
+  }
+  /* apple */
+  return '<circle r="' + 9 * s + '" fill="#ff8a65" stroke="#f4694b" stroke-width="2.5"/>' +
+    '<path d="M 0 ' + (-8 * s) + ' Q 2 ' + (-13 * s) + ' 6 ' + (-14 * s) + '" stroke="#7a5c1e" stroke-width="1.8" fill="none"/>' +
+    '<ellipse cx="' + (5 * s) + '" cy="' + (-11 * s) + '" rx="' + 4 * s + '" ry="' + 2.4 * s + '" fill="#7bc9b2" transform="rotate(-25 ' + (5 * s) + ' ' + (-11 * s) + ')"/>';
+}
+
+function buildAct2Shelf() {
+  var row = document.getElementById("shelfRow");
+  var keys = document.getElementById("item-keys");
+  if (!row || !keys) return;
+  row.innerHTML = "";
+  keys.innerHTML = "";
+  ITEMS.forEach(function (item, idx) {
+    var x = 46 + idx * 74;
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("id", "shelf-" + item.id);
+    g.setAttribute("transform", "translate(" + x + ",236)");
+    g.innerHTML =
+      '<g class="shelf-icon">' + itemIconSVG(item.id, 1) + "</g>" +
+      '<text y="22" text-anchor="middle" font-size="10.5" font-weight="800" fill="#3d3a34">' + item.name + "</text>";
+    g.style.cursor = "pointer";
+    g.addEventListener("pointerdown", function (e) { e.preventDefault(); cycleItem(item.id); });
+    row.appendChild(g);
+
+    var key = document.createElement("button");
+    key.className = "item-key";
+    key.id = "key-" + item.id;
+    key.innerHTML = "<div style='width:30px;height:30px'><svg viewBox='-20 -20 40 40' width='30' height='30'>" + itemIconSVG(item.id, 1) + "</svg></div>" +
+      item.name + "<small>" + item.note + "</small>";
+    key.addEventListener("click", function () { cycleItem(item.id); });
+    keys.appendChild(key);
+  });
+}
+
+function cycleItem(id) {
+  var cur = ACT2.place[id] || "none";
+  ACT2.place[id] = cur === "none" ? "L" : (cur === "L" ? "R" : "none");
+  renderTrays();
+  updateBalance();
+  var item = ITEMS.filter(function (i) { return i.id === id; })[0];
+  var where = ACT2.place[id];
+  if (where === "none") {
+    speakText("把" + item.name + "收回來");
+  } else {
+    speakText("把" + item.name + "放到" + (where === "L" ? "左" : "右") + "盤");
+  }
+}
+
+function renderTrays() {
+  var tl = document.getElementById("trayL-items");
+  var tr = document.getElementById("trayR-items");
+  if (!tl || !tr) return;
+  tl.innerHTML = "";
+  tr.innerHTML = "";
+  var idx = { L: 0, R: 0 };
+  ITEMS.forEach(function (item) {
+    var side = ACT2.place[item.id];
+    if (side !== "L" && side !== "R") return;
+    var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", "translate(" + (49 - 14 + idx[side] * 18) + ",100)");
+    /* 右盤 x 基準 309-35=274 */
+    if (side === "R") g.setAttribute("transform", "translate(" + (309 - 14 - idx[side] * 18) + ",100)");
+    g.innerHTML = itemIconSVG(item.id, 0.85);
+    (side === "L" ? tl : tr).appendChild(g);
+    idx[side]++;
+  });
+  /* 物品架圖示：放上架就淡化 */
+  ITEMS.forEach(function (item) {
+    var shelf = document.getElementById("shelf-" + item.id);
+    var key = document.getElementById("key-" + item.id);
+    var placed = ACT2.place[item.id] !== "none";
+    if (shelf) shelf.style.opacity = placed ? "0.25" : "1";
+    if (key) {
+      key.classList.toggle("placed-l", ACT2.place[item.id] === "L");
+      key.classList.toggle("placed-r", ACT2.place[item.id] === "R");
+    }
+  });
+}
+
+function updateBalance() {
+  var wl = 0, wr = 0;
+  ITEMS.forEach(function (item) {
+    if (ACT2.place[item.id] === "L") wl += item.weight;
+    if (ACT2.place[item.id] === "R") wr += item.weight;
+  });
+  ACT2.target = Math.max(-11, Math.min(11, (wr - wl) * 2.2));
+  startTiltLoop();
+  var bubble = document.getElementById("act2-bubble");
+  if (!bubble) return;
+  var names = { L: [], R: [] };
+  ITEMS.forEach(function (item) {
+    if (ACT2.place[item.id] === "L") names.L.push(item.name);
+    if (ACT2.place[item.id] === "R") names.R.push(item.name);
+  });
+  var lhs = names.L.length ? names.L.join("+") : "(空)";
+  var rhs = names.R.length ? names.R.join("+") : "(空)";
+  if (wl === 0 && wr === 0) {
+    bubble.innerHTML = "💡 點物品輪流放到「左盤 → 右盤 → 收回」，看天平怎麼傾斜。棉花很大包，一定比較重嗎？試試看！";
+  } else if (wl === wr) {
+    bubble.innerHTML = "⚖️ <b>" + lhs + " = " + rhs + "</b>，天平水平 → <b>一樣重</b>！";
+    speakText("兩邊一樣重, 天平平平衡衡");
+    markAct2Done();
+  } else {
+    var heavySide = wl > wr ? "左" : "右";
+    var lightSide = wl > wr ? "右" : "左";
+    bubble.innerHTML = (wl > wr ? "⬅️" : "➡️") + " <b>" + (wl > wr ? lhs : rhs) + "</b> 那端下沉 → <b>" + (wl > wr ? lhs : rhs) + " 比較重</b>；" +
+      (wl > wr ? rhs : lhs) + " 比較輕。";
+    /* 破除迷思：棉花 vs 鐵球 對比 */
+    if ((ACT2.place.cotton === "L" && ACT2.place.iron === "R") || (ACT2.place.cotton === "R" && ACT2.place.iron === "L")) {
+      if (ACT2.place.cotton !== ACT2.place.iron) {
+        var cottonSide = ACT2.place.cotton;
+        var ironSide = ACT2.place.iron;
+        if ((wl > wr && cottonSide === (wl > wr ? "L" : "R")) || (wr > wl && cottonSide === (wr > wl ? "L" : "R"))) {
+          /* cotton heavier — 不會發生（棉花 2 < 鐵球 3），保留防禦 */
+        } else {
+          bubble.innerHTML += " <br>🤯 看到了嗎？<b>棉花一大包體積大，卻比小小的鐵球輕</b>！體積大不代表比較重喔！";
+          speakText("棉花很大包, 卻比小小的鐵球輕, 體積大不一定比較重喔");
+          markAct2Done();
+        }
+      }
+    } else {
+      speakText(heavySide + "邊下沉, " + (wl > wr ? lhs : rhs) + "比較重, " + lightSide + "邊比較輕");
+    }
+  }
+}
+
+function markAct2Done() {
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+}
+
+function startTiltLoop() {
+  if (ACT2.raf) return;
+  function step() {
+    var beam = document.getElementById("beamGroup");
+    var hl = document.getElementById("hangerL");
+    var hr = document.getElementById("hangerR");
+    if (!beam || !hl || !hr) { ACT2.raf = null; return; }
+    var diff = ACT2.target - ACT2.angle;
+    if (Math.abs(diff) < 0.05) {
+      ACT2.angle = ACT2.target;
+      ACT2.raf = null;
+    } else {
+      ACT2.angle += diff * 0.12;
+      ACT2.raf = requestAnimationFrame(step);
+    }
+    beam.setAttribute("transform", "rotate(" + ACT2.angle + " 179 78)");
+    hl.setAttribute("transform", "rotate(" + (-ACT2.angle) + " 49 78)");
+    hr.setAttribute("transform", "rotate(" + (-ACT2.angle) + " 309 78)");
+  }
+  ACT2.raf = requestAnimationFrame(step);
+}
+
+function resetAct2() {
+  ACT2.place = {};
+  ACT2.angle = 0;
+  ACT2.target = 0;
+  renderTrays();
+  var beam = document.getElementById("beamGroup");
+  var hl = document.getElementById("hangerL");
+  var hr = document.getElementById("hangerR");
+  if (beam) beam.setAttribute("transform", "rotate(0 179 78)");
+  if (hl) hl.setAttribute("transform", "rotate(0 49 78)");
+  if (hr) hr.setAttribute("transform", "rotate(0 309 78)");
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 點物品輪流放到「左盤 → 右盤 → 收回」，看天平怎麼傾斜。棉花很大包，一定比較重嗎？試試看！";
+}
+
+/* ================================================================== */
+/* Act 3：面積疊合與方格鋪排（A = 4x3 = 12 格；B = L 型 10 格）          */
+/* ================================================================== */
+var ACT3 = { mode: "overlay", done: false };
+var CELL = 21;
+var A_ORIGIN = { x: 34, y: 48 };    /* A：4 欄 x 3 列 */
+var B_ORIGIN = { x: 216, y: 30 };   /* B：L 型（3 欄，第 4 列只留左 1 格） */
+var B_CELLS = [
+  [0, 0], [1, 0], [2, 0],
+  [0, 1], [1, 1], [2, 1],
+  [0, 2], [1, 2], [2, 2],
+  [0, 3]
+];
+
+function rectCells() {
+  var cells = [];
+  for (var r = 0; r < 3; r++) for (var c = 0; c < 4; c++) cells.push([c, r]);
+  return cells;
+}
+function cellRect(origin, c, r, fill, stroke, sw, extra) {
+  return '<rect x="' + (origin.x + c * CELL) + '" y="' + (origin.y + r * CELL) + '" width="' + CELL + '" height="' + CELL + '"' +
+    ' fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + sw + '" ' + (extra || "") + "/>";
+}
+function shapeBPath(origin) {
+  /* L 型外框：3 欄 x 4 列，右下角缺 2 格 */
+  var x = origin.x, y = origin.y, s = CELL;
+  var w = 3 * s, h = 4 * s;
+  return "M " + x + " " + y + " L " + (x + w) + " " + y + " L " + (x + w) + " " + (y + 3 * s) +
+    " L " + (x + s) + " " + (y + 3 * s) + " L " + (x + s) + " " + (y + h) + " L " + x + " " + (y + h) + " Z";
+}
+
+function renderAreaScene() {
+  var g = document.getElementById("areaScene");
+  if (!g) return;
+  var html = "";
+  if (ACT3.mode === "overlay") {
+    /* 疊合法：A 實心 + B 疊上來（以 A 左上對齊，露出誰凸出來） */
+    var overlap = { x: A_ORIGIN.x, y: A_ORIGIN.y, w: 3 * CELL, h: 3 * CELL };
+    html += "<text x='34' y='36' font-size='11.5' font-weight='800' fill='#318a70'>長方形 A（4×3）</text>";
+    html += rectCells(A_ORIGIN, 0, 0, "none", "none", 0, "");
+    html += "<rect x='" + A_ORIGIN.x + "' y='" + A_ORIGIN.y + "' width='" + (4 * CELL) + "' height='" + (3 * CELL) + "' fill='#e7f5f0' stroke='#318a70' stroke-width='3' rx='2'/>";
+    /* B 疊在 A 上（重疊區域半透明） */
+    html += "<path d='" + shapeBPath({ x: A_ORIGIN.x, y: A_ORIGIN.y }) + "' fill='rgba(255,138,101,0.35)' stroke='#f4694b' stroke-width='3' stroke-dasharray='6 4' rx='2'/>";
+    html += "<text x='" + (A_ORIGIN.x + 3 * CELL + 8) + "' y='" + (A_ORIGIN.y + 1.6 * CELL) + "' font-size='10.5' font-weight='800' fill='#318a70'>← A 多出來\n的 3 格</text>";
+    html += "<text x='" + (A_ORIGIN.x + 0.5 * CELL) + "' y='" + (A_ORIGIN.y + 3.6 * CELL) + "' font-size='10.5' font-weight='800' fill='#f4694b'>↑ B 只多出 1 格</text>";
+    html += "<text x='34' y='196' font-size='11.5' font-weight='800' fill='#3d3a34'>🧩 疊合對齊：A 凸出來的部分（3 格）比 B 凸出來的（1 格）多 → A 面積比較大！</text>";
+  } else {
+    /* 積木鋪排法：兩圖形鋪滿黃色小方塊 */
+    html += "<text x='34' y='36' font-size='11.5' font-weight='800' fill='#318a70'>長方形 A</text>";
+    rectCells().forEach(function (rc) { html += cellRect(A_ORIGIN, rc[0], rc[1], "#ffd166", "#d9910d", 1.5, 'rx="2"'); });
+    html += "<text x='" + (A_ORIGIN.x + 2 * CELL) + "' y='" + (A_ORIGIN.y + 4.9 * CELL) + "' text-anchor='middle' font-size='12' font-weight='800' fill='#7a5c1e'>12 格</text>";
+    html += "<text x='216' y='18' font-size='11.5' font-weight='800' fill='#f4694b'>L 型 B</text>";
+    B_CELLS.forEach(function (rc) { html += cellRect(B_ORIGIN, rc[0], rc[1], "#ffd166", "#d9910d", 1.5, 'rx="2"'); });
+    html += "<text x='" + (B_ORIGIN.x + 1.5 * CELL) + "' y='" + (B_ORIGIN.y + 4.9 * CELL) + "' text-anchor='middle' font-size='12' font-weight='800' fill='#7a5c1e'>10 格</text>";
+    html += "<text x='34' y='196' font-size='11.5' font-weight='800' fill='#3d3a34'>🔢 數格數：A 有 12 格、B 有 10 格 → 12 &gt; 10，<b>A 面積比較大</b>！</text>";
+  }
+  g.innerHTML = html;
+}
+
+function setAreaMode(mode) {
+  ACT3.mode = mode;
+  ACT3.done = false;
+  var bo = document.getElementById("btn-mode-overlay");
+  var bt = document.getElementById("btn-mode-tiles");
+  var run = document.getElementById("btn-area-run");
+  if (bo) bo.classList.toggle("mode-active", mode === "overlay");
+  if (bt) bt.classList.toggle("mode-active", mode === "tiles");
+  if (run) run.disabled = false;
+  renderAreaScene();
+  renderAreaCards(false);
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    bubble.innerHTML = mode === "overlay"
+      ? "💡 疊合法：把 B 疊到 A 上對齊一角，看誰凸出來的部分比較多！按「▶ 開始比較」看看。"
+      : "💡 鋪排法：在兩個圖形上鋪滿一格格小方塊，數數看誰的格數多！按「▶ 開始比較」看看。";
+  }
+}
+
+function renderAreaCards(reveal) {
+  var row = document.getElementById("area-cards");
+  if (!row) return;
+  var html = "";
+  html += "<div class='shape-card" + (reveal ? " hl" : "") + "'>圖形 A：12 格</div>";
+  html += "<div class='shape-card" + (reveal ? " hl" : "") + "'>圖形 B：10 格</div>";
+  if (reveal) html += "<div class='shape-card hl'>12 &gt; 10 → A 大！</div>";
+  row.innerHTML = html;
+}
+
+function runAreaMethod() {
+  if (ACT3.done) {
+    /* 已揭示 → 重播一次語音 */
+    speakText(ACT3.mode === "overlay"
+      ? "疊合之後, A 凸出來的部分比較多, A 的面積比較大"
+      : "A 有 12 格, B 有 10 格, 12 大於 10, A 的面積比較大");
+    return;
+  }
+  ACT3.done = true;
+  var run = document.getElementById("btn-area-run");
+  if (run) run.textContent = "🔁 再聽一次";
+  renderAreaCards(true);
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    bubble.innerHTML = ACT3.mode === "overlay"
+      ? "🌟 疊合結果：A 和 B 疊在一起後，<b>A 凸出來 3 格、B 只凸出 1 格</b> → <b>A 的面積比較大</b>！"
+      : "🌟 鋪排結果：<b>A 有 12 格、B 有 10 格</b>，12 &gt; 10 → <b>A 的面積比較大</b>！";
+  }
+  speakText(ACT3.mode === "overlay"
+    ? "疊合之後, A 凸出來的部分比較多, A 的面積比較大"
+    : "A 有 12 格, B 有 10 格, 12 大於 10, A 的面積比較大");
+  markAct3Done();
+}
+function markAct3Done() {
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+}
+
+function resetAct3() {
+  ACT3.mode = "overlay";
+  ACT3.done = false;
+  var bo = document.getElementById("btn-mode-overlay");
+  var bt = document.getElementById("btn-mode-tiles");
+  var run = document.getElementById("btn-area-run");
+  if (bo) bo.classList.add("mode-active");
+  if (bt) bt.classList.remove("mode-active");
+  if (run) { run.disabled = false; run.textContent = "▶ 開始比較"; }
+  renderAreaScene();
+  renderAreaCards(false);
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 先猜猜看誰比較大，再按「開始比較」驗證！";
+}
+
+/* ================================================================== */
+/* Act 4：小小挑戰賽（容量 / 重量 / 面積 三題）                          */
+/* ================================================================== */
+var QUESTIONS = [
+  {
+    text: "🥛 把裝滿的高瘦杯 A 的水，全部倒進矮胖杯 B，結果水<b>溢出來</b>了。誰的容量比較大？",
+    choices: ["高瘦杯 A", "矮胖杯 B", "一樣大"],
+    answer: 0,
+    ok: "🎉 答對了！水裝不進 B 而溢出來，代表原本 A 裝的水比較多 → <b>A 的容量比較大</b>！",
+    okVoice: "答對了, 水溢出來代表 A 的容量比較大",
+    hint: "💡 圖解提示：倒過去裝不下而溢出來，就是原本那杯裝得比較多喔！",
+    hintVoice: "倒過去裝不下而溢出來, 就是原本那杯裝得比較多"
+  },
+  {
+    text: "⚖️ 天平左盤放一大包棉花、右盤放一顆小鐵球，結果<b>鐵球那端下沉</b>。誰比較重？",
+    choices: ["大包棉花", "小鐵球", "一樣重"],
+    answer: 1,
+    ok: "🎉 答對了！下沉的一端比較重 → <b>小鐵球比較重</b>。體積大不一定比較重喔！",
+    okVoice: "答對了, 下沉的一端比較重, 小鐵球比較重",
+    hint: "💡 圖解提示：天平下沉的那一端就是比較重的一端！",
+    hintVoice: "天平下沉的那一端就是比較重的一端"
+  },
+  {
+    text: "🧱 磁磚 A 鋪滿了 12 格，磁磚 B 鋪滿了 10 格。誰的面積比較大？",
+    choices: ["磁磚 A", "磁磚 B", "一樣大"],
+    answer: 0,
+    ok: "🎉 答對了！12 格 &gt; 10 格 → <b>磁磚 A 的面積比較大</b>！",
+    okVoice: "答對了, 12 格大於 10 格, 磁磚 A 的面積比較大",
+    hint: "💡 圖解提示：格子鋪得越多，蓋住的面積就越大！",
+    hintVoice: "格子鋪得越多, 蓋住的面積就越大"
+  }
+];
+var ACT4 = { index: 0 };
+
+function renderQuestion() {
+  var q = QUESTIONS[ACT4.index];
+  var qt = document.getElementById("q-text");
+  var prog = document.getElementById("q-progress");
+  var row = document.getElementById("choice-row");
+  var bubble = document.getElementById("act4-bubble");
+  if (qt) qt.innerHTML = q.text;
+  if (prog) prog.textContent = "第 " + (ACT4.index + 1) + " / " + QUESTIONS.length + " 題";
+  if (row) {
+    row.innerHTML = "";
+    q.choices.forEach(function (label, i) {
+      var b = document.createElement("button");
+      b.className = "choice-btn";
+      b.textContent = label;
+      b.addEventListener("click", function () { answerChoice(i, b); });
+      row.appendChild(b);
+    });
+  }
+  if (bubble) bubble.innerHTML = "💪 選一個答案吧！";
+}
+
+function answerChoice(i, btn) {
+  var q = QUESTIONS[ACT4.index];
+  var bubble = document.getElementById("act4-bubble");
+  var row = document.getElementById("choice-row");
+  if (i === q.answer) {
+    btn.classList.add("correct");
+    if (row) row.querySelectorAll(".choice-btn").forEach(function (b) { if (b !== btn) b.disabled = true; });
+    if (bubble) bubble.innerHTML = q.ok;
+    speakText(q.okVoice);
+    if (ACT4.index < QUESTIONS.length - 1) {
+      setTimeout(function () {
+        ACT4.index++;
+        renderQuestion();
+      }, 1400);
+    } else if (!verifyState.act4) {
+      verifyState.act4 = true;
+      refreshStatusBar();
+      if (bubble) bubble.innerHTML += "<br>🏆 三題全對，度量小達人就是你！";
+    }
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText(q.hintVoice);
+  }
+}
+
+function resetAct4() {
+  ACT4.index = 0;
+  renderQuestion();
+}
+
+/* ==================== 初始化 ==================== */
+resetAct1();
+buildAct2Shelf();
+resetAct2();
+resetAct3();
+resetAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

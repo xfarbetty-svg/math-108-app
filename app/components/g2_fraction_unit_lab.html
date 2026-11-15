@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-10 單位分數的認識 · 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex; gap: 6px;
+  background: #ebe3d5; padding: 4px; border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800;
+  padding: 2px 8px; border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3;
+  overflow: hidden; max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 切份／切法按鈕 */
+.cut-row { display: flex; gap: 8px; }
+.cut-btn {
+  flex: 1 1 0; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 8px 4px; font-size: 12.5px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.cut-btn.active { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.cut-btn:active { transform: scale(0.96); }
+.big-btn {
+  align-self: center; background: var(--lemon); color: #6b4a0a;
+  border-radius: 999px; padding: 9px 18px; font-size: 13.5px; font-weight: 800;
+  box-shadow: 0 3px 8px rgba(217, 145, 13, 0.25);
+}
+.big-btn:active { transform: scale(0.96); }
+
+/* Act 1 被選中的披薩切片：分離 + 發光 */
+.pizza-slice { cursor: pointer; transition: filter 0.2s; }
+.pizza-slice.picked {
+  filter: drop-shadow(0 0 7px rgba(255, 209, 102, 0.95)) drop-shadow(0 0 3px rgba(255, 138, 101, 0.8));
+}
+
+/* 分數結構卡 */
+.frac-card {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  background: #fff; border: 1px dashed var(--mint); border-radius: 12px; padding: 8px 10px;
+}
+.frac-notation { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.frac-label { font-size: 9.5px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.frac-stack {
+  display: flex; flex-direction: column; align-items: center; line-height: 1.05;
+  border: 2px solid var(--line); border-radius: 10px; padding: 4px 12px; background: #fffdf6;
+}
+.frac-stack b { font-size: 20px; }
+.frac-stack .frac-line { width: 34px; height: 3px; background: var(--ink); border-radius: 2px; margin: 2px 0; }
+.frac-name { font-size: 14px; font-weight: 800; color: var(--mint-deep); text-align: center; line-height: 1.4; }
+
+/* Act 2 天平梁旋轉 */
+#act2-beam { transition: transform 0.6s ease; transform-origin: 262px 87px; }
+.light-dot { transition: opacity 0.3s; }
+
+/* Act 3 色帶對比列 */
+.bar-row {
+  display: flex; align-items: center; gap: 8px;
+  border: 2px solid var(--line); border-radius: 10px; padding: 5px 8px;
+  background: #fff; cursor: pointer; transition: all 0.15s;
+}
+.bar-row.sel { border-color: var(--coral); background: #fff4ef; }
+.bar-frac {
+  flex: 0 0 40px; display: flex; flex-direction: column; align-items: center; line-height: 1.05;
+}
+.bar-frac b { font-size: 14px; }
+.bar-frac i { display: block; width: 18px; height: 2.5px; background: var(--ink); border-radius: 2px; margin: 2px 0; }
+.bar-frac .bar-name { font-size: 9px; font-weight: 800; color: var(--ink-soft); white-space: nowrap; }
+.bar-row svg { flex: 1 1 auto; min-width: 0; height: 26px; }
+.anatomy-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.anatomy-chip {
+  background: #e7f5f0; color: var(--mint-deep); font-size: 10.5px; font-weight: 800;
+  border-radius: 999px; padding: 3px 9px; white-space: nowrap;
+}
+.rule-chain {
+  display: none; justify-content: center; align-items: center; gap: 10px;
+  background: #fff4ef; border: 2px solid var(--coral); border-radius: 12px; padding: 8px 10px;
+}
+.rule-chain.show { display: flex; }
+.rule-chain .rf { display: flex; flex-direction: column; align-items: center; line-height: 1.05; }
+.rule-chain .rf b { font-size: 17px; color: var(--coral-deep); }
+.rule-chain .rf i { display: block; width: 20px; height: 3px; background: var(--coral-deep); border-radius: 2px; margin: 2px 0; }
+.rule-chain .gt { font-size: 18px; font-weight: 800; color: var(--coral-deep); }
+
+/* Act 4 挑戰 */
+.q-progress {
+  align-self: center; background: #ebe3d5; color: var(--ink-soft);
+  border-radius: 999px; font-size: 11px; font-weight: 800; padding: 3px 12px;
+}
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.15s;
+}
+.choice-btn svg { width: 64px; height: 64px; }
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      單位分數的認識 · 分數小教室
+      <small>二年級 · N-2-10 幾分之一與平分概念</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 披薩切切樂</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 公平天平</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 分數小法官</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（披薩切切樂 / 幾分之一的誕生） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('把披薩平分成幾份, 其中的一份就是幾分之一')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">披薩切切樂 · 幾分之一的誕生</div>
+      <div class="card-desc">先把披薩<b>平分</b>切成幾份，再點其中一片拿出來，看看「幾分之一」是怎麼寫的！</div>
+      <div class="cut-row">
+        <button class="cut-btn" id="cut2-btn" onclick="slicePizza(2)">🔪 切成 2 份</button>
+        <button class="cut-btn" id="cut4-btn" onclick="slicePizza(4)">🔪 切成 4 份</button>
+        <button class="cut-btn" id="cut8-btn" onclick="slicePizza(8)">🔪 切成 8 份</button>
+      </div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 208" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="圓形披薩平分切片示意圖">
+          <circle cx="179" cy="104" r="88" fill="#fff6df" stroke="#ffd166" stroke-width="4"></circle>
+          <g id="act1-slices"></g>
+          <text x="179" y="196" text-anchor="middle" font-size="11" font-weight="800" fill="#8a857b">👆 點一片披薩，把它拿出來！</text>
+        </svg>
+        <div class="frac-card" id="act1-frac-card">
+          <div class="frac-notation">
+            <span class="frac-label">分子 ↑ 拿了幾份</span>
+            <div class="frac-stack"><b id="act1-num">?</b><span class="frac-line"></span><b id="act1-den">?</b></div>
+            <span class="frac-label">分母 ↓ 平分成幾份</span>
+          </div>
+          <div class="frac-name" id="act1-frac-name">還沒切喔！<br>先選一個切法吧 🔪</div>
+        </div>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 披薩要<b>平分</b>切，其中 1 份才叫做「幾分之一」！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（公平天平檢驗機 / 什麼才叫平分） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('要兩塊一樣大才叫平分, 用天平來檢驗看看')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">公平天平檢驗機 · 什麼才叫平分</div>
+      <div class="card-desc">選一種切法，再按下「天平秤重檢驗」，看看兩塊色紙是不是一樣大！</div>
+      <div class="cut-row">
+        <button class="cut-btn active" id="methodA-btn" onclick="setCutMethod('A')">✂️ 切法 A：對折平分</button>
+        <button class="cut-btn" id="methodB-btn" onclick="setCutMethod('B')">✂️ 切法 B：隨意斜切</button>
+      </div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 205" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="色紙切法與天平秤重示意圖">
+          <!-- 左側：色紙切法預覽 -->
+          <text x="80" y="28" text-anchor="middle" font-size="11" font-weight="800" fill="#8a857b">色紙切法預覽</text>
+          <g id="cutA-group">
+            <rect x="15" y="45" width="65" height="90" rx="6" fill="#a8dcc9" stroke="#318a70" stroke-width="2"></rect>
+            <rect x="80" y="45" width="65" height="90" rx="6" fill="#7bc9b2" stroke="#318a70" stroke-width="2"></rect>
+            <line x1="80" y1="45" x2="80" y2="135" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 4"></line>
+            <text x="80" y="158" text-anchor="middle" font-size="10.5" font-weight="800" fill="#318a70">兩塊一樣大 ✓</text>
+          </g>
+          <g id="cutB-group" style="display:none">
+            <polygon points="15,45 55,45 145,120 145,135 15,135" fill="#ff8a65" stroke="#f4694b" stroke-width="2"></polygon>
+            <polygon points="55,45 145,45 145,120" fill="#ffd0c2" stroke="#f4694b" stroke-width="2"></polygon>
+            <line x1="55" y1="45" x2="145" y2="120" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 4"></line>
+            <text x="80" y="158" text-anchor="middle" font-size="10.5" font-weight="800" fill="#f4694b">一塊大、一塊小 ✗</text>
+          </g>
+          <!-- 右側：天平 -->
+          <circle id="light-green" class="light-dot" cx="222" cy="26" r="8" fill="#7bc9b2" opacity="0.15"></circle>
+          <text x="222" y="48" text-anchor="middle" font-size="9" font-weight="800" fill="#318a70">平衡</text>
+          <circle id="light-red" class="light-dot" cx="302" cy="26" r="8" fill="#ff8a65" opacity="0.15"></circle>
+          <text x="302" y="48" text-anchor="middle" font-size="9" font-weight="800" fill="#f4694b">傾斜</text>
+          <g id="act2-beam">
+            <rect x="196" y="84" width="132" height="7" rx="3" fill="#8a857b"></rect>
+            <line x1="200" y1="91" x2="200" y2="118" stroke="#8a857b" stroke-width="2"></line>
+            <line x1="324" y1="91" x2="324" y2="118" stroke="#8a857b" stroke-width="2"></line>
+            <path d="M 184 118 A 16 8 0 0 0 216 118 Z" fill="#ffd166" stroke="#d9910d" stroke-width="2"></path>
+            <path d="M 308 118 A 16 8 0 0 0 340 118 Z" fill="#ffd166" stroke="#d9910d" stroke-width="2"></path>
+            <rect id="piece-left" x="187" y="103" width="26" height="15" rx="3" fill="#318a70"></rect>
+            <rect id="piece-right" x="311" y="103" width="26" height="15" rx="3" fill="#d9910d"></rect>
+          </g>
+          <path d="M 262 88 L 252 112 L 272 112 Z" fill="#8a857b"></path>
+          <rect x="259" y="112" width="6" height="40" fill="#8a857b"></rect>
+          <ellipse cx="262" cy="156" rx="26" ry="6" fill="#c9b8a3"></ellipse>
+        </svg>
+      </div>
+      <button class="big-btn" id="btn-balance" onclick="runBalance()">⚖️ 天平秤重檢驗</button>
+      <div class="tip-bubble" id="act2-bubble">💡 先選切法 A 或 B，再按天平檢驗！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（分數結構大解剖 / 分母越大每一份越小） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('分母越大, 分給越多人, 每一份反而越小')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 分母越大每一份越小</div>
+      <div class="card-desc">同樣長的色帶，切的份數越多，每一份就越小！點點看每一條色帶。</div>
+      <div class="anatomy-row">
+        <span class="anatomy-chip">上：分子＝拿幾份</span>
+        <span class="anatomy-chip">中：分數線＝平分</span>
+        <span class="anatomy-chip">下：分母＝切幾份</span>
+      </div>
+      <div class="stage">
+        <div id="act3-rows" style="display:flex;flex-direction:column;gap:6px;padding:8px;">
+          <div class="bar-row" data-idx="0">
+            <span class="bar-frac"><b>1</b><span class="bar-name">完整 1 條</span></span>
+            <svg viewBox="0 0 220 24" preserveAspectRatio="none">
+              <rect x="1" y="2" width="218" height="20" rx="4" fill="#7bc9b2" stroke="#318a70" stroke-width="1.5"></rect>
+            </svg>
+          </div>
+          <div class="bar-row" data-idx="1">
+            <span class="bar-frac"><b>1</b><i></i><b>2</b><span class="bar-name">二分之一</span></span>
+            <svg viewBox="0 0 220 24" preserveAspectRatio="none">
+              <rect x="1" y="2" width="218" height="20" rx="4" fill="#f0e7da" stroke="#d9cbb6" stroke-width="1.5"></rect>
+              <rect x="1" y="2" width="109" height="20" rx="4" fill="#7bc9b2"></rect>
+              <line x1="110" y1="2" x2="110" y2="22" stroke="#318a70" stroke-width="1.5" stroke-dasharray="4 3"></line>
+            </svg>
+          </div>
+          <div class="bar-row" data-idx="2">
+            <span class="bar-frac"><b>1</b><i></i><b>4</b><span class="bar-name">四分之一</span></span>
+            <svg viewBox="0 0 220 24" preserveAspectRatio="none">
+              <rect x="1" y="2" width="218" height="20" rx="4" fill="#f0e7da" stroke="#d9cbb6" stroke-width="1.5"></rect>
+              <rect x="1" y="2" width="55" height="20" rx="4" fill="#ffd166"></rect>
+              <line x1="55.5" y1="2" x2="55.5" y2="22" stroke="#d9910d" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="110" y1="2" x2="110" y2="22" stroke="#d9910d" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="164.5" y1="2" x2="164.5" y2="22" stroke="#d9910d" stroke-width="1.5" stroke-dasharray="4 3"></line>
+            </svg>
+          </div>
+          <div class="bar-row" data-idx="3">
+            <span class="bar-frac"><b>1</b><i></i><b>8</b><span class="bar-name">八分之一</span></span>
+            <svg viewBox="0 0 220 24" preserveAspectRatio="none">
+              <rect x="1" y="2" width="218" height="20" rx="4" fill="#f0e7da" stroke="#d9cbb6" stroke-width="1.5"></rect>
+              <rect x="1" y="2" width="27.5" height="20" rx="4" fill="#ff8a65"></rect>
+              <line x1="28.25" y1="2" x2="28.25" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="55.5" y1="2" x2="55.5" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="82.75" y1="2" x2="82.75" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="110" y1="2" x2="110" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="137.25" y1="2" x2="137.25" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="164.5" y1="2" x2="164.5" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+              <line x1="191.75" y1="2" x2="191.75" y2="22" stroke="#f4694b" stroke-width="1.5" stroke-dasharray="4 3"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <button class="big-btn" id="btn-reveal-rule" onclick="revealRule()">🔎 揭示規律</button>
+      <div class="rule-chain" id="act3-rule-chain">
+        <span class="rf"><b>1</b><i></i><b>2</b></span>
+        <span class="gt">＞</span>
+        <span class="rf"><b>1</b><i></i><b>4</b></span>
+        <span class="gt">＞</span>
+        <span class="rf"><b>1</b><i></i><b>8</b></span>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 點色帶比較看看，再按「揭示規律」！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（分數小法官） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('用公平平分的知識, 當一位分數小法官')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 分數小法官</div>
+      <span class="q-progress" id="act4-progress">第 1 / 3 題</span>
+      <div class="card-desc" id="act4-question"></div>
+      <div class="choice-row" id="act4-opts"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 仔細观察，選出正確答案！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級單位分數小教室。現在進行第 " + currentAct + " 幕。一起認識幾分之一和平分！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：披薩切切樂（幾分之一的誕生） ==================== */
+var FRACTION_NAMES = { 2: "二分之一", 4: "四分之一", 8: "八分之一" };
+var SLICE_COLORS = ["#ff8a65", "#ffd166", "#7bc9b2", "#7db8e8", "#f4a3c0", "#b79ce0", "#a8dcc9", "#ffd0c2"];
+var act1Den = 0;      /* 目前平分成幾份（0 = 未切） */
+var act1Picked = -1;  /* 被選出的切片索引 */
+
+function slicePath(cx, cy, r, a0, a1) {
+  var x1 = cx + r * Math.cos(a0), y1 = cy + r * Math.sin(a0);
+  var x2 = cx + r * Math.cos(a1), y2 = cy + r * Math.sin(a1);
+  var large = (a1 - a0) > Math.PI ? 1 : 0;
+  return "M " + cx + " " + cy +
+    " L " + x1.toFixed(2) + " " + y1.toFixed(2) +
+    " A " + r + " " + r + " 0 " + large + " 1 " + x2.toFixed(2) + " " + y2.toFixed(2) + " Z";
+}
+
+function clearPickedVisual() {
+  document.querySelectorAll("#act1-slices .pizza-slice").forEach(function (p) {
+    p.classList.remove("picked");
+    p.removeAttribute("transform");
+  });
+}
+
+function slicePizza(n) {
+  act1Den = n;
+  act1Picked = -1;
+  var g = document.getElementById("act1-slices");
+  if (!g) return;
+  g.innerHTML = "";
+  var cx = 179, cy = 104, r = 84;
+  var span = (Math.PI * 2) / n;
+  var gap = 0.045; /* 切縫，視覺分離 */
+  for (var i = 0; i < n; i++) {
+    var a0 = -Math.PI / 2 + i * span + gap / 2;
+    var a1 = -Math.PI / 2 + (i + 1) * span - gap / 2;
+    var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", slicePath(cx, cy, r, a0, a1));
+    p.setAttribute("fill", SLICE_COLORS[i % SLICE_COLORS.length]);
+    p.setAttribute("stroke", "#ffffff");
+    p.setAttribute("stroke-width", "2");
+    p.setAttribute("class", "pizza-slice");
+    p.addEventListener("click", (function (idx) { return function () { pickSlice(idx); }; })(i));
+    g.appendChild(p);
+  }
+  /* 按鈕高亮 */
+  [2, 4, 8].forEach(function (k) {
+    var b = document.getElementById("cut" + k + "-btn");
+    if (b) b.classList.toggle("active", k === n);
+  });
+  /* 重置結構卡 */
+  var num = document.getElementById("act1-num");
+  var den = document.getElementById("act1-den");
+  var name = document.getElementById("act1-frac-name");
+  if (num) num.textContent = "?";
+  if (den) den.textContent = String(n);
+  if (name) name.innerHTML = "已平分成 <b>" + n + "</b> 份！<br>👆 點一片拿出來";
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "🔪 已把披薩<b>平分</b>成 " + n + " 份，點其中一片看看！";
+  speakText("把披薩平分成" + n + "份, 點其中一片看看");
+}
+
+function pickSlice(idx) {
+  if (act1Den === 0) return;
+  act1Picked = idx;
+  clearPickedVisual();
+  var slices = document.querySelectorAll("#act1-slices .pizza-slice");
+  var p = slices[idx];
+  if (p) {
+    /* 沿切片中心角方向分離 22px + 發光 */
+    var span = (Math.PI * 2) / act1Den;
+    var mid = -Math.PI / 2 + (idx + 0.5) * span;
+    var dx = (22 * Math.cos(mid)).toFixed(1);
+    var dy = (22 * Math.sin(mid)).toFixed(1);
+    p.setAttribute("transform", "translate(" + dx + "," + dy + ")");
+    p.classList.add("picked");
+  }
+  var n = act1Den;
+  var num = document.getElementById("act1-num");
+  var den = document.getElementById("act1-den");
+  var name = document.getElementById("act1-frac-name");
+  var bubble = document.getElementById("act1-bubble");
+  if (num) num.textContent = "1";
+  if (den) den.textContent = String(n);
+  if (name) name.innerHTML = "這一份就是<br><b>" + FRACTION_NAMES[n] + "（1/" + n + "）</b>";
+  if (bubble) bubble.innerHTML = "🌟 平分成 <b>" + n + "</b> 份，其中的 <b>1</b> 份，就是 <b>" + FRACTION_NAMES[n] + "</b>！分母寫下面，分子寫上面。";
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  speakText("平分成" + n + "份, 其中的1份就是" + FRACTION_NAMES[n]);
+}
+
+function resetAct1() {
+  act1Den = 0;
+  act1Picked = -1;
+  var g = document.getElementById("act1-slices");
+  if (g) g.innerHTML = "";
+  [2, 4, 8].forEach(function (k) {
+    var b = document.getElementById("cut" + k + "-btn");
+    if (b) b.classList.remove("active");
+  });
+  var num = document.getElementById("act1-num");
+  var den = document.getElementById("act1-den");
+  var name = document.getElementById("act1-frac-name");
+  var bubble = document.getElementById("act1-bubble");
+  if (num) num.textContent = "?";
+  if (den) den.textContent = "?";
+  if (name) name.innerHTML = "還沒切喔！<br>先選一個切法吧 🔪";
+  if (bubble) bubble.innerHTML = "💡 披薩要<b>平分</b>切，其中 1 份才叫做「幾分之一」！";
+}
+
+/* ==================== Act 2：公平天平檢驗機 ==================== */
+var act2Method = "A";
+
+function setCutMethod(m) {
+  act2Method = m;
+  var ga = document.getElementById("cutA-group");
+  var gb = document.getElementById("cutB-group");
+  if (ga) ga.style.display = (m === "A") ? "" : "none";
+  if (gb) gb.style.display = (m === "B") ? "" : "none";
+  var ba = document.getElementById("methodA-btn");
+  var bb = document.getElementById("methodB-btn");
+  if (ba) ba.classList.toggle("active", m === "A");
+  if (bb) bb.classList.toggle("active", m === "B");
+  /* 重置天平與燈號 */
+  var beam = document.getElementById("act2-beam");
+  if (beam) beam.style.transform = "rotate(0deg)";
+  var lg = document.getElementById("light-green");
+  var lr = document.getElementById("light-red");
+  if (lg) lg.setAttribute("opacity", "0.15");
+  if (lr) lr.setAttribute("opacity", "0.15");
+  /* 依切法換上砝碼（色紙塊） */
+  var pl = document.getElementById("piece-left");
+  var pr = document.getElementById("piece-right");
+  if (pl && pr) {
+    if (m === "A") {
+      pl.setAttribute("x", "187"); pl.setAttribute("y", "103"); pl.setAttribute("width", "26"); pl.setAttribute("height", "15");
+      pr.setAttribute("x", "311"); pr.setAttribute("y", "103"); pr.setAttribute("width", "26"); pr.setAttribute("height", "15");
+    } else {
+      /* 切法 B：左（大塊）大、右（小塊）小 */
+      pl.setAttribute("x", "184"); pl.setAttribute("y", "99"); pl.setAttribute("width", "32"); pl.setAttribute("height", "19");
+      pr.setAttribute("x", "314"); pr.setAttribute("y", "110"); pr.setAttribute("width", "14"); pr.setAttribute("height", "8");
+    }
+  }
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.innerHTML = (m === "A")
+      ? "✂️ 切法 A：對折公平平分，兩塊<b>一樣大</b>。按天平檢驗吧！"
+      : "✂️ 切法 B：隨意斜切，一塊<b>大</b>一塊<b>小</b>。按天平檢驗吧！";
+  }
+}
+
+function runBalance() {
+  var beam = document.getElementById("act2-beam");
+  var lg = document.getElementById("light-green");
+  var lr = document.getElementById("light-red");
+  var bubble = document.getElementById("act2-bubble");
+  if (act2Method === "A") {
+    if (beam) beam.style.transform = "rotate(0deg)";
+    if (lg) lg.setAttribute("opacity", "1");
+    if (lr) lr.setAttribute("opacity", "0.15");
+    if (bubble) bubble.innerHTML = "✅ 天平<b>平衡</b>了！綠燈亮起：兩份一樣大，是<b>公平平分</b>！每一份就是 <b>1/2</b>！";
+    speakText("天平平衡, 兩份一樣大, 是公平平分, 每一份就是二分之一");
+  } else {
+    if (beam) beam.style.transform = "rotate(-12deg)"; /* 左（大塊）下沉 */
+    if (lg) lg.setAttribute("opacity", "0.15");
+    if (lr) lr.setAttribute("opacity", "1");
+    if (bubble) bubble.innerHTML = "⚠️ 天平<b>傾斜</b>了！紅燈警告：大小不一樣，<b>不是平分</b>！不能叫 1/2！";
+    speakText("天平傾斜了, 大小不一樣, 不是平分, 不能叫二分之一");
+  }
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+}
+
+function resetAct2() {
+  act2Method = "A";
+  setCutMethod("A");
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 先選切法 A 或 B，再按天平檢驗！";
+}
+
+/* ==================== Act 3：規律大發現（分母越大每一份越小） ==================== */
+var ACT3_ROWS = [
+  { speak: "這是一條完整的色帶, 還沒有切, 是 1 條" },
+  { speak: "切成2份拿1份, 就是二分之一, 每一份比較大" },
+  { speak: "切成4份拿1份, 就是四分之一, 每一份更小了" },
+  { speak: "切成8份拿1份, 就是八分之一, 每一份最小" }
+];
+
+function selectBarRow(idx) {
+  document.querySelectorAll("#act3-rows .bar-row").forEach(function (r, i) {
+    r.classList.toggle("sel", i === idx);
+  });
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    if (idx === 0) bubble.innerHTML = "💡 完整的 <b>1 條</b>還沒切；切了才會變成分數喔！";
+    if (idx === 1) bubble.innerHTML = "💡 切成 <b>2</b> 份拿 <b>1</b> 份 → <b>1/2</b>，每一份比較大！";
+    if (idx === 2) bubble.innerHTML = "💡 切成 <b>4</b> 份拿 <b>1</b> 份 → <b>1/4</b>，每一份更小了！";
+    if (idx === 3) bubble.innerHTML = "💡 切成 <b>8</b> 份拿 <b>1</b> 份 → <b>1/8</b>，每一份最小！";
+  }
+  speakText(ACT3_ROWS[idx].speak);
+}
+
+function revealRule() {
+  var chain = document.getElementById("act3-rule-chain");
+  if (chain) chain.classList.add("show");
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "🌟 <b>1/2 ＞ 1/4 ＞ 1/8</b>！分母越大（分給越多人），每一份反而<b>越小</b>！";
+  var btn = document.getElementById("btn-reveal-rule");
+  if (btn) btn.disabled = true;
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  speakText("二分之一大於四分之一大於八分之一, 分母越大每一份越小");
+}
+
+function resetAct3() {
+  document.querySelectorAll("#act3-rows .bar-row").forEach(function (r) { r.classList.remove("sel"); });
+  var chain = document.getElementById("act3-rule-chain");
+  if (chain) chain.classList.remove("show");
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 點色帶比較看看，再按「揭示規律」！";
+  var btn = document.getElementById("btn-reveal-rule");
+  if (btn) btn.disabled = false;
+}
+
+/* ==================== Act 4：小小挑戰賽（分數小法官） ==================== */
+var ACT4_QUESTIONS = [
+  {
+    q: "哪一張圖是有<b>公平平分</b>成 1/4？",
+    opts: [
+      { ok: false, label: "圖 A", hint: "四塊大小不一樣，不是平分喔！", svg: '<svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="30" fill="#ffd166" stroke="#d9910d" stroke-width="3"/><line x1="5" y1="25" x2="65" y2="25" stroke="#ffffff" stroke-width="3"/><line x1="35" y1="5" x2="35" y2="65" stroke="#ffffff" stroke-width="3"/></svg>' },
+      { ok: true, label: "圖 B", hint: "", svg: '<svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="30" fill="#7bc9b2" stroke="#318a70" stroke-width="3"/><line x1="5" y1="35" x2="65" y2="35" stroke="#ffffff" stroke-width="3"/><line x1="35" y1="5" x2="35" y2="65" stroke="#ffffff" stroke-width="3"/></svg>' }
+    ]
+  },
+  {
+    q: "一條吐司<b>平分成 6 片</b>，吃了 1 片，是幾分之幾條？",
+    opts: [
+      { ok: false, label: "1/5 條", hint: "平分成 6 片，分母就是 6 喔！" },
+      { ok: true, label: "1/6 條", hint: "" },
+      { ok: false, label: "6/1 條", hint: "分子在上面、分母在下面，再想想！" }
+    ]
+  },
+  {
+    q: "<b>1/2</b> 和 <b>1/4</b> 哪一個比較大？",
+    opts: [
+      { ok: false, label: "1/4", hint: "分母越大，每一份越小，再想想！" },
+      { ok: true, label: "1/2", hint: "" },
+      { ok: false, label: "一樣大", hint: "切成 2 份和切成 4 份，每一份一樣大嗎？" }
+    ]
+  }
+];
+var act4QIndex = 0;
+var act4Answered = false;
+
+function renderQuestion() {
+  var q = ACT4_QUESTIONS[act4QIndex];
+  var qEl = document.getElementById("act4-question");
+  var optsEl = document.getElementById("act4-opts");
+  var progEl = document.getElementById("act4-progress");
+  var bubble = document.getElementById("act4-bubble");
+  if (!qEl || !optsEl) return;
+  act4Answered = false;
+  qEl.innerHTML = q.q;
+  if (progEl) progEl.textContent = "第 " + (act4QIndex + 1) + " / 3 題";
+  if (bubble) bubble.innerHTML = "💪 仔細觀察，選出正確答案！";
+  optsEl.innerHTML = "";
+  q.opts.forEach(function (opt) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    if (opt.svg) b.innerHTML = opt.svg + "<span>" + opt.label + "</span>";
+    else b.textContent = opt.label;
+    b.addEventListener("click", function () { answerChoice(b, opt); });
+    optsEl.appendChild(b);
+  });
+}
+
+function answerChoice(btn, opt) {
+  if (act4Answered) return;
+  var bubble = document.getElementById("act4-bubble");
+  if (opt.ok) {
+    act4Answered = true;
+    btn.classList.add("correct");
+    if (bubble) bubble.innerHTML = "🎉 答對了！你是一位合格的分數小法官！";
+    var isLast = act4QIndex === ACT4_QUESTIONS.length - 1;
+    if (isLast) {
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+      if (bubble) bubble.innerHTML = "🏆 3 題全對！你已經完全懂「平分」和「幾分之一」了！";
+      speakText("全部答對, 你已經完全懂平分和幾分之一了");
+    } else {
+      speakText("答對了! 換下一題");
+      setTimeout(function () {
+        act4QIndex++;
+        renderQuestion();
+      }, 1100);
+    }
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = "💡 再想想看：" + opt.hint;
+    speakText("再想想看, " + opt.hint);
+  }
+}
+
+function resetAct4() {
+  act4QIndex = 0;
+  act4Answered = false;
+  renderQuestion();
+}
+
+/* ==================== 綁定靜態元素 ==================== */
+function bindStaticEvents() {
+  document.querySelectorAll("#act3-rows .bar-row").forEach(function (r) {
+    r.addEventListener("click", function () { selectBarRow(parseInt(r.getAttribute("data-idx"), 10)); });
+  });
+}
+
+/* ==================== 初始化 ==================== */
+bindStaticEvents();
+renderQuestion();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

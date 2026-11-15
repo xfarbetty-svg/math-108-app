@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-8 兩步驟應用問題 · 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --sky-deep: #3a76b8;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* 機台運轉脈衝 */
+@keyframes machinePulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.25); }
+  100% { filter: brightness(1); }
+}
+.machine.running { animation: machinePulse 0.45s ease-in-out 2; }
+
+/* Act 1 操作按鈕 */
+.step-btn-row { display: flex; gap: 8px; }
+.step-btn {
+  flex: 1 1 0;
+  background: #e7f5f0;
+  border: 2px solid var(--mint);
+  color: var(--mint-deep);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 13px;
+  font-weight: 800;
+  transition: all 0.15s;
+}
+.step-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.step-btn.alt {
+  background: #fff4ef;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+
+/* Act 2 情境切換 */
+.scen-btn-row { display: flex; gap: 8px; }
+.scen-btn {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 6px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  transition: all 0.15s;
+}
+.scen-btn.active {
+  background: #fff4ef;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+
+/* Act 3 解題金字塔 */
+.pyramid-card {
+  display: block;
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 10px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: left;
+  line-height: 1.45;
+  transition: all 0.15s;
+}
+.pyramid-card small { display: block; font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+.pyramid-card.selected {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.pyramid-card.selected small { color: var(--mint-deep); }
+#act-3-view .pyramid-card:nth-child(1) { width: 66%; margin: 0 auto; }
+#act-3-view .pyramid-card:nth-child(2) { width: 82%; margin: 0 auto; }
+#act-3-view .pyramid-card:nth-child(3) { width: 100%; }
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.q-progress {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--sky-deep);
+  background: #eaf3fb;
+  border-radius: 999px;
+  padding: 2px 10px;
+  align-self: flex-start;
+}
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      兩步驟應用問題 · 概念小教室
+      <small>二年級 · G2-N-2-8 先乘後加減 · 找中繼站</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（工廠流水線解題儀） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('兩步驟問題, 先算買了多少顆, 再算全部合起來是多少')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 工廠流水線解題儀</div>
+      <div class="card-desc">一盒蘋果 <b>4</b> 顆，買了 <b>3</b> 盒，家裡原本有 <b>5</b> 顆。兩台機台接力運算，先送出「中繼站」的數字，才能算出最終答案！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 228" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="兩步驟流水線：機台1、中繼站、機台2、最終結果">
+          <!-- 蘋果情境：3 盒各 4 顆 + 原本 5 顆 -->
+          <g id="act1-apples" font-family="inherit"></g>
+          <text x="179" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#8a857b">3 盒蘋果（每盒 4 顆）＋ 家裡原本 5 顆</text>
+          <!-- 輸送帶 -->
+          <rect x="10" y="112" width="338" height="10" rx="5" fill="#e8dcc8"></rect>
+          <line x1="16" y1="117" x2="342" y2="117" stroke="#cbbfa8" stroke-width="2" stroke-dasharray="6 5"></line>
+          <!-- 機台 1 -->
+          <g id="act1-machine1" class="machine">
+            <rect x="8" y="66" width="72" height="56" rx="10" fill="#fff4ef" stroke="#ff8a65" stroke-width="2.5"></rect>
+            <text x="44" y="84" text-anchor="middle" font-size="10.5" font-weight="800" fill="#f4694b">機台 1</text>
+            <text id="act1-m1-formula" x="44" y="108" text-anchor="middle" font-size="13" font-weight="800" fill="#3d3a34">4 × 3</text>
+          </g>
+          <!-- 中繼站 -->
+          <g>
+            <rect x="104" y="58" width="76" height="72" rx="12" fill="#fff6df" stroke="#ffd166" stroke-width="2.5"></rect>
+            <text x="142" y="78" text-anchor="middle" font-size="10.5" font-weight="800" fill="#d9910d">中繼站</text>
+            <text x="142" y="92" text-anchor="middle" font-size="9.5" font-weight="700" fill="#8a857b">（中間數字）</text>
+            <text id="act1-relay" x="142" y="118" text-anchor="middle" font-size="18" font-weight="800" fill="#d9910d">?</text>
+          </g>
+          <!-- 機台 2 -->
+          <g id="act1-machine2" class="machine">
+            <rect x="206" y="66" width="72" height="56" rx="10" fill="#eaf3fb" stroke="#7db8e8" stroke-width="2.5"></rect>
+            <text x="242" y="84" text-anchor="middle" font-size="10.5" font-weight="800" fill="#3a76b8">機台 2</text>
+            <text id="act1-m2-formula" x="242" y="108" text-anchor="middle" font-size="13" font-weight="800" fill="#3d3a34">? + 5</text>
+          </g>
+          <!-- 最終結果 -->
+          <g>
+            <rect x="292" y="62" width="58" height="64" rx="12" fill="#e7f5f0" stroke="#7bc9b2" stroke-width="2.5"></rect>
+            <text x="321" y="82" text-anchor="middle" font-size="10.5" font-weight="800" fill="#318a70">最終</text>
+            <text x="321" y="95" text-anchor="middle" font-size="10.5" font-weight="800" fill="#318a70">答案</text>
+            <text id="act1-result" x="321" y="118" text-anchor="middle" font-size="18" font-weight="800" fill="#318a70">?</text>
+          </g>
+          <!-- 輸送帶流動圓點 -->
+          <circle id="act1-dot1" cx="80" cy="117" r="5" fill="#ff8a65" opacity="0"></circle>
+          <circle id="act1-dot2" cx="182" cy="117" r="5" fill="#7db8e8" opacity="0"></circle>
+          <!-- 算式揭示 -->
+          <text id="act1-eq1" x="179" y="160" text-anchor="middle" font-size="12.5" font-weight="800" fill="#f4694b" opacity="0"></text>
+          <text id="act1-eq2" x="179" y="185" text-anchor="middle" font-size="12.5" font-weight="800" fill="#3a76b8" opacity="0"></text>
+          <text id="act1-eq3" x="179" y="212" text-anchor="middle" font-size="13" font-weight="800" fill="#318a70" opacity="0"></text>
+        </svg>
+      </div>
+      <div class="step-btn-row">
+        <button class="step-btn" id="btn-step1" onclick="act1Step1()">▶ 啟動第一步</button>
+        <button class="step-btn alt" id="btn-step2" onclick="act1Step2()" disabled>▶ 啟動第二步</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 兩步驟題要先算出「題目沒說的中繼站數字」，再往下算第二步！點擊「啟動第一步」看看。</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（先乘後減 vs 先乘後加 雙模式探索） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('先乘後減, 先算花了幾元, 再算找回幾元; 先乘後加, 先算坐了多少人, 再算全部有幾位')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 雙模式探索</div>
+      <div class="card-desc">切換兩種生活情境，一步一步按下「下一步」，看圖像怎麼先乘、再加減！</div>
+      <div class="scen-btn-row">
+        <button class="scen-btn active" id="scen-btn-0" onclick="setScenario(0)">🍦 情境一：付錢找零</button>
+        <button class="scen-btn" id="scen-btn-1" onclick="setScenario(1)">🪑 情境二：追加合併</button>
+      </div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 212" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="兩步驟情境動態演示">
+          <text id="act2-story" x="179" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4a5568"></text>
+          <g id="act2-scene"></g>
+          <text id="act2-eq1" x="179" y="152" text-anchor="middle" font-size="13" font-weight="800" fill="#f4694b" opacity="0"></text>
+          <text id="act2-eq2" x="179" y="182" text-anchor="middle" font-size="13" font-weight="800" fill="#3a76b8" opacity="0"></text>
+          <text id="act2-final" x="179" y="204" text-anchor="middle" font-size="12.5" font-weight="800" fill="#318a70" opacity="0"></text>
+        </svg>
+      </div>
+      <div class="step-btn-row">
+        <button class="step-btn" id="btn-act2-next" onclick="act2Next()">▶ 下一步</button>
+        <button class="step-btn alt" onclick="resetAct2Scene()">↺ 重來</button>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 先點情境，再按「下一步」逐步揭曉兩個算式。</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（解題金字塔） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('解題金字塔: 先問最後要問什麼, 再找中繼站, 最後兩步分開寫')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 解題金字塔</div>
+      <div class="card-desc">兩步驟解題的三層祕訣，從塔頂往下點，找到「中繼站」的秘密！</div>
+      <button class="pyramid-card" id="pyr-1" onclick="selectPyramid(1)">① 問號在最後<small>題目真正要問的是什麼？先把問題圈出來。</small></button>
+      <button class="pyramid-card" id="pyr-2" onclick="selectPyramid(2)">② 先找中繼站<small>哪一個數字題目沒說，但必須先算出來？</small></button>
+      <button class="pyramid-card" id="pyr-3" onclick="selectPyramid(3)">③ 兩步分開寫<small>第一步寫一式；第二步用剛才的答案再算一式。</small></button>
+      <div class="tip-bubble" id="act3-bubble">💡 依序點亮三層金字塔，聽聽看每一層的解題祕訣。</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（兩步驟解題大特務） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <span class="q-progress" id="quiz-progress">第 1 / 3 題</span>
+      </div>
+      <div class="card-title">小小挑戰賽 · 兩步驟解題大特務</div>
+      <div class="card-desc" id="quiz-question"></div>
+      <div class="choice-row" id="quiz-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 特務請出動！先找中繼站，再選答案。</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("兩步驟應用問題概念小教室。現在進行第 " + currentAct + " 幕。先找中繼站，兩步分開算！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2Scene();
+  resetAct3();
+  resetQuiz();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：工廠流水線解題儀（4×3=12 → 12+5=17） ==================== */
+var act1Busy = false;
+
+function resetAct1() {
+  act1Busy = false;
+  var m1 = document.getElementById("act1-m1-formula");
+  var m2 = document.getElementById("act1-m2-formula");
+  var relay = document.getElementById("act1-relay");
+  var result = document.getElementById("act1-result");
+  if (m1) m1.textContent = "4 × 3";
+  if (m2) m2.textContent = "? + 5";
+  if (relay) relay.textContent = "?";
+  if (result) result.textContent = "?";
+  ["act1-eq1", "act1-eq2", "act1-eq3"].forEach(function (id) {
+    var t = document.getElementById(id);
+    if (t) { t.setAttribute("opacity", "0"); t.textContent = ""; }
+  });
+  var btn2 = document.getElementById("btn-step2");
+  if (btn2) btn2.disabled = true;
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 兩步驟題要先算出「題目沒說的中繼站數字」，再往下算第二步！點擊「啟動第一步」看看。";
+  buildAct1Apples();
+}
+
+function buildAct1Apples() {
+  var g = document.getElementById("act1-apples");
+  if (!g) return;
+  g.innerHTML = "";
+  var ns = "http://www.w3.org/2000/svg";
+  /* 3 盒 × 4 顆蘋果 */
+  for (var box = 0; box < 3; box++) {
+    var bx = 30 + box * 96;
+    var frame = document.createElementNS(ns, "rect");
+    frame.setAttribute("x", bx - 38);
+    frame.setAttribute("y", 18);
+    frame.setAttribute("width", 76);
+    frame.setAttribute("height", 26);
+    frame.setAttribute("rx", 8);
+    frame.setAttribute("fill", "#f2ede2");
+    frame.setAttribute("stroke", "#cbbfa8");
+    frame.setAttribute("stroke-width", "1.5");
+    g.appendChild(frame);
+    for (var a = 0; a < 4; a++) {
+      var c = document.createElementNS(ns, "circle");
+      c.setAttribute("cx", bx - 26 + a * 17);
+      c.setAttribute("cy", 31);
+      c.setAttribute("r", 6);
+      c.setAttribute("fill", "#ff8a65");
+      c.setAttribute("stroke", "#ffffff");
+      c.setAttribute("stroke-width", "1.5");
+      g.appendChild(c);
+    }
+  }
+  /* 家裡原本 5 顆 */
+  var home = document.createElementNS(ns, "text");
+  home.setAttribute("x", 330);
+  home.setAttribute("y", 36);
+  home.setAttribute("text-anchor", "middle");
+  home.setAttribute("font-size", "12");
+  home.setAttribute("font-weight", "800");
+  home.setAttribute("fill", "#d9910d");
+  home.textContent = "+5";
+  g.appendChild(home);
+}
+
+function runBeltDot(dotId, dx) {
+  var d = document.getElementById(dotId);
+  if (!d) return;
+  d.setAttribute("opacity", "1");
+  d.style.transition = "none";
+  d.style.transform = "translate(0px,0px)";
+  void d.getBoundingClientRect();
+  d.style.transition = "transform 0.8s linear";
+  d.style.transform = "translate(" + dx + "px,0px)";
+  setTimeout(function () {
+    d.setAttribute("opacity", "0");
+    d.style.transition = "none";
+    d.style.transform = "translate(0px,0px)";
+  }, 880);
+}
+
+function showEq(id, text) {
+  var t = document.getElementById(id);
+  if (!t) return;
+  t.textContent = text;
+  t.setAttribute("opacity", "1");
+}
+
+function act1Step1() {
+  if (act1Busy) return;
+  act1Busy = true;
+  var m1 = document.getElementById("act1-machine1");
+  if (m1) {
+    m1.classList.remove("running");
+    void m1.getBoundingClientRect();
+    m1.classList.add("running");
+  }
+  speakText("第一步, 先算買了多少顆, 4 × 3 = 12");
+  showEq("act1-eq1", "第一步：4 × 3 = 12（先算買了幾顆蘋果）");
+  runBeltDot("act1-dot1", 58);
+  setTimeout(function () {
+    var relay = document.getElementById("act1-relay");
+    if (relay) relay.textContent = "12";
+    var btn2 = document.getElementById("btn-step2");
+    if (btn2) btn2.disabled = false;
+    var bubble = document.getElementById("act1-bubble");
+    if (bubble) bubble.innerHTML = "🌟 中繼站出現 <b>12</b> 了！這就是題目沒說、必須先算的中間數字。";
+    act1Busy = false;
+  }, 900);
+}
+
+function act1Step2() {
+  if (act1Busy) return;
+  var btn2 = document.getElementById("btn-step2");
+  if (btn2 && btn2.disabled) return;
+  act1Busy = true;
+  var m2 = document.getElementById("act1-machine2");
+  if (m2) {
+    m2.classList.remove("running");
+    void m2.getBoundingClientRect();
+    m2.classList.add("running");
+  }
+  var m2f = document.getElementById("act1-m2-formula");
+  if (m2f) m2f.textContent = "12 + 5";
+  speakText("第二步, 再算全部合起來, 12 + 5 = 17");
+  showEq("act1-eq2", "第二步：12 + 5 = 17（再算全部合起來）");
+  runBeltDot("act1-dot2", 106);
+  setTimeout(function () {
+    var result = document.getElementById("act1-result");
+    if (result) result.textContent = "17";
+    showEq("act1-eq3", "🎉 最終答案：全部共有 17 顆蘋果！");
+    var bubble = document.getElementById("act1-bubble");
+    if (bubble) bubble.innerHTML = "🎉 完成！<b>先乘：4×3=12</b>，<b>再加：12+5=17</b>，兩步驟就這樣接力！";
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+    act1Busy = false;
+  }, 900);
+}
+
+/* ==================== Act 2：雙模式探索（先乘後減 / 先乘後加） ==================== */
+var SCENARIOS = [
+  {
+    story: "🍦 買 3 枝 8 元的冰棒，付了 50 元，找回幾元？",
+    step1Eq: "第一步：8 × 3 = 24（先算花了幾元）",
+    step2Eq: "第二步：50 − 24 = 26（再算找回幾元）",
+    finalEq: "🎉 找回 26 元！先乘後減。",
+    audio1: "情境一, 第一步, 8 × 3 = 24, 先算花了幾元",
+    audio2: "第二步, 50 減 24 等於 26, 找回 26 元"
+  },
+  {
+    story: "🪑 一排椅子坐 6 人，排了 4 排，又搬來 7 張單人椅，共有幾位？",
+    step1Eq: "第一步：6 × 4 = 24（先算排椅坐幾位）",
+    step2Eq: "第二步：24 + 7 = 31（再算全部幾位）",
+    finalEq: "🎉 共有 31 位！先乘後加。",
+    audio1: "情境二, 第一步, 6 × 4 = 24, 先算排椅坐幾位",
+    audio2: "第二步, 24 加 7 等於 31, 共有 31 位"
+  }
+];
+var act2Scenario = 0, act2Step = 0, act2Busy = false;
+
+function setScenario(idx) {
+  if (act2Busy) return;
+  act2Scenario = idx;
+  act2Step = 0;
+  for (var i = 0; i < 2; i++) {
+    var b = document.getElementById("scen-btn-" + i);
+    if (b) b.classList.toggle("active", i === idx);
+  }
+  renderAct2Scene();
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.innerHTML = idx === 0
+      ? "🍦 情境一：<b>先乘後減</b>。先算花了幾元，再算找零！"
+      : "🪑 情境二：<b>先乘後加</b>。先算排椅幾位，再算全部！";
+  }
+  speakText(idx === 0
+    ? "情境一, 買 3 枝 8 元的冰棒, 付了 50 元, 找回幾元"
+    : "情境二, 一排椅子坐 6 人, 排了 4 排, 又搬來 7 張單人椅, 共有幾位");
+}
+
+function renderAct2Scene() {
+  var scene = document.getElementById("act2-scene");
+  var story = document.getElementById("act2-story");
+  if (!scene) return;
+  var data = SCENARIOS[act2Scenario];
+  if (story) story.textContent = data.story;
+  var parts = [];
+  if (act2Scenario === 0) {
+    /* 冰棒：3 枝各 8 元 + 50 元鈔票 */
+    for (var i = 0; i < 3; i++) {
+      var x = 44 + i * 58;
+      parts.push('<rect x="' + (x - 11) + '" y="34" width="22" height="42" rx="9" fill="#ff8a65" stroke="#f4694b" stroke-width="2"/>');
+      parts.push('<line x1="' + x + '" y1="76" x2="' + x + '" y2="94" stroke="#d9910d" stroke-width="4" stroke-linecap="round"/>');
+      parts.push('<text x="' + x + '" y="110" text-anchor="middle" font-size="11" font-weight="800" fill="#f4694b">8元</text>');
+    }
+    parts.push('<rect x="224" y="40" width="94" height="34" rx="7" fill="#e7f5f0" stroke="#7bc9b2" stroke-width="2"/>');
+    parts.push('<text x="271" y="63" text-anchor="middle" font-size="14" font-weight="800" fill="#318a70">付 50元</text>');
+    parts.push('<text x="179" y="132" text-anchor="middle" font-size="11" font-weight="700" fill="#8a857b">' + (act2Step >= 2 ? "花費 24 元 → 從 50 元扣掉" : "3 枝冰棒，每枝 8 元") + '</text>');
+  } else {
+    /* 椅子：4 排 × 6 人 + 7 張單人椅 */
+    for (var r = 0; r < 4; r++) {
+      for (var p = 0; p < 6; p++) {
+        parts.push('<circle cx="' + (24 + p * 20) + '" cy="' + (42 + r * 18) + '" r="6" fill="#7db8e8" stroke="#ffffff" stroke-width="1.5"/>');
+      }
+    }
+    parts.push('<text x="140" y="122" text-anchor="middle" font-size="11" font-weight="700" fill="#8a857b">4 排 × 每排 6 人</text>');
+    for (var s = 0; s < 7; s++) {
+      var sx = 218 + (s % 4) * 26;
+      var sy = 36 + Math.floor(s / 4) * 24;
+      parts.push('<rect x="' + sx + '" y="' + sy + '" width="18" height="16" rx="4" fill="#ffd166" stroke="#d9910d" stroke-width="1.5"/>');
+    }
+    parts.push('<text x="292" y="122" text-anchor="middle" font-size="11" font-weight="700" fill="#8a857b">＋7 張單人椅</text>');
+  }
+  scene.innerHTML = parts.join("");
+
+  var eq1 = document.getElementById("act2-eq1");
+  var eq2 = document.getElementById("act2-eq2");
+  var fin = document.getElementById("act2-final");
+  if (eq1) { eq1.setAttribute("opacity", act2Step >= 1 ? "1" : "0"); eq1.textContent = act2Step >= 1 ? data.step1Eq : ""; }
+  if (eq2) { eq2.setAttribute("opacity", act2Step >= 2 ? "1" : "0"); eq2.textContent = act2Step >= 2 ? data.step2Eq : ""; }
+  if (fin) { fin.setAttribute("opacity", act2Step >= 2 ? "1" : "0"); fin.textContent = act2Step >= 2 ? data.finalEq : ""; }
+
+  var btn = document.getElementById("btn-act2-next");
+  if (btn) {
+    btn.disabled = act2Step >= 2;
+    btn.textContent = act2Step === 0 ? "▶ 啟動第一步" : (act2Step === 1 ? "▶ 啟動第二步" : "✅ 完成");
+  }
+}
+
+function act2Next() {
+  if (act2Busy || act2Step >= 2) return;
+  act2Busy = true;
+  act2Step++;
+  renderAct2Scene();
+  var data = SCENARIOS[act2Scenario];
+  speakText(act2Step === 1 ? data.audio1 : data.audio2);
+  var bubble = document.getElementById("act2-bubble");
+  if (act2Step === 1) {
+    if (bubble) bubble.innerHTML = act2Scenario === 0
+      ? "🌟 第一步：8 × 3 = <b>24</b>，先算出「花了幾元」這個中繼站！"
+      : "🌟 第一步：6 × 4 = <b>24</b>，先算出「排椅坐幾位」這個中繼站！";
+  } else {
+    if (bubble) bubble.innerHTML = "🎉 第二步完成！<b>" + (act2Scenario === 0 ? "50 − 24 = 26" : "24 + 7 = 31") + "</b>，中繼站數字派上用場了！";
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  }
+  act2Busy = false;
+}
+
+function resetAct2Scene() {
+  act2Scenario = 0;
+  act2Step = 0;
+  for (var i = 0; i < 2; i++) {
+    var b = document.getElementById("scen-btn-" + i);
+    if (b) b.classList.toggle("active", i === 0);
+  }
+  renderAct2Scene();
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 先點情境，再按「下一步」逐步揭曉兩個算式。";
+}
+
+/* ==================== Act 3：解題金字塔 ==================== */
+var PYRAMID_AUDIO = [
+  "第一層, 問號在最後, 先搞清楚題目真正要問的是什麼",
+  "第二層, 先找中繼站, 題目沒說但必須先算出來的數字",
+  "第三層, 兩步分開寫, 第一步寫一式, 第二步用剛才的答案再算一式"
+];
+var pyramidClicked = {};
+
+function selectPyramid(idx) {
+  var card = document.getElementById("pyr-" + idx);
+  if (!card) return;
+  card.classList.add("selected");
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    if (idx === 1) bubble.innerHTML = "① <b>問號在最後</b>：例如「全部共有幾顆？」就是題目真正要問的！";
+    if (idx === 2) bubble.innerHTML = "② <b>先找中繼站</b>：像流水線的「12」，題目沒說，卻是第二步的關鍵！";
+    if (idx === 3) bubble.innerHTML = "③ <b>兩步分開寫</b>：4×3=12，再 12+5=17。兩條式子，一步一步來！";
+  }
+  speakText(PYRAMID_AUDIO[idx - 1]);
+  pyramidClicked[idx] = true;
+  if (pyramidClicked[1] && pyramidClicked[2] && pyramidClicked[3]) {
+    if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+    if (bubble) bubble.innerHTML += "<br>🏆 金字塔三層全部點亮，你就是兩步驟解題大師！";
+  }
+}
+
+function resetAct3() {
+  pyramidClicked = {};
+  for (var i = 1; i <= 3; i++) {
+    var card = document.getElementById("pyr-" + i);
+    if (card) card.classList.remove("selected");
+  }
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 依序點亮三層金字塔，聽聽看每一層的解題祕訣。";
+}
+
+/* ==================== Act 4：小小挑戰賽 ==================== */
+var QUIZ = [
+  {
+    q: "🍪 一袋餅乾有 <b>6</b> 塊，買了 <b>4</b> 袋，分給同學 <b>9</b> 塊，還剩幾塊？",
+    opts: ["15 塊", "24 塊", "33 塊"],
+    ok: 0,
+    hint: "先找中繼站：6 × 4 = 24 塊，再 24 − 9 = ？",
+    yes: "答對了！6 × 4 = 24，24 − 9 = 15，還剩 15 塊！",
+    no: "再想想：先算 4 袋共有幾塊（6 × 4），再扣掉分掉的 9 塊。"
+  },
+  {
+    q: "💰 小華有 <b>100</b> 元，買了 <b>2</b> 本 <b>35</b> 元的筆記本，還剩幾元？",
+    opts: ["70 元", "30 元", "65 元"],
+    ok: 1,
+    hint: "先找中繼站：35 × 2 = 70 元，再 100 − 70 = ？",
+    yes: "答對了！35 × 2 = 70，100 − 70 = 30，還剩 30 元！",
+    no: "再想想：先算 2 本筆記本共幾元（35 × 2），再用 100 元扣掉。"
+  },
+  {
+    q: "✏️ 一盒鉛筆有 <b>8</b> 枝，老師買了 <b>3</b> 盒，再加上原本的 <b>5</b> 枝，共有幾枝？",
+    opts: ["24 枝", "34 枝", "29 枝"],
+    ok: 2,
+    hint: "先找中繼站：8 × 3 = 24 枝，再 24 + 5 = ？",
+    yes: "答對了！8 × 3 = 24，24 + 5 = 29，共有 29 枝！",
+    no: "再想想：先算 3 盒共有幾枝（8 × 3），再加上原本的 5 枝。"
+  }
+];
+var quizIdx = 0;
+
+function buildQuiz() {
+  var q = QUIZ[quizIdx];
+  var qEl = document.getElementById("quiz-question");
+  var prog = document.getElementById("quiz-progress");
+  var box = document.getElementById("quiz-choices");
+  if (!qEl || !box) return;
+  qEl.innerHTML = q.q;
+  if (prog) prog.textContent = "第 " + (quizIdx + 1) + " / " + QUIZ.length + " 題";
+  box.innerHTML = "";
+  q.opts.forEach(function (opt, i) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.addEventListener("click", function () { pickQuizAnswer(b, i); });
+    box.appendChild(b);
+  });
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 特務請出動！先找中繼站，再選答案。";
+}
+
+function pickQuizAnswer(btn, idx) {
+  var q = QUIZ[quizIdx];
+  var ok = idx === q.ok;
+  btn.classList.add(ok ? "correct" : "wrong");
+  var bubble = document.getElementById("act4-bubble");
+  if (ok) {
+    if (bubble) bubble.innerHTML = "🎉 " + q.yes;
+    speakText(q.yes);
+    if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+    if (quizIdx < QUIZ.length - 1) {
+      setTimeout(function () {
+        quizIdx++;
+        buildQuiz();
+      }, 1400);
+    } else {
+      if (bubble) bubble.innerHTML += "<br>🏆 3 題全破，兩步驟解題大特務任務完成！";
+    }
+  } else {
+    if (bubble) bubble.innerHTML = "💡 " + q.hint;
+    speakText(q.no);
+  }
+}
+
+function resetQuiz() {
+  quizIdx = 0;
+  buildQuiz();
+}
+
+/* ==================== 初始化 ==================== */
+resetAct1();
+resetAct2Scene();
+resetAct3();
+resetQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>
