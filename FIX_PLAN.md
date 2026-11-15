@@ -45,9 +45,12 @@
   - 產出檔案: `tools/verify_g2_concept_labs.js`, `app/components/g2_template_lab.html`
   - 驗收結果: Exit Code 0 (390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、高度 $\le 420\text{px}$、Console 0 報錯)
   - 施工通道: 通道一 (OpenCode CLI $0)
-- [ ] **Step 2: G2-N-2-1 一千以內的數 (`g2_place_value_1000_lab.html`)**
-  - 課綱活動: 百格千塊立體積木、千位進位翻牌器、三位數數線放大鏡。
-  - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-1`
+- [x] **Step 2: G2-N-2-1 一千以內的數 (`g2_place_value_1000_lab.html`)**
+  - 產出檔案: `app/components/g2_place_value_1000_lab.html` (1017 行)
+  - 課綱活動: 百格千塊立體積木、千位進位翻牌器、三位數數線放大鏡、滿 10 個百合體金千立方體
+  - 驗證結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕按鈕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一/通道二自動容災協同 ($0)
+- [ ] **Step 3: G2-N-2-2 加減算式與直式計算 (`g2_vertical_addition_subtraction_lab.html`)**
 - [ ] **Step 3: G2-N-2-2 加減算式與直式計算 (`g2_vertical_addition_subtraction_lab.html`)**
   - 課綱活動: 直式算柱位值對齊、滿十進一動態飛入、不夠減借十退位拆解。
   - 驗證指令: `node tools/verify_g2_concept_labs.js --unit N-2-2`

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-1 一千以內的數 · 概念探索實驗室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 1 位值標籤 */
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag-btn {
+  flex: 1 1 45%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.tag-btn.active {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.tag-btn:active { transform: scale(0.95); }
+
+/* Act 2 拖曳 */
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+.golden-cube {
+  opacity: 0;
+  transform: scale(0.3);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.golden-cube.show { opacity: 1; transform: scale(1); }
+.sparkle {
+  animation: sparklePulse 1.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes sparklePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Act 3 位值計數器 */
+.pv-row { display: flex; gap: 8px; justify-content: center; }
+.pv-col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pv-label { font-size: 11px; font-weight: 800; color: var(--ink-soft); }
+.pv-controls { display: flex; align-items: center; gap: 6px; }
+.pv-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 17px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pv-btn:active { transform: scale(0.92); }
+.pv-digit {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fdf6e9;
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.big-word {
+  text-align: center;
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--coral-deep);
+  letter-spacing: 2px;
+}
+#act3-needle { transition: transform 0.35s ease; }
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 40%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      一千以內的數 · 概念實驗室
+      <small>二年級 · G2-N-2-1 位值與十進位</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（千/百/十/個 位值結構） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('這是積木家族：1 個千、1 個百、1 個十、1 個一。點下面的標籤，看看它們之間的十進位關係！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 看一看</div>
+      <div class="card-desc">積木家族報到！大立方體、百格板、十格條與小方塊。點下面的位值標籤，找出它們之間的祕密關係！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 254" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="千位大立方體、百格板、十格條與小方塊">
+          <!-- 千位大立方體（擬物 3D） -->
+          <g id="act1-g-thousand">
+            <polygon points="26,96 46,82 158,82 138,96" fill="#f4f9ff" stroke="#7db8e8" stroke-width="2"></polygon>
+            <polygon points="138,96 158,82 158,194 138,208" fill="#d8e8f7" stroke="#7db8e8" stroke-width="2"></polygon>
+            <rect x="26" y="96" width="112" height="112" rx="4" fill="#e8f1fb" stroke="#7db8e8" stroke-width="2.5"></rect>
+            <g id="act1-thousand-grid"></g>
+            <text x="93" y="228" text-anchor="middle" font-size="11" font-weight="800" fill="#4a7ba6">1000</text>
+          </g>
+          <!-- 百格板 -->
+          <g id="act1-g-hundred">
+            <rect x="166" y="110" width="90" height="90" rx="4" fill="#e7f5f0" stroke="#318a70" stroke-width="2.5"></rect>
+            <g id="act1-hundred-grid"></g>
+            <text x="211" y="216" text-anchor="middle" font-size="11" font-weight="800" fill="#318a70">100</text>
+          </g>
+          <!-- 十格條 -->
+          <g id="act1-g-ten">
+            <rect x="284" y="110" width="16" height="80" rx="3" fill="#ffe9a8" stroke="#d9910d" stroke-width="2.5"></rect>
+            <g id="act1-ten-grid"></g>
+            <text x="292" y="204" text-anchor="middle" font-size="11" font-weight="800" fill="#b07a0a">10</text>
+          </g>
+          <!-- 個位小方塊 -->
+          <g id="act1-g-unit">
+            <rect x="284" y="214" width="16" height="16" rx="3" fill="#ffd0c2" stroke="#f4694b" stroke-width="2.5"></rect>
+            <text x="292" y="246" text-anchor="middle" font-size="11" font-weight="800" fill="#c2543a">1</text>
+          </g>
+        </svg>
+      </div>
+      <div class="tag-row" id="act1-tags">
+        <button class="tag-btn" data-place="thousand" onclick="highlightPlace('thousand')">千位 · 1000</button>
+        <button class="tag-btn" data-place="hundred" onclick="highlightPlace('hundred')">百位 · 100</button>
+        <button class="tag-btn" data-place="ten" onclick="highlightPlace('ten')">十位 · 10</button>
+        <button class="tag-btn" data-place="unit" onclick="highlightPlace('unit')">個位 · 1</button>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 點下方的位值標籤，看看積木之間「十進位」的祕密！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（百格板拖入千位收集箱） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('用手指把百格板拖進右邊的千位收集箱，集滿 10 塊，就會變成一個金色的一千大立方體！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 拖一拖</div>
+      <div class="card-desc">把左邊的百格板拖進右邊的千位收集箱，每塊是 100。集滿 <b>10 塊</b>會發生什麼事呢？</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 250" xmlns="http://www.w3.org/2000/svg" style="touch-action:none" role="img" aria-label="百格板拖入千位收集箱">
+          <defs>
+            <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffe08a"></stop>
+              <stop offset="1" stop-color="#f5b409"></stop>
+            </linearGradient>
+          </defs>
+          <!-- 百格板發放區 -->
+          <rect x="12" y="52" width="140" height="170" rx="12" fill="#f3ede0" stroke="#e0d5c0" stroke-width="2"></rect>
+          <text x="82" y="42" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a857b">百格板發放區</text>
+          <text id="act2-tray" x="82" y="204" text-anchor="middle" font-size="11" font-weight="800" fill="#b0a88f">剩 10 塊</text>
+          <!-- 千位收集箱 -->
+          <rect x="210" y="52" width="134" height="170" rx="14" fill="#fffaf0" stroke="#ffd166" stroke-width="2.5" stroke-dasharray="7 5"></rect>
+          <text x="277" y="42" text-anchor="middle" font-size="11.5" font-weight="800" fill="#d9910d">千位收集箱</text>
+          <text id="act2-count" x="277" y="76" text-anchor="middle" font-size="11.5" font-weight="800" fill="#8a857b">已收集 0 塊</text>
+          <text id="act2-value" x="277" y="102" text-anchor="middle" font-size="21" font-weight="900" fill="#f4694b">0</text>
+          <g id="act2-collected"></g>
+          <!-- 金色 1000 大立方體（合體動畫） -->
+          <g id="act2-golden" class="golden-cube">
+            <polygon points="242,102 258,92 328,92 312,102" fill="#fff3cd" stroke="#d9910d" stroke-width="2"></polygon>
+            <polygon points="312,102 328,92 328,162 312,172" fill="#e8a906" stroke="#d9910d" stroke-width="2"></polygon>
+            <rect x="242" y="102" width="70" height="70" rx="4" fill="url(#goldGrad)" stroke="#d9910d" stroke-width="2.5"></rect>
+            <text x="277" y="143" text-anchor="middle" font-size="14" font-weight="900" fill="#7a5100">1000</text>
+            <text class="sparkle" x="230" y="96" font-size="15">✨</text>
+            <text class="sparkle" x="322" y="180" font-size="15">✨</text>
+          </g>
+          <!-- 可拖曳的百格板 -->
+          <g id="act2-draggable" class="drag-handle">
+            <rect x="0" y="0" width="56" height="56" rx="6" fill="#e7f5f0" stroke="#318a70" stroke-width="2.5"></rect>
+            <g id="act2-plate-grid"></g>
+          </g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 拖曳百格板到右邊的千位收集箱，集滿 10 塊看看會發生什麼！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（位值計數器與數線定位） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('按加號減號調整百位十位個位，積木、國字和數線會一起變動！')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 想一想</div>
+      <div class="card-desc">按 <b>＋／−</b> 調整百位、十位、個位，看看積木、國字與數線怎麼一起連動！</div>
+      <div class="pv-row">
+        <div class="pv-col">
+          <span class="pv-label">百位</span>
+          <div class="pv-controls">
+            <button class="pv-btn" onclick="pvChange('h',-1)">−</button>
+            <span class="pv-digit" id="pv-h">3</span>
+            <button class="pv-btn" onclick="pvChange('h',1)">＋</button>
+          </div>
+        </div>
+        <div class="pv-col">
+          <span class="pv-label">十位</span>
+          <div class="pv-controls">
+            <button class="pv-btn" onclick="pvChange('t',-1)">−</button>
+            <span class="pv-digit" id="pv-t">4</span>
+            <button class="pv-btn" onclick="pvChange('t',1)">＋</button>
+          </div>
+        </div>
+        <div class="pv-col">
+          <span class="pv-label">個位</span>
+          <div class="pv-controls">
+            <button class="pv-btn" onclick="pvChange('u',-1)">−</button>
+            <span class="pv-digit" id="pv-u">5</span>
+            <button class="pv-btn" onclick="pvChange('u',1)">＋</button>
+          </div>
+        </div>
+      </div>
+      <div class="big-word" id="act3-word">三百四十五</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 224" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="積木組合與 0 到 1000 數線">
+          <text x="20" y="34" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">百</text>
+          <g id="act3-squares"></g>
+          <text x="20" y="76" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">十</text>
+          <g id="act3-bars"></g>
+          <text x="20" y="118" text-anchor="middle" font-size="12" font-weight="800" fill="#8a857b">個</text>
+          <g id="act3-units"></g>
+          <!-- 數線 0 ~ 1000 -->
+          <line x1="24" y1="190" x2="334" y2="190" stroke="#c9c2b4" stroke-width="2.5"></line>
+          <g id="act3-ticks"></g>
+          <g id="act3-needle">
+            <polygon points="24,190 29,177 19,177" fill="#f4694b"></polygon>
+            <circle cx="24" cy="173" r="3" fill="#f4694b"></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 調整位值，把數字調到 <b>999</b> 看看會發現什麼！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（積木辨識互動題） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('看積木說數字：幾個百、幾個十、幾個一，合起來是多少？')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 試一試</div>
+      <div class="card-desc" id="act4-question"></div>
+      <svg id="act4-blocks" viewBox="0 0 358 70" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="題目積木組合"></svg>
+      <div class="choice-row" id="act4-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級數學，一千以內的數。現在進行第 " + currentAct + " 幕。跟著四個關卡，認識千、百、十、個的位值秘密！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function markDone(key) {
+  if (!verifyState[key]) {
+    verifyState[key] = true;
+    refreshStatusBar();
+  }
+}
+
+var SVG_NS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs) {
+  var el = document.createElementNS(SVG_NS, tag);
+  for (var k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+/* ==================== Act 1：位值積木大解剖 ==================== */
+function drawGrid(groupId, x, y, w, h, cx, cy, color) {
+  var g = document.getElementById(groupId);
+  if (!g) return;
+  g.innerHTML = "";
+  var i;
+  for (i = 1; i < cx; i++) {
+    g.appendChild(svgEl("line", {
+      x1: x + (w / cx) * i, y1: y, x2: x + (w / cx) * i, y2: y + h,
+      stroke: color, "stroke-width": 1
+    }));
+  }
+  for (i = 1; i < cy; i++) {
+    g.appendChild(svgEl("line", {
+      x1: x, y1: y + (h / cy) * i, x2: x + w, y2: y + (h / cy) * i,
+      stroke: color, "stroke-width": 1
+    }));
+  }
+}
+
+var PLACE_KEYS = ["thousand", "hundred", "ten", "unit"];
+var PLACE_REL = {
+  thousand: {
+    bubble: "🔵 <b>1 個千位大立方體 = 1000</b>：10 個百合起來，才升級成 1 個千！",
+    speak: "1 個千就是 1000。10 個百合起來, 才升級成 1 個千。"
+  },
+  hundred: {
+    bubble: "🟩 <b>1 個百格板 = 100</b>：10 條十格條合起來，就是 1 個百！",
+    speak: "1 個百就是 100。10 個十合起來, 就是 1 個百。"
+  },
+  ten: {
+    bubble: "🟨 <b>1 個十格條 = 10</b>：10 個一小方塊排成一排，就是 1 個十！",
+    speak: "1 個十就是 10。10 個一排成一排, 就是 1 個十。"
+  },
+  unit: {
+    bubble: "🟧 <b>1 個小方塊 = 1</b>：數滿 10 個一，就換成 1 個十！",
+    speak: "1 個小方塊就是 1。數滿 10 個一, 就換成 1 個十。"
+  }
+};
+
+function highlightPlace(key) {
+  if (!PLACE_REL[key]) return;
+  PLACE_KEYS.forEach(function (k) {
+    var g = document.getElementById("act1-g-" + k);
+    if (g) g.style.opacity = (k === key) ? "1" : "0.28";
+  });
+  document.querySelectorAll("#act1-tags .tag-btn").forEach(function (b) {
+    b.classList.toggle("active", b.getAttribute("data-place") === key);
+  });
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 " + PLACE_REL[key].bubble;
+  markDone("act1");
+  speakText(PLACE_REL[key].speak);
+}
+
+function resetAct1() {
+  PLACE_KEYS.forEach(function (k) {
+    var g = document.getElementById("act1-g-" + k);
+    if (g) g.style.opacity = "1";
+  });
+  document.querySelectorAll("#act1-tags .tag-btn").forEach(function (b) {
+    b.classList.remove("active");
+  });
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 點下方的位值標籤，看看積木之間「十進位」的祕密！";
+  verifyState.act1 = false;
+}
+
+function initAct1() {
+  drawGrid("act1-thousand-grid", 26, 96, 112, 112, 10, 10, "#b9cfe8");
+  drawGrid("act1-hundred-grid", 166, 110, 90, 90, 10, 10, "#b5dccd");
+  var g = document.getElementById("act1-ten-grid");
+  if (g) {
+    g.innerHTML = "";
+    for (var i = 1; i < 10; i++) {
+      g.appendChild(svgEl("line", {
+        x1: 284, y1: 110 + 8 * i, x2: 300, y2: 110 + 8 * i,
+        stroke: "#e3b23c", "stroke-width": 1.5
+      }));
+    }
+  }
+}
+
+/* ==================== Act 2：百格板拖入千位收集箱 ==================== */
+var act2 = { dragX: 54, dragY: 108, collected: 0, done: false, dragging: false, start: null, origin: null };
+var DRAG_GROUP = null;
+var DRAG_SIZE = 56;
+
+function applyDragTransform() {
+  if (DRAG_GROUP) DRAG_GROUP.setAttribute("transform", "translate(" + act2.dragX + "," + act2.dragY + ")");
+}
+function svgPoint(evt) {
+  var svg = document.getElementById("act2-svg");
+  if (!svg) return null;
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+function initDrag2() {
+  DRAG_GROUP = document.getElementById("act2-draggable");
+  if (!DRAG_GROUP) return;
+  drawGrid("act2-plate-grid", 0, 0, DRAG_SIZE, DRAG_SIZE, 10, 10, "#b5dccd");
+  applyDragTransform();
+  DRAG_GROUP.addEventListener("pointerdown", function (e) {
+    if (act2.done) return;
+    var p = svgPoint(e);
+    if (!p) return;
+    act2.dragging = true;
+    act2.start = p;
+    act2.origin = { x: act2.dragX, y: act2.dragY };
+    DRAG_GROUP.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+  DRAG_GROUP.addEventListener("pointermove", function (e) {
+    if (!act2.dragging) return;
+    var p = svgPoint(e);
+    if (!p) return;
+    act2.dragX = Math.max(16, Math.min(296, act2.origin.x + (p.x - act2.start.x)));
+    act2.dragY = Math.max(44, Math.min(188, act2.origin.y + (p.y - act2.start.y)));
+    applyDragTransform();
+    e.preventDefault();
+  });
+  DRAG_GROUP.addEventListener("pointerup", function (e) {
+    if (!act2.dragging) return;
+    act2.dragging = false;
+    /* 磁吸貼齊：板心落入收集箱範圍則計數 */
+    var cx = act2.dragX + DRAG_SIZE / 2;
+    var cy = act2.dragY + DRAG_SIZE / 2;
+    if (cx >= 208 && cx <= 346 && cy >= 50 && cy <= 224) {
+      collectPlate();
+    } else {
+      act2.dragX = 54; act2.dragY = 108;
+      applyDragTransform();
+    }
+    e.preventDefault();
+  });
+  DRAG_GROUP.addEventListener("pointercancel", function () { act2.dragging = false; });
+}
+
+function collectPlate() {
+  act2.collected++;
+  var i = act2.collected - 1;
+  var col = i % 3, row = Math.floor(i / 3);
+  var holder = document.getElementById("act2-collected");
+  if (holder) {
+    holder.appendChild(svgEl("rect", {
+      x: 236 + col * 30, y: 112 + row * 28, width: 22, height: 22, rx: 3,
+      fill: "#7bc9b2", stroke: "#ffffff", "stroke-width": 1.5
+    }));
+  }
+  var countEl = document.getElementById("act2-count");
+  var valueEl = document.getElementById("act2-value");
+  var trayEl = document.getElementById("act2-tray");
+  if (countEl) countEl.textContent = "已收集 " + act2.collected + " 塊";
+  if (valueEl) valueEl.textContent = String(act2.collected * 100);
+  if (trayEl) trayEl.textContent = "剩 " + (10 - act2.collected) + " 塊";
+  act2.dragX = 54; act2.dragY = 108;
+  applyDragTransform();
+  if (act2.collected >= 10) {
+    celebrateThousand();
+  } else {
+    speakText(act2.collected * 100 + "！已經收集 " + act2.collected + " 個百");
+  }
+}
+
+function celebrateThousand() {
+  act2.done = true;
+  var holder = document.getElementById("act2-collected");
+  if (holder) holder.innerHTML = "";
+  var golden = document.getElementById("act2-golden");
+  if (golden) golden.classList.add("show");
+  var valueEl = document.getElementById("act2-value");
+  if (valueEl) {
+    valueEl.textContent = "1000";
+    valueEl.setAttribute("fill", "#d9910d");
+  }
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "🎉 <b>10 個百就是一千！</b>10 塊百格板合體成 1 個金色 1000 大立方體！";
+  markDone("act2");
+  speakText("太棒了！10 個 100 就是 1000！");
+}
+
+function resetAct2() {
+  act2.dragX = 54; act2.dragY = 108;
+  act2.collected = 0;
+  act2.done = false;
+  act2.dragging = false;
+  applyDragTransform();
+  var holder = document.getElementById("act2-collected");
+  if (holder) holder.innerHTML = "";
+  var golden = document.getElementById("act2-golden");
+  if (golden) golden.classList.remove("show");
+  var valueEl = document.getElementById("act2-value");
+  if (valueEl) {
+    valueEl.textContent = "0";
+    valueEl.setAttribute("fill", "#f4694b");
+  }
+  var countEl = document.getElementById("act2-count");
+  var trayEl = document.getElementById("act2-tray");
+  if (countEl) countEl.textContent = "已收集 0 塊";
+  if (trayEl) trayEl.textContent = "剩 10 塊";
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 拖曳百格板到右邊的千位收集箱，集滿 10 塊看看會發生什麼！";
+  verifyState.act2 = false;
+}
+
+/* ==================== Act 3：位值計數器與數線 ==================== */
+var pv = { h: 3, t: 4, u: 5 };
+
+function toChineseNum(n) {
+  var digits = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
+  if (n === 0) return "零";
+  var h = Math.floor(n / 100), t = Math.floor((n % 100) / 10), u = n % 10;
+  var s = "";
+  if (h > 0) s += digits[h] + "百";
+  if (t > 0) {
+    if (t > 1 || h === 0) s += digits[t];
+    s += "十";
+  } else if (h > 0 && u > 0) {
+    s += "零";
+  }
+  if (u > 0) s += digits[u];
+  return s;
+}
+
+function pvValue() { return pv.h * 100 + pv.t * 10 + pv.u; }
+
+function redrawAct3() {
+  var sq = document.getElementById("act3-squares");
+  var bars = document.getElementById("act3-bars");
+  var units = document.getElementById("act3-units");
+  var i;
+  if (sq) {
+    sq.innerHTML = "";
+    for (i = 0; i < pv.h; i++) {
+      sq.appendChild(svgEl("rect", {
+        x: 40 + i * 29, y: 18, width: 24, height: 24, rx: 3,
+        fill: "#7bc9b2", stroke: "#318a70", "stroke-width": 1.5
+      }));
+    }
+  }
+  if (bars) {
+    bars.innerHTML = "";
+    for (i = 0; i < pv.t; i++) {
+      bars.appendChild(svgEl("rect", {
+        x: 40 + i * 17, y: 60, width: 12, height: 26, rx: 3,
+        fill: "#ffd166", stroke: "#d9910d", "stroke-width": 1.5
+      }));
+    }
+  }
+  if (units) {
+    units.innerHTML = "";
+    for (i = 0; i < pv.u; i++) {
+      units.appendChild(svgEl("rect", {
+        x: 40 + i * 23, y: 102, width: 16, height: 16, rx: 3,
+        fill: "#ff8a65", stroke: "#f4694b", "stroke-width": 1.5
+      }));
+    }
+  }
+  var word = document.getElementById("act3-word");
+  if (word) word.textContent = toChineseNum(pvValue());
+  var needle = document.getElementById("act3-needle");
+  if (needle) needle.style.transform = "translateX(" + (pvValue() / 1000 * 310) + "px)";
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    bubble.innerHTML = pvValue() === 999
+      ? "🌟 <b>999 已經是最大！</b>再多 1 個一，就要進位成一千了！"
+      : "💡 調整位值，把數字調到 <b>999</b> 看看會發現什麼！";
+  }
+}
+
+function pvChange(digit, delta) {
+  var next = pv[digit] + delta;
+  if (next < 0 || next > 9) return;
+  pv[digit] = next;
+  var el = document.getElementById("pv-" + digit);
+  if (el) el.textContent = String(pv[digit]);
+  redrawAct3();
+  markDone("act3");
+}
+
+function initAct3Ticks() {
+  var g = document.getElementById("act3-ticks");
+  if (!g) return;
+  g.innerHTML = "";
+  for (var k = 0; k <= 10; k++) {
+    var x = 24 + 31 * k;
+    g.appendChild(svgEl("line", {
+      x1: x, y1: 186, x2: x, y2: 194,
+      stroke: "#c9c2b4", "stroke-width": k % 2 === 0 ? 2 : 1
+    }));
+    g.appendChild(svgEl("text", {
+      x: x, y: 210, "text-anchor": "middle",
+      "font-size": 8.5, "font-weight": 700, fill: "#8a857b"
+    })).textContent = String(k * 100);
+  }
+}
+
+function resetAct3() {
+  pv = { h: 3, t: 4, u: 5 };
+  document.getElementById("pv-h").textContent = "3";
+  document.getElementById("pv-t").textContent = "4";
+  document.getElementById("pv-u").textContent = "5";
+  redrawAct3();
+  verifyState.act3 = false;
+}
+
+/* ==================== Act 4：積木辨識小小挑戰賽 ==================== */
+var QPOOL = [
+  { h: 4, t: 2, u: 6, ans: 426, opts: [426, 462, 246, 424], hint: "4 個百是 400，2 個十是 20，6 個一是 6，合起來 400+20+6=426。" },
+  { h: 3, t: 0, u: 5, ans: 305, opts: [305, 350, 315, 35], hint: "3 個百是 300，十位是 0，5 個一是 5，中間要補 0：305。" },
+  { h: 7, t: 1, u: 0, ans: 710, opts: [710, 701, 717, 170], hint: "7 個百是 700，1 個十是 10，個位是 0，合起來就是 710。" },
+  { h: 5, t: 8, u: 0, opts: [580, 508, 585, 850], ans: 580, hint: "5 個百是 500，8 個十是 80，合起來就是 580。" },
+  { h: 9, t: 9, u: 9, opts: [999, 990, 909, 989], ans: 999, hint: "9 個百、9 個十、9 個一，每個位數都是 9：999。" }
+];
+var act4 = { qIndex: 0, order: [], locked: false, gen: 0 };
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function drawQBlocks(q) {
+  var svg = document.getElementById("act4-blocks");
+  if (!svg) return;
+  svg.innerHTML = "";
+  var caps = [["百", 16], ["十", 40], ["個", 62]];
+  caps.forEach(function (c) {
+    svg.appendChild(svgEl("text", {
+      x: 18, y: c[1], "text-anchor": "middle",
+      "font-size": 11, "font-weight": 800, fill: "#8a857b"
+    })).textContent = c[0];
+  });
+  var i;
+  for (i = 0; i < q.h; i++) {
+    svg.appendChild(svgEl("rect", {
+      x: 34 + i * 20, y: 4, width: 16, height: 16, rx: 2,
+      fill: "#7bc9b2", stroke: "#318a70", "stroke-width": 1.5
+    }));
+  }
+  for (i = 0; i < q.t; i++) {
+    svg.appendChild(svgEl("rect", {
+      x: 34 + i * 13, y: 28, width: 8, height: 16, rx: 2,
+      fill: "#ffd166", stroke: "#d9910d", "stroke-width": 1.5
+    }));
+  }
+  for (i = 0; i < q.u; i++) {
+    svg.appendChild(svgEl("rect", {
+      x: 34 + i * 16, y: 52, width: 10, height: 10, rx: 2,
+      fill: "#ff8a65", stroke: "#f4694b", "stroke-width": 1.5
+    }));
+  }
+}
+
+function renderQ() {
+  var q = QPOOL[act4.order[act4.qIndex]];
+  var desc = document.getElementById("act4-question");
+  if (desc) {
+    desc.innerHTML = "第 " + (act4.qIndex + 1) + " / 3 題 · <b>" + q.h + "</b> 個百、<b>" + q.t + "</b> 個十、<b>" + q.u + "</b> 個一，合起來代表多少？";
+  }
+  drawQBlocks(q);
+  var box = document.getElementById("act4-choices");
+  if (box) {
+    box.innerHTML = "";
+    shuffle(q.opts).forEach(function (v) {
+      var b = document.createElement("button");
+      b.className = "choice-btn";
+      b.setAttribute("data-ok", v === q.ans ? "1" : "0");
+      b.setAttribute("onclick", "answer(this)");
+      b.textContent = String(v);
+      box.appendChild(b);
+    });
+  }
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 數一數積木，選出正確的數字！";
+}
+
+function buildAct4() {
+  act4.gen++;
+  act4.qIndex = 0;
+  act4.locked = false;
+  act4.order = shuffle([0, 1, 2, 3, 4]).slice(0, 3);
+  renderQ();
+  verifyState.act4 = false;
+  refreshStatusBar();
+}
+
+function answer(btn) {
+  if (act4.locked) return;
+  var q = QPOOL[act4.order[act4.qIndex]];
+  var ok = btn.getAttribute("data-ok") === "1";
+  var bubble = document.getElementById("act4-bubble");
+  if (ok) {
+    act4.locked = true;
+    btn.classList.add("correct");
+    if (bubble) bubble.innerHTML = "🎉 答對了！<b>" + q.ans + "</b>。" + q.hint;
+    speakText("答對了！" + q.ans + "。" + q.hint);
+    var myGen = act4.gen;
+    setTimeout(function () {
+      if (myGen !== act4.gen) return;
+      act4.qIndex++;
+      if (act4.qIndex < 3) {
+        act4.locked = false;
+        renderQ();
+      } else {
+        if (bubble) bubble.innerHTML = "🏆 <b>3 題全對！</b>你已經完全掌握「一千以內」的位值了！";
+        markDone("act4");
+        speakText("太厲害了！三題全部答對，你已經完全掌握一千以內的數了！");
+      }
+    }, 1100);
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = "💡 再想想看：" + q.hint;
+    speakText("再想想看。" + q.hint);
+  }
+}
+
+/* ==================== 重置實驗室 ==================== */
+function resetLab() {
+  Object.keys(verifyState).forEach(function (k) { verifyState[k] = false; });
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  buildAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== 初始化 ==================== */
+initAct1();
+initDrag2();
+initAct3Ticks();
+resetAct3();
+buildAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>
