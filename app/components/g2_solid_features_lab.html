@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-S-2-1 物體之幾何特徵 · 概念小教室</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* Act 1 物體選擇鈕 */
+.obj-btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.obj-btn {
+  flex: 1 1 44%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 4px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.obj-btn.active {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.launch-btn {
+  align-self: center;
+  background: var(--mint);
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 9px 22px;
+  border-radius: 999px;
+  box-shadow: 0 3px 8px rgba(49, 138, 112, 0.3);
+}
+.launch-btn:active { transform: scale(0.95); }
+
+/* Act 3 形體觸摸 */
+.shape { cursor: pointer; transition: opacity 0.2s; }
+.shape.dim { opacity: 0.35; }
+.face-flat { fill: #f2e4c8; stroke: #a08650; stroke-width: 2; transition: fill 0.2s; }
+.face-curve { fill: #ffdccf; stroke: #e08a6d; stroke-width: 2; transition: fill 0.2s; }
+.shape.sel .face-flat { fill: #7bc9b2; stroke: #318a70; }
+.shape.sel .face-curve { fill: #ff8a65; stroke: #f4694b; }
+.shape-label { font-size: 12px; font-weight: 800; fill: #6b6557; }
+
+/* Act 4 挑戰 */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+.choice-btn:disabled { cursor: default; }
+.next-btn {
+  align-self: center;
+  background: var(--lemon);
+  color: #7a5c1e;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 7px 18px;
+  border-radius: 999px;
+}
+.next-btn.hidden { display: none; }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      物體之幾何特徵小教室
+      <small>二年級 · S-2-1 滾動 × 滑動 × 堆疊</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 斜坡實驗室</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 堆疊高塔</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 觸摸顯微鏡</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 分類大師</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（斜坡滾動與滑動實驗室） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('把皮球放上斜坡, 圓圓的曲面會滾動; 積木平平的面只能滑動')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 斜坡實驗室</div>
+      <div class="card-desc">選一個物體放上斜坡，按「出發」看看它是<b>滾動</b>還是<b>滑動</b>？</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="斜坡滾動與滑動實驗">
+          <rect x="0" y="224" width="358" height="26" fill="#e8dcc4"></rect>
+          <polygon points="30,54 338,224 30,224" fill="#f7e3c3" stroke="#d9b98a" stroke-width="2"></polygon>
+          <line x1="30" y1="54" x2="338" y2="224" stroke="#c69a5f" stroke-width="3" stroke-linecap="round"></line>
+          <text x="298" y="242" font-size="11" font-weight="800" fill="#8a7a5e">斜坡底</text>
+          <!-- 移動中的物體（依選擇切換顯示） -->
+          <g id="act1-obj" transform="translate(0,0)">
+            <g id="act1-obj-ball">
+              <circle r="16" fill="#ff8a65" stroke="#f4694b" stroke-width="3"></circle>
+              <line x1="-16" y1="0" x2="16" y2="0" stroke="#ffffff" stroke-width="3" stroke-linecap="round"></line>
+              <circle cx="-6" cy="-6" r="4" fill="#ffd0c2"></circle>
+            </g>
+            <g id="act1-obj-cube" transform="rotate(28.92)">
+              <rect x="-14" y="-14" width="28" height="28" rx="3" fill="#ffd166" stroke="#d9910d" stroke-width="3"></rect>
+              <line x1="-14" y1="-14" x2="14" y2="14" stroke="#fbe29f" stroke-width="2.5"></line>
+            </g>
+            <g id="act1-obj-cylLying">
+              <circle r="15" fill="#7bc9b2" stroke="#318a70" stroke-width="3"></circle>
+              <circle r="6" fill="#a8dfd0" stroke="#318a70" stroke-width="2"></circle>
+              <line x1="-15" y1="0" x2="15" y2="0" stroke="#318a70" stroke-width="2.5"></line>
+            </g>
+            <g id="act1-obj-cylUpright">
+              <rect x="-12" y="-16" width="24" height="32" rx="6" fill="#7bc9b2" stroke="#318a70" stroke-width="3"></rect>
+              <ellipse cx="0" cy="-16" rx="12" ry="5" fill="#a8dfd0" stroke="#318a70" stroke-width="2"></ellipse>
+            </g>
+          </g>
+          <circle id="act1-lamp" cx="330" cy="30" r="10" fill="#7bc9b2" opacity="0"></circle>
+        </svg>
+      </div>
+      <div class="obj-btn-row">
+        <button class="obj-btn active" data-obj="ball" onclick="pickAct1(this)">🔴 皮球</button>
+        <button class="obj-btn" data-obj="cube" onclick="pickAct1(this)">🟡 方塊積木</button>
+        <button class="obj-btn" data-obj="cylLying" onclick="pickAct1(this)">🟢 罐子·橫躺</button>
+        <button class="obj-btn" data-obj="cylUpright" onclick="pickAct1(this)">🟢 罐子·直立</button>
+      </div>
+      <button class="launch-btn" id="btn-act1-go" onclick="launchAct1()">🚀 出發！</button>
+      <div class="tip-bubble" id="act1-bubble">💡 皮球有<b>曲面</b>會滾動；積木用<b>平平的面</b>貼著斜坡，只能滑動。同一個罐子，橫躺會滾、直立會滑！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（積木堆疊高塔大挑戰） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('平面對平面才能穩固堆疊, 曲面會滑落滾走')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 堆疊高塔大挑戰</div>
+      <div class="card-desc">選一個物體放到塔頂，按「往上堆疊」。誰能讓高塔穩固？</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="積木堆疊高塔挑戰">
+          <rect x="0" y="212" width="358" height="28" fill="#e8dcc4"></rect>
+          <!-- 穩固燈號 -->
+          <circle id="act2-lamp-ok" cx="322" cy="26" r="11" fill="#7bc9b2" opacity="0.15"></circle>
+          <circle id="act2-lamp-no" cx="286" cy="26" r="11" fill="#ff8a65" opacity="0.15"></circle>
+          <text x="322" y="52" font-size="10" font-weight="800" fill="#318a70" text-anchor="middle">綠燈</text>
+          <text x="286" y="52" font-size="10" font-weight="800" fill="#f4694b" text-anchor="middle">橘燈</text>
+          <!-- 固定基座 -->
+          <rect x="142" y="178" width="44" height="34" rx="3" fill="#e0b96b" stroke="#b3873a" stroke-width="2.5"></rect>
+          <text x="164" y="200" font-size="10" font-weight="800" fill="#7a5c1e" text-anchor="middle">基座</text>
+          <g id="act2-stack"></g>
+          <g id="act2-flyer"></g>
+        </svg>
+      </div>
+      <div class="obj-btn-row">
+        <button class="obj-btn active" data-stack="cube" onclick="pickStack(this)">🟡 正方體</button>
+        <button class="obj-btn" data-stack="cylUp" onclick="pickStack(this)">🟢 直立圓柱</button>
+        <button class="obj-btn" data-stack="cylLying" onclick="pickStack(this)">🟠 橫躺圓柱</button>
+        <button class="obj-btn" data-stack="ball" onclick="pickStack(this)">🔴 皮球</button>
+      </div>
+      <button class="launch-btn" onclick="stackUp()">⬆️ 往上堆疊</button>
+      <div class="tip-bubble" id="act2-bubble">💡 <b>平面對平面</b>就能穩固堆高；<b>曲面</b>碰到平面會滑落滾走！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（平面 vs 曲面 觸摸顯微鏡） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('點選形體, 看看它有幾個平平的面, 幾個彎彎的曲面')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 平面 vs 曲面 觸摸顯微鏡</div>
+      <div class="card-desc">點選形體放大觀察：<b>平平的面</b>變綠色、<b>彎彎的曲面</b>變橘色。</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="三大形體面結構觀察">
+          <!-- 正方體：6 個平面 -->
+          <g id="act3-shape-cube" class="shape sel" onclick="selectShape('cube')">
+            <polygon class="face-flat" points="40,138 62,116 106,116 84,138"></polygon>
+            <polygon class="face-flat" points="84,138 106,116 106,160 84,182"></polygon>
+            <rect class="face-flat" x="40" y="138" width="44" height="44"></rect>
+            <text class="shape-label" x="75" y="208" text-anchor="middle">正方體</text>
+          </g>
+          <!-- 圓柱：2 平面 + 1 曲面 -->
+          <g id="act3-shape-cyl" class="shape" onclick="selectShape('cyl')">
+            <path class="face-curve" d="M146,120 L146,180 A34,12 0 0 0 214,180 L214,120 Z"></path>
+            <ellipse class="face-flat" cx="180" cy="120" rx="34" ry="12"></ellipse>
+            <ellipse class="face-flat" cx="180" cy="180" rx="34" ry="12" fill="none" stroke-dasharray="4 3" opacity="0.6"></ellipse>
+            <text class="shape-label" x="180" y="212" text-anchor="middle">圓柱</text>
+          </g>
+          <!-- 球體：1 個曲面 -->
+          <g id="act3-shape-sphere" class="shape" onclick="selectShape('sphere')">
+            <circle class="face-curve" cx="298" cy="148" r="36"></circle>
+            <ellipse cx="286" cy="134" rx="10" ry="6" fill="#ffffff" opacity="0.45"></ellipse>
+            <text class="shape-label" x="298" y="208" text-anchor="middle">球</text>
+          </g>
+        </svg>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 點一點每個形體，數數看它有幾個<b>平面</b>、幾個<b>曲面</b>！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（形體特徵分類大師） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('想一想斜坡實驗和堆疊高塔, 把形體特徵分類出來')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 形體特徵分類大師</div>
+      <div class="card-desc" id="act4-question"></div>
+      <div class="choice-row" id="act4-choices"></div>
+      <button class="next-btn hidden" id="btn-next-q" onclick="nextQuestion()">下一題 ➜</button>
+      <div class="tip-bubble" id="act4-bubble">💪 三題全對，就是形體特徵分類大師！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級物體之幾何特徵小教室。現在進行第 " + currentAct + " 幕。曲面會滾動, 平面只能滑動, 平面對平面才能堆得穩！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* 通用 rAF 動畫（真實 pointer/rAF 驅動，非死圖） */
+var act1Raf = null, flyRaf = null;
+function animate(dur, onUpdate, onDone, rafRef) {
+  var t0 = null;
+  function frame(ts) {
+    if (t0 === null) t0 = ts;
+    var k = Math.min(1, (ts - t0) / dur);
+    onUpdate(k);
+    if (k < 1) {
+      var id = requestAnimationFrame(frame);
+      if (rafRef) rafRef.value = id;
+    } else if (onDone) {
+      onDone();
+    }
+  }
+  var id = requestAnimationFrame(frame);
+  if (rafRef) rafRef.value = id;
+}
+
+/* ==================== Act 1：斜坡滾動與滑動實驗室 ==================== */
+var ACT1 = {
+  A: { x: 30, y: 54 },      /* 斜坡頂點 */
+  D: { x: 308, y: 170 },    /* 斜坡向量 */
+  LEN: 351.8,
+  N: { x: 0.4832, y: -0.8755 }, /* 斜坡法線（朝上） */
+  ANGLE: 28.92
+};
+var OBJ1 = {
+  ball:      { off: 16, roll: 16, msg: "🟠 皮球用<b>曲面</b>接觸斜坡 → 轉呀轉地<b>滾動</b>下去了！曲面會滾動。", say: "皮球有曲面, 在斜坡上會滾動" },
+  cube:      { off: 14, roll: 0,  msg: "🟡 積木用<b>平平的面</b>貼著斜坡 → 只能<b>滑動</b>溜下來！平面只能滑動。", say: "積木的面平平的, 在斜坡上只能滑動" },
+  cylLying:  { off: 15, roll: 15, msg: "🟢 罐子<b>橫躺</b>，圓圓的面碰到斜坡 → <b>滾動</b>下去了！", say: "罐子橫躺, 圓面碰到斜坡會滾動" },
+  cylUpright:{ off: 16, roll: 0,  msg: "🟢 罐子<b>直立</b>，平平的面貼著斜坡 → 只能<b>滑動</b>！同一個罐子，擺法不同就不同！", say: "罐子直立, 平面貼著斜坡只能滑動" }
+};
+var selObj1 = "ball";
+
+function act1Pos(t, off) {
+  return {
+    x: ACT1.A.x + t * ACT1.D.x + ACT1.N.x * off,
+    y: ACT1.A.y + t * ACT1.D.y + ACT1.N.y * off
+  };
+}
+function applyAct1Obj(t, rotDeg) {
+  var cfg = OBJ1[selObj1];
+  var p = act1Pos(t, cfg.off);
+  var outer = document.getElementById("act1-obj");
+  if (outer) outer.setAttribute("transform", "translate(" + p.x.toFixed(2) + "," + p.y.toFixed(2) + ")");
+  var inner = document.getElementById("act1-obj-" + selObj1);
+  if (inner && cfg.roll > 0 && rotDeg !== undefined) {
+    inner.setAttribute("transform", "rotate(" + rotDeg.toFixed(1) + ")");
+  }
+}
+function pickAct1(btn) {
+  var obj = btn.getAttribute("data-obj");
+  if (!OBJ1[obj]) return;
+  selObj1 = obj;
+  document.querySelectorAll("#act-1-view .obj-btn").forEach(function (b) {
+    b.classList.toggle("active", b === btn);
+  });
+  ["ball", "cube", "cylLying", "cylUpright"].forEach(function (k) {
+    var g = document.getElementById("act1-obj-" + k);
+    if (g) g.style.display = (k === obj) ? "" : "none";
+  });
+  resetAct1Obj();
+}
+function resetAct1Obj() {
+  if (act1Raf) { cancelAnimationFrame(act1Raf); act1Raf = null; }
+  var lamp = document.getElementById("act1-lamp");
+  if (lamp) lamp.setAttribute("opacity", "0");
+  applyAct1Obj(0, 0);
+}
+function resetAct1() {
+  selObj1 = "ball";
+  document.querySelectorAll("#act-1-view .obj-btn").forEach(function (b) {
+    b.classList.toggle("active", b.getAttribute("data-obj") === "ball");
+  });
+  ["ball", "cube", "cylLying", "cylUpright"].forEach(function (k) {
+    var g = document.getElementById("act1-obj-" + k);
+    if (g) g.style.display = (k === "ball") ? "" : "none";
+  });
+  resetAct1Obj();
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 皮球有<b>曲面</b>會滾動；積木用<b>平平的面</b>貼著斜坡，只能滑動。同一個罐子，橫躺會滾、直立會滑！";
+}
+function launchAct1() {
+  var cfg = OBJ1[selObj1];
+  resetAct1Obj();
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "⏳ 出發！仔細看它是滾動還是滑動……";
+  var rafBox = { value: 0 };
+  animate(1600, function (k) {
+    var t = k; /* 線性等速（重力分量固定） */
+    var rot = cfg.roll > 0 ? (t * ACT1.LEN / cfg.roll) * 57.2958 : 0;
+    applyAct1Obj(t, rot);
+  }, function () {
+    act1Raf = null;
+    if (bubble) bubble.innerHTML = cfg.msg;
+    var lamp = document.getElementById("act1-lamp");
+    if (lamp) lamp.setAttribute("opacity", "0.9");
+    speakText(cfg.say + ", 有曲面的東西可以滾動, 平平的面只能滑動");
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  }, rafBox);
+  act1Raf = rafBox.value;
+}
+
+/* ==================== Act 2：積木堆疊高塔大挑戰 ==================== */
+var GROUND_Y = 212, BASE_H = 34, TOP_LIMIT = 44, CX = 164;
+var STACK_OBJ = {
+  cube:     { h: 34, flat: true,  say: "正方體平面對平面, 成功堆疊" },
+  cylUp:    { h: 40, flat: true,  say: "直立圓柱平面朝下, 成功堆疊" },
+  cylLying: { h: 30, flat: false, say: "橫躺圓柱的曲面碰平面, 滑落了" },
+  ball:     { h: 32, flat: false, say: "皮球全是曲面, 滾走了" }
+};
+var selStack = "cube";
+var tower = []; /* 已成功堆疊的物件 */
+
+function stackTopY() {
+  var h = BASE_H;
+  tower.forEach(function (it) { h += STACK_OBJ[it].h; });
+  return GROUND_Y - h;
+}
+function drawStackObject(type, y) {
+  var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  var cfg = STACK_OBJ[type];
+  if (type === "cube") {
+    var r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("x", CX - 22); r.setAttribute("y", y);
+    r.setAttribute("width", 44); r.setAttribute("height", cfg.h);
+    r.setAttribute("rx", 3);
+    r.setAttribute("fill", "#ffd166"); r.setAttribute("stroke", "#d9910d");
+    r.setAttribute("stroke-width", 2.5);
+    g.appendChild(r);
+  } else if (type === "cylUp") {
+    var c = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    c.setAttribute("x", CX - 17); c.setAttribute("y", y);
+    c.setAttribute("width", 34); c.setAttribute("height", cfg.h);
+    c.setAttribute("rx", 5);
+    c.setAttribute("fill", "#7bc9b2"); c.setAttribute("stroke", "#318a70");
+    c.setAttribute("stroke-width", 2.5);
+    g.appendChild(c);
+    var e = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+    e.setAttribute("cx", CX); e.setAttribute("cy", y);
+    e.setAttribute("rx", 17); e.setAttribute("ry", 6);
+    e.setAttribute("fill", "#a8dfd0"); e.setAttribute("stroke", "#318a70");
+    e.setAttribute("stroke-width", 2);
+    g.appendChild(e);
+  }
+  return g;
+}
+function renderStack() {
+  var layer = document.getElementById("act2-stack");
+  if (!layer) return;
+  layer.innerHTML = "";
+  var y = GROUND_Y - BASE_H;
+  tower.forEach(function (type) {
+    y -= STACK_OBJ[type].h;
+    layer.appendChild(drawStackObject(type, y));
+  });
+}
+function setLamp(ok) {
+  var lampOk = document.getElementById("act2-lamp-ok");
+  var lampNo = document.getElementById("act2-lamp-no");
+  if (lampOk) lampOk.setAttribute("opacity", ok ? "1" : "0.15");
+  if (lampNo) lampNo.setAttribute("opacity", ok ? "0.15" : "1");
+}
+function drawFlyer(type) {
+  var layer = document.getElementById("act2-flyer");
+  if (!layer) return null;
+  layer.innerHTML = "";
+  var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  if (type === "ball") {
+    var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    c.setAttribute("r", 16);
+    c.setAttribute("fill", "#ff8a65"); c.setAttribute("stroke", "#f4694b");
+    c.setAttribute("stroke-width", 3);
+    g.appendChild(c);
+    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", -16); line.setAttribute("x2", 16);
+    line.setAttribute("stroke", "#ffffff"); line.setAttribute("stroke-width", 3);
+    g.appendChild(line);
+  } else { /* cylLying：橫躺圓柱側面 */
+    var r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("x", -20); r.setAttribute("y", -15);
+    r.setAttribute("width", 40); r.setAttribute("height", 30);
+    r.setAttribute("rx", 15);
+    r.setAttribute("fill", "#7bc9b2"); r.setAttribute("stroke", "#318a70");
+    r.setAttribute("stroke-width", 3);
+    g.appendChild(r);
+  }
+  layer.appendChild(g);
+  return g;
+}
+function pickStack(btn) {
+  var t = btn.getAttribute("data-stack");
+  if (!STACK_OBJ[t]) return;
+  selStack = t;
+  document.querySelectorAll("#act-2-view .obj-btn").forEach(function (b) {
+    b.classList.toggle("active", b === btn);
+  });
+}
+function stackUp() {
+  var cfg = STACK_OBJ[selStack];
+  var topY = stackTopY();
+  var bubble = document.getElementById("act2-bubble");
+  if (topY - cfg.h < TOP_LIMIT) {
+    if (bubble) bubble.innerHTML = "🗼 塔已經快頂到天花板啦！按上方 🔄 重置，再蓋一座新塔。";
+    return;
+  }
+  if (cfg.flat) {
+    tower.push(selStack);
+    renderStack();
+    setLamp(true);
+    if (bubble) bubble.innerHTML = "🎉 <b>成功堆疊</b>！平面對平面，穩穩疊上第 " + tower.length + " 層！";
+    speakText(cfg.say + ", 平面對平面, 穩固堆疊");
+    if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  } else {
+    /* 曲面對平面：物件滑落滾走 */
+    setLamp(false);
+    var g = drawFlyer(selStack);
+    if (g) {
+      var startY = topY - cfg.h / 2;
+      var rafBox = { value: 0 };
+      if (flyRaf) cancelAnimationFrame(flyRaf);
+      animate(1200, function (k) {
+        var x = 20 + 150 * k;
+        var y = startY + 90 * k * k;
+        var rot = selStack === "ball" ? 720 * k : 240 * k;
+        g.setAttribute("transform", "translate(" + x.toFixed(1) + "," + y.toFixed(1) + ") rotate(" + rot.toFixed(1) + ")");
+        g.setAttribute("opacity", String(1 - k * 0.85));
+      }, function () {
+        flyRaf = null;
+        var layer = document.getElementById("act2-flyer");
+        if (layer) layer.innerHTML = "";
+      }, rafBox);
+      flyRaf = rafBox.value;
+    }
+    if (bubble) bubble.innerHTML = "🏀 <b>曲面無法穩固堆疊</b>！物體滑落滾走了，換平面試試看。";
+    speakText(cfg.say + ", 曲面無法穩固堆疊");
+  }
+}
+function resetAct2() {
+  tower = [];
+  selStack = "cube";
+  document.querySelectorAll("#act-2-view .obj-btn").forEach(function (b) {
+    b.classList.toggle("active", b.getAttribute("data-stack") === "cube");
+  });
+  renderStack();
+  setLamp(true);
+  if (flyRaf) { cancelAnimationFrame(flyRaf); flyRaf = null; }
+  var layer = document.getElementById("act2-flyer");
+  if (layer) layer.innerHTML = "";
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 <b>平面對平面</b>就能穩固堆高；<b>曲面</b>碰到平面會滑落滾走！";
+}
+
+/* ==================== Act 3：平面 vs 曲面 觸摸顯微鏡 ==================== */
+var SHAPE3 = {
+  cube: {
+    msg: "🔬 <b>正方體</b>：有 <b>6 個平面</b>（通通平平的）→ 只能滑動，但堆疊超穩！",
+    say: "正方體有 6 個平平的面, 只能滑動, 堆疊很穩固"
+  },
+  cyl: {
+    msg: "🔬 <b>圓柱</b>：有 <b>2 個平面</b> + <b>1 個曲面</b> → 直立可堆疊、橫躺會滾動，兩項全能！",
+    say: "圓柱有 2 個平面和 1 個曲面, 能滾也能疊"
+  },
+  sphere: {
+    msg: "🔬 <b>球</b>：只有 <b>1 個曲面</b>（四面八方都彎彎的）→ 到處都能滾，卻完全疊不穩！",
+    say: "球只有一個曲面, 四面八方都能滾動"
+  }
+};
+var selShape3 = "cube";
+function selectShape(name) {
+  if (!SHAPE3[name]) return;
+  selShape3 = name;
+  ["cube", "cyl", "sphere"].forEach(function (k) {
+    var g = document.getElementById("act3-shape-" + k);
+    if (!g) return;
+    g.classList.toggle("sel", k === name);
+    g.classList.toggle("dim", k !== name);
+  });
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = SHAPE3[name].msg;
+  speakText(SHAPE3[name].say);
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+}
+function resetAct3() {
+  selShape3 = "cube";
+  ["cube", "cyl", "sphere"].forEach(function (k) {
+    var g = document.getElementById("act3-shape-" + k);
+    if (!g) return;
+    g.classList.toggle("sel", k === "cube");
+    g.classList.toggle("dim", k !== "cube");
+  });
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 點一點每個形體，數數看它有幾個<b>平面</b>、幾個<b>曲面</b>！";
+}
+
+/* ==================== Act 4：形體特徵分類大師 ==================== */
+var QUIZ = [
+  {
+    q: "第 1 題：哪一個形體「<b>既能滾動、又能穩穩堆疊</b>」？",
+    opts: ["正方體", "圓柱罐子", "皮球"], ok: 1,
+    hint: "🤔 想想罐子：橫躺會滾、直立可疊——它有平面也有曲面！",
+    win: "🎉 答對了！圓柱有 2 個平面能堆疊，也有曲面能滾動，兩項全能！",
+    sayOk: "答對了! 圓柱能滾也能疊",
+    sayNo: "再想想看, 罐子橫躺會滾, 直立可以疊"
+  },
+  {
+    q: "第 2 題：哪一種東西放在斜坡上「<b>只能滑動、不能滾動</b>」？",
+    opts: ["皮球", "方塊積木", "橫躺的罐子"], ok: 1,
+    hint: "🤔 回想斜坡實驗：平平的面貼著斜坡，只能怎麼移動呢？",
+    win: "🎉 答對了！方塊積木 6 個面都平平的，只能滑動。",
+    sayOk: "答對了! 方塊積木只能滑動",
+    sayNo: "再想想看, 平平的面在斜坡上只能滑動"
+  },
+  {
+    q: "第 3 題：蓋一座穩固的高塔，<b>最上面一層</b>放哪一個最穩？",
+    opts: ["皮球", "橫躺的圓柱", "正方體"], ok: 2,
+    hint: "🤔 曲面會滾走！平面對平面才能穩固堆疊喔。",
+    win: "🎉 答對了！平面對平面，高塔穩如泰山。你是形體特徵分類大師！",
+    sayOk: "答對了! 平面對平面, 高塔穩如泰山",
+    sayNo: "再想想看, 曲面會滾走, 要用平面堆疊"
+  }
+];
+var qIndex = 0, qDone = 0;
+
+function renderQuiz() {
+  var q = QUIZ[qIndex];
+  var qEl = document.getElementById("act4-question");
+  var row = document.getElementById("act4-choices");
+  var nextBtn = document.getElementById("btn-next-q");
+  var bubble = document.getElementById("act4-bubble");
+  if (!qEl || !row) return;
+  qEl.innerHTML = q.q;
+  row.innerHTML = "";
+  q.opts.forEach(function (opt, idx) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = opt;
+    b.addEventListener("click", function () { pickAnswer(b, idx); });
+    row.appendChild(b);
+  });
+  if (nextBtn) nextBtn.classList.add("hidden");
+  if (bubble && qIndex === 0 && qDone === 0) bubble.innerHTML = "💪 三題全對，就是形體特徵分類大師！";
+}
+function pickAnswer(btn, idx) {
+  var q = QUIZ[qIndex];
+  var bubble = document.getElementById("act4-bubble");
+  var row = document.getElementById("act4-choices");
+  if (!row) return;
+  var btns = row.querySelectorAll(".choice-btn");
+  if (idx === q.ok) {
+    btn.classList.add("correct");
+    btns.forEach(function (b) { b.disabled = true; });
+    if (bubble) bubble.innerHTML = q.win;
+    speakText(q.sayOk);
+    qDone++;
+    if (qIndex < QUIZ.length - 1) {
+      var nextBtn = document.getElementById("btn-next-q");
+      if (nextBtn) nextBtn.classList.remove("hidden");
+    } else {
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+    }
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText(q.sayNo);
+  }
+}
+function nextQuestion() {
+  if (qIndex < QUIZ.length - 1) {
+    qIndex++;
+    renderQuiz();
+  }
+}
+function resetAct4() {
+  qIndex = 0; qDone = 0;
+  renderQuiz();
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 三題全對，就是形體特徵分類大師！";
+}
+
+/* ==================== 初始化 ==================== */
+resetAct1();
+resetAct2();
+resetAct3();
+renderQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

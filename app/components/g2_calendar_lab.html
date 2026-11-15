@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-14 時間（年、月、星期、日）· 概念小教室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --gold: #ffd166;
+  --gold-deep: #d9910d;
+  --blue: #7db8e8;
+  --blue-deep: #2b6cb0;
+  --purple: #b794f4;
+  --purple-deep: #6b46c1;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* ===== 卡片通用造型 ===== */
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800;
+  padding: 2px 8px; border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line); border-radius: 12px; background: #fdfaf3;
+  overflow: hidden; max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+/* ===== Act 1 月份按鈕牆 ===== */
+.month-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.month-btn {
+  padding: 7px 2px; font-size: 12px; font-weight: 800; border-radius: 10px;
+  border: 2px solid transparent; background: #fdf6e9; color: var(--ink);
+  transition: all 0.15s; text-align: center;
+}
+.month-btn.big  { background: #fff6df; border-color: var(--gold); color: var(--gold-deep); }
+.month-btn.small{ background: #eef5fd; border-color: var(--blue); color: var(--blue-deep); }
+.month-btn.feb  { background: #f5effd; border-color: var(--purple); color: var(--purple-deep); }
+.month-btn.selected { transform: scale(1.06); box-shadow: 0 3px 8px rgba(0,0,0,0.12); }
+.month-btn:active { transform: scale(0.94); }
+
+/* ===== Act 2 / Act 3 工具按鈕 ===== */
+.tool-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+/* ===== Act 4 挑戰 ===== */
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+.q-progress { font-size: 11px; font-weight: 800; color: var(--ink-soft); text-align: center; }
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      時間魔法小教室
+      <small>二年級 · N-2-14 年、月、星期、日</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（魔法年曆翻牌箱） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('一年有12個月, 31天的是大月, 30天的是小月, 二月最特別')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 魔法年曆翻牌箱</div>
+      <div class="card-desc">點下面的月份按鈕，年曆卡就會翻到那一頁！金色是大月、藍色是小月、紫色是特別的二月。</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 340 182" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="魔法年曆翻牌卡">
+          <!-- 年曆卡片本體 -->
+          <rect x="40" y="8" width="260" height="150" rx="16" fill="#ffffff" stroke="#f0e7da" stroke-width="2"/>
+          <!-- 卡片抬頭（依月份變色） -->
+          <path id="act1-header-bg" d="M40,24 a16,16 0 0 1 16,-16 h228 a16,16 0 0 1 16,16 v24 h-260 z" fill="#ffd166"/>
+          <text id="act1-header-name" x="170" y="42" text-anchor="middle" font-size="18" font-weight="900" fill="#ffffff">5 月</text>
+          <text id="act1-header-type" x="288" y="41" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff">大月</text>
+          <!-- 天數大字 -->
+          <text id="act1-days-num" x="122" y="112" text-anchor="middle" font-size="52" font-weight="900" fill="#d9910d">31</text>
+          <text x="122" y="140" text-anchor="middle" font-size="13" font-weight="800" fill="#8a857b">天</text>
+          <!-- 日期小點陣 -->
+          <g id="act1-dots"></g>
+          <text id="act1-note" x="236" y="102" text-anchor="middle" font-size="12" font-weight="800" fill="#7a5c1e">31 天</text>
+          <text id="act1-note2" x="236" y="122" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8a857b">大月</text>
+        </svg>
+      </div>
+      <div class="month-grid" id="month-grid"></div>
+      <div class="tip-bubble" id="act1-bubble">💡 一年有 <b>12 個月</b>：大月 31 天、小月 30 天，二月最特別（平年 28 天、閏年 29 天）。</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（拳頭大月小月記憶神器） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('握起拳頭, 凸起的地方是大月, 凹陷的地方是小月, 一路點過去, 七月和八月連著兩個大月')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 拳頭記憶神器</div>
+      <div class="card-desc">凸起的關節是大月（31天），凹下去的指縫是小月（30天）。點拳頭上的月份，或按「點念口訣」讓小手逐一敲給你看！</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 340 212" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="拳頭大月小月圖">
+          <!-- 手掌 -->
+          <rect x="52" y="86" width="236" height="112" rx="42" fill="#ffd9b8" stroke="#e8a87c" stroke-width="3"/>
+          <!-- 四個凸起關節（大月） -->
+          <g id="act2-knuckles" fill="#ffd9b8" stroke="#e8a87c" stroke-width="3">
+            <ellipse cx="85"  cy="88" rx="25" ry="24"/>
+            <ellipse cx="145" cy="88" rx="25" ry="24"/>
+            <ellipse cx="205" cy="88" rx="25" ry="24"/>
+            <ellipse cx="265" cy="88" rx="25" ry="24"/>
+          </g>
+          <!-- 指節摺痕 -->
+          <g stroke="#e8a87c" stroke-width="2" fill="none" stroke-linecap="round">
+            <path d="M73,102 q12,8 24,0"/>
+            <path d="M133,102 q12,8 24,0"/>
+            <path d="M193,102 q12,8 24,0"/>
+            <path d="M253,102 q12,8 24,0"/>
+          </g>
+          <!-- 大拇指 -->
+          <ellipse cx="300" cy="152" rx="24" ry="32" fill="#ffd9b8" stroke="#e8a87c" stroke-width="3" transform="rotate(-24 300 152)"/>
+          <!-- 月份標記（凸=大 金色 / 凹=小 藍色） -->
+          <g id="act2-marks"></g>
+          <!-- 導覽小手指 -->
+          <g id="act2-pointer" style="transition: transform 0.28s ease;">
+            <path d="M0,-26 L9,-6 L-9,-6 Z" fill="#f4694b" stroke="#ffffff" stroke-width="2"/>
+            <circle cx="0" cy="-2" r="5" fill="#ffd166" stroke="#f4694b" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="btn-tts" id="btn-chant" onclick="startChant()">🎵 點念口訣</button>
+        <button class="btn-tts" onclick="stopChant()">⏹️ 停止</button>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 拳頭關節凸起 = <b>大月 31 天</b>；指縫凹陷 = <b>小月 30 天</b>。七月、八月是連著的兩個大月喔！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（月曆神探） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('月曆直著看, 同一行的日期每次都多7, 從10日選到16日, 一共經過7天')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 月曆神探</div>
+      <div class="card-desc">這是 5 月的月曆（5月1日是星期日）。點兩個日期，亮起彩色緞帶，數數看經過了幾天！</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="5月月曆 7x5 格">
+          <!-- 星期表頭 -->
+          <g id="act3-head" font-size="11" font-weight="800" text-anchor="middle"></g>
+          <!-- 緞帶層 -->
+          <g id="act3-bands"></g>
+          <!-- 日期格子 -->
+          <g id="act3-cells"></g>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="btn-tts" onclick="revealPlus7()">🔎 找找 +7 規律</button>
+        <button class="btn-tts" onclick="clearAct3Select()">🧹 清除選取</button>
+      </div>
+      <div class="tip-bubble" id="act3-bubble">💡 點一個日期當「起點」，再點一個當「終點」，月曆會亮起彩色緞帶條！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（時間神曆大考驗） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" id="act4-tts" onclick="speakCurrentQuestion()">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 時間神曆大考驗</div>
+      <div class="q-progress" id="q-progress">第 1 / 3 題</div>
+      <div class="card-desc" id="q-desc"></div>
+      <div class="choice-row" id="q-choices"></div>
+      <div class="tip-bubble" id="act4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級時間魔法小教室。一年有12個月, 大月31天, 小月30天, 二月平年28天閏年29天。跟著四個關卡一起探索年月星期!");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  buildAct1();
+  resetAct2();
+  buildAct3(true);
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== 月份資料（唯一真理源） ==================== */
+var CN_NUM = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
+var BIG_MONTHS = [1, 3, 5, 7, 8, 10, 12];
+var SMALL_MONTHS = [4, 6, 9, 11];
+function monthType(m) {
+  if (m === 2) return "feb";
+  return BIG_MONTHS.indexOf(m) !== -1 ? "big" : "small";
+}
+function monthDays(m) {
+  if (m === 2) return 28; /* 平年 */
+  return BIG_MONTHS.indexOf(m) !== -1 ? 31 : 30;
+}
+var TYPE_COLOR = {
+  big:   { head: "#ffd166", deep: "#d9910d", label: "大月" },
+  small: { head: "#7db8e8", deep: "#2b6cb0", label: "小月" },
+  feb:   { head: "#b794f4", deep: "#6b46c1", label: "特別" }
+};
+
+/* ==================== Act 1：魔法年曆翻牌箱 ==================== */
+function buildAct1() {
+  var grid = document.getElementById("month-grid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  for (var m = 1; m <= 12; m++) {
+    (function (mm) {
+      var b = document.createElement("button");
+      b.className = "month-btn " + monthType(mm);
+      b.id = "month-btn-" + mm;
+      b.textContent = mm + "月";
+      b.addEventListener("click", function () { pickMonth(mm); });
+      grid.appendChild(b);
+    })(m);
+  }
+  pickMonth(5, true);
+}
+function pickMonth(m, silent) {
+  var t = monthType(m), c = TYPE_COLOR[t], days = monthDays(m);
+  var headerBg = document.getElementById("act1-header-bg");
+  var headerName = document.getElementById("act1-header-name");
+  var headerType = document.getElementById("act1-header-type");
+  var daysNum = document.getElementById("act1-days-num");
+  var note = document.getElementById("act1-note");
+  var note2 = document.getElementById("act1-note2");
+  var dots = document.getElementById("act1-dots");
+  var bubble = document.getElementById("act1-bubble");
+  if (!headerBg || !dots) return;
+
+  headerBg.setAttribute("fill", c.head);
+  headerName.textContent = m + " 月";
+  headerType.textContent = c.label + " · " + CN_NUM[m] + "月";
+  headerName.setAttribute("fill", "#ffffff");
+  headerType.setAttribute("fill", "#ffffff");
+  daysNum.textContent = String(days);
+  daysNum.setAttribute("fill", c.deep);
+  if (m === 2) {
+    note.textContent = "平年 28 天";
+    note2.textContent = "閏年 29 天";
+  } else {
+    note.textContent = days + " 天";
+    note2.textContent = c.label;
+  }
+  note.setAttribute("fill", c.deep);
+  note2.setAttribute("fill", "#8a857b");
+
+  /* 日期小點陣：6 顆一排 */
+  dots.innerHTML = "";
+  for (var d = 1; d <= days; d++) {
+    var dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot.setAttribute("cx", 208 + ((d - 1) % 6) * 13);
+    dot.setAttribute("cy", 62 + Math.floor((d - 1) / 6) * 13);
+    dot.setAttribute("r", 4);
+    dot.setAttribute("fill", c.head);
+    dot.setAttribute("stroke", c.deep);
+    dot.setAttribute("stroke-width", "1");
+    dots.appendChild(dot);
+  }
+
+  /* 按鈕高亮 */
+  for (var i = 1; i <= 12; i++) {
+    var btn = document.getElementById("month-btn-" + i);
+    if (btn) btn.classList.toggle("selected", i === m);
+  }
+
+  if (bubble) {
+    if (m === 2) {
+      bubble.innerHTML = "💜 <b>二月</b>最特別：平年 <b>28 天</b>，閏年 <b>29 天</b>！";
+    } else {
+      bubble.innerHTML = (t === "big" ? "🌟 " : "💙 ") + "<b>" + m + " 月</b>是" + c.label + "，有 <b>" + days + " 天</b>。";
+    }
+  }
+
+  if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  if (!silent) {
+    if (m === 2) {
+      speakText("二月, 平年28天, 閏年29天, 二月最特別");
+    } else {
+      speakText(CN_NUM[m] + "月, " + days + "天, 是" + c.label);
+    }
+  }
+}
+
+/* ==================== Act 2：拳頭大月小月記憶神器 ==================== */
+/* 拳頭位置：關節凸起(大月) / 指縫凹陷(小月)；七月後折返，八月踩回小指關節 */
+var FIST_POS = [
+  { m: 1,  x: 85,  y: 58 },  /* 關節 */
+  { m: 2,  x: 115, y: 96 },  /* 指縫 */
+  { m: 3,  x: 145, y: 58 },
+  { m: 4,  x: 175, y: 96 },
+  { m: 5,  x: 205, y: 58 },
+  { m: 6,  x: 235, y: 96 },
+  { m: 7,  x: 265, y: 58 },
+  { m: 8,  x: 292, y: 72 },  /* 折返：踩回小指關節外緣 */
+  { m: 9,  x: 235, y: 96 },
+  { m: 10, x: 205, y: 58 },
+  { m: 11, x: 175, y: 96 },
+  { m: 12, x: 145, y: 58 }
+];
+var chantTimers = [];
+
+function buildAct2Marks() {
+  var g = document.getElementById("act2-marks");
+  if (!g) return;
+  g.innerHTML = "";
+  FIST_POS.forEach(function (p) {
+    var t = monthType(p.m), c = TYPE_COLOR[t];
+    var grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    grp.setAttribute("cursor", "pointer");
+    /* 命中圈（可點） */
+    var hit = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    hit.setAttribute("cx", p.x); hit.setAttribute("cy", p.y); hit.setAttribute("r", 15);
+    hit.setAttribute("fill", c.head); hit.setAttribute("opacity", "0.95");
+    hit.setAttribute("stroke", "#ffffff"); hit.setAttribute("stroke-width", "2.5");
+    grp.appendChild(hit);
+    var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", p.x); label.setAttribute("y", p.y + 4);
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("font-size", "10.5"); label.setAttribute("font-weight", "900");
+    label.setAttribute("fill", "#ffffff");
+    label.textContent = String(p.m);
+    grp.appendChild(label);
+    var tag = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    tag.setAttribute("x", p.x); tag.setAttribute("y", p.y - 18);
+    tag.setAttribute("text-anchor", "middle");
+    tag.setAttribute("font-size", "9"); tag.setAttribute("font-weight", "800");
+    tag.setAttribute("fill", c.deep);
+    tag.textContent = (t === "feb") ? "28/29" : String(monthDays(p.m));
+    grp.appendChild(tag);
+    grp.addEventListener("pointerdown", function (e) { e.preventDefault(); tapFistMonth(p.m); });
+    g.appendChild(grp);
+  });
+  moveFistPointer(FIST_POS[0]);
+}
+function moveFistPointer(p) {
+  var ptr = document.getElementById("act2-pointer");
+  if (!ptr) return;
+  ptr.style.transform = "translate(" + p.x + "px, " + p.y + "px)";
+}
+function tapFistMonth(m) {
+  stopChant();
+  var t = monthType(m), c = TYPE_COLOR[t];
+  moveFistPointer(FIST_POS[m - 1]);
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) {
+    bubble.innerHTML = "👉 <b>" + m + " 月</b>：" + (m === 2 ? "平年 28 / 閏年 29 天" : monthDays(m) + " 天，是" + c.label + "！") +
+      (t === "big" ? "（凸起關節）" : "（凹陷指縫）");
+  }
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+  speakText(CN_NUM[m] + "月" + (m === 2 ? "特別, 平年28天" : (t === "big" ? "大" : "小")));
+}
+function startChant() {
+  stopChant();
+  var i = 0;
+  function step() {
+    if (i >= FIST_POS.length) {
+      var bubble = document.getElementById("act2-bubble");
+      if (bubble) bubble.innerHTML = "🎉 點完了！<b>大月</b>有 1,3,5,7,8,10,12 月（31天），<b>小月</b>有 4,6,9,11 月（30天）。";
+      if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+      chantTimers = [];
+      return;
+    }
+    var p = FIST_POS[i], m = p.m, t = monthType(m), c = TYPE_COLOR[t];
+    moveFistPointer(p);
+    var bubble = document.getElementById("act2-bubble");
+    if (bubble) {
+      bubble.innerHTML = "🎵 " + CN_NUM[m] + "月" + (m === 2 ? "小（28/29天）" : (t === "big" ? "大（31天）" : "小（30天）"));
+    }
+    speakText(CN_NUM[m] + "月" + (m === 2 ? "特別" : (t === "big" ? "大" : "小")));
+    i++;
+    chantTimers.push(setTimeout(step, 950));
+  }
+  step();
+}
+function stopChant() {
+  chantTimers.forEach(clearTimeout);
+  chantTimers = [];
+}
+function resetAct2() {
+  stopChant();
+  moveFistPointer(FIST_POS[0]);
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 拳頭關節凸起 = <b>大月 31 天</b>；指縫凹陷 = <b>小月 30 天</b>。七月、八月是連著的兩個大月喔！";
+}
+
+/* ==================== Act 3：月曆神探（7×5 格 + 跨日標尺） ==================== */
+var CELL_W = 44, CELL_H = 30, CELL_STEP_X = 46, CELL_STEP_Y = 32, GRID_X0 = 9, GRID_Y0 = 28;
+var WEEK_HEAD = ["日", "一", "二", "三", "四", "五", "六"];
+var act3Start = null, act3End = null;
+
+function buildAct3(reset) {
+  var head = document.getElementById("act3-head");
+  var cells = document.getElementById("act3-cells");
+  var bands = document.getElementById("act3-bands");
+  if (!head || !cells || !bands) return;
+  head.innerHTML = ""; cells.innerHTML = ""; bands.innerHTML = "";
+  if (reset) { act3Start = null; act3End = null; }
+
+  WEEK_HEAD.forEach(function (w, i) {
+    var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", GRID_X0 + i * CELL_STEP_X + CELL_W / 2);
+    t.setAttribute("y", 20);
+    t.setAttribute("fill", (i === 0 || i === 6) ? "#f4694b" : "#8a857b");
+    t.textContent = w;
+    head.appendChild(t);
+  });
+
+  for (var d = 1; d <= 31; d++) {
+    (function (day) {
+      var col = (day - 1) % 7, row = Math.floor((day - 1) / 7);
+      var x = GRID_X0 + col * CELL_STEP_X, y = GRID_Y0 + row * CELL_STEP_Y;
+      var grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      grp.setAttribute("cursor", "pointer");
+      grp.dataset.day = String(day);
+      var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      bg.setAttribute("x", x); bg.setAttribute("y", y);
+      bg.setAttribute("width", CELL_W); bg.setAttribute("height", CELL_H);
+      bg.setAttribute("rx", 8);
+      bg.setAttribute("fill", "#ffffff"); bg.setAttribute("stroke", "#f0e7da");
+      bg.setAttribute("stroke-width", "1.5");
+      grp.appendChild(bg);
+      var tx = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      tx.setAttribute("x", x + CELL_W / 2); tx.setAttribute("y", y + CELL_H / 2 + 5);
+      tx.setAttribute("text-anchor", "middle");
+      tx.setAttribute("font-size", "13"); tx.setAttribute("font-weight", "800");
+      tx.setAttribute("fill", "#3d3a34");
+      tx.textContent = String(day);
+      grp.appendChild(tx);
+      grp.addEventListener("pointerdown", function (e) { e.preventDefault(); pickAct3Day(day); });
+      cells.appendChild(grp);
+    })(d);
+  }
+  if (reset) {
+    var bubble = document.getElementById("act3-bubble");
+    if (bubble) bubble.innerHTML = "💡 點一個日期當「起點」，再點一個當「終點」，月曆會亮起彩色緞帶條！";
+  }
+  refreshStatusBar();
+}
+
+function pickAct3Day(day) {
+  if (act3Start === null || (act3Start !== null && act3End !== null)) {
+    act3Start = day; act3End = null;
+    var bubble = document.getElementById("act3-bubble");
+    if (bubble) bubble.innerHTML = "📍 起點：<b>" + act3Start + " 日</b>。再點一個日期當終點！";
+    drawAct3Highlights();
+    return;
+  }
+  if (day === act3Start) { drawAct3Highlights(); return; }
+  act3End = day;
+  drawAct3Highlights();
+  var lo = Math.min(act3Start, act3End), hi = Math.max(act3Start, act3End);
+  var span = hi - lo + 1;
+  var bubble2 = document.getElementById("act3-bubble");
+  if (bubble2) bubble2.innerHTML = "🌈 從 <b>" + lo + " 日</b>到 <b>" + hi + " 日</b>，緞帶亮起來了！包含頭尾一共 <b>" + span + " 天</b>。";
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  speakText("從" + lo + "日到" + hi + "日, 包含頭尾一共經過" + span + "天");
+}
+
+function drawAct3Highlights() {
+  var cells = document.getElementById("act3-cells");
+  var bands = document.getElementById("act3-bands");
+  if (!cells || !bands) return;
+  bands.innerHTML = "";
+  var lo = act3Start, hi = act3End;
+  if (lo !== null && hi !== null) { lo = Math.min(act3Start, act3End); hi = Math.max(act3Start, act3End); }
+  var rowHits = {}; /* row -> [minX, maxX] */
+  var plus7Set = (act3Start === null && act3End === null) ? null : null;
+
+  Array.prototype.forEach.call(cells.children, function (grp) {
+    var day = parseInt(grp.dataset.day, 10);
+    var bg = grp.querySelector("rect");
+    var tx = grp.querySelector("text");
+    var inRange = lo !== null && hi !== null && day >= lo && day <= hi;
+    var isEndpoint = day === act3Start || day === act3End;
+    if (inRange) {
+      bg.setAttribute("fill", isEndpoint ? "#7bc9b2" : "#d8f3ea");
+      bg.setAttribute("stroke", "#318a70");
+      tx.setAttribute("fill", "#318a70");
+      var col = (day - 1) % 7, row = Math.floor((day - 1) / 7);
+      var x = GRID_X0 + col * CELL_STEP_X;
+      if (!rowHits[row]) rowHits[row] = [x, x + CELL_W];
+      else {
+        rowHits[row][0] = Math.min(rowHits[row][0], x);
+        rowHits[row][1] = Math.max(rowHits[row][1], x + CELL_W);
+      }
+    } else {
+      bg.setAttribute("fill", "#ffffff");
+      bg.setAttribute("stroke", "#f0e7da");
+      tx.setAttribute("fill", "#3d3a34");
+    }
+  });
+
+  /* 彩色緞帶條：每列一段圓角帶 */
+  Object.keys(rowHits).forEach(function (row) {
+    var seg = rowHits[row];
+    var band = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    band.setAttribute("x", seg[0] - 4);
+    band.setAttribute("y", GRID_Y0 + parseInt(row, 10) * CELL_STEP_Y + 7);
+    band.setAttribute("width", seg[1] - seg[0] + 8);
+    band.setAttribute("height", CELL_H - 14);
+    band.setAttribute("rx", 9);
+    band.setAttribute("fill", "#ffd166");
+    band.setAttribute("opacity", "0.35");
+    bands.appendChild(band);
+  });
+}
+
+function revealPlus7() {
+  var cells = document.getElementById("act3-cells");
+  var bands = document.getElementById("act3-bands");
+  if (!cells || !bands) return;
+  bands.innerHTML = "";
+  var targets = [3, 10, 17, 24, 31];
+  Array.prototype.forEach.call(cells.children, function (grp) {
+    var day = parseInt(grp.dataset.day, 10);
+    var bg = grp.querySelector("rect");
+    var tx = grp.querySelector("text");
+    if (targets.indexOf(day) !== -1) {
+      bg.setAttribute("fill", "#fff6df");
+      bg.setAttribute("stroke", "#d9910d");
+      tx.setAttribute("fill", "#d9910d");
+    } else {
+      bg.setAttribute("fill", "#ffffff");
+      bg.setAttribute("stroke", "#f0e7da");
+      tx.setAttribute("fill", "#3d3a34");
+    }
+  });
+  /* 直向 +7 連線箭頭 */
+  for (var i = 0; i < targets.length - 1; i++) {
+    var col = (targets[i] - 1) % 7;
+    var x = GRID_X0 + col * CELL_STEP_X + CELL_W / 2;
+    var y1 = GRID_Y0 + i * CELL_STEP_Y + CELL_H + 1;
+    var arrow = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    arrow.setAttribute("x", x + 16);
+    arrow.setAttribute("y", y1 + 18);
+    arrow.setAttribute("font-size", "10");
+    arrow.setAttribute("font-weight", "900");
+    arrow.setAttribute("fill", "#d9910d");
+    arrow.textContent = "+7 ↓";
+    bands.appendChild(arrow);
+  }
+  act3Start = null; act3End = null;
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "🌟 直著看同一行：<b>3 → 10 → 17 → 24 → 31</b>，往下一天就 <b>+7</b>！一星期有 7 天。";
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+  speakText("直著看同一行, 每往下一格日期就加7, 因為一星期有7天");
+}
+
+function clearAct3Select() {
+  act3Start = null; act3End = null;
+  buildAct3(false);
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 已清除。再點兩個日期，找找看經過了幾天！";
+}
+
+/* ==================== Act 4：小小挑戰賽（3 題月曆生活題） ==================== */
+var QUIZZES = [
+  {
+    desc: "<b>四月</b>是大月還是小月？有幾天呢？",
+    speech: "四月是大月還是小月? 有幾天呢?",
+    choices: [
+      { text: "大月 · 31 天", ok: false },
+      { text: "小月 · 30 天", ok: true },
+      { text: "特別月 · 28 天", ok: false }
+    ],
+    hint: "念口訣：一月大、二月小、三月大、<b>四月小</b>！伸出拳頭點點看，四月在凹陷的指縫裡。",
+    okText: "答對了！四月是<b>小月</b>，有 <b>30 天</b>。",
+    okSpeech: "答對了, 四月是小月, 有30天"
+  },
+  {
+    desc: "5 月 10 日是<b>星期日</b>，那 5 月 <b>17 日</b>是星期幾？",
+    speech: "5月10日是星期日, 那5月17日是星期幾?",
+    choices: [
+      { text: "星期六", ok: false },
+      { text: "星期日", ok: true },
+      { text: "星期一", ok: false }
+    ],
+    hint: "一星期有 <b>7 天</b>，10 + 7 = 17，直著往下走一格，星期幾不變喔！",
+    okText: "答對了！10 + 7 = 17，同一行往下一格，還是<b>星期日</b>！",
+    okSpeech: "答對了, 10加7等於17, 同一行往下一格, 還是星期日"
+  },
+  {
+    desc: "一年之中，<b>大月</b>（31 天）一共有幾個？",
+    speech: "一年之中, 大月31天的一共有幾個?",
+    choices: [
+      { text: "5 個", ok: false },
+      { text: "6 個", ok: false },
+      { text: "7 個", ok: true }
+    ],
+    hint: "念口訣數數看：1、3、5、7、8、10、12，伸出拳頭點關節，一共 <b>7 個</b>大月！",
+    okText: "答對了！大月有 <b>1, 3, 5, 7, 8, 10, 12</b> 月，一共 <b>7 個</b>！",
+    okSpeech: "答對了, 大月有13578 10 12月, 一共7個"
+  }
+];
+var qIndex = 0;
+
+function renderQuiz() {
+  var q = QUIZZES[qIndex];
+  var desc = document.getElementById("q-desc");
+  var choices = document.getElementById("q-choices");
+  var progress = document.getElementById("q-progress");
+  var bubble = document.getElementById("act4-bubble");
+  if (!desc || !choices) return;
+  progress.textContent = "第 " + (qIndex + 1) + " / " + QUIZZES.length + " 題";
+  desc.innerHTML = q.desc;
+  bubble.innerHTML = "💪 選一個答案吧！";
+  choices.innerHTML = "";
+  q.choices.forEach(function (c) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.textContent = c.text;
+    b.addEventListener("click", function () { answerQuiz(b, c.ok); });
+    choices.appendChild(b);
+  });
+}
+function speakCurrentQuestion() {
+  var q = QUIZZES[qIndex];
+  if (q) speakText(q.speech);
+}
+function answerQuiz(btn, ok) {
+  var q = QUIZZES[qIndex];
+  var bubble = document.getElementById("act4-bubble");
+  var choices = document.getElementById("q-choices");
+  if (!ok) {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = "💡 再想想看：" + q.hint;
+    speakText("再想想看, 握起拳頭念念口訣");
+    return;
+  }
+  btn.classList.add("correct");
+  /* 鎖住其他選項 */
+  Array.prototype.forEach.call(choices.children, function (b) {
+    b.disabled = true;
+    b.style.opacity = b === btn ? "1" : "0.5";
+  });
+  if (bubble) bubble.innerHTML = "🎉 " + q.okText;
+  if (!verifyState.act4 && qIndex === QUIZZES.length - 1) {
+    verifyState.act4 = true;
+    refreshStatusBar();
+  }
+  speakText(q.okSpeech);
+  if (qIndex < QUIZZES.length - 1) {
+    qIndex++;
+    setTimeout(function () {
+      if (currentAct === 4) renderQuiz();
+    }, 1600);
+  } else {
+    var progress = document.getElementById("q-progress");
+    if (progress) progress.textContent = "🏆 挑戰完成！";
+  }
+}
+function resetAct4() {
+  qIndex = 0;
+  renderQuiz();
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1();
+buildAct2Marks();
+buildAct3(true);
+renderQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

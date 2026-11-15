@@ -108,11 +108,27 @@
   - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
   - 施工通道: 通道一 (本地 OpenCode CLI $0)
 
-### 🌊 第三波 (Wave 3: 時間與空間幾何 6 單元)
-- [ ] **Step 14: G2-N-2-13 鐘面的時刻 (`g2_clock_time_lab.html`)**
-- [ ] **Step 15: G2-N-2-14 時間（年、月、星期、日） (`g2_calendar_lab.html`)**
-- [ ] **Step 16: G2-S-2-1 物體之幾何特徵 (`g2_solid_features_lab.html`)**
-- [ ] **Step 17: G2-S-2-2 簡單幾何形體 (`g2_shapes_lab.html`)**
+### 🌊 第三波 (Wave 3: 時間與空間幾何 6 單元) —— 推進中 (4/6 完成)
+- [x] **Step 14: G2-N-2-13 鐘面的時刻 (`g2_clock_time_lab.html`)**
+  - 產出檔案: `app/components/g2_clock_time_lab.html` (31KB), 更新 `app/shell.js`
+  - 課綱活動: 齒輪連動時鐘、半點與時針扇形區間迷思破解、外圈五分五分數
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 15: G2-N-2-14 時間（年、月、星期、日） (`g2_calendar_lab.html`)**
+  - 產出檔案: `app/components/g2_calendar_lab.html` (35KB), 更新 `app/shell.js`
+  - 課綱活動: 12 個月份翻牌箱、拳頭大月小月記憶神器、月曆神探 (+7 規律與跨日標尺)
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 16: G2-S-2-1 物體之幾何特徵 (`g2_solid_features_lab.html`)**
+  - 產出檔案: `app/components/g2_solid_features_lab.html` (34KB), 更新 `app/shell.js`
+  - 課綱活動: 斜坡滾動 vs 滑動物理實驗、積木堆疊高塔穩定性、平面 vs 曲面顯微鏡
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一 (本地 OpenCode CLI $0)
+- [x] **Step 17: G2-S-2-2 簡單幾何形體 (`g2_shapes_lab.html`)**
+  - 產出檔案: `app/components/g2_shapes_lab.html` (40KB), 更新 `app/shell.js`
+  - 課綱活動: 3D 等角透視積木解剖儀 (面/邊/頂點大點名)、印泥蓋印章拓印工坊、正方體 vs 長方體對照
+  - 驗收結果: Exit Code 0 (CDP 390px 視口零溢出、4 幕切換、AudioManager 接口、Console 0 報錯)
+  - 施工通道: 通道一/通道二自動容災協同 ($0)
 - [ ] **Step 18: G2-S-2-3 直尺操作 (`g2_ruler_drawing_lab.html`)**
 - [ ] **Step 19: G2-S-2-4 平面圖形的邊長 (`g2_perimeter_lab.html`)**
 

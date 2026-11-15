@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-N-2-13 鐘面的時刻 · 概念探索實驗室 Four Acts</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --sky-deep: #2f6ea8;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== 頂部導航列 ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  box-shadow: var(--shadow);
+}
+.top-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+/* ===== 四幕導航列 ===== */
+.act-nav {
+  display: flex;
+  gap: 6px;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+}
+.act-btn {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--mint-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ===== 卡片通用造型 ===== */
+.act-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge {
+  background: #e7f5f0;
+  color: var(--mint-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #e7f5f0;
+  border: 1px solid #c9e8dd;
+  color: var(--mint-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+
+/* 提示氣泡 */
+.tip-bubble {
+  background: #fff6df;
+  border: 1px dashed var(--lemon-deep);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7a5c1e;
+}
+
+/* 教具舞台：高度硬閘 <= 420px */
+.stage {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fdfaf3;
+  overflow: hidden;
+  max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+.stage-controls { padding: 6px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Act 1 滑桿 */
+.time-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 22px;
+  background: transparent;
+}
+.time-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7bc9b2 0%, #ffd166 100%);
+}
+.time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -8px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid var(--mint-deep);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  cursor: grab;
+}
+.time-slider::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7bc9b2 0%, #ffd166 100%);
+}
+.time-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid var(--mint-deep);
+}
+.slider-labels { display: flex; justify-content: space-between; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+
+/* Act 2 情境按鈕 */
+.scene-row { display: flex; gap: 8px; }
+.scene-btn {
+  flex: 1 1 0;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 4px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.scene-btn.active {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+
+/* Act 3 金色氣泡提示 */
+.act3-legend { text-align: center; font-size: 12px; font-weight: 800; color: var(--lemon-deep); }
+
+/* Act 4 挑戰 */
+.q-progress { display: flex; gap: 5px; justify-content: center; }
+.q-dot { width: 10px; height: 10px; border-radius: 999px; background: #e6ddcd; }
+.q-dot.on { background: var(--lemon); }
+.q-dot.done { background: var(--mint); }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%;
+  background: #fdf6e9;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  transition: all 0.15s;
+}
+.choice-btn.correct {
+  background: #e7f5f0;
+  border-color: var(--mint);
+  color: var(--mint-deep);
+}
+.choice-btn.wrong {
+  background: #fff0eb;
+  border-color: var(--coral);
+  color: var(--coral-deep);
+}
+
+/* ===== 底部狀態列 ===== */
+.status-bar {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--lemon);
+  flex: 0 0 auto;
+}
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <!-- 頂部導航列 -->
+  <div class="top-bar">
+    <div class="top-title">
+      鐘面的時刻 · 時針分針實驗室
+      <small>二年級 · N-2-13 幾點幾分與齒輪連動</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <!-- 四幕導航列 -->
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 物理探索器</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 觀念大解剖（齒輪連動時鐘） -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('短針看時, 長針看分, 長針走一小格是一分鐘, 走一大格是五分鐘')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 時針分針大解剖</div>
+      <div class="card-desc">紅色短粗針是<b>時針</b>，藍色長細針是<b>分針</b>。拉動下面的滑桿：長針轉一圈（60 分），短針就齒輪連動前進一大格（1 小時）！</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 222" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="齒輪連動時鐘與數位顯示">
+          <g id="act1-clock"></g>
+          <g id="act1-digital">
+            <rect x="222" y="66" width="126" height="92" rx="12" fill="#3d3a34"></rect>
+            <text id="act1-digital-time" x="285" y="108" text-anchor="middle" font-size="30" font-weight="800" fill="#7bc9b2" font-family="Consolas, monospace">03:25</text>
+            <text id="act1-digital-words" x="285" y="134" text-anchor="middle" font-size="13" font-weight="800" fill="#ffd166">3 點 25 分</text>
+          </g>
+        </svg>
+        <div class="stage-controls">
+          <input type="range" id="act1-slider" class="time-slider" min="0" max="1440" step="1" value="205" aria-label="時間滑桿 0 到 1440 分鐘">
+          <div class="slider-labels"><span>0 分</span><span>12:00 中午</span><span>24:00</span></div>
+        </div>
+      </div>
+      <div class="tip-bubble" id="act1-bubble">💡 拉拉看：滑桿每走 <b>60 分</b>，長針轉一整圈，短針就前進一大格！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 物理探索器（半點與扇形區間迷思破解） -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('短針只要還在 8 和 9 之間, 就還是 8 點多, 就算長針快繞完一圈也一樣')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">物理探索器 · 短針的扇形保護區</div>
+      <div class="card-desc">綠色扇形是「8～9 點保護區」：<b>短針只要還在裡面，就一定是 8 點多</b>！點按鈕看三個關鍵時刻。</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="半點與扇形區間探索時鐘">
+          <g id="act2-clock"></g>
+          <rect x="256" y="14" width="92" height="40" rx="9" fill="#3d3a34"></rect>
+          <text id="act2-digital" x="302" y="40" text-anchor="middle" font-size="20" font-weight="800" fill="#7bc9b2" font-family="Consolas, monospace">08:00</text>
+        </svg>
+        <div class="stage-controls">
+          <div class="scene-row">
+            <button class="scene-btn active" id="scene-0" onclick="gotoScene(0)">🕗 整點 8:00</button>
+            <button class="scene-btn" id="scene-1" onclick="gotoScene(1)">🌗 半點 8:30</button>
+            <button class="scene-btn" id="scene-2" onclick="gotoScene(2)">⚠️ 陷阱 8:55</button>
+          </div>
+        </div>
+      </div>
+      <div class="tip-bubble" id="act2-bubble">💡 長針指 12，短針<b>正指 8</b> —— 這是整點 8:00。</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 規律大發現（五分五分數與乘法關聯） -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('長針指到數字幾, 就是幾乘以五, 指 7 就是七五一十五, 35 分')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 鐘面上的乘法表</div>
+      <div class="card-desc">點亮金色氣泡：<b>長針指到數字幾，就是「幾 × 5」分</b>！指到 7 ➔ 7 × 5 = 35 分。</div>
+      <div class="stage">
+        <svg id="act3-svg" viewBox="0 0 358 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="五分五分數乘法氣泡時鐘">
+          <g id="act3-clock"></g>
+          <g id="act3-bubbles"></g>
+        </svg>
+      </div>
+      <div class="act3-legend" id="act3-legend">👆 點一顆金色氣泡，看分針跑到哪裡！</div>
+      <div class="tip-bubble" id="act3-bubble">💡 長針走一小格是 1 分，走一大格就是 <b>5 分</b>：5、10、15……正好是 5 的乘法！</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽（時間報讀大師） -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('看鐘面報讀時刻, 先看短針, 再看長針')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 時間報讀大師</div>
+      <div class="q-progress" id="q-progress"><span class="q-dot on"></span><span class="q-dot"></span><span class="q-dot"></span></div>
+      <div class="card-desc" id="q-desc">第 1 題：鐘面上是<b>幾點幾分</b>？</div>
+      <div class="stage">
+        <svg id="act4-svg" viewBox="0 0 358 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="挑戰題鐘面">
+          <g id="act4-clock"></g>
+        </svg>
+      </div>
+      <div class="choice-row" id="q-choices">
+        <button class="choice-btn" data-ok="0" onclick="answerChoice(this)">12:00</button>
+        <button class="choice-btn" data-ok="1" onclick="answerChoice(this)">4:00</button>
+        <button class="choice-btn" data-ok="0" onclick="answerChoice(this)">4:30</button>
+      </div>
+      <div class="tip-bubble" id="act4-bubble">💪 先看短針在哪個扇形區間，再看長針指到幾！</div>
+    </div>
+  </div>
+
+  <!-- 底部狀態列 -->
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級鐘面的時刻實驗室。現在進行第 " + currentAct + " 幕。短針看時, 長針看分, 一起來當時間報讀大師!");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== SVG 通用工具 ==================== */
+var SVGNS = "http://www.w3.org/2000/svg";
+function svgEl(tag, attrs, parent) {
+  var e = document.createElementNS(SVGNS, tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+/* 時鐘角度：0 度指 12 點方向，順時針為正 */
+function clockPoint(cx, cy, r, deg) {
+  var rad = (deg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+/* ==================== 擬物化鐘面產生器 ==================== */
+function buildClockFace(group, cx, cy, r, opts) {
+  opts = opts || {};
+  /* 外框 */
+  svgEl("circle", { cx: cx, cy: cy, r: r, fill: "#ffffff", stroke: "#e8dcc8", "stroke-width": Math.max(4, r * 0.05) }, group);
+  svgEl("circle", { cx: cx, cy: cy, r: r * 0.965, fill: "none", stroke: "#f4ecdd", "stroke-width": 1.5 }, group);
+  /* 60 條分鐘細刻度（每 5 格一條粗刻度） */
+  for (var i = 0; i < 60; i++) {
+    var deg = i * 6;
+    var major = i % 5 === 0;
+    var len = major ? r * 0.11 : r * 0.05;
+    var w = major ? Math.max(2, r * 0.028) : 1;
+    var p1 = clockPoint(cx, cy, r * 0.9, deg);
+    var p2 = clockPoint(cx, cy, r * 0.9 - len, deg);
+    svgEl("line", {
+      x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y,
+      stroke: major ? "#c9bda6" : "#e2d8c4", "stroke-width": w, "stroke-linecap": "round"
+    }, group);
+  }
+  /* 1~12 大數字 */
+  var numR = r * 0.72;
+  for (var n = 1; n <= 12; n++) {
+    var p = clockPoint(cx, cy, numR, n * 30);
+    svgEl("text", {
+      x: p.x, y: p.y + r * 0.065, "text-anchor": "middle",
+      "font-size": Math.round(r * (opts.mini ? 0.19 : 0.17)),
+      "font-weight": "800", fill: "#3d3a34",
+      "font-family": "'Segoe UI', 'Noto Sans TC', sans-serif"
+    }, group).textContent = String(n);
+  }
+  /* 中心螺帽 */
+  svgEl("circle", { cx: cx, cy: cy, r: r * 0.075, fill: "#3d3a34" }, group);
+  svgEl("circle", { cx: cx, cy: cy, r: r * 0.032, fill: "#ffd166" }, group);
+}
+
+/* ==================== 指針組（紅短粗時針 / 藍長細分針） ==================== */
+function buildHands(group, cx, cy, r) {
+  var hourG = svgEl("g", {}, group);
+  svgEl("line", {
+    x1: cx, y1: cy + r * 0.09, x2: cx, y2: cy - r * 0.48,
+    stroke: "#f4694b", "stroke-width": Math.max(5, r * 0.062), "stroke-linecap": "round"
+  }, hourG);
+  var minG = svgEl("g", {}, group);
+  svgEl("line", {
+    x1: cx, y1: cy + r * 0.11, x2: cx, y2: cy - r * 0.74,
+    stroke: "#2f6ea8", "stroke-width": Math.max(3, r * 0.038), "stroke-linecap": "round"
+  }, minG);
+  svgEl("circle", { cx: cx, cy: cy, r: r * 0.055, fill: "#f4694b" }, group);
+  return { hour: hourG, minute: minG };
+}
+function setHands(hands, cx, cy, totalMin) {
+  var hourDeg = ((totalMin / 60) % 12) * 30;
+  var minDeg = (totalMin % 60) * 6;
+  hands.hour.setAttribute("transform", "rotate(" + hourDeg + " " + cx + " " + cy + ")");
+  hands.minute.setAttribute("transform", "rotate(" + minDeg + " " + cx + " " + cy + ")");
+}
+function pad2(n) { return (n < 10 ? "0" : "") + n; }
+function fmtTime(totalMin) {
+  var h = Math.floor(totalMin / 60) % 24;
+  var m = Math.floor(totalMin % 60);
+  return pad2(h) + ":" + pad2(m);
+}
+
+/* ==================== Act 1：齒輪連動滑桿時鐘 ==================== */
+var A1 = { cx: 112, cy: 111, r: 92, hands: null, min: 205 };
+function buildAct1() {
+  var g = document.getElementById("act1-clock");
+  if (!g || A1.hands) return;
+  buildClockFace(g, A1.cx, A1.cy, A1.r);
+  A1.hands = buildHands(g, A1.cx, A1.cy, A1.r);
+  setHands(A1.hands, A1.cx, A1.cy, A1.min);
+  var slider = document.getElementById("act1-slider");
+  slider.addEventListener("input", onAct1Slide);
+  updateAct1Digital();
+}
+function onAct1Slide(e) {
+  A1.min = Number(e.target.value) || 0;
+  setHands(A1.hands, A1.cx, A1.cy, A1.min);
+  updateAct1Digital();
+  if (!verifyState.act1) {
+    verifyState.act1 = true;
+    var bubble = document.getElementById("act1-bubble");
+    if (bubble) bubble.innerHTML = "🌟 觀察到了嗎？<b>長針轉一圈 = 60 分</b>，短針只前進 <b>1 大格 = 1 小時</b>，這就是齒輪連動！";
+    refreshStatusBar();
+  }
+}
+function updateAct1Digital() {
+  var h = Math.floor(A1.min / 60) % 24;
+  var m = Math.floor(A1.min % 60);
+  var t = document.getElementById("act1-digital-time");
+  var w = document.getElementById("act1-digital-words");
+  if (t) t.textContent = fmtTime(A1.min);
+  if (w) w.textContent = h + " 點 " + m + " 分";
+}
+function resetAct1() {
+  A1.min = 205;
+  var slider = document.getElementById("act1-slider");
+  if (slider) slider.value = "205";
+  setHands(A1.hands, A1.cx, A1.cy, A1.min);
+  updateAct1Digital();
+  var bubble = document.getElementById("act1-bubble");
+  if (bubble) bubble.innerHTML = "💡 拉拉看：滑桿每走 <b>60 分</b>，長針轉一整圈，短針就前進一大格！";
+}
+
+/* ==================== Act 2：扇形保護區與三大情境 ==================== */
+var A2 = { cx: 148, cy: 132, r: 100, hands: null, min: 480, animId: null };
+var SCENES = [
+  { min: 480,  icon: "整點", desc: "💡 長針指 12，短針<b>正指 8</b> —— 這是整點 <b>8:00</b>。", speak: "整點八點整, 長針指十二, 短針正指八" },
+  { min: 510,  icon: "半點", desc: "💡 長針指 6（30 分），短針走到 <b>8 和 9 正中間</b> —— 八點半！短針一半小時走半格。", speak: "八點半, 長針指六是三十分, 短針在八和九的正中間" },
+  { min: 535,  icon: "陷阱", desc: "⚠️ 長針指 11（55 分），短針<b>很接近 9</b>，但它<b>仍在 8～9 綠色扇形保護區內</b> —— 還是 8 點多，是 8:55！", speak: "八點五十五分, 短針還在八到九的扇形區間裡面, 不要誤看成九點" }
+];
+function buildAct2() {
+  var g = document.getElementById("act2-clock");
+  if (!g || A2.hands) return;
+  /* 8~9 點半透明綠色扇形保護區（先畫，壓在刻度下面） */
+  var p1 = clockPoint(A2.cx, A2.cy, A2.r * 0.9, 240);
+  var p2 = clockPoint(A2.cx, A2.cy, A2.r * 0.9, 270);
+  svgEl("path", {
+    id: "act2-sector",
+    d: "M " + A2.cx + " " + A2.cy + " L " + p1.x + " " + p1.y +
+       " A " + (A2.r * 0.9) + " " + (A2.r * 0.9) + " 0 0 1 " + p2.x + " " + p2.y + " Z",
+    fill: "#7bc9b2", "fill-opacity": "0.32", stroke: "#318a70", "stroke-width": 2, "stroke-dasharray": "5 4"
+  }, g);
+  var label = clockPoint(A2.cx, A2.cy, A2.r * 0.62, 255);
+  svgEl("text", {
+    x: label.x, y: label.y, "text-anchor": "middle", "font-size": 11.5,
+    "font-weight": "800", fill: "#2b6b57"
+  }, g).textContent = "8~9 扇形保護區";
+  buildClockFace(g, A2.cx, A2.cy, A2.r, { mini: true });
+  A2.hands = buildHands(g, A2.cx, A2.cy, A2.r);
+  setHands(A2.hands, A2.cx, A2.cy, A2.min);
+  document.getElementById("act2-digital").textContent = fmtTime(A2.min);
+}
+function gotoScene(idx) {
+  var scene = SCENES[idx];
+  if (!scene) return;
+  document.querySelectorAll("#act-2-view .scene-btn").forEach(function (b, i) {
+    b.classList.toggle("active", i === idx);
+  });
+  animateAct2(scene.min);
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = scene.desc;
+  speakText(scene.speak);
+  /* 陷阱情境要強調扇形保護區 */
+  var sector = document.getElementById("act2-sector");
+  if (sector) sector.setAttribute("fill-opacity", idx === 2 ? "0.55" : "0.32");
+  if (!verifyState.act2) { verifyState.act2 = true; refreshStatusBar(); }
+}
+function animateAct2(targetMin) {
+  if (A2.animId) cancelAnimationFrame(A2.animId);
+  var from = A2.min, t0 = null, DUR = 650;
+  function step(ts) {
+    if (t0 === null) t0 = ts;
+    var k = Math.min(1, (ts - t0) / DUR);
+    var ease = 1 - Math.pow(1 - k, 3);
+    A2.min = from + (targetMin - from) * ease;
+    setHands(A2.hands, A2.cx, A2.cy, A2.min);
+    var digital = document.getElementById("act2-digital");
+    if (digital) digital.textContent = fmtTime(A2.min);
+    if (k < 1) { A2.animId = requestAnimationFrame(step); }
+    else { A2.min = targetMin; A2.animId = null; }
+  }
+  A2.animId = requestAnimationFrame(step);
+}
+function resetAct2() {
+  if (A2.animId) { cancelAnimationFrame(A2.animId); A2.animId = null; }
+  A2.min = 480;
+  setHands(A2.hands, A2.cx, A2.cy, A2.min);
+  var digital = document.getElementById("act2-digital");
+  if (digital) digital.textContent = fmtTime(A2.min);
+  document.querySelectorAll("#act-2-view .scene-btn").forEach(function (b, i) {
+    b.classList.toggle("active", i === 0);
+  });
+  var sector = document.getElementById("act2-sector");
+  if (sector) sector.setAttribute("fill-opacity", "0.32");
+  var bubble = document.getElementById("act2-bubble");
+  if (bubble) bubble.innerHTML = "💡 長針指 12，短針<b>正指 8</b> —— 這是整點 8:00。";
+}
+
+/* ==================== Act 3：五分五分數金色氣泡 ==================== */
+var A3 = { cx: 179, cy: 132, r: 88, hands: null, active: 0 };
+function buildAct3() {
+  var g = document.getElementById("act3-clock");
+  var bg = document.getElementById("act3-bubbles");
+  if (!g || !bg || A3.hands) return;
+  buildClockFace(g, A3.cx, A3.cy, A3.r, { mini: true });
+  A3.hands = buildHands(g, A3.cx, A3.cy, A3.r);
+  setHands(A3.hands, A3.cx, A3.cy, 130); /* 2:10 起手，長針指 2 */
+  for (var n = 1; n <= 12; n++) {
+    (function (n) {
+      var p = clockPoint(A3.cx, A3.cy, A3.r + 22, n * 30);
+      var c = svgEl("circle", {
+        cx: p.x, cy: p.y, r: 13.5, fill: "#f4ecdd", stroke: "#d9910d", "stroke-width": 1.5,
+        class: "act3-bubble", "data-n": n, style: "cursor:pointer"
+      }, bg);
+      var t = svgEl("text", {
+        x: p.x, y: p.y + 4.5, "text-anchor": "middle", "font-size": 10.5,
+        "font-weight": "800", fill: "#8a6a1c", style: "cursor:pointer; pointer-events:none"
+      }, bg);
+      t.textContent = String(n * 5);
+      c.addEventListener("click", function () { pickBubble(n); });
+    })(n);
+  }
+}
+function pickBubble(n) {
+  A3.active = n;
+  var mins = n * 5;
+  /* 時間設為 2 點 + n*5 分，讓長針精確指到數字 n */
+  setHands(A3.hands, A3.cx, A3.cy, 120 + mins);
+  document.querySelectorAll("#act3-bubbles .act3-bubble").forEach(function (c) {
+    var isOn = Number(c.getAttribute("data-n")) === n;
+    c.setAttribute("fill", isOn ? "#ffd166" : "#f4ecdd");
+    c.setAttribute("stroke", isOn ? "#f4694b" : "#d9910d");
+    c.setAttribute("stroke-width", isOn ? "2.5" : "1.5");
+  });
+  var legend = document.getElementById("act3-legend");
+  if (legend) legend.textContent = "長針指到 " + n + " ➔ " + n + " × 5 = " + mins + " 分";
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "🌟 長針指到 <b>" + n + "</b>，就是 <b>" + n + " × 5 = " + mins + " 分</b>！這就是鐘面上的 5 的乘法表。";
+  speakText("長針指到 " + n + ", " + n + " 乘以 5 等於 " + mins + " 分");
+  if (!verifyState.act3) { verifyState.act3 = true; refreshStatusBar(); }
+}
+function resetAct3() {
+  A3.active = 0;
+  setHands(A3.hands, A3.cx, A3.cy, 130);
+  document.querySelectorAll("#act3-bubbles .act3-bubble").forEach(function (c) {
+    c.setAttribute("fill", "#f4ecdd");
+    c.setAttribute("stroke", "#d9910d");
+    c.setAttribute("stroke-width", "1.5");
+  });
+  var legend = document.getElementById("act3-legend");
+  if (legend) legend.textContent = "👆 點一顆金色氣泡，看分針跑到哪裡！";
+  var bubble = document.getElementById("act3-bubble");
+  if (bubble) bubble.innerHTML = "💡 長針走一小格是 1 分，走一大格就是 <b>5 分</b>：5、10、15……正好是 5 的乘法！";
+}
+
+/* ==================== Act 4：小小挑戰賽 ==================== */
+var A4 = { cx: 179, cy: 98, r: 78, hands: null, qIdx: 0 };
+var QUESTIONS = [
+  {
+    min: 240, /* 4:00 整點 */
+    choices: [
+      { text: "12:00", ok: false },
+      { text: "4:00", ok: true },
+      { text: "4:30", ok: false }
+    ],
+    hint: "💡 短針<b>正指 4</b>、長針指 12 —— 是 <b>4:00</b> 整點！",
+    hintWrong: "💡 再看一次：短針正指 4（整點時短針正對數字），長針指 12 就是 0 分。"
+  },
+  {
+    min: 270, /* 4:30 半點 */
+    choices: [
+      { text: "5:30", ok: false },
+      { text: "4:30", ok: true },
+      { text: "4:00", ok: false }
+    ],
+    hint: "🎉 長針指 6（30 分），短針在 4 和 5 正中間 —— 是 <b>4:30 半點</b>！",
+    hintWrong: "💡 扇形引導：短針還在 <b>4～5 扇形區間內</b>，還沒走進 5，所以不是 5 點多，是 <b>4:30</b>！"
+  },
+  {
+    min: 475, /* 7:55 陷阱 */
+    choices: [
+      { text: "8:55", ok: false },
+      { text: "7:55", ok: true },
+      { text: "7:50", ok: false }
+    ],
+    hint: "🎉 長針指 11 是 55 分，短針雖然很接近 8，但<b>仍在 7～8 扇形區間內</b> —— 是 <b>7:55</b>！",
+    hintWrong: "💡 陷阱破解：短針還沒走到 8，仍在 <b>7～8 扇形保護區</b>內，所以是 7 點多，不是 8:55！"
+  }
+];
+function buildAct4() {
+  var g = document.getElementById("act4-clock");
+  if (!g || A4.hands) return;
+  buildClockFace(g, A4.cx, A4.cy, A4.r, { mini: true });
+  A4.hands = buildHands(g, A4.cx, A4.cy, A4.r);
+  loadQuestion(0);
+}
+function loadQuestion(idx) {
+  var q = QUESTIONS[idx];
+  A4.qIdx = idx;
+  setHands(A4.hands, A4.cx, A4.cy, q.min);
+  var row = document.getElementById("q-choices");
+  row.innerHTML = "";
+  q.choices.forEach(function (c) {
+    var b = document.createElement("button");
+    b.className = "choice-btn";
+    b.setAttribute("data-ok", c.ok ? "1" : "0");
+    b.textContent = c.text;
+    b.addEventListener("click", function () { answerChoice(b); });
+    row.appendChild(b);
+  });
+  var desc = document.getElementById("q-desc");
+  if (desc) desc.innerHTML = "第 " + (idx + 1) + " 題：鐘面上是<b>幾點幾分</b>？";
+  document.querySelectorAll("#q-progress .q-dot").forEach(function (d, i) {
+    d.className = "q-dot" + (i < idx ? " done" : (i === idx ? " on" : ""));
+  });
+  var bubble = document.getElementById("act4-bubble");
+  if (bubble) bubble.innerHTML = "💪 先看短針在哪個扇形區間，再看長針指到幾！";
+}
+function answerChoice(btn) {
+  var q = QUESTIONS[A4.qIdx];
+  var ok = btn.getAttribute("data-ok") === "1";
+  var bubble = document.getElementById("act4-bubble");
+  if (ok) {
+    btn.classList.add("correct");
+    if (bubble) bubble.innerHTML = q.hint;
+    speakText("答對了! " + q.choices.filter(function (c) { return c.ok; })[0].text.replace(":", " 點 ").replace(/^/, "") + ", 你是時間報讀大師!");
+    document.querySelectorAll("#q-progress .q-dot")[A4.qIdx].className = "q-dot done";
+    if (!verifyState.act4 && A4.qIdx === QUESTIONS.length - 1) {
+      verifyState.act4 = true;
+      refreshStatusBar();
+      if (bubble) bubble.innerHTML = "🏆 三題全對！你就是<b>時間報讀大師</b>！";
+      speakText("三題全對! 你就是時間報讀大師!");
+      return;
+    }
+    setTimeout(function () {
+      if (A4.qIdx < QUESTIONS.length - 1) loadQuestion(A4.qIdx + 1);
+    }, 1100);
+  } else {
+    btn.classList.add("wrong");
+    if (bubble) bubble.innerHTML = q.hintWrong;
+    speakText("再想想看, 短針還在哪一個扇形區間裡面呢");
+  }
+}
+function resetAct4() {
+  document.querySelectorAll("#q-choices .choice-btn").forEach(function (b) {
+    b.classList.remove("correct", "wrong");
+  });
+  loadQuestion(0);
+  if (verifyState.act4) { verifyState.act4 = false; refreshStatusBar(); }
+}
+
+/* ==================== 初始化 ==================== */
+buildAct1();
+buildAct2();
+buildAct3();
+buildAct4();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>

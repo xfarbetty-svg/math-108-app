@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G2-S-2-2 簡單幾何形體 · 概念小教室</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --sky: #7db8e8;
+  --sky-deep: #2f6fa8;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.lab-wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px 12px; box-shadow: var(--shadow);
+}
+.top-title { font-size: 14px; font-weight: 800; line-height: 1.3; }
+.top-title small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
+.top-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 999px; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line); background: #fdf6e9;
+}
+.icon-btn:active { transform: scale(0.94); }
+
+.act-nav { display: flex; gap: 6px; background: #ebe3d5; padding: 4px; border-radius: 999px; }
+.act-btn {
+  flex: 1 1 0; padding: 7px 4px; font-size: 11.5px; font-weight: 800;
+  border-radius: 999px; color: var(--ink-soft); text-align: center;
+  transition: all 0.2s; white-space: nowrap;
+}
+.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+.act-panel { display: flex; flex-direction: column; gap: 10px; }
+.act-panel.hidden { display: none; }
+.act-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.card-badge { background: #e7f5f0; color: var(--mint-deep); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+.btn-tts {
+  background: #e7f5f0; border: 1px solid #c9e8dd; color: var(--mint-deep);
+  font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.btn-tts:disabled { opacity: 0.45; cursor: default; }
+.card-title { font-size: 14.5px; font-weight: 800; }
+.card-desc { font-size: 12.5px; line-height: 1.55; color: #4a5568; }
+.tip-bubble {
+  background: #fff6df; border: 1px dashed var(--lemon-deep); border-radius: 12px;
+  padding: 8px 10px; font-size: 12px; line-height: 1.5; color: #7a5c1e;
+}
+
+.stage {
+  border: 2px solid var(--line); border-radius: 12px;
+  background: #fdfaf3; overflow: hidden; max-height: 420px;
+}
+.stage svg { display: block; width: 100%; height: auto; }
+
+.tool-row { display: flex; gap: 6px; }
+.tool-btn {
+  flex: 1 1 0; background: #fdf6e9; border: 2px solid var(--line); border-radius: 10px;
+  padding: 7px 4px; font-size: 12px; font-weight: 800; color: var(--ink);
+  transition: all 0.15s;
+}
+.tool-btn.active { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.tool-btn:active { transform: scale(0.96); }
+.tool-btn:disabled { opacity: 0.45; }
+
+.drag-handle { cursor: grab; touch-action: none; }
+.drag-handle:active { cursor: grabbing; }
+
+.cmp-grid { display: flex; flex-direction: column; gap: 8px; }
+.cmp-pair { display: flex; gap: 8px; }
+.cmp-card {
+  flex: 1 1 0; background: #fdfaf3; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 8px; text-align: center; transition: all 0.15s;
+}
+.cmp-card.picked { background: #e7f5f0; border-color: var(--mint); box-shadow: 0 3px 8px rgba(49,138,112,0.15); }
+.cmp-card .cmp-name { font-size: 13.5px; font-weight: 800; }
+.cmp-card .cmp-icon { display: block; margin: 4px auto 2px; }
+.cmp-card .cmp-fact { font-size: 11px; line-height: 1.45; color: #5b564d; font-weight: 700; }
+
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice-btn {
+  flex: 1 1 30%; background: #fdf6e9; border: 2px solid var(--line); border-radius: 12px;
+  padding: 9px 6px; font-size: 14px; font-weight: 800; color: var(--ink); transition: all 0.15s;
+}
+.choice-btn.correct { background: #e7f5f0; border-color: var(--mint); color: var(--mint-deep); }
+.choice-btn.wrong { background: #fff0eb; border-color: var(--coral); color: var(--coral-deep); }
+.choice-btn:disabled { cursor: default; }
+.quiz-progress { font-size: 11.5px; font-weight: 800; color: var(--ink-soft); }
+
+.status-bar {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 7px 12px; font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
+.status-dot.done { background: var(--mint); }
+</style>
+</head>
+<body>
+<div class="lab-wrap">
+
+  <div class="top-bar">
+    <div class="top-title">
+      簡單幾何形體小教室
+      <small>二年級 · S-2-2 正方體／長方體／圓柱／球</small>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btn-tts-top" title="語音朗讀本頁重點" onclick="speakPage()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="重置全部進度" onclick="resetLab()">🔄</button>
+    </div>
+  </div>
+
+  <div class="act-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">1️⃣ 觀念大解剖</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">2️⃣ 印章工坊</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">3️⃣ 規律大發現</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">4️⃣ 小小挑戰賽</button>
+  </div>
+
+  <!-- Act 1: 3D 積木解剖儀 -->
+  <div class="act-panel" id="act-1-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 1</span>
+        <button class="btn-tts" onclick="speakText('正方體有6個面, 8個頂點, 12條邊')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">觀念大解剖 · 面、邊、頂點大點名</div>
+      <div class="card-desc">這是 3D 積木解剖儀！先選好積木，再點下面的按鈕，幫它數一數有幾個面、幾個頂點、幾條邊。</div>
+      <div class="stage">
+        <svg id="act1-svg" viewBox="0 0 358 232" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="立體積木面邊頂點解剖圖">
+          <g id="a1-solid"></g>
+          <g font-size="13" font-weight="800">
+            <text x="206" y="58" fill="#8a857b">點名結果</text>
+            <text id="a1-c-face" x="206" y="86" fill="#8a857b">面：還沒數</text>
+            <text id="a1-c-vertex" x="206" y="116" fill="#8a857b">頂點：還沒數</text>
+            <text id="a1-c-edge" x="206" y="146" fill="#8a857b">邊：還沒數</text>
+            <text id="a1-solid-name" x="206" y="180" fill="#318a70" font-size="14">正方體</text>
+          </g>
+          <circle id="a1-star" r="11" fill="#ffd166" stroke="#d9910d" stroke-width="2" opacity="0"></circle>
+          <text id="a1-star-txt" font-size="13" text-anchor="middle" fill="#7a5c1e" opacity="0">★</text>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn active" id="a1-btn-cube" onclick="selectSolid('cube')">正方體</button>
+        <button class="tool-btn" id="a1-btn-cuboid" onclick="selectSolid('cuboid')">長方體</button>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn" id="a1-btn-face" onclick="countFaces()">🖐️ 數面</button>
+        <button class="tool-btn" id="a1-btn-vertex" onclick="countVertices()">⭐ 數頂點</button>
+        <button class="tool-btn" id="a1-btn-edge" onclick="countEdges()">📏 數邊</button>
+      </div>
+      <div class="tip-bubble" id="a1-bubble">💡 正方體有 6 個面、8 個頂點、12 條邊。長方體也是，只是面和邊的大小不一樣！</div>
+    </div>
+  </div>
+
+  <!-- Act 2: 印章拓印工坊 -->
+  <div class="act-panel hidden" id="act-2-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 2</span>
+        <button class="btn-tts" onclick="speakText('把積木的一面沾上印泥, 再蓋到白紙上, 就會印出一個平面圖形')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">印章拓印工坊 · 蓋一蓋</div>
+      <div class="card-desc">先點選一塊積木，把它<b>拖去沾印泥</b>，再<b>拖到白紙上</b>蓋印章，看看會印出什麼圖形？</div>
+      <div class="stage">
+        <svg id="act2-svg" viewBox="0 0 358 232" xmlns="http://www.w3.org/2000/svg" style="touch-action:none">
+          <rect x="108" y="26" width="152" height="134" rx="4" fill="#ffffff" stroke="#d8d2c6" stroke-width="2"></rect>
+          <text x="120" y="44" font-size="11" font-weight="800" fill="#b7b0a3">白紙</text>
+          <g id="a2-prints"></g>
+          <rect x="24" y="168" width="98" height="46" rx="23" fill="#ffe3da" stroke="#f4694b" stroke-width="2.5"></rect>
+          <text x="73" y="196" font-size="12" font-weight="800" fill="#f4694b" text-anchor="middle">印泥</text>
+          <rect x="256" y="168" width="88" height="46" rx="10" fill="#f3ecdd" stroke="#d8d2c6" stroke-width="2" stroke-dasharray="5 4"></rect>
+          <text x="300" y="196" font-size="10.5" font-weight="800" fill="#b7b0a3" text-anchor="middle">積木架</text>
+          <g id="a2-block" class="drag-handle" style="touch-action:none"></g>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <button class="tool-btn active" id="a2-btn-cube" onclick="selectStampBlock('cube')">正方體</button>
+        <button class="tool-btn" id="a2-btn-cuboid" onclick="selectStampBlock('cuboid')">長方體</button>
+        <button class="tool-btn" id="a2-btn-cylinder" onclick="selectStampBlock('cylinder')">圓柱</button>
+      </div>
+      <div class="tip-bubble" id="a2-bubble">💡 拖積木去紅色印泥沾一下，再拖到白紙上放開手，就蓋出印章了！</div>
+    </div>
+  </div>
+
+  <!-- Act 3: 雙胞胎透視鏡 -->
+  <div class="act-panel hidden" id="act-3-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 3</span>
+        <button class="btn-tts" onclick="speakText('正方體六個面都一樣大, 長方體相對的面才一樣大')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">規律大發現 · 雙胞胎透視鏡</div>
+      <div class="card-desc">點一點下面的形體卡片，比一比它們哪裡一樣、哪裡不一樣！</div>
+      <div class="cmp-grid">
+        <div class="cmp-pair">
+          <button class="cmp-card" id="cmp-cube" onclick="pickCompare('cube')">
+            <span class="cmp-name">正方體</span>
+            <svg class="cmp-icon" width="46" height="34" viewBox="0 0 46 34"><polygon points="6,12 24,4 40,12 22,20" fill="#d7f0e7" stroke="#318a70" stroke-width="2"/><polygon points="6,12 22,20 22,30 6,22" fill="#b9e4d6" stroke="#318a70" stroke-width="2"/><polygon points="22,20 40,12 40,22 22,30" fill="#94d3bf" stroke="#318a70" stroke-width="2"/></svg>
+            <span class="cmp-fact">6 個面都一樣大<br>12 條邊一樣長</span>
+          </button>
+          <button class="cmp-card" id="cmp-cuboid" onclick="pickCompare('cuboid')">
+            <span class="cmp-name">長方體</span>
+            <svg class="cmp-icon" width="46" height="34" viewBox="0 0 46 34"><polygon points="4,14 30,6 44,12 18,20" fill="#dceafb" stroke="#2f6fa8" stroke-width="2"/><polygon points="4,14 18,20 18,29 4,23" fill="#bcd7f2" stroke="#2f6fa8" stroke-width="2"/><polygon points="18,20 44,12 44,21 18,29" fill="#95bce4" stroke="#2f6fa8" stroke-width="2"/></svg>
+            <span class="cmp-fact">相對的面一樣大<br>邊有長有短</span>
+          </button>
+        </div>
+        <div class="cmp-pair">
+          <button class="cmp-card" id="cmp-cylinder" onclick="pickCompare('cylinder')">
+            <span class="cmp-name">圓柱</span>
+            <svg class="cmp-icon" width="46" height="34" viewBox="0 0 46 34"><ellipse cx="23" cy="8" rx="13" ry="5" fill="#ffe9c9" stroke="#d9910d" stroke-width="2"/><path d="M10,8 L10,26 A13,5 0 0 0 36,26 L36,8" fill="#ffd166" stroke="#d9910d" stroke-width="2"/></svg>
+            <span class="cmp-fact">上下兩個圓平面<br>躺下來會滾</span>
+          </button>
+          <button class="cmp-card" id="cmp-sphere" onclick="pickCompare('sphere')">
+            <span class="cmp-name">球體</span>
+            <svg class="cmp-icon" width="46" height="34" viewBox="0 0 46 34"><circle cx="23" cy="17" r="13" fill="#fdd9cd" stroke="#f4694b" stroke-width="2"/><path d="M12,13 A13,13 0 0 1 23,4" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <span class="cmp-fact">整個都是彎彎的<br>到處都一樣圓</span>
+          </button>
+        </div>
+      </div>
+      <div class="tip-bubble" id="a3-bubble">💡 正方體像「雙胞胎中的完美 twins」，長方體只有「面對面」的兩個面才一樣大。</div>
+    </div>
+  </div>
+
+  <!-- Act 4: 小小挑戰賽 -->
+  <div class="act-panel hidden" id="act-4-view">
+    <div class="act-card">
+      <div class="card-head">
+        <span class="card-badge">Act 4</span>
+        <button class="btn-tts" onclick="speakText('形體結構神算手, 三題挑戰, 加油!')">🔊 聽一聽</button>
+      </div>
+      <div class="card-title">小小挑戰賽 · 形體結構神算手</div>
+      <div class="quiz-progress" id="a4-progress">第 1 / 3 題</div>
+      <div class="card-desc" id="a4-question"></div>
+      <div class="choice-row" id="a4-choices"></div>
+      <div class="tip-bubble" id="a4-bubble">💪 選一個答案吧！</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">探索進度 0 / 4 · 繼續加油！</span>
+  </div>
+
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script>
+"use strict";
+
+/* ==================== 全站音訊標準：唯一入口 AudioManager ==================== */
+function speakText(rawText) {
+  if (window.AudioManager && typeof window.AudioManager.play === "function") {
+    window.AudioManager.play(rawText, {
+      onStart: function () { setSpeechBtnState(true); },
+      onEnd: function () { setSpeechBtnState(false); },
+      onError: function () { setSpeechBtnState(false); }
+    });
+    return;
+  }
+  /* 降級防護：AudioManager 未載入時靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+  setSpeechBtnState(false);
+}
+function stopSpeech() {
+  if (window.AudioManager && typeof window.AudioManager.stop === "function") {
+    window.AudioManager.stop();
+  }
+}
+function setSpeechBtnState(playing) {
+  var btn = document.getElementById("btn-tts-top");
+  if (!btn) return;
+  btn.textContent = playing ? "⏸️" : "🔊";
+}
+function speakPage() {
+  speakText("二年級簡單幾何形體小教室。現在進行第 " + currentAct + " 幕。正方體有6個面, 8個頂點, 12條邊，一起來探索立體的世界！");
+}
+
+/* ==================== 幕次切換 ==================== */
+var currentAct = 1;
+function switchAct(n) {
+  if (n < 1 || n > 4) return;
+  currentAct = n;
+  for (var i = 1; i <= 4; i++) {
+    var tab = document.getElementById("tab-act" + i);
+    var view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.classList.toggle("hidden", i !== n);
+  }
+  stopSpeech();
+}
+
+/* ==================== 單元自我驗證狀態 ==================== */
+var verifyState = { act1: false, act2: false, act3: false, act4: false };
+
+function refreshStatusBar() {
+  var done = 0;
+  ["act1", "act2", "act3", "act4"].forEach(function (k) { if (verifyState[k]) done++; });
+  var dot = document.getElementById("status-dot");
+  var text = document.getElementById("status-text");
+  if (dot) dot.classList.toggle("done", done === 4);
+  if (text) {
+    text.textContent = done === 4
+      ? "探索進度 4 / 4 · 全部完成，你真棒！"
+      : "探索進度 " + done + " / 4 · 繼續加油！";
+  }
+}
+
+function resetLab() {
+  verifyState = { act1: false, act2: false, act3: false, act4: false };
+  stopSpeech();
+  resetAct1();
+  resetAct2();
+  resetAct3();
+  resetAct4();
+  switchAct(1);
+  refreshStatusBar();
+}
+
+/* ==================== Act 1：3D 積木解剖儀（面 6 / 頂點 8 / 邊 12） ==================== */
+var SOLID_DEFS = {
+  cube:   { name: "正方體", fx: 44, fy: 100, fw: 100, fh: 100, dx: 30, dy: -25,
+            speech: "正方體有6個面, 8個頂點, 12條邊, 每個面都一樣大" },
+  cuboid: { name: "長方體", fx: 34, fy: 108, fw: 138, fh: 76, dx: 28, dy: -22,
+            speech: "長方體也有6個面, 8個頂點, 12條邊, 相對的面一樣大" }
+};
+var currentSolid = "cube";
+var solidEls = null; /* {faces:[], edges:[], verts:[], hiddenEdgeSet} */
+var countTimer = null;
+
+function solidVerts(def) {
+  var fx = def.fx, fy = def.fy, fw = def.fw, fh = def.fh, dx = def.dx, dy = def.dy;
+  return [
+    [fx, fy], [fx + fw, fy], [fx + fw, fy + fh], [fx, fy + fh],          /* 前面四點 0-3 */
+    [fx + dx, fy + dy], [fx + fw + dx, fy + dy],                         /* 後上 4,5 */
+    [fx + fw + dx, fy + fh + dy], [fx + dx, fy + fh + dy]                /* 後下 6,7 */
+  ];
+}
+var FACE_DEFS = [
+  { idx: [4, 5, 1, 0], label: "上面", fill: "#d7f0e7", hidden: false },
+  { idx: [1, 2, 6, 5], label: "右面", fill: "#a8dcc9", hidden: false },
+  { idx: [0, 3, 2, 1], label: "前面", fill: "#c4e8db", hidden: false },
+  { idx: [0, 4, 7, 3], label: "左面", fill: "#eef4ef", hidden: true },
+  { idx: [4, 5, 6, 7], label: "後面", fill: "#eef4ef", hidden: true },
+  { idx: [3, 2, 6, 7], label: "下面", fill: "#eef4ef", hidden: true }
+];
+var EDGE_IDX = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+
+function buildSolid(kind) {
+  currentSolid = kind;
+  var def = SOLID_DEFS[kind];
+  var g = document.getElementById("a1-solid");
+  if (!g) return;
+  while (g.firstChild) g.removeChild(g.firstChild);
+  var NS = "http://www.w3.org/2000/svg";
+  var verts = solidVerts(def);
+  solidEls = { faces: [], edges: [], verts: [] };
+
+  /* 先畫隱藏面（虛線淡色），再畫可見面 */
+  FACE_DEFS.forEach(function (f) {
+    var pts = f.idx.map(function (i) { return verts[i][0] + "," + verts[i][1]; }).join(" ");
+    var p = document.createElementNS(NS, "polygon");
+    p.setAttribute("points", pts);
+    p.setAttribute("fill", f.fill);
+    p.setAttribute("stroke", f.hidden ? "#b9b2a4" : "#318a70");
+    p.setAttribute("stroke-width", "2");
+    if (f.hidden) p.setAttribute("stroke-dasharray", "5 4");
+    g.appendChild(p);
+    solidEls.faces.push(p);
+  });
+  EDGE_IDX.forEach(function (e) {
+    var a = verts[e[0]], b = verts[e[1]];
+    var l = document.createElementNS(NS, "line");
+    l.setAttribute("x1", a[0]); l.setAttribute("y1", a[1]);
+    l.setAttribute("x2", b[0]); l.setAttribute("y2", b[1]);
+    l.setAttribute("stroke", "#318a70");
+    l.setAttribute("stroke-width", "2.5");
+    l.setAttribute("stroke-linecap", "round");
+    g.appendChild(l);
+    solidEls.edges.push(l);
+  });
+  verts.forEach(function (v) {
+    var c = document.createElementNS(NS, "circle");
+    c.setAttribute("cx", v[0]); c.setAttribute("cy", v[1]);
+    c.setAttribute("r", "4.5");
+    c.setAttribute("fill", "#ffffff");
+    c.setAttribute("stroke", "#318a70");
+    c.setAttribute("stroke-width", "2");
+    g.appendChild(c);
+    solidEls.verts.push(c);
+  });
+  var name = document.getElementById("a1-solid-name");
+  if (name) name.textContent = def.name;
+  clearCounters();
+}
+
+function clearCounters() {
+  var map = { "a1-c-face": "面：還沒數", "a1-c-vertex": "頂點：還沒數", "a1-c-edge": "邊：還沒數" };
+  Object.keys(map).forEach(function (id) {
+    var t = document.getElementById(id);
+    if (t) { t.textContent = map[id]; t.setAttribute("fill", "#8a857b"); }
+  });
+  var bubble = document.getElementById("a1-bubble");
+  if (bubble) bubble.innerHTML = "💡 正方體有 6 個面、8 個頂點、12 條邊。長方體也是，只是面和邊的大小不一樣！";
+  ["a1-btn-face", "a1-btn-vertex", "a1-btn-edge"].forEach(function (id) {
+    var b = document.getElementById(id); if (b) b.disabled = false;
+  });
+  hideStar();
+}
+
+function stopCountTimer() {
+  if (countTimer) { clearInterval(countTimer); countTimer = null; }
+  ["a1-btn-face", "a1-btn-vertex", "a1-btn-edge"].forEach(function (id) {
+    var b = document.getElementById(id); if (b) b.disabled = false;
+  });
+}
+
+function resetFaceLook() {
+  if (!solidEls) return;
+  FACE_DEFS.forEach(function (f, i) {
+    var p = solidEls.faces[i];
+    p.setAttribute("fill", f.fill);
+    p.setAttribute("stroke", f.hidden ? "#b9b2a4" : "#318a70");
+    p.setAttribute("stroke-width", "2");
+  });
+  solidEls.edges.forEach(function (l) { l.setAttribute("stroke", "#318a70"); l.setAttribute("stroke-width", "2.5"); });
+  solidEls.verts.forEach(function (c) { c.setAttribute("fill", "#ffffff"); c.setAttribute("stroke", "#318a70"); });
+}
+
+function selectSolid(kind) {
+  stopCountTimer();
+  buildSolid(kind);
+  var cubeBtn = document.getElementById("a1-btn-cube");
+  var cuboidBtn = document.getElementById("a1-btn-cuboid");
+  if (cubeBtn) cubeBtn.classList.toggle("active", kind === "cube");
+  if (cuboidBtn) cuboidBtn.classList.toggle("active", kind === "cuboid");
+  speakText(SOLID_DEFS[kind].speech);
+}
+
+function runSequence(total, stepFn, doneFn, bubbleId, doneMsg) {
+  stopCountTimer();
+  ["a1-btn-face", "a1-btn-vertex", "a1-btn-edge"].forEach(function (id) {
+    var b = document.getElementById(id); if (b) b.disabled = true;
+  });
+  var i = 0;
+  stepFn(i);
+  countTimer = setInterval(function () {
+    i++;
+    if (i < total) { stepFn(i); return; }
+    clearInterval(countTimer); countTimer = null;
+    doneFn();
+    ["a1-btn-face", "a1-btn-vertex", "a1-btn-edge"].forEach(function (id) {
+      var b = document.getElementById(id); if (b) b.disabled = false;
+    });
+    var bubble = document.getElementById(bubbleId);
+    if (bubble) bubble.innerHTML = doneMsg;
+    if (!verifyState.act1) { verifyState.act1 = true; refreshStatusBar(); }
+  }, 480);
+}
+
+function countFaces() {
+  resetFaceLook();
+  var def = SOLID_DEFS[currentSolid];
+  var counter = document.getElementById("a1-c-face");
+  var colors = ["#ffd166", "#7bc9b2", "#7db8e8", "#ff8a65", "#c9a7e0", "#8fd18f"];
+  runSequence(6,
+    function (i) {
+      FACE_DEFS.forEach(function (f, j) {
+        solidEls.faces[j].setAttribute("fill", j <= i ? colors[j] : f.fill);
+      });
+      if (counter) counter.textContent = "面：數到 " + (i + 1) + " 個";
+    },
+    function () {
+      if (counter) { counter.textContent = "面：6 個 ✓"; counter.setAttribute("fill", "#318a70"); }
+      speakText(def.speech);
+    },
+    "a1-bubble",
+    "🎉 數完了！" + def.name + "有 <b>6 個面</b>，每一面都是平平的外皮。");
+}
+
+function showStar(v) {
+  var star = document.getElementById("a1-star");
+  var txt = document.getElementById("a1-star-txt");
+  if (!star || !txt) return;
+  star.setAttribute("cx", v[0]);
+  star.setAttribute("cy", v[1] - 2);
+  star.setAttribute("opacity", "1");
+  txt.setAttribute("x", v[0]);
+  txt.setAttribute("y", v[1] + 2);
+  txt.setAttribute("opacity", "1");
+}
+function hideStar() {
+  var star = document.getElementById("a1-star");
+  var txt = document.getElementById("a1-star-txt");
+  if (star) star.setAttribute("opacity", "0");
+  if (txt) txt.setAttribute("opacity", "0");
+}
+
+function countVertices() {
+  resetFaceLook();
+  var def = SOLID_DEFS[currentSolid];
+  var verts = solidVerts(def);
+  var counter = document.getElementById("a1-c-vertex");
+  runSequence(8,
+    function (i) {
+      solidEls.verts.forEach(function (c, j) {
+        if (j <= i) { c.setAttribute("fill", "#ffd166"); c.setAttribute("stroke", "#d9910d"); }
+      });
+      showStar(verts[i]);
+      if (counter) counter.textContent = "頂點：數到 " + (i + 1) + " 個";
+    },
+    function () {
+      hideStar();
+      if (counter) { counter.textContent = "頂點：8 個 ✓"; counter.setAttribute("fill", "#d9910d"); }
+      speakText("一、二、三、四、五、六、七、八, " + def.name + "有8個尖尖的頂點");
+    },
+    "a1-bubble",
+    "🌟 數完了！" + def.name + "有 <b>8 個頂點</b>，每個尖尖角都亮起金色星星。");
+}
+
+function countEdges() {
+  resetFaceLook();
+  var def = SOLID_DEFS[currentSolid];
+  var counter = document.getElementById("a1-c-edge");
+  runSequence(12,
+    function (i) {
+      solidEls.edges.forEach(function (l, j) {
+        if (j <= i) { l.setAttribute("stroke", "#ffd166"); l.setAttribute("stroke-width", "5"); }
+      });
+      if (counter) counter.textContent = "邊：數到 " + (i + 1) + " 條";
+    },
+    function () {
+      if (counter) { counter.textContent = "邊：12 條 ✓"; counter.setAttribute("fill", "#318a70"); }
+      speakText("一共有12條邊, " + def.name + "的邊亮起高光了");
+    },
+    "a1-bubble",
+    "📏 數完了！" + def.name + "有 <b>12 條邊</b>，全部點亮高光！");
+}
+
+function resetAct1() {
+  stopCountTimer();
+  var cubeBtn = document.getElementById("a1-btn-cube");
+  var cuboidBtn = document.getElementById("a1-btn-cuboid");
+  if (cubeBtn) cubeBtn.classList.add("active");
+  if (cuboidBtn) cuboidBtn.classList.remove("active");
+  buildSolid("cube");
+}
+
+/* ==================== Act 2：印章拓印工坊（真實 pointer 拖曳） ==================== */
+var STAMP_DEFS = {
+  cube:     { name: "正方體", print: "square",  speech: "正方體的面是正方形, 蓋出正方形!" },
+  cuboid:   { name: "長方體", print: "rect",    speech: "長方體的面是長方形, 蓋出長方形!" },
+  cylinder: { name: "圓柱",   print: "circle",  speech: "圓柱的底面是圓形, 蓋出圓形!" }
+};
+var stampBlock = "cube";
+var blockX = 300, blockY = 191, isBlockDragging = false, blockInky = false;
+var BLOCK_GROUP = null;
+var stampedKinds = {};
+
+function drawStampBlock(kind) {
+  var g = BLOCK_GROUP;
+  if (!g) return;
+  while (g.firstChild) g.removeChild(g.firstChild);
+  var NS = "http://www.w3.org/2000/svg";
+  var ink = blockInky ? "#f4694b" : null;
+  if (kind === "cube" || kind === "cuboid") {
+    var fw = kind === "cube" ? 26 : 34;
+    var fh = kind === "cube" ? 26 : 20;
+    var dxx = 9, dyy = -8;
+    var fx = -fw / 2, fy = -fh / 2 + 4;
+    var top = document.createElementNS(NS, "polygon");
+    top.setAttribute("points", (fx) + "," + (fy) + " " + (fx + fw) + "," + (fy) + " " + (fx + fw + dxx) + "," + (fy + dyy) + " " + (fx + dxx) + "," + (fy + dyy));
+    top.setAttribute("fill", "#d7f0e7"); top.setAttribute("stroke", "#318a70"); top.setAttribute("stroke-width", "2");
+    var right = document.createElementNS(NS, "polygon");
+    right.setAttribute("points", (fx + fw) + "," + (fy) + " " + (fx + fw) + "," + (fy + fh) + " " + (fx + fw + dxx) + "," + (fy + fh + dyy) + " " + (fx + fw + dxx) + "," + (fy + dyy));
+    right.setAttribute("fill", "#a8dcc9"); right.setAttribute("stroke", "#318a70"); right.setAttribute("stroke-width", "2");
+    var front = document.createElementNS(NS, "rect");
+    front.setAttribute("x", fx); front.setAttribute("y", fy);
+    front.setAttribute("width", fw); front.setAttribute("height", fh);
+    front.setAttribute("fill", "#c4e8db"); front.setAttribute("stroke", "#318a70"); front.setAttribute("stroke-width", "2");
+    g.appendChild(top); g.appendChild(right); g.appendChild(front);
+    if (ink) {
+      var pad = document.createElementNS(NS, "rect");
+      pad.setAttribute("x", fx + 3); pad.setAttribute("y", fy + fh - 5);
+      pad.setAttribute("width", fw - 6); pad.setAttribute("height", 4); pad.setAttribute("rx", 2);
+      pad.setAttribute("fill", ink);
+      g.appendChild(pad);
+    }
+  } else {
+    var body = document.createElementNS(NS, "path");
+    body.setAttribute("d", "M-12,-6 L-12,8 A12,5 0 0 0 12,8 L12,-6");
+    body.setAttribute("fill", "#ffd166"); body.setAttribute("stroke", "#d9910d"); body.setAttribute("stroke-width", "2");
+    var topE = document.createElementNS(NS, "ellipse");
+    topE.setAttribute("cx", 0); topE.setAttribute("cy", -6);
+    topE.setAttribute("rx", 12); topE.setAttribute("ry", 5);
+    topE.setAttribute("fill", "#ffe9c9"); topE.setAttribute("stroke", "#d9910d"); topE.setAttribute("stroke-width", "2");
+    g.appendChild(body); g.appendChild(topE);
+    if (ink) {
+      var bot = document.createElementNS(NS, "ellipse");
+      bot.setAttribute("cx", 0); bot.setAttribute("cy", 8);
+      bot.setAttribute("rx", 10); bot.setAttribute("ry", 3.5);
+      bot.setAttribute("fill", ink);
+      g.appendChild(bot);
+    }
+  }
+}
+
+function applyBlockTransform() {
+  if (BLOCK_GROUP) BLOCK_GROUP.setAttribute("transform", "translate(" + blockX + "," + blockY + ")");
+}
+
+function svgPointAct2(evt) {
+  var svg = document.getElementById("act2-svg");
+  var pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  var ctm = svg.getScreenCTM();
+  if (!ctm) return null;
+  var p = pt.matrixTransform(ctm.inverse());
+  return { x: p.x, y: p.y };
+}
+
+function initStampDrag() {
+  BLOCK_GROUP = document.getElementById("a2-block");
+  if (!BLOCK_GROUP) return;
+  var start = null;
+  BLOCK_GROUP.addEventListener("pointerdown", function (e) {
+    isBlockDragging = true;
+    start = { x: e.clientX, y: e.clientY, ox: blockX, oy: blockY };
+    try { BLOCK_GROUP.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  BLOCK_GROUP.addEventListener("pointermove", function (e) {
+    if (!isBlockDragging) return;
+    var svg = document.getElementById("act2-svg");
+    var rect = svg.getBoundingClientRect();
+    var scale = 358 / rect.width;
+    blockX = Math.max(20, Math.min(338, start.ox + (e.clientX - start.x) * scale));
+    blockY = Math.max(30, Math.min(210, start.oy + (e.clientY - start.y) * scale));
+    applyBlockTransform();
+    e.preventDefault();
+  });
+  BLOCK_GROUP.addEventListener("pointerup", function (e) {
+    if (!isBlockDragging) return;
+    isBlockDragging = false;
+    var overInk = blockX >= 20 && blockX <= 128 && blockY >= 160 && blockY <= 218;
+    var overPaper = blockX >= 104 && blockX <= 264 && blockY >= 22 && blockY <= 164;
+    var bubble = document.getElementById("a2-bubble");
+    if (overInk && !blockInky) {
+      blockInky = true;
+      drawStampBlock(stampBlock);
+      applyBlockTransform();
+      if (bubble) bubble.innerHTML = "🎨 沾好紅印泥了！現在拖到白紙上蓋下去～";
+      speakText("沾好印泥了, 拖到白紙上蓋下去");
+    } else if (overPaper) {
+      if (!blockInky) {
+        if (bubble) bubble.innerHTML = "💡 積木還沒沾印泥喔！先去紅色印泥上沾一下。";
+        speakText("先去印泥沾一下喔");
+      } else {
+        stampPrint(stampBlock, blockX, blockY);
+        blockInky = false;
+        drawStampBlock(stampBlock);
+        applyBlockTransform();
+      }
+    }
+    e.preventDefault();
+  });
+  BLOCK_GROUP.addEventListener("pointercancel", function () { isBlockDragging = false; });
+}
+
+function stampPrint(kind, sx, sy) {
+  var def = STAMP_DEFS[kind];
+  var NS = "http://www.w3.org/2000/svg";
+  var g = document.getElementById("a2-prints");
+  if (!g) return;
+  var cx = Math.max(130, Math.min(250, sx));
+  var cy = Math.max(48, Math.min(140, sy));
+  var el = null;
+  if (def.print === "square") {
+    el = document.createElementNS(NS, "rect");
+    el.setAttribute("x", cx - 18); el.setAttribute("y", cy - 18);
+    el.setAttribute("width", 36); el.setAttribute("height", 36);
+    el.setAttribute("rx", 2);
+  } else if (def.print === "rect") {
+    el = document.createElementNS(NS, "rect");
+    el.setAttribute("x", cx - 27); el.setAttribute("y", cy - 16);
+    el.setAttribute("width", 54); el.setAttribute("height", 32);
+    el.setAttribute("rx", 2);
+  } else {
+    el = document.createElementNS(NS, "ellipse");
+    el.setAttribute("cx", cx); el.setAttribute("cy", cy);
+    el.setAttribute("rx", 20); el.setAttribute("ry", 19);
+  }
+  el.setAttribute("fill", "rgba(244,105,75,0.55)");
+  el.setAttribute("stroke", "#f4694b");
+  el.setAttribute("stroke-width", "2.5");
+  g.appendChild(el);
+  var label = document.createElementNS(NS, "text");
+  label.setAttribute("x", cx); label.setAttribute("y", cy + (def.print === "circle" ? 4 : 5));
+  label.setAttribute("text-anchor", "middle");
+  label.setAttribute("font-size", "10.5");
+  label.setAttribute("font-weight", "800");
+  label.setAttribute("fill", "#b23a22");
+  label.textContent = def.print === "square" ? "正方形" : (def.print === "rect" ? "長方形" : "圓形");
+  g.appendChild(label);
+  stampedKinds[def.print] = true;
+  var bubble = document.getElementById("a2-bubble");
+  if (bubble) bubble.innerHTML = "🎉 " + def.name + "蓋出了「<b>" + label.textContent + "</b>」！立體的面就是平面的外皮。";
+  speakText(def.speech);
+  if (!verifyState.act2 && stampedKinds.square && stampedKinds.rect && stampedKinds.circle) {
+    verifyState.act2 = true;
+    refreshStatusBar();
+    if (bubble) bubble.innerHTML = "🏆 三種圖形都蓋出來了！<b>立體形體的面，印出來就是平面圖形</b>。";
+    speakText("三種圖形都蓋出來了, 立體的面印出來就是平面圖形");
+  }
+}
+
+function selectStampBlock(kind) {
+  stampBlock = kind;
+  blockInky = false;
+  ["a2-btn-cube", "a2-btn-cuboid", "a2-btn-cylinder"].forEach(function (id, i) {
+    var b = document.getElementById(id);
+    if (b) b.classList.toggle("active", ["cube", "cuboid", "cylinder"][i] === kind);
+  });
+  drawStampBlock(kind);
+  speakText(STAMP_DEFS[kind].name + "的每一個面, 沾印泥蓋在紙上, 看看會印出什麼圖形");
+}
+
+function resetAct2() {
+  blockX = 300; blockY = 191; blockInky = false; isBlockDragging = false;
+  stampedKinds = {};
+  var g = document.getElementById("a2-prints");
+  if (g) while (g.firstChild) g.removeChild(g.firstChild);
+  ["a2-btn-cube", "a2-btn-cuboid", "a2-btn-cylinder"].forEach(function (id, i) {
+    var b = document.getElementById(id);
+    if (b) b.classList.toggle("active", i === 0);
+  });
+  stampBlock = "cube";
+  drawStampBlock("cube");
+  applyBlockTransform();
+  var bubble = document.getElementById("a2-bubble");
+  if (bubble) bubble.innerHTML = "💡 拖積木去紅色印泥沾一下，再拖到白紙上放開手，就蓋出印章了！";
+}
+
+/* ==================== Act 3：正方體 vs 長方體 雙胞胎透視鏡 ==================== */
+var CMP_DEFS = {
+  cube:     { id: "cmp-cube", speech: "正方體的六個面都一樣大, 十二條邊都一樣長, 像完美的雙胞胎", fact: "6 個面都一樣大、12 條邊一樣長。" },
+  cuboid:   { id: "cmp-cuboid", speech: "長方體相對的兩個面才一樣大, 邊有長有短", fact: "相對的面一樣大、邊有長有短。" },
+  cylinder: { id: "cmp-cylinder", speech: "圓柱上下是兩個一樣的圓形平面, 躺下來可以滾", fact: "上下兩個圓形平面，躺下來會滾。" },
+  sphere:   { id: "cmp-sphere", speech: "球體整個表面都是彎彎的, 沒有平面, 到處都一樣圓", fact: "整個表面都是彎的，沒有平面。" }
+};
+var pickedCompare = {};
+
+function pickCompare(kind) {
+  var def = CMP_DEFS[kind];
+  var card = document.getElementById(def.id);
+  if (card) card.classList.toggle("picked", true);
+  pickedCompare[kind] = true;
+  var bubble = document.getElementById("a3-bubble");
+  var names = { cube: "正方體", cuboid: "長方體", cylinder: "圓柱", sphere: "球體" };
+  if (bubble) bubble.innerHTML = "🔍 <b>" + names[kind] + "</b>：" + def.fact;
+  speakText(def.speech);
+  if (!verifyState.act3 && pickedCompare.cube && pickedCompare.cuboid) {
+    verifyState.act3 = true;
+    refreshStatusBar();
+    if (bubble) bubble.innerHTML = "🌟 發現了！<b>正方體</b>六個面全一樣大；<b>長方體</b>只有面對面的兩個面一樣大。";
+  }
+}
+
+function resetAct3() {
+  pickedCompare = {};
+  Object.keys(CMP_DEFS).forEach(function (k) {
+    var card = document.getElementById(CMP_DEFS[k].id);
+    if (card) card.classList.remove("picked");
+  });
+  var bubble = document.getElementById("a3-bubble");
+  if (bubble) bubble.innerHTML = "💡 正方體像「雙胞胎中的完美 twins」，長方體只有「面對面」的兩個面才一樣大。";
+}
+
+/* ==================== Act 4：小小挑戰賽（3 題） ==================== */
+var QUIZ = [
+  {
+    q: "數一數：正方體有幾個「面」？",
+    opts: ["6 個", "8 個", "12 個"],
+    ans: 0,
+    hint: "💡 解剖提示：上、下、前、後、左、右，一個一樣平平的外皮算一個面。",
+    okSpeech: "答對了! 正方體有6個面",
+    hintSpeech: "再想想看, 正方體有上下前後左右六個面喔"
+  },
+  {
+    q: "把圓柱的底面沾印泥蓋在紙上，會印出什麼圖形？",
+    opts: ["正方形", "長方形", "圓形"],
+    ans: 2,
+    hint: "💡 解剖提示：圓柱的底面是圓圓平平的，印章印出來也是圓圓的。",
+    okSpeech: "答對了! 圓柱的底面蓋出圓形",
+    hintSpeech: "再想想看, 圓柱的底面是圓圓的喔"
+  },
+  {
+    q: "哪一個形體「6 個面都一樣大、12 條邊一樣長」？",
+    opts: ["長方體", "正方體", "球體"],
+    ans: 1,
+    hint: "💡 解剖提示：正方體像完美的雙胞胎，每一面都一模一樣大。",
+    okSpeech: "答對了! 正方體六個面都一樣大",
+    hintSpeech: "再想想看, 哪一個形體每一面都一模一樣大呢"
+  }
+];
+var quizIdx = 0;
+
+function renderQuiz() {
+  var q = QUIZ[quizIdx];
+  var qEl = document.getElementById("a4-question");
+  var cEl = document.getElementById("a4-choices");
+  var pEl = document.getElementById("a4-progress");
+  var bEl = document.getElementById("a4-bubble");
+  if (!qEl || !cEl) return;
+  qEl.textContent = q.q;
+  if (pEl) pEl.textContent = "第 " + (quizIdx + 1) + " / " + QUIZ.length + " 題";
+  if (bEl) bEl.innerHTML = "💪 選一個答案吧！";
+  cEl.innerHTML = "";
+  q.opts.forEach(function (opt, i) {
+    var btn = document.createElement("button");
+    btn.className = "choice-btn";
+    btn.textContent = opt;
+    btn.setAttribute("data-ok", i === q.ans ? "1" : "0");
+    btn.addEventListener("click", function () { answerQuiz(btn); });
+    cEl.appendChild(btn);
+  });
+}
+
+function answerQuiz(btn) {
+  var ok = btn.getAttribute("data-ok") === "1";
+  var bubble = document.getElementById("a4-bubble");
+  var choices = document.getElementById("a4-choices");
+  if (ok) {
+    btn.classList.add("correct");
+    if (choices) choices.querySelectorAll(".choice-btn").forEach(function (b) { b.disabled = true; });
+    if (bubble) bubble.innerHTML = "🎉 答對了！你真是形體結構神算手！";
+    speakText(QUIZ[quizIdx].okSpeech);
+    quizIdx++;
+    if (quizIdx >= QUIZ.length) {
+      if (!verifyState.act4) { verifyState.act4 = true; refreshStatusBar(); }
+      var pEl = document.getElementById("a4-progress");
+      if (pEl) pEl.textContent = "挑戰完成 🏆";
+      if (bubble) bubble.innerHTML = "🏆 三題全過！面、邊、頂點都難不倒你了！";
+      speakText("三題全過! 你是形體結構神算手!");
+    } else {
+      setTimeout(function () {
+        if (quizIdx > 0 && quizIdx < QUIZ.length) renderQuiz();
+      }, 900);
+    }
+  } else {
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    if (bubble) bubble.innerHTML = QUIZ[quizIdx].hint;
+    speakText(QUIZ[quizIdx].hintSpeech);
+  }
+}
+
+function resetAct4() {
+  quizIdx = 0;
+  renderQuiz();
+}
+
+/* ==================== 初始化 ==================== */
+buildSolid("cube");
+initStampDrag();
+resetAct2();
+renderQuiz();
+refreshStatusBar();
+
+/* 暴露給 CDP 驗證器 */
+window.G2_LAB_SELFTEST = {
+  switchAct: switchAct,
+  reset: resetLab,
+  state: verifyState
+};
+</script>
+</body>
+</html>
