@@ -433,6 +433,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transition: y 0.5s cubic-bezier(0.25, 1, 0.5, 1), height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 </style>
+  <script src="js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -964,22 +965,14 @@ function showCard(idx) {
   `;
 }
 
-// ===== 語音導讀 (Web Speech API 臺灣腔 zh-TW) =====
+// ===== 語音導讀 (統一由 AudioManager 播放) =====
 function playVoiceGuide() {
   const m = MODULES[currentMod];
+  if (!m) return;
   const textToRead = `${m.storyTitle}。${m.storyLead}。${m.storyText.replace(/<[^>]+>/g, '')}。${m.magicCode}`;
-  
-  if (!("speechSynthesis" in window)) {
-    alert("您的瀏覽器暫不支援自動語音播放，請閱讀卡片導讀文字喔！");
-    return;
+  if (window.AudioManager) {
+    window.AudioManager.play(textToRead);
   }
-  
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(textToRead);
-  utter.lang = "zh-TW";
-  utter.rate = 0.92; // 稍慢、親切
-  utter.pitch = 1.1; // 輕快親切兒少口吻
-  window.speechSynthesis.speak(utter);
 }
 
 // ===== 信心挑戰按鈕 =====

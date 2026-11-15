@@ -109,6 +109,7 @@ def main():
     gates = [
         ["node", "tools/verify_curriculum_131.js"],
         ["node", "tools/verify_app_shell.js"],
+        ["node", "tools/verify_audio_singleton.js"],
         ["node", "tools/verify_circle_concept.js"],
         ["node", "tools/verify_g3_new_concepts.js"],
         ["node", "tools/verify_g3_remaining_concepts.js"],

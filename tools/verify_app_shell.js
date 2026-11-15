@@ -35,6 +35,11 @@ function startServer() {
     const server = http.createServer((req, res) => {
       const urlPath = decodeURIComponent(req.url.split('?')[0]);
       if (urlPath === '/favicon.ico') { res.writeHead(204); res.end(); return; }
+      if (urlPath.startsWith('/api/tts')) {
+        res.writeHead(200, { 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' });
+        res.end(Buffer.alloc(100));
+        return;
+      }
       let fp = path.join(process.cwd(), urlPath === '/' ? 'app/index.html' : urlPath.replace(/^\//, ''));
       try {
         const stat = fs.statSync(fp);

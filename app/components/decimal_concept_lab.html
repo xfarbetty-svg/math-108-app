@@ -350,6 +350,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .btn-go-quiz:active { transform: scale(0.98); }
 </style>
+  <script src="../js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -1033,111 +1034,32 @@ function cleanTextForSpeech(text) {
 }
 
 function stopSpeech() {
-  if (currentTtsAudio) {
-    try {
-      currentTtsAudio.pause();
-      currentTtsAudio.src = "";
-    } catch (e) {}
-    currentTtsAudio = null;
-  }
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_STOP" }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.stop();
   }
   isSpeaking = false;
-  updateVoiceButtons(false);
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(false);
 }
-
 function playVoiceText(rawText) {
-  const clean = cleanTextForSpeech(rawText);
-  if (!clean) return;
-
-  speechEpoch++;
-  const thisEpoch = speechEpoch;
-
-  stopSpeech();
-
-  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-
-  const audio = new Audio();
-  currentTtsAudio = audio;
-  let hasFallback = false;
-
-  function doWebSpeechFallback() {
-    if (hasFallback || speechEpoch !== thisEpoch) return;
-    hasFallback = true;
-    if (!("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance(clean);
-    u.lang = "zh-TW";
-    u.rate = 0.95;
-    u.pitch = 1.05;
-    const voices = window.speechSynthesis.getVoices() || [];
-    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
-                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
-    if (twVoice) u.voice = twVoice;
-    u.onstart = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = true;
-        updateVoiceButtons(true);
-      }
-    };
-    u.onend = u.onerror = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = false;
-        updateVoiceButtons(false);
-      }
-    };
-    window.speechSynthesis.speak(u);
+  if (isSpeaking) {
+    stopSpeech();
+    return;
   }
+  isSpeaking = true;
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(true);
 
-  const timer = setTimeout(() => {
-    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
-      doWebSpeechFallback();
-    }
-  }, 2500);
-
-  audio.onplay = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = true;
-      updateVoiceButtons(true);
-    }
-  };
-
-  audio.onended = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = false;
-      updateVoiceButtons(false);
-    }
-  };
-
-  audio.oncanplay = () => {
-    clearTimeout(timer);
-    if (speechEpoch === thisEpoch) {
-      audio.play().catch(doWebSpeechFallback);
-    }
-  };
-
-  audio.onerror = () => {
-    clearTimeout(timer);
-    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
-      audio.src = fallbackCloudUrl;
-      audio.load();
-    } else {
-      doWebSpeechFallback();
-    }
-  };
-
-  audio.src = primaryUrl;
-  audio.load();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_SPEAK", text: rawText }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.play(rawText, {
+      onStart: () => { if (typeof updateVoiceButtons === "function") updateVoiceButtons(true); },
+      onEnd: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); },
+      onError: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); }
+    });
+  }
 }
-
-const ACT_VOICES = {
-  1: "活動一：十等分與零點一的誕生。把一整條色紙平均分成十格，塗一格就是十分之一，寫成小數零點一。中間的圓點叫做小數點，用來分開整數和不滿一的部分。塗滿十格，十個零點一剛好就是整數一喔！",
-  2: "活動二：一位小數位值計數盒。小數點左邊是個位，放整數一；右邊是十分位，放零點一。按加零點一，十分位就多一顆珠子。集滿十顆就打包進位，變成個位的一顆！",
-  3: "活動三：公尺數線上的小數。把一公尺平均分成十格，每一格就是零點一公尺。滑動鉛筆停在零點七，就是十分之七公尺，也是七個零點一公尺喔！",
-  4: "活動四：比大小與小數點對齊加減。比大小時，可以用一全長當關卡，超過一的全長就比較大。直式加減時，小數點要對齊，十分位和十分位相加減，滿十就進一！"
-};
-
 function playVoice(actNum) {
   if (isSpeaking) {
     stopSpeech();

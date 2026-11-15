@@ -312,31 +312,25 @@ function showDegraded(markup) {
   console.warn(markup);
 }
 
-/* ---------- 臺灣腔 TTS 語音朗讀系統（Edge-TTS 雲端高傳真神經音色 + Web Speech 原生雙備援） ---------- */
-let speechEpoch = 0;
-let isSpeaking = false;
-let currentTtsAudio = null;
-
-function cleanTextForSpeech(text) {
-  if (!text) return "";
-  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
-             .replace(/[🎒🚰🥤🧪💡✨🌟🎯🦉🟢🐗🗿🦗👺🌳⏱️🧱🧊👑⚔️💥⚡🔥🎉🎨✏️🍓🕊️🕊🎉🍕🍪🐟🍉蓮霧杨桃檸檬⭐]/g, "")
-             .replace(/[\(\)（）\-\_\~·]/g, " ")
-             .trim();
-}
+/* ---------- 臺灣腔 TTS 語音朗讀（全站音訊單例 AudioManager 統一發聲） ---------- */
+/* 監聽教具 iframe 的 postMessage：{ type: 'TTS_SPEAK', text } / { type: 'TTS_STOP' } */
+window.addEventListener("message", (event) => {
+  if (!event.data) return;
+  if (event.data.type === "TTS_SPEAK" && event.data.text) {
+    if (window.AudioManager) {
+      window.AudioManager.play(event.data.text);
+    }
+  } else if (event.data.type === "TTS_STOP") {
+    if (window.AudioManager) {
+      window.AudioManager.stop();
+    }
+  }
+});
 
 function stopCurrentSpeech() {
-  if (currentTtsAudio) {
-    try {
-      currentTtsAudio.pause();
-      currentTtsAudio.src = "";
-    } catch (e) {}
-    currentTtsAudio = null;
+  if (window.AudioManager) {
+    window.AudioManager.stop();
   }
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-  isSpeaking = false;
   updateSpeakBtn(false);
 }
 
@@ -344,111 +338,24 @@ function speakCurrentProblem() {
   const q = state.unit ? state.unit.questions[state.qIndex] : null;
   if (!q) return;
 
-  speechEpoch++;
-  const thisEpoch = speechEpoch;
-
-  if (isSpeaking) {
+  // 正在朗讀中 → 點擊即停止（切換行為）
+  if (window.AudioManager && window.AudioManager.isPlaying()) {
     stopCurrentSpeech();
     return;
   }
 
   const rawText = (q.stem || q.title || "") + "。" + (q.subtitle || "");
-  const clean = cleanTextForSpeech(rawText);
-  if (!clean) return;
-
-  isSpeaking = true;
-  updateSpeakBtn(true);
-
-  if (currentTtsAudio) {
-    try {
-      currentTtsAudio.pause();
-      currentTtsAudio.src = "";
-    } catch (e) {}
-    currentTtsAudio = null;
+  if (window.AudioManager) {
+    updateSpeakBtn(true);
+    window.AudioManager.play(rawText, {
+      onStart: () => updateSpeakBtn(true),
+      onEnd: () => updateSpeakBtn(false),
+      onError: () => updateSpeakBtn(false)
+    });
+  } else {
+    console.warn("[DEGRADED] AudioManager 未載入，語音朗讀不可用");
+    updateSpeakBtn(false);
   }
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-
-  // 優先嘗試本地 /api/tts，遠端回退 math3-bank.pages.dev，底層回退 Web Speech
-  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-
-  const audio = new Audio();
-  currentTtsAudio = audio;
-  let hasFallback = false;
-
-  function doWebSpeechFallback() {
-    if (hasFallback || speechEpoch !== thisEpoch) return;
-    hasFallback = true;
-    try {
-      if (audio) { audio.pause(); audio.src = ""; }
-    } catch (e) {}
-    if (!("speechSynthesis" in window)) {
-      isSpeaking = false;
-      updateSpeakBtn(false);
-      return;
-    }
-    const utter = new SpeechSynthesisUtterance(clean);
-    utter.lang = "zh-TW";
-    utter.rate = 0.95;
-    utter.pitch = 1.05;
-
-    const voices = window.speechSynthesis.getVoices() || [];
-    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
-                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
-    if (twVoice) utter.voice = twVoice;
-
-    utter.onstart = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = true;
-        updateSpeakBtn(true);
-      }
-    };
-    utter.onend = utter.onerror = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = false;
-        updateSpeakBtn(false);
-      }
-    };
-
-    window.speechSynthesis.speak(utter);
-  }
-
-  const timer = setTimeout(() => {
-    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
-      doWebSpeechFallback();
-    }
-  }, 2500);
-
-  audio.oncanplay = () => {
-    clearTimeout(timer);
-    if (speechEpoch === thisEpoch) {
-      if (hasFallback) return;
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-      audio.play().catch(doWebSpeechFallback);
-    }
-  };
-
-  audio.onended = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = false;
-      updateSpeakBtn(false);
-    }
-  };
-
-  audio.onerror = () => {
-    clearTimeout(timer);
-    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
-      audio.src = fallbackCloudUrl;
-      audio.load();
-    } else {
-      doWebSpeechFallback();
-    }
-  };
-
-  audio.src = primaryUrl;
-  audio.load();
 }
 
 function updateSpeakBtn(active) {
@@ -464,12 +371,7 @@ function updateSpeakBtn(active) {
 }
 
 function stopSpeech() {
-  speechEpoch++;
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-  isSpeaking = false;
-  updateSpeakBtn(false);
+  stopCurrentSpeech();
 }
 
 /* ---------- 手機手寫計算草稿板（028 Scratchpad Canvas 移植） ---------- */

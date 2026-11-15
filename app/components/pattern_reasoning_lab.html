@@ -225,19 +225,28 @@
     <script>
         let currentAct = 1;
         let isMuted = false;
-        const synth = window.speechSynthesis;
-
         function speak(text) {
-            if (isMuted || !synth) return;
-            synth.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'zh-TW';
-            synth.speak(utter);
+        if (typeof isMuted !== 'undefined' && isMuted) return;
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'TTS_SPEAK', text: text }, '*');
+        } else if (window.AudioManager) {
+            window.AudioManager.play(text);
         }
+    }
 
+        function stopSpeech() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'TTS_STOP' }, '*');
+            } else if (window.AudioManager) {
+                window.AudioManager.stop();
+            }
+        }
         function toggleMute() {
             isMuted = !isMuted;
             document.querySelector('.voice-btn').innerText = isMuted ? '🔇' : '🔊';
+            if (isMuted) {
+                stopSpeech();
+            }
         }
 
         function switchAct(act) {
@@ -477,5 +486,6 @@
             initAct4();
         }
     </script>
+    <script src="../js/audio_manager.js"></script>
 </body>
 </html>

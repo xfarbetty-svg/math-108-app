@@ -221,6 +221,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transform: scale(0.98);
 }
 </style>
+  <script src="../js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -778,111 +779,32 @@ function cleanTextForSpeech(text) {
 }
 
 function stopSpeech() {
-  if (currentTtsAudio) {
-    try {
-      currentTtsAudio.pause();
-      currentTtsAudio.src = "";
-    } catch (e) {}
-    currentTtsAudio = null;
-  }
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_STOP" }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.stop();
   }
   isSpeaking = false;
-  updateVoiceButtons(false);
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(false);
 }
-
 function playVoiceText(rawText) {
-  const clean = cleanTextForSpeech(rawText);
-  if (!clean) return;
-
-  speechEpoch++;
-  const thisEpoch = speechEpoch;
-
-  stopSpeech();
-
-  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-
-  const audio = new Audio();
-  currentTtsAudio = audio;
-  let hasFallback = false;
-
-  function doWebSpeechFallback() {
-    if (hasFallback || speechEpoch !== thisEpoch) return;
-    hasFallback = true;
-    if (!("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance(clean);
-    u.lang = "zh-TW";
-    u.rate = 0.95;
-    u.pitch = 1.05;
-    const voices = window.speechSynthesis.getVoices() || [];
-    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
-                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
-    if (twVoice) u.voice = twVoice;
-    u.onstart = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = true;
-        updateVoiceButtons(true);
-      }
-    };
-    u.onend = u.onerror = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = false;
-        updateVoiceButtons(false);
-      }
-    };
-    window.speechSynthesis.speak(u);
+  if (isSpeaking) {
+    stopSpeech();
+    return;
   }
+  isSpeaking = true;
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(true);
 
-  const timer = setTimeout(() => {
-    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
-      doWebSpeechFallback();
-    }
-  }, 2500);
-
-  audio.onplay = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = true;
-      updateVoiceButtons(true);
-    }
-  };
-
-  audio.onended = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = false;
-      updateVoiceButtons(false);
-    }
-  };
-
-  audio.oncanplay = () => {
-    clearTimeout(timer);
-    if (speechEpoch === thisEpoch) {
-      audio.play().catch(doWebSpeechFallback);
-    }
-  };
-
-  audio.onerror = () => {
-    clearTimeout(timer);
-    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
-      audio.src = fallbackCloudUrl;
-      audio.load();
-    } else {
-      doWebSpeechFallback();
-    }
-  };
-
-  audio.src = primaryUrl;
-  audio.load();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_SPEAK", text: rawText }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.play(rawText, {
+      onStart: () => { if (typeof updateVoiceButtons === "function") updateVoiceButtons(true); },
+      onEnd: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); },
+      onError: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); }
+    });
+  }
 }
-
-const ACT_VOICES = {
-  1: "活動一：包含除。十八顆草莓，每六顆裝一盒。每次拿走六顆裝一盒，總共可以拿三次，剛好裝滿三盒，算式記成十八除以六等於三！",
-  2: "活動二：等分除。二十塊餅乾平分給四個人，大家輪流拿一塊，每人分得五塊餅乾，算式記成二十除以四等於五！",
-  3: "活動三：餘數守則。十七顆蘋果每五顆裝一籃，可以裝三籃，剩下兩顆。這剩下的兩顆就是餘數。記住黃金守則：餘數一定要比除數小喔！",
-  4: "活動四：乘除互逆。乘法和除法是一家人！算二十四除以四的時候，心中默背四的乘法表：四一得四、四二得八，四六二十四！商就是六！"
-};
-
 function playVoice(actNum) {
   if (isSpeaking) {
     stopSpeech();

@@ -106,6 +106,7 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.2); display: none;
         }
     </style>
+    <script src="../js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -304,13 +305,12 @@
     }
 
     function speakHint() {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const text = document.getElementById('hint-text').innerText;
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'zh-TW';
-            u.rate = 1.0;
-            window.speechSynthesis.speak(u);
+        const text = document.getElementById('hint-text') ? document.getElementById('hint-text').innerText : '';
+        if (!text) return;
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'TTS_SPEAK', text: text }, '*');
+        } else if (window.AudioManager) {
+            window.AudioManager.play(text);
         }
     }
 

@@ -2,39 +2,86 @@
 """
 tools/dispatch_worker.py - 028-1 專屬工兵調用唯一標準入口 (遵循 Step-by-Step 單步推進規範)
 嚴禁 Agent 自行動手手寫業務代碼，所有生成與實作任務一律經由本腳本派工！
-支援通道一 (本地 OpenCode) 與通道二 (A-SERVER SSH) 自動 Failover 容錯。
+支援通道一 (本地 OpenCode)、通道二 (A-SERVER SSH) 與通道三 (035 金鑰池) 三級真自動 Failover 鋼鐵閉環。
 """
 
 import argparse
+import json
 import os
 import subprocess
 import sys
 import time
+import urllib.request
 
 OPENCODE_DEFAULT_MODEL = "opencode/glm-5.3-flash-free"
-OPENCODE_FALLBACK_MODEL = "google/gemini-2.5-flash"
+LOCAL_FREE_MODELS = [
+    "opencode/glm-5.3-flash-free",
+    "opencode/deepseek-v4.1-flash-free",
+    "opencode/minimax-m3.1-flash-free"
+]
+
+def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
+    """通道三：035 Key Pool 本地 8把 Key 輪詢閘道 (http://127.0.0.1:4000/v1)"""
+    print("[Worker Dispatch CH3] 正在派工至通道三 (035 Key Pool 8把 Key 閘道)...")
+    full_prompt = prompt
+    if task_file and os.path.isfile(task_file):
+        try:
+            with open(task_file, "r", encoding="utf-8") as f:
+                full_prompt = f"【任務卡內容】\n{f.read()}\n\n【執行指令】\n{prompt}"
+        except Exception as e:
+            print(f"[Worker Dispatch CH3] 讀取任務卡失敗: {e}", file=sys.stderr)
+
+    url = "http://127.0.0.1:4000/v1/chat/completions"
+    payload = {
+        "model": "gemini-2.5-flash",
+        "messages": [
+            {"role": "system", "content": "你是一個資深前端工程師，嚴格按照任務卡實作代碼。"},
+            {"role": "user", "content": full_prompt}
+        ],
+        "temperature": 0.2
+    }
+    try:
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"}
+        )
+        t0 = time.time()
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            elapsed = time.time() - t0
+            print(f"[Worker Dispatch CH3] 成功完成，耗時 {elapsed:.2f}s，HTTP {resp.status}")
+            output_text = data["choices"][0]["message"]["content"]
+            print("[Worker CH3 Output Preview]:")
+            for line in output_text.splitlines()[:10]:
+                print("  ", line[:120])
+            return 0
+    except Exception as e:
+        print(f"[Worker Dispatch CH3 ERROR] 通道三調用失敗: {e}", file=sys.stderr)
+        return 1
 
 def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT_MODEL, timeout: int = 300, channel: int = 1, auto_fallback: bool = True) -> int:
     """
-    依據 Step-by-Step 規範以標準子進程呼叫 OpenCode CLI：
-    Channel 1: 本地 OpenCode CLI (支援 GLM-free 額度耗盡自動切換 gemini-2.5-flash)
-    Channel 2: A-SERVER SSH 遠端 OpenCode CLI
+    依據 Step-by-Step 規範執行標準派工：
+    Channel 1: 本地 OpenCode CLI (支援多組免費模型自動輪換)
+    Channel 2: A-SERVER SSH 遠端 OpenCode CLI (獨立 GLM 配額)
+    Channel 3: 035 Key Pool 本地 8把 Google Key 池備援
     """
+    full_prompt = prompt
+    if task_file and os.path.isfile(task_file):
+        try:
+            with open(task_file, "r", encoding="utf-8") as f:
+                file_content = f.read()
+            full_prompt = f"【任務卡內容】\n{file_content}\n\n【執行指令】\n{prompt}"
+        except Exception as e:
+            print(f"[Worker Dispatch] 讀取任務卡失敗: {e}", file=sys.stderr)
+
     if channel == 2:
-        # A-SERVER SSH 通道
-        full_prompt = prompt
-        if task_file and os.path.isfile(task_file):
-            try:
-                with open(task_file, "r", encoding="utf-8") as f:
-                    file_content = f.read()
-                full_prompt = f"【任務卡內容】\n{file_content}\n\n【執行指令】\n{prompt}"
-            except Exception as e:
-                print(f"[Worker Dispatch CH2] 讀取任務卡失敗: {e}", file=sys.stderr)
-        
-        # 轉義單引號供 bash/ssh 使用
-        escaped_prompt = full_prompt.replace("'", "'\\''")
-        cmd = ["ssh", "-n", "a-server", f"opencode run -m {model} --format json --auto --standalone '{escaped_prompt}'"]
-        print(f"[Worker Dispatch CH2] 正在派工至 A-SERVER OpenCode (Model: {model})...")
+        # A-SERVER SSH 通道：強制使用 A-SERVER 專屬的免費模型 (獨立配額)
+        target_model = OPENCODE_DEFAULT_MODEL if "google/" in model else model
+        escaped_prompt = full_prompt.replace("'", "'\\''").replace('"', '\\"')
+        cmd = ["ssh", "-n", "a-server", f"opencode run -m {target_model} --format json --auto --standalone \"{escaped_prompt}\""]
+        print(f"[Worker Dispatch CH2] 正在派工至 A-SERVER OpenCode (Model: {target_model})...")
     else:
         cmd = ["opencode", "run", "--format", "json", "--auto", "--standalone", "-m", model]
         if task_file and os.path.isfile(task_file):
@@ -51,28 +98,34 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
             text=True,
             encoding="utf-8",
             errors="replace",
-            shell=(channel == 1), # 本地 Windows 需要 shell=True，SSH 則直接執行
+            shell=(channel == 1),
             timeout=timeout
         )
         elapsed = time.time() - t0
         print(f"[Worker Dispatch CH{channel}] 完成，耗時 {elapsed:.2f}s，Exit Code: {proc.returncode}")
         
         if proc.returncode != 0:
-            print(f"[Worker Dispatch ERROR] 工兵執行失敗 (Exit Code {proc.returncode})")
+            print(f"[Worker Dispatch ERROR] 通道 {channel} 執行失敗 (Exit Code {proc.returncode})")
             if proc.stderr:
-                print(f"[Worker Dispatch STDERR]: {proc.stderr.strip()[:1000]}")
+                print(f"[Worker Dispatch STDERR]: {proc.stderr.strip()[:600]}")
             if proc.stdout:
-                print(f"[Worker Dispatch STDOUT]: {proc.stdout.strip()[:1000]}")
+                print(f"[Worker Dispatch STDOUT]: {proc.stdout.strip()[:600]}")
             
-            # 若通道 1 失敗且開啟自動容錯：
-            # 優先切換至本地備援模型 (gemini-2.5-flash)，維持本地工具落地能力
-            if channel == 1 and auto_fallback:
-                if model != OPENCODE_FALLBACK_MODEL:
-                    print(f"[Worker Dispatch FAILOVER] ⚠️ 通道 1 額度耗盡或異常，切換至本地備援模型 ({OPENCODE_FALLBACK_MODEL})...")
-                    return run_worker(prompt=prompt, task_file=task_file, model=OPENCODE_FALLBACK_MODEL, timeout=timeout, channel=1, auto_fallback=True)
-                else:
-                    print("[Worker Dispatch FAILOVER] ⚠️ 本地備援亦異常，自動切換至通道 2 (A-SERVER SSH 備援)...")
-                    return run_worker(prompt=prompt, task_file=task_file, model=model, timeout=timeout, channel=2, auto_fallback=False)
+            if auto_fallback:
+                if channel == 1:
+                    # 通道 1 失敗：先換本地其他免費模型，若全掛則切換至通道 2
+                    curr_idx = LOCAL_FREE_MODELS.index(model) if model in LOCAL_FREE_MODELS else -1
+                    if curr_idx != -1 and curr_idx + 1 < len(LOCAL_FREE_MODELS):
+                        next_model = LOCAL_FREE_MODELS[curr_idx + 1]
+                        print(f"[Worker Dispatch FAILOVER] ⚠️ 通道 1 切換至本地替代免費模型 ({next_model})...")
+                        return run_worker(prompt=prompt, task_file=task_file, model=next_model, timeout=timeout, channel=1, auto_fallback=True)
+                    else:
+                        print("[Worker Dispatch FAILOVER] ⚠️ 通道 1 本地模型全數耗盡，自動切換至通道 2 (A-SERVER SSH 備援)...")
+                        return run_worker(prompt=prompt, task_file=task_file, model=OPENCODE_DEFAULT_MODEL, timeout=timeout, channel=2, auto_fallback=True)
+                elif channel == 2:
+                    # 通道 2 也失敗：自動切換至通道 3 (035 Key Pool)
+                    print("[Worker Dispatch FAILOVER] ⚠️ 通道 2 亦異常，自動切換至通道 3 (035 Key Pool 8把 Key 備援)...")
+                    return run_channel3_gemini_pool(prompt=prompt, task_file=task_file)
                 
             return proc.returncode
             
@@ -83,46 +136,46 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
                 print("  ", l[:120])
                 
         return 0
-        
+
     except subprocess.TimeoutExpired:
-        print(f"[Worker Dispatch TIMEOUT] 工兵執行超過 {timeout}s 逾時！", file=sys.stderr)
-        if channel == 1 and auto_fallback:
-            print("[Worker Dispatch FAILOVER] ⚠️ 通道 1 逾時，自動切換至通道 2 (A-SERVER SSH 備援)...")
-            return run_worker(prompt=prompt, task_file=task_file, model=model, timeout=timeout, channel=2, auto_fallback=False)
-        return 43
+        print(f"[Worker Dispatch TIMEOUT] 通道 {channel} 超時 ({timeout}s)！", file=sys.stderr)
+        if auto_fallback and channel == 1:
+            print("[Worker Dispatch FAILOVER] ⚠️ 超時切換至通道 2...")
+            return run_worker(prompt=prompt, task_file=task_file, model=OPENCODE_DEFAULT_MODEL, timeout=timeout, channel=2, auto_fallback=True)
+        elif auto_fallback and channel == 2:
+            print("[Worker Dispatch FAILOVER] ⚠️ 通道 2 超時切換至通道 3...")
+            return run_channel3_gemini_pool(prompt=prompt, task_file=task_file)
+        return 124
     except Exception as e:
-        print(f"[Worker Dispatch EXCEPTION] {e}", file=sys.stderr)
-        if channel == 1 and auto_fallback:
-            print("[Worker Dispatch FAILOVER] ⚠️ 通道 1 例外，自動切換至通道 2 (A-SERVER SSH 備援)...")
-            return run_worker(prompt=prompt, task_file=task_file, model=model, timeout=timeout, channel=2, auto_fallback=False)
+        print(f"[Worker Dispatch EXCEPTION] 通道 {channel} 異常: {e}", file=sys.stderr)
+        if auto_fallback and channel < 3:
+            next_ch = channel + 1
+            print(f"[Worker Dispatch FAILOVER] ⚠️ 切換至通道 {next_ch}...")
+            if next_ch == 2:
+                return run_worker(prompt=prompt, task_file=task_file, model=OPENCODE_DEFAULT_MODEL, timeout=timeout, channel=2, auto_fallback=True)
+            else:
+                return run_channel3_gemini_pool(prompt=prompt, task_file=task_file)
         return 1
 
-def main():
-    if sys.platform == "win32":
-        try:
-            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-            sys.stderr.reconfigure(encoding="utf-8", errors="replace")
-        except Exception:
-            pass
-
-    parser = argparse.ArgumentParser(description="028-1 OpenCode 派工標準工具 (Step-by-Step 規範)")
-    parser.add_argument("prompt", nargs="?", default="健康檢查：請回覆「通道正常」", help="派工提示詞或簡述")
-    parser.add_argument("--file", "-f", help="任務卡檔案路徑 (.md)")
-    parser.add_argument("--channel", "-c", type=int, choices=[1, 2], default=1, help="通道選擇 (1=本地 OpenCode, 2=A-SERVER OpenCode)")
-    parser.add_argument("--model", "-m", default=OPENCODE_DEFAULT_MODEL, help="模型名稱")
-    parser.add_argument("--timeout", "-t", type=int, default=300, help="逾時秒數 (預設 300s)")
-    parser.add_argument("--no-fallback", action="store_true", help="關閉自動 Failover 到通道 2")
-    parser.add_argument("--test", action="store_true", help="執行快速自我檢查")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="028-1 工兵派工腳本 (支援通道 1/2/3 自動容錯)")
+    parser.add_argument("prompt", help="發送給工兵的具體執行指令")
+    parser.add_argument("--file", "-f", help="任務卡 Markdown 檔案路徑", default=None)
+    parser.add_argument("--model", "-m", help="指定 OpenCode 模型名稱", default=OPENCODE_DEFAULT_MODEL)
+    parser.add_argument("--channel", "-c", help="指定起始通道 (1: 本地, 2: A-SERVER, 3: 035 Key Pool)", type=int, default=1)
+    parser.add_argument("--timeout", "-t", help="超時秒數", type=int, default=300)
+    parser.add_argument("--no-fallback", help="關閉自動 Failover", action="store_true")
     
     args = parser.parse_args()
-    
-    if args.test:
-        print(f"[Dispatch Self-Test] 開始執行通道 {args.channel} 自我檢測...")
-        code = run_worker(f"自我檢測：請簡短回覆「通道{args.channel}連線正常」即可，不要操作任何檔案。", timeout=30, channel=args.channel, auto_fallback=not args.no_fallback)
-        sys.exit(code)
-        
-    code = run_worker(prompt=args.prompt, task_file=args.file, model=args.model, timeout=args.timeout, channel=args.channel, auto_fallback=not args.no_fallback)
+    if args.channel == 3:
+        code = run_channel3_gemini_pool(prompt=args.prompt, task_file=args.file)
+    else:
+        code = run_worker(
+            prompt=args.prompt,
+            task_file=args.file,
+            model=args.model,
+            timeout=args.timeout,
+            channel=args.channel,
+            auto_fallback=(not args.no_fallback)
+        )
     sys.exit(code)
-
-if __name__ == "__main__":
-    main()

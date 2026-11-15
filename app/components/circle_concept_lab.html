@@ -246,6 +246,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transform: scale(0.98);
 }
 </style>
+  <script src="../js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -781,111 +782,32 @@ function cleanTextForSpeech(text) {
 }
 
 function stopSpeech() {
-  if (currentTtsAudio) {
-    try {
-      currentTtsAudio.pause();
-      currentTtsAudio.src = "";
-    } catch (e) {}
-    currentTtsAudio = null;
-  }
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_STOP" }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.stop();
   }
   isSpeaking = false;
-  updateVoiceButtons(false);
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(false);
 }
-
 function playVoiceText(rawText) {
-  const clean = cleanTextForSpeech(rawText);
-  if (!clean) return;
-
-  speechEpoch++;
-  const thisEpoch = speechEpoch;
-
-  stopSpeech();
-
-  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-
-  const audio = new Audio();
-  currentTtsAudio = audio;
-  let hasFallback = false;
-
-  function doWebSpeechFallback() {
-    if (hasFallback || speechEpoch !== thisEpoch) return;
-    hasFallback = true;
-    if (!("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance(clean);
-    u.lang = "zh-TW";
-    u.rate = 0.95;
-    u.pitch = 1.05;
-    const voices = window.speechSynthesis.getVoices() || [];
-    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
-                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
-    if (twVoice) u.voice = twVoice;
-    u.onstart = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = true;
-        updateVoiceButtons(true);
-      }
-    };
-    u.onend = u.onerror = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = false;
-        updateVoiceButtons(false);
-      }
-    };
-    window.speechSynthesis.speak(u);
+  if (isSpeaking) {
+    stopSpeech();
+    return;
   }
+  isSpeaking = true;
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(true);
 
-  const timer = setTimeout(() => {
-    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
-      doWebSpeechFallback();
-    }
-  }, 2500);
-
-  audio.onplay = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = true;
-      updateVoiceButtons(true);
-    }
-  };
-
-  audio.onended = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = false;
-      updateVoiceButtons(false);
-    }
-  };
-
-  audio.oncanplay = () => {
-    clearTimeout(timer);
-    if (speechEpoch === thisEpoch) {
-      audio.play().catch(doWebSpeechFallback);
-    }
-  };
-
-  audio.onerror = () => {
-    clearTimeout(timer);
-    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
-      audio.src = fallbackCloudUrl;
-      audio.load();
-    } else {
-      doWebSpeechFallback();
-    }
-  };
-
-  audio.src = primaryUrl;
-  audio.load();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_SPEAK", text: rawText }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.play(rawText, {
+      onStart: () => { if (typeof updateVoiceButtons === "function") updateVoiceButtons(true); },
+      onEnd: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); },
+      onError: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); }
+    });
+  }
 }
-
-const ACT_VOICES = {
-  1: "活動一：認識圓的部位。點點看四顆按鈕：圓心是圓正中間的點，圓周是最外圍的曲線，半徑從圓心連到圓周，直徑通過圓心、兩端都在圓周上喔！",
-  2: "活動二：半徑處處等長。轉動指針，不管轉到哪個角度，長度都是五公分。打開對向半徑，兩條半徑接成一條直徑，直徑等於半徑乘以二喔！",
-  3: "活動三：圓規畫圓。金屬針固定在圓心，鉛筆腳張開的距離就是半徑。調好張開距離，按下開始畫圓，轉一圈就畫出漂亮的圓囉！",
-  4: "活動四：迷思小偵探。圓裡有四條線段，只有一條是真正的直徑。直徑要通過圓心，兩端都要在圓周上，仔細找找看吧！"
-};
-
 function playVoice(actNum) {
   if (isSpeaking) {
     stopSpeech();

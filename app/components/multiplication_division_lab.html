@@ -97,6 +97,7 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;
         }
     </style>
+    <script src="../js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -171,11 +172,12 @@
     let isMuted = false;
 
     function speak(text) {
-        if (isMuted || !('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'zh-TW';
-        window.speechSynthesis.speak(utter);
+        if (typeof isMuted !== 'undefined' && isMuted) return;
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'TTS_SPEAK', text: text }, '*');
+        } else if (window.AudioManager) {
+            window.AudioManager.play(text);
+        }
     }
 
     function toggleMute() {

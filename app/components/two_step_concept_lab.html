@@ -229,6 +229,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   transform: scale(0.98);
 }
 </style>
+  <script src="../js/audio_manager.js"></script>
 </head>
 <body>
 
@@ -839,111 +840,32 @@ function cleanTextForSpeech(text) {
 }
 
 function stopSpeech() {
-  if (currentTtsAudio) {
-    try {
-      currentTtsAudio.pause();
-      currentTtsAudio.src = "";
-    } catch (e) {}
-    currentTtsAudio = null;
-  }
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_STOP" }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.stop();
   }
   isSpeaking = false;
-  updateVoiceButtons(false);
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(false);
 }
-
 function playVoiceText(rawText) {
-  const clean = cleanTextForSpeech(rawText);
-  if (!clean) return;
-
-  speechEpoch++;
-  const thisEpoch = speechEpoch;
-
-  stopSpeech();
-
-  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
-
-  const audio = new Audio();
-  currentTtsAudio = audio;
-  let hasFallback = false;
-
-  function doWebSpeechFallback() {
-    if (hasFallback || speechEpoch !== thisEpoch) return;
-    hasFallback = true;
-    if (!("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance(clean);
-    u.lang = "zh-TW";
-    u.rate = 0.95;
-    u.pitch = 1.05;
-    const voices = window.speechSynthesis.getVoices() || [];
-    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
-                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
-    if (twVoice) u.voice = twVoice;
-    u.onstart = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = true;
-        updateVoiceButtons(true);
-      }
-    };
-    u.onend = u.onerror = () => {
-      if (speechEpoch === thisEpoch) {
-        isSpeaking = false;
-        updateVoiceButtons(false);
-      }
-    };
-    window.speechSynthesis.speak(u);
+  if (isSpeaking) {
+    stopSpeech();
+    return;
   }
+  isSpeaking = true;
+  if (typeof updateVoiceButtons === "function") updateVoiceButtons(true);
 
-  const timer = setTimeout(() => {
-    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
-      doWebSpeechFallback();
-    }
-  }, 2500);
-
-  audio.onplay = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = true;
-      updateVoiceButtons(true);
-    }
-  };
-
-  audio.onended = () => {
-    if (speechEpoch === thisEpoch) {
-      isSpeaking = false;
-      updateVoiceButtons(false);
-    }
-  };
-
-  audio.oncanplay = () => {
-    clearTimeout(timer);
-    if (speechEpoch === thisEpoch) {
-      audio.play().catch(doWebSpeechFallback);
-    }
-  };
-
-  audio.onerror = () => {
-    clearTimeout(timer);
-    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
-      audio.src = fallbackCloudUrl;
-      audio.load();
-    } else {
-      doWebSpeechFallback();
-    }
-  };
-
-  audio.src = primaryUrl;
-  audio.load();
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "TTS_SPEAK", text: rawText }, "*");
+  } else if (window.AudioManager) {
+    window.AudioManager.play(rawText, {
+      onStart: () => { if (typeof updateVoiceButtons === "function") updateVoiceButtons(true); },
+      onEnd: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); },
+      onError: () => { isSpeaking = false; if (typeof updateVoiceButtons === "function") updateVoiceButtons(false); }
+    });
+  }
 }
-
-const ACT_VOICES = {
-  1: "活動一：階梯解題法。兩步驟題目要像走樓梯一樣，先算第一階買三本筆記本花七十五元，再算第二階用一百元扣掉七十五元找回二十五元，一步一步來就不會亂！",
-  2: "活動二：連乘雙層盒。一盒六顆、一條四盒，買三條。先算一條幾顆再乘三，或者先算三條總共幾盒再乘六，算出來都是七十二顆！",
-  3: "活動三：陷阱避雷針。看清楚先做什麼！繩子要先剪掉剩下的才平分，算式是一百二十減二十等於一百，一百除以五等於二十公分，順序千萬不要搞反喔！",
-  4: "活動四：採買小店長。買兩個三十元的麵包付一百元，第一步先算麵包要六十元，第二步用一百減六十找四十元，算帳好清楚！"
-};
-
 function playVoice(actNum) {
   if (isSpeaking) {
     stopSpeech();
