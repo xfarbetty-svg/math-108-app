@@ -40,6 +40,8 @@ function showView(name) {
   views.forEach((v) => { $(v).style.display = (v === name) ? "block" : "none"; });
   const draftBtn = $("btnOpenScratchpad");
   if (draftBtn) draftBtn.style.display = (name === "stageView") ? "inline-flex" : "none";
+  const nav = $("gradeNav");
+  if (nav) nav.style.display = (name === "gradeView") ? "flex" : "none";
   window.scrollTo({ top: 0 });
 }
 
@@ -119,12 +121,74 @@ async function openUnit(code, initialQIndex = 0) {
   renderStage();
 }
 
+/* ---------- 單元內建模式切換（概念小教室 vs 真題測驗） ---------- */
+const CONCEPT_COMPONENTS = {
+  "N-3-15": "components/capacity_concept_lab.html"
+};
+
+let currentUnitMode = "exam"; // "concept" | "exam"
+
+function setUnitMode(mode) {
+  currentUnitMode = mode;
+  const tabs = $("unitModeTabs");
+  const conceptWrap = $("unitConceptWrap");
+  const examWrap = $("unitExamWrap");
+  const btnConcept = $("btnModeConcept");
+  const btnExam = $("btnModeExam");
+
+  if (mode === "concept") {
+    if (btnConcept) btnConcept.classList.add("active");
+    if (btnExam) btnExam.classList.remove("active");
+    if (conceptWrap) conceptWrap.style.display = "block";
+    if (examWrap) examWrap.style.display = "none";
+    const frame = $("conceptFrame");
+    const code = state.unit ? state.unit.code : null;
+    if (frame && code && CONCEPT_COMPONENTS[code]) {
+      if (!frame.src || !frame.src.includes(CONCEPT_COMPONENTS[code])) {
+        frame.src = CONCEPT_COMPONENTS[code];
+      }
+    }
+    $("progressNum").textContent = "🌱 概念探索";
+    $("progressSource").textContent = "108 課綱官方導讀 · 自由沙盒 · 零壓力找量感";
+    $("dots").style.display = "none";
+    $("stageTitle").style.display = "none";
+  } else {
+    if (btnExam) btnExam.classList.add("active");
+    if (btnConcept) btnConcept.classList.remove("active");
+    if (conceptWrap) conceptWrap.style.display = "none";
+    if (examWrap) examWrap.style.display = "block";
+    $("dots").style.display = "flex";
+    $("stageTitle").style.display = "block";
+    renderQuestion();
+  }
+}
+
+window.switchToExamMode = () => setUnitMode("exam");
+
 /* ---------- 測驗舞台 ---------- */
 let heightTimer = null;
 
 function renderStage() {
   showView("stageView");
-  renderQuestion();
+  const code = state.unit ? state.unit.code : null;
+  const tabs = $("unitModeTabs");
+  const btnConcept = $("btnModeConcept");
+  const btnExam = $("btnModeExam");
+
+  if (code && CONCEPT_COMPONENTS[code]) {
+    tabs.style.display = "flex";
+    btnConcept.onclick = () => setUnitMode("concept");
+    btnExam.onclick = () => setUnitMode("exam");
+    // 預設進入真題測驗（也可切換至概念）
+    setUnitMode("exam");
+  } else {
+    tabs.style.display = "none";
+    $("unitConceptWrap").style.display = "none";
+    $("unitExamWrap").style.display = "block";
+    $("dots").style.display = "flex";
+    $("stageTitle").style.display = "block";
+    renderQuestion();
+  }
 }
 
 function renderQuestion() {

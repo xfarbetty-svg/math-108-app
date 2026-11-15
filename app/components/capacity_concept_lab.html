@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-15 容量概念小教室 · 108 課綱</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #4a94d4;
+  --mint: #7bc9b2;
+  --mint-deep: #48a88b;
+  --lemon: #ffd166;
+  --lemon-deep: #e09f18;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 20px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 24px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== 1. 課綱生活探險導讀 ===== */
+.story-card {
+  background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%);
+  border: 1.5px solid #b3d9ff;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: var(--shadow);
+}
+.story-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.story-tag {
+  background: #1976d2;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+.btn-tts {
+  background: #ffffff;
+  border: 1px solid #90caf9;
+  color: #1565c0;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(25, 118, 210, 0.12);
+}
+.btn-tts:active { transform: scale(0.95); }
+.story-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0d47a1;
+}
+.story-body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #2c3e50;
+}
+.magic-code {
+  background: #ffffff;
+  border: 1.5px dashed #42a5f5;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-weight: 800;
+  color: #1565c0;
+  font-size: 13px;
+  margin-top: 2px;
+  width: fit-content;
+}
+
+/* ===== 2. 自由探索量杯沙盒 ===== */
+.sandbox-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.sandbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sandbox-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sandbox-sub {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.visual-stage {
+  width: 100%;
+  background: #faf7f2;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+.visual-stage svg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  max-height: 200px;
+}
+
+/* 即時容量看板 */
+.measure-meter {
+  background: #eef6fd;
+  border: 1.5px solid #b3d9ff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+}
+.meter-label { font-size: 11px; font-weight: 700; color: #546e7a; }
+.meter-val-primary { font-size: 18px; font-weight: 900; color: #1565c0; letter-spacing: 0.5px; }
+.meter-val-sub { font-size: 12.5px; font-weight: 700; color: #37474f; }
+.bubble-tip {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0277bd;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+/* 物品托盤 */
+.items-rack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rack-label {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+}
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.item-btn {
+  background: #fdfaf6;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+.item-btn:hover { background: #fff; border-color: var(--sky); }
+.item-btn:active { transform: scale(0.95); background: #eef6fd; }
+.item-icon { font-size: 20px; line-height: 1; }
+.item-name { font-size: 10.5px; font-weight: 800; color: var(--ink); }
+.item-tag { font-size: 9.5px; font-weight: 700; color: #1565c0; background: #e3f2fd; padding: 1px 3px; border-radius: 3px; }
+
+.sandbox-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-action {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.btn-reset { background: #eceff1; color: #37474f; }
+.btn-random { background: #e1f5fe; color: #0288d1; border: 1px solid #b3e5fc; }
+
+/* ===== 3. 三大核心秘笈小卡 ===== */
+.flashcards-box {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow);
+}
+.fc-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.fc-dots {
+  display: flex;
+  gap: 6px;
+}
+.dot-btn {
+  width: 20px;
+  height: 6px;
+  border-radius: 999px;
+  background: #e0d7c7;
+  transition: all 0.2s;
+}
+.dot-btn.active { background: #1976d2; width: 28px; }
+
+.flashcard {
+  background: #fdfaf6;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.fc-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: fit-content;
+}
+.badge-blue { background: #e3f2fd; color: #1565c0; }
+.badge-green { background: #e8f5e9; color: #2e7d32; }
+.badge-red { background: #ffebee; color: #c62828; }
+.fc-title { font-size: 13.5px; font-weight: 800; color: var(--ink); }
+.fc-desc { font-size: 12.5px; line-height: 1.55; color: #455a64; }
+.fc-formula {
+  background: #ffffff;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0277bd;
+  margin-top: 3px;
+}
+
+/* ===== 4. 前往真題挑戰按鈕 ===== */
+.btn-go-quiz {
+  background: linear-gradient(135deg, var(--coral) 0%, var(--coral-deep) 100%);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 900;
+  box-shadow: 0 6px 16px rgba(244, 105, 75, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-go-quiz:active { transform: scale(0.98); }
+
+#water-surface {
+  transition: y 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap">
+
+  <!-- 1. 課綱生活導讀 -->
+  <section class="story-card">
+    <div class="story-header">
+      <span class="story-tag">108 課綱官方導讀 · N-3-15</span>
+      <button class="btn-tts" onclick="playVoice()">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="story-title">🧪 認識容量：「公升」與「毫升」</div>
+    <div class="story-body">
+      容器能裝得下多少液體叫做<b>「容量」</b>！<br>
+      • <b>毫升 (mL)</b>：量很小的液體，例如滴幾滴眼藥水、一小瓶養樂多 (100mL)、自己的小水壺 (400mL)。<br>
+      • <b>公升 (L)</b>：量很大的液體，例如家庭號大鮮奶 (2L)、大鐵鍋 (5L)。<br>
+      • <b>生活任務</b>：小學生每日健康喝水量約 <b>1800 毫升</b>，拿 400mL 的水壺至少要裝滿 5 次才夠喝喔！
+    </div>
+    <div class="magic-code">🔑 通關密碼：1 公升 (L) ＝ 1000 毫升 (mL)</div>
+  </section>
+
+  <!-- 2. 自由探索量杯沙盒 -->
+  <section class="sandbox-card">
+    <div class="sandbox-header">
+      <div class="sandbox-title">
+        <span>🎮</span>
+        <span>動手倒水 · 觀測刻度</span>
+      </div>
+      <span class="sandbox-sub">零壓力自由探索</span>
+    </div>
+
+    <div class="visual-stage">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="145" cy="210" rx="80" ry="7" fill="#e8dfd1"/>
+        
+        <!-- 把手 -->
+        <path d="M190,60 C235,60 235,170 190,180" fill="none" stroke="#b0d4f1" stroke-width="11" stroke-linecap="round"/>
+        <path d="M190,60 C235,60 235,170 190,180" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- 玻璃杯身 -->
+        <rect x="90" y="30" width="110" height="175" rx="10" fill="#f2f8fc" stroke="#7db8e8" stroke-width="3.5"/>
+        <path d="M90,30 L80,26 L90,40 Z" fill="#7db8e8"/> <!-- 倒水口 -->
+
+        <!-- 藍色水 -->
+        <g clip-path="url(#c-clip)">
+          <rect id="water-surface" x="90" y="205" width="110" height="0" fill="#7db8e8" opacity="0.8"/>
+          <ellipse id="water-wave" cx="145" cy="205" rx="55" ry="5" fill="#4a94d4" opacity="0.6"/>
+        </g>
+        <clipPath id="c-clip">
+          <rect x="92" y="32" width="106" height="171" rx="8"/>
+        </clipPath>
+
+        <!-- 刻度 (2000mL 大量杯) -->
+        <!-- 2000 mL (2L) -->
+        <line x1="92" y1="45" x2="114" y2="45" stroke="#f4694b" stroke-width="2.5"/>
+        <text x="118" y="49" font-size="10.5" font-weight="900" fill="#f4694b">2000 mL (2L)</text>
+
+        <!-- 1500 mL -->
+        <line x1="92" y1="85" x2="108" y2="85" stroke="#37474f" stroke-width="1.8"/>
+        <text x="113" y="89" font-size="9.5" font-weight="800" fill="#37474f">1500 mL</text>
+
+        <!-- 1000 mL (1L) -->
+        <line x1="92" y1="125" x2="118" y2="125" stroke="#2e7d32" stroke-width="2.5"/>
+        <text x="123" y="129" font-size="10.5" font-weight="900" fill="#2e7d32">1000 mL (1L)</text>
+
+        <!-- 500 mL -->
+        <line x1="92" y1="165" x2="108" y2="165" stroke="#37474f" stroke-width="1.8"/>
+        <text x="113" y="169" font-size="9.5" font-weight="800" fill="#37474f">500 mL</text>
+
+        <rect x="96" y="36" width="8" height="160" rx="3" fill="#ffffff" opacity="0.45"/>
+      </svg>
+    </div>
+
+    <!-- 儀表 -->
+    <div class="measure-meter">
+      <div class="meter-label">目前量杯水位容量</div>
+      <div class="meter-val-primary" id="meter-primary">0 公升 0 毫升</div>
+      <div class="meter-val-sub" id="meter-sub">＝ 0 毫升 (mL)</div>
+      <div class="bubble-tip" id="bubble-tip">💡 點點看下方容器，把水倒進量杯玩玩看！</div>
+    </div>
+
+    <!-- 容器選擇 -->
+    <div class="items-rack">
+      <div class="rack-label">
+        <span>點擊容器倒水入杯：</span>
+        <span style="color:#1565c0;">可多次點選累加</span>
+      </div>
+      <div class="items-grid">
+        <button class="item-btn" onclick="addWater(10, '神奇眼藥水')">
+          <span class="item-icon">💧</span>
+          <span class="item-name">眼藥水</span>
+          <span class="item-tag">+10mL</span>
+        </button>
+        <button class="item-btn" onclick="addWater(100, '活力多多')">
+          <span class="item-icon">🧃</span>
+          <span class="item-name">多多</span>
+          <span class="item-tag">+100mL</span>
+        </button>
+        <button class="item-btn" onclick="addWater(400, '隨身水壺')">
+          <span class="item-icon">🍶</span>
+          <span class="item-name">水壺</span>
+          <span class="item-tag">+400mL</span>
+        </button>
+        <button class="item-btn" onclick="addWater(500, '珍珠奶茶')">
+          <span class="item-icon">🥤</span>
+          <span class="item-name">珍奶</span>
+          <span class="item-tag">+500mL</span>
+        </button>
+        <button class="item-btn" onclick="addWater(600, '礦泉水')">
+          <span class="item-icon">🫙</span>
+          <span class="item-name">礦泉水</span>
+          <span class="item-tag">+600mL</span>
+        </button>
+        <button class="item-btn" onclick="addWater(1000, '家庭號鮮奶')">
+          <span class="item-icon">🥛</span>
+          <span class="item-name">大鮮奶</span>
+          <span class="item-tag">+1000mL</span>
+        </button>
+        <button class="item-btn" onclick="addWater(1800, '一日飲水目標')">
+          <span class="item-icon">🚰</span>
+          <span class="item-name">一日飲水</span>
+          <span class="item-tag">+1.8L</span>
+        </button>
+        <button class="item-btn" onclick="addWater(2000, '熬湯大陶鍋')">
+          <span class="item-icon">🍲</span>
+          <span class="item-name">大湯鍋</span>
+          <span class="item-tag">+2L</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sandbox-actions">
+      <button class="btn-action btn-reset" onclick="resetWater()">🔄 倒光重來</button>
+      <button class="btn-action btn-random" onclick="randomWater()">🎲 隨機倒幾瓶</button>
+    </div>
+  </section>
+
+  <!-- 3. 三大核心秘笈小卡 -->
+  <section class="flashcards-box">
+    <div class="fc-nav">
+      <div style="font-size:13.5px; font-weight:800; color:var(--ink);">💡 30 秒三大容量秘笈</div>
+      <div class="fc-dots">
+        <button class="dot-btn active" id="dot-0" onclick="showCard(0)"></button>
+        <button class="dot-btn" id="dot-1" onclick="showCard(1)"></button>
+        <button class="dot-btn" id="dot-2" onclick="showCard(2)"></button>
+      </div>
+    </div>
+
+    <div class="flashcard" id="card-content">
+      <!-- 動態載入卡片內容 -->
+    </div>
+  </section>
+
+  <!-- 4. 信心挑戰按鈕 -->
+  <button class="btn-go-quiz" onclick="goToQuiz()">
+    <span>🚀</span>
+    <span>我懂了！開始挑戰 10 題真題測驗</span>
+  </button>
+
+</div>
+
+<script>
+let currentCap = 0;
+const MAX_CAP = 2000;
+
+const CARDS = [
+  {
+    badge: "📏 生活量感指南",
+    bClass: "badge-blue",
+    title: "什麼時候用毫升？什麼時候用公升？",
+    desc: "量少的用毫升：眼藥水 10mL、多多 100mL、水壺 400mL。<br>量多的用公升：大鮮奶 2L、大湯鍋 5L、浴缸 200L。<br>10 瓶多多倒在一起，剛好就是整整 1 公升！",
+    formula: "💡 提示：1800 毫升飲水量 ＝ 1 公升 800 毫升。"
+  },
+  {
+    badge: "🔑 進率通關密碼",
+    bClass: "badge-green",
+    title: "量杯平視法：1 公升 ＝ 1000 毫升",
+    desc: "看量杯刻度時，眼睛一定要<b>平平地看著水面</b>。<br>先看有沒有滿 1000mL（滿 1000 就是 1 公升），再看多出幾大格幾小格！",
+    formula: "📐 公式：1 L = 1000 mL ； 2400 mL = 2 L 400 mL"
+  },
+  {
+    badge: "🕵️ 避坑除錯小偵探",
+    bClass: "badge-red",
+    title: "小心「十位與百位補 0」陷阱！",
+    desc: "考卷最常考：<b>3 公升 8 毫升</b> 是多少毫升？<br>❌ 錯誤答案：3800 毫升 或 380 毫升！<br>⭕ 正確答案：<b>3008 毫升</b>（十位百位都補 0）！",
+    formula: "⚠️ 必記：3 公升 80 毫升 ＝ 3080 毫升（百位補一個 0）！"
+  }
+];
+
+function addWater(val, name) {
+  if (currentCap + val > MAX_CAP) {
+    document.getElementById("bubble-tip").textContent = `⚠️ 已經裝滿 2000 毫升囉！先倒光再重新倒水玩玩看！`;
+    return;
+  }
+  currentCap += val;
+  updateDisplay(name, val);
+}
+
+function resetWater() {
+  currentCap = 0;
+  updateDisplay();
+  document.getElementById("bubble-tip").textContent = `💡 已倒光！點點看下方容器倒水試試看！`;
+}
+
+function randomWater() {
+  resetWater();
+  const options = [100, 400, 500, 600, 1000];
+  const pick = options[Math.floor(Math.random() * options.length)];
+  currentCap = pick;
+  updateDisplay("隨機調配", pick);
+}
+
+function updateDisplay(lastItem, addedVal) {
+  const major = Math.floor(currentCap / 1000);
+  const minor = currentCap % 1000;
+
+  document.getElementById("meter-primary").textContent = `${major} 公升 ${minor} 毫升`;
+  document.getElementById("meter-sub").textContent = `＝ ${currentCap} 毫升 (mL)`;
+
+  const bubble = document.getElementById("bubble-tip");
+  if (currentCap === 0) {
+    bubble.textContent = `💡 點點看下方容器，把水倒進量杯玩玩看！`;
+  } else if (lastItem) {
+    if (major > 0 && minor === 0) {
+      bubble.textContent = `🎉 太神奇了！正好等於 ${major} 公升（也就是 ${currentCap} 毫升）！`;
+    } else if (major > 0) {
+      bubble.textContent = `✨ 倒進【${lastItem}】，現在超過 ${major} 公升了，水位在 ${major} 公升又 ${minor} 毫升！`;
+    } else {
+      bubble.textContent = `👍 倒進【${lastItem}】(+${addedVal}mL)，現在水位是 ${minor} 毫升！`;
+    }
+  }
+
+  // 更新 SVG 水位 (0mL = y205 h0, 2000mL = y45 h160)
+  const water = document.getElementById("water-surface");
+  const wave = document.getElementById("water-wave");
+  if (water && wave) {
+    const h = (currentCap / MAX_CAP) * 160;
+    const y = 205 - h;
+    water.setAttribute("y", y);
+    water.setAttribute("height", h);
+    wave.setAttribute("cy", y);
+  }
+}
+
+function showCard(idx) {
+  for (let i = 0; i < 3; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    if (d) d.classList.toggle("active", i === idx);
+  }
+  const c = CARDS[idx];
+  document.getElementById("card-content").innerHTML = `
+    <div class="fc-badge ${c.bClass}">${c.badge}</div>
+    <div class="fc-title">${c.title}</div>
+    <div class="fc-desc">${c.desc}</div>
+    <div class="fc-formula">${c.formula}</div>
+  `;
+}
+
+function playVoice() {
+  const text = "認識容量公升與毫升。容器能裝得下多少液體叫做容量。毫升表示量很小的液體，例如眼藥水、養樂多。公升表示量很大的液體，例如家庭號大鮮奶。通關密碼：1 公升等於 1000 毫升。";
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-TW";
+  u.rate = 0.92;
+  u.pitch = 1.1;
+  window.speechSynthesis.speak(u);
+}
+
+function goToQuiz() {
+  // 通知外層 Shell 切換到真題測驗
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已掌握容量概念！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  showCard(0);
+  updateDisplay();
+});
+</script>
+</body>
+</html>

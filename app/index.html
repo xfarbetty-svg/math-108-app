@@ -275,14 +275,40 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   display: none; margin: 10px 0 0; padding: 10px 14px; border-radius: 12px;
   background: #fff3cd; color: #8a6d1a; font-size: 12px; line-height: 1.6;
 }
-/* 手機 390px：header 單行壓到 ≈40px，藥丸橫向滑動，教具 One-Screen 優先 */
+/* 單元內建模式切換 (概念教室 vs 真題測驗) */
+.unit-mode-tabs {
+  display: flex;
+  background: #ede6d8;
+  padding: 3px;
+  border-radius: 999px;
+  gap: 4px;
+  max-width: 320px;
+  margin: 0 auto 10px;
+}
+.unit-mode-btn {
+  flex: 1;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+}
+.unit-mode-btn.active {
+  background: #ffffff;
+  color: var(--coral-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 手機 390px：header 乾淨分層，答題時隱藏年級列，拒絕右側擠壓 */
 @media (max-width: 699px) {
-  .topbar-inner { display: flex; align-items: center; gap: 10px; padding: 4px 12px; }
-  .brand { margin-bottom: 0; flex: 0 0 auto; }
-  .brand h1 { font-size: 15px; white-space: nowrap; }
+  .topbar-inner { padding: 6px 12px 8px; }
+  .brand { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .brand h1 { font-size: 16px; white-space: nowrap; }
   .brand .sub { display: none; }
-  .grade-nav { flex: 1 1 auto; min-width: 0; }
-  .grade-btn { padding: 4px 12px; font-size: 13px; }
+  .grade-nav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .grade-btn { padding: 5px 12px; font-size: 13px; }
   
   /* Stage View Mobile Optimization */
   #stageView .stage-head { align-items: center; justify-content: space-between; margin-bottom: 4px; min-height: 36px; padding: 0 4px; gap: 4px; }
@@ -313,10 +339,11 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
     <div class="brand">
       <div style="display:flex;align-items:center;gap:8px">
         <h1>🎨 小數學冒險</h1>
-        <a href="concept_preview.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:999px; background:#fff5ee; border:1px solid #ffd8c7; color:#f4694b; font-size:11.5px; font-weight:800;" title="體驗概念探索小教室打樣">🌱 概念教室</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="sub" style="font-size:11px;color:var(--ink-soft)">108 課綱官方 131 條目 · 純離線真題</span>
         <button id="btnAppUpdate" class="btn-update" title="檢查與更新最新版本">🔄 更新</button>
       </div>
-      <span class="sub" style="font-size:11px;color:var(--ink-soft)">108 課綱官方 131 條目 · 一到六年級 · 純離線真題</span>
     </div>
     <nav class="grade-nav" id="gradeNav" aria-label="年級導航"></nav>
   </div>
@@ -337,14 +364,23 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
         <div class="progress-source" id="progressSource"></div>
       </div>
     </div>
-    <div class="dots" id="dots"></div>
-    <div class="stage-title" id="stageTitle"></div>
-    <div class="stage-frame"><iframe id="stageFrame" title="具象考題教具"></iframe></div>
-    <div class="stage-nav">
-      <button class="btn-prev" id="btnPrev">← 上一題</button>
-      <button class="btn-check-main" id="btnCheckMain">✔ 檢查答案</button>
-      <button class="btn-next" id="btnNext">下一題 →</button>
-      <button class="btn-finish-mini" id="btnFinish">交卷</button>
+    <div class="unit-mode-tabs" id="unitModeTabs" style="display:none;">
+      <button class="unit-mode-btn" id="btnModeConcept">🌱 概念探索</button>
+      <button class="unit-mode-btn active" id="btnModeExam">🎯 真題測驗</button>
+    </div>
+    <div id="unitConceptWrap" style="display:none; width:100%;">
+      <iframe id="conceptFrame" title="單元概念探索" style="width:100%; border:0; display:block; min-height:560px;"></iframe>
+    </div>
+    <div id="unitExamWrap">
+      <div class="dots" id="dots"></div>
+      <div class="stage-title" id="stageTitle"></div>
+      <div class="stage-frame"><iframe id="stageFrame" title="具象考題教具"></iframe></div>
+      <div class="stage-nav">
+        <button class="btn-prev" id="btnPrev">← 上一題</button>
+        <button class="btn-check-main" id="btnCheckMain">✔ 檢查答案</button>
+        <button class="btn-next" id="btnNext">下一題 →</button>
+        <button class="btn-finish-mini" id="btnFinish">交卷</button>
+      </div>
     </div>
   </section>
 
