@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=420, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>R-3-2 數量模式與推理實驗室</title>
+    <style>
+        :root {
+            --forest-green: #2d5a27;
+            --leaf-green: #7fb069;
+            --wood-brown: #8b5a2b;
+            --sky-blue: #e0f7fa;
+            --frog-color: #4caf50;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0;
+            width: 390px; height: 420px;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background: var(--sky-blue);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        /* 導航標籤 */
+        .nav-tabs {
+            display: flex; background: var(--forest-green); height: 40px;
+        }
+        .tab {
+            flex: 1; color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; cursor: pointer; border-bottom: 3px solid transparent; opacity: 0.7;
+        }
+        .tab.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: bold; }
+
+        /* 視圖容器 */
+        .view-container { flex: 1; position: relative; overflow: hidden; padding: 10px; }
+        .view { display: none; height: 100%; flex-direction: column; align-items: center; }
+        .view.active { display: flex; }
+
+        /* 通用元件 */
+        .title { font-size: 16px; color: var(--forest-green); margin-bottom: 8px; font-weight: bold; }
+        .btn {
+            background: var(--leaf-green); color: white; border: none; padding: 6px 12px;
+            border-radius: 15px; cursor: pointer; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn:active { transform: translateY(2px); }
+
+        /* Act 1: 跳跳蛙 */
+        #frog-path { width: 100%; height: 120px; position: relative; border-bottom: 2px solid var(--wood-brown); margin-top: 20px; }
+        .lilypad { position: absolute; bottom: -10px; width: 40px; height: 15px; background: #45a049; border-radius: 50%; text-align: center; font-size: 10px; color: white; }
+        #frog { 
+            position: absolute; width: 30px; height: 30px; bottom: 5px; left: 5px; 
+            transition: all 0.6s cubic-bezier(0.45, 0.05, 0.55, 0.95); z-index: 10;
+            font-size: 24px; display: flex; align-items: center; justify-content: center;
+        }
+        .arc { 
+            position: absolute; border: 2px dashed var(--leaf-green); border-radius: 50% 50% 0 0; 
+            border-bottom: none; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+        }
+
+        /* Act 2: 火柴棒 */
+        #match-stage { height: 100px; display: flex; align-items: flex-end; gap: 2px; margin: 10px 0; }
+        .square-group { position: relative; width: 40px; height: 40px; }
+        .match { position: absolute; background: #d2691e; border-radius: 2px; }
+        .match::after { content: ''; position: absolute; width: 6px; height: 6px; background: #800; border-radius: 50%; }
+        .m-top { width: 40px; height: 4px; top: 0; left: 0; }
+        .m-bottom { width: 40px; height: 4px; bottom: 0; left: 0; }
+        .m-left { width: 4px; height: 40px; left: 0; top: 0; }
+        .m-right { width: 4px; height: 40px; right: 0; top: 0; }
+        .formula-box { background: rgba(255,255,255,0.8); padding: 8px; border-radius: 8px; font-size: 14px; text-align: center; }
+
+        /* Act 3: 找規律 */
+        .sequence-box { display: flex; gap: 8px; margin: 20px 0; }
+        .num-card { 
+            width: 45px; height: 45px; background: white; border: 2px solid var(--leaf-green);
+            display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 8px;
+            position: relative;
+        }
+        .diff-hint { position: absolute; top: -25px; font-size: 12px; color: #e91e63; font-weight: bold; opacity: 0; transition: 0.3s; }
+
+        /* Act 4: 挑戰 */
+        .challenge-card { background: white; padding: 15px; border-radius: 12px; width: 90%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+
+        /* 底部控制 */
+        .controls {
+            height: 40px; background: #eee; display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
+        }
+        .voice-btn { font-size: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-tabs">
+        <div id="tab-act1" class="tab active" onclick="switchAct(1)">🐸 跳跳蛙</div>
+        <div id="tab-act2" class="tab" onclick="switchAct(2)">🥢 火柴棒</div>
+        <div id="tab-act3" class="tab" onclick="switchAct(3)">🔍 找規律</div>
+        <div id="tab-act4" class="tab" onclick="switchAct(4)">🏆 尋寶</div>
+    </div>
+
+    <div class="view-container">
+        <!-- Act 1 -->
+        <div id="act-1-view" class="view active">
+            <div class="title">等差數線：每次跳 +4</div>
+            <div id="frog-path">
+                <div id="frog">🐸</div>
+                <!-- Lilypads generated by JS -->
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn" onclick="frogJump()">🐸 跳一下</button>
+                <button class="btn" style="background:#999" onclick="resetAct1()">重置</button>
+            </div>
+        </div>
+
+        <!-- Act 2 -->
+        <div id="act-2-view" class="view">
+            <div class="title">圖形規律：拼正方形</div>
+            <div id="match-stage"></div>
+            <div class="formula-box" id="match-info">
+                正方形：1 個，火柴：4 根<br>
+                規律：4 + 3 × (n - 1)
+            </div>
+            <div style="margin-top: 10px;">
+                <button class="btn" onclick="addSquare()">＋ 增加一個</button>
+                <button class="btn" style="background:#999" onclick="resetAct2()">重置</button>
+            </div>
+        </div>
+
+        <!-- Act 3 -->
+        <div id="act-3-view" class="view">
+            <div class="title">破招：找出隱藏的差值</div>
+            <div class="sequence-box" id="seq-container"></div>
+            <button class="btn" onclick="revealDiff()">🔍 揭示規律</button>
+            <button class="btn" style="margin-top:10px; background:#666" onclick="nextSeq()">下一題</button>
+        </div>
+
+        <!-- Act 4 -->
+        <div id="act-4-view" class="view">
+            <div class="title">規律尋寶：第 10 個是多少？</div>
+            <div class="challenge-card">
+                <div id="quest-text" style="font-size:15px; line-height:1.5;">數列：3, 8, 13, 18...<br>請問第 10 個數字是？</div>
+                <div class="options" id="quest-options"></div>
+            </div>
+            <div id="feedback" style="margin-top:10px; font-weight:bold;"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="voice-btn" onclick="toggleMute()">🔊</div>
+        <div style="font-size: 12px; color: #666;">R-3-2 數量模式與推理</div>
+    </div>
+
+    <script>
+        let currentAct = 1;
+        let isMuted = false;
+        const synth = window.speechSynthesis;
+
+        function speak(text) {
+            if (isMuted) return;
+            synth.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'zh-TW';
+            synth.speak(utter);
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            document.querySelector('.voice-btn').innerText = isMuted ? '🔇' : '🔊';
+        }
+
+        function switchAct(act) {
+            currentAct = act;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            const targetTab = document.getElementById("tab-act" + act) || document.getElementById("tab" + act);
+            const targetView = document.getElementById("act-" + act + "-view") || document.getElementById("view" + act);
+            if (targetTab) targetTab.classList.add('active');
+            if (targetView) targetView.classList.add('active');
+            
+            const msgs = [
+                '青蛙跳躍：觀察等差規律跳數！',
+                '火柴拼排：每增加一個正方形多3根火柴！',
+                '找規律：觀察數字之間的差距！',
+                '尋寶挑戰：歸納通則秒殺解題！'
+            ];
+            speak(msgs[act - 1] || '找規律');
+        }
+
+        switchAct(1);
+    </script>
+</body>
+</html>

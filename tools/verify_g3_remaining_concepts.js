@@ -106,7 +106,14 @@ const LABS = [
   { code: 'N-3-6', file: 'mult_div_relation_concept_lab.html' },
   { code: 'N-3-7', file: 'two_step_concept_lab.html' },
   { code: 'N-3-8', file: 'estimation_concept_lab.html' },
-  { code: 'N-3-11', file: 'number_line_concept_lab.html' }
+  { code: 'N-3-11', file: 'number_line_concept_lab.html' },
+  { code: 'N-3-16', file: 'weight_concept_lab.html' },
+  { code: 'N-3-17', file: 'time_concept_lab.html' },
+  { code: 'S-3-2', file: 'square_rectangle_lab.html' },
+  { code: 'S-3-4', file: 'solid_geometry_lab.html' },
+  { code: 'R-3-1', file: 'multiplication_division_lab.html' },
+  { code: 'R-3-2', file: 'pattern_reasoning_lab.html' },
+  { code: 'D-3-1', file: 'table_cross_lab.html' }
 ];
 
 async function main() {

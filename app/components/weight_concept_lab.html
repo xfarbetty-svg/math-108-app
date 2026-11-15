@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-N-3-16 重量四幕式概念小教室</title>
+    <style>
+        :root {
+            --bg-cream: #FDFBF7;
+            --forest-green: #2D5A27;
+            --wood-brown: #8B5A2B;
+            --paper-tan: #E8D5B5;
+            --accent-red: #C04848;
+            --gold: #f59e0b;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            margin: 0; padding: 0; 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--bg-cream);
+            display: flex; justify-content: center; align-items: flex-start;
+            height: 100vh; overflow: hidden;
+        }
+        #app {
+            width: 390px; height: 420px;
+            position: relative; overflow: hidden;
+            border: 2px solid var(--paper-tan);
+            background: radial-gradient(circle at center, #fff 0%, var(--paper-tan) 100%);
+            display: flex; flex-direction: column;
+        }
+        /* Header & UI */
+        .header {
+            height: 38px; background: var(--forest-green);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 12px; color: white; font-size: 13px; font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .tts-btn { cursor: pointer; font-size: 18px; }
+        
+        /* Hint box */
+        .hint-box {
+            background: rgba(255,255,255,0.92); border-radius: 8px;
+            margin: 4px 8px; padding: 5px 10px; font-size: 12px;
+            border-left: 3px solid var(--forest-green);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            min-height: 32px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .weight-readout {
+            font-weight: bold; color: var(--accent-red); font-size: 13px;
+        }
+
+        /* Scale Stage */
+        .stage {
+            flex: 1; position: relative; display: flex; justify-content: center; align-items: center;
+        }
+        .scale-svg {
+            width: 220px; height: 220px;
+        }
+        .needle { 
+            stroke: var(--accent-red); stroke-width: 3; stroke-linecap: round;
+            transform-origin: 110px 125px; transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+        }
+        .tray-fruit {
+            font-size: 20px; transition: transform 0.2s;
+        }
+
+        /* Magnifier Act 1 */
+        .magnifier {
+            position: absolute; top: 10px; right: 12px;
+            width: 105px; height: 105px;
+            border-radius: 50%; border: 3px solid var(--wood-brown);
+            background: #ffffff; overflow: hidden; display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+            z-index: 10;
+        }
+
+        /* Items Shelf */
+        .shelf {
+            height: 52px; background: rgba(139, 90, 43, 0.08);
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 0 6px; border-top: 1px solid rgba(139, 90, 43, 0.15);
+        }
+        .item-btn {
+            background: white; border: 1px solid #d1c7bd; border-radius: 8px;
+            padding: 3px 6px; font-size: 11px; cursor: pointer; text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .item-btn:active { transform: scale(0.95); }
+
+        /* Navigation */
+        .nav-bar {
+            height: 48px; background: var(--wood-brown); display: flex;
+        }
+        .nav-item {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: white; font-size: 10px; cursor: pointer; opacity: 0.65;
+            gap: 2px;
+        }
+        .nav-item.active { opacity: 1; background: rgba(255,255,255,0.18); font-weight: bold; }
+        
+        .zero-btn {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+            background: var(--accent-red); color: white; border: none; border-radius: 12px;
+            padding: 4px 12px; font-size: 11px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">
+        <span id="act-title">Act 1: 秤面大解剖</span>
+        <span class="tts-btn" onclick="speakHint()">🔊</span>
+    </div>
+
+    <div class="hint-box">
+        <span id="hint-text">每一大格 100g，每一小格 10g，繞一圈 3000g = 3kg。</span>
+        <span class="weight-readout" id="display-val">0 g</span>
+    </div>
+
+    <div class="stage">
+        <!-- Scale SVG -->
+        <svg class="scale-svg" viewBox="0 0 220 220">
+            <!-- Tray -->
+            <path d="M50 45 Q110 35 170 45 L160 62 L60 62 Z" fill="#b0bec5" stroke="#78909c" stroke-width="1.5" />
+            <rect x="105" y="62" width="10" height="15" fill="#78909c" />
+            <!-- Tray items display -->
+            <text id="tray-icon" x="110" y="42" text-anchor="middle" font-size="22"></text>
+
+            <!-- Base -->
+            <rect x="55" y="75" width="110" height="135" fill="#a1887f" rx="6" stroke="#6d4c41" stroke-width="2"/>
+            <circle cx="110" cy="135" r="58" fill="#ffffff" stroke="#6d4c41" stroke-width="3"/>
+            
+            <!-- Ticks -->
+            <g id="ticks-group"></g>
+            
+            <!-- Scale Labels -->
+            <text x="110" y="93" font-size="9" font-weight="bold" fill="#2d6a4f" text-anchor="middle">0 / 3kg</text>
+            <text x="156" y="139" font-size="8" font-weight="bold" fill="#6d4c41" text-anchor="middle">1kg</text>
+            <text x="110" y="184" font-size="8" font-weight="bold" fill="#6d4c41" text-anchor="middle">2kg</text>
+            <text x="64" y="139" font-size="8" font-weight="bold" fill="#6d4c41" text-anchor="middle">2.5</text>
+
+            <!-- Needle -->
+            <line id="needle" class="needle" x1="110" y1="135" x2="110" y2="87" transform="rotate(0, 110, 135)" />
+            <circle cx="110" cy="135" r="5" fill="#c04848" />
+        </svg>
+
+        <!-- Magnifier for Act 1 -->
+        <div id="magnifier" class="magnifier">
+            <svg width="105" height="105" viewBox="90 75 40 40">
+                <circle cx="110" cy="135" r="58" fill="#ffffff" stroke="#6d4c41" stroke-width="2"/>
+                <use href="#ticks-group" />
+                <line x1="110" y1="135" x2="110" y2="87" stroke="#c04848" stroke-width="1.5" />
+                <text x="110" y="93" font-size="5" font-weight="bold" fill="#2d6a4f" text-anchor="middle">0/3kg</text>
+                <text x="118" y="96" font-size="3" fill="#6d4c41">10g 20g 30g...</text>
+            </svg>
+        </div>
+
+        <button id="zero-btn" class="zero-btn" onclick="calibrate()">🔄 歸零校準</button>
+    </div>
+
+    <!-- Shelf for Act 2 -->
+    <div id="shelf-act2" class="shelf" style="display:none;">
+        <button class="item-btn" onclick="putItem(150, '🍎 蘋果', '🍎')">🍎 蘋果 150g</button>
+        <button class="item-btn" onclick="putItem(1000, '🍞 麵粉', '🍞')">🍞 麵粉 1kg</button>
+        <button class="item-btn" onclick="putItem(2200, '🍉 西瓜', '🍉')">🍉 西瓜 2.2kg</button>
+        <button class="item-btn" onclick="putItem(0, '清空', '')">🗑️ 清空</button>
+    </div>
+
+    <!-- Shelf for Act 4 -->
+    <div id="shelf-act4" class="shelf" style="display:none;">
+        <button class="item-btn" onclick="addItem(1000, '🍞')">➕ 1kg (1000g)</button>
+        <button class="item-btn" onclick="addItem(100, '🍎')">➕ 100g</button>
+        <button class="item-btn" onclick="addItem(10, '🍬')">➕ 10g</button>
+        <button class="item-btn" onclick="addItem(-9999, '')">🗑️ 重來</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-bar">
+        <div class="nav-item active" id="tab-act1" onclick="switchAct(1)"><span>🔍</span><span>Act 1 解剖</span></div>
+        <div class="nav-item" id="tab-act2" onclick="switchAct(2)"><span>🍎</span><span>Act 2 探索</span></div>
+        <div class="nav-item" id="tab-act3" onclick="switchAct(3)"><span>🔄</span><span>Act 3 歸零</span></div>
+        <div class="nav-item" id="tab-act4" onclick="switchAct(4)"><span>🛒</span><span>Act 4 採買</span></div>
+    </div>
+</div>
+
+<div id="act-1-view" style="display:block;"></div>
+<div id="act-2-view" style="display:none;"></div>
+<div id="act-3-view" style="display:none;"></div>
+<div id="act-4-view" style="display:none;"></div>
+
+<script>
+    let currentAct = 1;
+    let currentWeight = 0;
+    let offset = 0;
+    let targetGoal = 1350;
+
+    // Generate Scale Ticks (3000g = 300 ticks, each tick = 10g, every 10 ticks = 100g)
+    const ticksGroup = document.getElementById('ticks-group');
+    for (let i = 0; i < 300; i += 2) {
+        const angle = i * (360 / 300);
+        const isMajor = i % 10 === 0;
+        const len = isMajor ? 8 : 4;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", "110");
+        line.setAttribute("y1", "79");
+        line.setAttribute("x2", "110");
+        line.setAttribute("y2", (79 + len).toString());
+        line.setAttribute("stroke", isMajor ? "#2e7d32" : "#9e9e9e");
+        line.setAttribute("stroke-width", isMajor ? "1.5" : "0.75");
+        line.setAttribute("transform", `rotate(${angle}, 110, 135)`);
+        ticksGroup.appendChild(line);
+    }
+
+    const hints = [
+        "每一大格 100g，每一小格 10g，繞一圈 3000g = 3kg。右上角放大鏡看細節！",
+        "點擊物品放上秤盤，指針旋轉顯示精確重量！1000g 正好是 1kg。",
+        "秤子還沒放東西就偏離了 50g！請點擊下方「🔄 歸零校準」復位！",
+        "超市採買任務：請組合出「1公斤 350公克」（1350g）！"
+    ];
+
+    function updateNeedle(val) {
+        const net = Math.max(0, val + offset);
+        const deg = (net / 3000) * 360;
+        document.getElementById('needle').style.transform = `rotate(${deg}deg, 110, 135)`;
+        
+        let kg = Math.floor(net / 1000);
+        let g = net % 1000;
+        let str = `${net} g`;
+        if (kg > 0) str = `${kg} kg ${g} g (${net}g)`;
+        document.getElementById('display-val').innerText = str;
+    }
+
+    function switchAct(act) {
+        currentAct = act;
+        document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('active', i === act-1));
+        for (let i = 1; i <= 4; i++) {
+            const v = document.getElementById(`act-${i}-view`);
+            if (v) v.style.display = (i === act) ? 'block' : 'none';
+        }
+        document.getElementById('act-title').innerText = `Act ${act}: ` + ["秤面大解剖", "重量探索器", "歸零鈕與陷阱", "超市採買家"][act-1];
+        document.getElementById('hint-text').innerText = hints[act-1];
+        
+        document.getElementById('magnifier').style.display = (act === 1) ? 'block' : 'none';
+        document.getElementById('shelf-act2').style.display = (act === 2) ? 'flex' : 'none';
+        document.getElementById('shelf-act4').style.display = (act === 4) ? 'flex' : 'none';
+        document.getElementById('zero-btn').style.display = (act === 3) ? 'block' : 'none';
+        document.getElementById('tray-icon').textContent = '';
+
+        if (act === 3) {
+            offset = 50;
+            currentWeight = 0;
+            updateNeedle(0);
+        } else {
+            offset = 0;
+            currentWeight = 0;
+            updateNeedle(0);
+        }
+        speakHint();
+    }
+
+    function putItem(weight, name, icon) {
+        currentWeight = weight;
+        document.getElementById('tray-icon').textContent = icon;
+        updateNeedle(weight);
+        if (weight > 0) {
+            let kg = Math.floor(weight / 1000);
+            let g = weight % 1000;
+            let label = kg > 0 ? `${kg}公斤${g > 0 ? g + '公克' : ''}` : `${g}公克`;
+            document.getElementById('hint-text').innerText = `放上 ${name}！秤面指在 ${label}！`;
+        } else {
+            document.getElementById('hint-text').innerText = "秤盤已清空。";
+        }
+    }
+
+    function calibrate() {
+        offset = 0;
+        updateNeedle(currentWeight);
+        document.getElementById('zero-btn').style.display = 'none';
+        document.getElementById('hint-text').innerText = "🎉 歸零成功！現在指針準確指向 0g，可以開始量測了！";
+    }
+
+    function addItem(w, icon) {
+        if (w === -9999) {
+            currentWeight = 0;
+            document.getElementById('tray-icon').textContent = '';
+            updateNeedle(0);
+            document.getElementById('hint-text').innerText = "已重置。請湊出 1公斤 350公克（1350g）！";
+            return;
+        }
+        currentWeight += w;
+        document.getElementById('tray-icon').textContent = icon;
+        updateNeedle(currentWeight);
+
+        if (currentWeight === targetGoal) {
+            document.getElementById('hint-text').innerText = "🎯 太神了！剛好達成 1公斤 350公克（1350g）！";
+        } else if (currentWeight > targetGoal) {
+            document.getElementById('hint-text').innerText = `超過了！目前是 ${currentWeight}g，按重來再試試！`;
+        } else {
+            document.getElementById('hint-text').innerText = `目前 ${currentWeight}g，還差 ${targetGoal - currentWeight}g！`;
+        }
+    }
+
+    function speakHint() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const text = document.getElementById('hint-text').innerText;
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'zh-TW';
+            u.rate = 1.0;
+            window.speechSynthesis.speak(u);
+        }
+    }
+
+    // Init
+    switchAct(1);
+</script>
+</body>
+</html>

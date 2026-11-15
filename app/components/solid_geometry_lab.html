@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=420, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-S-3-4 幾何形體實驗室</title>
+    <style>
+        :root {
+            --paper-bg: #fdfbf7;
+            --box-color: #d2b48c;
+            --box-border: #8b7355;
+            --accent: #e67e22;
+            --text: #5d4037;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0; width: 390px; height: 420px;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: var(--paper-bg); color: var(--text);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        /* 導航標籤 */
+        nav {
+            display: flex; background: #e0d5bc; height: 36px;
+            border-bottom: 2px solid var(--box-border);
+        }
+        .tab {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: bold; cursor: pointer; border-right: 1px solid #ccc;
+        }
+        .tab.active { background: var(--paper-bg); color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+        /* 內容區 */
+        .view-container { flex: 1; position: relative; overflow: hidden; }
+        .view { display: none; width: 100%; height: 100%; padding: 8px; flex-direction: column; align-items: center; }
+        .view.active { display: flex; }
+
+        /* 3D 舞台 */
+        .stage {
+            width: 140px; height: 140px; perspective: 600px;
+            margin: 10px auto; position: relative;
+        }
+        .cube {
+            width: 75px; height: 75px; position: absolute; top: 32px; left: 32px;
+            transform-style: preserve-3d; transition: transform 0.5s;
+            transform: rotateX(-20deg) rotateY(30deg);
+        }
+        .face {
+            position: absolute; width: 75px; height: 75px;
+            background: rgba(210, 180, 140, 0.85);
+            border: 2px solid var(--box-border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: bold; backface-visibility: visible;
+        }
+        /* 立體位置 */
+        .f-front  { transform: translateZ(37.5px); }
+        .f-back   { transform: rotateY(180deg) translateZ(37.5px); }
+        .f-right  { transform: rotateY(90deg) translateZ(37.5px); }
+        .f-left   { transform: rotateY(-90deg) translateZ(37.5px); }
+        .f-top    { transform: rotateX(90deg) translateZ(37.5px); }
+        .f-bottom { transform: rotateX(-90deg) translateZ(37.5px); }
+
+        /* 高亮樣式 */
+        .hl-face { background: rgba(230, 126, 34, 0.75) !important; color: white; border: 2px solid #d35400; }
+        .hl-edge { box-shadow: 0 0 8px #e74c3c; border: 3px solid #e74c3c !important; }
+
+        /* 控制鈕 */
+        .controls { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+        button {
+            padding: 5px 11px; border: 1px solid var(--box-border);
+            background: #fff; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;
+        }
+        button:active { background: #eee; }
+        .info-panel { font-size: 13px; margin-top: 4px; font-weight: bold; color: #d35400; text-align: center; }
+
+        /* Act 2 & 3 展開圖 */
+        .net-container {
+            position: relative; width: 160px; height: 160px;
+            transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(20deg);
+            margin-top: 10px;
+        }
+        .net-face {
+            position: absolute; width: 38px; height: 38px;
+            background: var(--box-color); border: 1px solid var(--box-border);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;
+        }
+        /* 十字展開圖佈局 */
+        .n-center { top: 60px; left: 60px; }
+        .n-up     { top: 22px; left: 60px; transform-origin: bottom; }
+        .n-down   { top: 98px; left: 60px; transform-origin: top; }
+        .n-left   { top: 60px; left: 22px; transform-origin: right; }
+        .n-right  { top: 60px; left: 98px; transform-origin: left; }
+        .n-far    { top: 136px; left: 60px; transform-origin: top; }
+
+        /* 語音與底部 */
+        .footer {
+            height: 28px; background: #8b7355; color: white;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 12px; font-size: 11px;
+        }
+        #voice-toggle { cursor: pointer; font-size: 14px; }
+
+        /* Act 4 專用 */
+        .shape-desc { font-size: 11px; text-align: center; margin-top: 4px; line-height: 1.4; color: #6d4c41; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="tab active" id="tab-act1" onclick="switchAct(1)">構成要素</div>
+    <div class="tab" id="tab-act2" onclick="switchAct(2)">摺疊實驗</div>
+    <div class="tab" id="tab-act3" onclick="switchAct(3)">對面挑戰</div>
+    <div class="tab" id="tab-act4" onclick="switchAct(4)">角柱角錐</div>
+</nav>
+
+<div class="view-container">
+    <!-- Act 1: Anatomy -->
+    <div class="view active" id="act-1-view">
+        <div class="stage">
+            <div class="cube" id="cube1">
+                <div class="face f-front">前</div><div class="face f-back">後</div>
+                <div class="face f-right">右</div><div class="face f-left">左</div>
+                <div class="face f-top">上</div><div class="face f-bottom">下</div>
+            </div>
+        </div>
+        <div class="info-panel" id="act1-info">點擊按鈕探索正方體：6個面、12條邊、8個頂點</div>
+        <div class="controls">
+            <button onclick="highlight('face')">👀 面 (6個)</button>
+            <button onclick="highlight('edge')">📏 邊 (12條)</button>
+            <button onclick="highlight('vertex')">📍 頂點 (8個)</button>
+        </div>
+    </div>
+
+    <!-- Act 2: Folding -->
+    <div class="view" id="act-2-view">
+        <div class="net-container" id="net2">
+            <div class="net-face n-center">底</div>
+            <div class="net-face n-up" id="f2-up">上</div>
+            <div class="net-face n-down" id="f2-down">下</div>
+            <div class="net-face n-left" id="f2-left">左</div>
+            <div class="net-face n-right" id="f2-right">右</div>
+            <div class="net-face n-far" id="f2-far">頂</div>
+        </div>
+        <div class="controls" style="margin-top:14px">
+            <input type="range" id="fold-slider" min="0" max="90" value="0" style="width:140px" oninput="foldNet(this.value)">
+            <button onclick="autoFold()">▶️ 自動閉合</button>
+        </div>
+        <div class="info-panel" id="act2-info">滑動滑桿：觀察平面展開圖閉合成立體盒子！</div>
+    </div>
+
+    <!-- Act 3: Opposite Faces -->
+    <div class="view" id="act-3-view">
+        <div class="net-container" id="net3">
+            <div class="net-face n-center" style="background:#ff7675; color:white">A</div>
+            <div class="net-face n-up" id="f3-up" style="background:#74b9ff">B</div>
+            <div class="net-face n-down" id="f3-down" style="background:#74b9ff">B'</div>
+            <div class="net-face n-left" id="f3-left" style="background:#55efc4">C</div>
+            <div class="net-face n-right" id="f3-right" style="background:#55efc4">C'</div>
+            <div class="net-face n-far" id="f3-far" style="background:#ff7675; color:white">A'</div>
+        </div>
+        <div class="info-panel" id="act3-msg">找對面規律：中間隔一個面的必定是對面！</div>
+        <div class="controls" style="margin-top:14px">
+            <button onclick="foldOpposite()">🔄 閉合驗證 A 與 A'</button>
+            <button onclick="resetAct3()">展開還原</button>
+        </div>
+    </div>
+
+    <!-- Act 4: Prisms & Pyramids -->
+    <div class="view" id="act-4-view">
+        <div id="shape-display" style="font-size: 36px; margin-top: 14px;">⛺</div>
+        <div class="info-panel" id="act4-title">三角柱</div>
+        <div class="shape-desc" id="act4-desc">面：5 (上下底面2 + 側面3) · 邊：9 · 頂點：6</div>
+        <div class="controls" style="margin-top:10px">
+            <button onclick="showShape('tri-prism')">三角柱 (帳篷)</button>
+            <button onclick="showShape('quad-prism')">四角柱 (積木)</button>
+            <button onclick="showShape('tri-pyramid')">三角錐 (金字塔)</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <span>G3-S-3-4 幾何形體操作</span>
+    <span id="voice-toggle" onclick="toggleMute()">🔊</span>
+</div>
+
+<script>
+    let isMuted = false;
+
+    function speak(text) {
+        if (isMuted || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'zh-TW';
+        window.speechSynthesis.speak(utter);
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        document.getElementById('voice-toggle').innerText = isMuted ? '🔇' : '🔊';
+    }
+
+    function switchAct(actNum) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(`tab-act${actNum}`).classList.add('active');
+        document.getElementById(`act-${actNum}-view`).classList.add('active');
+        
+        const hints = [
+            "正方體有 6 個大小相同的正方形面、12 條等長的邊、8 個頂點！",
+            "滑動滑桿，觀察平面十字展開圖如何閉合成一個正方體！",
+            "對面規律：中間隔著一個面，摺起來後正好會成為相互平行的對面！",
+            "角柱有上下兩個平行的底面；角錐只有一個底面，頂端聚集成一個頂點！"
+        ];
+        speak(hints[actNum - 1]);
+    }
+
+    function highlight(type) {
+        const faces = document.querySelectorAll('#cube1 .face');
+        faces.forEach(f => {
+            f.classList.remove('hl-face', 'hl-edge');
+        });
+        if (type === 'face') {
+            faces.forEach(f => f.classList.add('hl-face'));
+            document.getElementById('act1-info').innerText = "✨ 共有 6 個完全相同的正方形面！";
+        } else if (type === 'edge') {
+            faces.forEach(f => f.classList.add('hl-edge'));
+            document.getElementById('act1-info').innerText = "📏 共有 12 條等長的邊！";
+        } else if (type === 'vertex') {
+            document.getElementById('act1-info').innerText = "📍 共有 8 個頂點（三個面相交之處）！";
+        }
+    }
+
+    function foldNet(deg) {
+        document.getElementById('f2-up').style.transform = `rotateX(${deg}deg)`;
+        document.getElementById('f2-down').style.transform = `rotateX(-${deg}deg)`;
+        document.getElementById('f2-left').style.transform = `rotateY(-${deg}deg)`;
+        document.getElementById('f2-right').style.transform = `rotateY(${deg}deg)`;
+        document.getElementById('f2-far').style.transform = `translateY(${deg > 45 ? -deg*0.3 : 0}px) rotateX(-${deg*2}deg)`;
+    }
+
+    function autoFold() {
+        let v = 0;
+        const timer = setInterval(() => {
+            v += 5;
+            document.getElementById('fold-slider').value = v;
+            foldNet(v);
+            if (v >= 90) clearInterval(timer);
+        }, 30);
+    }
+
+    function foldOpposite() {
+        document.getElementById('f3-up').style.transform = 'rotateX(90deg)';
+        document.getElementById('f3-down').style.transform = 'rotateX(-90deg)';
+        document.getElementById('f3-left').style.transform = 'rotateY(-90deg)';
+        document.getElementById('f3-right').style.transform = 'rotateY(90deg)';
+        document.getElementById('f3-far').style.transform = 'translateY(-27px) rotateX(-180deg)';
+        document.getElementById('act3-msg').innerText = "🎉 閉合驗證：A 與 A' 完全位在對面！";
+    }
+
+    function resetAct3() {
+        ['f3-up', 'f3-down', 'f3-left', 'f3-right', 'f3-far'].forEach(id => {
+            document.getElementById(id).style.transform = 'none';
+        });
+        document.getElementById('act3-msg').innerText = "找對面規律：中間隔一個面的必定是對面！";
+    }
+
+    function showShape(type) {
+        if (type === 'tri-prism') {
+            document.getElementById('shape-display').innerText = '⛺';
+            document.getElementById('act4-title').innerText = '三角柱 (Triangular Prism)';
+            document.getElementById('act4-desc').innerText = '面：5 (底面2三角形 + 側面3長方形) · 邊：9 · 頂點：6';
+        } else if (type === 'quad-prism') {
+            document.getElementById('shape-display').innerText = '🧱';
+            document.getElementById('act4-title').innerText = '四角柱 (長方體 / 正方體)';
+            document.getElementById('act4-desc').innerText = '面：6 · 邊：12 · 頂點：8';
+        } else if (type === 'tri-pyramid') {
+            document.getElementById('shape-display').innerText = '🔺';
+            document.getElementById('act4-title').innerText = '三角錐 (Triangular Pyramid)';
+            document.getElementById('act4-desc').innerText = '面：4 (全是三角形) · 邊：6 · 頂點：4';
+        }
+    }
+
+    switchAct(1);
+</script>
+</body>
+</html>

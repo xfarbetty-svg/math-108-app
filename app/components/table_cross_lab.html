@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=420, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G3-D-3-1 表格實驗室</title>
+    <style>
+        :root {
+            --station-bg: #090d16;
+            --led-orange: #ff9900;
+            --led-green: #33ff33;
+            --led-red: #ff3333;
+            --highlight: rgba(255, 255, 0, 0.25);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background: #111827;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: flex-start;
+            height: 100vh; overflow: hidden;
+        }
+
+        #app-container {
+            width: 390px; height: 420px;
+            background: var(--station-bg);
+            border: 2px solid #374151;
+            position: relative; overflow: hidden; color: white;
+            display: flex; flex-direction: column;
+        }
+
+        /* 跑馬燈風格 */
+        .marquee-container {
+            background: #000; height: 26px; border-bottom: 1px solid #4b5563;
+            overflow: hidden; display: flex; align-items: center; padding: 0 8px;
+        }
+        .marquee-text {
+            white-space: nowrap; color: var(--led-orange); font-size: 11px; font-weight: bold;
+        }
+
+        /* 導航標籤 */
+        nav {
+            display: flex; background: #1f2937; height: 34px;
+        }
+        .tab {
+            flex: 1; text-align: center; line-height: 34px; font-size: 11px;
+            cursor: pointer; border-right: 1px solid #374151; color: #9ca3af;
+            transition: 0.2s; font-weight: bold;
+        }
+        .tab.active {
+            background: #374151; color: var(--led-green);
+            box-shadow: inset 0 -3px 0 var(--led-green);
+        }
+
+        /* 視圖容器 */
+        .view {
+            display: none; padding: 8px 10px; flex: 1; position: relative;
+        }
+        .view.active { display: flex; flex-direction: column; }
+
+        /* 表格通用樣式 */
+        table {
+            width: 100%; border-collapse: collapse; font-size: 12px;
+            background: rgba(255,255,255,0.04); margin-top: 4px;
+        }
+        th, td {
+            border: 1px solid #374151; padding: 5px 3px; text-align: center;
+        }
+        th { background: #1e293b; color: var(--led-orange); font-weight: bold; }
+
+        /* Act 2 十字高亮 */
+        .cross-table td { cursor: pointer; position: relative; transition: background 0.15s; }
+        .cross-table td.h-light, .cross-table td.v-light { background: var(--highlight); }
+        .cross-table td.intersect { 
+            background: var(--led-green) !important; color: #000 !important; 
+            font-weight: 900; transform: scale(1.08); z-index: 10;
+        }
+
+        .btn-action {
+            background: var(--led-orange); color: black; padding: 4px 10px;
+            border-radius: 4px; font-weight: bold; font-size: 11px; margin-top: 6px;
+            border: none; cursor: pointer;
+        }
+        .btn-action:active { transform: scale(0.95); }
+
+        .feedback {
+            font-size: 11px; margin-top: 5px; color: var(--led-green); min-height: 1.2em; font-weight: bold;
+        }
+        .voice-btn {
+            position: absolute; bottom: 6px; right: 8px;
+            background: #374151; border-radius: 50%; width: 26px; height: 26px;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <!-- 跑馬燈 -->
+    <div class="marquee-container">
+        <div class="marquee-text" id="marquee">🚄 歡迎來到二維表格實驗室！點選上方標籤開始探索！</div>
+    </div>
+
+    <!-- 導航 -->
+    <nav>
+        <div id="tab-act1" class="tab active" onclick="switchAct(1)">Act 1 解剖</div>
+        <div id="tab-act2" class="tab" onclick="switchAct(2)">Act 2 十字</div>
+        <div id="tab-act3" class="tab" onclick="switchAct(3)">Act 3 時刻</div>
+        <div id="tab-act4" class="tab" onclick="switchAct(4)">Act 4 實戰</div>
+    </nav>
+
+    <!-- Act 1: 一維表格 -->
+    <div id="act-1-view" class="view active">
+        <div style="font-size:12px; font-weight:bold; color:#93c5fd;">圖書館借閱排行榜 (一維表格)</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">一維表格只有單一方向（每橫列是一本書的各項數據）：</div>
+        <table>
+            <thead><tr><th>排名</th><th>熱門書名</th><th>借閱次數</th></tr></thead>
+            <tbody>
+                <tr onclick="speak('第一名是神奇的科學，借閱128次')"><td>1</td><td>神奇的科學</td><td style="color:#fde047">128</td></tr>
+                <tr onclick="speak('第二名是冒險王，借閱95次')"><td>2</td><td>冒險王</td><td>95</td></tr>
+                <tr onclick="speak('第三名是小貓日記，借閱82次')"><td>3</td><td>小貓日記</td><td>82</td></tr>
+                <tr onclick="speak('第四名是太空旅行，借閱77次')"><td>4</td><td>太空旅行</td><td>77</td></tr>
+            </tbody>
+        </table>
+        <div class="feedback" style="margin-top:8px">💡 點擊任一橫列，聽語音解說！</div>
+    </div>
+
+    <!-- Act 2: 二維票價表 (十字交叉) -->
+    <div id="act-2-view" class="view">
+        <div style="font-size:12px; font-weight:bold; color:#93c5fd;">高鐵票價查詢 (二維表格十字交叉)</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">橫列為「起點」，直欄為「終點」，十字交點就是票價：</div>
+        <table class="cross-table" id="price-table">
+            <thead>
+                <tr><th>起＼終</th><th>台北</th><th>新竹</th><th>台中</th><th>左營</th></tr>
+            </thead>
+            <tbody>
+                <tr><th>台北</th><td>-</td><td data-f="台北" data-t="新竹" data-p="290">290</td><td data-f="台北" data-t="台中" data-p="700">700</td><td data-f="台北" data-t="左營" data-p="1490">1490</td></tr>
+                <tr><th>新竹</th><td data-f="新竹" data-t="台北" data-p="290">290</td><td>-</td><td data-f="新竹" data-t="台中" data-p="410">410</td><td data-f="新竹" data-t="左營" data-p="1200">1200</td></tr>
+                <tr><th>台中</th><td data-f="台中" data-t="台北" data-p="700">700</td><td data-f="台中" data-t="新竹" data-p="410">410</td><td>-</td><td data-f="台中" data-t="左營" data-p="790">790</td></tr>
+                <tr><th>左營</th><td data-f="左營" data-t="台北" data-p="1490">1490</td><td data-f="左營" data-t="新竹" data-p="1200">1200</td><td data-f="左營" data-t="台中" data-p="790">790</td><td>-</td></tr>
+            </tbody>
+        </table>
+        <div id="price-info" style="margin-top:8px; padding:6px; background:#000; border:1px solid #22c55e; text-align:center; font-size:12px; font-weight:bold; color:#4ade80;">
+            請點擊表格內任意票價單元格！
+        </div>
+    </div>
+
+    <!-- Act 3: 火車時刻表 -->
+    <div id="act-3-view" class="view">
+        <div style="font-size:12px; font-weight:bold; color:#93c5fd;">火車時刻表對照</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">任務：從板橋出發，哪一班車能在 10:30 前抵達新竹？</div>
+        <table>
+            <thead><tr><th>車次</th><th>車種</th><th>板橋開</th><th>新竹到</th></tr></thead>
+            <tbody>
+                <tr><td>101</td><td>自強號</td><td>09:00</td><td style="color:#fde047; font-weight:bold">10:05</td></tr>
+                <tr><td>502</td><td>區間車</td><td>09:15</td><td>10:40</td></tr>
+                <tr><td>103</td><td>自強號</td><td>09:40</td><td style="color:#fde047; font-weight:bold">10:25</td></tr>
+                <tr><td>504</td><td>區間車</td><td>10:00</td><td>11:15</td></tr>
+            </tbody>
+        </table>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+            <button class="btn-action" onclick="checkTrain('101')">101次 (10:05抵達)</button>
+            <button class="btn-action" onclick="checkTrain('502')">502次 (10:40抵達)</button>
+            <button class="btn-action" onclick="checkTrain('103')">103次 (10:25抵達)</button>
+        </div>
+        <div id="train-feedback" class="feedback"></div>
+    </div>
+
+    <!-- Act 4: 表格實戰 -->
+    <div id="act-4-view" class="view">
+        <div style="font-size:12px; font-weight:bold; color:#93c5fd;">實戰決策：最划算購票</div>
+        <div style="font-size:10px; color:#9ca3af; margin-top:2px;">預算 800 元，想從台北到台中，哪種票最便宜？</div>
+        <table>
+            <thead><tr><th>票種名稱</th><th>台北-台中票價</th><th>限制條件</th></tr></thead>
+            <tbody>
+                <tr><td>原價全票</td><td>700 元</td><td>隨買隨搭</td></tr>
+                <tr><td>早鳥 65 折</td><td style="color:#4ade80; font-weight:bold">455 元</td><td>需 28 天前預訂</td></tr>
+                <tr><td>早鳥 8 折</td><td>560 元</td><td>需 7 天前預訂</td></tr>
+                <tr><td>商務車廂</td><td>1250 元</td><td>超過預算 ❌</td></tr>
+            </tbody>
+        </table>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+            <button class="btn-action" onclick="checkPromo(455)">選早鳥65折</button>
+            <button class="btn-action" onclick="checkPromo(700)">選原價全票</button>
+        </div>
+        <div id="promo-feedback" class="feedback"></div>
+    </div>
+
+    <div class="voice-btn" onclick="toggleMute()">🔊</div>
+</div>
+
+<script>
+    let isMuted = false;
+
+    function speak(text) {
+        if (isMuted || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'zh-TW';
+        window.speechSynthesis.speak(utter);
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        document.querySelector('.voice-btn').innerText = isMuted ? '🔇' : '🔊';
+    }
+
+    function switchAct(n) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(`tab-act${n}`).classList.add('active');
+        document.getElementById(`act-${n}-view`).classList.add('active');
+        
+        const hints = [
+            "一維表格只有單一方向，例如熱門圖書借閱排行榜。",
+            "二維表格有橫列與直欄，交叉處就是對應的數據！",
+            "看火車時刻表：先找起點開車時間，再看終點到達時間。",
+            "在表格中對比不同方案的價格與條件，做出最聰明的決定！"
+        ];
+        document.getElementById('marquee').innerText = `🚄 ` + hints[n-1];
+        speak(hints[n-1]);
+    }
+
+    // Act 2 Crosshair Highlight
+    const cells = document.querySelectorAll('#price-table td[data-p]');
+    cells.forEach(td => {
+        td.addEventListener('click', function() {
+            cells.forEach(c => c.classList.remove('h-light', 'v-light', 'intersect'));
+            const colIndex = this.cellIndex;
+            const row = this.parentElement;
+            
+            // Highlight row
+            Array.from(row.children).forEach((c, idx) => {
+                if (idx > 0) c.classList.add('h-light');
+            });
+            // Highlight col
+            const tbody = row.parentElement;
+            Array.from(tbody.children).forEach(r => {
+                if (r.children[colIndex]) r.children[colIndex].classList.add('v-light');
+            });
+            this.classList.add('intersect');
+
+            const f = this.getAttribute('data-f');
+            const t = this.getAttribute('data-t');
+            const p = this.getAttribute('data-p');
+            const msg = `📍 起點：${f} ➜ 終點：${t} · 票價：${p} 元！`;
+            document.getElementById('price-info').innerText = msg;
+            speak(`${f}到${t}，票價${p}元`);
+        });
+    });
+
+    // Act 3 Check
+    function checkTrain(code) {
+        const fb = document.getElementById('train-feedback');
+        if (code === '101') {
+            fb.innerText = "🎯 正確！101次自強號 10:05 抵達，在 10:30 之前！";
+            speak("太棒了！101次自強號在10:05抵達，趕得上！");
+        } else if (code === '103') {
+            fb.innerText = "🎯 正確！103次自強號 10:25 抵達，剛好在 10:30 之前！";
+            speak("太棒了！103次自強號在10:25抵達，剛好趕上！");
+        } else {
+            fb.innerText = "❌ 502次區間車 10:40 才抵達，已經超過 10:30 遲到囉！";
+            speak("502次區間車十點四十分才到，會遲到喔！");
+        }
+    }
+
+    // Act 4 Check
+    function checkPromo(val) {
+        const fb = document.getElementById('promo-feedback');
+        if (val === 455) {
+            fb.innerText = "🎉 答對了！早鳥65折只要 455 元，省下 245 元最划算！";
+            speak("答對了！早鳥六五折只要四百五十五元，最省錢！");
+        } else {
+            fb.innerText = "💡 原價 700 元雖然在 800 元預算內，但提前預訂早鳥票可以省更多喔！";
+            speak("原價七百元雖然在預算內，但不是最省錢的方案喔！");
+        }
+    }
+
+    switchAct(1);
+</script>
+</body>
+</html>

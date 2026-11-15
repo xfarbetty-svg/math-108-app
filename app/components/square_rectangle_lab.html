@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>S-3-2 正方形與長方形實驗室</title>
+    <style>
+        :root {
+            --bg-paper: #f5f2e9;
+            --wood-dark: #5d4037;
+            --wood-light: #8d6e63;
+            --accent: #d32f2f;
+            --ruler-alpha: rgba(255, 255, 255, 0.4);
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0; padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #d7ccc8;
+            display: flex; justify-content: center; align-items: flex-start;
+            height: 100vh; overflow: hidden;
+        }
+        #app-container {
+            width: 390px; height: 420px;
+            background: var(--bg-paper);
+            border: 8px solid var(--wood-dark);
+            position: relative; overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        /* Tabs Navigation */
+        nav {
+            display: flex; background: var(--wood-dark); height: 36px;
+        }
+        .tab {
+            flex: 1; color: #fff; font-size: 12px; border: none;
+            background: none; cursor: pointer; opacity: 0.7;
+            transition: 0.3s; border-bottom: 3px solid transparent;
+        }
+        .tab.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: bold; }
+
+        /* View Management */
+        .view { 
+            display: none; width: 100%; height: 340px; 
+            position: relative; padding: 10px;
+        }
+        .view.active { display: block; }
+
+        /* Common Elements */
+        .shape { position: absolute; border: 2px solid #333; transition: 0.3s; }
+        .label { position: absolute; font-size: 12px; color: var(--wood-dark); pointer-events: none; }
+        .btn-action {
+            position: absolute; bottom: 10px; right: 10px;
+            padding: 6px 12px; background: var(--wood-light);
+            color: white; border: none; border-radius: 4px; cursor: pointer;
+        }
+
+        /* Act 1: Observation */
+        #act-1-view .square { width: 80px; height: 80px; left: 50px; top: 80px; background: #fffde7; }
+        #act-1-view .rect { width: 120px; height: 80px; left: 200px; top: 80px; background: #e3f2fd; }
+        .tick { position: absolute; background: var(--accent); }
+        .tick-v { width: 2px; height: 10px; }
+        .tick-h { width: 10px; height: 2px; }
+
+        /* Act 2: Triangle Ruler */
+        #ruler {
+            position: absolute; width: 100px; height: 100px;
+            cursor: move; z-index: 100; touch-action: none;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+        }
+        .corner-marker {
+            position: absolute; width: 15px; height: 15px;
+            border: 2px dashed #999; border-radius: 50%;
+        }
+
+        /* Act 3: Folding */
+        .fold-paper {
+            width: 160px; height: 100px; background: #e1f5fe;
+            margin: 40px auto; position: relative; border: 2px solid #0288d1;
+            transform-style: preserve-3d; transition: transform 1s;
+        }
+        .fold-paper.folded { transform: rotateX(-180deg); transform-origin: top; }
+
+        /* Act 4: Grid */
+        #grid-container {
+            display: grid; grid-template-columns: repeat(5, 30px);
+            grid-template-rows: repeat(3, 30px);
+            gap: 1px; background: #ccc; width: 156px; margin: 40px auto;
+        }
+        .grid-cell { width: 30px; height: 30px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .grid-cell.filled { background: #ffcc80; animation: pop 0.3s; }
+
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+        /* Audio Control */
+        #audio-ctrl {
+            position: absolute; bottom: 5px; left: 5px;
+            background: rgba(255,255,255,0.8); border-radius: 50%;
+            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 18px; z-index: 200;
+        }
+        .hint-text {
+            position: absolute; top: 45px; width: 100%; text-align: center;
+            font-size: 14px; color: #555; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <nav>
+        <button class="tab active" id="tab-act1" onclick="switchAct(1)">1.觀察</button>
+        <button class="tab" id="tab-act2" onclick="switchAct(2)">2.直角</button>
+        <button class="tab" id="tab-act3" onclick="switchAct(3)">3.對邊</button>
+        <button class="tab" id="tab-act4" onclick="switchAct(4)">4.面積</button>
+    </nav>
+
+    <div id="audio-ctrl" onclick="toggleMute()">🔊</div>
+    <div class="hint-text" id="hint">觀察圖形，點擊邊看看！</div>
+
+    <!-- Act 1 -->
+    <div id="act-1-view" class="view active">
+        <div class="shape square" onclick="markSides('sq')">
+            <div id="sq-marks"></div>
+        </div>
+        <div class="shape rect" onclick="markSides('rt')">
+            <div id="rt-marks"></div>
+        </div>
+        <div class="label" style="left: 70px; top: 170px;">正方形</div>
+        <div class="label" style="left: 235px; top: 170px;">長方形</div>
+    </div>
+
+    <!-- Act 2 -->
+    <div id="act-2-view" class="view">
+        <div class="shape square" style="left:40px; top:100px; width:80px; height:80px;"></div>
+        <div class="shape rect" style="left:180px; top:100px; width:120px; height:80px;"></div>
+        <svg id="ruler" viewBox="0 0 100 100">
+            <path d="M 0 100 L 100 100 L 0 0 Z" fill="var(--ruler-alpha)" stroke="var(--wood-dark)" stroke-width="2"/>
+            <rect x="2" y="88" width="10" height="10" fill="none" stroke="red" stroke-width="1" />
+        </svg>
+        <div class="label" style="bottom: 50px; width:100%; text-align:center;">拖曳三角板檢查四個角</div>
+    </div>
+
+    <!-- Act 3 -->
+    <div id="act-3-view" class="view">
+        <div id="paper-container" style="perspective: 600px; margin-top: 60px;">
+            <div id="paper" class="fold-paper">
+                <div style="position:absolute; top:-20px; width:100%; text-align:center; font-size:12px;">邊 A</div>
+                <div style="position:absolute; bottom:-20px; width:100%; text-align:center; font-size:12px;">邊 B</div>
+            </div>
+        </div>
+        <button class="btn-action" onclick="animateFold()">開始摺紙</button>
+    </div>
+
+    <!-- Act 4 -->
+    <div id="act-4-view" class="view">
+        <div id="grid-container"></div>
+        <div class="label" id="grid-info" style="bottom: 60px; width:100%; text-align:center;">長 5cm, 寬 3cm</div>
+        <button class="btn-action" onclick="fillGrid()">鋪設方格</button>
+    </div>
+</div>
+
+<script>
+    let isMuted = false;
+    const hints = [
+        "正方形四邊等長，長方形對邊等長。",
+        "使用三角板的直角，檢查圖形的四個角。",
+        "對摺後邊緣重合，代表對邊一樣長。",
+        "數一數，長方形裡面可以排多少個 1公分正方形？"
+    ];
+
+    function speak(text) {
+        if (isMuted) return;
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'zh-TW';
+        window.speechSynthesis.speak(msg);
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        document.getElementById('audio-ctrl').innerText = isMuted ? "🔇" : "🔊";
+    }
+
+    function switchAct(actNum) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        const targetView = document.getElementById("act-" + actNum + "-view") || document.getElementById("act" + actNum);
+        if (targetView) targetView.classList.add('active');
+        const targetTab = document.getElementById("tab-act" + actNum) || document.querySelector(".tab:nth-child(" + actNum + ")");
+        if (targetTab) targetTab.classList.add('active');
+        speak(hints[actNum - 1]);
+    }
+
+    // Act 2: 三角板拖曳與磁吸邏輯
+    const ruler = document.getElementById('ruler') || document.getElementById('setsquare');
+    if (ruler) {
+        let isDragging = false;
+        let offset = { x: 0, y: 0 };
+        const startDrag = (e) => {
+            isDragging = true;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            const rect = ruler.getBoundingClientRect();
+            offset.x = cx - rect.left; offset.y = cy - rect.top;
+        };
+        ruler.addEventListener('mousedown', startDrag);
+        ruler.addEventListener('touchstart', startDrag, { passive: false });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            ruler.style.left = (cx - offset.x) + 'px';
+            ruler.style.top = (cy - offset.y) + 'px';
+        });
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('touchend', () => isDragging = false);
+    }
+
+    switchAct(1);
+</script>
+</body>
+</html>

@@ -423,17 +423,21 @@
           "code": "N-3-16",
           "title": "重量（「公斤」、「公克」）",
           "full_text": "重量：「公斤」、「公克」。實測、量感、估測與計算。單位換算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/weight_concept_lab.html",
+          "concept_path": "components/weight_concept_lab.html"
         },
         {
           "code": "N-3-17",
           "title": "時間（「日」、「時」、「分」、「秒」）",
           "full_text": "時間：「日」、「時」、「分」、「秒」。實測、量感、估測與計算。時間單位的換算。認識時間加減問題的類型。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/time_concept_lab.html",
+          "concept_path": "components/time_concept_lab.html"
         },
         {
           "code": "S-3-1",
@@ -447,9 +451,11 @@
           "code": "S-3-2",
           "title": "正方形和長方形",
           "full_text": "正方形和長方形：以邊與角的特徵來定義正方形和長方形。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/square_rectangle_lab.html",
+          "concept_path": "components/square_rectangle_lab.html"
         },
         {
           "code": "S-3-3",
@@ -463,33 +469,41 @@
           "code": "S-3-4",
           "title": "幾何形體之操作",
           "full_text": "幾何形體之操作：以操作活動為主。平面圖形的分割與重組。初步體驗展開圖如何黏合成立體形體。知道不同之展開圖可能黏合成同一形狀之立體形體。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/solid_geometry_lab.html",
+          "concept_path": "components/solid_geometry_lab.html"
         },
         {
           "code": "R-3-1",
           "title": "乘法與除法的關係",
           "full_text": "乘法與除法的關係：乘除互逆。應用於驗算與解題。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/multiplication_division_lab.html",
+          "concept_path": "components/multiplication_division_lab.html"
         },
         {
           "code": "R-3-2",
           "title": "數量模式與推理（I）",
           "full_text": "數量模式與推理（I）：以操作活動為主。一維變化模式之觀察與推理，例如數列、一維圖表等。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/pattern_reasoning_lab.html",
+          "concept_path": "components/pattern_reasoning_lab.html"
         },
         {
           "code": "D-3-1",
           "title": "一維表格與二維表格",
           "full_text": "一維表格與二維表格：以操作活動為主。報讀、說明與製作生活中的表格。二維表格含列聯表。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "component_path": "components/table_cross_lab.html",
+          "concept_path": "components/table_cross_lab.html"
         }
       ]
     },
