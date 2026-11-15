@@ -675,7 +675,17 @@ function sbReset() {
   document.getElementById("sb-bubble").textContent = "💡 點選下方容器，把水倒進量杯試試看！";
 }
 
-// ===== 語音朗讀 =====
+// ===== 語音朗讀 (Edge-TTS 雲端高傳真神經音色 + Web Speech 原生雙備援) =====
+let currentTtsAudio = null;
+let speechEpoch = 0;
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🎒🚰🥤🧪💡✨🌟🎯🦉]/g, "")
+             .trim();
+}
+
 function playVoice(actNum) {
   const texts = {
     1: "活動一：拿100毫升小量杯量隨身水壺。全班拿出水壺，用100毫升小量杯倒水，倒滿4杯剛好是400毫升！",
@@ -683,13 +693,73 @@ function playVoice(actNum) {
     3: "活動三：2.7公升果汁桶小數橋樑。0.1公升等於100毫升。2.7公升等於2公升加上700毫升，也就是2700毫升！",
     4: "活動四：自由量杯沙盒。點點看眼藥水、多多、水壺、鮮奶，隨意倒水體驗容量的量感！"
   };
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(texts[actNum] || texts[1]);
-  u.lang = "zh-TW";
-  u.rate = 0.92;
-  u.pitch = 1.1;
-  window.speechSynthesis.speak(u);
+  const rawText = texts[actNum] || texts[1];
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  // 1. 停止舊有發音
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch(e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+
+  // 2. 雙備援音訊播放：優先本地 /api/tts，遠端回退 math3-bank.pages.dev，底層回退 Web Speech
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
 }
 
 function goToQuiz() {

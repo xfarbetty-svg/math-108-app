@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-13 角與角度概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 24px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  max-height: 180px;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🏷️ 活動一 · 認識角</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">📐 活動二 · 找直角</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">⚖️ 活動三 · 比大小</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🧭 活動四 · 角度沙箱</button>
+  </nav>
+
+  <!-- ==================== 活動一：兩張紙條轉一轉 · 認識角的構成 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.208 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🏷️ 活動一：兩張紙條轉一轉 · 認識角的構成</div>
+    <div class="card-desc">
+      釘子固定處是 <b>頂點</b>，兩條紙條是 <b>邊</b>。兩邊張開的程度就是 <b>角</b>，張開得愈大，角就愈大！
+    </div>
+
+    <!-- 視覺畫布：可旋轉紙條角 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <!-- 陰影 -->
+        <ellipse cx="150" cy="155" rx="85" ry="6" fill="#e8dfd1"/>
+        
+        <!-- 動態張角扇形 -->
+        <path id="act1-wedge" d="" fill="#fef08a" opacity="0.5"/>
+        <path id="act1-arc" d="" fill="none" stroke="#eab308" stroke-width="2.5" stroke-dasharray="3,2"/>
+        <text id="act1-deg-label" x="185" y="115" font-size="12" font-weight="900" fill="#ca8a04">45°</text>
+
+        <!-- 底邊 (固定藍色紙條) -->
+        <g id="act1-base">
+          <rect x="150" y="125" width="90" height="10" rx="5" fill="#60a5fa" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="200" y="148" font-size="11" font-weight="800" fill="#2563eb" text-anchor="middle">邊</text>
+        </g>
+
+        <!-- 旋轉邊 (動態珊瑚橘色紙條) -->
+        <g id="act1-moving-arm" transform="rotate(-45, 150, 130)">
+          <rect x="150" y="125" width="90" height="10" rx="5" fill="#fb923c" stroke="#ea580c" stroke-width="1.5"/>
+          <text x="200" y="120" font-size="11" font-weight="800" fill="#ea580c" text-anchor="middle">邊</text>
+        </g>
+
+        <!-- 頂點木釘鉚釘 -->
+        <circle cx="150" cy="130" r="7" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
+        <circle cx="150" cy="130" r="2.5" fill="#d7ccc8"/>
+        <text x="150" y="160" font-size="11" font-weight="900" fill="#5d4037" text-anchor="middle">頂點</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act1-stat">目前角的大小：45°</div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="adjustAct1(-15)">➖ 變小角 (-15°)</button>
+        <button class="btn-action" onclick="adjustAct1(15)">➕ 變大角 (+15°)</button>
+        <button class="btn-action" onclick="setAct1(90)">📐 轉成直角 (90°)</button>
+      </div>
+      <div class="info-bubble" id="act1-bubble">
+        💡 釘子固定的是「頂點」，兩條紙條是「邊」！兩邊張開得愈大，角就愈大！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：三角板找直角 · 90度標準裁判 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.209 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📐 活動二：三角板找直角 · 90度標準裁判</div>
+    <div class="card-desc">
+      三角板上有一個方方正正的角叫做 <b>直角</b>！用三角板的直角貼合比對，完全吻合就是直角！
+    </div>
+
+    <!-- 視覺畫布：三角板比對課桌/時鐘/窗框 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="158" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 物品目標展示區 -->
+        <g id="act2-target-group">
+          <!-- 課桌角目標 -->
+          <g id="target-desk">
+            <rect x="70" y="45" width="110" height="85" rx="4" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/>
+            <line x1="70" y1="55" x2="180" y2="55" stroke="#fb923c" stroke-width="1.5"/>
+            <text x="125" y="95" font-size="12" font-weight="900" fill="#9a3412" text-anchor="middle">課桌的角</text>
+          </g>
+        </g>
+
+        <!-- 半透明三角板元件 -->
+        <g id="act2-setsquare" transform="translate(140, 45)">
+          <path d="M0,0 L0,85 L85,85 Z" fill="rgba(56, 189, 248, 0.45)" stroke="#0284c7" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M0,70 L15,70 L15,85" fill="none" stroke="#ef4444" stroke-width="2"/>
+          <circle cx="28" cy="62" r="8" fill="#ffffff" opacity="0.8"/>
+          <text x="28" y="66" font-size="9" font-weight="900" fill="#0284c7" text-anchor="middle">90°</text>
+          <text x="40" y="100" font-size="10" font-weight="800" fill="#0284c7">三角板</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act2-stat">檢驗目標：課桌的邊角</div>
+      <div class="btn-grid">
+        <button class="btn-action active" id="btn-desk" onclick="switchAct2Target('desk')">🪑 比對課桌角</button>
+        <button class="btn-action" id="btn-window" onclick="switchAct2Target('window')">🪟 比對窗戶角</button>
+        <button class="btn-action" id="btn-clock" onclick="switchAct2Target('clock')">🕒 比對時鐘3點</button>
+        <button class="btn-action" onclick="rotateAct2Square()">🔄 旋轉三角板 45°</button>
+      </div>
+      <div class="info-bubble" id="act2-bubble">
+        💡 課桌的角方方正正，和三角板完全重疊！這就是標準的「直角」！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：銳角鈍角三兄弟 · 直角是裁判 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.211 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">⚖️ 活動三：銳角鈍角三兄弟 · 直角是裁判</div>
+    <div class="card-desc">
+      以 90 度直角為標準裁判：比直角小的叫做 <b>銳角</b>，比直角大的叫做 <b>鈍角</b>！
+    </div>
+
+    <!-- 視覺畫布：三兄弟疊合對比 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="155" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 直角基準虛線 (90度) -->
+        <g opacity="0.6">
+          <line x1="150" y1="130" x2="230" y2="130" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="150" y1="130" x2="150" y2="50" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,3"/>
+          <path d="M150,118 L162,118 L162,130" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+          <text x="140" y="45" font-size="10" font-weight="700" fill="#64748b">直角裁判 (90°)</text>
+        </g>
+
+        <!-- 銳角展示 (綠色，40度) -->
+        <g id="act3-acute" transform="rotate(-40, 150, 130)">
+          <line x1="150" y1="130" x2="230" y2="130" stroke="#22c55e" stroke-width="5" stroke-linecap="round"/>
+        </g>
+        <!-- 鈍角展示 (橘紅色，130度) -->
+        <g id="act3-obtuse" transform="rotate(-130, 150, 130)" style="display:none;">
+          <line x1="150" y1="130" x2="230" y2="130" stroke="#f97316" stroke-width="5" stroke-linecap="round"/>
+        </g>
+        <!-- 直角展示 (藍色，90度) -->
+        <g id="act3-right" transform="rotate(-90, 150, 130)" style="display:none;">
+          <line x1="150" y1="130" x2="230" y2="130" stroke="#3b82f6" stroke-width="5" stroke-linecap="round"/>
+        </g>
+
+        <!-- 固定底邊 -->
+        <line x1="150" y1="130" x2="230" y2="130" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- 動態張角扇形 -->
+        <path id="act3-arc" d="M185,130 A35,35 0 0,0 176,107" fill="none" stroke="#22c55e" stroke-width="3"/>
+
+        <!-- 頂點 -->
+        <circle cx="150" cy="130" r="6" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
+        <text id="act3-name-tag" x="150" y="152" font-size="12" font-weight="900" fill="#15803d" text-anchor="middle">銳角（比直角小）</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act3-stat">目前角色：銳角小不點 (40°)</div>
+      <div class="btn-grid">
+        <button class="btn-action active" id="btn-acute" onclick="switchAct3Role('acute')">🌱 綠色銳角 (<90°)</button>
+        <button class="btn-action" id="btn-right" onclick="switchAct3Role('right')">⚖️ 藍色直角 (=90°)</button>
+        <button class="btn-action" id="btn-obtuse" onclick="switchAct3Role('obtuse')">🦁 橘色鈍角 (>90°)</button>
+      </div>
+      <div class="info-bubble" id="act3-bubble">
+        💡 銳角尖尖的，張開度比 90 度直角小！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：角度自由沙箱 · 破解邊長迷思 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.213 探究核心沙箱</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧭 活動四：角度自由沙箱 · 破解邊長迷思</div>
+    <div class="card-desc">
+      想一想：邊長變長了，角會變大嗎？動手拉動邊長拉桿，實證角的大小只跟張開度有關！
+    </div>
+
+    <!-- 視覺畫布：動態邊長與動態角度 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="150" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 動態扇形 -->
+        <path id="sb-wedge" d="" fill="#dbeafe" opacity="0.6"/>
+        <path id="sb-arc" d="" fill="none" stroke="#3b82f6" stroke-width="2"/>
+        <text id="sb-deg-text" x="175" y="105" font-size="12" font-weight="900" fill="#1d4ed8">60°</text>
+
+        <!-- 底邊 (長度可變) -->
+        <line id="sb-base-line" x1="150" y1="125" x2="220" y2="125" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"/>
+
+        <!-- 旋轉邊 (角度與長度皆可變) -->
+        <g id="sb-arm-group" transform="rotate(-60, 150, 125)">
+          <line id="sb-arm-line" x1="150" y1="125" x2="220" y2="125" stroke="#f43f5e" stroke-width="6" stroke-linecap="round"/>
+        </g>
+
+        <!-- 頂點 -->
+        <circle cx="150" cy="125" r="6" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
+        <text id="sb-type-label" x="150" y="148" font-size="12" font-weight="900" fill="#1e3a8a" text-anchor="middle">銳角 (60°)</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="sb-stat">角度：60° · 邊長：70px (中邊)</div>
+      
+      <!-- 角度選擇 -->
+      <div style="font-size:11px; font-weight:800; color:#64748b; text-align:left;">📐 選擇角度：</div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="setSbAngle(30)">30° 銳角</button>
+        <button class="btn-action active" id="sb-ang-60" onclick="setSbAngle(60)">60° 銳角</button>
+        <button class="btn-action" onclick="setSbAngle(90)">90° 直角</button>
+        <button class="btn-action" onclick="setSbAngle(120)">120° 鈍角</button>
+      </div>
+
+      <!-- 邊長拉桿 -->
+      <div style="font-size:11px; font-weight:800; color:#64748b; text-align:left; margin-top:2px;">📏 改變邊長 (觀察角度有沒有變？)：</div>
+      <div class="btn-grid">
+        <button class="btn-action" id="sb-len-45" onclick="setSbLen(45, '短邊 (45px)')">短邊</button>
+        <button class="btn-action active" id="sb-len-70" onclick="setSbLen(70, '中邊 (70px)')">中邊</button>
+        <button class="btn-action" id="sb-len-95" onclick="setSbLen(95, '長邊 (95px)')">長邊</button>
+      </div>
+
+      <div class="info-bubble" id="sb-bubble">
+        💡 邊長從 45px 變成 95px，角依然是 60°！邊長不會影響角的大小，角只看張開度！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 挑戰真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+}
+
+/* ==================== 活動一：紙條轉一轉邏輯 ==================== */
+let act1Angle = 45;
+function adjustAct1(delta) {
+  act1Angle = Math.max(15, Math.min(150, act1Angle + delta));
+  updateAct1View();
+}
+function setAct1(deg) {
+  act1Angle = deg;
+  updateAct1View();
+}
+function updateAct1View() {
+  const arm = document.getElementById("act1-moving-arm");
+  const degLabel = document.getElementById("act1-deg-label");
+  const stat = document.getElementById("act1-stat");
+  const bubble = document.getElementById("act1-bubble");
+  const wedge = document.getElementById("act1-wedge");
+  const arc = document.getElementById("act1-arc");
+
+  if (arm) arm.setAttribute("transform", `rotate(-${act1Angle}, 150, 130)`);
+  if (degLabel) degLabel.textContent = act1Angle + "°";
+  if (stat) stat.textContent = `目前角的大小：${act1Angle}°`;
+
+  // 計算弧線 d
+  const rad = (act1Angle * Math.PI) / 180;
+  const r = 35;
+  const x = 150 + r * Math.cos(rad);
+  const y = 130 - r * Math.sin(rad);
+  const d = `M 185 130 A ${r} ${r} 0 0 0 ${x.toFixed(1)} ${y.toFixed(1)}`;
+  if (arc) arc.setAttribute("d", d);
+  if (wedge) wedge.setAttribute("d", `M 150 130 L 185 130 A ${r} ${r} 0 0 0 ${x.toFixed(1)} ${y.toFixed(1)} Z`);
+
+  let typeName = act1Angle < 90 ? "銳角 (小於90°)" : (act1Angle === 90 ? "直角 (剛好90°)" : "鈍角 (大於90°)");
+  if (bubble) {
+    bubble.innerHTML = `💡 目前兩邊張開 <b>${act1Angle}°</b>，這是 <b>${typeName}</b>！兩邊張開得愈大，角就愈大！`;
+  }
+}
+updateAct1View();
+
+/* ==================== 活動二：三角板找直角邏輯 ==================== */
+let act2Rotation = 0;
+function switchAct2Target(target) {
+  const stat = document.getElementById("act2-stat");
+  const bubble = document.getElementById("act2-bubble");
+  const targetGroup = document.getElementById("act2-target-group");
+  const sq = document.getElementById("act2-setsquare");
+
+  document.querySelectorAll("#act-2-view .btn-action").forEach(b => b.classList.remove("active"));
+  const activeBtn = document.getElementById("btn-" + target);
+  if (activeBtn) activeBtn.classList.add("active");
+
+  act2Rotation = 0;
+  if (sq) sq.setAttribute("transform", "translate(140, 45)");
+
+  if (target === "desk") {
+    if (stat) stat.textContent = "檢驗目標：課桌的邊角";
+    if (bubble) bubble.innerHTML = "💡 課桌的角方方正正，和三角板完全重疊！這就是標準的「直角」！";
+    if (targetGroup) targetGroup.innerHTML = `
+      <rect x="70" y="45" width="110" height="85" rx="4" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/>
+      <line x1="70" y1="55" x2="180" y2="55" stroke="#fb923c" stroke-width="1.5"/>
+      <text x="125" y="95" font-size="12" font-weight="900" fill="#9a3412" text-anchor="middle">課桌的角</text>
+    `;
+  } else if (target === "window") {
+    if (stat) stat.textContent = "檢驗目標：教室窗戶角";
+    if (bubble) bubble.innerHTML = "💡 窗戶的四個角都是垂直 90 度的，三角板能剛好貼齊，也是「直角」！";
+    if (targetGroup) targetGroup.innerHTML = `
+      <rect x="75" y="45" width="100" height="85" rx="3" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5"/>
+      <line x1="125" y1="45" x2="125" y2="130" stroke="#38bdf8" stroke-width="2"/>
+      <line x1="75" y1="87" x2="175" y2="87" stroke="#38bdf8" stroke-width="2"/>
+      <text x="125" y="110" font-size="11" font-weight="900" fill="#0369a1" text-anchor="middle">窗戶框角</text>
+    `;
+  } else if (target === "clock") {
+    if (stat) stat.textContent = "檢驗目標：時鐘 3 點鐘指針";
+    if (bubble) bubble.innerHTML = "💡 時鐘 3 點整，分針指著 12、時針指著 3，剛好形成完美的「直角」！";
+    if (targetGroup) targetGroup.innerHTML = `
+      <circle cx="120" cy="85" r="42" fill="#ffffff" stroke="#64748b" stroke-width="2.5"/>
+      <line x1="120" y1="85" x2="120" y2="52" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+      <line x1="120" y1="85" x2="153" y2="85" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="120" cy="85" r="3" fill="#0f172a"/>
+      <text x="120" y="105" font-size="10" font-weight="900" fill="#64748b" text-anchor="middle">3:00</text>
+    `;
+    if (sq) sq.setAttribute("transform", "translate(120, 45)");
+  }
+}
+function rotateAct2Square() {
+  act2Rotation = (act2Rotation === 0) ? 45 : 0;
+  const sq = document.getElementById("act2-setsquare");
+  const bubble = document.getElementById("act2-bubble");
+  if (sq) {
+    if (act2Rotation === 45) {
+      sq.setAttribute("transform", "translate(140, 45) rotate(45, 0, 85)");
+      if (bubble) bubble.innerHTML = "💡 瞧！即使三角板傾斜 45 度擺放，它的直角依然是直角！直角的大小不隨擺放方向改變！";
+    } else {
+      sq.setAttribute("transform", "translate(140, 45)");
+    }
+  }
+}
+
+/* ==================== 活動三：銳角鈍角三兄弟邏輯 ==================== */
+function switchAct3Role(role) {
+  document.querySelectorAll("#act-3-view .btn-action").forEach(b => b.classList.remove("active"));
+  const btn = document.getElementById("btn-" + role);
+  if (btn) btn.classList.add("active");
+
+  const acute = document.getElementById("act3-acute");
+  const right = document.getElementById("act3-right");
+  const obtuse = document.getElementById("act3-obtuse");
+  const arc = document.getElementById("act3-arc");
+  const stat = document.getElementById("act3-stat");
+  const bubble = document.getElementById("act3-bubble");
+  const tag = document.getElementById("act3-name-tag");
+
+  acute.style.display = "none";
+  right.style.display = "none";
+  obtuse.style.display = "none";
+
+  if (role === "acute") {
+    acute.style.display = "block";
+    if (arc) {
+      arc.setAttribute("d", "M 185 130 A 35 35 0 0 0 176 107");
+      arc.setAttribute("stroke", "#22c55e");
+    }
+    if (stat) stat.textContent = "目前角色：銳角小不點 (40°)";
+    if (tag) { tag.textContent = "銳角（比直角小）"; tag.setAttribute("fill", "#15803d"); }
+    if (bubble) bubble.innerHTML = "💡 銳角尖尖的，張開度比 90 度直角小！";
+  } else if (role === "right") {
+    right.style.display = "block";
+    if (arc) {
+      arc.setAttribute("d", "M 185 130 A 35 35 0 0 0 150 95");
+      arc.setAttribute("stroke", "#3b82f6");
+    }
+    if (stat) stat.textContent = "目前角色：直角正義哥 (90°)";
+    if (tag) { tag.textContent = "直角（剛好90度）"; tag.setAttribute("fill", "#1d4ed8"); }
+    if (bubble) bubble.innerHTML = "💡 直角就像裁判！方方正正剛好 90 度，用來給銳角和鈍角當標準！";
+  } else if (role === "obtuse") {
+    obtuse.style.display = "block";
+    if (arc) {
+      arc.setAttribute("d", "M 185 130 A 35 35 0 0 0 127 103");
+      arc.setAttribute("stroke", "#f97316");
+    }
+    if (stat) stat.textContent = "目前角色：鈍角大胖兄 (130°)";
+    if (tag) { tag.textContent = "鈍角（比直角大）"; tag.setAttribute("fill", "#c2410c"); }
+    if (bubble) bubble.innerHTML = "💡 鈍角開開胖胖的，張開度比 90 度直角大！";
+  }
+}
+
+/* ==================== 活動四：角度自由沙箱邏輯 ==================== */
+let sbAngle = 60;
+let sbLen = 70;
+let sbLenName = "中邊 (70px)";
+
+function setSbAngle(deg) {
+  sbAngle = deg;
+  document.querySelectorAll("#act-4-view .btn-action").forEach(b => {
+    if (b.textContent.includes(deg + "°")) b.classList.add("active");
+    else if (b.textContent.includes("°")) b.classList.remove("active");
+  });
+  updateSbView();
+}
+function setSbLen(len, name) {
+  sbLen = len;
+  sbLenName = name;
+  document.querySelectorAll("#act-4-view .btn-action").forEach(b => {
+    if (b.textContent.includes(name.slice(0, 2))) b.classList.add("active");
+    else if (b.textContent.includes("邊")) b.classList.remove("active");
+  });
+  updateSbView();
+}
+function updateSbView() {
+  const arm = document.getElementById("sb-arm-group");
+  const armLine = document.getElementById("sb-arm-line");
+  const baseLine = document.getElementById("sb-base-line");
+  const wedge = document.getElementById("sb-wedge");
+  const arc = document.getElementById("sb-arc");
+  const degText = document.getElementById("sb-deg-text");
+  const typeLabel = document.getElementById("sb-type-label");
+  const stat = document.getElementById("sb-stat");
+  const bubble = document.getElementById("sb-bubble");
+
+  if (arm) arm.setAttribute("transform", `rotate(-${sbAngle}, 150, 125)`);
+  if (baseLine) baseLine.setAttribute("x2", 150 + sbLen);
+  if (armLine) armLine.setAttribute("x2", 150 + sbLen);
+
+  const rad = (sbAngle * Math.PI) / 180;
+  const r = Math.min(35, sbLen * 0.5);
+  const x = 150 + r * Math.cos(rad);
+  const y = 125 - r * Math.sin(rad);
+
+  if (arc) arc.setAttribute("d", `M ${150 + r} 125 A ${r} ${r} 0 0 0 ${x.toFixed(1)} ${y.toFixed(1)}`);
+  if (wedge) wedge.setAttribute("d", `M 150 125 L ${150 + r} 125 A ${r} ${r} 0 0 0 ${x.toFixed(1)} ${y.toFixed(1)} Z`);
+  if (degText) degText.textContent = sbAngle + "°";
+
+  let type = sbAngle < 90 ? `銳角 (${sbAngle}°)` : (sbAngle === 90 ? `直角 (90°)` : `鈍角 (${sbAngle}°)`);
+  if (typeLabel) typeLabel.textContent = type;
+  if (stat) stat.textContent = `角度：${sbAngle}° · 邊長：${sbLen}px (${sbLenName})`;
+
+  if (bubble) {
+    bubble.innerHTML = `💡 <b>邊長調整為 ${sbLen}px，角依然是 ${sbAngle}°！</b>實證證明：邊長不會影響角的大小，角只看張開度！`;
+  }
+}
+updateSbView();
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 雙備援) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🏷️📐⚖️🧭💡✨🌟🎯🦉]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function playVoice(actNum) {
+  const texts = {
+    1: "活動一：兩張紙條轉一轉。釘子固定的是頂點，兩條紙條是邊。你看，兩邊張開的地方就是角，張開得愈大，角就愈大喔！",
+    2: "活動二：三角板找直角。拿出三角板，這個方方正正的角叫做直角！轉動三角板貼上去，只要邊邊完全對齊，就是直角喔！",
+    3: "活動三：銳角鈍角三兄弟。以直角為標準裁判，比直角小的叫做銳角，比直角大的叫做鈍角，記住直角就像裁判一樣喔！",
+    4: "活動四：角度自由沙箱。試著轉動角度、再拉拉看邊長拉桿。想一想，邊長變長了，角的大小會改變嗎？角的大小只看張開度喔！"
+  };
+  const rawText = texts[actNum] || texts[1];
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+</script>
+</body>
+</html>

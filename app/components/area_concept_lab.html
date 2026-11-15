@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-14 面積概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 24px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  max-height: 180px;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">📮 活動一 · 鋪排看</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🔍 活動二 · 1平方公分</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🪟 活動三 · 方格板</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🧩 活動四 · 變形沙箱</button>
+  </nav>
+
+  <!-- ==================== 活動一：鋪排看 · 密鋪無縫隙 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.215 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📮 活動一：個別單位鋪排 · 不能有縫隙與重疊</div>
+    <div class="card-desc">
+      要測量卡片「面」的大小，用郵票鋪排時必須<b>整齊密鋪</b>！有縫隙或重疊都會量不準！
+    </div>
+
+    <!-- 視覺畫布：郵票密鋪 vs 散亂鋪 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="158" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 卡片底板 (長 180, 寬 110) -->
+        <rect x="60" y="30" width="180" height="110" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+        <text x="150" y="22" font-size="11" font-weight="900" fill="#b45309" text-anchor="middle">明信片卡片</text>
+
+        <!-- 郵票鋪排群組 -->
+        <g id="act1-stamps-group">
+          <!-- 預設為整齊密鋪：3行×2列 = 6張 (每張 60×55) -->
+          <g transform="translate(60, 30)">
+            <rect x="2" y="2" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+            <text x="30" y="32" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 1</text>
+
+            <rect x="62" y="2" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+            <text x="90" y="32" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 2</text>
+
+            <rect x="122" y="2" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+            <text x="150" y="32" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 3</text>
+
+            <rect x="2" y="57" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+            <text x="30" y="87" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 4</text>
+
+            <rect x="62" y="57" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+            <text x="90" y="87" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 5</text>
+
+            <rect x="122" y="57" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+            <text x="150" y="87" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 6</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act1-stat">鋪排狀態：整齊密鋪（剛好 6 張郵票）</div>
+      <div class="btn-grid">
+        <button class="btn-action active" id="btn-tight" onclick="setAct1Mode('tight')">✨ 整齊密鋪（無縫隙）</button>
+        <button class="btn-action" id="btn-gap" onclick="setAct1Mode('gap')">⚠️ 有縫隙（量不準）</button>
+        <button class="btn-action" id="btn-overlap" onclick="setAct1Mode('overlap')">⚠️ 互相重疊（量不準）</button>
+      </div>
+      <div class="info-bubble" id="act1-bubble">
+        💡 鋪得整整齊齊、邊貼著邊，沒有縫隙也沒有重疊，卡片的大小剛好是「6 張郵票」！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：認識 1 平方公分 · 標準量感 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.217 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🔍 活動二：認識「1 平方公分 (cm²)」</div>
+    <div class="card-desc">
+      邊長 <b>1 公分</b> 的正方形，面積就是 <b>1 平方公分</b>。它的大小大約跟我們大拇指指甲差不多大！
+    </div>
+
+    <!-- 視覺畫布：1cm² 與大拇指指甲放大對比 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="155" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 1cm² 擬物方塊 (放大呈現) -->
+        <g transform="translate(65, 35)">
+          <rect x="0" y="0" width="70" height="70" rx="4" fill="#60a5fa" stroke="#1d4ed8" stroke-width="2.5"/>
+          <text x="35" y="40" font-size="13" font-weight="900" fill="#ffffff" text-anchor="middle">1 cm²</text>
+          <!-- 邊長標註 -->
+          <text x="35" y="-6" font-size="11" font-weight="800" fill="#1e40af" text-anchor="middle">1 公分</text>
+          <text x="-12" y="40" font-size="11" font-weight="800" fill="#1e40af" text-anchor="middle">1cm</text>
+          <text x="35" y="90" font-size="11" font-weight="900" fill="#1d4ed8" text-anchor="middle">1 平方公分</text>
+        </g>
+
+        <!-- 等號與對比符號 -->
+        <text x="160" y="75" font-size="18" font-weight="900" fill="#94a3b8">≈</text>
+
+        <!-- 生活對照物：大拇指指甲 / 10元硬幣比例尺 -->
+        <g id="act2-compare-group" transform="translate(185, 35)">
+          <!-- 大拇指指甲輪廓 -->
+          <rect x="0" y="5" width="65" height="60" rx="14" fill="#fecdd3" stroke="#e11d48" stroke-width="2.5"/>
+          <ellipse cx="32" cy="18" rx="20" ry="8" fill="#fda4af" opacity="0.6"/>
+          <text x="32" y="42" font-size="11" font-weight="900" fill="#9f1239" text-anchor="middle">大拇指</text>
+          <text x="32" y="90" font-size="11" font-weight="900" fill="#be123c" text-anchor="middle">指甲面積</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act2-stat">生活量感：1 cm² ≈ 大拇指指甲</div>
+      <div class="btn-grid">
+        <button class="btn-action active" id="btn-thumb" onclick="setAct2Compare('thumb')">👍 大拇指指甲</button>
+        <button class="btn-action" id="btn-dice" onclick="setAct2Compare('dice')">🎲 小骰子一面</button>
+        <button class="btn-action" id="btn-key" onclick="setAct2Compare('key')">⌨️ 鍵盤小按鍵</button>
+      </div>
+      <div class="info-bubble" id="act2-bubble">
+        💡 只要邊長是 1 公分的正方形，面積就是「1 平方公分」(1 cm²)。伸出大拇指摸摸看，指甲就是最好的量尺！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：方格板覆蓋點數 · 矩陣乘法 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.219 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🪟 活動三：方格板覆蓋點數 · 銜接「長×寬」</div>
+    <div class="card-desc">
+      用透明方格板覆蓋長方形，一格一格數出有幾格！每排 4 格、有 3 排，剛好是 <b>4 × 3 = 12 平方公分</b>！
+    </div>
+
+    <!-- 視覺畫布：3×4 透明方格板 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="155" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 3×4 方格矩陣 (每個 40×35，總寬 160，總高 105，起點 70, 30) -->
+        <g id="act3-grid-matrix" transform="translate(70, 30)">
+          <!-- 底層長方形 -->
+          <rect x="0" y="0" width="160" height="105" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+          
+          <!-- 12 個可點選小方塊 (3行 4列) -->
+          <!-- 行 0 -->
+          <rect id="cell-0-0" x="0" y="0" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(0,0)"/>
+          <text id="txt-0-0" x="20" y="22" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
+
+          <rect id="cell-0-1" x="40" y="0" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(0,1)"/>
+          <text id="txt-0-1" x="60" y="22" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">2</text>
+
+          <rect id="cell-0-2" x="80" y="0" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(0,2)"/>
+          <text id="txt-0-2" x="100" y="22" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">3</text>
+
+          <rect id="cell-0-3" x="120" y="0" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(0,3)"/>
+          <text id="txt-0-3" x="140" y="22" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">4</text>
+
+          <!-- 行 1 -->
+          <rect id="cell-1-0" x="0" y="35" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(1,0)"/>
+          <text id="txt-1-0" x="20" y="57" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">5</text>
+
+          <rect id="cell-1-1" x="40" y="35" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(1,1)"/>
+          <text id="txt-1-1" x="60" y="57" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">6</text>
+
+          <rect id="cell-1-2" x="80" y="35" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(1,2)"/>
+          <text id="txt-1-2" x="100" y="57" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">7</text>
+
+          <rect id="cell-1-3" x="120" y="35" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(1,3)"/>
+          <text id="txt-1-3" x="140" y="57" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">8</text>
+
+          <!-- 行 2 -->
+          <rect id="cell-2-0" x="0" y="70" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(2,0)"/>
+          <text id="txt-2-0" x="20" y="92" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">9</text>
+
+          <rect id="cell-2-1" x="40" y="70" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(2,1)"/>
+          <text id="txt-2-1" x="60" y="92" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">10</text>
+
+          <rect id="cell-2-2" x="80" y="70" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(2,2)"/>
+          <text id="txt-2-2" x="100" y="92" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">11</text>
+
+          <rect id="cell-2-3" x="120" y="70" width="40" height="35" fill="#86efac" stroke="#16a34a" stroke-width="1.5" onclick="toggleAct3Cell(2,3)"/>
+          <text id="txt-2-3" x="140" y="92" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">12</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act3-stat">面積計算：每排 4 格 × 3 排 = 12 平方公分</div>
+      <div class="btn-grid">
+        <button class="btn-action active" onclick="act3FillAll()">🔢 全部點亮 (12格)</button>
+        <button class="btn-action" onclick="act3HighlightRows()">📐 觀察排數 (4×3)</button>
+        <button class="btn-action" onclick="act3Reset()">🔄 清除重數</button>
+      </div>
+      <div class="info-bubble" id="act3-bubble">
+        💡 長方形橫著看有 4 格（長 4 公分），直著看有 3 格（寬 3 公分）。算式就是 <b>4 × 3 = 12 平方公分</b>！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：變形沙箱 · 破解周長面積迷思 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 p.221 核心迷思破招</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧩 活動四：變形拼圖沙箱 · 面積守恆與周長迷思</div>
+    <div class="card-desc">
+      用 6 個 1cm² 方塊拼出不同形狀！形狀變了，<b>面積依然都是 6 cm²</b>，但周長會跟著改變喔！
+    </div>
+
+    <!-- 視覺畫布：6 格動態拼貼網格 (6列 3行) -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="150" rx="85" ry="6" fill="#e8dfd1"/>
+
+        <!-- 6×3 可點選方塊網格 (每個 32×32，寬 192，高 96，起點 54, 30) -->
+        <g id="act4-grid" transform="translate(54, 30)">
+          <!-- JS 動態生成 18 個網格點選方塊 -->
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act4-stat">面積：6 cm² · 周長：10 cm (2×3 長方形)</div>
+      
+      <div style="font-size:11px; font-weight:800; color:#64748b; text-align:left;">🎯 點選快速拼出 6 平方公分形狀：</div>
+      <div class="btn-grid">
+        <button class="btn-action active" id="btn-shape-rect" onclick="act4Preset('2x3')">長方形 (2×3)</button>
+        <button class="btn-action" id="btn-shape-line" onclick="act4Preset('1x6')">一字形 (1×6)</button>
+        <button class="btn-action" id="btn-shape-l" onclick="act4Preset('L')">L 形拼圖</button>
+        <button class="btn-action" onclick="act4Clear()">自由點格子</button>
+      </div>
+
+      <div class="info-bubble" id="act4-bubble">
+        💡 <b>破招大發現：</b>長方形 (2×3) 和一字形 (1×6) 面積都是 <b>6 平方公分</b>！但長方形周長只有 10 公分，一字形周長卻有 14 公分！證明「面積相同，周長不一定相同」！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 挑戰真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  stopSpeech();
+}
+
+/* ==================== 活動一：鋪排看邏輯 ==================== */
+function setAct1Mode(mode) {
+  document.querySelectorAll("#act-1-view .btn-action").forEach(b => b.classList.remove("active"));
+  const btn = document.getElementById("btn-" + mode);
+  if (btn) btn.classList.add("active");
+
+  const grp = document.getElementById("act1-stamps-group");
+  const stat = document.getElementById("act1-stat");
+  const bubble = document.getElementById("act1-bubble");
+
+  if (mode === "tight") {
+    if (stat) stat.textContent = "鋪排狀態：整齊密鋪（剛好 6 張郵票）";
+    if (bubble) bubble.innerHTML = "💡 鋪得整整齊齊、邊貼著邊，沒有縫隙也沒有重疊，卡片的大小剛好是「6 張郵票」！";
+    if (grp) {
+      grp.innerHTML = `
+        <g transform="translate(60, 30)">
+          <rect x="2" y="2" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="30" y="32" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 1</text>
+          <rect x="62" y="2" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="90" y="32" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 2</text>
+          <rect x="122" y="2" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="150" y="32" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 3</text>
+          <rect x="2" y="57" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="30" y="87" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 4</text>
+          <rect x="62" y="57" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="90" y="87" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 5</text>
+          <rect x="122" y="57" width="56" height="51" rx="4" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="150" y="87" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">郵票 6</text>
+        </g>
+      `;
+    }
+  } else if (mode === "gap") {
+    if (stat) stat.textContent = "鋪排狀態：有大縫隙（測量不準！）";
+    if (bubble) bubble.innerHTML = "⚠️ <b>縫隙陷阱：</b>郵票中間空了好多黃色卡片空白，這樣數出來只有 4 張，測量結果不準確！";
+    if (grp) {
+      grp.innerHTML = `
+        <g transform="translate(60, 30)">
+          <rect x="5" y="5" width="52" height="46" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <text x="31" y="32" font-size="10" font-weight="900" fill="#991b1b" text-anchor="middle">郵票 1</text>
+          <rect x="120" y="5" width="52" height="46" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <text x="146" y="32" font-size="10" font-weight="900" fill="#991b1b" text-anchor="middle">郵票 2</text>
+          <rect x="5" y="60" width="52" height="46" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <text x="31" y="87" font-size="10" font-weight="900" fill="#991b1b" text-anchor="middle">郵票 3</text>
+          <rect x="120" y="60" width="52" height="46" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <text x="146" y="87" font-size="10" font-weight="900" fill="#991b1b" text-anchor="middle">郵票 4</text>
+          <text x="90" y="60" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">有縫隙！</text>
+        </g>
+      `;
+    }
+  } else if (mode === "overlap") {
+    if (stat) stat.textContent = "鋪排狀態：相互重疊壓到（測量不準！）";
+    if (bubble) bubble.innerHTML = "⚠️ <b>重疊陷阱：</b>郵票疊在別人的身上，數出來的數量會比實際面積多算或少算，也不準確！";
+    if (grp) {
+      grp.innerHTML = `
+        <g transform="translate(60, 30)">
+          <rect x="10" y="10" width="60" height="50" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <rect x="40" y="15" width="60" height="50" rx="4" fill="#f87171" opacity="0.8" stroke="#dc2626" stroke-width="2"/>
+          <rect x="100" y="10" width="60" height="50" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <rect x="25" y="50" width="60" height="50" rx="4" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+          <rect x="75" y="45" width="60" height="50" rx="4" fill="#f87171" opacity="0.8" stroke="#dc2626" stroke-width="2"/>
+          <text x="90" y="80" font-size="11" font-weight="900" fill="#991b1b" text-anchor="middle">疊在一起！</text>
+        </g>
+      `;
+    }
+  }
+}
+
+/* ==================== 活動二：認識 1 平方公分對比 ==================== */
+function setAct2Compare(target) {
+  document.querySelectorAll("#act-2-view .btn-action").forEach(b => b.classList.remove("active"));
+  const btn = document.getElementById("btn-" + target);
+  if (btn) btn.classList.add("active");
+
+  const grp = document.getElementById("act2-compare-group");
+  const stat = document.getElementById("act2-stat");
+  const bubble = document.getElementById("act2-bubble");
+
+  if (target === "thumb") {
+    if (stat) stat.textContent = "生活量感：1 cm² ≈ 大拇指指甲";
+    if (bubble) bubble.innerHTML = "💡 伸出大拇指摸摸看，小學生的指甲面積剛好大約就是「1 平方公分」！";
+    if (grp) {
+      grp.innerHTML = `
+        <rect x="0" y="5" width="65" height="60" rx="14" fill="#fecdd3" stroke="#e11d48" stroke-width="2.5"/>
+        <ellipse cx="32" cy="18" rx="20" ry="8" fill="#fda4af" opacity="0.6"/>
+        <text x="32" y="42" font-size="11" font-weight="900" fill="#9f1239" text-anchor="middle">大拇指</text>
+        <text x="32" y="90" font-size="11" font-weight="900" fill="#be123c" text-anchor="middle">指甲面積</text>
+      `;
+    }
+  } else if (target === "dice") {
+    if (stat) stat.textContent = "生活量感：1 cm² ≈ 小骰子的一個面";
+    if (bubble) bubble.innerHTML = "💡 桌遊常見的小骰子，每一個正方形的面邊長剛好是 1 公分，面積就是「1 平方公分」！";
+    if (grp) {
+      grp.innerHTML = `
+        <rect x="0" y="5" width="65" height="60" rx="6" fill="#ffffff" stroke="#475569" stroke-width="2.5"/>
+        <circle cx="32" cy="35" r="8" fill="#ef4444"/>
+        <text x="32" y="90" font-size="11" font-weight="900" fill="#334155" text-anchor="middle">骰子一面</text>
+      `;
+    }
+  } else if (target === "key") {
+    if (stat) stat.textContent = "生活量感：1 cm² ≈ 鍵盤的一個小按鍵";
+    if (bubble) bubble.innerHTML = "💡 電腦鍵盤上的一個小字母鍵，面積也大約是 1 到 1.5 平方公分左右！";
+    if (grp) {
+      grp.innerHTML = `
+        <rect x="0" y="5" width="65" height="60" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="2.5"/>
+        <text x="32" y="40" font-size="18" font-weight="900" fill="#1e293b" text-anchor="middle">A</text>
+        <text x="32" y="90" font-size="11" font-weight="900" fill="#475569" text-anchor="middle">鍵盤按鍵</text>
+      `;
+    }
+  }
+}
+
+/* ==================== 活動三：方格板點數邏輯 ==================== */
+let act3Grid = [
+  [true, true, true, true],
+  [true, true, true, true],
+  [true, true, true, true]
+];
+
+function toggleAct3Cell(r, c) {
+  act3Grid[r][c] = !act3Grid[r][c];
+  updateAct3View();
+}
+function act3FillAll() {
+  act3Grid = [
+    [true, true, true, true],
+    [true, true, true, true],
+    [true, true, true, true]
+  ];
+  updateAct3View();
+}
+function act3Reset() {
+  act3Grid = [
+    [false, false, false, false],
+    [false, false, false, false],
+    [false, false, false, false]
+  ];
+  updateAct3View();
+}
+function act3HighlightRows() {
+  act3FillAll();
+  const bubble = document.getElementById("act3-bubble");
+  if (bubble) {
+    bubble.innerHTML = "💡 <b>乘法算理：</b>第一排 4 格、第二排 4 格、第三排 4 格。共有 3 排，<b>4 × 3 = 12 平方公分</b>！";
+  }
+}
+function updateAct3View() {
+  let count = 0;
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 4; c++) {
+      const cell = document.getElementById(`cell-${r}-${c}`);
+      const txt = document.getElementById(`txt-${r}-${c}`);
+      if (act3Grid[r][c]) {
+        count++;
+        if (cell) {
+          cell.setAttribute("fill", "#86efac");
+          cell.setAttribute("stroke", "#16a34a");
+        }
+        if (txt) {
+          txt.textContent = count;
+          txt.style.display = "block";
+        }
+      } else {
+        if (cell) {
+          cell.setAttribute("fill", "#f8fafc");
+          cell.setAttribute("stroke", "#cbd5e1");
+        }
+        if (txt) txt.style.display = "none";
+      }
+    }
+  }
+  const stat = document.getElementById("act3-stat");
+  if (stat) stat.textContent = `目前點亮：${count} 格 = ${count} 平方公分`;
+}
+
+/* ==================== 活動四：變形沙箱邏輯 ==================== */
+// 6 列 3 行 = 18 格 (每個 32x32)
+let selectedCells = new Set(["0-0", "0-1", "0-2", "1-0", "1-1", "1-2"]); // 預設 2x3
+
+function renderAct4Grid() {
+  const g = document.getElementById("act4-grid");
+  if (!g) return;
+  let html = "";
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 6; c++) {
+      const id = `${r}-${c}`;
+      const active = selectedCells.has(id);
+      const fill = active ? "#60a5fa" : "#f1f5f9";
+      const stroke = active ? "#1d4ed8" : "#cbd5e1";
+      html += `
+        <rect id="sb-cell-${id}" x="${c * 32}" y="${r * 32}" width="30" height="30" rx="3" fill="${fill}" stroke="${stroke}" stroke-width="2" onclick="toggleSbCell('${id}')" style="cursor:pointer;"/>
+      `;
+    }
+  }
+  g.innerHTML = html;
+  calculateAct4Stats();
+}
+
+function toggleSbCell(id) {
+  if (selectedCells.has(id)) selectedCells.delete(id);
+  else selectedCells.add(id);
+  renderAct4Grid();
+}
+
+function act4Preset(type) {
+  document.querySelectorAll("#act-4-view .btn-action").forEach(b => b.classList.remove("active"));
+  selectedCells.clear();
+
+  if (type === "2x3") {
+    // 2行 3列
+    selectedCells.add("0-0"); selectedCells.add("0-1"); selectedCells.add("0-2");
+    selectedCells.add("1-0"); selectedCells.add("1-1"); selectedCells.add("1-2");
+    const b = document.getElementById("btn-shape-rect");
+    if (b) b.classList.add("active");
+  } else if (type === "1x6") {
+    // 1行 6列
+    for (let c = 0; c < 6; c++) selectedCells.add(`1-${c}`);
+    const b = document.getElementById("btn-shape-line");
+    if (b) b.classList.add("active");
+  } else if (type === "L") {
+    selectedCells.add("0-0");
+    selectedCells.add("1-0");
+    selectedCells.add("2-0"); selectedCells.add("2-1"); selectedCells.add("2-2"); selectedCells.add("2-3");
+    const b = document.getElementById("btn-shape-l");
+    if (b) b.classList.add("active");
+  }
+  renderAct4Grid();
+}
+function act4Clear() {
+  selectedCells.clear();
+  renderAct4Grid();
+}
+
+function calculateAct4Stats() {
+  const area = selectedCells.size;
+  let perimeter = 0;
+
+  selectedCells.forEach(cell => {
+    const [r, c] = cell.split('-').map(Number);
+    const neighbors = [[r-1, c], [r+1, c], [r, c-1], [r, c+1]];
+    neighbors.forEach(([nr, nc]) => {
+      if (!selectedCells.has(`${nr}-${nc}`)) perimeter++;
+    });
+  });
+
+  const stat = document.getElementById("act4-stat");
+  const bubble = document.getElementById("act4-bubble");
+  if (stat) stat.textContent = `面積：${area} cm² · 周長：${perimeter} cm`;
+
+  if (bubble) {
+    if (area === 6) {
+      bubble.innerHTML = `💡 <b>破招大發現：</b>這個圖形的面積是 <b>6 平方公分</b>，周長是 <b>${perimeter} 公分</b>！形狀變了，面積依然是 6，但周長跟著變了！證明「面積相同，周長不一定相同」！`;
+    } else {
+      bubble.innerHTML = `💡 目前點選了 <b>${area} 個方格</b>，面積是 <b>${area} 平方公分</b>，外圍周長是 <b>${perimeter} 公分</b>！`;
+    }
+  }
+}
+renderAct4Grid();
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 雙備援) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[📮🔍🪟🧩💡✨🌟🎯🦉]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function playVoice(actNum) {
+  const texts = {
+    1: "活動一：個別單位鋪排。要測量卡片的大小，郵票必須排得整整齊齊，不能重疊，也不能有縫隙喔！",
+    2: "活動二：認識一平方公分。邊長一公分的正方形，面積就是一平方公分，大小大約跟你的大拇指指甲差不多喔！",
+    3: "活動三：方格板覆蓋點數。我們用透明方格板蓋上去數數看，每排四格、有三排，四乘三剛好是十二平方公分！",
+    4: "活動四：變形拼圖沙箱。試試看用六個方塊拼出不同的形狀。你看，面積都是六平方公分，但周長會跟著改變喔！"
+  };
+  const rawText = texts[actNum] || texts[1];
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+</script>
+</body>
+</html>
