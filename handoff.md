@@ -1,30 +1,29 @@
 # 斷點交接日誌 (Handoff Log)
 
-## ⏯️ 目前做到哪（Session 43 批次化首戰圓滿落地：2026-11-15 12:05）
+## ⏯️ 目前做到哪（Session 43 實體部署流程鋼鐵重構與 S-3-3 圓發布：2026-11-15 12:30）
 
-本 Session 啟動三年級「概念小教室批次生產流程」，落實「035 架構規劃 ➔ 本地 OpenCode CLI 施工 ➔ AGY 總監 CDP 實機驗收」流水線，並完成單元架構規範收攏：
+本 Session 針對使用者提出「實體部署流程脫節、手機端無法即時看到更新」的痛點，徹底根治部署流程，並建立三重鋼鐵防錯機制：
 
-1. **單元整合與架構規範定錨**：
-   - **角度雙條目收攏**：在 `app/shell.js` 中將 `N-3-13` 與 `S-3-1` 標記為「同義整合」，點擊任一卡片皆載入同一套完整題庫與四幕式角度概念小教室，維持教育部 108 課綱 131 條目守門員全綠（Exit Code 0）的同時消除使用者的認知混淆。
-   - **幾何圖形純粹性**：確立「平面幾何（圓、角、面積）一律採純 2D 正視向量 SVG、嚴禁硬套 034 等角透視」之法典標準，確保圓形 1:1 圓潤精準，半徑旋轉處處等長，絕無立體投影橢圓變形之弊。
-2. **G3-S-3-3「圓」概念小教室 100% 落地 (`app/components/circle_concept_lab.html`)**：
-   - **Act 1 認識圓部位**：圓心紅點、圓周外廓、半徑藍射線、直徑綠線段，點擊高亮波紋與精確定義語音朗讀。
-   - **Act 2 半徑處處等長 ＆ 直徑＝半徑×2**：360° 旋轉指針實證長度不變，展開對向半徑直觀呈現兩倍算式。
-   - **Act 3 圓規畫圓擬物沙箱**：調整兩腳張開長度 2~6cm，旋轉一圈繪出彩色圓周，直擊「圓規張開長度是半徑而非直徑」之段考核心盲點。
-   - **Act 4 迷思小偵探**：4 條線段交互挑選，實證「通過圓心且兩端在圓周上的才是直徑，且為圓內最長直線」。
-   - **微軟 Edge-TTS 曉臻語音**：支援 `/api/tts` 直連 ➔ `math3-bank.pages.dev/api/tts` 備援 ➔ 離線 Web Speech API 降級。
-   - 機械化 CDP 守門員 `tools/verify_circle_concept.js` 7 項全綠（Exit Code 0）。
-3. **主入口容器掛載與守門員全綠**：
-   - `app/shell.js` 的 `CONCEPT_COMPONENTS` 成功掛載 `"S-3-3": "components/circle_concept_lab.html"`。
-   - 全量守門員測試（`verify_curriculum_131.js`、`verify_app_shell.js`、`verify_circle_concept.js`、`test_tts_endpoint.py`）全部 Exit Code 0！
-4. **雲端部署狀態**：
-   - 隨即進行 Git commit & push 至 `main` 分支。
-   - Cloudflare Pages：`https://math-108.pages.dev`。
+1. **部署流程鋼鐵重構（徹底根治脫節與快取殘留）**：
+   - **Git `pre-push` Hook 物理門禁 (`.git/hooks/pre-push`)**：
+     只要執行 `git push`，Git 會強制在推送前自動執行 `npx wrangler pages deploy`。部署成功才放行 push；部署失敗直接攔截阻斷，徹底杜絕程式碼與線上伺服器脫節。
+   - **升級 `tools/release.py`（S0~S4 鋼鐵閉環）**：
+     - `S0` 自動快取破除：自動生成唯一發布版號（如 `v=20261115_122825`），自動注入 `VERSION` 與 `app/index.html` 的 `shell.js?v=TIMESTAMP` 腳本標籤。
+     - `S1` 全量守門員檢驗：131 課綱、總入口、圓概念小教室、Edge-TTS 端點 100% Exit Code 0。
+     - `S2` Git 提交與推送。
+     - `S3` Cloudflare Pages 實體部署。
+     - `S4` 遠端邊緣節點 HTTPS 實測驗真：主動發送真實 HTTPS 請求探測 `https://math-108.pages.dev`，驗證 HTTP 200 且版號完全吻合才報完工，徹底消滅假成功！
+   - **一鍵發布指令 (`.\deploy.ps1`)**：根目錄提供標準 PowerShell 發布腳本，一鍵全自動搞定。
+2. **G3-S-3-3「圓」概念小教室 100% 落地與實體生效 (`app/components/circle_concept_lab.html`)**：
+   - 純 2D 向量 SVG、四幕擬物互動（圓心/圓周/半徑/直徑、360°指針等長、圓規畫圓沙箱、迷思直線挑戰）、微軟 Edge-TTS 曉臻雙通道自然語音。
+   - 線上節點已驗真生效（版號 `20261115_122825`）。
+3. **角度單元同義收攏**：
+   - 在 `app/shell.js` 中將 `N-3-13` 與 `S-3-1` 明確標記為「同義整合」，點擊任一卡片皆載入同一套題庫與概念小教室，守門員 131 條全綠。
 
 ---
 
 ## 📋 接下來進行什麼（批次化第二戰推進）
-依據第一批核心單元排程，接續執行：
+部署流程已徹底固化為鋼鐵閉環，後續發布一鍵自動化。接續推進：
 1. **G3-N-3-9 簡單同分母分數**（平分概念、幾分之幾、分數大小比較、同分母加減）
 2. **G3-N-3-10 一位小數**（0.1 的意義、十等分、小數點位值、小數與公尺/公分換算）
 3. **G3-N-3-12 長度（毫米 mm）**（直尺放大鏡、1cm=10mm、指甲厚度、實物測量對齊）
@@ -32,7 +31,7 @@
 ---
 
 ## 🕐 最後更新
-- 時間：2026-11-15 12:05
+- 時間：2026-11-15 12:30
 - 更新者：Antigravity (Gemini 3.8 Flash) @ DESKTOP-6ELKIRH
-- Git push 狀態：待推
-- Cloudflare Pages：已連通 (https://math-108.pages.dev)
+- Git push 狀態：✅ 已推 (Commit b60a0f1)
+- Cloudflare Pages：✅ 已實體部署生效 (Build 20261115_122825)
