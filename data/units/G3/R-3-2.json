@@ -1,0 +1,116 @@
+{
+  "code": "R-3-2",
+  "title": "數量模式與推理（I）",
+  "grade": 3,
+  "question_count": 5,
+  "verified_source": "台北市忠孝國小 114-1 期末 / 高雄市陽明國小 113-2 期末段考試卷",
+  "questions": [
+    {
+      "id": "G3-R-3-2-Q01",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "等差跳數規律：填補空格",
+      "stem": "觀察數列規律：3, 7, 11, ❓, 19，請問 ❓ 應該填入什麼數字？",
+      "choices": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "answer_index": 2,
+      "answer_raw": "15",
+      "component_path": "components/pattern_reasoning_lab.html",
+      "explanation": {
+        "concept": "等差數列規律",
+        "steps": [
+          "7 - 3 = 4，11 - 7 = 4，每次跳躍增加 4。",
+          "11 + 4 = 15，驗證 15 + 4 = 19 正確。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-2-Q02",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "火柴棒拼排規律：正方形",
+      "stem": "拼 1 個正方形要 4 根火柴，連著拼 2 個要 7 根，連著拼 3 個要 10 根，請問每多拼 1 個正方形需要增加幾根火柴？",
+      "choices": [
+        "1 根",
+        "2 根",
+        "3 根",
+        "4 根"
+      ],
+      "answer_index": 2,
+      "answer_raw": "3 根",
+      "component_path": "components/pattern_reasoning_lab.html",
+      "explanation": {
+        "concept": "幾何圖形拼排通則",
+        "steps": [
+          "第 1 個正方形需要 4 根，之後每多 1 個因為共用 1 條邊，只需多 3 根火柴。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-2-Q03",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "乘法倍數數列規律",
+      "stem": "觀察規律：2, 4, 8, 16, ❓，請問下一個數字是多少？",
+      "choices": [
+        "20",
+        "24",
+        "32",
+        "64"
+      ],
+      "answer_index": 2,
+      "answer_raw": "32",
+      "component_path": "components/pattern_reasoning_lab.html",
+      "explanation": {
+        "concept": "等比翻倍規律",
+        "steps": [
+          "每個數字都是前一個數字的 2 倍：2×2=4, 4×2=8, 8×2=16, 16×2=32。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-2-Q04",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "幾何週期排列規律",
+      "stem": "圖案按照「🔴 🟦 🟦 🔴 🟦 🟦 🔴 🟦 🟦 ...」順序排列，請問第 10 個圖案是什麼？",
+      "choices": [
+        "🔴 紅球",
+        "🟦 藍方塊",
+        "⭐ 黃星星",
+        "不確定"
+      ],
+      "answer_index": 0,
+      "answer_raw": "🔴 紅球",
+      "component_path": "components/pattern_reasoning_lab.html",
+      "explanation": {
+        "concept": "週期除法求餘數",
+        "steps": [
+          "週期為 3 個一組 (🔴 🟦 🟦)。",
+          "10 ÷ 3 = 3 組 ... 餘 1，餘 1 表示是每組第 1 個圖案，即 🔴。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-2-Q05",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "火柴規律倒推推導",
+      "stem": "承第 2 題規律 (算式: 4 + 3 × (個數-1))，連著拼 5 個正方形總共需要幾根火柴？",
+      "choices": [
+        "13 根",
+        "16 根",
+        "19 根",
+        "20 根"
+      ],
+      "answer_index": 1,
+      "answer_raw": "16 根",
+      "component_path": "components/pattern_reasoning_lab.html",
+      "explanation": {
+        "concept": "代入通則計算",
+        "steps": [
+          "4 + 3 × (5 - 1) = 4 + 3 × 4 = 4 + 12 = 16 根火柴。"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "code": "D-3-1",
+  "title": "一維表格與二維表格",
+  "grade": 3,
+  "question_count": 5,
+  "verified_source": "台北市忠孝國小 114-1 期末 / 高雄市陽明國小 113-2 期中段考試卷",
+  "questions": [
+    {
+      "id": "G3-D-3-1-Q01",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "一維與二維表格基本概念",
+      "stem": "高鐵票價表同時有「起點站」橫列與「終點站」直欄，這種表格屬於哪一種？",
+      "choices": [
+        "一維表格",
+        "二維表格",
+        "立體表格",
+        "不是表格"
+      ],
+      "answer_index": 1,
+      "answer_raw": "二維表格",
+      "component_path": "components/table_cross_lab.html",
+      "explanation": {
+        "concept": "二維表格結構定義",
+        "steps": [
+          "同時具有橫列（列標題）與直欄（欄標題）兩個維度交叉對照的表格，稱為二維表格。"
+        ]
+      }
+    },
+    {
+      "id": "G3-D-3-1-Q02",
+      "exam_source": "高雄市陽明國小 113-2 期中",
+      "title": "二維表格十字交叉讀取",
+      "stem": "在高鐵票價表中，起點找「台北」，終點找「台中」，兩條線交叉處寫著 700，代表什麼意思？",
+      "choices": [
+        "台北到台中距離 700 公里",
+        "台北到台中車程 700 分鐘",
+        "台北到台中的票價是 700 元",
+        "台北到台中共有 700 班車"
+      ],
+      "answer_index": 2,
+      "answer_raw": "台北到台中的票價是 700 元",
+      "component_path": "components/table_cross_lab.html",
+      "explanation": {
+        "concept": "二維交叉讀取意義",
+        "steps": [
+          "橫向台北向右延伸，縱向台中向下延伸，交叉點的數值即代表該起訖點之票價（700元）。"
+        ]
+      }
+    },
+    {
+      "id": "G3-D-3-1-Q03",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "時刻表讀取：發車與抵達時間",
+      "stem": "火車時刻表顯示 101 次自強號「板橋開 09:00，新竹到 10:05」，請問從板橋到新竹行車時間是多少？",
+      "choices": [
+        "55 分鐘",
+        "1 小時 5 分鐘",
+        "1 小時 15 分鐘",
+        "2 小時"
+      ],
+      "answer_index": 1,
+      "answer_raw": "1 小時 5 分鐘",
+      "component_path": "components/table_cross_lab.html",
+      "explanation": {
+        "concept": "行車時間計算",
+        "steps": [
+          "到達時間 10:05 減去出發時間 09:00 = 1 小時 5 分鐘。"
+        ]
+      }
+    },
+    {
+      "id": "G3-D-3-1-Q04",
+      "exam_source": "高雄市陽明國小 113-2 期中",
+      "title": "表格比對決策：時限篩選",
+      "stem": "小明必須在 10:30 前抵達新竹，甲車 10:05 到，乙車 10:40 到，他應該搭哪一班車？",
+      "choices": [
+        "甲車",
+        "乙車",
+        "兩班都可以",
+        "兩班都遲到"
+      ],
+      "answer_index": 0,
+      "answer_raw": "甲車",
+      "component_path": "components/table_cross_lab.html",
+      "explanation": {
+        "concept": "時刻條件比較",
+        "steps": [
+          "10:05 早於 10:30，符合要求；10:40 晚於 10:30 會遲到。"
+        ]
+      }
+    },
+    {
+      "id": "G3-D-3-1-Q05",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "二維表格對角線特徵",
+      "stem": "在同站對稱的二維高鐵票價表中，對角線（例如台北對台北、台中對台中）通常標示為「-」符號，為什麼？",
+      "choices": [
+        "因為高鐵壞了",
+        "因為起點與終點相同不需要搭車",
+        "因為免費",
+        "因為沒有座位"
+      ],
+      "answer_index": 1,
+      "answer_raw": "因為起點與終點相同不需要搭車",
+      "component_path": "components/table_cross_lab.html",
+      "explanation": {
+        "concept": "二維對稱表格對角線物理意涵",
+        "steps": [
+          "起點站與終點站相同代表原地不動，無須乘車，因此無對應之票價。"
+        ]
+      }
+    }
+  ]
+}

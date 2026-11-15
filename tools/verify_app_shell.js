@@ -183,7 +183,28 @@ async function main() {
       ok(document.getElementById('gradeView').style.display === 'block', '回單元列表正常');
       ok(document.querySelectorAll('#gradeView .unit-card').length === 11, 'G1 單元列表仍為 11 張卡片');
 
-      // 4. 交卷結算
+      // 4. G3 → 點擊檢驗 7 大新物理操作單元 (S-3-4, R-3-1, R-3-2, D-3-1, N-3-16, N-3-17, S-3-2)
+      document.querySelectorAll('#gradeNav .grade-btn')[2].click();
+      await sleep(100);
+      const testUnits = ['S-3-4', 'R-3-1', 'R-3-2', 'D-3-1', 'N-3-16', 'N-3-17', 'S-3-2'];
+      for (const code of testUnits) {
+        const card = document.querySelector('#gradeView .unit-card.ready[data-code=\"' + code + '\"]');
+        ok(!!card, 'G3 單元 ' + code + ' ready 卡片存在');
+        if (card) {
+          card.click();
+          await sleep(600);
+          const stageDisplay = document.getElementById('stageView').style.display;
+          ok(stageDisplay === 'block', 'G3 單元 ' + code + ' 點擊成功開啟舞台 (stageView display=' + stageDisplay + ')');
+          const conceptBtn = document.getElementById('btnModeConcept');
+          ok(!!conceptBtn && conceptBtn.style.display !== 'none', 'G3 單元 ' + code + ' 具備概念小教室按鈕');
+          document.getElementById('btnBack').click();
+          await sleep(100);
+        }
+      }
+
+      // 5. 切回 G1 測交卷結算
+      document.querySelectorAll('#gradeNav .grade-btn')[0].click();
+      await sleep(100);
       document.querySelector('#gradeView .unit-card.ready').click();
       await sleep(900);
       document.getElementById('btnFinish').click();

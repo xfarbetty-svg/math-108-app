@@ -143,7 +143,14 @@ const CONCEPT_COMPONENTS = {
   "S-3-1": "components/angle_concept_lab.html",
   "N-3-14": "components/area_concept_lab.html",
   "N-3-15": "components/capacity_concept_lab.html",
-  "S-3-3": "components/circle_concept_lab.html"
+  "S-3-3": "components/circle_concept_lab.html",
+  "N-3-16": "components/weight_concept_lab.html",
+  "N-3-17": "components/time_concept_lab.html",
+  "S-3-2": "components/square_rectangle_lab.html",
+  "S-3-4": "components/solid_geometry_lab.html",
+  "R-3-1": "components/multiplication_division_lab.html",
+  "R-3-2": "components/pattern_reasoning_lab.html",
+  "D-3-1": "components/table_cross_lab.html"
 };
 
 let currentUnitMode = "exam"; // "concept" | "exam"

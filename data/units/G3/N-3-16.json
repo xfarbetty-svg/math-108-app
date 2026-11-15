@@ -1,0 +1,119 @@
+{
+  "code": "N-3-16",
+  "title": "重量（「公斤」、「公克」）",
+  "grade": 3,
+  "question_count": 5,
+  "verified_source": "高雄市陽明國小/獅湖國小 113-2 期末實體段考試卷",
+  "questions": [
+    {
+      "id": "G3-N-3-16-Q01",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "單位換算：1公斤等於幾公克？",
+      "stem": "1 公斤（kg）等於多少公克（g）？",
+      "choices": [
+        "10 公克",
+        "100 公克",
+        "1000 公克",
+        "10000 公克"
+      ],
+      "answer_index": 2,
+      "answer_raw": "1000 公克",
+      "component_path": "components/weight_concept_lab.html",
+      "explanation": {
+        "concept": "重量公制單位換算",
+        "steps": [
+          "國際重量單位中，1 公斤 (kg) 等於 1000 公克 (g)。",
+          "磅秤繞完一整圈正好是 1000g，也就是 1kg。"
+        ]
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q02",
+      "exam_source": "高雄市獅湖國小 113-2 期末",
+      "title": "磅秤刻度報讀：大格與小格",
+      "stem": "一個 3kg 的圓形磅秤，每 1 大格是 100g，裡面平分成 10 小格，請問每 1 小格代表多少？",
+      "choices": [
+        "1 公克",
+        "5 公克",
+        "10 公克",
+        "50 公克"
+      ],
+      "answer_index": 2,
+      "answer_raw": "10 公克",
+      "component_path": "components/weight_concept_lab.html",
+      "explanation": {
+        "concept": "刻度細分算理",
+        "steps": [
+          "1 大格為 100 公克，分成 10 個等分小格。",
+          "100 ÷ 10 = 10，所以每 1 小格代表 10 公克。"
+        ]
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q03",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "複合單位換算：公斤公克化聚",
+      "stem": "媽媽買了一顆西瓜，重 2 公斤 450 公克，換算成公克是多少？",
+      "choices": [
+        "245 公克",
+        "2045 公克",
+        "2450 公克",
+        "24500 公克"
+      ],
+      "answer_index": 2,
+      "answer_raw": "2450 公克",
+      "component_path": "components/weight_concept_lab.html",
+      "explanation": {
+        "concept": "複合單位聚合法則",
+        "steps": [
+          "2 公斤 = 2000 公克。",
+          "2000 公克 + 450 公克 = 2450 公克。"
+        ]
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q04",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "生活估測：合理的重量單位",
+      "stem": "請問一瓶大瓶家庭號鮮奶的重量，大約是多少比較合理？",
+      "choices": [
+        "2 公克",
+        "20 公克",
+        "2 公斤",
+        "200 公斤"
+      ],
+      "answer_index": 2,
+      "answer_raw": "2 公斤",
+      "component_path": "components/weight_concept_lab.html",
+      "explanation": {
+        "concept": "生活重量量感",
+        "steps": [
+          "1 顆櫻桃約 10g，1 本書約 300g。",
+          "家庭號鮮奶約 2000ml，重約 2000g = 2公斤。"
+        ]
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q05",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "磅秤歸零安全守則",
+      "stem": "使用磅秤量測物品前，若指針沒有指向 0，應該怎麼做？",
+      "choices": [
+        "直接放上去秤",
+        "先旋轉校準鈕歸零再秤",
+        "把物品拿更重一點",
+        "用眼睛自己加減"
+      ],
+      "answer_index": 1,
+      "answer_raw": "先旋轉校準鈕歸零再秤",
+      "component_path": "components/weight_concept_lab.html",
+      "explanation": {
+        "concept": "工具操作安全與精確性",
+        "steps": [
+          "磅秤量測前必須確保空盤指在 0 刻度（歸零）。",
+          "未歸零會導致量測值包含初始誤差。"
+        ]
+      }
+    }
+  ]
+}

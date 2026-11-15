@@ -1,0 +1,114 @@
+{
+  "code": "S-3-4",
+  "title": "幾何形體之操作",
+  "grade": 3,
+  "question_count": 5,
+  "verified_source": "高雄市陽明國小 113-2 / 獅湖國小 114-1 期末段考試卷",
+  "questions": [
+    {
+      "id": "G3-S-3-4-Q01",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "正方體幾何要素計數",
+      "stem": "一個正方體有幾個面？幾條邊？幾個頂點？",
+      "choices": [
+        "6面、8邊、12頂點",
+        "6面、12邊、8頂點",
+        "8面、12邊、6頂點",
+        "4面、8邊、4頂點"
+      ],
+      "answer_index": 1,
+      "answer_raw": "6面、12邊、8頂點",
+      "component_path": "components/solid_geometry_lab.html",
+      "explanation": {
+        "concept": "正方體結構要素",
+        "steps": [
+          "正方體由 6 個大小相同的正方形面包圍，相鄰面相交形成 12 條邊，3 邊相交形成 8 個頂點。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-4-Q02",
+      "exam_source": "高雄市獅湖國小 114-1 期末",
+      "title": "長方體面的特徵",
+      "stem": "長方體相對的兩個面，有什麼幾何特徵？",
+      "choices": [
+        "形狀不同",
+        "面積大小不一定",
+        "形狀相同且面積相等",
+        "都是三角形"
+      ],
+      "answer_index": 2,
+      "answer_raw": "形狀相同且面積相等",
+      "component_path": "components/solid_geometry_lab.html",
+      "explanation": {
+        "concept": "長方體對面性質",
+        "steps": [
+          "長方體相對的兩面（對面）形狀相同、大小相等，且彼此互相平行。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-4-Q03",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "正方體展開圖判斷",
+      "stem": "正方體展開圖有 6 個正方形，如果有一排連了 5 個正方形，能摺成正方體嗎？",
+      "choices": [
+        "可以，剛好拼合",
+        "不能，會有面重疊且缺少底面",
+        "可以，只要有6個面就行",
+        "不一定"
+      ],
+      "answer_index": 1,
+      "answer_raw": "不能，會有面重疊且缺少底面",
+      "component_path": "components/solid_geometry_lab.html",
+      "explanation": {
+        "concept": "展開圖閉合拓撲規律",
+        "steps": [
+          "正方體一排最多只能連 4 個面（構成 4 個側面），若連 5 個面則會重疊且無法封閉。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-4-Q04",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "角柱與角錐底面辨析",
+      "stem": "角柱有上下 2 個互相平行的底面，請問「三角錐」有幾個底面？",
+      "choices": [
+        "1 個",
+        "2 個",
+        "3 個",
+        "4 個"
+      ],
+      "answer_index": 0,
+      "answer_raw": "1 個",
+      "component_path": "components/solid_geometry_lab.html",
+      "explanation": {
+        "concept": "角錐結構特徵",
+        "steps": [
+          "角錐只有 1 個底面，所有側面都是三角形且在頂端匯聚於同 1 個頂點。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-4-Q05",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "title": "展開圖對面辨識",
+      "stem": "在十字展開圖中，中間隔著 1 個面的兩個面，摺成正方體後會是什麼關係？",
+      "choices": [
+        "相鄰垂直的面",
+        "完全重合的面",
+        "彼此平行的對面",
+        "連在一起的邊"
+      ],
+      "answer_index": 2,
+      "answer_raw": "彼此平行的對面",
+      "component_path": "components/solid_geometry_lab.html",
+      "explanation": {
+        "concept": "展開圖找對面口訣",
+        "steps": [
+          "口訣：「相間隔一個，摺起是對面」。中間隔著一個面，閉合後必定成為相互平行的對面。"
+        ]
+      }
+    }
+  ]
+}

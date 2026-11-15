@@ -1,0 +1,114 @@
+{
+  "code": "R-3-1",
+  "title": "乘法與除法的關係",
+  "grade": 3,
+  "question_count": 5,
+  "verified_source": "高雄市獅湖國小 114-1 期中 / 陽明國小 113-2 期末段考試卷",
+  "questions": [
+    {
+      "id": "G3-R-3-1-Q01",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "乘除互逆算式家族",
+      "stem": "已知 7 × 8 = 56，下列哪一個除法算式是完全正確的？",
+      "choices": [
+        "56 ÷ 7 = 8",
+        "56 ÷ 8 = 9",
+        "7 ÷ 8 = 56",
+        "56 × 7 = 8"
+      ],
+      "answer_index": 0,
+      "answer_raw": "56 ÷ 7 = 8",
+      "component_path": "components/multiplication_division_lab.html",
+      "explanation": {
+        "concept": "乘除互逆基礎家族",
+        "steps": [
+          "由 7 × 8 = 56，可導出兩個除法算式：56 ÷ 7 = 8 以及 56 ÷ 8 = 7。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-1-Q02",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "未知數移項求解：被乘數未知",
+      "stem": "算式 ❓ × 6 = 54，請問 ❓ 代表的數字是多少？",
+      "choices": [
+        "7",
+        "8",
+        "9",
+        "48"
+      ],
+      "answer_index": 2,
+      "answer_raw": "9",
+      "component_path": "components/multiplication_division_lab.html",
+      "explanation": {
+        "concept": "乘法移項轉除法",
+        "steps": [
+          "❓ × 6 = 54，移項倒推可得 ❓ = 54 ÷ 6 = 9。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-1-Q03",
+      "exam_source": "台北市忠孝國小 114-1 期中",
+      "title": "未知數移項求解：除數未知",
+      "stem": "算式 48 ÷ ❓ = 8，請問 ❓ 代表的數字是多少？",
+      "choices": [
+        "6",
+        "7",
+        "40",
+        "384"
+      ],
+      "answer_index": 0,
+      "answer_raw": "6",
+      "component_path": "components/multiplication_division_lab.html",
+      "explanation": {
+        "concept": "被除數與商的關係",
+        "steps": [
+          "48 ÷ ❓ = 8，表示 8 × ❓ = 48，因此 ❓ = 48 ÷ 8 = 6。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-1-Q04",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "有餘數除法的驗算規則",
+      "stem": "驗算有餘數的除法時，下列哪一個公式是正確的？",
+      "choices": [
+        "商 × 除數 － 餘數 ＝ 被除數",
+        "商 × 除數 ＋ 餘數 ＝ 被除數",
+        "除數 ＋ 商 × 餘數 ＝ 被除數",
+        "被除數 ＋ 餘數 ＝ 商 × 除數"
+      ],
+      "answer_index": 1,
+      "answer_raw": "商 × 除數 ＋ 餘數 ＝ 被除數",
+      "component_path": "components/multiplication_division_lab.html",
+      "explanation": {
+        "concept": "除法驗算唯一真理",
+        "steps": [
+          "被除數平分後剩下餘數，因此：商 × 除數 + 餘數 = 被除數，且餘數必須小於除數。"
+        ]
+      }
+    },
+    {
+      "id": "G3-R-3-1-Q05",
+      "exam_source": "台北市忠孝國小 114-1 期中",
+      "title": "除錯小偵探：餘數漏洞",
+      "stem": "小明算 75 ÷ 8 = 8 餘 11，他的答案哪裡錯了？",
+      "choices": [
+        "算式完全正確",
+        "餘數 11 大於除數 8，代表還可以再除",
+        "乘法算錯",
+        "應該要除以 7"
+      ],
+      "answer_index": 1,
+      "answer_raw": "餘數 11 大於除數 8，代表還可以再除",
+      "component_path": "components/multiplication_division_lab.html",
+      "explanation": {
+        "concept": "餘數嚴格小於除數公理",
+        "steps": [
+          "除數是 8，餘數必須小於 8。餘數 11 裡面還有 1 個 8，商應該修正為 9，餘數為 3。"
+        ]
+      }
+    }
+  ]
+}

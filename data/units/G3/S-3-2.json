@@ -1,0 +1,116 @@
+{
+  "code": "S-3-2",
+  "title": "正方形和長方形",
+  "grade": 3,
+  "question_count": 5,
+  "verified_source": "高雄市獅湖國小 114-1 期中 / 台北市忠孝國小 113-2 期末段考試卷",
+  "questions": [
+    {
+      "id": "G3-S-3-2-Q01",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "幾何特徵：正方形的性質",
+      "stem": "關於「正方形」的特徵，下列哪一個敘述是完全正確的？",
+      "choices": [
+        "只有 2 個直角",
+        "4 條邊都一樣長，且 4 個角都是直角",
+        "只要 4 條邊一樣長就是正方形",
+        "對邊等長但沒有直角"
+      ],
+      "answer_index": 1,
+      "answer_raw": "4 條邊都一樣長，且 4 個角都是直角",
+      "component_path": "components/square_rectangle_lab.html",
+      "explanation": {
+        "concept": "正方形嚴格幾何定義",
+        "steps": [
+          "正方形必須同時滿足：① 4 條邊全部等長；② 4 個角全部都是 90 度直角。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q02",
+      "exam_source": "台北市忠孝國小 113-2 期末",
+      "title": "幾何特徵：長方形的對邊關係",
+      "stem": "長方形有 4 個直角，請問它的「邊」有什麼規律？",
+      "choices": [
+        "4 條邊都不一樣長",
+        "4 條邊都一樣長",
+        "相對的兩條邊（對邊）一樣長",
+        "相鄰的兩條邊一樣長"
+      ],
+      "answer_index": 2,
+      "answer_raw": "相對的兩條邊（對邊）一樣長",
+      "component_path": "components/square_rectangle_lab.html",
+      "explanation": {
+        "concept": "長方形對邊相等性質",
+        "steps": [
+          "長方形有兩組對邊（長對長、寬對寬），對邊互相平行且長度相等。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q03",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "周長計算：正方形周長",
+      "stem": "一個邊長 8 公分的正方形，它的周長是多少公分？",
+      "choices": [
+        "16 公分",
+        "24 公分",
+        "32 公分",
+        "64 公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "32 公分",
+      "component_path": "components/square_rectangle_lab.html",
+      "explanation": {
+        "concept": "正方形周長公式",
+        "steps": [
+          "正方形有 4 條等長的邊。",
+          "周長 = 邊長 × 4 = 8 × 4 = 32 公分。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q04",
+      "exam_source": "台北市忠孝國小 113-2 期末",
+      "title": "周長計算：長方形周長",
+      "stem": "一個長 10 公分、寬 6 公分的長方形，它的周長是多少公分？",
+      "choices": [
+        "16 公分",
+        "32 公分",
+        "60 公分",
+        "40 公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "32 公分",
+      "component_path": "components/square_rectangle_lab.html",
+      "explanation": {
+        "concept": "長方形周長公式",
+        "steps": [
+          "長方形周長 = (長 + 寬) × 2。",
+          "(10 + 6) × 2 = 16 × 2 = 32 公分。"
+        ]
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q05",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "圖形辨析：三角板比對直角",
+      "stem": "拿三角板上的哪一個角去比對，可以檢查一個角是不是直角？",
+      "choices": [
+        "最小的角",
+        "尖尖的銳角",
+        "方方正正的直角",
+        "鈍角"
+      ],
+      "answer_index": 2,
+      "answer_raw": "方方正正的直角",
+      "component_path": "components/square_rectangle_lab.html",
+      "explanation": {
+        "concept": "直角檢驗法",
+        "steps": [
+          "三角板最大的角是標準 90 度直角，貼齊比對若完全重合即為直角。"
+        ]
+      }
+    }
+  ]
+}
