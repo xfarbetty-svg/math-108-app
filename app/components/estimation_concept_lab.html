@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-8 四則估算概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.btn-tts.speaking {
+  background: #fff1f0;
+  border-color: #ffccc7;
+  color: #f4694b;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn.active { background: var(--sky-deep); border-color: var(--sky-deep); }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🧲 活動一 · 數線磁鐵靠攏</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">👛 活動二 · 帶錢夠不夠</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🎯 活動三 · 乘除估算雷達</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🕵️ 活動四 · 合理檢驗偵探</button>
+  </nav>
+
+  <!-- ==================== 活動一：數線磁鐵靠攏（概數取整百整千） ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-8 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧲 活動一：數線磁鐵 · 看看更靠近誰</div>
+    <div class="card-desc">
+      估算第一步：取概數！看數字更靠近哪一個整百或整千！看下一位：<b>未滿 5 往左靠，滿 5 往右靠</b>！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- 數線主體：400 到 500 -->
+        <line x1="40" y1="80" x2="280" y2="80" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+        <!-- 刻度：400 / 450 / 500 -->
+        <line x1="40"  y1="68" x2="40"  y2="92" stroke="#2563eb" stroke-width="3"/>
+        <line x1="160" y1="72" x2="160" y2="88" stroke="#a8a29e" stroke-width="2.5"/>
+        <line x1="280" y1="68" x2="280" y2="92" stroke="#16a34a" stroke-width="3"/>
+        <text x="40"  y="108" font-size="11" font-weight="900" fill="#2563eb" text-anchor="middle">400</text>
+        <text x="160" y="104" font-size="9.5" font-weight="800" fill="#a8a29e" text-anchor="middle">450</text>
+        <text x="280" y="108" font-size="11" font-weight="900" fill="#16a34a" text-anchor="middle">500</text>
+        <text x="40"  y="124" font-size="8.5" font-weight="800" fill="#94a3b8" text-anchor="middle">左邊整百</text>
+        <text x="280" y="124" font-size="8.5" font-weight="800" fill="#94a3b8" text-anchor="middle">右邊整百</text>
+
+        <!-- 中點標記：450 正中央 -->
+        <text id="a1-mid-flag" x="160" y="40" font-size="8" font-weight="800" fill="#a8a29e" text-anchor="middle" opacity="0" style="transition: opacity 0.2s;">剛好在正中央！</text>
+        <line id="a1-mid-line" x1="160" y1="44" x2="160" y2="68" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3 2" opacity="0" style="transition: opacity 0.2s;"/>
+
+        <!-- 磁鐵（吸附目標）：左磁鐵 / 右磁鐵（U 口朝下對準小球） -->
+        <g id="a1-magnet-left" opacity="0" style="transition: opacity 0.25s;">
+          <text x="40" y="34" font-size="8" font-weight="900" fill="#dc2626" text-anchor="middle">吸向 400</text>
+          <rect x="30" y="40" width="20" height="9" rx="2" fill="#dc2626"/>
+          <rect x="30" y="49" width="6" height="15" fill="#dc2626"/>
+          <rect x="44" y="49" width="6" height="15" fill="#dc2626"/>
+          <rect x="30" y="58" width="6" height="6" fill="#e5e5e5" stroke="#9ca3af" stroke-width="0.8"/>
+          <rect x="44" y="58" width="6" height="6" fill="#e5e5e5" stroke="#9ca3af" stroke-width="0.8"/>
+        </g>
+        <g id="a1-magnet-right" opacity="0" style="transition: opacity 0.25s;">
+          <text x="280" y="34" font-size="8" font-weight="900" fill="#dc2626" text-anchor="middle">吸向 500</text>
+          <rect x="270" y="40" width="20" height="9" rx="2" fill="#dc2626"/>
+          <rect x="270" y="49" width="6" height="15" fill="#dc2626"/>
+          <rect x="284" y="49" width="6" height="15" fill="#dc2626"/>
+          <rect x="270" y="58" width="6" height="6" fill="#e5e5e5" stroke="#9ca3af" stroke-width="0.8"/>
+          <rect x="284" y="58" width="6" height="6" fill="#e5e5e5" stroke="#9ca3af" stroke-width="0.8"/>
+        </g>
+
+        <!-- 紅色小球 -->
+        <circle id="a1-ball" cx="40" cy="80" r="9" fill="#ef4444" stroke="#b91c1c" stroke-width="2" opacity="0" style="transition: cx 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s;"/>
+        <text id="a1-ball-tag" x="40" y="60" font-size="11.5" font-weight="900" fill="#b91c1c" text-anchor="middle" opacity="0" style="transition: x 0.6s, opacity 0.25s;"></text>
+
+        <!-- 吸附結果標籤 -->
+        <text id="a1-result" x="160" y="138" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">點下面的膠囊按鈕，看小球被磁鐵吸向誰！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn" data-num="482" onclick="selectBall('482')">🔢 482</button>
+        <button class="part-btn" data-num="418" onclick="selectBall('418')">🔢 418</button>
+        <button class="part-btn" data-num="450" onclick="selectBall('450')">🔢 450</button>
+      </div>
+      <div class="panel-stat" id="a1-stat">482 更靠近 400 還是 500？</div>
+      <div class="info-bubble" id="a1-bubble">
+        💡 看下一位：<b>十位未滿 5 往左靠</b>、<b>滿 5 往右靠</b>！450 剛好在正中央，習慣往大的靠！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：生活採買估算（帶的錢夠不夠買？） ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-8 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">👛 活動二：生活採買 · 保險高估法則</div>
+    <div class="card-desc">
+      小明帶了 <b>2000 元</b>去逛街，想買一雙 <b>899 元</b>的球鞋和一件 <b>1150 元</b>的外套，帶的錢夠不夠？按下「🛒 開始估算」逐步推理！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg">
+        <!-- 錢包與鈔票 -->
+        <g id="a2-wallet">
+          <rect x="20" y="52" width="52" height="34" rx="6" fill="#8d6e63" stroke="#5d4037" stroke-width="2"/>
+          <rect x="20" y="60" width="52" height="8" fill="#a1887f"/>
+          <circle cx="62" cy="76" r="4" fill="#ffd166" stroke="#b8860b" stroke-width="1.5"/>
+          <text x="46" y="104" font-size="10" font-weight="900" fill="#5d4037" text-anchor="middle">帶 2000 元</text>
+        </g>
+
+        <!-- 商品：球鞋 + 外套 -->
+        <g id="a2-shoe">
+          <path d="M100,66 L118,52 L136,56 L138,68 Q140,74 132,74 L100,74 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+          <path d="M100,74 L138,74 L138,78 Q138,82 132,82 L104,82 Q98,82 100,74 Z" fill="#fca5a5" stroke="#b91c1c" stroke-width="1.5"/>
+          <text x="118" y="100" font-size="10" font-weight="900" fill="#b91c1c" text-anchor="middle">球鞋 899 元</text>
+        </g>
+        <g id="a2-coat">
+          <path d="M176,52 L192,52 L200,58 L196,82 L184,82 L184,62 L176,52 M192,52 L208,52 L216,58 L220,82 L208,82 L196,62" fill="#2563eb" stroke="#1e40af" stroke-width="2" fill-rule="evenodd"/>
+          <text x="198" y="100" font-size="10" font-weight="900" fill="#1e40af" text-anchor="middle">外套 1150 元</text>
+        </g>
+
+        <!-- 估算比較區 -->
+        <g id="a2-compare" opacity="0" style="transition: opacity 0.3s;">
+          <rect x="30" y="112" width="240" height="22" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+          <text id="a2-est-line" x="150" y="127" font-size="10.5" font-weight="900" fill="#92400e" text-anchor="middle"></text>
+        </g>
+        <!-- 精確驗算區 -->
+        <g id="a2-exact" opacity="0" style="transition: opacity 0.3s;">
+          <rect x="30" y="140" width="240" height="22" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+          <text id="a2-exact-line" x="150" y="155" font-size="10.5" font-weight="900" fill="#166534" text-anchor="middle"></text>
+        </g>
+
+        <!-- 判決印章 -->
+        <g id="a2-stamp" opacity="0" style="transition: opacity 0.3s;">
+          <circle cx="252" cy="30" r="24" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 3"/>
+          <text x="252" y="28" font-size="10" font-weight="900" fill="#dc2626" text-anchor="middle">可能</text>
+          <text x="252" y="42" font-size="10" font-weight="900" fill="#dc2626" text-anchor="middle">不夠！</text>
+        </g>
+
+        <text id="a2-caption" x="150" y="172" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">點「🛒 開始估算」，用保險高估法則判斷！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a2-step" onclick="a2Step()">🛒 開始估算</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">2000 元夠買 899 ＋ 1150 嗎？</div>
+      <div class="info-bubble warn" id="a2-bubble">
+        💡 買東西怕帶不夠錢，要把價格<b>往高估算</b>才保險！先自己想想看～
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：乘法估算雷達 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-8 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🎯 活動三：乘法估算雷達 · 幾十幾百乘一位數</div>
+    <div class="card-desc">
+      遇到二位數或三位數乘法，先看成接近的<b>整十</b>或<b>整百</b>，秒殺算出大約是多少！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- 雷達屏幕 -->
+        <circle cx="62" cy="72" r="44" fill="#f0fdf4" stroke="#318a70" stroke-width="2.5"/>
+        <circle cx="62" cy="72" r="30" fill="none" stroke="#86efac" stroke-width="1.5"/>
+        <circle cx="62" cy="72" r="16" fill="none" stroke="#86efac" stroke-width="1.5"/>
+        <line x1="62" y1="28" x2="62" y2="116" stroke="#86efac" stroke-width="1.2"/>
+        <line x1="18" y1="72" x2="106" y2="72" stroke="#86efac" stroke-width="1.2"/>
+        <!-- 掃描扇葉 -->
+        <g id="a3-sweep" style="transform-origin: 62px 72px; transition: transform 0.9s ease-out;">
+          <path d="M62,72 L62,28 A44,44 0 0 1 93,40 Z" fill="#318a70" opacity="0.28"/>
+          <line x1="62" y1="72" x2="90" y2="35" stroke="#318a70" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <text id="a3-orig" x="62" y="76" font-size="11" font-weight="900" fill="#166534" text-anchor="middle">49</text>
+        <text x="62" y="140" font-size="9" font-weight="800" fill="#8a857b" text-anchor="middle">雷達掃描原數</text>
+
+        <!-- 轉換箭頭 -->
+        <line id="a3-arrow" x1="112" y1="72" x2="146" y2="72" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" opacity="0" style="transition: opacity 0.25s;"/>
+        <polygon id="a3-arrow-head" points="146,66 158,72 146,78" fill="#f59e0b" opacity="0" style="transition: opacity 0.25s;"/>
+
+        <!-- 整十整百大數結果 -->
+        <g id="a3-rounded" opacity="0" style="transition: opacity 0.25s;">
+          <rect x="164" y="44" width="112" height="56" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+          <text id="a3-rounded-tag" x="220" y="66" font-size="10" font-weight="800" fill="#1e40af" text-anchor="middle">看成 →</text>
+          <text id="a3-rounded-num" x="220" y="90" font-size="19" font-weight="900" fill="#2563eb" text-anchor="middle">50</text>
+        </g>
+
+        <!-- 積木示意（幾十 × 幾） -->
+        <g id="a3-groups" opacity="0" style="transition: opacity 0.3s;"></g>
+
+        <!-- 逐步算式 -->
+        <text id="a3-step1" x="150" y="128" font-size="11" font-weight="900" fill="#92400e" text-anchor="middle">點「🎯 發動雷達」開始掃描！</text>
+        <text id="a3-step2" x="150" y="146" font-size="11.5" font-weight="900" fill="#166534" text-anchor="middle"></text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn" data-q="1" onclick="pickRadar(1)">題目 1 · 餅乾 49 × 6</button>
+        <button class="part-btn" data-q="2" onclick="pickRadar(2)">題目 2 · 電影票 295 × 4</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-scan" onclick="radarScan()">🎯 發動雷達</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">每盒餅乾 49 元，買 6 盒大約幾元？</div>
+      <div class="info-bubble" id="a3-bubble">
+        💡 先看成接近的<b>整十或整百</b>再乘，一秒就知大約多少！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：合理性檢驗除錯小偵探 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-8 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🕵️ 活動四：合理性檢驗 · 抓出算錯的離譜答案</div>
+    <div class="card-desc">
+      算完題目用估算檢查答案合不合理！如果不合常理，代表<b>一定算錯了</b>！小明算 495 × 6 得到 4970，快用偵探雷達抓包！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+        <!-- 小明與算式 -->
+        <g id="a4-boy">
+          <circle cx="36" cy="44" r="14" fill="#fcd5b5" stroke="#e8a87c" stroke-width="2"/>
+          <path d="M24,38 Q36,26 48,38" fill="none" stroke="#5d4037" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="31" cy="44" r="1.8" fill="#3d3a34"/>
+          <circle cx="41" cy="44" r="1.8" fill="#3d3a34"/>
+          <path d="M32,51 Q36,54 40,51" fill="none" stroke="#3d3a34" stroke-width="1.5" stroke-linecap="round"/>
+          <text x="36" y="72" font-size="10" font-weight="900" fill="#5d4037" text-anchor="middle">小明</text>
+        </g>
+        <rect x="58" y="32" width="116" height="26" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+        <text x="116" y="49" font-size="10" font-weight="900" fill="#dc2626" text-anchor="middle">495 × 6 ＝ 4970 ?!</text>
+
+        <!-- 偵探雷達掃描區 -->
+        <g id="a4-radar">
+          <circle cx="226" cy="44" r="28" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+          <circle cx="226" cy="44" r="18" fill="none" stroke="#fdba74" stroke-width="1.2"/>
+          <circle cx="226" cy="44" r="9" fill="none" stroke="#fdba74" stroke-width="1.2"/>
+          <g id="a4-sweep" style="transform-origin: 226px 44px; transition: transform 0.9s ease-out;">
+            <path d="M226,44 L226,16 A28,28 0 0 1 245.8,24.2 Z" fill="#ea580c" opacity="0.3"/>
+            <line x1="226" y1="44" x2="245.8" y2="24.2" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <text x="226" y="47" font-size="8.5" font-weight="900" fill="#9a3412" text-anchor="middle">偵探</text>
+          <text x="226" y="58" font-size="8.5" font-weight="900" fill="#9a3412" text-anchor="middle">雷達</text>
+        </g>
+
+        <!-- 破招印章 -->
+        <g id="a4-stamp" opacity="0" style="transition: opacity 0.3s;">
+          <circle cx="276" cy="40" r="20" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 3"/>
+          <text x="276" y="38" font-size="9" font-weight="900" fill="#dc2626" text-anchor="middle">抓包</text>
+          <text x="276" y="49" font-size="9" font-weight="900" fill="#dc2626" text-anchor="middle">✓</text>
+        </g>
+
+        <!-- 逐步推理卡 -->
+        <g id="a4-steps" opacity="0" style="transition: opacity 0.3s;">
+          <rect x="24" y="88" width="252" height="20" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.2"/>
+          <text id="a4-step1" x="150" y="102" font-size="10" font-weight="900" fill="#92400e" text-anchor="middle"></text>
+          <rect x="24" y="112" width="252" height="20" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2"/>
+          <text id="a4-step2" x="150" y="126" font-size="10" font-weight="900" fill="#166534" text-anchor="middle"></text>
+        </g>
+
+        <text id="a4-caption" x="150" y="152" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle"></text>
+        <text id="a4-truth" x="150" y="170" font-size="10.5" font-weight="900" fill="#dc2626" text-anchor="middle" opacity="0" style="transition: opacity 0.3s;"></text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-scan" onclick="detectScan()">🕵️ 發動偵探雷達</button>
+      </div>
+      <div class="panel-stat" id="a4-stat">495 × 6 ＝ 4970，合理嗎？</div>
+      <div class="info-bubble warn" id="a4-bubble">
+        💡 先用估算算出<b>大約值</b>，再跟 4970 比一比：差太多就一定算錯了！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：數線磁鐵靠攏 ==================== */
+const A1_INFO = {
+  "482": {
+    ballX: 218, tagX: 218,
+    magnet: "right",
+    stat: "482 ＝ 概數 500！（十位 8 滿 5，往右靠）",
+    bubble: "🧲 <b>482</b> 的十位是 <b>8（滿 5）</b>，往右靠！小紅球被右邊磁鐵吸向 <b>500</b>，概數記為 <b>500</b>！",
+    result: "482 → 概數 500 ✓",
+    mid: false
+  },
+  "418": {
+    ballX: 103, tagX: 103,
+    magnet: "left",
+    stat: "418 ＝ 概數 400！（十位 1 未滿 5，往左靠）",
+    bubble: "🧲 <b>418</b> 的十位是 <b>1（未滿 5）</b>，往左靠！小紅球被左邊磁鐵吸向 <b>400</b>，概數記為 <b>400</b>！",
+    result: "418 → 概數 400 ✓",
+    mid: false
+  },
+  "450": {
+    ballX: 160, tagX: 160,
+    magnet: "right",
+    stat: "450 剛好在中間 → 習慣往大的靠 ＝ 500！",
+    bubble: "⚖️ <b>450</b> 剛好在 <b>400 和 500 的正中央</b>！這時候習慣<b>往大的靠</b>，概數記為 <b>500</b>！",
+    result: "450（正中央）→ 概數 500 ✓",
+    mid: true
+  }
+};
+
+function selectBall(num) {
+  const info = A1_INFO[num];
+  if (!info) return;
+  document.querySelectorAll("#act-1-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.num === num));
+
+  const ball = document.getElementById("a1-ball");
+  const tag = document.getElementById("a1-ball-tag");
+  const magL = document.getElementById("a1-magnet-left");
+  const magR = document.getElementById("a1-magnet-right");
+  const midLine = document.getElementById("a1-mid-line");
+  const midFlag = document.getElementById("a1-mid-flag");
+  const result = document.getElementById("a1-result");
+  const stat = document.getElementById("a1-stat");
+  const bubble = document.getElementById("a1-bubble");
+
+  if (ball) { ball.setAttribute("cx", info.ballX); ball.style.opacity = "1"; }
+  if (tag) { tag.textContent = num; tag.setAttribute("x", info.tagX); tag.style.opacity = "1"; }
+  if (magL) magL.style.opacity = (info.magnet === "left") ? "1" : "0";
+  if (magR) magR.style.opacity = (info.magnet === "right") ? "1" : "0";
+  if (midLine) midLine.style.opacity = info.mid ? "1" : "0";
+  if (midFlag) midFlag.style.opacity = info.mid ? "1" : "0";
+  if (result) result.textContent = info.result;
+  if (stat) stat.textContent = info.stat;
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = info.bubble; }
+  notifyHeight();
+}
+
+/* ==================== 活動二：生活採買估算 ==================== */
+let a2StepIdx = 0;
+
+const A2_STEPS = [
+  {
+    compareText: "899 → 900　1150 → 1200（往高估！）",
+    stat: "第 1 步：899 → 900、1150 → 1200（往高估）",
+    bubble: "🛒 保險高估法則：<b>899 往高估成 900</b>、<b>1150 往高估成 1200</b>！高估才不會漏算！",
+    warn: false
+  },
+  {
+    compareText: "900 ＋ 1200 ＝ 2100 元",
+    stat: "第 2 步：900 ＋ 1200 ＝ 2100 元！",
+    bubble: "🧮 估算合計 <b>2100 元</b>！<b>2100 ＞ 2000</b>，估算結果超過帶的錢，<b>可能不夠買</b>！",
+    warn: true
+  },
+  {
+    compareText: "精確驗算：899 ＋ 1150 ＝ 2049 ＞ 2000",
+    exactText: "2049 ＞ 2000 → 真的不夠！估算超神速又安全！",
+    stat: "🎉 驗算：真的不夠買！899 ＋ 1150 ＝ 2049 元",
+    bubble: "🕵️ 精確算 <b>899 ＋ 1150 ＝ 2049 元</b>，真的超過 2000 元！<b>估算一眼就先知道</b>，又快又安全！",
+    warn: false,
+    stamp: true
+  }
+];
+
+function a2Step() {
+  if (a2StepIdx >= A2_STEPS.length) a2StepIdx = 0; // 循環重播
+  const s = A2_STEPS[a2StepIdx];
+
+  const compare = document.getElementById("a2-compare");
+  const estLine = document.getElementById("a2-est-line");
+  const exact = document.getElementById("a2-exact");
+  const exactLine = document.getElementById("a2-exact-line");
+  const stamp = document.getElementById("a2-stamp");
+  const stat = document.getElementById("a2-stat");
+  const bubble = document.getElementById("a2-bubble");
+  const caption = document.getElementById("a2-caption");
+
+  if (compare) compare.style.opacity = "1";
+  if (estLine) estLine.textContent = s.compareText;
+  if (exact) exact.style.opacity = s.exactText ? "1" : "0";
+  if (exactLine && s.exactText) exactLine.textContent = s.exactText;
+  if (stamp) stamp.style.opacity = s.stamp ? "1" : "0";
+  if (stat) stat.textContent = s.stat;
+  if (bubble) {
+    bubble.classList.toggle("warn", !!s.warn);
+    bubble.innerHTML = s.bubble;
+  }
+  if (caption) caption.textContent = (a2StepIdx >= A2_STEPS.length - 1) ? "再點一次重播！" : "繼續點「🛒 開始估算」看下一步！";
+  a2StepIdx++;
+  notifyHeight();
+}
+
+/* ==================== 活動三：乘法估算雷達 ==================== */
+let a3Q = 1;
+
+const A3_QUESTIONS = {
+  1: {
+    orig: "49", rounded: "50", roundedTag: "49 看成 →",
+    stat: "每盒餅乾 49 元，買 6 盒大約幾元？",
+    step1: "49 看成 50，50 × 6 ＝ 300",
+    step2: "大約 300 元！（6 疊 50 元積木）",
+    bubble: "🎯 <b>49 看成 50</b>：50 × 6 ＝ <b>300 元</b>！買 6 盒大約 300 元，一秒算好！",
+    boxes: 6
+  },
+  2: {
+    orig: "295", rounded: "300", roundedTag: "295 看成 →",
+    stat: "電影票一張 295 元，買 4 張大約幾元？",
+    step1: "295 看成 300，300 × 4 ＝ 1200",
+    step2: "大約 1200 元！（4 疊 300 元積木）",
+    bubble: "🎯 <b>295 看成 300</b>：300 × 4 ＝ <b>1200 元</b>！買 4 張大約 1200 元！",
+    boxes: 4
+  }
+};
+
+function pickRadar(q) {
+  a3Q = q;
+  const info = A3_QUESTIONS[q];
+  if (!info) return;
+  document.querySelectorAll("#act-3-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.q === q));
+
+  // 重置掃描狀態
+  resetRadar();
+  const orig = document.getElementById("a3-orig");
+  if (orig) orig.textContent = info.orig;
+  const stat = document.getElementById("a3-stat");
+  if (stat) stat.textContent = info.stat;
+  const step1 = document.getElementById("a3-step1");
+  const step2 = document.getElementById("a3-step2");
+  if (step1) step1.textContent = "點「🎯 發動雷達」開始掃描！";
+  if (step2) step2.textContent = "";
+  const bubble = document.getElementById("a3-bubble");
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "💡 先看成接近的<b>整十或整百</b>再乘，一秒就知大約多少！"; }
+  notifyHeight();
+}
+
+function resetRadar() {
+  const ids = ["a3-arrow", "a3-arrow-head", "a3-rounded", "a3-groups"];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.opacity = "0";
+  });
+  const sweep = document.getElementById("a3-sweep");
+  if (sweep) sweep.style.transform = "rotate(0deg)";
+}
+
+function radarScan() {
+  const info = A3_QUESTIONS[a3Q];
+  if (!info) return;
+
+  const arrow = document.getElementById("a3-arrow");
+  const arrowHead = document.getElementById("a3-arrow-head");
+  const rounded = document.getElementById("a3-rounded");
+  const roundedTag = document.getElementById("a3-rounded-tag");
+  const roundedNum = document.getElementById("a3-rounded-num");
+  const groups = document.getElementById("a3-groups");
+  const sweep = document.getElementById("a3-sweep");
+  const step1 = document.getElementById("a3-step1");
+  const step2 = document.getElementById("a3-step2");
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+
+  // 1. 掃描扇葉旋轉
+  if (sweep) sweep.style.transform = "rotate(360deg)";
+  // 2. 箭頭與整十整百結果
+  if (arrow) arrow.style.opacity = "1";
+  if (arrowHead) arrowHead.style.opacity = "1";
+  if (rounded) rounded.style.opacity = "1";
+  if (roundedTag) roundedTag.textContent = info.roundedTag;
+  if (roundedNum) roundedNum.textContent = info.rounded;
+  // 3. 積木示意：info.boxes 個 50/300 積木
+  if (groups) {
+    const w = 16, gap = 4, x0 = 168, h = 10, y0 = 106;
+    let html = "";
+    for (let i = 0; i < Math.min(info.boxes, 6); i++) {
+      const x = x0 + (i % 6) * (w + gap);
+      html += `<rect x="${x}" y="${y0}" width="${w}" height="${h}" rx="2" fill="#93c5fd" stroke="#2563eb" stroke-width="1.5"/>`;
+    }
+    groups.innerHTML = html;
+    groups.style.opacity = "1";
+  }
+  // 4. 算式與答案
+  if (step1) step1.textContent = info.step1;
+  if (step2) step2.textContent = info.step2;
+  if (stat) stat.textContent = "🎯 " + info.step2;
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = info.bubble; }
+  notifyHeight();
+}
+
+/* ==================== 活動四：合理性檢驗除錯小偵探 ==================== */
+function detectScan() {
+  const steps = document.getElementById("a4-steps");
+  const step1 = document.getElementById("a4-step1");
+  const step2 = document.getElementById("a4-step2");
+  const sweep = document.getElementById("a4-sweep");
+  const stamp = document.getElementById("a4-stamp");
+  const caption = document.getElementById("a4-caption");
+  const truth = document.getElementById("a4-truth");
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+
+  // 1. 雷達掃描
+  if (sweep) sweep.style.transform = "rotate(360deg)";
+  // 2. 逐步推理卡
+  if (steps) steps.style.opacity = "1";
+  if (step1) step1.textContent = "495 大約是 500，500 × 6 ＝ 3000";
+  if (step2) step2.textContent = "4970 比 3000 大太多了！連估算的邊都沾不上！";
+  // 3. 印章與破招真相
+  if (stamp) stamp.style.opacity = "1";
+  if (caption) caption.textContent = "破招真相：";
+  if (truth) {
+    truth.textContent = "小明百位 4 × 6 ＝ 24 抄錯成 40 了！用估算一眼看穿！";
+    truth.style.opacity = "1";
+  }
+  if (stat) stat.textContent = "🎉 偵探破招成功：4970 太離譜，一定算錯了！";
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = "🕵️ 估算安全網：<b>495 ≈ 500</b>，<b>500 × 6 ＝ 3000</b>。真答案應該在 3000 附近，4970 根本差超過 1900，<b>一定算錯</b>！正解是 2970！";
+  }
+  notifyHeight();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌🧲👛⚖️🧮🛒🔢🎬]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：數線磁鐵。四百八十二更靠近五百還是四百呢？數線上看最清楚，四百八十二比四百五十還要大，所以概數看成五百；四百一十八就看成四百喔！四百五十剛好在正中央，習慣往大的靠，概數記為五百。",
+  2: "活動二：生活採買估算。買東西怕帶不夠錢，要把價錢往上估算！八百九十九看成九百，一千一百五十看成一千兩百，合起來兩千一百元，所以帶兩千元不夠買喔！精確驗算八百九十九加一千一百五十等於兩千零四十九，真的不夠！",
+  3: "活動三：乘法估算雷達。一盒四十九元買六盒，把四十九看成五十，五十乘六等於三百元，一秒鐘就知道大約要三百元！電影票兩百九十五元看成三百，三百乘四等於一千兩百元喔！",
+  4: "活動四：合理性檢驗。小明算四百九十五乘六等於四千九百七十，快用估算抓出錯誤！四百九十五看成五百，五百乘六只要三千元，小明算四千多太離譜了，一定算錯了！破招真相：百位四乘六等於二十四，小明抄錯成四十了！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+pickRadar(1);
+</script>
+</body>
+</html>

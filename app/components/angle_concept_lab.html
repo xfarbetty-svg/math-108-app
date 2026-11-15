@@ -136,6 +136,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   height: auto;
   max-height: 180px;
 }
+#act2-setsquare {
+  transition: transform 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+  cursor: grab;
+  touch-action: none;
+}
+#act2-setsquare.dragging {
+  transition: none !important;
+  cursor: grabbing;
+  filter: drop-shadow(0 6px 14px rgba(2, 132, 199, 0.45));
+}
 
 /* 互動面板 */
 .interact-panel {
@@ -308,13 +318,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
           </g>
         </g>
 
-        <!-- 半透明三角板元件 -->
+        <!-- 半透明三角板元件 (支援手指拖曳與旋轉) -->
         <g id="act2-setsquare" transform="translate(140, 45)">
           <path d="M0,0 L0,85 L85,85 Z" fill="rgba(56, 189, 248, 0.45)" stroke="#0284c7" stroke-width="2.5" stroke-linejoin="round"/>
           <path d="M0,70 L15,70 L15,85" fill="none" stroke="#ef4444" stroke-width="2"/>
           <circle cx="28" cy="62" r="8" fill="#ffffff" opacity="0.8"/>
           <text x="28" y="66" font-size="9" font-weight="900" fill="#0284c7" text-anchor="middle">90°</text>
-          <text x="40" y="100" font-size="10" font-weight="800" fill="#0284c7">三角板</text>
+          <text x="42" y="100" font-size="9.5" font-weight="800" fill="#0284c7" text-anchor="middle">✋ 拖曳三角板</text>
         </g>
       </svg>
     </div>
@@ -527,22 +537,47 @@ updateAct1View();
 
 /* ==================== 活動二：三角板找直角邏輯 ==================== */
 let act2Rotation = 0;
+let act2CurrentTarget = "desk";
+let act2Pos = { x: 140, y: 45 };
+let isDraggingSq = false;
+let sqDragOffset = { x: 0, y: 0 };
+
+function getAct2TargetSnapPos() {
+  if (act2CurrentTarget === "clock") return { x: 120, y: 45 };
+  return { x: 140, y: 45 };
+}
+
+function applyAct2Transform(smooth) {
+  const sq = document.getElementById("act2-setsquare");
+  if (!sq) return;
+  if (!smooth) {
+    sq.style.transition = "none";
+  } else {
+    sq.style.transition = "transform 0.35s cubic-bezier(0.34, 1.3, 0.64, 1)";
+  }
+  let tf = `translate(${act2Pos.x}, ${act2Pos.y})`;
+  if (act2Rotation !== 0) {
+    tf += ` rotate(${act2Rotation}, 0, 85)`;
+  }
+  sq.setAttribute("transform", tf);
+}
+
 function switchAct2Target(target) {
+  act2CurrentTarget = target;
   const stat = document.getElementById("act2-stat");
   const bubble = document.getElementById("act2-bubble");
   const targetGroup = document.getElementById("act2-target-group");
-  const sq = document.getElementById("act2-setsquare");
 
   document.querySelectorAll("#act-2-view .btn-action").forEach(b => b.classList.remove("active"));
   const activeBtn = document.getElementById("btn-" + target);
   if (activeBtn) activeBtn.classList.add("active");
 
   act2Rotation = 0;
-  if (sq) sq.setAttribute("transform", "translate(140, 45)");
+  const snapPos = getAct2TargetSnapPos();
 
   if (target === "desk") {
     if (stat) stat.textContent = "檢驗目標：課桌的邊角";
-    if (bubble) bubble.innerHTML = "💡 課桌的角方方正正，和三角板完全重疊！這就是標準的「直角」！";
+    if (bubble) bubble.innerHTML = "💡 瞧！三角板滑過去貼齊課桌角，完全重疊！這就是標準的「直角」！也可以用手指拖曳三角板喔！";
     if (targetGroup) targetGroup.innerHTML = `
       <rect x="70" y="45" width="110" height="85" rx="4" fill="#fed7aa" stroke="#c2410c" stroke-width="2.5"/>
       <line x1="70" y1="55" x2="180" y2="55" stroke="#fb923c" stroke-width="1.5"/>
@@ -567,21 +602,77 @@ function switchAct2Target(target) {
       <circle cx="120" cy="85" r="3" fill="#0f172a"/>
       <text x="120" y="105" font-size="10" font-weight="900" fill="#64748b" text-anchor="middle">3:00</text>
     `;
-    if (sq) sq.setAttribute("transform", "translate(120, 45)");
   }
+
+  // 平滑滑入貼齊
+  act2Pos = { x: snapPos.x + 35, y: snapPos.y };
+  applyAct2Transform(false);
+  setTimeout(() => {
+    act2Pos = snapPos;
+    applyAct2Transform(true);
+  }, 40);
 }
+
 function rotateAct2Square() {
   act2Rotation = (act2Rotation === 0) ? 45 : 0;
-  const sq = document.getElementById("act2-setsquare");
   const bubble = document.getElementById("act2-bubble");
-  if (sq) {
-    if (act2Rotation === 45) {
-      sq.setAttribute("transform", "translate(140, 45) rotate(45, 0, 85)");
-      if (bubble) bubble.innerHTML = "💡 瞧！即使三角板傾斜 45 度擺放，它的直角依然是直角！直角的大小不隨擺放方向改變！";
-    } else {
-      sq.setAttribute("transform", "translate(140, 45)");
-    }
+  applyAct2Transform(true);
+  if (act2Rotation === 45) {
+    if (bubble) bubble.innerHTML = "💡 瞧！三角板旋轉 45 度擺放，它的直角依然是直角！直角的大小不隨擺放方向改變！";
+  } else {
+    if (bubble) bubble.innerHTML = "💡 三角板轉回來了！方方正正的 90 度依然吻合！";
   }
+}
+
+function initAct2Drag() {
+  const sq = document.getElementById("act2-setsquare");
+  const svg = document.querySelector("#act-2-view svg");
+  if (!sq || !svg) return;
+
+  function getSvgPoint(e) {
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX || (e.touches && e.touches[0].clientX);
+    pt.y = e.clientY || (e.touches && e.touches[0].clientY);
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  const onStart = (e) => {
+    isDraggingSq = true;
+    sq.classList.add("dragging");
+    const pt = getSvgPoint(e);
+    sqDragOffset = { x: pt.x - act2Pos.x, y: pt.y - act2Pos.y };
+  };
+
+  const onMove = (e) => {
+    if (!isDraggingSq) return;
+    const pt = getSvgPoint(e);
+    let nx = pt.x - sqDragOffset.x;
+    let ny = pt.y - sqDragOffset.y;
+    nx = Math.max(10, Math.min(220, nx));
+    ny = Math.max(10, Math.min(85, ny));
+    act2Pos = { x: nx, y: ny };
+    applyAct2Transform(false);
+  };
+
+  const onEnd = () => {
+    if (!isDraggingSq) return;
+    isDraggingSq = false;
+    sq.classList.remove("dragging");
+    const snap = getAct2TargetSnapPos();
+    const dist = Math.hypot(act2Pos.x - snap.x, act2Pos.y - snap.y);
+    const bubble = document.getElementById("act2-bubble");
+    if (dist < 35) {
+      act2Pos = snap;
+      applyAct2Transform(true);
+      if (bubble) bubble.innerHTML = "🎉 喀嗒！成功貼齊角落！兩邊完全重疊，這就是標準的「直角」！";
+    } else {
+      if (bubble) bubble.innerHTML = "💡 繼續用手指拖動三角板，把它的直角靠到角落貼合比對看看！";
+    }
+  };
+
+  sq.addEventListener("pointerdown", onStart);
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onEnd);
 }
 
 /* ==================== 活動三：銳角鈍角三兄弟邏輯 ==================== */
@@ -738,6 +829,9 @@ function playVoice(actNum) {
   function doWebSpeechFallback() {
     if (hasFallback || speechEpoch !== thisEpoch) return;
     hasFallback = true;
+    try {
+      if (audio) { audio.pause(); audio.src = ""; }
+    } catch (e) {}
     if (!("speechSynthesis" in window)) return;
     const u = new SpeechSynthesisUtterance(clean);
     u.lang = "zh-TW";
@@ -759,6 +853,8 @@ function playVoice(actNum) {
   audio.oncanplay = () => {
     clearTimeout(timer);
     if (speechEpoch === thisEpoch) {
+      if (hasFallback) return;
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
       audio.play().catch(doWebSpeechFallback);
     }
   };
@@ -784,6 +880,9 @@ function goToQuiz() {
     alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
   }
 }
+
+// 註冊觸控與拖曳
+initAct2Drag();
 </script>
 </body>
 </html>

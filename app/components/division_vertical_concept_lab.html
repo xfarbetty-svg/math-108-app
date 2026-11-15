@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-5 除以一位數直式概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.btn-tts.speaking {
+  background: #ffedd5;
+  border-color: #fdba74;
+  color: #c2410c;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">💰 活動一 · 分錢與長除法</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🪜 活動二 · 三位數直式</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🔍 活動三 · 商中間補零</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">⚖️ 活動四 · 帶餘數與驗算</button>
+  </nav>
+
+  <!-- ==================== 活動一：分錢算理與長除法 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-5 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">💰 活動一：分錢看長除法 · 為什麼要從最高位除起</div>
+    <div class="card-desc">
+      <b>72 元</b>平分給 3 個人。先分 7 個 10 元，每人得 2 個 10 元，剩下的 1 個 10 元換成 10 個 1 元，再跟個位 2 個 1 元合起來繼續分！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a1-svg" viewBox="0 0 320 216" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" onclick="a1Next()">▶ 下一步</button>
+        <button class="btn-action" onclick="a1Reset()">↺ 重來</button>
+      </div>
+      <div class="panel-stat" id="a1-stat">72 ÷ 3 ＝ ？</div>
+      <div class="info-bubble" id="a1-bubble">💡</div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：三位數步步算理 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-5 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🪜 活動二：三位數長除法 · 百位十位個位步步除</div>
+    <div class="card-desc">
+      三位數除以一位數，從最高<b>百位</b>開始除！<b>除、乘、減、掉下來</b>，四個口訣步步推進！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a2-svg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" onclick="a2Go(-1)">◀ 上一步</button>
+        <button class="btn-action" onclick="a2Go(1)">▶ 下一步</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">856 ÷ 4 ＝ ？</div>
+      <div class="info-bubble" id="a2-bubble">💡</div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：商中間補 0 大陷阱 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-5 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🔍 活動三：商中間補零 · 不夠分商一定要補零</div>
+    <div class="card-desc">
+      算 <b>618 ÷ 6</b>，很多小朋友會算成 13！十位 1 除以 6 不夠分，商十位必須<b>補 0 占位</b>！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a3-svg" viewBox="0 0 320 184" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-reveal" onclick="a3ToggleReveal()">🔍 破招檢驗</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">618 ÷ 6 ＝ ？ 小明算對了嗎？</div>
+      <div class="info-bubble warn" id="a3-bubble">💡</div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：帶餘數與驗算黃金法則 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-5 驗算探究</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">⚖️ 活動四：帶餘數與驗算 · 商乘除數加餘數</div>
+    <div class="card-desc">
+      有餘數的直式怎麼檢查對不對？用驗算公式：<b>【商 × 除數 ＋ 餘數 ＝ 被除數】</b>！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a4-svg" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" onclick="a4Next()">▶ 下一步</button>
+        <button class="btn-action" onclick="a4Reset()">↺ 重來</button>
+      </div>
+      <div class="panel-stat" id="a4-stat">539 ÷ 5 ＝ 107 … 4，對嗎？</div>
+      <div class="info-bubble" id="a4-bubble">💡</div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：分錢算理與長除法（72 ÷ 3） ==================== */
+let a1Step = 0;
+const A1_MAX = 4;
+const A1_STAT = [
+  "72 ÷ 3 ＝ ？",
+  "十位：每人 2 個⑩（2×3＝6）",
+  "剩 1⑩ → 10 個①，＋2① ＝ 12 個①",
+  "個位：每人 4 個①（4×3＝12）",
+  "答案：每人 24 元 ✓"
+];
+const A1_BUBBLE = [
+  "💡 長除法要從<b>最高位（十位）</b>開始分！7 個⑩元分給 3 人，每人先分幾個⑩？",
+  "💡 每人分 <b>2 個⑩</b>！3 人共用掉 <b>6 個⑩</b>（2×3＝6），7－6 還剩 <b>1 個⑩</b>！",
+  "💡 剩下的 1 個⑩<b>換成 10 個①</b>，加上個位的 2 個①，合起來 <b>12 個①</b>繼續分！",
+  "💡 12 個①平分給 3 人，每人 <b>4 個①</b>（4×3＝12），12－12 剛好分完！",
+  "🎉 每人分得 <b>24 元</b>（2 個⑩＋4 個①）！這就是為什麼要<b>從最高位除起</b>！"
+];
+
+function a1Render() {
+  const svg = document.getElementById("a1-svg");
+  if (!svg) return;
+  const s = a1Step;
+  let h = "";
+  h += `<defs><marker id="a1-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#f4694b"/></marker></defs>`;
+
+  /* --- 左：錢幣池 --- */
+  h += `<text x="70" y="14" font-size="10.5" font-weight="900" fill="#57534e" text-anchor="middle">錢幣池（72 元）</text>`;
+  const tensPos = [[28,48],[58,48],[88,48],[118,48],[43,80],[73,80],[103,80]];
+  tensPos.forEach((p, i) => {
+    const used = (s >= 1 && i < 6);
+    const fill = used ? "#e5e7eb" : "#f5c542";
+    const stroke = used ? "#9ca3af" : "#b8860b";
+    h += `<g opacity="${used ? 0.4 : 1}">` +
+         `<circle cx="${p[0]}" cy="${p[1]}" r="13" fill="${fill}" stroke="${stroke}" stroke-width="2"/>` +
+         `<text x="${p[0]}" y="${p[1] + 4}" font-size="10" font-weight="900" fill="${used ? "#9ca3af" : "#92600a"}" text-anchor="middle">10</text></g>`;
+  });
+  if (s >= 2) {
+    h += `<circle cx="103" cy="80" r="17" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4 3"/>`;
+  }
+  if (s === 1) {
+    h += `<text x="14" y="104" font-size="9" font-weight="900" fill="#f4694b">用掉 6 個⑩，還剩 1 個⑩！</text>`;
+  }
+  if (s >= 2) {
+    h += `<text x="14" y="100" font-size="9" font-weight="900" fill="#f4694b">1⑩ → 10 個①</text>`;
+    h += `<path d="M103,95 L96,103" stroke="#f4694b" stroke-width="2" stroke-dasharray="3 2" marker-end="url(#a1-arrow)"/>`;
+  }
+  if (s < 2) {
+    [[40,112],[64,112]].forEach(p => {
+      h += `<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>` +
+           `<text x="${p[0]}" y="${p[1] + 3.5}" font-size="8" font-weight="900" fill="#475569" text-anchor="middle">1</text>`;
+    });
+  } else {
+    for (let i = 0; i < 12; i++) {
+      const r = Math.floor(i / 6), c = i % 6;
+      const x = 32 + c * 14, y = 112 + r * 18;
+      h += `<g opacity="${s >= 3 ? 0.4 : 1}">` +
+           `<circle cx="${x}" cy="${y}" r="7" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.2"/>` +
+           `<text x="${x}" y="${y + 3}" font-size="7" font-weight="900" fill="#475569" text-anchor="middle">1</text></g>`;
+    }
+    if (s >= 4) {
+      h += `<text x="74" y="152" font-size="9.5" font-weight="900" fill="#16a34a" text-anchor="middle">12 個①剛好分完！</text>`;
+    }
+  }
+
+  /* --- 右：長除號直式 --- */
+  if (s >= 1) h += `<text x="200" y="44" font-size="15" font-weight="900" fill="#f4694b" text-anchor="middle">2</text>`;
+  if (s >= 3) h += `<text x="224" y="44" font-size="15" font-weight="900" fill="#f4694b" text-anchor="middle">4</text>`;
+  h += `<line x1="186" y1="52" x2="244" y2="52" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="172" y="72" font-size="15" font-weight="900" fill="#1e293b" text-anchor="middle">3</text>`;
+  h += `<path d="M186,56 Q178,72 186,88" fill="none" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="200" y="72" font-size="15" font-weight="900" fill="#1e293b" text-anchor="middle">7</text>`;
+  h += `<text x="224" y="72" font-size="15" font-weight="900" fill="#1e293b" text-anchor="middle">2</text>`;
+  if (s >= 1) {
+    h += `<text x="200" y="94" font-size="13" font-weight="900" fill="#f4694b" text-anchor="middle">6</text>`;
+    h += `<line x1="194" y1="100" x2="212" y2="100" stroke="#1e293b" stroke-width="1.5"/>`;
+    h += `<text x="252" y="94" font-size="8.5" font-weight="800" fill="#8a857b">2×3＝6</text>`;
+  }
+  if (s >= 2) {
+    h += `<rect x="192" y="104" width="44" height="20" rx="3" fill="#fef3c7" opacity="0.9"/>`;
+    h += `<text x="200" y="118" font-size="13" font-weight="900" fill="#b45309" text-anchor="middle">1</text>`;
+    h += `<text x="224" y="118" font-size="13" font-weight="900" fill="#b45309" text-anchor="middle">2</text>`;
+  }
+  if (s >= 3) {
+    h += `<text x="200" y="142" font-size="13" font-weight="900" fill="#f4694b" text-anchor="middle">1</text>`;
+    h += `<text x="224" y="142" font-size="13" font-weight="900" fill="#f4694b" text-anchor="middle">2</text>`;
+    h += `<line x1="194" y1="148" x2="234" y2="148" stroke="#1e293b" stroke-width="1.5"/>`;
+    h += `<text x="256" y="142" font-size="8.5" font-weight="800" fill="#8a857b">4×3＝12</text>`;
+  }
+  if (s >= 4) {
+    h += `<text x="224" y="168" font-size="13" font-weight="900" fill="#16a34a" text-anchor="middle">0</text>`;
+    h += `<rect x="30" y="182" width="260" height="26" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>`;
+    h += `<text x="160" y="199" font-size="11.5" font-weight="900" fill="#166534" text-anchor="middle">🎉 每人分得 24 元（2 個⑩ ＋ 4 個①）！</text>`;
+  }
+
+  svg.innerHTML = h;
+  const stat = document.getElementById("a1-stat");
+  if (stat) stat.textContent = A1_STAT[s];
+  const bubble = document.getElementById("a1-bubble");
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = A1_BUBBLE[s]; }
+  notifyHeight();
+}
+function a1Next() { if (a1Step < A1_MAX) { a1Step++; a1Render(); } }
+function a1Reset() { a1Step = 0; a1Render(); }
+
+/* ==================== 活動二：三位數步步算理（856 ÷ 4） ==================== */
+let a2Step = 0;
+const A2_MAX = 3;
+const A2_STAT = [
+  "856 ÷ 4 ＝ ？",
+  "百位：8÷4＝2，商百位寫 2",
+  "十位：5 掉下來，5÷4＝1 餘 1",
+  "個位：16÷4＝4，答案 214 ✓"
+];
+const A2_BUBBLE = [
+  "💡 口訣：<b>除 ➜ 乘 ➜ 減 ➜ 掉下來</b>！從最高<b>百位</b>開始！",
+  "💡 除：8÷4＝2；乘：4×2＝8；減：8－8＝0！",
+  "💡 十位的 5 <b>掉下來</b>，5÷4＝1 餘 1，商十位寫 1！",
+  "💡 個位 6 掉下來和 1 合成 <b>16</b>，16÷4＝4，856÷4＝<b>214</b>！"
+];
+
+function a2Render() {
+  const svg = document.getElementById("a2-svg");
+  if (!svg) return;
+  const s = a2Step;
+  let h = "";
+  h += `<defs><marker id="a2-arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#f4694b"/></marker></defs>`;
+
+  /* 商（逐步出現） */
+  if (s >= 1) h += `<text x="118" y="32" font-size="14" font-weight="900" fill="${s === 1 ? "#f4694b" : "#1e293b"}" text-anchor="middle">2</text>`;
+  if (s >= 2) h += `<text x="142" y="32" font-size="14" font-weight="900" fill="${s === 2 ? "#f4694b" : "#1e293b"}" text-anchor="middle">1</text>`;
+  if (s >= 3) h += `<text x="166" y="32" font-size="14" font-weight="900" fill="#f4694b" text-anchor="middle">4</text>`;
+  h += `<line x1="108" y1="40" x2="178" y2="40" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="92" y="62" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">4</text>`;
+  h += `<path d="M106,46 Q98,62 106,78" fill="none" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="118" y="62" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">8</text>`;
+  h += `<text x="142" y="62" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">5</text>`;
+  h += `<text x="166" y="62" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">6</text>`;
+
+  if (s >= 1) {
+    h += `<text x="118" y="82" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">8</text>`;
+    h += `<line x1="112" y1="88" x2="126" y2="88" stroke="#1e293b" stroke-width="1.5"/>`;
+    h += `<text x="204" y="64" font-size="9" font-weight="800" fill="#b45309">百位 8÷4＝2</text>`;
+    h += `<text x="204" y="78" font-size="9" font-weight="800" fill="#b45309">4×2＝8</text>`;
+    h += `<text x="204" y="92" font-size="9" font-weight="800" fill="#b45309">8−8＝0</text>`;
+  }
+  if (s >= 2) {
+    h += `<path d="M142,68 C152,80 152,92 143,102" fill="none" stroke="#f4694b" stroke-width="2" marker-end="url(#a2-arrow)"/>`;
+    h += `<text x="118" y="106" font-size="12" font-weight="900" fill="#94a3b8" text-anchor="middle">0</text>`;
+    h += `<rect x="134" y="94" width="18" height="18" rx="3" fill="#fef3c7"/>`;
+    h += `<text x="142" y="106" font-size="12" font-weight="900" fill="#b45309" text-anchor="middle">5</text>`;
+    h += `<text x="142" y="126" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">4</text>`;
+    h += `<line x1="136" y1="132" x2="152" y2="132" stroke="#1e293b" stroke-width="1.5"/>`;
+    h += `<text x="204" y="116" font-size="9" font-weight="800" fill="#b45309">十位 5 掉下來</text>`;
+    h += `<text x="204" y="130" font-size="9" font-weight="800" fill="#b45309">5÷4＝1 餘1</text>`;
+  }
+  if (s >= 3) {
+    h += `<path d="M166,68 C178,88 178,130 167,146" fill="none" stroke="#f4694b" stroke-width="2" marker-end="url(#a2-arrow)"/>`;
+    h += `<text x="142" y="150" font-size="12" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+    h += `<rect x="158" y="138" width="18" height="18" rx="3" fill="#fef3c7"/>`;
+    h += `<text x="166" y="150" font-size="12" font-weight="900" fill="#b45309" text-anchor="middle">6</text>`;
+    h += `<text x="142" y="170" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">1</text>`;
+    h += `<text x="166" y="170" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">6</text>`;
+    h += `<line x1="136" y1="176" x2="174" y2="176" stroke="#1e293b" stroke-width="1.5"/>`;
+    h += `<text x="166" y="192" font-size="12" font-weight="900" fill="#16a34a" text-anchor="middle">0</text>`;
+    h += `<text x="204" y="152" font-size="9" font-weight="800" fill="#b45309">6 掉下來成 16</text>`;
+    h += `<text x="204" y="166" font-size="9" font-weight="800" fill="#b45309">16÷4＝4</text>`;
+    h += `<text x="204" y="192" font-size="11" font-weight="900" fill="#16a34a">＝ 214 ✓</text>`;
+  }
+
+  svg.innerHTML = h;
+  const stat = document.getElementById("a2-stat");
+  if (stat) stat.textContent = A2_STAT[s];
+  const bubble = document.getElementById("a2-bubble");
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = A2_BUBBLE[s]; }
+  notifyHeight();
+}
+function a2Go(dir) {
+  const next = a2Step + dir;
+  if (next < 0 || next > A2_MAX) return;
+  a2Step = next;
+  a2Render();
+}
+/* ==================== 活動三：商中間補 0 大陷阱（618 ÷ 6） ==================== */
+let a3Revealed = false;
+
+function a3Render() {
+  const svg = document.getElementById("a3-svg");
+  if (!svg) return;
+  const R = a3Revealed;
+  let h = "";
+  /* 中央分隔線 */
+  h += `<line x1="160" y1="18" x2="160" y2="158" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+
+  /* --- 左：小明的錯誤算式 --- */
+  h += `<text x="82" y="16" font-size="10.5" font-weight="900" fill="#dc2626" text-anchor="middle">❌ 小明：算成 13</text>`;
+  h += `<text x="86" y="40" font-size="14" font-weight="900" fill="#dc2626" text-anchor="middle">1</text>`;
+  h += `<text x="120" y="40" font-size="14" font-weight="900" fill="#dc2626" text-anchor="middle">3</text>`;
+  h += `<rect x="96" y="26" width="16" height="20" rx="3" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+  h += `<text x="104" y="41" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">?</text>`;
+  h += `<line x1="74" y1="48" x2="134" y2="48" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="62" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">6</text>`;
+  h += `<path d="M76,50 Q68,66 76,82" fill="none" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="86" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">6</text>`;
+  h += `<text x="103" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+  h += `<text x="120" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">8</text>`;
+  h += `<text x="86" y="88" font-size="12" font-weight="900" fill="#64748b" text-anchor="middle">6</text>`;
+  h += `<line x1="80" y1="94" x2="96" y2="94" stroke="#1e293b" stroke-width="1.5"/>`;
+  h += `<rect x="96" y="98" width="14" height="18" rx="3" fill="#fef9c3"/>`;
+  h += `<rect x="113" y="98" width="14" height="18" rx="3" fill="#fef9c3"/>`;
+  h += `<text x="103" y="112" font-size="12" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+  h += `<text x="120" y="112" font-size="12" font-weight="900" fill="#1e293b" text-anchor="middle">8</text>`;
+  h += `<text x="103" y="132" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">1</text>`;
+  h += `<text x="120" y="132" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">8</text>`;
+  h += `<line x1="97" y1="138" x2="126" y2="138" stroke="#1e293b" stroke-width="1.5"/>`;
+  h += `<text x="120" y="154" font-size="12" font-weight="900" fill="#94a3b8" text-anchor="middle">0</text>`;
+
+  /* --- 右：正確算式 --- */
+  h += `<text x="240" y="16" font-size="10.5" font-weight="900" fill="#16a34a" text-anchor="middle">✅ 正確：103</text>`;
+  h += `<text x="240" y="40" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+  h += `<rect x="250" y="26" width="14" height="20" rx="3" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  h += `<text x="257" y="40" font-size="14" font-weight="900" fill="#b45309" text-anchor="middle">0</text>`;
+  h += `<text x="274" y="40" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">3</text>`;
+  h += `<line x1="228" y1="48" x2="286" y2="48" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="216" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">6</text>`;
+  h += `<path d="M230,50 Q222,66 230,82" fill="none" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="240" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">6</text>`;
+  h += `<text x="257" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+  h += `<text x="274" y="66" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">8</text>`;
+  h += `<text x="240" y="88" font-size="12" font-weight="900" fill="#64748b" text-anchor="middle">6</text>`;
+  h += `<line x1="234" y1="94" x2="248" y2="94" stroke="#1e293b" stroke-width="1.5"/>`;
+  h += `<rect x="250" y="98" width="14" height="18" rx="3" fill="#fef9c3"/>`;
+  h += `<rect x="267" y="98" width="14" height="18" rx="3" fill="#fef9c3"/>`;
+  h += `<text x="257" y="112" font-size="12" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+  h += `<text x="274" y="112" font-size="12" font-weight="900" fill="#1e293b" text-anchor="middle">8</text>`;
+  h += `<text x="257" y="132" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">1</text>`;
+  h += `<text x="274" y="132" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">8</text>`;
+  h += `<line x1="251" y1="138" x2="280" y2="138" stroke="#1e293b" stroke-width="1.5"/>`;
+  h += `<text x="274" y="154" font-size="12" font-weight="900" fill="#16a34a" text-anchor="middle">0</text>`;
+
+  /* --- 破招後追加元素 --- */
+  if (R) {
+    /* 放大鏡盯住正確的補 0 */
+    h += `<circle cx="257" cy="36" r="11" fill="none" stroke="#0ea5e9" stroke-width="2.5" opacity="0.85"/>`;
+    h += `<line x1="265" y1="44" x2="273" y2="52" stroke="#0ea5e9" stroke-width="3.5" stroke-linecap="round"/>`;
+    /* 小明商劃掉 */
+    h += `<line x1="78" y1="34" x2="128" y2="34" stroke="#dc2626" stroke-width="2.5"/>`;
+    /* 雙印章 */
+    h += `<circle cx="140" cy="44" r="13" fill="none" stroke="#dc2626" stroke-width="2.5"/>`;
+    h += `<text x="140" y="49" font-size="12" font-weight="900" fill="#dc2626" text-anchor="middle">✗</text>`;
+    h += `<circle cx="298" cy="44" r="13" fill="none" stroke="#16a34a" stroke-width="2.5"/>`;
+    h += `<text x="298" y="49" font-size="12" font-weight="900" fill="#16a34a" text-anchor="middle">✓</text>`;
+    /* 底部註解 */
+    h += `<text x="82" y="174" font-size="9.5" font-weight="900" fill="#dc2626" text-anchor="middle">618÷6 應該是三位數！13 太小了！</text>`;
+    h += `<text x="240" y="174" font-size="9.5" font-weight="900" fill="#166534" text-anchor="middle">十位 1÷6 不夠 → 補 0！18÷6＝3</text>`;
+  }
+
+  svg.innerHTML = h;
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+  if (stat) stat.textContent = R ? "618÷6＝103，不是 13！" : "618 ÷ 6 ＝ ？ 小明算對了嗎？";
+  if (bubble) {
+    if (R) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🔍 破招！600 多÷6，每人至少 <b>100 多</b>，商必須是三位數！十位 <b>1÷6 不夠分</b>，商十位要<b>補 0 占位</b>：6÷6＝1 → 補 0 → 18÷6＝3，答案 <b>103</b>！";
+    } else {
+      bubble.classList.add("warn");
+      bubble.innerHTML = "🕵️ 小明把 618÷6 算成 <b>13</b>。<b>錯在哪裡</b>？想一想：600 多平分給 6 人，每人至少有多少？再按「🔍 破招檢驗」！";
+    }
+  }
+  notifyHeight();
+}
+
+function a3ToggleReveal() {
+  a3Revealed = !a3Revealed;
+  const btn = document.getElementById("btn-a3-reveal");
+  if (btn) btn.textContent = a3Revealed ? "↺ 收回破招" : "🔍 破招檢驗";
+  a3Render();
+}
+
+/* ==================== 活動四：帶餘數與驗算（539 ÷ 5） ==================== */
+let a4Step = 0;
+const A4_MAX = 3;
+const A4_STAT = [
+  "539 ÷ 5 ＝ 107 … 4，對嗎？",
+  "先算：107 × 5 ＝ 535",
+  "再加餘數：535 ＋ 4 ＝ 539",
+  "天平水平，驗算完全正確 ✓"
+];
+const A4_BUBBLE = [
+  "💡 驗算黃金法則：<b>商 × 除數 ＋ 餘數 ＝ 被除數</b>！先想想天平會怎麼傾？",
+  "💡 商 107 乘除數 5 ＝ <b>535</b>，比 539 少了 4，天平左邊翹起來！",
+  "💡 把餘數 <b>4</b> 加回去：535＋4＝<b>539</b>，天平完全水平！",
+  "🎉 <b>驗算完全正確</b>！小提醒：餘數一定要<b>比除數小</b>（4＜5），不然還能再分喔！"
+];
+
+function a4Render() {
+  const svg = document.getElementById("a4-svg");
+  if (!svg) return;
+  const s = a4Step;
+  let h = "";
+
+  /* --- 左：直式 539 ÷ 5 --- */
+  h += `<text x="118" y="36" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">1</text>`;
+  h += `<rect x="133" y="22" width="14" height="20" rx="3" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+  h += `<text x="140" y="36" font-size="14" font-weight="900" fill="#b45309" text-anchor="middle">0</text>`;
+  h += `<text x="162" y="36" font-size="14" font-weight="900" fill="#f4694b" text-anchor="middle">7</text>`;
+  h += `<line x1="106" y1="44" x2="172" y2="44" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="90" y="64" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">5</text>`;
+  h += `<path d="M104,48 Q96,64 104,80" fill="none" stroke="#1e293b" stroke-width="2"/>`;
+  h += `<text x="118" y="64" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">5</text>`;
+  h += `<text x="140" y="64" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">3</text>`;
+  h += `<text x="162" y="64" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">9</text>`;
+  h += `<text x="118" y="86" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">5</text>`;
+  h += `<line x1="112" y1="92" x2="126" y2="92" stroke="#1e293b" stroke-width="1.5"/>`;
+  h += `<rect x="133" y="100" width="14" height="18" rx="3" fill="#fef3c7"/>`;
+  h += `<rect x="155" y="100" width="14" height="18" rx="3" fill="#fef3c7"/>`;
+  h += `<text x="140" y="114" font-size="12" font-weight="900" fill="#b45309" text-anchor="middle">3</text>`;
+  h += `<text x="162" y="114" font-size="12" font-weight="900" fill="#b45309" text-anchor="middle">9</text>`;
+  h += `<text x="140" y="136" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">3</text>`;
+  h += `<text x="162" y="136" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">5</text>`;
+  h += `<line x1="134" y1="142" x2="170" y2="142" stroke="#1e293b" stroke-width="1.5"/>`;
+  h += `<text x="162" y="160" font-size="13" font-weight="900" fill="#16a34a" text-anchor="middle">4</text>`;
+  h += `<text x="170" y="160" font-size="9" font-weight="900" fill="#16a34a">4＜5 ✓</text>`;
+  h += `<text x="118" y="178" font-size="8.5" font-weight="800" fill="#8a857b" text-anchor="middle">3÷5 不夠 → 商補 0</text>`;
+  h += `<text x="118" y="190" font-size="8.5" font-weight="800" fill="#8a857b" text-anchor="middle">39÷5＝7 餘 4</text>`;
+
+  /* --- 右：驗算平衡天平 --- */
+  if (s >= 2) {
+    h += `<rect x="204" y="40" width="112" height="136" rx="10" fill="#dcfce7" opacity="0.4"/>`;
+  }
+  h += `<rect x="238" y="168" width="44" height="8" rx="3" fill="#94a3b8"/>`;
+  h += `<line x1="260" y1="168" x2="260" y2="56" stroke="#64748b" stroke-width="5"/>`;
+  h += `<circle cx="260" cy="52" r="4" fill="#475569"/>`;
+  const leftY = (s >= 2) ? 54 : 48;
+  const rightY = (s >= 2) ? 54 : 60;
+  h += `<line x1="222" y1="${leftY}" x2="298" y2="${rightY}" stroke="#475569" stroke-width="4" stroke-linecap="round"/>`;
+  h += `<line x1="222" y1="${leftY}" x2="222" y2="86" stroke="#64748b" stroke-width="2"/>`;
+  h += `<line x1="298" y1="${rightY}" x2="298" y2="86" stroke="#64748b" stroke-width="2"/>`;
+  h += `<path d="M202,86 Q222,104 242,86" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>`;
+  h += `<text x="222" y="78" font-size="7.5" font-weight="800" fill="#64748b" text-anchor="middle">107×5</text>`;
+  const leftVal = (s >= 2) ? `<text x="222" y="99" font-size="10" font-weight="900" fill="#16a34a" text-anchor="middle">539</text>`
+                           : (s === 1 ? `<text x="222" y="99" font-size="10" font-weight="900" fill="#1e293b" text-anchor="middle">535</text>`
+                                      : `<text x="222" y="99" font-size="10" font-weight="900" fill="#94a3b8" text-anchor="middle">？</text>`);
+  h += leftVal;
+  h += `<path d="M278,86 Q298,104 318,86" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>`;
+  h += `<text x="298" y="78" font-size="7.5" font-weight="800" fill="#64748b" text-anchor="middle">被除數</text>`;
+  h += `<text x="298" y="99" font-size="10" font-weight="900" fill="#1e293b" text-anchor="middle">539</text>`;
+  if (s >= 2) {
+    h += `<circle cx="244" cy="76" r="9" fill="#f4694b"/>`;
+    h += `<text x="244" y="79" font-size="8" font-weight="900" fill="#ffffff" text-anchor="middle">+4</text>`;
+  }
+  if (s >= 1) {
+    h += `<text x="260" y="122" font-size="10.5" font-weight="900" fill="#b45309" text-anchor="middle">107 × 5 ＝ 535</text>`;
+  }
+  if (s >= 2) {
+    h += `<text x="260" y="138" font-size="10.5" font-weight="900" fill="#16a34a" text-anchor="middle">535 ＋ 4 ＝ 539 ✓</text>`;
+  }
+  if (s >= 3) {
+    h += `<circle cx="260" cy="24" r="17" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>`;
+    h += `<text x="260" y="22" font-size="9" font-weight="900" fill="#166534" text-anchor="middle">驗算</text>`;
+    h += `<text x="260" y="34" font-size="9" font-weight="900" fill="#166534" text-anchor="middle">正確✓</text>`;
+  }
+
+  svg.innerHTML = h;
+  const stat = document.getElementById("a4-stat");
+  if (stat) stat.textContent = A4_STAT[s];
+  const bubble = document.getElementById("a4-bubble");
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = A4_BUBBLE[s]; }
+  notifyHeight();
+}
+function a4Next() { if (a4Step < A4_MAX) { a4Step++; a4Render(); } }
+function a4Reset() { a4Step = 0; a4Render(); }
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌🔬🪙📎🩹🔁💰🪜🔍⚖️➜▶◀↺]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：分錢與長除法。七十二元分給三個人，先分十位：每人分兩個十元，用掉六十元，剩下一個十元換成十個一元，加上二合起來是十二元，再分給三個人每人四元，剛好每人分得二十四元！",
+  2: "活動二：三位數長除法。八百五十六除以四，記住四字口訣：除、乘、減、掉下來！百位八除以四得二，十位五除以四得一餘一，個位六掉下來十六除以四得四，答案是兩百一十四！",
+  3: "活動三：商中間補零。六百一十八除以六，小明算成十三，這差太遠了！六百多平分給六個人，每人至少有一百多！十位的一除以六不夠分，商一定要補零占位喔！",
+  4: "活動四：驗算黃金法則。五百三十九除以五等於一百零七餘四。檢查對不對，把商一百零七乘除數五等於五百三十五，再把剩下的四加回來，剛好是五百三十九，驗算滿分！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+a1Render();
+a2Render();
+a3Render();
+a4Render();
+</script>
+</body>
+</html>

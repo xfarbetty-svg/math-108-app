@@ -111,6 +111,7 @@ def main():
         ["node", "tools/verify_app_shell.js"],
         ["node", "tools/verify_circle_concept.js"],
         ["node", "tools/verify_g3_new_concepts.js"],
+        ["node", "tools/verify_g3_remaining_concepts.js"],
         ["python", "tests/test_tts_endpoint.py"]
     ]
     for g in gates:

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-11 整數數線概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn.active { background: var(--sky-deep); border-color: var(--sky-deep); }
+.part-btn[data-obj="origin"].active { background: #ef4444; border-color: #ef4444; }
+.part-btn[data-obj="arrow"].active  { background: #d9910d; border-color: #d9910d; }
+.part-btn[data-obj="unit"].active   { background: #318a70; border-color: #318a70; }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+
+/* 高亮閃爍動畫 */
+.hl-pulse {
+  animation: hlPulse 1s ease-in-out infinite;
+}
+@keyframes hlPulse {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
+/* 活動二：刻度標籤淡入淡出 */
+#a2-labels, #a2-celltext { transition: opacity 0.18s ease; }
+
+/* 活動三：青蛙與落點 */
+#a3-frog, #a3-arc, #a3-land { transition: opacity 0.25s ease; }
+
+/* 活動四：問號翻牌 */
+#a4-qbox {
+  transition: transform 0.22s ease, opacity 0.2s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+#a4-flipped, #a4-gap, #a4-cell { transition: opacity 0.25s ease; }
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🧭 活動一 · 數線三要素</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">📏 活動二 · 單位長切換</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🐸 活動三 · 青蛙跳加減</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">❓ 活動四 · 數線找問號</button>
+  </nav>
+
+  <!-- ==================== 活動一：數線三要素 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-11 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧭 活動一：數線三要素 · 原點、方向與單位長</div>
+    <div class="card-desc">
+      一條合格的數線必須具備三大要素：起點【<b>原點 0</b>】、向右延伸的【<b>箭頭方向</b>】、以及每一格都等長的【<b>單位長</b>】！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- 單位長括弧（tick1 ↔ tick2 之間，水藍色） -->
+        <g id="a1-unit-hl" opacity="0" class="hl-pulse">
+          <path d="M60,52 L60,44 L90,44 L90,52" fill="none" stroke="#318a70" stroke-width="3" stroke-linecap="round"/>
+          <path d="M71,47 L75,44 L79,47" fill="none" stroke="#318a70" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <!-- 箭頭金色高亮框 -->
+        <rect id="a1-arrow-hl" x="282" y="56" width="30" height="28" rx="8" fill="none" stroke="#d9910d" stroke-width="3" opacity="0" class="hl-pulse"/>
+        <!-- 原點紅色高亮圈 -->
+        <circle id="a1-origin-hl" cx="30" cy="70" r="11" fill="none" stroke="#ef4444" stroke-width="3" opacity="0" class="hl-pulse"/>
+
+        <!-- 數線本體 -->
+        <line x1="24" y1="70" x2="290" y2="70" stroke="#3d3a34" stroke-width="3" stroke-linecap="round"/>
+        <!-- 金色箭頭 -->
+        <polygon points="288,62 306,70 288,78" fill="#d9910d"/>
+        <polygon points="288,65.5 300,70 288,74.5" fill="#ffd166"/>
+
+        <!-- 刻度與數字（0~8） -->
+        <g id="a1-ticks" font-size="10" font-weight="800" fill="#57534e" text-anchor="middle"></g>
+
+        <text id="a1-caption" x="160" y="112" font-size="10.5" font-weight="800" fill="#8a857b" text-anchor="middle">點下面的膠囊按鈕，認識數線三要素！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn" data-obj="origin" onclick="selectElement('origin')">點我亮原點 (0)</button>
+        <button class="part-btn" data-obj="arrow" onclick="selectElement('arrow')">點我亮箭頭 (方向)</button>
+        <button class="part-btn" data-obj="unit" onclick="selectElement('unit')">點我亮單位長 (格距)</button>
+      </div>
+      <div class="panel-stat" id="a1-stat">數線三要素：原點、方向、單位長</div>
+      <div class="info-bubble" id="a1-bubble">
+        💡 數線就像一條數字的排隊跑道：有起點、有方向、每一格距離都一樣長！點按鈕看看它們在哪裡！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：單位長切換 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-11 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📏 活動二：單位長切換 · 一格可以代表多少</div>
+    <div class="card-desc">
+      數線每一格不一定只能代表 1！也可以代表 <b>10、100、甚至 1000</b>！切換按鈕，看同一條數線的刻度數字即時變身！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- 單位長提示括弧（0 ↔ 1 格之間） -->
+        <path d="M30,52 L30,44 L60,44 L60,52" fill="none" stroke="#318a70" stroke-width="3" stroke-linecap="round"/>
+        <text id="a2-celltext" x="45" y="38" font-size="10.5" font-weight="900" fill="#318a70" text-anchor="middle">每格＝1</text>
+
+        <!-- 數線本體 -->
+        <line x1="24" y1="70" x2="290" y2="70" stroke="#3d3a34" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="288,62 306,70 288,78" fill="#d9910d"/>
+        <polygon points="288,65.5 300,70 288,74.5" fill="#ffd166"/>
+
+        <!-- 刻度與數字 -->
+        <g id="a2-labels" font-size="9.5" font-weight="800" fill="#57534e" text-anchor="middle"></g>
+
+        <text x="160" y="112" font-size="10.5" font-weight="800" fill="#8a857b" text-anchor="middle" id="a2-caption">先數數看：一小格到底代表多少？</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid" id="a2-btn-grid">
+        <button class="btn-action active" data-unit="1" onclick="setUnit(1)">單位長 1</button>
+        <button class="btn-action" data-unit="10" onclick="setUnit(10)">單位長 10</button>
+        <button class="btn-action" data-unit="100" onclick="setUnit(100)">單位長 100</button>
+        <button class="btn-action" data-unit="1000" onclick="setUnit(1000)">單位長 1000</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">一小格 ＝ 1</div>
+      <div class="info-bubble" id="a2-bubble">
+        💡 看數線第一步：一定要先<b>數數看一小格代表多少</b>！刻度 0、1、2、3…就是每格代表 1 的數線！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：青蛙跳跳樂 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-11 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🐸 活動三：青蛙跳跳樂 · 數線上的加減動態</div>
+    <div class="card-desc">
+      可愛青蛙在數線上跳躍！<b>加法往右跳，數字變大；減法往左跳，數字變小</b>！每跳一格就是 50 喔！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+        <!-- 算式顯示 -->
+        <text id="a3-eq" x="160" y="24" font-size="13" font-weight="900" fill="#2575ba" text-anchor="middle">選一個算式，讓青蛙開始跳！</text>
+
+        <!-- 跳躍弧線 -->
+        <path id="a3-arc" fill="none" stroke="#2575ba" stroke-width="2.5" stroke-dasharray="5 4" stroke-linecap="round" opacity="0"/>
+
+        <!-- 數線本體（0~500，每格 50） -->
+        <line x1="14" y1="100" x2="296" y2="100" stroke="#3d3a34" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="294,92 312,100 294,108" fill="#d9910d"/>
+        <polygon points="294,95.5 306,100 294,104.5" fill="#ffd166"/>
+
+        <!-- 刻度與數字 -->
+        <g id="a3-ticks" font-size="7.5" font-weight="800" fill="#57534e" text-anchor="middle"></g>
+
+        <!-- 落點標記 -->
+        <text id="a3-land" x="0" y="78" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle" opacity="0"></text>
+
+        <!-- 青蛙 -->
+        <g id="a3-frog" transform="translate(20,100)">
+          <path d="M-6,0 L-10,4 M-2,0 L-3,5 M2,0 L3,5 M6,0 L10,4" stroke="#15803d" stroke-width="1.6" stroke-linecap="round"/>
+          <ellipse cx="0" cy="-6" rx="9" ry="7" fill="#4ade80" stroke="#15803d" stroke-width="1.6"/>
+          <circle cx="-3.5" cy="-13" r="3.2" fill="#ffffff" stroke="#15803d" stroke-width="1"/>
+          <circle cx="3.5" cy="-13" r="3.2" fill="#ffffff" stroke="#15803d" stroke-width="1"/>
+          <circle cx="-2.8" cy="-13" r="1.2" fill="#1f2937"/>
+          <circle cx="4.2" cy="-13" r="1.2" fill="#1f2937"/>
+          <path d="M-4,-4.5 Q0,-1.5 4,-4.5" stroke="#15803d" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <text x="160" y="140" font-size="9.5" font-weight="800" fill="#8a857b" text-anchor="middle">0 到 500 的數線，每一小格代表 50</text>
+        <text x="160" y="158" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">➡ 加法往右跳 · 減法往左跳 ⬅</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-add" onclick="runFrogJump(200, 150, '200 ＋ 150 ＝ 350')">🐸 200 ＋ 150</button>
+        <button class="btn-action" id="btn-a3-sub" onclick="runFrogJump(400, -250, '400 － 250 ＝ 150')">🐸 400 － 250</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">青蛙在哪裡？快點按鈕讓牠跳跳！</div>
+      <div class="info-bubble" id="a3-bubble">
+        💡 想一想：<b>200 ＋ 150</b> 要往右跳幾格？（150 ÷ 50 ＝ 3 格）
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：數線找問號 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-11 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">❓ 活動四：數線找問號 · 缺漏數字推理破招</div>
+    <div class="card-desc">
+      段考常考題：數線中間有個【<b>？</b>】，怎麼知道是多少？兩步破招：<b>先算一小格是多少，再數有幾格</b>！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- 全距括弧（1200 ↔ 1600，共 4 小格） -->
+        <g id="a4-gap" opacity="0">
+          <path d="M30,88 L30,95 L278,95 L278,88" fill="none" stroke="#d9910d" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="154" y="107" font-size="9.5" font-weight="900" fill="#d9910d" text-anchor="middle">1200 到 1600 一共隔了 4 小格</text>
+        </g>
+        <!-- 一小格括弧（1200 ↔ 第 1 格） -->
+        <g id="a4-cell" opacity="0">
+          <path d="M30,62 L30,55 L92,55 L92,62" fill="none" stroke="#318a70" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="61" y="50" font-size="9.5" font-weight="900" fill="#318a70" text-anchor="middle">1 小格 ＝ 100</text>
+        </g>
+
+        <!-- 數線本體 -->
+        <line x1="24" y1="78" x2="290" y2="78" stroke="#3d3a34" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="288,70 306,78 288,86" fill="#d9910d"/>
+        <polygon points="288,73.5 300,78 288,82.5" fill="#ffd166"/>
+
+        <!-- 刻度（5 個刻度點：1200、?、…、1600） -->
+        <g id="a4-ticks"></g>
+
+        <!-- 問號翻牌 -->
+        <g id="a4-qbox">
+          <rect x="130" y="16" width="48" height="30" rx="7" fill="#ffd166" stroke="#d9910d" stroke-width="2.5"/>
+          <text id="a4-qtext" x="154" y="37" font-size="16" font-weight="900" fill="#92400e" text-anchor="middle">?</text>
+        </g>
+        <!-- 解密光環 -->
+        <circle id="a4-flipped" cx="154" cy="31" r="26" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5 4" opacity="0"/>
+
+        <text x="160" y="126" font-size="9.5" font-weight="800" fill="#8a857b" text-anchor="middle">已知兩端 1200 與 1600，中間問號是多少？</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-step" onclick="a4Step()">🔍 逐步破招</button>
+        <button class="btn-action" id="btn-a4-reveal" onclick="revealQuestion()">🔓 解密</button>
+      </div>
+      <div class="panel-stat" id="a4-stat">？ ＝ ？</div>
+      <div class="info-bubble warn" id="a4-bubble">
+        💡 先自己想一想：<b>1200 到 1600 差多少</b>？中間隔了幾小格？再按「🔍 逐步破招」核對！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：數線三要素 ==================== */
+const A1_X0 = 30;   // 原點 x
+const A1_DX = 30;   // 每格 30px
+
+(function buildA1Ticks() {
+  const g = document.getElementById("a1-ticks");
+  if (!g) return;
+  let html = "";
+  for (let i = 0; i <= 8; i++) {
+    const x = A1_X0 + i * A1_DX;
+    html += `<line x1="${x}" y1="62" x2="${x}" y2="78" stroke="#3d3a34" stroke-width="2.5"/>`;
+    html += `<text x="${x}" y="96">${i}</text>`;
+  }
+  g.innerHTML = html;
+})();
+
+const A1_ELEMENTS = {
+  origin: {
+    stat: "原點 0 ＝ 數線的起點",
+    caption: "這是起點！",
+    text: "💡 <b>原點 0</b> 就是數線的起點，所有數字都從 0 開始往右排隊！就像賽跑的起跑線！"
+  },
+  arrow: {
+    stat: "箭頭 ＝ 越往右數字越大",
+    caption: "越往右數字越大！",
+    text: "💡 箭頭告訴我們數線的<b>方向</b>：越往右，數字就越大，而且可以一直延伸到無限遠！"
+  },
+  unit: {
+    stat: "單位長 ＝ 每一格都要等長",
+    caption: "每一格距離都一樣長！",
+    text: "💡 <b>單位長</b>就是每一格的距離！量一量，0 到 1 和 1 到 2 的間距<b>完全相同</b>，這樣數線才公平！"
+  }
+};
+
+function selectElement(key) {
+  const info = A1_ELEMENTS[key];
+  if (!info) return;
+  document.querySelectorAll("#act-1-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.obj === key));
+
+  const ori = document.getElementById("a1-origin-hl");
+  const arr = document.getElementById("a1-arrow-hl");
+  const unit = document.getElementById("a1-unit-hl");
+  if (ori) ori.style.opacity = (key === "origin") ? "1" : "0";
+  if (arr) arr.style.opacity = (key === "arrow") ? "1" : "0";
+  if (unit) unit.style.opacity = (key === "unit") ? "1" : "0";
+
+  const caption = document.getElementById("a1-caption");
+  const stat = document.getElementById("a1-stat");
+  const bubble = document.getElementById("a1-bubble");
+  if (caption) caption.textContent = info.caption;
+  if (stat) stat.textContent = info.stat;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = info.text;
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動二：單位長切換 ==================== */
+const A2_X0 = 30;
+const A2_DX = 30;
+let a2Unit = 1;
+
+function setUnit(unit) {
+  if (![1, 10, 100, 1000].includes(unit)) return;
+  a2Unit = unit;
+  document.querySelectorAll("#a2-btn-grid .btn-action").forEach(b =>
+    b.classList.toggle("active", Number(b.dataset.unit) === unit));
+
+  const labels = document.getElementById("a2-labels");
+  const celltext = document.getElementById("a2-celltext");
+  const stat = document.getElementById("a2-stat");
+  const bubble = document.getElementById("a2-bubble");
+  const caption = document.getElementById("a2-caption");
+
+  // 平滑淡出 → 換字 → 淡入
+  if (labels) labels.style.opacity = "0";
+  if (celltext) celltext.style.opacity = "0";
+  setTimeout(() => {
+    if (labels) {
+      let html = "";
+      for (let i = 0; i <= 8; i++) {
+        const x = A2_X0 + i * A2_DX;
+        html += `<line x1="${x}" y1="62" x2="${x}" y2="78" stroke="#3d3a34" stroke-width="2.5"/>`;
+        html += `<text x="${x}" y="96">${i * unit}</text>`;
+      }
+      labels.innerHTML = html;
+      labels.style.opacity = "1";
+    }
+    if (celltext) {
+      celltext.textContent = "每格＝" + unit;
+      celltext.style.opacity = "1";
+    }
+  }, 180);
+
+  if (stat) stat.textContent = "一小格 ＝ " + unit;
+  if (caption) caption.textContent = "刻度變成 0、" + unit + "、" + (unit * 2) + "、" + (unit * 3) + "…！";
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = "💡 刻度變成 <b>0、" + unit + "、" + (unit * 2) + "、" + (unit * 3) + "…</b>！同一條數線，一格代表 <b>" + unit + "</b>。看數線第一步，先確認一小格代表多少！";
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動三：青蛙跳跳樂 ==================== */
+const A3_X0 = 20;    // 0 刻度 x
+const A3_PX = 28;    // 每 50 單位 = 28px
+const A3_Y = 100;    // 數線 y
+
+(function buildA3Ticks() {
+  const g = document.getElementById("a3-ticks");
+  if (!g) return;
+  let html = "";
+  for (let j = 0; j <= 10; j++) {
+    const x = A3_X0 + j * A3_PX;
+    const v = j * 50;
+    html += `<line x1="${x}" y1="92" x2="${x}" y2="108" stroke="#3d3a34" stroke-width="2"/>`;
+    html += `<text x="${x}" y="120">${v}</text>`;
+  }
+  g.innerHTML = html;
+})();
+
+function a3Pos(v) { return A3_X0 + (v / 50) * A3_PX; }
+
+let a3Busy = false, a3Token = 0;
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+function nextFrame() { return new Promise(r => requestAnimationFrame(r)); }
+
+async function runFrogJump(start, delta, exprText) {
+  if (a3Busy) return;
+  a3Busy = true;
+  a3Token++;
+  const token = a3Token;
+
+  const frog = document.getElementById("a3-frog");
+  const arc = document.getElementById("a3-arc");
+  const eq = document.getElementById("a3-eq");
+  const land = document.getElementById("a3-land");
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+
+  const dir = (delta > 0) ? 1 : -1;
+  const cells = Math.round(Math.abs(delta) / 50);
+  let cur = start;
+
+  // 初始定位
+  frog.setAttribute("transform", `translate(${a3Pos(cur)},${A3_Y}) scale(${dir},1)`);
+  land.style.opacity = "0";
+  arc.style.opacity = "0";
+  eq.textContent = exprText + " …青蛙出發囉！";
+  stat.textContent = exprText.split("＝")[0].trim() + " ＝ ？";
+  bubble.innerHTML = "💡 青蛙站在 <b>" + start + "</b>，每跳一格就是 <b>50</b>，一共要跳 <b>" + cells + " 格</b>，方向往" + ((dir > 0) ? "右" : "左") + "！";
+  notifyHeight();
+  await wait(500);
+
+  for (let c = 0; c < cells; c++) {
+    if (token !== a3Token) { a3Busy = false; return; }
+    const x0 = a3Pos(cur), x1 = a3Pos(cur + dir * 50);
+    const mid = (x0 + x1) / 2;
+    arc.setAttribute("d", `M ${x0},${A3_Y - 8} Q ${mid},${A3_Y - 44} ${x1},${A3_Y - 8}`);
+    arc.style.opacity = "0.9";
+    const steps = 14;
+    for (let s = 1; s <= steps; s++) {
+      if (token !== a3Token) { a3Busy = false; return; }
+      const t = s / steps;
+      const x = x0 + (x1 - x0) * t;
+      const y = A3_Y - Math.sin(Math.PI * t) * 30;
+      frog.setAttribute("transform", `translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${dir},1)`);
+      await nextFrame();
+    }
+    cur += dir * 50;
+    frog.setAttribute("transform", `translate(${a3Pos(cur)},${A3_Y}) scale(${dir},1)`);
+    arc.style.opacity = "0";
+    await wait(130);
+  }
+
+  if (token !== a3Token) { a3Busy = false; return; }
+  // 落點慶祝
+  const result = cur;
+  land.textContent = result + " ✓";
+  land.setAttribute("x", a3Pos(result));
+  land.style.opacity = "1";
+  eq.textContent = exprText + " ！";
+  stat.textContent = exprText;
+  bubble.innerHTML = "🎉 青蛙" + ((dir > 0) ? "往右跳了 " + cells + " 格（＋" + Math.abs(delta) + "）" : "往左跳了 " + cells + " 格（－" + Math.abs(delta) + "）") + "，停在 <b>" + result + "</b>！加法往右數字變大、減法往左數字變小！";
+  notifyHeight();
+  a3Busy = false;
+}
+
+/* ==================== 活動四：數線找問號 ==================== */
+const A4_X0 = 30;    // 1200 刻度 x
+const A4_DX = 62;    // 每小格 62px（4 格跨 1200→1600）
+const A4_TICKS = [0, 1, 2, 3, 4];   // 5 個刻度：t0=1200, t2=?, t4=1600
+
+(function buildA4Ticks() {
+  const g = document.getElementById("a4-ticks");
+  if (!g) return;
+  let html = "";
+  const labels = { 0: "1200", 4: "1600" };
+  for (const i of A4_TICKS) {
+    const x = A4_X0 + i * A4_DX;
+    html += `<line x1="${x}" y1="70" x2="${x}" y2="86" stroke="#3d3a34" stroke-width="2.5"/>`;
+    if (labels[i] !== undefined) {
+      html += `<text x="${x}" y="102" font-size="10.5" font-weight="800" fill="#57534e" text-anchor="middle">${labels[i]}</text>`;
+    }
+  }
+  g.innerHTML = html;
+})();
+
+let a4StepIdx = 0;   // 0~3
+let a4Revealed = false;
+
+function a4Step() {
+  if (a4StepIdx >= 3) return;
+  a4StepIdx++;
+  const gap = document.getElementById("a4-gap");
+  const cell = document.getElementById("a4-cell");
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+  const stepBtn = document.getElementById("btn-a4-step");
+
+  if (a4StepIdx >= 1 && gap) gap.style.opacity = "1";
+  if (a4StepIdx >= 2 && cell) cell.style.opacity = "1";
+
+  if (a4StepIdx === 1) {
+    if (stat) stat.textContent = "第 1 步：1600 － 1200 ＝ 400";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "💡 <b>算大差距</b>：兩端相差 <b>1600 － 1200 ＝ 400</b>，這 400 被分成了幾小格呢？"; }
+  } else if (a4StepIdx === 2) {
+    if (stat) stat.textContent = "第 2 步：400 ÷ 4 ＝ 100（每小格 100！）";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "💡 <b>算一小格</b>：400 ÷ 4 ＝ <b>100</b>！所以每一小格代表 <b>100</b>！"; }
+  } else {
+    if (stat) stat.textContent = "第 3 步：1200 ＋ (100 × 2) ＝ 1400！";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "💡 <b>算問號</b>：問號在 1200 往右第 <b>2</b> 格，<b>1200 ＋ 200 ＝ 1400</b>！按「🔓 解密」翻牌揭晓！"; }
+    if (stepBtn) stepBtn.disabled = true;
+    if (stepBtn) stepBtn.style.opacity = "0.5";
+  }
+  notifyHeight();
+}
+
+function revealQuestion() {
+  if (a4Revealed) return;
+  a4Revealed = true;
+  const qbox = document.getElementById("a4-qbox");
+  const qtext = document.getElementById("a4-qtext");
+  const ring = document.getElementById("a4-flipped");
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+  const revealBtn = document.getElementById("btn-a4-reveal");
+
+  // 翻牌動畫：縮扁 → 換字 → 彈回
+  if (qbox) qbox.style.transform = "scaleX(0)";
+  setTimeout(() => {
+    if (qtext) { qtext.textContent = "1400"; qtext.setAttribute("fill", "#166534"); }
+    const rect = qbox ? qbox.querySelector("rect") : null;
+    if (rect) { rect.setAttribute("fill", "#bbf7d0"); rect.setAttribute("stroke", "#318a70"); }
+    if (qbox) qbox.style.transform = "scaleX(1)";
+    if (ring) ring.style.opacity = "1";
+  }, 220);
+
+  if (stat) stat.textContent = "？ ＝ 1400 ✓";
+  if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "🎉 解密成功！<b>？ ＝ 1400</b>。口訣記牢：先算總差距、除以格數求一小格，再數過去就是答案！"; }
+  if (revealBtn) { revealBtn.disabled = true; revealBtn.style.opacity = "0.5"; }
+  notifyHeight();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌🔬🪙📎🩹🔁🐸❓🔓🔍➡⬅]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：數線三要素。數線上有三件最重要的法寶：最左邊的原點零、右邊代表越來越大的箭頭方向、還有每一格都一樣長的單位長喔！",
+  2: "活動二：單位長切換。每一格可以是一，也可以是十、一百或一千！看數線第一步，一定要先數數看一小格到底代表多少喔！",
+  3: "活動三：青蛙跳跳樂。加法往右跳，減法往左跳！從兩百出發往右跳三格五十，就跳到了三百五十，數線加減法真好玩！",
+  4: "活動四：數線找問號。遇到問號先不要慌！先看已知的兩個數字相差多少，除以總格數算出每一小格代表一百，再數過去就解開謎題囉！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+setUnit(1);
+a4StepIdx = 0;
+</script>
+</body>
+</html>

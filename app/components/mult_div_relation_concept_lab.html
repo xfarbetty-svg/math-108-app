@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-6 乘除應用問題概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn.active { background: var(--sky-deep); border-color: var(--sky-deep); }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">⚖️ 活動一 · 乘除天平</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">📊 活動二 · 未知長條圖</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">❓ 活動三 · 符號解密槽</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🏪 活動四 · 生活應用站</button>
+  </nav>
+
+  <!-- ==================== 活動一：乘除互逆天平 · 算式旋轉卡片 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-6 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">⚖️ 活動一：乘除互逆天平 · 算式旋轉卡片</div>
+    <div class="card-desc">
+      乘法與除法是一體兩面！已知的兩個數<b>乘起來等於積</b>，積<b>除以其中一個數就等於另一個數</b>！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- 天平支柱與底座 -->
+        <rect x="130" y="118" width="60" height="10" rx="5" fill="#94a3b8"/>
+        <rect x="152" y="70" width="16" height="52" rx="6" fill="#cbd5e1"/>
+        <line x1="40" y1="60" x2="280" y2="60" stroke="#64748b" stroke-width="5" stroke-linecap="round" id="a1-beam"/>
+        <!-- 吊繩 -->
+        <line x1="60" y1="60" x2="60" y2="80" stroke="#94a3b8" stroke-width="2"/>
+        <line x1="260" y1="60" x2="260" y2="80" stroke="#94a3b8" stroke-width="2"/>
+        <!-- 左盤：乘法 -->
+        <g id="a1-pan-left">
+          <rect x="20" y="80" width="80" height="36" rx="8" fill="#fef3c7" stroke="#d9910d" stroke-width="2"/>
+          <text x="60" y="103" font-size="13" font-weight="900" fill="#92400e" text-anchor="middle">15 × 8 = 120</text>
+        </g>
+        <!-- 右盤：除法（雙算式） -->
+        <g id="a1-pan-right">
+          <rect x="220" y="80" width="80" height="36" rx="8" fill="#dbeafe" stroke="#2575ba" stroke-width="2"/>
+          <text x="260" y="103" font-size="13" font-weight="900" fill="#1e40af" text-anchor="middle">120 ÷ 8 = 15</text>
+        </g>
+        <!-- 天平支點帽 -->
+        <circle cx="160" cy="60" r="7" fill="#475569"/>
+
+
+        <!-- 底部標籤 -->
+        <text id="a1-caption" x="160" y="140" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">乘法和除法是好朋友！點「🔄 翻轉算式」看看！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a1-flip" onclick="flipEquation()">🔄 翻轉算式</button>
+      </div>
+      <div class="panel-stat" id="a1-stat">15 × 8 ＝ 120</div>
+      <div class="info-bubble" id="a1-bubble">
+        💡 左盤是乘法，右盤是除法！兩邊<b>一樣重</b>，因為它們用的是同一組數字！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：未知數長條圖（誰不知道求誰） ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-6 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📊 活動二：未知長條圖 · 總量、每份與份數</div>
+    <div class="card-desc">
+      長條圖是解題最強武器！看看是<b>【總量】</b>不知道、<b>【每份量】</b>不知道、還是<b>【有幾份】</b>不知道！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a2-svg" viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a2-modeA" onclick="setA2Mode('A')">模式 A · 求總量</button>
+        <button class="btn-action" id="btn-a2-modeB" onclick="setA2Mode('B')">模式 B · 求每份量</button>
+        <button class="btn-action" id="btn-a2-modeC" onclick="setA2Mode('C')">模式 C · 求份數</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">每箱 24 瓶，有 5 箱，全部幾瓶？</div>
+      <div class="info-bubble" id="a2-bubble">
+        💡 <b>總量</b>不知道 → 用乘法：每份量 × 份數 ＝ 總量！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：符號解密槽（括號與未知數） ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-6 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">❓ 活動三：符號解密槽 · 逆向推導未知數</div>
+    <div class="card-desc">
+      題目出現括號 <b>( )</b> 或符號 <b>▲</b> 代表未知數，用<b>乘除互逆</b>把未知數算出來！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a3-svg" viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-q1" onclick="pickCipher(1)">( ) × 7 ＝ 56</button>
+        <button class="btn-action" id="btn-a3-q2" onclick="pickCipher(2)">9 × ( ) ＝ 72</button>
+        <button class="btn-action" id="btn-a3-q3" onclick="pickCipher(3)">( ) ÷ 6 ＝ 14</button>
+        <button class="btn-action" id="btn-a3-q4" onclick="pickCipher(4)">96 ÷ ( ) ＝ 16</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-crack" onclick="crackCipher()">🔓 解密按鈕</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">( ) × 7 ＝ 56，括號裡是幾？</div>
+      <div class="info-bubble warn" id="a3-bubble">
+        💡 先自己想一想：括號在乘號前面，它就是<b>被乘數</b>！用哪個算式反推？
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：生活應用多步驟情境 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-6 活動例 4</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🏪 活動四：生活應用站 · 超商文具情境題</div>
+    <div class="card-desc">
+      生活中的數學題，看懂題目<b>問什麼</b>，列出算式驗證！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a4-svg" viewBox="0 0 320 185" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-s1" onclick="pickScene(1)">🥐 麵包店蛋塔</button>
+        <button class="btn-action" id="btn-a4-s2" onclick="pickScene(2)">✏️ 鉛筆平分組</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-solve" onclick="solveScene()">🧮 列式解題</button>
+      </div>
+      <div class="panel-stat" id="a4-stat">情境一：150 個蛋塔，每 6 個裝一盒，可以裝幾盒？</div>
+      <div class="info-bubble" id="a4-bubble">
+        💡 先看<b>題目問什麼</b>，再想已知哪些數，最後列出算式！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：乘除互逆天平 · 算式旋轉卡片 ==================== */
+let a1Flipped = false;
+
+function flipEquation() {
+  a1Flipped = !a1Flipped;
+  const beam = document.getElementById("a1-beam");
+  const panL = document.getElementById("a1-pan-left");
+  const panR = document.getElementById("a1-pan-right");
+  const stat = document.getElementById("a1-stat");
+  const bubble = document.getElementById("a1-bubble");
+  const caption = document.getElementById("a1-caption");
+
+  if (a1Flipped) {
+    // 天平傾斜一下再回正，右盤亮除法雙卡
+    if (beam) beam.setAttribute("transform", "rotate(6 160 60)");
+    setTimeout(() => { if (beam) beam.setAttribute("transform", "rotate(0 160 60)"); }, 180);
+
+    if (panL) {
+      panL.querySelector("rect").setAttribute("fill", "#dbeafe");
+      panL.querySelector("rect").setAttribute("stroke", "#2575ba");
+      const t = panL.querySelector("text");
+      t.setAttribute("fill", "#1e40af");
+      t.textContent = "120 ÷ 8 = 15";
+    }
+    if (panR) {
+      panR.querySelector("rect").setAttribute("fill", "#dcfce7");
+      panR.querySelector("rect").setAttribute("stroke", "#16a34a");
+      const t = panR.querySelector("text");
+      t.setAttribute("fill", "#166534");
+      t.textContent = "120 ÷ 15 = 8";
+    }
+    if (stat) stat.textContent = "120 ÷ 8 ＝ 15 、 120 ÷ 15 ＝ 8";
+    if (bubble) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🎉 翻轉成功！同一組數字（15、8、120）可以寫成 <b>1 個乘法</b>和 <b>2 個除法</b>算式，這就是乘除互逆！";
+    }
+    if (caption) caption.textContent = "15、8、120 是同一家人：積 120 除以一個數 ＝ 另一個數！";
+  } else {
+    if (panL) {
+      panL.querySelector("rect").setAttribute("fill", "#fef3c7");
+      panL.querySelector("rect").setAttribute("stroke", "#d9910d");
+      const t = panL.querySelector("text");
+      t.setAttribute("fill", "#92400e");
+      t.textContent = "15 × 8 = 120";
+    }
+    if (panR) {
+      panR.querySelector("rect").setAttribute("fill", "#dbeafe");
+      panR.querySelector("rect").setAttribute("stroke", "#2575ba");
+      const t = panR.querySelector("text");
+      t.setAttribute("fill", "#1e40af");
+      t.textContent = "120 ÷ 8 = 15";
+    }
+    if (stat) stat.textContent = "15 × 8 ＝ 120";
+    if (bubble) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "💡 左盤是乘法，右盤是除法！兩邊<b>一樣重</b>，因為它們用的是同一組數字！";
+    }
+    if (caption) caption.textContent = "乘法和除法是好朋友！點「🔄 翻轉算式」看看！";
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動二：未知數長條圖 ==================== */
+let a2Mode = "A";
+
+const A2_MODES = {
+  A: {
+    q: "每箱 24 瓶，有 5 箱，全部幾瓶？",
+    stat0: "模式 A：總量不知道 → 用乘法！",
+    eq: "24 × 5 ＝ 120 瓶",
+    bubble0: "💡 <b>總量</b>不知道 → 用乘法：每份量 × 份數 ＝ 總量！",
+    bubble1: "🎉 5 段每段 24 瓶，合起來就是 <b>24 × 5 ＝ 120 瓶</b>！總量用乘法算！",
+    answer: "答案：120 瓶"
+  },
+  B: {
+    q: "全部 120 瓶，平分裝成 5 箱，每箱幾瓶？",
+    stat0: "模式 B：每份量不知道 → 用除法！",
+    eq: "120 ÷ 5 ＝ 24 瓶",
+    bubble0: "💡 <b>每份量</b>不知道 → 用除法：總量 ÷ 份數 ＝ 每份量！",
+    bubble1: "🎉 把 120 瓶的長條<b>平切成 5 段</b>，每段就是 <b>120 ÷ 5 ＝ 24 瓶</b>！",
+    answer: "答案：每箱 24 瓶"
+  },
+  C: {
+    q: "全部 120 瓶，每 24 瓶裝一箱，可以裝幾箱？",
+    stat0: "模式 C：份數不知道 → 用除法！",
+    eq: "120 ÷ 24 ＝ 5 箱",
+    bubble0: "💡 <b>有幾份</b>不知道 → 用除法：總量 ÷ 每份量 ＝ 份數！",
+    bubble1: "🎉 長條<b>每 24 瓶切一段</b>，共切出 <b>120 ÷ 24 ＝ 5 箱</b>！",
+    answer: "答案：可以裝 5 箱"
+  }
+};
+
+function renderA2() {
+  const svg = document.getElementById("a2-svg");
+  if (!svg) return;
+  const info = A2_MODES[a2Mode];
+
+  let html = "";
+  // 題目文字
+  html += `<text x="160" y="20" font-size="12.5" font-weight="900" fill="#1e293b" text-anchor="middle">${info.q}</text>`;
+
+  // 長條主體：x 30~290，總寬 260
+  const X0 = 30, BARW = 260, BARY = 60, BARH = 46;
+
+  if (a2Mode === "A") {
+    // 求總量：長條等分 5 段，每段標 24，總長標 ?
+    const segW = BARW / 5;
+    for (let i = 0; i < 5; i++) {
+      const x = X0 + i * segW;
+      html += `<rect x="${x.toFixed(1)}" y="${BARY}" width="${segW.toFixed(1)}" height="${BARH}" fill="#93c5fd" stroke="#2563eb" stroke-width="2"/>`;
+      html += `<text x="${(x + segW / 2).toFixed(1)}" y="${BARY + 29}" font-size="12" font-weight="900" fill="#1e40af" text-anchor="middle">24</text>`;
+    }
+    html += `<text x="160" y="${BARY - 8}" font-size="10" font-weight="800" fill="#2563eb" text-anchor="middle">每段＝每箱 24 瓶 × 5 段</text>`;
+    // 總量問號大括號
+    html += `<text x="160" y="${BARY + BARH + 22}" font-size="12" font-weight="900" fill="#dc2626" text-anchor="middle">全部 ＝ ？ 瓶</text>`;
+  } else if (a2Mode === "B") {
+    // 求每份量：整條標 120，切成 5 段，每段標 ?
+    html += `<rect x="${X0}" y="${BARY}" width="${BARW}" height="${BARH}" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>`;
+    const segW = BARW / 5;
+    for (let i = 1; i < 5; i++) {
+      const x = X0 + i * segW;
+      html += `<line x1="${x.toFixed(1)}" y1="${BARY}" x2="${x.toFixed(1)}" y2="${BARY + BARH}" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5 3"/>`;
+    }
+    html += `<text x="160" y="${BARY + 29}" font-size="13" font-weight="900" fill="#166534" text-anchor="middle">全部 120 瓶</text>`;
+    for (let i = 0; i < 5; i++) {
+      const x = X0 + i * segW + segW / 2;
+      html += `<text x="${x.toFixed(1)}" y="${BARY + BARH + 16}" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">? 瓶</text>`;
+    }
+    html += `<text x="160" y="${BARY - 8}" font-size="10" font-weight="800" fill="#16a34a" text-anchor="middle">切成 5 段（5 箱），每段一樣多</text>`;
+  } else {
+    // 求份數：整條標 120，按每 24 劃分，份數標 ?
+    html += `<rect x="${X0}" y="${BARY}" width="${BARW}" height="${BARH}" fill="#fde68a" stroke="#d9910d" stroke-width="2"/>`;
+    // 每 24 瓶一段（120 ÷ 24 = 5 段）
+    const segW = BARW / 5;
+    for (let i = 1; i < 5; i++) {
+      const x = X0 + i * segW;
+      html += `<line x1="${x.toFixed(1)}" y1="${BARY}" x2="${x.toFixed(1)}" y2="${BARY + BARH}" stroke="#d9910d" stroke-width="2.5"/>`;
+    }
+    html += `<text x="160" y="${BARY + 29}" font-size="13" font-weight="900" fill="#92400e" text-anchor="middle">全部 120 瓶</text>`;
+    for (let i = 0; i < 5; i++) {
+      const x = X0 + i * segW + segW / 2;
+      html += `<text x="${x.toFixed(1)}" y="${BARY + BARH + 16}" font-size="10" font-weight="900" fill="#b45309" text-anchor="middle">每 24 瓶</text>`;
+    }
+    html += `<text x="160" y="${BARY - 8}" font-size="10" font-weight="800" fill="#d9910d" text-anchor="middle">每一段裝一箱 → 共能裝 ? 箱</text>`;
+  }
+
+  // 底部算式（逐步解鎖）
+  const solved = a2Solved;
+  if (solved) {
+    html += `<text x="160" y="${BARY + BARH + 46}" font-size="15" font-weight="900" fill="#166534" text-anchor="middle">${info.eq} ✓</text>`;
+  } else {
+    html += `<text x="160" y="${BARY + BARH + 46}" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">想一想該用乘法還是除法？</text>`;
+  }
+
+  svg.innerHTML = html;
+
+  const stat = document.getElementById("a2-stat");
+  const bubble = document.getElementById("a2-bubble");
+  if (stat) stat.textContent = solved ? info.answer : info.stat0;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = solved ? info.bubble1 : info.bubble0;
+  }
+}
+
+let a2Solved = false;
+
+function setA2Mode(mode) {
+  if (!A2_MODES[mode]) return;
+  a2Mode = mode;
+  a2Solved = false;
+  ["A", "B", "C"].forEach(m => {
+    const btn = document.getElementById("btn-a2-mode" + m);
+    if (btn) btn.classList.toggle("active", m === mode);
+  });
+  renderA2();
+  notifyHeight();
+}
+
+function solveA2() {
+  a2Solved = true;
+  renderA2();
+  notifyHeight();
+}
+
+/* ==================== 活動三：符號解密槽 ==================== */
+let a3Pick = 1;
+let a3Cracked = false;
+
+const A3_CIPHERS = {
+  1: {
+    label: "( ) × 7 ＝ 56",
+    stat0: "( ) × 7 ＝ 56，括號裡是幾？",
+    bubble0: "💡 括號在乘號<b>前面</b>，它是<b>被乘數</b>！積 ÷ 已知乘數 ＝ 被乘數，用哪個算式反推？",
+    detail: "56 ÷ 7 ＝ 8",
+    eqShow: "( ) × 7 ＝ 56 → 56 ÷ 7 ＝ 8",
+    bubble1: "🔓 解密成功！積是 56，除以已知乘數 7：<b>56 ÷ 7 ＝ 8</b>，括號裡就是 <b>8</b>！",
+    answer: "答案：括號裡是 8",
+    svg: (cracked) => {
+      let h = `<text x="160" y="24" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">( ) × 7 ＝ 56</text>`;
+      // 天平：左盤括號盒 × 7，右盤 56
+      h += `<rect x="40" y="50" width="110" height="40" rx="8" fill="#fef3c7" stroke="#d9910d" stroke-width="2"/>`;
+      h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#92400e" text-anchor="middle">( ) × 7</text>`;
+      h += `<rect x="190" y="50" width="100" height="40" rx="8" fill="#dbeafe" stroke="#2575ba" stroke-width="2"/>`;
+      h += `<text x="240" y="76" font-size="14" font-weight="900" fill="#1e40af" text-anchor="middle">56</text>`;
+      h += `<text x="170" y="76" font-size="16" font-weight="900" fill="#475569" text-anchor="middle">＝</text>`;
+      if (cracked) {
+        h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#166534" text-anchor="middle">8 × 7</text>`;
+        h += `<text x="160" y="118" font-size="13" font-weight="900" fill="#166534" text-anchor="middle">56 ÷ 7 ＝ 8 ✓</text>`;
+      } else {
+        h += `<text x="160" y="118" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">積 56 ÷ 乘數 7 ＝ ？</text>`;
+      }
+      return h;
+    }
+  },
+  2: {
+    label: "9 × ( ) ＝ 72",
+    stat0: "9 × ( ) ＝ 72，括號裡是幾？",
+    bubble0: "💡 這次括號跑到乘號<b>後面</b>了，它是<b>乘數</b>！反推算式一樣是「積 ÷ 已知乘數」嗎？",
+    detail: "72 ÷ 9 ＝ 8",
+    eqShow: "9 × ( ) ＝ 72 → 72 ÷ 9 ＝ 8",
+    bubble1: "🔓 解密成功！積 72 除以已知乘數 9：<b>72 ÷ 9 ＝ 8</b>，括號裡是 <b>8</b>！位置變了，反推方法一樣！",
+    answer: "答案：括號裡是 8",
+    svg: (cracked) => {
+      let h = `<text x="160" y="24" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">9 × ( ) ＝ 72</text>`;
+      h += `<rect x="40" y="50" width="110" height="40" rx="8" fill="#fef3c7" stroke="#d9910d" stroke-width="2"/>`;
+      h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#92400e" text-anchor="middle">9 × ( )</text>`;
+      h += `<rect x="190" y="50" width="100" height="40" rx="8" fill="#dbeafe" stroke="#2575ba" stroke-width="2"/>`;
+      h += `<text x="240" y="76" font-size="14" font-weight="900" fill="#1e40af" text-anchor="middle">72</text>`;
+      h += `<text x="170" y="76" font-size="16" font-weight="900" fill="#475569" text-anchor="middle">＝</text>`;
+      if (cracked) {
+        h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#166534" text-anchor="middle">9 × 8</text>`;
+        h += `<text x="160" y="118" font-size="13" font-weight="900" fill="#166534" text-anchor="middle">72 ÷ 9 ＝ 8 ✓</text>`;
+      } else {
+        h += `<text x="160" y="118" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">積 72 ÷ 乘數 9 ＝ ？</text>`;
+      }
+      return h;
+    }
+  },
+  3: {
+    label: "( ) ÷ 6 ＝ 14",
+    stat0: "( ) ÷ 6 ＝ 14，括號裡是幾？",
+    bubble0: "💡 這次括號是<b>被除數</b>（總量）！被除數不知道時，要用「<b>商 × 除數</b>」乘回去，這跟前兩題不同喔！",
+    detail: "14 × 6 ＝ 84",
+    eqShow: "( ) ÷ 6 ＝ 14 → 14 × 6 ＝ 84",
+    bubble1: "🔓 解密成功！被除數 ＝ 商 × 除數：<b>14 × 6 ＝ 84</b>，括號裡是 <b>84</b>！驗算：84 ÷ 6 ＝ 14 ✓",
+    answer: "答案：括號裡是 84",
+    svg: (cracked) => {
+      let h = `<text x="160" y="24" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">( ) ÷ 6 ＝ 14</text>`;
+      h += `<rect x="40" y="50" width="110" height="40" rx="8" fill="#fde68a" stroke="#d9910d" stroke-width="2"/>`;
+      h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#92400e" text-anchor="middle">( ) ÷ 6</text>`;
+      h += `<rect x="190" y="50" width="100" height="40" rx="8" fill="#dbeafe" stroke="#2575ba" stroke-width="2"/>`;
+      h += `<text x="240" y="76" font-size="14" font-weight="900" fill="#1e40af" text-anchor="middle">14</text>`;
+      h += `<text x="170" y="76" font-size="16" font-weight="900" fill="#475569" text-anchor="middle">＝</text>`;
+      if (cracked) {
+        h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#166534" text-anchor="middle">84 ÷ 6</text>`;
+        h += `<text x="160" y="118" font-size="13" font-weight="900" fill="#166534" text-anchor="middle">14 × 6 ＝ 84 ✓</text>`;
+      } else {
+        h += `<text x="160" y="118" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">被除數不知道 → 商 × 除數 乘回去！</text>`;
+      }
+      return h;
+    }
+  },
+  4: {
+    label: "96 ÷ ( ) ＝ 16",
+    stat0: "96 ÷ ( ) ＝ 16，括號裡是幾？",
+    bubble0: "💡 這次括號是<b>除數</b>！除數不知道時，用「<b>被除數 ÷ 商</b>」找出來，再驗算看看！",
+    detail: "96 ÷ 16 ＝ 6",
+    eqShow: "96 ÷ ( ) ＝ 16 → 96 ÷ 16 ＝ 6",
+    bubble1: "🔓 解密成功！除數 ＝ 被除數 ÷ 商：<b>96 ÷ 16 ＝ 6</b>，括號裡是 <b>6</b>！驗算：96 ÷ 6 ＝ 16 ✓",
+    answer: "答案：括號裡是 6",
+    svg: (cracked) => {
+      let h = `<text x="160" y="24" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">96 ÷ ( ) ＝ 16</text>`;
+      h += `<rect x="40" y="50" width="110" height="40" rx="8" fill="#fef3c7" stroke="#d9910d" stroke-width="2"/>`;
+      h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#92400e" text-anchor="middle">96 ÷ ( )</text>`;
+      h += `<rect x="190" y="50" width="100" height="40" rx="8" fill="#dbeafe" stroke="#2575ba" stroke-width="2"/>`;
+      h += `<text x="240" y="76" font-size="14" font-weight="900" fill="#1e40af" text-anchor="middle">16</text>`;
+      h += `<text x="170" y="76" font-size="16" font-weight="900" fill="#475569" text-anchor="middle">＝</text>`;
+      if (cracked) {
+        h += `<text x="95" y="76" font-size="14" font-weight="900" fill="#166534" text-anchor="middle">96 ÷ 6</text>`;
+        h += `<text x="160" y="118" font-size="13" font-weight="900" fill="#166534" text-anchor="middle">96 ÷ 16 ＝ 6 ✓</text>`;
+      } else {
+        h += `<text x="160" y="118" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">除數不知道 → 被除數 ÷ 商！</text>`;
+      }
+      return h;
+    }
+  }
+};
+
+function renderA3() {
+  const svg = document.getElementById("a3-svg");
+  if (!svg) return;
+  const info = A3_CIPHERS[a3Pick];
+  svg.innerHTML = info.svg(a3Cracked);
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+  if (stat) stat.textContent = a3Cracked ? info.answer : info.stat0;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = a3Cracked ? info.bubble1 : info.bubble0;
+    if (!a3Cracked) bubble.classList.add("warn");
+  }
+  notifyHeight();
+}
+
+function pickCipher(n) {
+  if (!A3_CIPHERS[n]) return;
+  a3Pick = n;
+  a3Cracked = false;
+  [1, 2, 3, 4].forEach(i => {
+    const btn = document.getElementById("btn-a3-q" + i);
+    if (btn) btn.classList.toggle("active", i === n);
+  });
+  renderA3();
+}
+
+function crackCipher() {
+  a3Cracked = true;
+  renderA3();
+}
+
+/* ==================== 活動四：生活應用站 ==================== */
+let a4Scene = 1;
+let a4Solved = false;
+
+const A4_SCENES = {
+  1: {
+    stat0: "情境一：150 個蛋塔，每 6 個裝一盒，可以裝幾盒？",
+    bubble0: "💡 已知<b>總量 150</b> 和<b>每份量 6</b>，問<b>有幾份</b>（幾盒）→ 該用哪個運算？",
+    steps: ["150 ÷ 6 ＝ 25", "150 ÷ 6 ＝ 25 盒"],
+    bubble1: "🎉 總量 ÷ 每份量 ＝ 份數：<b>150 ÷ 6 ＝ 25 盒</b>！一盒賣 90 元，25 盒共 2250 元！",
+    answer: "答案：可以裝 25 盒",
+    svg: (solved) => {
+      let h = `<text x="160" y="22" font-size="12.5" font-weight="900" fill="#1e293b" text-anchor="middle">烤了 150 個蛋塔，每 6 個裝一盒</text>`;
+      // 蛋塔長條：總量 150，按每 6 個切 25 段
+      const X0 = 26, BARW = 268, BARY = 44, BARH = 40;
+      h += `<rect x="${X0}" y="${BARY}" width="${BARW}" height="${BARH}" fill="#fde68a" stroke="#d9910d" stroke-width="2"/>`;
+      const segW = BARW / 25;
+      for (let i = 1; i < 25; i++) {
+        const x = X0 + i * segW;
+        h += `<line x1="${x.toFixed(1)}" y1="${BARY}" x2="${x.toFixed(1)}" y2="${BARY + BARH}" stroke="#d9910d" stroke-width="0.8" opacity="0.6"/>`;
+      }
+      h += `<text x="160" y="${BARY + 26}" font-size="13" font-weight="900" fill="#92400e" text-anchor="middle">全部 150 個</text>`;
+      h += `<text x="160" y="${BARY - 8}" font-size="10" font-weight="800" fill="#d9910d" text-anchor="middle">每 6 個一切 → 裝一盒</text>`;
+      if (solved) {
+        h += `<text x="160" y="${BARY + BARH + 24}" font-size="14.5" font-weight="900" fill="#166534" text-anchor="middle">150 ÷ 6 ＝ 25 盒 ✓</text>`;
+        h += `<text x="160" y="${BARY + BARH + 44}" font-size="11" font-weight="800" fill="#166534" text-anchor="middle">總量 ÷ 每份量 ＝ 份數</text>`;
+      } else {
+        h += `<text x="160" y="${BARY + BARH + 24}" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">問「可以裝幾盒」＝ 問有幾份！</text>`;
+      }
+      return h;
+    }
+  },
+  2: {
+    stat0: "情境二：鉛筆一打 12 枝，買 8 打，平分給 6 組，每組幾枝？",
+    bubble0: "💡 這題要<b>兩步驟</b>！先算總共買了幾枝（乘法），再平分給 6 組（除法）！",
+    steps: ["12 × 8 ＝ 96", "12 × 8 ＝ 96，96 ÷ 6 ＝ 16"],
+    bubble1: "🎉 兩步驟：先 <b>12 × 8 ＝ 96 枝</b>（總量用乘法），再 <b>96 ÷ 6 ＝ 16 枝</b>（每份量用除法）！",
+    answer: "答案：每組分 16 枝",
+    svg: (solved) => {
+      let h = `<text x="160" y="22" font-size="12.5" font-weight="900" fill="#1e293b" text-anchor="middle">一打 12 枝 × 8 打 → 平分 6 組</text>`;
+      // 上層：8 打的長條（每打一段）
+      const X0 = 26, BARW = 268, BARY = 42, BARH = 36;
+      const segW = BARW / 8;
+      for (let i = 0; i < 8; i++) {
+        const x = X0 + i * segW;
+        h += `<rect x="${x.toFixed(1)}" y="${BARY}" width="${segW.toFixed(1)}" height="${BARH}" fill="#bfdbfe" stroke="#2575ba" stroke-width="1.6"/>`;
+        h += `<text x="${(x + segW / 2).toFixed(1)}" y="${BARY + 24}" font-size="11" font-weight="900" fill="#1e40af" text-anchor="middle">12</text>`;
+      }
+      h += `<text x="160" y="${BARY - 8}" font-size="10" font-weight="800" fill="#2575ba" text-anchor="middle">8 打，每打 12 枝</text>`;
+      if (solved) {
+        h += `<text x="160" y="${BARY + BARH + 20}" font-size="12" font-weight="900" fill="#92400e" text-anchor="middle">第一步：12 × 8 ＝ 96 枝</text>`;
+        // 下層：96 ÷ 6 平分示意
+        const X2 = 26, W2 = 268, Y2 = 96, H2 = 34;
+        const segW2 = W2 / 6;
+        for (let i = 0; i < 6; i++) {
+          const x = X2 + i * segW2;
+          h += `<rect x="${x.toFixed(1)}" y="${Y2}" width="${segW2.toFixed(1)}" height="${H2}" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.6"/>`;
+          h += `<text x="${(x + segW2 / 2).toFixed(1)}" y="${Y2 + 22}" font-size="11" font-weight="900" fill="#166534" text-anchor="middle">16</text>`;
+        }
+        h += `<text x="160" y="${Y2 + H2 + 18}" font-size="12" font-weight="900" fill="#166534" text-anchor="middle">第二步：96 ÷ 6 ＝ 16 枝 ✓</text>`;
+      } else {
+        h += `<text x="160" y="${BARY + BARH + 22}" font-size="11" font-weight="800" fill="#8a857b" text-anchor="middle">先算全部枝數，再平分給 6 組！</text>`;
+      }
+      return h;
+    }
+  }
+};
+
+function renderA4() {
+  const svg = document.getElementById("a4-svg");
+  if (!svg) return;
+  const info = A4_SCENES[a4Scene];
+  svg.innerHTML = info.svg(a4Solved);
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+  if (stat) stat.textContent = a4Solved ? info.answer : info.stat0;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = a4Solved ? info.bubble1 : info.bubble0;
+  }
+}
+
+function pickScene(n) {
+  if (!A4_SCENES[n]) return;
+  a4Scene = n;
+  a4Solved = false;
+  [1, 2].forEach(i => {
+    const btn = document.getElementById("btn-a4-s" + i);
+    if (btn) btn.classList.toggle("active", i === n);
+  });
+  renderA4();
+}
+
+function solveScene() {
+  a4Solved = true;
+  renderA4();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌⚖️📊❓🏪🔓🧮🥐✏️]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：乘除天平。乘法和除法是好朋友！十五乘八等於一百二十，反過來一百二十除以八就等於十五，一百二十除以十五就等於八！",
+  2: "活動二：未知長條圖。解題看長條圖最清楚！不知道總量用乘法，不知道每份是多少或有幾份，就用全部除以知道的數量喔！",
+  3: "活動三：符號解密槽。遇到括號不用怕！括號乘七等於五十六，反過來用五十六除以七，答案就是八！被除數不知道就用商乘除數喔！",
+  4: "活動四：生活應用站。把題目轉化成數學算式，一步步解題，生活處處都是乘除法的應用喔！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+renderA2();
+setA2Mode("A");
+renderA3();
+pickCipher(1);
+renderA4();
+pickScene(1);
+</script>
+</body>
+</html>

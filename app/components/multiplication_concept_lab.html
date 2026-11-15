@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-3 乘以一位數 概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.btn-tts.speaking {
+  background: #fff3e0;
+  border-color: #ffd180;
+  color: #e65100;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn.active { background: var(--sky-deep); border-color: var(--sky-deep); }
+.part-btn[data-obj="blue"].active  { background: var(--sky-deep); border-color: var(--sky-deep); }
+.part-btn[data-obj="green"].active { background: var(--mint-deep); border-color: var(--mint-deep); }
+.part-btn[data-obj="sum"].active   { background: var(--lemon-deep); border-color: var(--lemon-deep); }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🧩 活動一 · 面積模型</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🪜 活動二 · 階梯進位</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🔍 活動三 · 中間含零</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🎡 活動四 · 規律估算</button>
+  </nav>
+
+  <!-- ==================== 活動一：乘法直式與面積模型 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-3 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧩 活動一：乘法直式與面積模型 · 拆解各部分乘積</div>
+    <div class="card-desc">
+      二位數乘一位數（如 <b>34 × 3</b>），可以拆成 <b>(30 × 3) + (4 × 3) = 90 + 12 = 102</b>！面積模型讓乘法一目了然！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- 面積模型標籤：寬 34 = 30 + 4，高 3 -->
+        <text x="89" y="16" font-size="11" font-weight="900" fill="#318a70" text-anchor="middle">30</text>
+        <text x="174" y="16" font-size="11" font-weight="900" fill="#2575ba" text-anchor="middle">4</text>
+        <text x="7" y="75" font-size="11" font-weight="900" fill="#8a857b" text-anchor="middle">3</text>
+        <text x="22" y="138" font-size="8.5" font-weight="800" fill="#8a857b">寬 34 × 高 3 的長方形面積</text>
+
+        <!-- 綠色塊：30 × 3 ＝ 90 -->
+        <g id="a1-g-green" style="transition: opacity 0.2s;">
+          <rect x="14" y="26" width="150" height="90" fill="#7bc9b2" stroke="#318a70" stroke-width="2.5"/>
+          <text x="89" y="64" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">30 × 3</text>
+          <text x="89" y="86" font-size="17" font-weight="900" fill="#ffffff" text-anchor="middle">＝ 90</text>
+        </g>
+        <!-- 藍色塊：4 × 3 ＝ 12 -->
+        <g id="a1-g-blue" style="transition: opacity 0.2s;">
+          <rect x="164" y="26" width="20" height="90" fill="#7db8e8" stroke="#2575ba" stroke-width="2.5"/>
+          <text x="174" y="82" font-size="9.5" font-weight="900" fill="#ffffff" text-anchor="middle" transform="rotate(-90 174 78)">4 × 3 ＝ 12</text>
+        </g>
+
+        <!-- 右側直式 -->
+        <g font-weight="900" font-size="17" fill="#3d3a34" text-anchor="middle">
+          <text x="240" y="38">3</text><text x="262" y="38">4</text>
+          <text x="210" y="58" fill="#8a857b" font-size="15">×</text><text x="262" y="58">3</text>
+        </g>
+        <line x1="196" y1="66" x2="282" y2="66" stroke="#94a3b8" stroke-width="2"/>
+        <g id="a1-g-blue-row" style="transition: opacity 0.2s;">
+          <text x="240" y="88" font-size="16" font-weight="900" fill="#2575ba" text-anchor="middle">1</text>
+          <text x="262" y="88" font-size="16" font-weight="900" fill="#2575ba" text-anchor="middle">2</text>
+          <text x="288" y="88" font-size="8.5" font-weight="800" fill="#2575ba" text-anchor="start">← 4×3</text>
+        </g>
+        <g id="a1-g-green-row" style="transition: opacity 0.2s;">
+          <text x="240" y="110" font-size="16" font-weight="900" fill="#318a70" text-anchor="middle">9</text>
+          <text x="262" y="110" font-size="16" font-weight="900" fill="#318a70" text-anchor="middle">0</text>
+          <text x="288" y="110" font-size="8.5" font-weight="800" fill="#318a70" text-anchor="start">← 30×3</text>
+        </g>
+        <line x1="196" y1="116" x2="282" y2="116" stroke="#94a3b8" stroke-width="2"/>
+        <g id="a1-g-sum" style="transition: opacity 0.2s;">
+          <text x="218" y="134" font-size="18" font-weight="900" fill="#3d3a34" text-anchor="middle">1</text>
+          <text x="240" y="134" font-size="18" font-weight="900" fill="#3d3a34" text-anchor="middle">0</text>
+          <text x="262" y="134" font-size="18" font-weight="900" fill="#3d3a34" text-anchor="middle">2</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn active" data-obj="all" onclick="a1Focus('all')">🔍 看全部</button>
+        <button class="part-btn" data-obj="blue" onclick="a1Focus('blue')">🟦 只看 4 × 3</button>
+        <button class="part-btn" data-obj="green" onclick="a1Focus('green')">🟩 只看 30 × 3</button>
+        <button class="part-btn" data-obj="sum" onclick="a1Focus('sum')">🟨 合起來 ＝ 102</button>
+      </div>
+      <div class="panel-stat" id="a1-stat">34 × 3 ＝ 90 ＋ 12 ＝ ？</div>
+      <div class="info-bubble" id="a1-bubble">
+        💡 面積模型：把 <b>34 拆成 30 和 4</b>，分別乘以 3 再合起來！點下面的按鈕，看看每一塊面積的由來！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：連續進位階梯直式 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-3 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🪜 活動二：連續進位直式 · 個位十位步步進位</div>
+    <div class="card-desc">
+      三位數乘以一位數，<b>從個位開始乘</b>，滿十向左進位！進位的數字要<b>加進下一次的乘積</b>裡！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a2-svg" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a2-prev" onclick="a2Prev()">⬅️ 上一步</button>
+        <button class="btn-action" id="btn-a2-next" onclick="a2Next()">下一步 ➡️</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">476 × 5 ＝ ？（從個位開始乘起！）</div>
+      <div class="info-bubble warn" id="a2-bubble">
+        💡 先想一想：個位 <b>6 × 5 ＝ ？</b>滿十了嗎？要進多少給十位呢？
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：中間含 0 乘法陷阱 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-3 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🔍 活動三：中間含 0 乘法陷阱 · 零乘任何數都是零</div>
+    <div class="card-desc">
+      遇到十位是 0 的題目（如 <b>306 × 4</b>），千萬別把十位吃掉！<b>0 × 4 = 0</b>，加上個位進位的 2，十位要寫 2！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- 左：小明的錯誤算法 -->
+        <text x="78" y="18" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">❌ 小明的算法（144）</text>
+        <g font-size="17" font-weight="900" fill="#3d3a34" text-anchor="middle">
+          <text x="40" y="44">3</text><text x="60" y="44">0</text><text x="80" y="44">6</text>
+          <text x="20" y="62" fill="#8a857b" font-size="14">×</text><text x="80" y="62">4</text>
+        </g>
+        <line x1="14" y1="70" x2="98" y2="70" stroke="#94a3b8" stroke-width="2"/>
+        <g font-size="16" font-weight="900" fill="#dc2626" text-anchor="middle">
+          <text x="40" y="92">1</text><text x="60" y="92">4</text><text x="80" y="92">4</text>
+        </g>
+        <circle cx="110" cy="86" r="11" fill="#dc2626"/>
+        <text x="110" y="90.5" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">✗</text>
+        <!-- 十位的 0 被吃掉：紅色打叉 -->
+        <line x1="55" y1="34" x2="65" y2="44" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="65" y1="34" x2="55" y2="44" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="78" y="112" font-size="9" font-weight="800" fill="#dc2626" text-anchor="middle">把 306 當成 36 算，十位的 0 被吃掉了！</text>
+
+        <!-- 右：正確算法 -->
+        <text x="228" y="18" font-size="11" font-weight="900" fill="#16a34a" text-anchor="middle">✅ 正確的算法（1224）</text>
+        <!-- 個位進位 ② -->
+        <text x="236" y="30" font-size="10.5" font-weight="900" fill="#dc2626" text-anchor="middle">②</text>
+        <g font-size="17" font-weight="900" fill="#3d3a34" text-anchor="middle">
+          <text x="205" y="44">3</text><text x="225" y="44">0</text><text x="245" y="44">6</text>
+          <text x="185" y="62" fill="#8a857b" font-size="14">×</text><text x="245" y="62">4</text>
+        </g>
+        <line x1="176" y1="70" x2="260" y2="70" stroke="#94a3b8" stroke-width="2"/>
+        <g font-size="16" font-weight="900" fill="#3d3a34" text-anchor="middle">
+          <text x="185" y="92">1</text><text x="205" y="92">2</text><text x="225" y="92">2</text><text x="245" y="92">4</text>
+        </g>
+        <!-- 放大鏡破招覆蓋層 -->
+        <g id="a3-fix" opacity="0" style="transition: opacity 0.25s;">
+          <rect x="214" y="26" width="22" height="74" rx="6" fill="#e0f2fe" opacity="0.65" stroke="#2575ba" stroke-width="2" stroke-dasharray="4 3"/>
+          <circle cx="288" cy="30" r="16" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5 3"/>
+          <text x="288" y="35" font-size="11" font-weight="900" fill="#16a34a" text-anchor="middle">破招</text>
+          <text x="228" y="134" font-size="10" font-weight="900" fill="#166534" text-anchor="middle">十位：0×4＝0 ＋ 進位 2 → 寫 2！百位：3×4＝12 → 1224 ✓</text>
+        </g>
+        <text id="a3-caption" x="160" y="134" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">按「🔍 放大鏡破招」，看穿十位的秘密！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-fix" onclick="a3Fix()">🔍 放大鏡破招</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">306 × 4 ＝ 144 還是 1224？</div>
+      <div class="info-bubble warn" id="a3-bubble">
+        💡 仔細看：小明是不是<b>跳過了十位的 0</b>？先自己想一想再破招！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：末尾有 0 規律探索與生活估算 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-3 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🎡 活動四：末尾有 0 規律與估算 · 秒殺心算法則</div>
+    <div class="card-desc">
+      末尾有 0 的乘法，<b>先算前面的數字乘法，再把 0 補在後面</b>！生活採買快速估算超好用！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a4-svg" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-spin" onclick="a4Spin()">🎡 轉動規律輪盤</button>
+        <button class="btn-action" id="btn-a4-est" onclick="a4Estimate()">🛒 估算解法</button>
+      </div>
+      <div class="panel-stat" id="a4-stat">規律：7 × 3 ＝ 21，那 70 × 3 呢？</div>
+      <div class="info-bubble" id="a4-bubble">
+        💡 點「🎡 轉動規律輪盤」，看看 <b>0 的個數</b>變化時，答案怎麼跟著變！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：面積模型聚焦 ==================== */
+const A1_FOCUS_MAP = {
+  all:   { green: 1, blue: 1, greenRow: 1, blueRow: 1, sum: 1 },
+  blue:  { green: 0.15, blue: 1, greenRow: 0.15, blueRow: 1, sum: 0.15 },
+  green: { green: 1, blue: 0.15, greenRow: 1, blueRow: 0.15, sum: 0.15 },
+  sum:   { green: 1, blue: 1, greenRow: 1, blueRow: 1, sum: 1 }
+};
+
+function a1Focus(part) {
+  const map = A1_FOCUS_MAP[part];
+  if (!map) return;
+  document.querySelectorAll("#act-1-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.obj === part));
+
+  const gGreen = document.getElementById("a1-g-green");
+  const gBlue = document.getElementById("a1-g-blue");
+  const gGreenRow = document.getElementById("a1-g-green-row");
+  const gBlueRow = document.getElementById("a1-g-blue-row");
+  const gSum = document.getElementById("a1-g-sum");
+  if (gGreen) gGreen.style.opacity = map.green;
+  if (gBlue) gBlue.style.opacity = map.blue;
+  if (gGreenRow) gGreenRow.style.opacity = map.greenRow;
+  if (gBlueRow) gBlueRow.style.opacity = map.blueRow;
+  if (gSum) gSum.style.opacity = map.sum;
+
+  const stat = document.getElementById("a1-stat");
+  const bubble = document.getElementById("a1-bubble");
+  if (part === "blue") {
+    if (stat) stat.textContent = "4 × 3 ＝ 12";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "🟦 藍色塊是 <b>4 × 3 ＝ 12</b>：個位的 4 先乘，個位乘個位積 12！"; }
+  } else if (part === "green") {
+    if (stat) stat.textContent = "30 × 3 ＝ 90";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "🟩 綠色塊是 <b>30 × 3 ＝ 90</b>：十位的 30 再乘，30 × 3 ＝ 90！"; }
+  } else if (part === "sum") {
+    if (stat) stat.textContent = "34 × 3 ＝ 90 ＋ 12 ＝ 102 ✓";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "🎉 合起來：<b>90 ＋ 12 ＝ 102</b>！所以 34 × 3 ＝ 102，面積模型拆解一目了然！"; }
+  } else {
+    if (stat) stat.textContent = "34 × 3 ＝ 90 ＋ 12 ＝ ？";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "💡 面積模型：把 <b>34 拆成 30 和 4</b>，分別乘以 3 再合起來！點下面的按鈕，看看每一塊面積的由來！"; }
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動二：連續進位階梯直式 ==================== */
+let a2Step = 0;   // 0: 題目 | 1: 個位 | 2: 十位 | 3: 百位完成
+
+const A2_STEP_INFO = [
+  { stat: "476 × 5 ＝ ？（從個位開始乘起！）",
+    bubble: "💡 先想一想：個位 <b>6 × 5 ＝ ？</b>滿十了嗎？要進多少給十位呢？",
+    l1: "點「下一步 ➡️」，從個位開始乘起！", l2: "" },
+  { stat: "個位：6 × 5 ＝ 30 → 寫 0 進 3",
+    bubble: "🪜 個位 <b>6 × 5 ＝ 30</b>：寫 0，把 <b>3 進位</b>給十位（紅色 ③）！",
+    l1: "個位：6 × 5 ＝ 30", l2: "寫 0，進 3 給十位（紅色 ③）" },
+  { stat: "十位：7 × 5 ＋ 3 ＝ 38 → 寫 8 進 3",
+    bubble: "🪜 十位 <b>7 × 5 ＝ 35</b>，加上進來的 3 ＝ <b>38</b>：寫 8，再進 3 給百位！",
+    l1: "十位：7 × 5 ＝ 35 ＋ 3 ＝ 38", l2: "寫 8，再進 3 給百位（紅色 ③）" },
+  { stat: "百位：4 × 5 ＋ 3 ＝ 23 → 答案 2380！",
+    bubble: "🎉 百位 <b>4 × 5 ＝ 20</b>，加上進來的 3 ＝ <b>23</b>，直接寫 23！答案：<b>476 × 5 ＝ 2380</b>！",
+    l1: "百位：4 × 5 ＝ 20 ＋ 3 ＝ 23", l2: "答案：2380 🎉" }
+];
+
+function renderA2() {
+  const svg = document.getElementById("a2-svg");
+  if (!svg) return;
+  const info = A2_STEP_INFO[a2Step];
+
+  let s = "";
+  // 標題
+  s += `<text x="160" y="18" font-size="14" font-weight="900" fill="#1e293b" text-anchor="middle">476 × 5 ＝ ？</text>`;
+
+  // 進位小數字（紅 ③）
+  if (a2Step >= 1) s += `<text x="234" y="32" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">③</text>`;
+  if (a2Step >= 2) s += `<text x="194" y="32" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">③</text>`;
+
+  // 當前位數高亮底色
+  const HL = { 1: { x: 246, y: 36 }, 2: { x: 206, y: 36 }, 3: { x: 166, y: 36 } };
+  if (HL[a2Step]) {
+    s += `<rect x="${HL[a2Step].x}" y="${HL[a2Step].y}" width="28" height="24" rx="5" fill="#fde68a" opacity="0.75"/>`;
+  }
+
+  // 被乘數與乘數
+  s += `<g font-size="21" font-weight="900" fill="#3d3a34" text-anchor="middle">`;
+  s += `<text x="180" y="54">4</text><text x="220" y="54">7</text><text x="260" y="54">6</text>`;
+  s += `<text x="140" y="72" fill="#8a857b" font-size="17">×</text><text x="260" y="72">5</text>`;
+  s += `</g>`;
+  s += `<line x1="128" y1="80" x2="292" y2="80" stroke="#94a3b8" stroke-width="2"/>`;
+
+  // 乘積（逐步顯現）
+  if (a2Step >= 1) {
+    if (a2Step === 1) s += `<rect x="246" y="86" width="28" height="24" rx="5" fill="#bbf7d0" opacity="0.9"/>`;
+    s += `<text x="260" y="104" font-size="21" font-weight="900" fill="${a2Step === 1 ? "#166534" : "#3d3a34"}" text-anchor="middle">0</text>`;
+  }
+  if (a2Step >= 2) {
+    if (a2Step === 2) s += `<rect x="206" y="86" width="28" height="24" rx="5" fill="#bbf7d0" opacity="0.9"/>`;
+    s += `<text x="220" y="104" font-size="21" font-weight="900" fill="${a2Step === 2 ? "#166534" : "#3d3a34"}" text-anchor="middle">8</text>`;
+  }
+  if (a2Step >= 3) {
+    s += `<rect x="126" y="86" width="108" height="24" rx="5" fill="#bbf7d0" opacity="0.55"/>`;
+    s += `<text x="180" y="104" font-size="21" font-weight="900" fill="#166534" text-anchor="middle">3</text>`;
+    s += `<text x="140" y="104" font-size="21" font-weight="900" fill="#166534" text-anchor="middle">2</text>`;
+  }
+
+  // 說明文字
+  if (info.l1) s += `<text x="160" y="134" font-size="12" font-weight="900" fill="#92400e" text-anchor="middle">${info.l1}</text>`;
+  if (info.l2) s += `<text x="160" y="152" font-size="12" font-weight="900" fill="${a2Step === 3 ? "#166534" : "#92400e"}" text-anchor="middle">${info.l2}</text>`;
+
+  svg.innerHTML = s;
+
+  const stat = document.getElementById("a2-stat");
+  const bubble = document.getElementById("a2-bubble");
+  if (stat) stat.textContent = info.stat;
+  if (bubble) {
+    bubble.classList.toggle("warn", a2Step < 3);
+    bubble.innerHTML = info.bubble;
+  }
+
+  const btnPrev = document.getElementById("btn-a2-prev");
+  const btnNext = document.getElementById("btn-a2-next");
+  if (btnPrev) {
+    btnPrev.disabled = (a2Step === 0);
+    btnPrev.style.opacity = (a2Step === 0) ? 0.45 : 1;
+  }
+  if (btnNext) btnNext.textContent = (a2Step === 3) ? "🔄 重新開始" : "下一步 ➡️";
+
+  notifyHeight();
+}
+
+function a2Next() {
+  if (a2Step >= 3) { a2Step = 0; }
+  else { a2Step++; }
+  renderA2();
+}
+function a2Prev() {
+  if (a2Step > 0) { a2Step--; renderA2(); }
+}
+
+/* ==================== 活動三：中間含 0 破招 ==================== */
+let a3Fixed = false;
+function a3Fix() {
+  a3Fixed = !a3Fixed;
+  const fix = document.getElementById("a3-fix");
+  const caption = document.getElementById("a3-caption");
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+  const btn = document.getElementById("btn-a3-fix");
+  if (a3Fixed) {
+    if (fix) fix.style.opacity = "1";
+    if (caption) caption.style.display = "none";
+    if (stat) stat.textContent = "🎉 破招成功：306 × 4 ＝ 1224 ✓";
+    if (bubble) { bubble.classList.remove("warn"); bubble.innerHTML = "🔍 破招！十位 <b>0 × 4 ＝ 0</b>，加上個位進位的 <b>2</b>，十位一定要寫 <b>2</b>！百位 <b>3 × 4 ＝ 12</b>，合起來 <b>1224</b>！"; }
+    if (btn) btn.textContent = "🔁 收回放大鏡";
+  } else {
+    if (fix) fix.style.opacity = "0";
+    if (caption) caption.style.display = "block";
+    if (stat) stat.textContent = "306 × 4 ＝ 144 還是 1224？";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "💡 仔細看：小明是不是<b>跳過了十位的 0</b>？先自己想一想再破招！"; }
+    if (btn) btn.textContent = "🔍 放大鏡破招";
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動四：規律輪盤與生活估算 ==================== */
+let a4RuleStep = 0;   // 0: 未轉 | 1~3: 已揭示第 1~3 條規律
+let a4EstOn = false;
+
+const A4_RULES = [
+  { text: "7 × 3 ＝ 21",    tag: "基礎乘法" },
+  { text: "70 × 3 ＝ 210",  tag: "補 1 個 0" },
+  { text: "700 × 3 ＝ 2100", tag: "補 2 個 0" }
+];
+
+const A4_RULE_INFO = [
+  { stat: "規律：7 × 3 ＝ 21，那 70 × 3 呢？", bubble: "💡 點「🎡 轉動規律輪盤」，看看 <b>0 的個數</b>變化時，答案怎麼跟著變！" },
+  { stat: "規律一：7 × 3 ＝ 21", bubble: "🎡 第一條：<b>7 × 3 ＝ 21</b>！這是最基礎的乘法，繼續轉動輪盤看看！", warn: false },
+  { stat: "規律二：70 × 3 ＝ 210（補 1 個 0）", bubble: "🎡 第二條：<b>70 × 3 ＝ 210</b>！先算 7 × 3 ＝ 21，再<b>補 1 個 0</b>！", warn: false },
+  { stat: "規律三：700 × 3 ＝ 2100（補 2 個 0）", bubble: "🎡 第三條：<b>700 × 3 ＝ 2100</b>！先算 7 × 3 ＝ 21，再<b>補 2 個 0</b>！末尾有 0，秒殺心算！", warn: false }
+];
+
+function renderA4() {
+  const svg = document.getElementById("a4-svg");
+  if (!svg) return;
+
+  let s = "";
+  // 左側：規律卡片列
+  for (let i = 0; i < 3; i++) {
+    const revealed = (a4RuleStep >= i + 1);
+    const active = (a4RuleStep === i + 1);
+    const y = 26 + i * 38;
+    s += `<g opacity="${revealed ? 1 : 0.15}" style="transition: opacity 0.25s;">`;
+    s += `<rect x="12" y="${y}" width="178" height="30" rx="8" fill="${active ? "#fde68a" : "#f8fafc"}" stroke="${active ? "#d9910d" : "#cbd5e1"}" stroke-width="2"/>`;
+    s += `<text x="86" y="${y + 21}" font-size="14" font-weight="900" fill="${active ? "#92400e" : "#334155"}" text-anchor="middle">${A4_RULES[i].text}</text>`;
+    s += `<text x="184" y="${y + 20}" font-size="8.5" font-weight="800" fill="#d9910d" text-anchor="end">${A4_RULES[i].tag}</text>`;
+    s += `</g>`;
+  }
+  s += `<text x="100" y="156" font-size="9" font-weight="800" fill="#8a857b" text-anchor="middle">先算前面的數字，再把 0 補在後面！</text>`;
+
+  // 右側：生活估算情境（超商 4 箱飲料，每箱 298 元）
+  s += `<g id="a4-est" opacity="${a4EstOn ? 1 : 0.12}" style="transition: opacity 0.25s;">`;
+  s += `<text x="252" y="22" font-size="10" font-weight="900" fill="#1e293b" text-anchor="middle">買 4 箱飲料，每箱 298 元</text>`;
+  const cratePos = [[206, 32], [258, 32], [206, 62], [258, 62]];
+  cratePos.forEach(p => {
+    s += `<rect x="${p[0]}" y="${p[1]}" width="46" height="24" rx="5" fill="#e3f2fd" stroke="#2575ba" stroke-width="2"/>`;
+    s += `<text x="${p[0] + 23}" y="${p[1] + 16.5}" font-size="9.5" font-weight="900" fill="#2575ba" text-anchor="middle">298元</text>`;
+  });
+  s += `<text x="252" y="110" font-size="11" font-weight="900" fill="#92400e" text-anchor="middle">把 298 想成 300</text>`;
+  s += `<text x="252" y="132" font-size="13.5" font-weight="900" fill="#166534" text-anchor="middle">300 × 4 ＝ 1200 元</text>`;
+  s += `<text x="252" y="152" font-size="9.5" font-weight="800" fill="#8a857b" text-anchor="middle">大約 1200 元，心算超快！</text>`;
+  s += `</g>`;
+
+  // 分隔線
+  s += `<line x1="200" y1="26" x2="200" y2="158" stroke="#f0e7da" stroke-width="2"/>`;
+
+  svg.innerHTML = s;
+
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+  const info = A4_RULE_INFO[a4RuleStep];
+  if (stat && info) stat.textContent = info.stat;
+  if (bubble && info) {
+    bubble.classList.toggle("warn", info.warn !== false && a4RuleStep === 0);
+    bubble.innerHTML = info.bubble;
+  }
+  if (a4EstOn && bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = "🛒 估算解法：<b>298 ≈ 300</b>，所以 <b>300 × 4 ＝ 1200</b> 元！生活採買，先取近似值再心算，超好用！";
+  }
+
+  const btnSpin = document.getElementById("btn-a4-spin");
+  if (btnSpin) btnSpin.textContent = (a4RuleStep >= 3) ? "🔄 再轉一次" : "🎡 轉動規律輪盤";
+
+  notifyHeight();
+}
+
+function a4Spin() {
+  a4RuleStep = (a4RuleStep >= 3) ? 0 : a4RuleStep + 1;
+  renderA4();
+}
+function a4Estimate() {
+  a4EstOn = !a4EstOn;
+  const btn = document.getElementById("btn-a4-est");
+  if (btn) btn.classList.toggle("active", a4EstOn);
+  renderA4();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌🔬🪙📎🩹🔁🧩🪜🔍🎡🟩🟦🟨🛒]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：面積模型。三十四乘三，可以把三十四拆成三十和四。三十乘三是一百零二嗎？三十乘三是九十，四乘三是十二，九十加十二就是一百零二！",
+  2: "活動二：連續進位。四百七十六乘五，六乘五等於三十，寫零進三。七乘五是三十五，加上進來的三變成三十八，寫八進三。最後四乘五加三等於二十三，答案是兩千三百八十！",
+  3: "活動三：中間含零的陷阱。三百零六乘四，很多人會直接算成一百四十四，這是大陷阱！零乘四等於零，再加上個位進位的二，十位一定要寫上二喔！",
+  4: "活動四：規律與估算。七乘三等於二十一，七十乘三就是兩百一十，七百乘三就是兩千一百！買兩百九十八元的東西四箱，估算成三百乘四，大約一千兩百元，心算超快！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+renderA2();
+renderA4();
+</script>
+</body>
+</html>

@@ -127,8 +127,17 @@ async function openUnit(code, initialQIndex = 0) {
 
 /* ---------- 單元內建模式切換（概念小教室 vs 真題測驗） ---------- */
 const CONCEPT_COMPONENTS = {
+  "N-3-1": "components/number_10000_concept_lab.html",
+  "N-3-2": "components/vertical_calc_concept_lab.html",
+  "N-3-3": "components/multiplication_concept_lab.html",
+  "N-3-4": "components/division_concept_lab.html",
+  "N-3-5": "components/division_vertical_concept_lab.html",
+  "N-3-6": "components/mult_div_relation_concept_lab.html",
+  "N-3-7": "components/two_step_concept_lab.html",
+  "N-3-8": "components/estimation_concept_lab.html",
   "N-3-9": "components/fraction_concept_lab.html",
   "N-3-10": "components/decimal_concept_lab.html",
+  "N-3-11": "components/number_line_concept_lab.html",
   "N-3-12": "components/millimeter_concept_lab.html",
   "N-3-13": "components/angle_concept_lab.html",
   "S-3-1": "components/angle_concept_lab.html",
@@ -152,6 +161,9 @@ function setUnitMode(mode) {
     if (btnExam) btnExam.classList.remove("active");
     if (conceptWrap) conceptWrap.style.display = "block";
     if (examWrap) examWrap.style.display = "none";
+    stopSpeech();
+    const btnSpeak = $("btnSpeak");
+    if (btnSpeak) btnSpeak.style.display = "none";
     const frame = $("conceptFrame");
     const code = state.unit ? state.unit.code : null;
     if (frame && code && CONCEPT_COMPONENTS[code]) {
@@ -168,6 +180,8 @@ function setUnitMode(mode) {
     if (btnConcept) btnConcept.classList.remove("active");
     if (conceptWrap) conceptWrap.style.display = "none";
     if (examWrap) examWrap.style.display = "block";
+    const btnSpeak = $("btnSpeak");
+    if (btnSpeak) btnSpeak.style.display = "";
     $("dots").style.display = "flex";
     $("stageTitle").style.display = "block";
     renderQuestion();
@@ -360,6 +374,9 @@ function speakCurrentProblem() {
   function doWebSpeechFallback() {
     if (hasFallback || speechEpoch !== thisEpoch) return;
     hasFallback = true;
+    try {
+      if (audio) { audio.pause(); audio.src = ""; }
+    } catch (e) {}
     if (!("speechSynthesis" in window)) {
       isSpeaking = false;
       updateSpeakBtn(false);
@@ -400,6 +417,8 @@ function speakCurrentProblem() {
   audio.oncanplay = () => {
     clearTimeout(timer);
     if (speechEpoch === thisEpoch) {
+      if (hasFallback) return;
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
       audio.play().catch(doWebSpeechFallback);
     }
   };

@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-7 兩步驟應用題概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn.active { background: var(--sky-deep); border-color: var(--sky-deep); }
+.part-btn[data-obj="redbean"].active { background: #e11d48; border-color: #e11d48; }
+.part-btn[data-obj="melon"].active   { background: #d9910d; border-color: #d9910d; }
+.part-btn[data-obj="milk"].active    { background: #2563eb; border-color: #2563eb; }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🪜 活動一 · 階梯解題法</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">📦 活動二 · 連乘雙層盒</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">⚠️ 活動三 · 陷阱避雷針</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🥖 活動四 · 採買小店長</button>
+  </nav>
+
+  <!-- ==================== 活動一：階梯式解題思考（先算什麼？後算什麼？） ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-7 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🪜 活動一：階梯解題法 · 分解出中間隱藏問題</div>
+    <div class="card-desc">
+      兩步驟題目不能一口吃成胖子！像走樓梯一樣：先走第一階找出【隱藏的中間答案】，再走第二階算出【最後的答案】！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a1-svg" viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a1-step1" onclick="a1StepTo(1)">🧡 走第 1 階</button>
+        <button class="btn-action" id="btn-a1-step2" onclick="a1StepTo(2)">💚 走第 2 階</button>
+        <button class="btn-action" onclick="a1StepTo(0)">🔁 重來</button>
+      </div>
+      <div class="panel-stat" id="a1-stat">先算什麼？後算什麼？</div>
+      <div class="info-bubble" id="a1-bubble">
+        💡 題目<b>沒有直接問</b>筆記本花多少錢，但它是最重要的<b>隱藏中間答案</b>！先找出它，才能算出找回多少錢！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：連乘雙層包裝盒（結合律模型） ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-7 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📦 活動二：連乘雙層盒 · 先算哪一步都一樣</div>
+    <div class="card-desc">
+      1 盒有 6 顆馬卡龍，1 條有 4 盒，3 條共有幾顆馬卡龍？切換兩種視角，逐步演算——兩種算法結果一模一樣！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="150" y="18" font-size="11" font-weight="900" fill="#57534e" text-anchor="middle">1 盒 ＝ 6 顆 · 1 條 ＝ 4 盒 · 共 3 條</text>
+
+        <!-- 視角 A 高亮：整條 -->
+        <rect id="a2-hl-row" x="18" y="30" width="264" height="40" rx="10" fill="none" stroke="#f4694b" stroke-width="2.5" stroke-dasharray="6 4" opacity="0" style="transition: opacity 0.25s;"/>
+        <!-- 視角 B 高亮：直向同位置整排盒 -->
+        <rect id="a2-hl-col" x="24" y="28" width="66" height="136" rx="10" fill="none" stroke="#318a70" stroke-width="2.5" stroke-dasharray="6 4" opacity="0" style="transition: opacity 0.25s;"/>
+
+        <!-- 3 條 × 4 盒 × 6 顆 由 JS 生成 -->
+        <g id="a2-boxes"></g>
+
+        <text id="a2-eq1" x="150" y="176" font-size="11.5" font-weight="900" fill="#92400e" text-anchor="middle"></text>
+        <text id="a2-eq2" x="150" y="193" font-size="11.5" font-weight="900" fill="#166534" text-anchor="middle"></text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a2-viewA" onclick="setA2View('A')">🧡 視角 A：先算一條幾顆</button>
+        <button class="btn-action" id="btn-a2-viewB" onclick="setA2View('B')">💚 視角 B：先算總共幾盒</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="a2Step()">▶ 逐步演算</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">3 條共有幾顆馬卡龍？</div>
+      <div class="info-bubble" id="a2-bubble">
+        💡 兩種視角走的是<b>不同的路</b>，但目的地一樣！按下「▶ 逐步演算」看看它們怎麼走！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：陷阱避雷針（先減後除 vs 先除後減） ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-7 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">⚠️ 活動三：陷阱避雷針 · 先剪掉還是先平分</div>
+    <div class="card-desc">
+      生活題目順序看清楚！題目說【剪掉後平分】還是【平分後扣除】？順序弄錯答案差很多！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- 偵探破招印章 -->
+        <g id="a3-stamp" opacity="0" style="transition: opacity 0.25s;">
+          <circle cx="252" cy="34" r="24" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 3"/>
+          <text x="252" y="32" font-size="10.5" font-weight="900" fill="#dc2626" text-anchor="middle">破招</text>
+          <text x="252" y="45" font-size="10.5" font-weight="900" fill="#dc2626" text-anchor="middle">✓</text>
+        </g>
+
+        <!-- 題目 A：剪掉 20cm 剩下平分成 5 段 -->
+        <g id="a3-scene-A">
+          <text x="150" y="28" font-size="11.5" font-weight="900" fill="#1e293b" text-anchor="middle">繩子 120cm，剪掉 20cm，剩下平分成 5 段</text>
+          <!-- 剪掉的一段（脫離飄起） -->
+          <rect x="36" y="38" width="40" height="12" rx="6" fill="#fda4af" stroke="#e11d48" stroke-width="1.5"/>
+          <text x="56" y="34" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">✂ 剪掉 20cm</text>
+          <!-- 剩下的繩子（100cm → 200px，分成 5 段） -->
+          <g id="a3-rope"></g>
+          <g id="a3-fix-A" opacity="0" style="transition: opacity 0.25s;">
+            <rect x="96" y="80" width="174" height="16" rx="8" fill="#16a34a" opacity="0.2"/>
+            <text x="183" y="92" font-size="10.5" font-weight="900" fill="#166534" text-anchor="middle">120－20＝100 ➔ 100÷5＝20 公分 ✓</text>
+          </g>
+          <text x="150" y="112" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">每段是幾公分？</text>
+        </g>
+
+        <!-- 題目 B：20 塊餅乾平分給 4 人，小華吃掉 2 塊 -->
+        <g id="a3-scene-B" style="display:none;">
+          <text x="150" y="28" font-size="11.5" font-weight="900" fill="#1e293b" text-anchor="middle">餅乾 20 塊平分給 4 人，小華吃掉 2 塊</text>
+          <g id="a3-cookies"></g>
+          <g id="a3-fix-B" opacity="0" style="transition: opacity 0.25s;">
+            <rect x="96" y="104" width="174" height="16" rx="8" fill="#16a34a" opacity="0.2"/>
+            <text x="183" y="116" font-size="10.5" font-weight="900" fill="#166534" text-anchor="middle">20÷4＝5 ➔ 5－2＝3 塊 ✓</text>
+          </g>
+          <text x="150" y="136" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">小華（紅框）吃到後還剩幾塊？</text>
+        </g>
+
+        <text id="a3-caption" x="150" y="166" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">切換題目，按「🕵️ 破招」看正確順序！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-A" onclick="pickTrap('A')">🪢 題目 A：先剪後平分</button>
+        <button class="btn-action" id="btn-a3-B" onclick="pickTrap('B')">🍪 題目 B：先平分後扣除</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="fixTrap()">🕵️ 破招</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">先做哪一步？順序要想清楚！</div>
+      <div class="info-bubble warn" id="a3-bubble">
+        💡 仔細讀題：<b>「剪掉後」</b>平分？還是<b>「平分後」</b>被吃掉？先自己排出順序，再按破招！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：採買小店長（生活兩步驟結算） ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-7 活動例 4</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🥖 活動四：採買小店長 · 點餐結算算式產生器</div>
+    <div class="card-desc">
+      歡迎光臨烘焙坊！點選購買商品與數量，付一張 <b>100 元</b>鈔票，即時產生兩步驟解題歷程！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 165" xmlns="http://www.w3.org/2000/svg">
+        <!-- 店面招牌 -->
+        <rect x="60" y="10" width="180" height="22" rx="6" fill="#d9910d"/>
+        <text x="150" y="26" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">🥐 陽光烘焙坊</text>
+
+        <!-- 貨架 -->
+        <rect x="20" y="96" width="260" height="8" rx="3" fill="#c9a877"/>
+
+        <!-- 商品 1：紅豆麵包 30 元 -->
+        <g id="a4-item-redbean">
+          <rect id="a4-hl-redbean" x="30" y="42" width="72" height="62" rx="10" fill="none" stroke="#e11d48" stroke-width="3" opacity="0" style="transition: opacity 0.2s;"/>
+          <ellipse cx="66" cy="66" rx="26" ry="17" fill="#e8a87c" stroke="#b45309" stroke-width="2"/>
+          <circle cx="58" cy="64" r="4" fill="#8b3a3a"/>
+          <circle cx="70" cy="60" r="4" fill="#8b3a3a"/>
+          <circle cx="74" cy="70" r="4" fill="#8b3a3a"/>
+          <circle cx="62" cy="72" r="3.5" fill="#8b3a3a"/>
+          <rect x="40" y="80" width="52" height="14" rx="7" fill="#ffffff" stroke="#e11d48" stroke-width="1.5"/>
+          <text x="66" y="91" font-size="9" font-weight="900" fill="#e11d48" text-anchor="middle">30 元</text>
+          <text id="a4-qty-redbean" x="66" y="42" font-size="10" font-weight="900" fill="#e11d48" text-anchor="start"></text>
+        </g>
+        <!-- 商品 2：菠蘿麵包 25 元 -->
+        <g id="a4-item-melon">
+          <rect id="a4-hl-melon" x="114" y="42" width="72" height="62" rx="10" fill="none" stroke="#d9910d" stroke-width="3" opacity="0" style="transition: opacity 0.2s;"/>
+          <ellipse cx="150" cy="66" rx="26" ry="17" fill="#f5d76e" stroke="#b45309" stroke-width="2"/>
+          <path d="M132,66 h36 M138,58 l24,16 M138,74 l24,-16 M144,56 l12,20 M156,56 l-12,20" stroke="#c8892b" stroke-width="1.6" fill="none"/>
+          <rect x="124" y="80" width="52" height="14" rx="7" fill="#ffffff" stroke="#d9910d" stroke-width="1.5"/>
+          <text x="150" y="91" font-size="9" font-weight="900" fill="#d9910d" text-anchor="middle">25 元</text>
+          <text id="a4-qty-melon" x="180" y="42" font-size="10" font-weight="900" fill="#d9910d" text-anchor="end"></text>
+        </g>
+        <!-- 商品 3：牛奶 40 元 -->
+        <g id="a4-item-milk">
+          <rect id="a4-hl-milk" x="198" y="42" width="72" height="62" rx="10" fill="none" stroke="#2563eb" stroke-width="3" opacity="0" style="transition: opacity 0.2s;"/>
+          <path d="M232,50 L244,50 L250,58 L250,88 L216,88 L216,58 Z" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+          <path d="M232,50 L232,88 M216,58 L250,58" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+          <rect x="220" y="64" width="26" height="14" rx="3" fill="#bfdbfe"/>
+          <rect x="212" y="80" width="52" height="14" rx="7" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+          <text x="238" y="91" font-size="9" font-weight="900" fill="#2563eb" text-anchor="middle">40 元</text>
+          <text id="a4-qty-milk" x="264" y="42" font-size="10" font-weight="900" fill="#2563eb" text-anchor="end"></text>
+        </g>
+
+        <!-- 100 元鈔票 -->
+        <g id="a4-banknote">
+          <rect x="96" y="112" width="108" height="30" rx="5" fill="#a7f3d0" stroke="#059669" stroke-width="2"/>
+          <text x="150" y="132" font-size="11.5" font-weight="900" fill="#065f46" text-anchor="middle">💰 付 100 元</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn" data-obj="redbean" onclick="pickItem('redbean')">🥯 紅豆麵包 30元</button>
+        <button class="part-btn" data-obj="melon" onclick="pickItem('melon')">🍞 菠蘿麵包 25元</button>
+        <button class="part-btn" data-obj="milk" onclick="pickItem('milk')">🥛 牛奶 40元</button>
+      </div>
+      <div class="btn-grid" id="a4-qty-grid"></div>
+      <div class="panel-stat" id="a4-stat">買 2 個紅豆麵包，付 100 元找零多少？</div>
+      <div class="info-bubble" id="a4-bubble">
+        💡 兩步驟結算：<b>第 1 步</b>算總價 ➔ <b>第 2 步</b>算找零！先點選商品與數量試試看！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：階梯解題法 ==================== */
+let a1StepIdx = 0;
+
+function renderA1() {
+  const svg = document.getElementById("a1-svg");
+  if (!svg) return;
+  const s = a1StepIdx;
+
+  let html = "";
+  // 題目
+  html += `<text x="150" y="20" font-size="10.5" font-weight="900" fill="#1e293b" text-anchor="middle">筆記本 3 本每本 25 元，付 100 元找回多少？</text>`;
+
+  // 第 1 階（橘色）
+  html += `<rect x="20" y="118" width="130" height="44" rx="6" fill="#fb923c" ${s >= 1 ? 'opacity="1"' : 'opacity="0.45"'}/>
+           <text x="85" y="136" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">第 1 階（隱藏問題）</text>`;
+  html += (s >= 1)
+    ? `<text x="85" y="152" font-size="11" font-weight="900" fill="#7c2d12" text-anchor="middle">25×3＝75 元 ✓</text>`
+    : `<text x="85" y="152" font-size="10" font-weight="800" fill="#fed7aa" text-anchor="middle">買筆記本花多少？</text>`;
+
+  // 第 2 階（綠色，疊在更高一階）
+  html += `<rect x="150" y="74" width="130" height="44" rx="6" fill="#4ade80" ${s >= 2 ? 'opacity="1"' : 'opacity="0.45"'}/>
+           <text x="215" y="92" font-size="10" font-weight="900" fill="#14532d" text-anchor="middle">第 2 階（最後問題）</text>`;
+  html += (s >= 2)
+    ? `<text x="215" y="108" font-size="11" font-weight="900" fill="#14532d" text-anchor="middle">100－75＝25 元 ✓</text>`
+    : `<text x="215" y="108" font-size="10" font-weight="800" fill="#dcfce7" text-anchor="middle">付 100 找回多少？</text>`;
+
+  // 地面
+  html += `<line x1="16" y1="162" x2="284" y2="162" stroke="#c9a877" stroke-width="3" stroke-linecap="round"/>`;
+
+  // 進度氣泡
+  if (s === 0) {
+    html += `<text x="150" y="48" font-size="10.5" font-weight="900" fill="#92400e" text-anchor="middle">🪜 像走樓梯：先第 1 階，再第 2 階！</text>`;
+  } else if (s === 1) {
+    html += `<rect x="52" y="34" width="196" height="20" rx="10" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+             <text x="150" y="48" font-size="10.5" font-weight="900" fill="#92400e" text-anchor="middle">🔎 隱藏中間答案：75 元！</text>
+             <path d="M150,54 L150,114" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4 3"/>
+             <polygon points="150,118 145,110 155,110" fill="#fbbf24"/>`;
+  } else {
+    html += `<rect x="30" y="30" width="240" height="20" rx="10" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+             <text x="150" y="44" font-size="10.5" font-weight="900" fill="#166534" text-anchor="middle">🎉 最後答案：找回 25 元！</text>`;
+  }
+
+  svg.innerHTML = html;
+
+  const stat = document.getElementById("a1-stat");
+  const bubble = document.getElementById("a1-bubble");
+  const b1 = document.getElementById("btn-a1-step1");
+  const b2 = document.getElementById("btn-a1-step2");
+  if (b1) b1.classList.toggle("active", s >= 1);
+  if (b2) b2.classList.toggle("active", s >= 2);
+  if (stat) {
+    if (s === 0) stat.textContent = "先算什麼？後算什麼？";
+    else if (s === 1) stat.textContent = "第 1 階：25×3＝75（元）";
+    else stat.textContent = "第 2 階：100－75＝25（元）✓";
+  }
+  if (bubble) {
+    if (s === 0) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "💡 題目<b>沒有直接問</b>筆記本花多少錢，但它是最重要的<b>隱藏中間答案</b>！先找出它，才能算出找回多少錢！";
+    } else if (s === 1) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🧡 <b>第 1 階</b>：雖然題目沒問，但要先算出「買筆記本總共花多少錢」＝ <b>25×3＝75 元</b>，這就是隱藏的中間答案！";
+    } else {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "💚 <b>第 2 階</b>：拿 100 元扣掉 75 元，<b>100－75＝25</b>，可以找回 <b>25 元</b>！一步一步走，兩步驟一點都不難！";
+    }
+  }
+  notifyHeight();
+}
+
+function a1StepTo(n) {
+  a1StepIdx = n;
+  renderA1();
+}
+
+/* ==================== 活動二：連乘雙層盒 ==================== */
+let a2View = "A";   // "A": 先算一條幾顆 | "B": 先算總共幾盒
+let a2StepIdx = 0;
+
+// 生成 3 條 × 4 盒 × 6 顆（3x2 馬卡龍點陣）
+(function buildA2Boxes() {
+  const g = document.getElementById("a2-boxes");
+  if (!g) return;
+  let html = "";
+  const MAC_COLORS = ["#f9a8d4", "#a5b4fc", "#fcd34d"];
+  for (let row = 0; row < 3; row++) {
+    const rowY = 32 + row * 44;
+    html += `<rect x="20" y="${rowY}" width="260" height="36" rx="8" fill="#fdf2f8" stroke="#f0e7da" stroke-width="1.5"/>`;
+    for (let box = 0; box < 4; box++) {
+      const boxX = 28 + box * 62;
+      html += `<rect x="${boxX}" y="${rowY + 4}" width="56" height="28" rx="5" fill="#ffffff" stroke="#e5d5c0" stroke-width="1.5"/>`;
+      const mc = MAC_COLORS[row];
+      for (let d = 0; d < 6; d++) {
+        const cx = boxX + 12 + (d % 3) * 16;
+        const cy = rowY + 12 + Math.floor(d / 3) * 12;
+        html += `<circle cx="${cx}" cy="${cy}" r="4" fill="${mc}" stroke="#d1a3a3" stroke-width="1"/>`;
+      }
+    }
+  }
+  g.innerHTML = html;
+})();
+
+function renderA2() {
+  const hlRow = document.getElementById("a2-hl-row");
+  const hlCol = document.getElementById("a2-hl-col");
+  const eq1 = document.getElementById("a2-eq1");
+  const eq2 = document.getElementById("a2-eq2");
+  const stat = document.getElementById("a2-stat");
+  const bubble = document.getElementById("a2-bubble");
+  const btnA = document.getElementById("btn-a2-viewA");
+  const btnB = document.getElementById("btn-a2-viewB");
+
+  const isA = (a2View === "A");
+  if (btnA) btnA.classList.toggle("active", isA);
+  if (btnB) btnB.classList.toggle("active", !isA);
+
+  // 高亮：視角 A 高亮一整條；視角 B 高亮直向一排盒
+  if (hlRow) hlRow.style.opacity = (isA && a2StepIdx >= 1) ? "1" : "0";
+  if (hlCol) hlCol.style.opacity = (!isA && a2StepIdx >= 1) ? "1" : "0";
+
+  let l1 = "", l2 = "";
+  if (a2StepIdx === 0) {
+    l1 = "先猜猜：先算哪一步？";
+  } else if (isA) {
+    if (a2StepIdx >= 1) l1 = "第 1 步：6×4＝24 顆（一條有 24 顆）";
+    if (a2StepIdx >= 2) l2 = "第 2 步：24×3＝72 顆 ✓";
+  } else {
+    if (a2StepIdx >= 1) l1 = "第 1 步：4×3＝12 盒（總共 12 盒）";
+    if (a2StepIdx >= 2) l2 = "第 2 步：6×12＝72 顆 ✓";
+  }
+  if (eq1) eq1.textContent = l1;
+  if (eq2) eq2.textContent = l2;
+
+  if (stat) stat.textContent = a2StepIdx >= 2 ? "答案：72 顆（兩種視角都一樣！）" : "3 條共有幾顆馬卡龍？";
+  if (bubble) {
+    if (a2StepIdx < 2) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = isA
+        ? "💡 <b>視角 A</b>：先盯著<b>一條</b>看（橘色框）→ 4 盒×6 顆，再乘以 3 條！"
+        : "💡 <b>視角 B</b>：先直著數<b>同一排的盒數</b>（綠色框）→ 4 盒×3 條，再乘以每盒 6 顆！";
+    } else {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🎉 <b>(6×4)×3 ＝ 6×(4×3) ＝ 72</b>，這就是連乘的<b>結合律</b>！先算哪一步都一樣，選好算的走！";
+    }
+  }
+  notifyHeight();
+}
+
+function setA2View(v) {
+  a2View = v;
+  a2StepIdx = 0;
+  renderA2();
+}
+
+function a2Step() {
+  if (a2StepIdx < 2) a2StepIdx++;
+  renderA2();
+}
+
+/* ==================== 活動三：陷阱避雷針 ==================== */
+let a3Trap = "A";  // "A": 先剪後平分 | "B": 先平分後扣除
+
+// 生成剩下的繩子（100cm → 200px，平分 5 段）
+(function buildA3Rope() {
+  const g = document.getElementById("a3-rope");
+  if (!g) return;
+  let html = "";
+  html += `<rect x="96" y="60" width="174" height="16" rx="8" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/>`;
+  for (let i = 1; i < 5; i++) {
+    const x = 96 + i * 34.8;
+    html += `<line x1="${x.toFixed(1)}" y1="58" x2="${x.toFixed(1)}" y2="78" stroke="#b45309" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+  }
+  for (let i = 0; i < 5; i++) {
+    const cx = 96 + i * 34.8 + 17.4;
+    html += `<text x="${cx.toFixed(1)}" y="72" font-size="9" font-weight="900" fill="#92400e" text-anchor="middle">?cm</text>`;
+  }
+  html += `<text x="96" y="95" font-size="8.5" font-weight="800" fill="#b45309" text-anchor="middle">剪掉後剩下 100cm</text>`;
+  g.innerHTML = html;
+})();
+
+// 生成 20 塊餅乾（4 人 × 5 塊，含小華高亮）
+(function buildA3Cookies() {
+  const g = document.getElementById("a3-cookies");
+  if (!g) return;
+  let html = "";
+  const COLORS = ["#fbbf24", "#a5b4fc", "#86efac", "#fda4af"];
+  for (let p = 0; p < 4; p++) {
+    const px = 30 + p * 62;
+    if (p === 3) {
+      html += `<rect x="${px - 4}" y="40" width="56" height="52" rx="8" fill="none" stroke="#e11d48" stroke-width="2" stroke-dasharray="4 3"/>`;
+    }
+    for (let c = 0; c < 5; c++) {
+      const cx = px + 6 + (c % 3) * 15;
+      const cy = 52 + Math.floor(c / 3) * 16;
+      const id = "a3-cookie-" + p + "-" + c;
+      html += `<circle id="${id}" cx="${cx}" cy="${cy}" r="6" fill="${COLORS[p]}" stroke="#b45309" stroke-width="1"/>`;
+    }
+  }
+  html += `<text x="53" y="104" font-size="8.5" font-weight="800" fill="#b45309" text-anchor="middle">每人 5 塊</text>`;
+  html += `<text x="239" y="104" font-size="8.5" font-weight="800" fill="#e11d48" text-anchor="middle">小華</text>`;
+  g.innerHTML = html;
+})();
+
+function pickTrap(t) {
+  a3Trap = t;
+  const isA = (t === "A");
+  const sceneA = document.getElementById("a3-scene-A");
+  const sceneB = document.getElementById("a3-scene-B");
+  const fixA = document.getElementById("a3-fix-A");
+  const fixB = document.getElementById("a3-fix-B");
+  const stamp = document.getElementById("a3-stamp");
+  const btnA = document.getElementById("btn-a3-A");
+  const btnB = document.getElementById("btn-a3-B");
+  if (sceneA) sceneA.style.display = isA ? "block" : "none";
+  if (sceneB) sceneB.style.display = isA ? "none" : "block";
+  if (fixA) fixA.style.opacity = "0";
+  if (fixB) fixB.style.opacity = "0";
+  if (stamp) stamp.style.opacity = "0";
+  if (btnA) btnA.classList.toggle("active", isA);
+  if (btnB) btnB.classList.toggle("active", !isA);
+
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+  if (isA) {
+    if (stat) stat.textContent = "先做哪一步？順序要想清楚！";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "🪢 題目 A 說「<b>剪掉後</b>」平分：要先剪掉、再平分！先自己排順序，再按破招！"; }
+  } else {
+    if (stat) stat.textContent = "先做哪一步？順序要想清楚！";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "🍪 題目 B 說「<b>平分後</b>」小華才吃掉 2 塊：要先平分、再扣除！先自己排順序，再按破招！"; }
+  }
+  notifyHeight();
+}
+
+const A3_FIX_INFO = {
+  A: { stat: "🎉 破招成功：每段 20 公分！", text: "🕵️ 破招！先剪掉：<b>120－20＝100</b>，再把剩下的 100 平分成 5 段：<b>100÷5＝20 公分</b>。順序是「先減後除」！" },
+  B: { stat: "🎉 破招成功：小華還剩 3 塊！", text: "🕵️ 破招！先平分：<b>20÷4＝5 塊</b>，小華拿到 5 塊後吃掉 2 塊：<b>5－2＝3 塊</b>。順序是「先除後減」！" }
+};
+
+function fixTrap() {
+  const info = A3_FIX_INFO[a3Trap];
+  if (!info) return;
+  const fix = document.getElementById(a3Trap === "A" ? "a3-fix-A" : "a3-fix-B");
+  const stamp = document.getElementById("a3-stamp");
+  const stat = document.getElementById("a3-stat");
+  const bubble = document.getElementById("a3-bubble");
+  if (fix) fix.style.opacity = "1";
+  if (stamp) stamp.style.opacity = "1";
+  if (stat) stat.textContent = info.stat;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = info.text;
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動四：採買小店長 ==================== */
+const A4_ITEMS = {
+  redbean: { name: "紅豆麵包", price: 30, unit: "個" },
+  melon:   { name: "菠蘿麵包", price: 25, unit: "個" },
+  milk:    { name: "牛奶",     price: 40, unit: "瓶" }
+};
+let a4Item = "redbean";
+let a4Qty = 2;
+
+// 生成數量按鈕 1~5
+(function buildA4Qty() {
+  const grid = document.getElementById("a4-qty-grid");
+  if (!grid) return;
+  for (let n = 1; n <= 5; n++) {
+    const b = document.createElement("button");
+    b.className = "btn-action";
+    b.textContent = "× " + n;
+    b.addEventListener("click", () => setA4Qty(n));
+    grid.appendChild(b);
+  }
+})();
+
+function setA4Qty(n) {
+  if (n < 1 || n > 5) return;
+  a4Qty = n;
+  renderA4();
+}
+
+function pickItem(key) {
+  if (!A4_ITEMS[key]) return;
+  a4Item = key;
+  renderA4();
+}
+
+function renderA4() {
+  const item = A4_ITEMS[a4Item];
+  if (!item) return;
+
+  // 商品按鈕高亮
+  document.querySelectorAll("#act-4-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.obj === a4Item));
+  ["redbean", "melon", "milk"].forEach(k => {
+    const hl = document.getElementById("a4-hl-" + k);
+    if (hl) hl.style.opacity = (k === a4Item) ? "1" : "0";
+    const qty = document.getElementById("a4-qty-" + k);
+    if (qty) qty.textContent = (k === a4Item) ? "×" + a4Qty : "";
+  });
+
+  // 數量按鈕高亮
+  const qtyBtns = document.querySelectorAll("#a4-qty-grid .btn-action");
+  qtyBtns.forEach((b, idx) => b.classList.toggle("active", idx === a4Qty - 1));
+
+  const total = item.price * a4Qty;
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+
+  if (total <= 100) {
+    const change = 100 - total;
+    if (stat) stat.textContent = "第 1 步：" + item.price + "×" + a4Qty + "＝" + total + "（元）";
+    if (bubble) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🧾 兩步驟結算：<br><b>第 1 步</b>：買 " + a4Qty + " " + item.unit + item.name + "，" + item.price + "×" + a4Qty + "＝<b>" + total + " 元</b><br><b>第 2 步</b>：100－" + total + "＝<b>" + change + " 元</b> 🎉 找零 " + change + " 元！";
+    }
+  } else {
+    const lack = total - 100;
+    if (stat) stat.textContent = "第 1 步：" + item.price + "×" + a4Qty + "＝" + total + "（元）";
+    if (bubble) {
+      bubble.classList.add("warn");
+      bubble.innerHTML = "🧾 兩步驟結算：<br><b>第 1 步</b>：" + item.price + "×" + a4Qty + "＝<b>" + total + " 元</b><br>⚠️ <b>第 2 步卡住了</b>：100 元不夠買！還差 <b>" + lack + " 元</b>，要再多準備一點錢喔！";
+    }
+  }
+  notifyHeight();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌🪜📦🥖]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：階梯解題法。兩步驟題目要像走樓梯一樣，先算第一階買三本筆記本花七十五元，再算第二階用一百元扣掉七十五元找回二十五元，一步一步來就不會亂！",
+  2: "活動二：連乘雙層盒。一盒六顆、一條四盒，買三條。先算一條幾顆再乘三，或者先算三條總共幾盒再乘六，算出來都是七十二顆！",
+  3: "活動三：陷阱避雷針。看清楚先做什麼！繩子要先剪掉剩下的才平分，算式是一百二十減二十等於一百，一百除以五等於二十公分，順序千萬不要搞反喔！",
+  4: "活動四：採買小店長。買兩個三十元的麵包付一百元，第一步先算麵包要六十元，第二步用一百減六十找四十元，算帳好清楚！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+renderA1();
+setA2View("A");
+pickTrap("A");
+renderA4();
+</script>
+</body>
+</html>
