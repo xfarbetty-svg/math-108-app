@@ -127,6 +127,9 @@ async function openUnit(code, initialQIndex = 0) {
 
 /* ---------- 單元內建模式切換（概念小教室 vs 真題測驗） ---------- */
 const CONCEPT_COMPONENTS = {
+  "N-3-9": "components/fraction_concept_lab.html",
+  "N-3-10": "components/decimal_concept_lab.html",
+  "N-3-12": "components/millimeter_concept_lab.html",
   "N-3-13": "components/angle_concept_lab.html",
   "S-3-1": "components/angle_concept_lab.html",
   "N-3-14": "components/area_concept_lab.html",

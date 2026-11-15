@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-12 長度（毫米 mm）概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.part-btn {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  transition: all 0.15s;
+}
+.part-btn:active, .part-btn.active {
+  transform: translateY(1px);
+  color: #ffffff;
+}
+.part-btn.active { background: var(--sky-deep); border-color: var(--sky-deep); }
+.part-btn[data-obj="coin"].active    { background: #b8860b; border-color: #b8860b; }
+.part-btn[data-obj="staple"].active  { background: #64748b; border-color: #64748b; }
+.part-btn[data-obj="clip"].active    { background: #318a70; border-color: #318a70; }
+.part-btn[data-obj="eraser"].active  { background: #e11d48; border-color: #e11d48; }
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+/* 底欄直通真題按鈕 */
+.concept-footer {
+  margin-top: 4px;
+}
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active {
+  transform: scale(0.98);
+}
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🔬 活動一 · 微距放大鏡</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🪙 活動二 · 微物測量</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🔁 活動三 · 換算板</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🕵️ 活動四 · 破招偵探</button>
+  </nav>
+
+  <!-- ==================== 活動一：直尺微距放大鏡（1cm = 10mm） ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-12 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🔬 活動一：直尺微距放大鏡 · 1cm ＝ 10mm</div>
+    <div class="card-desc">
+      把放大鏡對準直尺上 <b>3cm 到 4cm</b> 之間，數一數裡面藏著幾個小刻度！每個小刻度就是 <b>1 毫米(mm)</b>，大約像一張信用卡的厚度喔！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="a1-lens-clip"><circle cx="137.5" cy="72" r="50"/></clipPath>
+        </defs>
+        <!-- 放大鏡鏡柄 -->
+        <line x1="177" y1="115" x2="220" y2="152" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+        <line x1="177" y1="115" x2="220" y2="152" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round"/>
+        <!-- 放大鏡金屬框 -->
+        <circle cx="137.5" cy="72" r="58" fill="#f1f5f9" stroke="#64748b" stroke-width="7"/>
+        <circle cx="137.5" cy="72" r="50" fill="#ffffff"/>
+        <!-- 鏡片內容（放大 10 個 mm 刻度） -->
+        <g clip-path="url(#a1-lens-clip)">
+          <!-- 3cm 起點長刻度（紅） -->
+          <line x1="92.5" y1="44" x2="92.5" y2="104" stroke="#ef4444" stroke-width="3"/>
+          <text x="92.5" y="116" font-size="7" font-weight="800" fill="#ef4444" text-anchor="middle">3cm</text>
+          <!-- 4cm 終點長刻度（綠） -->
+          <line x1="182.5" y1="44" x2="182.5" y2="104" stroke="#16a34a" stroke-width="3"/>
+          <text x="182.5" y="116" font-size="7" font-weight="800" fill="#16a34a" text-anchor="middle">4cm</text>
+          <!-- 10 個 1mm 小刻度（含編號） -->
+          <g id="a1-mm-ticks" font-size="6.5" font-weight="800" fill="#64748b" text-anchor="middle"></g>
+          <!-- 基線 -->
+          <line x1="88" y1="104" x2="187" y2="104" stroke="#64748b" stroke-width="2"/>
+          <!-- 點數高亮線與標籤 -->
+          <line id="a1-count-line" x1="92.5" y1="46" x2="92.5" y2="110" stroke="#ef4444" stroke-width="3" opacity="0" style="transition: opacity 0.2s;"/>
+          <text id="a1-count-tag" x="137.5" y="38" font-size="11" font-weight="900" fill="#ef4444" text-anchor="middle" opacity="0" style="transition: opacity 0.2s;"></text>
+        </g>
+        <!-- 下方實體直尺 -->
+        <rect x="105" y="140" width="65" height="32" fill="#fde68a" opacity="0.5"/>
+        <rect x="18" y="140" width="264" height="32" fill="#fef3c7" stroke="#d6c9b6" stroke-width="2"/>
+        <g font-size="9" font-weight="800" fill="#78716c" text-anchor="middle">
+          <line x1="40"  y1="140" x2="40"  y2="158" stroke="#a8a29e" stroke-width="2"/><text x="40"  y="180">2cm</text>
+          <line x1="105" y1="140" x2="105" y2="158" stroke="#ef4444" stroke-width="2.5"/><text x="105" y="180">3cm</text>
+          <line x1="170" y1="140" x2="170" y2="158" stroke="#16a34a" stroke-width="2.5"/><text x="170" y="180">4cm</text>
+          <line x1="235" y1="140" x2="235" y2="158" stroke="#a8a29e" stroke-width="2"/><text x="235" y="180">5cm</text>
+        </g>
+        <text id="a1-caption" x="150" y="196" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">點下面的膠囊按鈕，數一數 3cm 到 4cm 之間的小刻度！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid" id="a1-btn-grid"></div>
+      <div class="panel-stat" id="a1-stat">3cm ＋ ？ mm ＝ ？</div>
+      <div class="info-bubble" id="a1-bubble">
+        💡 一個大格（1cm）裡面藏著 <b>10 個小刻度</b>，每個小刻度就是 <b>1 毫米(mm)</b>！1mm 大約像一張信用卡的厚度！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：生活微物對齊測量 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-12 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🪙 活動二：生活微物對齊測量</div>
+    <div class="card-desc">
+      把生活小物件的<b>左端對齊 0 刻度</b>放在直尺上，右端對到哪裡就讀到哪裡！點選物件，看看右端導引線停在幾毫米！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+        <!-- 物件名稱標籤 -->
+        <text id="a2-objname" x="150" y="30" font-size="11.5" font-weight="900" fill="#57534e" text-anchor="middle">選一個物件放上直尺！</text>
+        <!-- 右端讀數導引線 -->
+        <text id="a2-read" x="42" y="70" font-size="12" font-weight="900" fill="#ef4444" text-anchor="middle" opacity="0" style="transition: opacity 0.2s;"></text>
+        <line id="a2-guide" x1="42" y1="74" x2="42" y2="122" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3" opacity="0" style="transition: opacity 0.2s;"/>
+
+        <!-- 物件一：10元硬幣厚度 2mm（x: 30 → 42） -->
+        <g id="a2-obj-coin" style="display:none;">
+          <ellipse cx="36" cy="98" rx="6" ry="3" fill="#f5c542" stroke="#b8860b" stroke-width="1.5"/>
+          <rect x="30" y="98" width="12" height="20" rx="3" fill="#e8b923" stroke="#b8860b" stroke-width="1.5"/>
+        </g>
+        <!-- 物件二：訂書針寬度 12mm（x: 30 → 102） -->
+        <g id="a2-obj-staple" style="display:none;">
+          <path d="M30,116 L30,98 Q30,92 36,92 L102,92 Q108,92 108,98 L108,116" fill="none" stroke="#64748b" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+        <!-- 物件三：迴紋針長度 28mm（x: 30 → 198） -->
+        <g id="a2-obj-clip" style="display:none;">
+          <rect x="30" y="92" width="168" height="24" rx="12" fill="none" stroke="#8d99ae" stroke-width="3"/>
+          <rect x="38" y="99" width="136" height="10" rx="5" fill="none" stroke="#b8c2cf" stroke-width="2.5"/>
+        </g>
+        <!-- 物件四：橡皮擦長度 35mm（x: 30 → 240） -->
+        <g id="a2-obj-eraser" style="display:none;">
+          <rect x="30" y="86" width="210" height="32" rx="6" fill="#fda4af" stroke="#e11d48" stroke-width="2"/>
+          <rect x="30" y="86" width="52" height="32" rx="6" fill="#fecdd3" stroke="#e11d48" stroke-width="2"/>
+          <text x="140" y="106" font-size="9" font-weight="800" fill="#be123c" text-anchor="middle">ERASER</text>
+        </g>
+
+        <!-- 直尺本體 -->
+        <rect x="18" y="122" width="264" height="30" fill="#fef3c7" stroke="#d6c9b6" stroke-width="2"/>
+        <g id="a2-mmticks"></g>
+        <g font-size="9" font-weight="800" fill="#78716c" text-anchor="middle">
+          <line x1="30"  y1="122" x2="30"  y2="140" stroke="#a8a29e" stroke-width="2"/><text x="30"  y="160">0</text>
+          <line x1="90"  y1="122" x2="90"  y2="140" stroke="#a8a29e" stroke-width="2"/><text x="90"  y="160">1</text>
+          <line x1="150" y1="122" x2="150" y2="140" stroke="#a8a29e" stroke-width="2"/><text x="150" y="160">2</text>
+          <line x1="210" y1="122" x2="210" y2="140" stroke="#a8a29e" stroke-width="2"/><text x="210" y="160">3</text>
+          <line x1="270" y1="122" x2="270" y2="140" stroke="#a8a29e" stroke-width="2"/><text x="270" y="160">4</text>
+        </g>
+        <text x="150" y="180" font-size="9" font-weight="800" fill="#8a857b" text-anchor="middle">單位：公分 cm · 小刻度：毫米 mm</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="part-btn" data-obj="coin" onclick="selectObj('coin')">🪙 硬幣厚度</button>
+        <button class="part-btn" data-obj="staple" onclick="selectObj('staple')">📌 訂書針</button>
+        <button class="part-btn" data-obj="clip" onclick="selectObj('clip')">📎 迴紋針</button>
+        <button class="part-btn" data-obj="eraser" onclick="selectObj('eraser')">🩹 橡皮擦</button>
+      </div>
+      <div class="panel-stat" id="a2-stat">右端讀數：？ mm</div>
+      <div class="info-bubble" id="a2-bubble">
+        💡 測量口訣：<b>左端對齊 0 刻度</b>，右端對到哪、就讀到哪！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：單名數與複名數換算板 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-12 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🔁 活動三：單名數 ⇄ 複名數 換算板</div>
+    <div class="card-desc">
+      <b>3cm 5mm</b> 換成毫米是多少？<b>48mm</b> 換回公分和毫米又是多少？用 10mm 積木條和 1mm 小方塊，逐步拆解給你看！
+    </div>
+
+    <div class="stage-canvas">
+      <svg id="a3-svg" viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-modeA" onclick="setA3Mode('A')">3cm 5mm → ? mm</button>
+        <button class="btn-action" id="btn-a3-modeB" onclick="setA3Mode('B')">48mm → ? cm ? mm</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a3-step" onclick="a3Step()">🔍 逐步拆解</button>
+      </div>
+      <div class="panel-stat" id="a3-stat">3cm 5mm ＝ ？ mm</div>
+      <div class="info-bubble warn" id="a3-bubble">
+        ⚠️ 段考必考：換算時先算整公分是幾個 <b>10mm</b>，再把剩下的 mm 加上去！<b>1cm ＝ 10mm</b> 永遠記牢！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：測量迷思除錯小偵探 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">108 課綱 N-3-12 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🕵️ 活動四：測量迷思除錯小偵探</div>
+    <div class="card-desc">
+      三個小朋友量長度時都犯了經典錯誤！切換迷思案例，按下<b>🕵️ 開始糾錯</b>，蓋上偵探破招印章，看穿錯在哪裡！
+    </div>
+
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg">
+        <!-- 共用底部直尺（0~5cm，48px/cm，mm 小刻度 4.8px） -->
+        <rect x="18" y="112" width="264" height="30" fill="#fef3c7" stroke="#d6c9b6" stroke-width="2"/>
+        <g id="a4-mmticks"></g>
+        <g font-size="9" font-weight="800" fill="#78716c" text-anchor="middle">
+          <line x1="30"  y1="112" x2="30"  y2="130" stroke="#a8a29e" stroke-width="2"/><text x="30"  y="150">0</text>
+          <line x1="78"  y1="112" x2="78"  y2="130" stroke="#a8a29e" stroke-width="2"/><text x="78"  y="150">1</text>
+          <line x1="126" y1="112" x2="126" y2="130" stroke="#a8a29e" stroke-width="2"/><text x="126" y="150">2</text>
+          <line x1="174" y1="112" x2="174" y2="130" stroke="#a8a29e" stroke-width="2"/><text x="174" y="150">3</text>
+          <line x1="222" y1="112" x2="222" y2="130" stroke="#a8a29e" stroke-width="2"/><text x="222" y="150">4</text>
+          <line x1="270" y1="112" x2="270" y2="130" stroke="#a8a29e" stroke-width="2"/><text x="270" y="150">5</text>
+        </g>
+
+        <!-- 偵探破招印章 -->
+        <g id="a4-stamp" opacity="0" style="transition: opacity 0.25s;">
+          <circle cx="252" cy="38" r="26" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 3"/>
+          <text x="252" y="36" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">破招</text>
+          <text x="252" y="50" font-size="11" font-weight="900" fill="#dc2626" text-anchor="middle">✓</text>
+        </g>
+
+        <!-- 迷思一：沒對齊 0 刻度（鉛筆從 1cm 到 5cm，小明誤當 5cm，實為 4cm） -->
+        <g id="a4-scene-1">
+          <text x="150" y="34" font-size="11.5" font-weight="900" fill="#dc2626" text-anchor="middle" id="a4-m1-wrong">小明：鉛筆有 5 公分長！</text>
+          <rect x="78" y="64" width="192" height="26" rx="4" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+          <polygon points="70,77 78,70 78,84" fill="#b45309"/>
+          <text x="70" y="60" font-size="8.5" font-weight="800" fill="#b45309" text-anchor="end">從1cm開始</text>
+          <g id="a4-fix-1" opacity="0" style="transition: opacity 0.25s;">
+            <rect x="78" y="64" width="192" height="26" fill="#16a34a" opacity="0.18"/>
+            <line x1="78" y1="100" x2="270" y2="100" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+            <text x="174" y="97" font-size="10.5" font-weight="900" fill="#16a34a" text-anchor="middle">5cm － 1cm ＝ 4cm ✓</text>
+          </g>
+        </g>
+
+        <!-- 迷思二：看錯單位（木棒 28mm，小美誤當 28cm，實為 2cm 8mm） -->
+        <g id="a4-scene-2" style="display:none;">
+          <text x="97" y="34" font-size="11.5" font-weight="900" fill="#dc2626" text-anchor="middle" id="a4-m2-wrong">小美：木棒有 28 公分長！</text>
+          <rect x="30" y="70" width="134" height="22" rx="4" fill="#d6a06a" stroke="#92603a" stroke-width="2"/>
+          <line x1="40" y1="70" x2="40" y2="92" stroke="#92603a" stroke-width="1.5"/>
+          <line x1="154" y1="70" x2="154" y2="92" stroke="#92603a" stroke-width="1.5"/>
+          <g id="a4-fix-2" opacity="0" style="transition: opacity 0.25s;">
+            <rect x="30" y="70" width="134" height="22" fill="#16a34a" opacity="0.18"/>
+            <text x="97" y="98" font-size="10.5" font-weight="900" fill="#16a34a" text-anchor="middle">28mm ＝ 2cm 8mm（28cm 差 10 倍！）</text>
+          </g>
+        </g>
+
+        <!-- 迷思三：漏算毫米小刻度（橡皮擦 2cm 6mm，小華只讀 2cm，實為 26mm） -->
+        <g id="a4-scene-3" style="display:none;">
+          <text x="92" y="34" font-size="11.5" font-weight="900" fill="#dc2626" text-anchor="middle" id="a4-m3-wrong">小華：橡皮擦有 2 公分長！</text>
+          <rect x="30" y="64" width="125" height="26" rx="5" fill="#fda4af" stroke="#e11d48" stroke-width="2"/>
+          <text x="92" y="81" font-size="8.5" font-weight="800" fill="#be123c" text-anchor="middle">ERASER</text>
+          <g id="a4-fix-3" opacity="0" style="transition: opacity 0.25s;">
+            <rect x="30" y="64" width="125" height="26" fill="#16a34a" opacity="0.18"/>
+            <text x="92" y="98" font-size="10.5" font-weight="900" fill="#16a34a" text-anchor="middle">2cm 6mm ＝ 26mm（6 個小刻度不能漏！）</text>
+          </g>
+        </g>
+
+        <text id="a4-caption" x="150" y="168" font-size="10" font-weight="800" fill="#8a857b" text-anchor="middle">切換迷思案例，按「🕵️ 開始糾錯」蓋章破招！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-m1" onclick="pickMyth(1)">不對齊 0</button>
+        <button class="btn-action" id="btn-m2" onclick="pickMyth(2)">看錯單位</button>
+        <button class="btn-action" id="btn-m3" onclick="pickMyth(3)">漏算小刻度</button>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-fix" onclick="fixMyth()">🕵️ 開始糾錯</button>
+      </div>
+      <div class="panel-stat" id="a4-stat">迷思一：小明說鉛筆有 5 公分長，對嗎？</div>
+      <div class="info-bubble warn" id="a4-bubble">
+        💡 仔細看：鉛筆的<b>左端有對齊 0 刻度嗎</b>？先自己想一想再糾錯！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：直尺微距放大鏡 ==================== */
+const A1_MM_X0 = 92.5;   // 3cm 長刻度 x
+const A1_MM_DX = 9;      // 每 1mm 間距（放大後）
+function a1TickX(i) { return A1_MM_X0 + i * A1_MM_DX; }
+
+// 生成鏡片內 10 個 1mm 小刻度與編號（1~10）
+(function buildA1Ticks() {
+  const g = document.getElementById("a1-mm-ticks");
+  if (!g) return;
+  let html = "";
+  for (let i = 1; i <= 10; i++) {
+    const x = a1TickX(i);
+    html += `<line x1="${x}" y1="86" x2="${x}" y2="104" stroke="#94a3b8" stroke-width="1.5"/>`;
+    html += `<text x="${x}" y="80">${i}</text>`;
+  }
+  g.innerHTML = html;
+})();
+
+// 生成 10 顆點數膠囊按鈕（1mm ~ 10mm）
+(function buildA1Buttons() {
+  const grid = document.getElementById("a1-btn-grid");
+  if (!grid) return;
+  for (let n = 1; n <= 10; n++) {
+    const b = document.createElement("button");
+    b.className = "btn-action";
+    b.textContent = n + "mm";
+    b.addEventListener("click", () => selectMm(n));
+    grid.appendChild(b);
+  }
+})();
+
+function selectMm(n) {
+  if (n < 1 || n > 10) return;
+  const btns = document.querySelectorAll("#a1-btn-grid .btn-action");
+  btns.forEach((b, idx) => b.classList.toggle("active", idx === n - 1));
+
+  const x = a1TickX(n);
+  const line = document.getElementById("a1-count-line");
+  const tag = document.getElementById("a1-count-tag");
+  const stat = document.getElementById("a1-stat");
+  const bubble = document.getElementById("a1-bubble");
+
+  if (line) { line.setAttribute("x1", x); line.setAttribute("x2", x); line.style.opacity = "1"; }
+  if (tag) { tag.textContent = "第 " + n + " 格 ＝ " + n + " mm"; tag.style.opacity = "1"; }
+
+  if (n < 10) {
+    if (stat) stat.textContent = "3cm ＋ " + n + " mm ＝ ？";
+    if (bubble) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "💡 數到第 <b>" + n + " 個小刻度</b>了！繼續數下去，10 格會變成什麼呢？1mm 大約是一張信用卡的厚度喔！";
+    }
+  } else {
+    if (stat) stat.textContent = "3cm ＋ 10mm ＝ 4cm！";
+    if (bubble) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🎉 <b>10 個 1mm 排起來剛好是 1cm！</b>所以 <b>1 公分(cm) ＝ 10 毫米(mm)</b>，3cm ＋ 10mm 就剛好抵達 4cm！";
+    }
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動二：生活微物對齊測量 ==================== */
+const A2_MM_PX = 6;      // 直尺縮放：每 1mm = 6px
+const A2_X0 = 30;        // 0 刻度 x
+
+// 生成直尺 1mm 小刻度
+(function buildA2Ticks() {
+  const g = document.getElementById("a2-mmticks");
+  if (!g) return;
+  let html = "";
+  for (let mm = 1; mm <= 40; mm++) {
+    if (mm % 10 === 0) continue; // 整公分由 cm 長刻度負責
+    const x = A2_X0 + mm * A2_MM_PX;
+    const h = (mm % 5 === 0) ? 10 : 8;
+    html += `<line x1="${x}" y1="122" x2="${x}" y2="${122 + h}" stroke="#c9b98f" stroke-width="1"/>`;
+  }
+  g.innerHTML = html;
+})();
+
+const A2_OBJ_INFO = {
+  coin:   { name: "10元硬幣（厚度）", rightMm: 2,  read: "2mm",  text: "💡 10元硬幣疊起來的厚度約 <b>2mm</b>。2mm 還不到半個公分喔（2mm ＝ 0cm 2mm）！", voice: "" },
+  staple: { name: "訂書針（寬度）",   rightMm: 12, read: "12mm", text: "💡 訂書針寬度 <b>12mm ＝ 1cm 2mm</b>：1 個 10mm，再加 2 個 1mm！", voice: "" },
+  clip:   { name: "迴紋針（長度）",   rightMm: 28, read: "28mm", text: "💡 迴紋針長度 <b>28mm ＝ 2cm 8mm</b>：2 個 10mm，再加 8 個 1mm！", voice: "" },
+  eraser: { name: "橡皮擦（長度）",   rightMm: 35, read: "35mm", text: "💡 橡皮擦長度 <b>35mm ＝ 3cm 5mm</b>：3 個 10mm，再加 5 個 1mm！", voice: "" }
+};
+
+function selectObj(key) {
+  const info = A2_OBJ_INFO[key];
+  if (!info) return;
+  document.querySelectorAll("#act-2-view .part-btn").forEach(b => b.classList.toggle("active", b.dataset.obj === key));
+
+  // 只顯示選中的物件
+  ["coin", "staple", "clip", "eraser"].forEach(k => {
+    const g = document.getElementById("a2-obj-" + k);
+    if (g) g.style.display = (k === key) ? "block" : "none";
+  });
+
+  const rightX = A2_X0 + info.rightMm * A2_MM_PX;
+  const guide = document.getElementById("a2-guide");
+  const read = document.getElementById("a2-read");
+  const objname = document.getElementById("a2-objname");
+  const stat = document.getElementById("a2-stat");
+  const bubble = document.getElementById("a2-bubble");
+
+  if (guide) { guide.setAttribute("x1", rightX); guide.setAttribute("x2", rightX); guide.style.opacity = "1"; }
+  if (read) { read.setAttribute("x", rightX); read.textContent = "右端：" + info.read; read.style.opacity = "1"; }
+  if (objname) objname.textContent = info.name;
+  if (stat) stat.textContent = "右端讀數：" + info.read;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = info.text;
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動三：單名數 ⇄ 複名數 換算板 ==================== */
+let a3Mode = "A";  // "A": 複名數→單名數 | "B": 單名數→複名數
+let a3StepIdx = 0;
+
+function rodSVG(x, y, w, h, glow) {
+  let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${glow ? "#fde68a" : "#93c5fd"}" stroke="#2563eb" stroke-width="2"/>`;
+  for (let k = 1; k < 10; k++) {
+    const yy = (y + h * k / 10).toFixed(1);
+    s += `<line x1="${x + 2}" y1="${yy}" x2="${x + w - 2}" y2="${yy}" stroke="#60a5fa" stroke-width="1"/>`;
+  }
+  return s;
+}
+function cubeSVG(x, y, size) {
+  return `<rect x="${x}" y="${y}" width="${size}" height="${size}" rx="2" fill="#fca5a5" stroke="#dc2626" stroke-width="1.5"/>`;
+}
+
+function renderA3() {
+  const svg = document.getElementById("a3-svg");
+  if (!svg) return;
+  const isA = (a3Mode === "A");
+  const tens = isA ? 3 : 4;
+  const ones = isA ? 5 : 8;
+  const qText = isA ? "3cm 5mm ＝ ？ mm" : "48mm ＝ ？ cm ？ mm";
+
+  let html = "";
+  // 題目文字
+  html += `<text x="150" y="20" font-size="13.5" font-weight="900" fill="#1e293b" text-anchor="middle">${qText}</text>`;
+
+  // 10mm 積木條（每條分 10 小格＝10 個 1mm）
+  const glowRods = (isA && a3StepIdx >= 1);
+  for (let i = 0; i < tens; i++) {
+    html += rodSVG(30 + i * 30, 48, 22, 80, glowRods);
+  }
+  if (isA) {
+    html += `<text x="60" y="142" font-size="8" font-weight="800" fill="#2563eb" text-anchor="middle">每條 ＝ 10mm（1cm）</text>`;
+  } else {
+    html += `<text x="90" y="142" font-size="8" font-weight="800" fill="#2563eb" text-anchor="middle">每條 ＝ 10mm（1cm）</text>`;
+  }
+
+  // 加號
+  html += `<text x="${30 + tens * 30 + 8}" y="95" font-size="16" font-weight="900" fill="#57534e" text-anchor="middle">＋</text>`;
+
+  // 1mm 小方塊（B 模式 8 顆排成 2 列）
+  const cubeX0 = 30 + tens * 30 + 22;
+  if (!isA) {
+    const rows = 2, cols = Math.ceil(ones / rows), size = 16, gap = 4;
+    for (let i = 0; i < ones; i++) {
+      const r = Math.floor(i / cols), c = i % cols;
+      html += cubeSVG(cubeX0 + c * (size + gap), 48 + r * (size + gap + 22), size);
+    }
+  } else {
+    for (let i = 0; i < ones; i++) {
+      html += cubeSVG(cubeX0 + i * 22, 72, 18);
+    }
+  }
+  html += `<text x="${cubeX0 + (isA ? ones * 11 : 38)}" y="142" font-size="8" font-weight="800" fill="#dc2626" text-anchor="middle">每個 ＝ 1mm</text>`;
+
+  // 逐步拆解文字
+  let l1 = "", l2 = "";
+  if (isA) {
+    if (a3StepIdx === 0) l1 = "點「🔍 逐步拆解」開始拆解！";
+    if (a3StepIdx >= 1) l1 = "3cm ＝ 3 個 10mm ＝ 30mm";
+    if (a3StepIdx >= 2) l2 = "30mm ＋ 5mm ＝ 35mm ✓";
+  } else {
+    if (a3StepIdx === 0) l1 = "點「🔍 逐步拆解」開始拆解！";
+    if (a3StepIdx >= 1) l1 = "48mm ＝ 40mm ＋ 8mm";
+    if (a3StepIdx >= 2) { l1 = "40mm ＝ 4 個 10mm ＝ 4cm"; l2 = "48mm ＝ 4cm 8mm ✓"; }
+  }
+  if (l1) html += `<text x="150" y="158" font-size="11" font-weight="900" fill="#92400e" text-anchor="middle">${l1}</text>`;
+  if (l2) html += `<text x="150" y="172" font-size="11" font-weight="900" fill="#166534" text-anchor="middle">${l2}</text>`;
+
+  svg.innerHTML = html;
+
+  const stat = document.getElementById("a3-stat");
+  if (stat) {
+    if (isA) stat.textContent = (a3StepIdx >= 2) ? "答案：35mm" : "3cm 5mm ＝ ？ mm";
+    else stat.textContent = (a3StepIdx >= 2) ? "答案：4cm 8mm" : "48mm ＝ ？ cm ？ mm";
+  }
+}
+
+function setA3Mode(mode) {
+  a3Mode = mode;
+  a3StepIdx = 0;
+  const btnA = document.getElementById("btn-a3-modeA");
+  const btnB = document.getElementById("btn-a3-modeB");
+  if (btnA) btnA.classList.toggle("active", mode === "A");
+  if (btnB) btnB.classList.toggle("active", mode === "B");
+  renderA3();
+}
+
+function a3Step() {
+  if (a3StepIdx < 2) a3StepIdx++;
+  renderA3();
+}
+
+/* ==================== 活動四：測量迷思除錯小偵探 ==================== */
+let a4Myth = 1;
+
+// 生成共用直尺的 mm 小刻度（48px/cm → 每 1mm = 4.8px）
+(function buildA4Ticks() {
+  const g = document.getElementById("a4-mmticks");
+  if (!g) return;
+  let html = "";
+  for (let mm = 1; mm <= 50; mm++) {
+    if (mm % 10 === 0) continue;
+    const x = 30 + mm * 4.8;
+    const h = (mm % 5 === 0) ? 10 : 7;
+    html += `<line x1="${x.toFixed(1)}" y1="112" x2="${x.toFixed(1)}" y2="${112 + h}" stroke="#c9b98f" stroke-width="0.8"/>`;
+  }
+  g.innerHTML = html;
+})();
+
+function pickMyth(n) {
+  a4Myth = n;
+  for (let i = 1; i <= 3; i++) {
+    const scene = document.getElementById("a4-scene-" + i);
+    const fix = document.getElementById("a4-fix-" + i);
+    const btn = document.getElementById("btn-m" + i);
+    if (scene) scene.style.display = (i === n) ? "block" : "none";
+    if (fix) fix.style.opacity = "0"; // 換案例時收回破招
+    if (btn) btn.classList.toggle("active", i === n);
+  }
+  const stamp = document.getElementById("a4-stamp");
+  if (stamp) stamp.style.opacity = "0";
+
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+  if (n === 1) {
+    if (stat) stat.textContent = "迷思一：小明說鉛筆有 5 公分長，對嗎？";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "💡 仔細看：鉛筆的<b>左端有對齊 0 刻度嗎</b>？先自己想一想再糾錯！"; }
+  } else if (n === 2) {
+    if (stat) stat.textContent = "迷思二：小美說木棒有 28 公分長，對嗎？";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "💡 仔細看：直尺上寫的是<b>公分(cm)</b>還是<b>毫米(mm)</b>？1cm 和 1mm 差幾倍？"; }
+  } else {
+    if (stat) stat.textContent = "迷思三：小華說橡皮擦有 2 公分長，對嗎？";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "💡 仔細看：橡皮擦右端超過整公分之後，還有幾個<b>小刻度</b>被忽略了？"; }
+  }
+  notifyHeight();
+}
+
+const A4_FIX_INFO = {
+  1: { text: "🕵️ 破招！鉛筆從 <b>1cm</b> 開始量到 <b>5cm</b>，左端沒對齊 0！要用「終點 － 起點」：<b>5 － 1 ＝ 4 公分</b>！", stat: "🎉 偵探破招成功：鉛筆其實是 4 公分！" },
+  2: { text: "🕵️ 破招！直尺上的 28 是<b>毫米(mm)</b>：28mm ＝ 2cm 8mm。小美說的 28公分 ＝ 280mm，足足差了 <b>10 倍</b>！", stat: "🎉 偵探破招成功：28mm ＝ 2cm 8mm！" },
+  3: { text: "🕵️ 破招！整公分 2cm 之後還有 <b>6 個小刻度（6mm）</b>，不能忽略！正確讀數是 <b>2cm 6mm ＝ 26mm</b>！", stat: "🎉 偵探破招成功：2cm 6mm ＝ 26mm！" }
+};
+
+function fixMyth() {
+  const info = A4_FIX_INFO[a4Myth];
+  if (!info) return;
+  const fix = document.getElementById("a4-fix-" + a4Myth);
+  const stamp = document.getElementById("a4-stamp");
+  const stat = document.getElementById("a4-stat");
+  const bubble = document.getElementById("a4-bubble");
+  if (fix) fix.style.opacity = "1";
+  if (stamp) stamp.style.opacity = "1";
+  if (stat) stat.textContent = info.stat;
+  if (bubble) {
+    bubble.classList.remove("warn");
+    bubble.innerHTML = info.text;
+  }
+  notifyHeight();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌🔬🪙📎🩹🔁]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：直尺微距放大鏡。把放大鏡對準三公分到四公分之間，數一數，一公分裡面藏著十個小刻度，每個小刻度就是一毫米。一公分等於十毫米，一毫米大約像一張信用卡的厚度喔！",
+  2: "活動二：生活微物測量。把小物件的左端對齊零刻度，右端對到哪裡就讀到哪裡。硬幣厚度約二毫米，訂書針十二毫米是一公分二毫米，迴紋針二十八毫米是二公分八毫米，橡皮擦三十五毫米是三公分五毫米喔！",
+  3: "活動三：換算板。三公分五毫米，先想三公分是三個十毫米，就是三十毫米，再加五毫米，等於三十五毫米。反過來，四十八毫米可以拆成四十毫米加八毫米，就是四公分八毫米喔！",
+  4: "活動四：迷思小偵探。量長度要對齊零刻度，看清楚單位是公分還是毫米，整公分後面的小刻度也不能漏掉。點下糾錯按鈕，一起破招吧！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+renderA3();
+setA3Mode("A");
+pickMyth(1);
+</script>
+</body>
+</html>

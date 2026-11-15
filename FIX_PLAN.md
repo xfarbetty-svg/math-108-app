@@ -1,33 +1,98 @@
-# FIX_PLAN: G3-N-3-13 角與角度 概念小教室落地計畫
+# 🎯 專案施工藍圖：三年級概念小教室第二戰（分數、小數、毫米）
 
-> **規劃核心**：035 Key Pool (Gemini 2.5 Pro 大腦 $0 額度)  
-> **施工通道**：通道一 (本地 OpenCode CLI / GLM-5.3-flash)  
-> **審核驗收**：AGY 總監 (Playwright CDP 390px 實機測試 Exit Code 0)  
-> **狀態**：[COMPLETED] 全流程通過雙硬閘門驗收 (Exit Code 0)  
+> 生成時間：2026-11-15 13:53:00  
+> 架構規劃：通道三 (035 金鑰池 Gemini 2.5 Pro)  
+> 可指派施工單位：通道一 (本地 OpenCode CLI) / 通道二 (A-SERVER SSH) / 通道三 (035 金鑰池)  
 
 ---
 
-## 🎯 施工清單 (Task Breakdown)
+## 1. 核心規格與邊界 (Given-When-Then)
 
-### Step 1: 建立 Concept Lab 元件 (`app/components/angle_concept_lab.html`)
-- [x] 視口規格：390px 手機單屏極致緊湊（總高 ≤ 420px，`overflow: hidden`，零捲軸）
-- [x] 4 幕活動導航膠囊 (Act 1 ~ Act 4)
-- [x] 雙通道 Edge-TTS 台灣曉臻語音導讀整合
-- [x] 日系莫蘭迪純向量 SVG 畫布 (viewBox 0 0 300 170)：
-  - Act 1：兩紙條開合扇形（木釘頂點、藍橘雙邊、張角扇形）
-  - Act 2：魔術三角板疊合找直角（半透明水藍壓克力三角板旋轉貼合）
-  - Act 3：銳角/直角/鈍角三兄弟疊合比大小
-  - Act 4：角度自由沙箱（動態張角 0°~150° + 邊長拉桿 45~95px 破除邊長迷思）
-- [x] 底欄「🎯 挑戰真題測驗」按鈕（呼叫 `parent.switchToExamMode()`）
+### G3-N-3-9 簡單同分母分數 (`fraction_concept_lab.html`)
+- **Given**: 使用者進入分數概念小教室。
+- **When**: 點擊 Act 1~4 切換或在各幕中進行點擊/拖曳操作。
+- **Then**:
+  - **Act 1 (平分與分數命名)**: 平分與不平分對比，披薩/鬆餅切換 2, 4, 8 等分，點選著色即時顯示分子/分母/分數線與「每一份都要一樣大」。
+  - **Act 2 (單位分數與幾分之幾)**: 巧克力長條（5等分、10等分），點擊累加 $1/n$，直觀理解「3 個 $1/5$ 是 $3/5$」。
+  - **Act 3 (同分母比大小)**: 雙軌長條（如 $2/6$ vs $4/6$）SVG 長度直觀對比，分母相同時分子大者大。
+  - **Act 4 (同分母加法與減法)**: 拼塊合併與拿走，展示 $1/8 + 3/8 = 4/8$ 與 $5/6 - 2/6 = 3/6$，強調「分母不變，分子相加減」。
+- **邊界禁區**: 分母僅限 2~12 常用等分，不涉及帶分數與假分數。
 
-### Step 2: 建立機械化守門員驗收腳本 (`tools/verify_angle_concept.js`)
-- [x] Playwright CDP 實機載入 `app/components/angle_concept_lab.html` (390x844 視口)
-- [x] 驗證 `#app` 高度 ≤ 420px，無橫向溢出、無縱向捲軸
-- [x] 依序點擊 Act 1 ~ Act 4 導航，驗證視圖無縫切換
-- [x] 驗證音訊播放器與備援降級機制
-- [x] 驗收 Exit Code 0 (7項全綠)
+### G3-N-3-10 一位小數 (`decimal_concept_lab.html`)
+- **Given**: 使用者進入一位小數概念小教室。
+- **When**: 操作十等分色紙、計數盒或數線。
+- **Then**:
+  - **Act 1 (十等分與 0.1 誕生)**: 10 等分長條/方格，點選顯示 $1/10 = 0.1$，展示 10 個 0.1 合成 1。
+  - **Act 2 (一位小數位值盒)**: 個位、小數點、十分位撥珠/計數台，滿 10 顆 0.1 動態進位至個位 1。
+  - **Act 3 (公尺/公分直尺放大數線)**: 0 到 1 展開 10 等分微小刻度，拉動滑塊測量與對齊。
+  - **Act 4 (小數比大小與加減)**: 雙軌長條（如 0.8 vs 1.2）對比；小數點對齊直式/橫式加減演示。
+- **邊界禁區**: 僅限一位小數（十分位），不涉及百分位與千分位。
 
-### Step 3: 掛載整合進總入口 Shell
-- [x] 更新 `app/shell.js` 掛載 `N-3-13` 與 `S-3-1` 指標
-- [x] 執行全域守門員 `node tools/verify_app_shell.js` Exit Code 0
-- [x] 執行真題驗證 `node tools/verify_n313_cdp.js` Exit Code 0
+### G3-N-3-12 長度（毫米 mm） (`millimeter_concept_lab.html`)
+- **Given**: 使用者進入長度毫米概念小教室。
+- **When**: 操作直尺放大鏡與生活物件。
+- **Then**:
+  - **Act 1 (直尺微距放大鏡)**: 原生 SVG 擬物直尺，放大鏡聚焦 3~4cm 區間，看清 10 個 1mm 微小刻度，實證 $1\text{cm} = 10\text{mm}$。
+  - **Act 2 (生活微物對齊測量)**: 擬物硬幣厚度 (2mm)、橡皮擦、訂書針，對齊 0 刻度測量讀數。
+  - **Act 3 (單名數與複名數換算)**: 互動換算滑塊，如 $3\text{cm } 5\text{mm} = 35\text{mm}$、$42\text{mm} = 4\text{cm } 2\text{mm}$ 動態拆解。
+  - **Act 4 (測量迷思除錯小偵探)**: 展示「沒對齊 0 刻度（從 1 開始量）」、「看錯單位」之常見陷阱，引導糾錯。
+- **邊界禁區**: 全原生 SVG 繪製，嚴禁真實相機與外部 3D 庫。
+
+---
+
+## 2. 預計影響檔案樹
+
+```text
+d:\ANTIGRAVITY\028-1_國小數學APP\
+├── app/
+│   ├── components/
+│   │   ├── fraction_concept_lab.html    # [NEW] G3-N-3-9 分數實驗室
+│   │   ├── decimal_concept_lab.html     # [NEW] G3-N-3-10 小數實驗室
+│   │   └── millimeter_concept_lab.html  # [NEW] G3-N-3-12 毫米實驗室
+│   └── shell.js                         # [MODIFY] CONCEPT_COMPONENTS 註冊 N-3-9, N-3-10, N-3-12
+├── tools/
+│   └── verify_g3_new_concepts.js        # [NEW] Playwright CDP 自動化驗收守門員
+├── deploy.ps1                           # [EXISTING] 一鍵部署
+└── FIX_PLAN.md                          # [THIS FILE] 施工計畫
+```
+
+---
+
+## 3. 單步執行清單 (Step-by-Step Checklist)
+
+- [x] **Step 1: 建立 G3-N-3-9 簡單同分母分數概念小教室**
+  - 產出檔案: `app/components/fraction_concept_lab.html` (43KB, 1149 行, 4 幕式互動)
+  - 規格: 390px Mobile-First、平分圓盤/巧克力長條/雙軌比大小/同分母加減、手動語音導讀
+  - 驗證指令: 靜態檢查無外部依賴、語音手動、四幕式齊備 (Exit Code 0)
+  - 施工單位: 通道一 (本地 OpenCode CLI)
+
+- [x] **Step 2: 建立 G3-N-3-10 一位小數概念小教室**
+  - 產出檔案: `app/components/decimal_concept_lab.html` (44KB, 1176 行, 4 幕式互動)
+  - 規格: 390px Mobile-First、十等分方格/位值盒滿十進位/公尺數線/小數點對齊比大小加減、手動語音導讀
+  - 驗證指令: 靜態檢查無外部依賴、語音手動、四幕式齊備 (Exit Code 0)
+  - 施工單位: 通道一/二 (OpenCode CLI)
+
+- [x] **Step 3: 建立 G3-N-3-12 長度（毫米 mm）概念小教室**
+  - 產出檔案: `app/components/millimeter_concept_lab.html` (40KB, 966 行, 4 幕式互動)
+  - 規格: 390px Mobile-First、直尺放大鏡/微物量測/複名數換算/除錯偵探、手動語音導讀
+  - 驗證指令: 靜態檢查無外部依賴、語音手動、四幕式齊備 (Exit Code 0)
+  - 施工單位: 通道一/二 (OpenCode CLI)
+
+- [x] **Step 4: 整合至 app/shell.js 並編寫守門員測試**
+  - 產出/修改檔案: `app/shell.js`、`tools/verify_g3_new_concepts.js`、`tools/release.py`
+  - 規格: 在 `CONCEPT_COMPONENTS` 完整登錄 `N-3-9`, `N-3-10`, `N-3-12`，支援概念/測驗模式切換
+  - 驗證指令: `node tools/verify_g3_new_concepts.js` (ALL 3 LABS Exit Code 0)
+  - 施工單位: 本地整合驗證完成
+
+- [ ] **Step 5: 部署閉環與雲端驗真**
+  - 執行指令: `.\deploy.ps1`
+  - 驗證: Cloudflare Pages 邊緣探測 HTTP 200，真機手機 390px 驗收通過
+
+---
+
+## 4. 施工防錯守則
+1. **零外部依賴**: 100% Vanilla JS + 原生 SVG + CSS3，嚴禁引入任何 CDN 或外部庫。
+2. **純 2D 正視向量**: 幾何圖形純 2D 正視視角，圓潤精準，嚴禁套用 034 等角透視造成橢圓或拉伸變形。
+3. **單手單屏 (One-Screen)**: 手機 390px 視口寬度下 `body { overflow-x: hidden; }`，無水平捲軸，高度緊湊無冗餘空白。
+4. **語音純淨規範**: 嚴禁任何自動播放（`autoplay`），100% 由使用者手動點擊「🔊 聽導讀」觸發，支援隨時「⏹ 停止」，切換 Act 時必須 `speechSynthesis.cancel()`。
+5. **單步即停硬門禁**: 每個 Step 完成後必須展示真實終端輸出，通過後打勾 `[x]` 並停機報告，嚴禁一口氣盲目連衝。

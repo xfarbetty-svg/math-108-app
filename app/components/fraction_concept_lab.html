@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-9 簡單同分母分數概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --choco: #8d6e63;
+  --choco-deep: #5d4037;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  max-height: 185px;
+}
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+/* 分數卡片（分子珊瑚粉橘 / 分母天空藍） */
+.fraction-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: #ffffff;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 14px 8px;
+  box-shadow: var(--shadow);
+  min-width: 74px;
+}
+.frac-num {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--coral-deep);
+  line-height: 1.1;
+}
+.frac-bar {
+  width: 100%;
+  height: 3.5px;
+  background: var(--ink);
+  border-radius: 3px;
+}
+.frac-den {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  line-height: 1.1;
+}
+.fraction-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.frac-op {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+/* 比較徽章（Act 3） */
+.compare-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 16px;
+  font-weight: 900;
+  box-shadow: var(--shadow);
+}
+.compare-badge .fa, .compare-badge .fb { display: inline-flex; flex-direction: column; align-items: center; gap: 1px; }
+.compare-badge .fa .t { color: var(--coral-deep); font-size: 15px; line-height: 1; }
+.compare-badge .fa .b { color: var(--coral-deep); font-size: 15px; line-height: 1; border-top: 2.5px solid var(--ink); padding-top: 1px; }
+.compare-badge .fb .t { color: var(--mint-deep); font-size: 15px; line-height: 1; }
+.compare-badge .fb .b { color: var(--mint-deep); font-size: 15px; line-height: 1; border-top: 2.5px solid var(--ink); padding-top: 1px; }
+.compare-badge .cmp { font-size: 19px; color: var(--ink); padding: 0 2px; }
+
+/* 底欄直通真題按鈕 */
+.concept-footer { margin-top: 4px; }
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🍰 活動一 · 平分與命名</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🍫 活動二 · 單位分數</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🆚 活動三 · 比大小</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🧩 活動四 · 加與減</button>
+  </nav>
+
+  <!-- ==================== 活動一：平分圓盤與分數命名 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-9 探究活動 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🍰 活動一：平分圓盤與分數命名</div>
+    <div class="card-desc">
+      分數的第一步是<b>「平分」</b>：每一份都要<b>一模一樣大</b>！先選等分方式，再點點看扇形，看看分數是怎麼命名的。
+    </div>
+
+    <!-- 視覺畫布：可點擊圓盤 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg">
+        <g id="a1-sectors"></g>
+        <circle cx="150" cy="92" r="3.5" fill="#3d3a34" opacity="0.55"/>
+        <text id="a1-tag" x="150" y="176" font-size="12.5" font-weight="900" fill="#57534e" text-anchor="middle">選好等分方式，點扇形玩玩看！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid" id="a1-mode-grid">
+        <button class="btn-action active" data-div="2" onclick="setDiscDiv(2)">2 等分</button>
+        <button class="btn-action" data-div="4" onclick="setDiscDiv(4)">4 等分</button>
+        <button class="btn-action" data-div="8" onclick="setDiscDiv(8)">8 等分</button>
+        <button class="btn-action" data-div="0" onclick="setDiscDiv(0)">✂️ 不平分</button>
+      </div>
+      <div class="fraction-row">
+        <div class="fraction-card">
+          <span class="frac-num" id="a1-num">—</span>
+          <span class="frac-bar"></span>
+          <span class="frac-den" id="a1-den">—</span>
+        </div>
+        <div class="info-bubble" id="a1-bubble" style="flex:1 1 0; min-width:0;">
+          💡 每一份<b>一模一樣大</b>，這叫做<b>「平分」</b>！點點看扇形吧！
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：巧克力長條與單位分數 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-9 探究活動 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🍫 活動二：巧克力長條與單位分數</div>
+    <div class="card-desc">
+      一條巧克力<b>平分成 5 格</b>，每一格就是 <b>1/5 條</b>（一個單位分數）。點格子累加選取，看看選了幾個 1/5！
+    </div>
+
+    <!-- 視覺畫布：巧克力長條 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- 錫箔包裝紙 -->
+        <rect x="16" y="24" width="268" height="62" rx="10" fill="#e8eef7" stroke="#c3d2e8" stroke-width="2"/>
+        <g id="a2-cells"></g>
+        <text id="a2-tag" x="150" y="112" font-size="12.5" font-weight="900" fill="#57534e" text-anchor="middle">點點看格子上面的巧克力！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="a2-stat">選了 0 格 ＝ 0/5 條</div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="chocoPreset(1)">點 1 格</button>
+        <button class="btn-action" onclick="chocoPreset(3)">點 3 格</button>
+        <button class="btn-action" onclick="chocoPreset(5)">點 5 格（全滿）</button>
+        <button class="btn-action" onclick="chocoReset()">🧹 全部歸零</button>
+      </div>
+      <div class="info-bubble" id="a2-bubble">
+        💡 平分成 5 格，<b>1 格就是 1 個 1/5 條</b>！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：雙軌長條同分母比大小 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-9 探究活動 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🆚 活動三：雙軌長條同分母比大小</div>
+    <div class="card-desc">
+      兩條長條都<b>平分成 6 格</b>（分母相同）！點格子幫軌道 A（珊瑚）與軌道 B（薄荷）著色，中間徽章即時比較大小。
+    </div>
+
+    <!-- 視覺畫布：雙軌長條 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="150" y="16" font-size="11.5" font-weight="900" fill="#f4694b" text-anchor="middle">🅰 軌道 A（珊瑚隊）</text>
+        <rect x="18" y="22" width="264" height="34" rx="8" fill="#fdf1ec" stroke="#f0c4b4" stroke-width="2"/>
+        <g id="a3-cellsA"></g>
+        <text x="150" y="80" font-size="11.5" font-weight="900" fill="#318a70" text-anchor="middle">🅱 軌道 B（薄荷隊）</text>
+        <rect x="18" y="88" width="264" height="34" rx="8" fill="#edf7f3" stroke="#bfe0d4" stroke-width="2"/>
+        <g id="a3-cellsB"></g>
+        <text id="a3-tag" x="150" y="144" font-size="11.5" font-weight="900" fill="#57534e" text-anchor="middle">點格子著色，比比看誰比較多！</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="compare-badge" id="a3-badge">
+        <span class="fa"><span class="t" id="a3-fa-t">0</span><span class="b" id="a3-fa-b">6</span></span>
+        <span class="cmp" id="a3-cmp">?</span>
+        <span class="fb"><span class="t" id="a3-fb-t">0</span><span class="b" id="a3-fb-b">6</span></span>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="racePreset(2,4)">示範 2/6 vs 4/6</button>
+        <button class="btn-action" onclick="racePreset(5,3)">示範 5/6 vs 3/6</button>
+        <button class="btn-action" onclick="racePreset(3,3)">示範 3/6 vs 3/6</button>
+        <button class="btn-action" onclick="raceReset()">🧹 全部歸零</button>
+      </div>
+      <div class="info-bubble" id="a3-bubble">
+        💡 <b>分母相同時，分子越大，分數就越大！</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：拼塊合併與拿走（同分母加減） ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-9 探究活動 4</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧩 活動四：拼塊合併與拿走（同分母加減）</div>
+    <div class="card-desc">
+      <b>加法</b>就是把拼塊<b>合併</b>進來；<b>減法</b>就是把拼塊<b>拿走</b>。分母一樣時：<b>分母不變，分子相加或相減</b>！
+    </div>
+
+    <!-- 視覺畫布：加減長條 -->
+    <div class="stage-canvas">
+      <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- 加法模式：上方兩塊拼塊 -->
+        <g id="a4-add-pieces">
+          <g id="a4-piece1">
+            <rect x="34" y="12" width="28" height="24" rx="5" fill="#ffb89c" stroke="#f4694b" stroke-width="2"/>
+            <text x="48" y="29" font-size="11" font-weight="900" fill="#c2410c" text-anchor="middle">1</text>
+          </g>
+          <g id="a4-piece3">
+            <rect x="86" y="12" width="84" height="24" rx="5" fill="#ffb89c" stroke="#f4694b" stroke-width="2"/>
+            <text x="128" y="29" font-size="11" font-weight="900" fill="#c2410c" text-anchor="middle">3 格</text>
+          </g>
+          <text x="196" y="29" font-size="11.5" font-weight="900" fill="#8a857b">← 待拼入</text>
+        </g>
+        <!-- 減法模式：叉叉提示 -->
+        <g id="a4-sub-hint" style="display:none;">
+          <text x="150" y="29" font-size="11.5" font-weight="900" fill="#92400e" text-anchor="middle">點擊想「拿走」的 2 格試試看！</text>
+        </g>
+        <!-- 主長條（8格加法 / 6格減法 依模式重繪） -->
+        <g id="a4-cells"></g>
+        <text id="a4-tag" x="150" y="152" font-size="12.5" font-weight="900" fill="#57534e" text-anchor="middle"></text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action active" id="btn-mode-add" onclick="setOpMode('add')">➕ 加法合併</button>
+        <button class="btn-action" id="btn-mode-sub" onclick="setOpMode('sub')">➖ 減法拿走</button>
+      </div>
+      <div class="fraction-row" id="a4-equation"></div>
+      <div class="btn-grid">
+        <button class="btn-action" id="btn-a4-go" onclick="act4Go()">▶ 拼入合併</button>
+        <button class="btn-action" onclick="act4Reset()">🧹 重新開始</button>
+      </div>
+      <div class="info-bubble" id="a4-bubble">
+        💡 1/8 ＋ 3/8：按下「拼入合併」，看 1 格和 3 格一起進到 8 格長條！
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 進入真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：平分圓盤與分數命名 ==================== */
+const A1_CX = 150, A1_CY = 92, A1_R = 66;
+let a1Div = 2;              // 2 / 4 / 8 / 0(不平分)
+let a1Selected = [];        // 各扇形選取狀態
+const A1_UNEQUAL_SLICES = [150, 100, 70, 40];  // 不平分：四份角度明顯不同
+
+function polar(cx, cy, r, deg) {
+  const rad = (deg - 90) * Math.PI / 180;
+  return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+}
+
+function sectorPath(cx, cy, r, startDeg, endDeg) {
+  const [x1, y1] = polar(cx, cy, r, startDeg);
+  const [x2, y2] = polar(cx, cy, r, endDeg);
+  const large = (endDeg - startDeg) > 180 ? 1 : 0;
+  return `M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
+}
+
+function setDiscDiv(div) {
+  a1Div = div;
+  document.querySelectorAll("#a1-mode-grid .btn-action").forEach(b => {
+    b.classList.toggle("active", Number(b.dataset.div) === div);
+  });
+  a1Selected = [];
+  renderDisc();
+}
+
+function renderDisc() {
+  const g = document.getElementById("a1-sectors");
+  const tag = document.getElementById("a1-tag");
+  const numEl = document.getElementById("a1-num");
+  const denEl = document.getElementById("a1-den");
+  const bubble = document.getElementById("a1-bubble");
+  if (!g) return;
+  g.innerHTML = "";
+  let slices = [];
+
+  if (a1Div === 0) {
+    // 不平分：四份大小明顯不同
+    let acc = 0;
+    A1_UNEQUAL_SLICES.forEach((deg, i) => {
+      slices.push({ start: acc, end: acc + deg, idx: i, fill: ["#fde2d4", "#fef3c7", "#dbeafe", "#d1fae5"][i], unequal: true });
+      acc += deg;
+    });
+  } else {
+    const step = 360 / a1Div;
+    for (let i = 0; i < a1Div; i++) {
+      slices.push({ start: i * step, end: (i + 1) * step, idx: i, fill: "#fff7ed", unequal: false });
+    }
+  }
+
+  slices.forEach(s => {
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", sectorPath(A1_CX, A1_CY, A1_R, s.start, s.end));
+    const sel = !s.unequal && a1Selected[s.idx];
+    p.setAttribute("fill", sel ? "#ff8a65" : s.fill);
+    p.setAttribute("stroke", s.unequal ? "#a8a29e" : "#d6c9b6");
+    p.setAttribute("stroke-width", "2.5");
+    p.style.cursor = "pointer";
+    p.style.transition = "fill 0.15s";
+    p.addEventListener("click", () => {
+      if (s.unequal) {
+        if (bubble) {
+          bubble.classList.add("warn");
+          bubble.innerHTML = "⚠️ 這個圓<b>沒有平分</b>！每一份都不一樣大，所以<b>不能用</b>「1/4」這種分數說每一份！";
+        }
+        if (tag) { tag.textContent = "每份不一樣大 → 不能用分數命名！"; tag.setAttribute("fill", "#b45309"); }
+        if (numEl) numEl.textContent = "?";
+        if (denEl) denEl.textContent = "?";
+        return;
+      }
+      a1Selected[s.idx] = !a1Selected[s.idx];
+      renderDisc();
+    });
+    g.appendChild(p);
+  });
+
+  if (a1Div === 0) {
+    if (tag) { tag.textContent = "✂️ 每份不一樣大 → 沒有平分，不能用分數！"; tag.setAttribute("fill", "#b45309"); }
+    if (numEl) numEl.textContent = "?";
+    if (denEl) denEl.textContent = "?";
+    if (bubble) { bubble.classList.add("warn"); bubble.innerHTML = "⚠️ 分數一定要先<b>平分</b>！每一份一模一樣大，才能命名！"; }
+  } else {
+    const k = a1Selected.filter(Boolean).length;
+    if (k > 0) {
+      if (numEl) numEl.textContent = String(k);
+      if (denEl) denEl.textContent = String(a1Div);
+      if (tag) { tag.textContent = `選了 ${k} 個 1/${a1Div} → ${k}/${a1Div} 個圓`; tag.setAttribute("fill", "#f4694b"); }
+      if (bubble) {
+        bubble.classList.remove("warn");
+        bubble.innerHTML = `💡 圓被<b>平分成 ${a1Div} 份</b>，每份是 <b>1/${a1Div}</b>。選了 <b>${k} 個 1/${a1Div}</b>，就是 <b>${a1Div} 分之 ${k}（${k}/${a1Div}）</b>！分母 ${a1Div} 表示平分的份數，分子 ${k} 表示選了幾份！`;
+      }
+    } else {
+      if (numEl) numEl.textContent = "—";
+      if (denEl) denEl.textContent = "—";
+      if (tag) { tag.textContent = `平分成 ${a1Div} 份，點扇形選選看！`; tag.setAttribute("fill", "#57534e"); }
+      if (bubble) {
+        bubble.classList.remove("warn");
+        bubble.innerHTML = `💡 圓被<b>平分成 ${a1Div} 份</b>，每份一模一樣大，每份就是 <b>1/${a1Div}</b>！`;
+      }
+    }
+  }
+}
+
+/* ==================== 活動二：巧克力長條與單位分數 ==================== */
+const A2_N = 5;
+const A2_X = 24, A2_W = 252, A2_Y = 32, A2_H = 46;   // 5 格，每格 50.4px
+let a2Sel = new Array(A2_N).fill(false);
+
+function renderChoco() {
+  const g = document.getElementById("a2-cells");
+  if (!g) return;
+  g.innerHTML = "";
+  const cw = A2_W / A2_N;
+  for (let i = 0; i < A2_N; i++) {
+    const x = A2_X + i * cw;
+    const grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    grp.style.cursor = "pointer";
+    // 巧克力本體
+    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("x", (x + 2).toFixed(1));
+    r.setAttribute("y", A2_Y);
+    r.setAttribute("width", (cw - 4).toFixed(1));
+    r.setAttribute("height", A2_H);
+    r.setAttribute("rx", "6");
+    r.setAttribute("fill", a2Sel[i] ? "#8d6e63" : "#efe3d8");
+    r.setAttribute("stroke", a2Sel[i] ? "#5d4037" : "#d7c9bb");
+    r.setAttribute("stroke-width", "2.5");
+    r.style.transition = "fill 0.15s";
+    grp.appendChild(r);
+    // 巧克力方格凹槽紋
+    const sq = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    sq.setAttribute("x", (x + 10).toFixed(1));
+    sq.setAttribute("y", A2_Y + 8);
+    sq.setAttribute("width", (cw - 20).toFixed(1));
+    sq.setAttribute("height", A2_H - 16);
+    sq.setAttribute("rx", "4");
+    sq.setAttribute("fill", "none");
+    sq.setAttribute("stroke", a2Sel[i] ? "#a1887f" : "#e0d3c5");
+    sq.setAttribute("stroke-width", "2");
+    sq.style.pointerEvents = "none";
+    grp.appendChild(sq);
+    // 1/5 標籤
+    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", (x + cw / 2).toFixed(1));
+    t.setAttribute("y", A2_Y + A2_H + 16);
+    t.setAttribute("font-size", "10.5");
+    t.setAttribute("font-weight", "900");
+    t.setAttribute("fill", a2Sel[i] ? "#5d4037" : "#b0a496");
+    t.setAttribute("text-anchor", "middle");
+    t.textContent = `1/5`;
+    t.style.pointerEvents = "none";
+    grp.appendChild(t);
+    grp.addEventListener("click", () => { a2Sel[i] = !a2Sel[i]; renderChoco(); });
+    g.appendChild(grp);
+  }
+
+  const k = a2Sel.filter(Boolean).length;
+  const stat = document.getElementById("a2-stat");
+  const tag = document.getElementById("a2-tag");
+  const bubble = document.getElementById("a2-bubble");
+  if (stat) stat.textContent = `選了 ${k} 格 ＝ ${k}/5 條`;
+  if (tag) tag.textContent = k === 0 ? "點點看格子上面的巧克力！" : `每格都是 1 個 1/5 條`;
+  if (bubble) {
+    if (k === 0) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "💡 平分成 5 格，<b>1 格就是 1 個 1/5 條</b>！";
+    } else if (k === 5) {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = "🎉 選了 <b>5 個 1/5</b>，就是 <b>5/5 條</b>——剛好<b>全滿 1 條</b>！5/5 ＝ 1！";
+    } else {
+      bubble.classList.remove("warn");
+      bubble.innerHTML = `💡 選了 <b>${k} 格</b>，就是 <b>${k} 個 1/5 條</b>，合起來是 <b>${k}/5 條</b>！分子 ${k} ＝ 拼起來的格數。`;
+    }
+  }
+}
+
+function chocoPreset(n) {
+  a2Sel = new Array(A2_N).fill(false);
+  for (let i = 0; i < n; i++) a2Sel[i] = true;
+  renderChoco();
+}
+function chocoReset() {
+  a2Sel = new Array(A2_N).fill(false);
+  renderChoco();
+}
+
+/* ==================== 活動三：雙軌長條同分母比大小 ==================== */
+const A3_N = 6;
+const A3_X = 22, A3_W = 256;
+let a3SelA = new Array(A3_N).fill(false);
+let a3SelB = new Array(A3_N).fill(false);
+
+function renderRace() {
+  const gA = document.getElementById("a3-cellsA");
+  const gB = document.getElementById("a3-cellsB");
+  const cw = A3_W / A3_N;
+  function drawBar(g, sel, colorOn, fillOff, strokeOff, y) {
+    if (!g) return;
+    g.innerHTML = "";
+    for (let i = 0; i < A3_N; i++) {
+      const x = A3_X + i * cw;
+      const grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      grp.style.cursor = "pointer";
+      const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      r.setAttribute("x", (x + 2).toFixed(1));
+      r.setAttribute("y", y);
+      r.setAttribute("width", (cw - 4).toFixed(1));
+      r.setAttribute("height", 30);
+      r.setAttribute("rx", "5");
+      r.setAttribute("fill", sel[i] ? colorOn : fillOff);
+      r.setAttribute("stroke", sel[i] ? "rgba(0,0,0,0.18)" : strokeOff);
+      r.setAttribute("stroke-width", "2");
+      r.style.transition = "fill 0.15s";
+      grp.appendChild(r);
+      grp.addEventListener("click", () => { sel[i] = !sel[i]; renderRace(); });
+      g.appendChild(grp);
+    }
+  }
+  drawBar(gA, a3SelA, "#ff8a65", "#fdf1ec", "#f0c4b4", 26);
+  drawBar(gB, a3SelB, "#7bc9b2", "#edf7f3", "#bfe0d4", 92);
+
+  const a = a3SelA.filter(Boolean).length;
+  const b = a3SelB.filter(Boolean).length;
+  const faT = document.getElementById("a3-fa-t");
+  const fbT = document.getElementById("a3-fb-t");
+  const cmp = document.getElementById("a3-cmp");
+  const tag = document.getElementById("a3-tag");
+  const bubble = document.getElementById("a3-bubble");
+  if (faT) faT.textContent = String(a);
+  if (fbT) fbT.textContent = String(b);
+  let cmpText = "?", bubbleHTML;
+  if (a > b) { cmpText = "＞"; }
+  else if (a < b) { cmpText = "＜"; }
+  else { cmpText = "＝"; }
+  if (cmp) cmp.textContent = cmpText;
+  if (tag) tag.textContent = `A：${a}/6 · B：${b}/6`;
+  if (bubble) {
+    if (a === 0 && b === 0) {
+      bubble.classList.remove("warn");
+      bubbleHTML = "💡 <b>分母相同時，分子越大，分數就越大！</b>先點點看格子著色吧！";
+    } else if (a === b) {
+      bubble.classList.remove("warn");
+      bubbleHTML = `💡 ${a}/6 ＝ ${b}/6，<b>分子相同、分母相同</b>，兩條一樣大！`;
+    } else {
+      const big = a > b ? "A" : "B";
+      const bigF = a > b ? a : b, smallF = a > b ? b : a;
+      bubbleHTML = `💡 ${bigF}/6 ＞ ${smallF}/6，<b>${big === "A" ? "珊瑚隊 A" : "薄荷隊 B"} 比較長</b>！<b>分母相同（都是 6）時，分子越大，分數就越大！</b>`;
+    }
+    bubble.innerHTML = bubbleHTML;
+  }
+}
+
+function racePreset(a, b) {
+  a3SelA = new Array(A3_N).fill(false);
+  a3SelB = new Array(A3_N).fill(false);
+  for (let i = 0; i < a; i++) a3SelA[i] = true;
+  for (let i = 0; i < b; i++) a3SelB[i] = true;
+  renderRace();
+}
+function raceReset() {
+  a3SelA = new Array(A3_N).fill(false);
+  a3SelB = new Array(A3_N).fill(false);
+  renderRace();
+}
+
+/* ==================== 活動四：拼塊合併與拿走 ==================== */
+let a4Mode = "add";          // "add" | "sub"
+let a4AddDone = false;       // 加法是否已拼入
+let a4Removed = new Array(6).fill(false);  // 減法：被拿走的格子
+const A4_X = 30, A4_W = 240, A4_Y = 62;
+
+/* 小型直式分數 HTML */
+function fracHTML(num, den, color) {
+  return `<span class="fraction-card" style="min-width:58px; padding:4px 10px 6px; border-width:2px;">
+    <span class="frac-num" style="font-size:18px; color:${color};">${num}</span>
+    <span class="frac-bar"></span>
+    <span class="frac-den" style="font-size:18px; color:${color};">${den}</span>
+  </span>`;
+}
+
+function renderAct4() {
+  const g = document.getElementById("a4-cells");
+  const tag = document.getElementById("a4-tag");
+  const bubble = document.getElementById("a4-bubble");
+  const eq = document.getElementById("a4-equation");
+  const goBtn = document.getElementById("btn-a4-go");
+  if (!g) return;
+  g.innerHTML = "";
+
+  if (a4Mode === "add") {
+    const N = 8, cw = A4_W / N;
+    for (let i = 0; i < N; i++) {
+      const x = A4_X + i * cw;
+      const filled = a4AddDone && i < 4;   // 1/8 + 3/8 = 4/8
+      const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      r.setAttribute("x", (x + 1.5).toFixed(1));
+      r.setAttribute("y", A4_Y);
+      r.setAttribute("width", (cw - 3).toFixed(1));
+      r.setAttribute("height", 34);
+      r.setAttribute("rx", "5");
+      r.setAttribute("fill", filled ? "#ff8a65" : "#fff3ea");
+      r.setAttribute("stroke", filled ? "#f4694b" : "#f0c4b4");
+      r.setAttribute("stroke-width", "2");
+      r.style.transition = "fill 0.3s";
+      g.appendChild(r);
+      if (filled) {
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", (x + cw / 2).toFixed(1));
+        t.setAttribute("y", A4_Y + 23);
+        t.setAttribute("font-size", "11");
+        t.setAttribute("font-weight", "900");
+        t.setAttribute("fill", "#ffffff");
+        t.setAttribute("text-anchor", "middle");
+        t.textContent = "1/8";
+        g.appendChild(t);
+      }
+    }
+    // 長條外框
+    const frame = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    frame.setAttribute("x", A4_X - 4);
+    frame.setAttribute("y", A4_Y - 4);
+    frame.setAttribute("width", A4_W + 8);
+    frame.setAttribute("height", 42);
+    frame.setAttribute("rx", "8");
+    frame.setAttribute("fill", "none");
+    frame.setAttribute("stroke", "#d6c9b6");
+    frame.setAttribute("stroke-width", "2");
+    g.appendChild(frame);
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", A4_X + A4_W / 2);
+    label.setAttribute("y", A4_Y + 56);
+    label.setAttribute("font-size", "10.5");
+    label.setAttribute("font-weight", "900");
+    label.setAttribute("fill", "#8a857b");
+    label.setAttribute("text-anchor", "middle");
+    label.textContent = "8 格長條（平分成 8 份，每份 1/8）";
+    g.appendChild(label);
+
+    if (tag) {
+      tag.textContent = a4AddDone ? "1 格 ＋ 3 格 ＝ 4 格 → 4/8 條！" : "上方的拼塊還沒拼進長條喔！";
+      tag.setAttribute("fill", a4AddDone ? "#f4694b" : "#57534e");
+    }
+    if (eq) {
+      eq.innerHTML = a4AddDone
+        ? fracHTML(1, 8, "#f4694b") + `<span class="frac-op">＋</span>` + fracHTML(3, 8, "#f4694b") + `<span class="frac-op">＝</span>` + fracHTML(4, 8, "#f4694b")
+        : fracHTML(1, 8, "#f4694b") + `<span class="frac-op">＋</span>` + fracHTML(3, 8, "#f4694b") + `<span class="frac-op">＝</span><span class="frac-op" style="color:#cbd5e1;">？</span>`;
+    }
+    if (goBtn) { goBtn.style.display = "inline-block"; goBtn.textContent = a4AddDone ? "✔ 已合併" : "▶ 拼入合併"; goBtn.disabled = a4AddDone; goBtn.style.opacity = a4AddDone ? "0.55" : "1"; }
+    if (bubble) {
+      if (a4AddDone) {
+        bubble.classList.remove("warn");
+        bubble.innerHTML = "🎉 <b>1/8 ＋ 3/8 ＝ 4/8</b>！<b>分母不變（都是 8），分子相加（1＋3＝4）</b>！";
+      } else {
+        bubble.innerHTML = "💡 1/8 ＋ 3/8：按下「拼入合併」，看 1 格和 3 格一起進到 8 格長條！";
+      }
+    }
+  } else {
+    const N = 6, cw = A4_W / N;
+    const removedCount = a4Removed.filter(Boolean).length;
+    for (let i = 0; i < N; i++) {
+      const x = A4_X + i * cw;
+      const alive = i < 5 && !a4Removed[i];   // 初始 5/6
+      const removed = i < 5 && a4Removed[i];
+      const grp = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      if (i < 5) grp.style.cursor = "pointer";
+      const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      r.setAttribute("x", (x + 1.5).toFixed(1));
+      r.setAttribute("y", A4_Y);
+      r.setAttribute("width", (cw - 3).toFixed(1));
+      r.setAttribute("height", 34);
+      r.setAttribute("rx", "5");
+      r.setAttribute("fill", alive ? "#7bc9b2" : "#f1f5f9");
+      r.setAttribute("stroke", alive ? "#318a70" : "#cbd5e1");
+      r.setAttribute("stroke-width", "2");
+      if (removed) r.setAttribute("stroke-dasharray", "4 3");
+      r.style.transition = "fill 0.2s";
+      grp.appendChild(r);
+      if (alive) {
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", (x + cw / 2).toFixed(1));
+        t.setAttribute("y", A4_Y + 23);
+        t.setAttribute("font-size", "11");
+        t.setAttribute("font-weight", "900");
+        t.setAttribute("fill", "#ffffff");
+        t.setAttribute("text-anchor", "middle");
+        t.textContent = "1/6";
+        t.style.pointerEvents = "none";
+        grp.appendChild(t);
+      }
+      if (removed) {
+        const x1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        x1.setAttribute("x1", (x + 6).toFixed(1)); x1.setAttribute("y1", A4_Y + 7);
+        x1.setAttribute("x2", (x + cw - 7.5).toFixed(1)); x1.setAttribute("y2", A4_Y + 27);
+        x1.setAttribute("stroke", "#ef4444"); x1.setAttribute("stroke-width", "3"); x1.setAttribute("stroke-linecap", "round");
+        x1.style.pointerEvents = "none";
+        grp.appendChild(x1);
+        const x2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        x2.setAttribute("x1", (x + cw - 7.5).toFixed(1)); x2.setAttribute("y1", A4_Y + 7);
+        x2.setAttribute("x2", (x + 6).toFixed(1)); x2.setAttribute("y2", A4_Y + 27);
+        x2.setAttribute("stroke", "#ef4444"); x2.setAttribute("stroke-width", "3"); x2.setAttribute("stroke-linecap", "round");
+        x2.style.pointerEvents = "none";
+        grp.appendChild(x2);
+      }
+      if (i < 5) grp.addEventListener("click", () => { a4Removed[i] = !a4Removed[i]; renderAct4(); });
+      g.appendChild(grp);
+    }
+    const frame = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    frame.setAttribute("x", A4_X - 4);
+    frame.setAttribute("y", A4_Y - 4);
+    frame.setAttribute("width", A4_W + 8);
+    frame.setAttribute("height", 42);
+    frame.setAttribute("rx", "8");
+    frame.setAttribute("fill", "none");
+    frame.setAttribute("stroke", "#d6c9b6");
+    frame.setAttribute("stroke-width", "2");
+    g.appendChild(frame);
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", A4_X + A4_W / 2);
+    label.setAttribute("y", A4_Y + 56);
+    label.setAttribute("font-size", "10.5");
+    label.setAttribute("font-weight", "900");
+    label.setAttribute("fill", "#8a857b");
+    label.setAttribute("text-anchor", "middle");
+    label.textContent = "6 格長條（原本有 5/6 條）";
+    g.appendChild(label);
+
+    const remain = 5 - removedCount;
+    if (tag) {
+      tag.textContent = removedCount === 0 ? "原本有 5/6 條，點格子拿走吧！" : `拿走 ${removedCount} 格，剩 ${remain}/6 條！`;
+      tag.setAttribute("fill", removedCount > 0 ? "#318a70" : "#57534e");
+    }
+    if (eq) {
+      eq.innerHTML = fracHTML(5, 6, "#318a70") + `<span class="frac-op">－</span>` + fracHTML(removedCount, 6, "#ef4444") + `<span class="frac-op">＝</span>` + fracHTML(remain, 6, "#318a70");
+    }
+    if (goBtn) { goBtn.style.display = "none"; }
+    if (bubble) {
+      if (removedCount === 0) {
+        bubble.classList.remove("warn");
+        bubble.innerHTML = "💡 原本有 <b>5/6 條</b>，<b>點擊想拿走的 2 格</b>，格子會變虛線並打上 ❌！";
+      } else if (removedCount === 2) {
+        bubble.classList.remove("warn");
+        bubble.innerHTML = "🎉 <b>5/6 － 2/6 ＝ 3/6</b>！<b>分母不變（都是 6），分子相減（5－2＝3）</b>！";
+      } else {
+        bubble.classList.remove("warn");
+        bubble.innerHTML = `💡 已拿走 <b>${removedCount} 格</b>，再點 1 格湊到 2 格，看看算式怎麼變！`;
+      }
+    }
+  }
+}
+
+function setOpMode(mode) {
+  a4Mode = mode;
+  const addBtn = document.getElementById("btn-mode-add");
+  const subBtn = document.getElementById("btn-mode-sub");
+  const pieces = document.getElementById("a4-add-pieces");
+  const subHint = document.getElementById("a4-sub-hint");
+  if (addBtn) addBtn.classList.toggle("active", mode === "add");
+  if (subBtn) subBtn.classList.toggle("active", mode === "sub");
+  if (pieces) pieces.style.display = mode === "add" ? "block" : "none";
+  if (subHint) subHint.style.display = mode === "sub" ? "block" : "none";
+  act4Reset();
+}
+
+function act4Go() {
+  if (a4Mode !== "add" || a4AddDone) return;
+  // 拼塊下滑動畫 → 長條逐格填色
+  const p1 = document.getElementById("a4-piece1");
+  const p3 = document.getElementById("a4-piece3");
+  if (p1) p1.style.transition = "transform 0.6s ease-in"; 
+  if (p3) p3.style.transition = "transform 0.6s ease-in";
+  if (p1) p1.style.transform = "translate(6px, 34px)";
+  if (p3) p3.style.transform = "translate(-24px, 34px)";
+  setTimeout(() => {
+    a4AddDone = true;
+    if (p1) p1.style.transform = "";
+    if (p3) p3.style.transform = "";
+    renderAct4();
+    notifyHeight();
+  }, 620);
+}
+
+function act4Reset() {
+  a4AddDone = false;
+  a4Removed = new Array(6).fill(false);
+  const p1 = document.getElementById("a4-piece1");
+  const p3 = document.getElementById("a4-piece3");
+  if (p1) { p1.style.transform = ""; p1.style.transition = ""; }
+  if (p3) { p3.style.transform = ""; p3.style.transition = ""; }
+  renderAct4();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🍰🍫🆚🧩🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌➕➖🅰🅱▶✔🧹✂️]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：平分圓盤與分數命名。分數的第一步是平分，每一份都要一模一樣大。選好等分方式，點點看扇形。分母表示平分成幾份，分子表示選了幾份。沒有平分的話，就不能用分數命名喔！",
+  2: "活動二：巧克力長條與單位分數。一條巧克力平分成五格，每一格就是一個五分之一條。點格子累加選取，選三格就是五分之三條，選五格就是五分之五條，剛好全滿一條囉！",
+  3: "活動三：雙軌長條同分母比大小。兩條長條都平分成六格，分母相同時，分子越大，分數就越大。點格子幫兩隊著色，比比看誰比較長！",
+  4: "活動四：拼塊合併與拿走。加法就是把拼塊合併進來，八分之１加八分之３等於八分之四，分母不變，分子相加。減法就是把拼塊拿走，六分之五減六分之二等於六分之三，分母不變，分子相減喔！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+renderDisc();
+renderChoco();
+renderRace();
+renderAct4();
+</script>
+</body>
+</html>

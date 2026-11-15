@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-10 一位小數概念小教室 · 108課綱官方探究</title>
+<style>
+:root {
+  --bg: #fff9f0;
+  --card: #ffffff;
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --sky: #7db8e8;
+  --sky-deep: #2575ba;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --lemon-deep: #d9910d;
+  --coral: #ff8a65;
+  --coral-deep: #f4694b;
+  --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 20px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.concept-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 頂部活動膠囊導航 */
+.activity-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  background: #ebe3d5;
+  padding: 4px;
+  border-radius: 999px;
+  flex-wrap: nowrap;
+}
+.activity-nav::-webkit-scrollbar { display: none; }
+.act-btn {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.act-btn.active {
+  background: #ffffff;
+  color: var(--sky-deep);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 卡片通用造型 */
+.act-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-badge {
+  background: #e3f2fd;
+  color: var(--sky-deep);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.btn-tts {
+  background: #f0f7ff;
+  border: 1px solid #cce3fa;
+  color: var(--sky-deep);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.btn-tts.speaking {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+.card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ink);
+}
+.card-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #4a5568;
+}
+
+/* SVG 舞台容器 */
+.stage-canvas {
+  width: 100%;
+  background: #fcfaf7;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stage-canvas svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+.stage-canvas > div { width: 100%; display: flex; justify-content: center; }
+
+/* 互動面板 */
+.interact-panel {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.panel-stat {
+  font-size: 14.5px;
+  font-weight: 900;
+  color: var(--sky-deep);
+  letter-spacing: 0.5px;
+}
+.btn-grid {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-action {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+.btn-action:active, .btn-action.active {
+  background: var(--sky-deep);
+  border-color: var(--sky-deep);
+  color: #ffffff;
+  transform: translateY(1px);
+}
+.info-bubble {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+}
+.info-bubble.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--coral-deep);
+  min-width: 0;
+}
+.slider-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* ============ 活動一：十等分色紙 ＆ 0.1 誕生 ============ */
+.a1-strip { cursor: pointer; transition: fill 0.25s; }
+.big-dec {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+.big-dec .bd-int { color: var(--sky-deep); }
+.big-dec .bd-dot { color: var(--coral-deep); font-size: 32px; }
+.big-dec .bd-tenth { color: var(--coral-deep); }
+.big-dec .bd-tenth.full { color: #94a3b8; }
+.bd-caption {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+.bd-caption .cap-dot { color: var(--coral-deep); }
+.bd-frac {
+  font-size: 12.5px;
+  font-weight: 900;
+  color: #475569;
+  margin-top: 2px;
+}
+
+/* ============ 活動二：位值計數盒 ============ */
+.pv-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+.pv-box {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-height: 116px;
+}
+.pv-unit { width: 88px; background: #eff6ff; border-color: #bfdbfe; }
+.pv-tenth { width: 148px; background: #fff5f2; border-color: #fecaca; }
+.pv-tenth.pulsing { animation: pvPulse 0.55s ease infinite; }
+@keyframes pvPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 105, 75, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(244, 105, 75, 0); }
+}
+.pv-label { font-size: 10.5px; font-weight: 900; color: #64748b; }
+.pv-unit .pv-label { color: var(--sky-deep); }
+.pv-tenth .pv-label { color: var(--coral-deep); }
+.pv-blocks { display: flex; align-items: center; justify-content: center; min-height: 44px; }
+.pv-block {
+  width: 36px; height: 36px;
+  background: linear-gradient(145deg, #60a5fa, #2563eb);
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(37, 99, 235, 0.35);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+}
+.pv-empty {
+  width: 36px; height: 36px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.pv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.pv-slot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px dashed #fca5a5;
+  transition: all 0.2s;
+}
+.pv-slot.on { background: var(--coral); border: 1.5px solid var(--coral-deep); box-shadow: 0 2px 4px rgba(244, 105, 75, 0.3); }
+.pv-count { font-size: 11.5px; font-weight: 900; color: #64748b; }
+.pv-dotwrap { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.pv-dotshow { font-size: 30px; font-weight: 900; color: var(--coral-deep); line-height: 1; }
+.pv-dotcap { font-size: 9px; font-weight: 800; color: var(--coral-deep); }
+
+/* ============ 活動三：公尺數線 ============ */
+.a3-hit { cursor: pointer; }
+
+/* ============ 活動四：比大小 ＆ 加減 ============ */
+.a4-vm {
+  display: inline-grid;
+  grid-template-columns: 26px 34px 16px 34px;
+  row-gap: 3px;
+  align-items: center;
+  justify-items: center;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.vm-head { font-size: 9.5px; color: #94a3b8; font-weight: 800; }
+.vm-cell { font-size: 21px; font-weight: 900; color: var(--ink); font-variant-numeric: tabular-nums; }
+.vm-dot { color: var(--coral-deep); font-size: 21px; font-weight: 900; }
+.vm-op { color: #64748b; font-size: 16px; font-weight: 800; }
+.vm-carry { color: #e11d48; font-size: 13px; font-weight: 900; }
+.vm-borrow { color: var(--lemon-deep); font-size: 10px; font-weight: 900; }
+.vm-line { grid-column: 1 / -1; height: 0; border-top: 2.5px solid #334155; width: 100%; margin: 2px 0; }
+.vm-result.vm-cell, .vm-cell.vm-result { color: var(--sky-deep); }
+.vm-stack { display: flex; flex-direction: column; align-items: center; line-height: 1; gap: 1px; }
+.vm-add10 { color: var(--lemon-deep); font-size: 11px; font-weight: 900; }
+.vm-strike { text-decoration: line-through; color: #94a3b8; }
+
+/* 底欄直通真題按鈕 */
+.concept-footer { margin-top: 4px; }
+.btn-go-quiz {
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  text-align: center;
+  transition: transform 0.15s;
+}
+.btn-go-quiz:active { transform: scale(0.98); }
+</style>
+</head>
+<body>
+
+<div class="concept-wrap" id="app">
+
+  <!-- 頂部活動膠囊切換 -->
+  <nav class="activity-nav">
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🟨 活動一 · 0.1 誕生</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🧮 活動二 · 位值計數盒</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">📏 活動三 · 公尺數線</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">⚖️ 活動四 · 比大小加減</button>
+  </nav>
+
+  <!-- ==================== 活動一：十等分方格與 0.1 的誕生 ==================== -->
+  <section class="act-card" id="act-1-view">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-10 活動例 1</span>
+      <button class="btn-tts" onclick="playVoice(1)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🟨 活動一：十等分與 0.1 的誕生</div>
+    <div class="card-desc">
+      把一整條色紙<b>平均分成 10 格</b>，每一格就是 <b>1/10</b>，寫成小數是 <b>0.1</b>！點點看下面的格子，塗滿 10 格會發生什麼事？
+    </div>
+
+    <!-- 視覺畫布：十等分色紙 -->
+    <div class="stage-canvas">
+      <svg id="a1-svg" viewBox="0 0 300 118" xmlns="http://www.w3.org/2000/svg">
+        <!-- 十等分長條（每格 27px，可點擊切換塗色） -->
+        <rect class="a1-strip" id="a1-strip-0" x="15"  y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(0)"/>
+        <rect class="a1-strip" id="a1-strip-1" x="42"  y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(1)"/>
+        <rect class="a1-strip" id="a1-strip-2" x="69"  y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(2)"/>
+        <rect class="a1-strip" id="a1-strip-3" x="96"  y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(3)"/>
+        <rect class="a1-strip" id="a1-strip-4" x="123" y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(4)"/>
+        <rect class="a1-strip" id="a1-strip-5" x="150" y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(5)"/>
+        <rect class="a1-strip" id="a1-strip-6" x="177" y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(6)"/>
+        <rect class="a1-strip" id="a1-strip-7" x="204" y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(7)"/>
+        <rect class="a1-strip" id="a1-strip-8" x="231" y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(8)"/>
+        <rect class="a1-strip" id="a1-strip-9" x="258" y="14" width="27" height="60" rx="3" fill="#fff7ed" stroke="#d6c9b6" stroke-width="1.5" onclick="toggleStrip(9)"/>
+        <!-- 第幾格編號 -->
+        <g font-size="9" font-weight="800" fill="#8a857b" text-anchor="middle">
+          <text x="28.5" y="92">1</text><text x="55.5" y="92">2</text><text x="82.5" y="92">3</text>
+          <text x="109.5" y="92">4</text><text x="136.5" y="92">5</text><text x="163.5" y="92">6</text>
+          <text x="190.5" y="92">7</text><text x="217.5" y="92">8</text><text x="244.5" y="92">9</text>
+          <text x="271.5" y="92">10</text>
+        </g>
+        <line x1="15" y1="98" x2="285" y2="98" stroke="#d6c9b6" stroke-width="2"/>
+        <text x="15" y="112" font-size="9" font-weight="800" fill="#8a857b">0</text>
+        <text x="285" y="112" font-size="9" font-weight="800" fill="#8a857b" text-anchor="end">1（全長）</text>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div>
+        <div class="big-dec">
+          <span class="bd-int" id="a1-d-int">0</span><span class="bd-dot">.</span><span class="bd-tenth" id="a1-d-tenth">0</span>
+        </div>
+        <div class="bd-caption">
+          <span>整數（滿 1）</span><span class="cap-dot">↑ 小數點</span><span>十分位（不滿 1）</span>
+        </div>
+        <div class="bd-frac" id="a1-frac">塗色 0 格 ＝ 0/10</div>
+      </div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="fillAllStrips()">🏆 一鍵全滿</button>
+        <button class="btn-action" onclick="clearStrips()">♻️ 清除重來</button>
+      </div>
+      <div class="info-bubble" id="act1-bubble">
+        💡 還沒塗色！點一格看看：1 格就是 1/10，寫成小數是 <b>0.1</b>！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動二：一位小數位值計數盒 ==================== -->
+  <section class="act-card" id="act-2-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-10 活動例 2</span>
+      <button class="btn-tts" onclick="playVoice(2)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">🧮 活動二：一位小數位值計數盒</div>
+    <div class="card-desc">
+      小數點<b>左邊</b>是【個位】放整數 1，<b>右邊</b>是【十分位】放 0.1。按「＋0.1」放珠子，<b>十分位滿 10 顆</b>會發生什麼事？一起看進位！
+    </div>
+
+    <!-- 視覺畫布：位值計數盒 -->
+    <div class="stage-canvas">
+      <div>
+        <div class="pv-row">
+          <div class="pv-box pv-unit" id="pv-box-unit">
+            <div class="pv-label">個位（1）</div>
+            <div class="pv-blocks" id="pv-units"></div>
+            <div class="pv-count" id="pv-units-count">0 個 1</div>
+          </div>
+          <div class="pv-dotwrap">
+            <div class="pv-dotshow">.</div>
+            <div class="pv-dotcap">小數點</div>
+          </div>
+          <div class="pv-box pv-tenth" id="pv-box-tenth">
+            <div class="pv-label">十分位（0.1）</div>
+            <div class="pv-grid" id="pv-tenths"></div>
+            <div class="pv-count" id="pv-tenths-count">0/10 顆 0.1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act2-stat">0 ＝ 0 個 1 ＋ 0 個 0.1</div>
+      <div class="btn-grid">
+        <button class="btn-action" onclick="pvAdd()">➕ 加 0.1</button>
+        <button class="btn-action" onclick="pvSub()">➖ 減 0.1</button>
+        <button class="btn-action" onclick="pvReset()">♻️ 重置</button>
+      </div>
+      <div class="info-bubble" id="act2-bubble">
+        💡 個位和小數點右邊的十分位都空空的！按「＋0.1」放一顆 0.1 珠子！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動三：公尺/公分直尺放大數線 ==================== -->
+  <section class="act-card" id="act-3-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-10 活動例 3</span>
+      <button class="btn-tts" onclick="playVoice(3)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">📏 活動三：公尺數線上的小數</div>
+    <div class="card-desc">
+      把 <b>1 公尺</b>平均分成 10 格，每一格就是 <b>0.1 公尺</b>！滑動鉛筆（或直接點尺上的刻度），看看 0.7 公尺有多長？
+    </div>
+
+    <!-- 視覺畫布：直尺數線與鉛筆 -->
+    <div class="stage-canvas">
+      <svg id="a3-svg" viewBox="0 0 300 118" xmlns="http://www.w3.org/2000/svg">
+        <!-- 讀值氣泡 -->
+        <text id="a3-callout" x="100" y="12" font-size="12" font-weight="900" fill="#f4694b" text-anchor="middle">0.7 公尺</text>
+        <!-- 長度高亮條 -->
+        <rect id="a3-lenbar" x="25" y="58" width="175" height="8" rx="3" fill="#ff8a65"/>
+        <!-- 鉛筆（垂直站在刻度上） -->
+        <g id="a3-pencil" transform="translate(100, 0)">
+          <rect x="-7" y="18" width="14" height="7" rx="2" fill="#f9a8d4" stroke="#ec4899" stroke-width="1"/>
+          <rect x="-7" y="25" width="14" height="4" fill="#cbd5e1"/>
+          <rect x="-7" y="29" width="14" height="18" fill="#ffd166" stroke="#d9910d" stroke-width="1"/>
+          <polygon points="-7,47 7,47 0,58" fill="#e8c89a" stroke="#c9a86b" stroke-width="0.8"/>
+          <polygon points="-2.5,54.2 2.5,54.2 0,58" fill="#334155"/>
+        </g>
+        <!-- 直尺本體 -->
+        <rect x="18" y="66" width="264" height="28" rx="4" fill="#f5e6c8" stroke="#d6c9b6" stroke-width="2"/>
+        <!-- 0.1 刻度與標籤 -->
+        <g stroke="#8a857b" stroke-width="1.5">
+          <line x1="25"  y1="66" x2="25"  y2="80"/><line x1="50"  y1="66" x2="50"  y2="80"/>
+          <line x1="75"  y1="66" x2="75"  y2="80"/><line x1="100" y1="66" x2="100" y2="80"/>
+          <line x1="125" y1="66" x2="125" y2="80"/><line x1="150" y1="66" x2="150" y2="80"/>
+          <line x1="175" y1="66" x2="175" y2="80"/><line x1="200" y1="66" x2="200" y2="80"/>
+          <line x1="225" y1="66" x2="225" y2="80"/><line x1="250" y1="66" x2="250" y2="80"/>
+          <line x1="275" y1="66" x2="275" y2="80" stroke="#3d3a34" stroke-width="2"/>
+        </g>
+        <g font-size="7.5" font-weight="800" fill="#64748b" text-anchor="middle">
+          <text x="25"  y="90">0</text><text x="50"  y="90">0.1</text><text x="75"  y="90">0.2</text>
+          <text x="100" y="90">0.3</text><text x="125" y="90">0.4</text><text x="150" y="90">0.5</text>
+          <text x="175" y="90">0.6</text><text x="200" y="90">0.7</text><text x="225" y="90">0.8</text>
+          <text x="250" y="90">0.9</text><text x="275" y="90">1.0</text>
+        </g>
+        <text x="282" y="112" font-size="8" font-weight="800" fill="#8a857b" text-anchor="end">單位：公尺</text>
+        <!-- 點擊熱區 -->
+        <rect class="a3-hit" x="15" y="50" width="270" height="62" fill="transparent" onclick="rulerClick(event)"/>
+      </svg>
+    </div>
+
+    <!-- 互動控制面板 -->
+    <div class="interact-panel">
+      <div class="panel-stat" id="act3-stat">0.7 公尺 ＝ 7/10 公尺 ＝ 7 個 0.1 公尺</div>
+      <div class="slider-row">
+        <span class="slider-label">✏️ 滑動鉛筆</span>
+        <input type="range" id="a3-slider" min="0" max="10" step="1" value="7" oninput="setRuler(this.value)">
+      </div>
+      <div class="info-bubble" id="act3-bubble">
+        💡 0.7 公尺就是 7 格 0.1 刻度！0.7 ＝ 7/10 ＝ 7 個 0.1，讀作「零點七」！
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 活動四：比大小與加減 ==================== -->
+  <section class="act-card" id="act-4-view" style="display:none;">
+    <div class="card-head">
+      <span class="card-badge">課綱手冊 N-3-10 探究挑戰</span>
+      <button class="btn-tts" onclick="playVoice(4)">
+        <span>🔊</span>
+        <span>聽導讀</span>
+      </button>
+    </div>
+    <div class="card-title">⚖️ 活動四：比大小 ＆ 小數點對齊加減</div>
+    <div class="card-desc">
+      切換兩種模式：<b>長條比大小</b>用「1 全長」當關卡一眼看出誰大；<b>直式加減</b>要記得<b>小數點對齊</b>，十分位相加減、滿十進一！
+    </div>
+
+    <!-- 模式切換 -->
+    <div class="btn-grid">
+      <button class="btn-action active" id="btn-a4-cmp" onclick="setA4Mode('cmp')">📏 長條比大小</button>
+      <button class="btn-action" id="btn-a4-ops" onclick="setA4Mode('ops')">🧮 小數點對齊加減</button>
+    </div>
+
+    <!-- 模式 A：長條比大小 -->
+    <div id="a4-compare">
+      <div class="stage-canvas">
+        <svg id="a4-cmp-svg" viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg">
+          <!-- 1 全長關卡虛線 -->
+          <line x1="148" y1="28" x2="148" y2="112" stroke="#d9910d" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <text x="148" y="20" font-size="9" font-weight="900" fill="#d9910d" text-anchor="middle">1（全長）</text>
+          <!-- 0 起點軸 -->
+          <line x1="42" y1="30" x2="42" y2="112" stroke="#8a857b" stroke-width="2"/>
+          <text x="42" y="125" font-size="9" font-weight="800" fill="#8a857b" text-anchor="middle">0</text>
+          <!-- A 長條 -->
+          <rect id="a4-barA" x="42" y="40" width="0" height="16" rx="8" fill="#ff8a65"/>
+          <text x="34" y="52" font-size="10" font-weight="900" fill="#64748b" text-anchor="end">A</text>
+          <text id="a4-labA" x="50" y="52" font-size="11" font-weight="900" fill="#f4694b">0.8</text>
+          <!-- B 長條 -->
+          <rect id="a4-barB" x="42" y="78" width="0" height="16" rx="8" fill="#7db8e8"/>
+          <text x="34" y="90" font-size="10" font-weight="900" fill="#64748b" text-anchor="end">B</text>
+          <text id="a4-labB" x="50" y="90" font-size="11" font-weight="900" fill="#2575ba">1.2</text>
+          <!-- 關係結論 -->
+          <text id="a4-rel" x="200" y="125" font-size="12.5" font-weight="900" fill="#16a34a" text-anchor="middle">1.2 ＞ 0.8</text>
+        </svg>
+      </div>
+      <div class="interact-panel">
+        <div class="btn-grid">
+          <button class="btn-action" onclick="nextCmpPair()">🔄 換一組</button>
+        </div>
+        <div class="info-bubble" id="act4-cmp-bubble">
+          💡 1.2 超過 1 全長（1 個 1 ＋ 2 個 0.1），0.8 只有 8 個 0.1、不到 1 → <b>1.2 ＞ 0.8</b>！
+        </div>
+      </div>
+    </div>
+
+    <!-- 模式 B：小數點對齊加減（直式逐步） -->
+    <div id="a4-ops" style="display:none;">
+      <div class="stage-canvas">
+        <div id="a4-vm"><!-- 由 JS 動態渲染直式算式 --></div>
+      </div>
+      <div class="interact-panel">
+        <div class="panel-stat" id="a4-op-stat">小數點對齊，準備開始！</div>
+        <div class="btn-grid">
+          <button class="btn-action" id="btn-op-step" onclick="opStepNext()">▶️ 下一步</button>
+          <button class="btn-action" onclick="opNextProblem()">🔄 換一題</button>
+        </div>
+        <div class="info-bubble" id="act4-op-bubble">
+          💡 小數點要對齊！整數對整數、十分位對十分位，才不會算錯喔！
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 底部通關直通紐 -->
+  <footer class="concept-footer">
+    <button class="btn-go-quiz" onclick="goToQuiz()">🎯 挑戰真題測驗（直通 10 題真題）</button>
+  </footer>
+
+</div>
+
+<script>
+/* ==================== 頁籤切換 ==================== */
+let currentAct = 1;
+function switchAct(n) {
+  currentAct = n;
+  for (let i = 1; i <= 4; i++) {
+    const tab = document.getElementById("tab-act" + i);
+    const view = document.getElementById("act-" + i + "-view");
+    if (tab) tab.classList.toggle("active", i === n);
+    if (view) view.style.display = (i === n) ? "flex" : "none";
+  }
+  // 切換時停止語音
+  stopSpeech();
+  notifyHeight();
+}
+
+/* ==================== 活動一：十等分與 0.1 的誕生 ==================== */
+let act1Filled = new Array(10).fill(false);
+
+function toggleStrip(i) {
+  if (i < 0 || i > 9) return;
+  act1Filled[i] = !act1Filled[i];
+  renderAct1();
+}
+function clearStrips() {
+  act1Filled = act1Filled.map(() => false);
+  renderAct1();
+}
+function fillAllStrips() {
+  act1Filled = act1Filled.map(() => true);
+  renderAct1();
+}
+function renderAct1() {
+  const n = act1Filled.filter(Boolean).length;
+  for (let i = 0; i < 10; i++) {
+    const el = document.getElementById("a1-strip-" + i);
+    if (el) el.setAttribute("fill", act1Filled[i] ? "#ff8a65" : "#fff7ed");
+  }
+
+  const dInt = document.getElementById("a1-d-int");
+  const dTenth = document.getElementById("a1-d-tenth");
+  const frac = document.getElementById("a1-frac");
+  const bubble = document.getElementById("act1-bubble");
+
+  if (dInt) dInt.textContent = n === 10 ? "1" : "0";
+  if (dTenth) {
+    dTenth.textContent = n === 10 ? "0" : String(n);
+    dTenth.classList.toggle("full", n === 10);
+  }
+  if (frac) {
+    if (n === 10) frac.textContent = "塗色 10 格 ＝ 10/10 ＝ 整數 1（全滿！）";
+    else frac.textContent = "塗色 " + n + " 格 ＝ " + n + "/10 ＝ 0." + n;
+  }
+  if (bubble) {
+    let html;
+    if (n === 0) {
+      html = "💡 還沒塗色！點一格看看：1 格就是 1/10，寫成小數是 <b>0.1</b>！";
+      bubble.classList.remove("warn");
+    } else if (n === 1) {
+      html = "🎉 <b>0.1 誕生了！</b>1 格 ＝ 1/10 ＝ 0.1！中間的圓點「.」叫<b>小數點</b>，把整數和不滿 1 的部分分開！";
+      bubble.classList.remove("warn");
+    } else if (n < 10) {
+      html = "💡 塗 " + n + " 格 ＝ " + n + "/10 ＝ <b>0." + n + "</b>，就是 " + n + " 個 0.1！再數數看還差幾格才滿 1？";
+      bubble.classList.remove("warn");
+    } else {
+      html = "🏆 塗滿 10 格！10 個 0.1 打包起來 ＝ <b>整數 1</b>！十個十分之一剛好就是 1！";
+      bubble.classList.add("warn");
+    }
+    bubble.innerHTML = html;
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動二：位值計數盒 ==================== */
+let pvTotal = 0;      // 十分位珠子總顆數（0 ~ 15）
+let pvCarryBusy = false;
+
+function pvBeadsHTML(count, pulse) {
+  let html = "";
+  for (let i = 0; i < 10; i++) {
+    const on = pulse ? true : i < count;
+    html += '<div class="pv-slot' + (on ? " on" : "") + '"></div>';
+  }
+  return html;
+}
+
+function pvFormat() {
+  const u = Math.floor(pvTotal / 10), t = pvTotal % 10;
+  if (pvTotal === 0) return "0";
+  if (t === 0) return String(u);
+  return u + "." + t;
+}
+
+function pvRender(bubbleOverride) {
+  const u = Math.floor(pvTotal / 10), t = pvTotal % 10;
+  const unitsEl = document.getElementById("pv-units");
+  const tenthsEl = document.getElementById("pv-tenths");
+  const uCount = document.getElementById("pv-units-count");
+  const tCount = document.getElementById("pv-tenths-count");
+  const tenthBox = document.getElementById("pv-box-tenth");
+  const stat = document.getElementById("act2-stat");
+  const bubble = document.getElementById("act2-bubble");
+
+  if (unitsEl) unitsEl.innerHTML = u > 0 ? '<div class="pv-block">1</div>' : '<div class="pv-empty">空</div>';
+  if (tenthsEl) tenthsEl.innerHTML = pvBeadsHTML(t, false);
+  if (uCount) uCount.textContent = u + " 個 1";
+  if (tCount) tCount.textContent = t + "/10 顆 0.1";
+  if (tenthBox) tenthBox.classList.remove("pulsing");
+
+  if (stat) stat.textContent = pvFormat() + " ＝ " + u + " 個 1 ＋ " + t + " 個 0.1";
+
+  if (bubble) {
+    let html = bubbleOverride;
+    if (!html) {
+      if (pvTotal === 0) {
+        html = "💡 個位和小數點右邊的十分位都空空的！按「＋0.1」放一顆 0.1 珠子！";
+      } else if (u === 0) {
+        html = "💡 現在有 " + t + " 顆 0.1，是 <b>0." + t + "</b>！集滿 10 顆會發生什麼事呢？";
+      } else if (t === 0) {
+        html = "🎉 剛好湊成整數！10 個 0.1 打包進位成個位的 1 顆，現在是 <b>" + u + "</b>！";
+      } else {
+        html = "💡 " + u + " 個 1 和 " + t + " 個 0.1，合起來是 <b>" + u + "." + t + "</b>！";
+      }
+    }
+    bubble.innerHTML = html;
+    bubble.classList.toggle("warn", pvTotal === 15);
+    if (pvTotal < 15) bubble.classList.remove("warn");
+  }
+  notifyHeight();
+}
+
+function pvAdd() {
+  if (pvCarryBusy) return;
+  const next = pvTotal + 1;
+  if (next > 15) {
+    const bubble = document.getElementById("act2-bubble");
+    if (bubble) bubble.innerHTML = "⚠️ 最多 15 顆（1.5 ＝ 1 個 1 ＋ 5 個 0.1）囉！";
+    return;
+  }
+  if (next % 10 === 0) {
+    // 滿 10 顆：進位打包動畫
+    pvCarryBusy = true;
+    const tenthsEl = document.getElementById("pv-tenths");
+    const tenthBox = document.getElementById("pv-box-tenth");
+    const stat = document.getElementById("act2-stat");
+    const bubble = document.getElementById("act2-bubble");
+    if (tenthsEl) tenthsEl.innerHTML = pvBeadsHTML(10, true);
+    if (tenthBox) tenthBox.classList.add("pulsing");
+    if (stat) stat.textContent = "🔧 10 顆 0.1 正在打包進位…";
+    if (bubble) bubble.innerHTML = "✨ 滿 10 顆了！10 個 0.1 正在<b>打包進位</b>…";
+    setTimeout(() => {
+      pvTotal = next;
+      pvCarryBusy = false;
+      pvRender("🎉 滿 10 顆 0.1 打包進位 → 個位變成 <b>1 顆</b>！10 個 0.1 ＝ 1！");
+    }, 1000);
+  } else {
+    pvTotal = next;
+    pvRender();
+  }
+}
+
+function pvSub() {
+  if (pvCarryBusy) return;
+  if (pvTotal <= 0) {
+    const bubble = document.getElementById("act2-bubble");
+    if (bubble) bubble.innerHTML = "⚠️ 沒有珠子了！先按「＋0.1」放幾顆吧！";
+    return;
+  }
+  pvTotal--;
+  pvRender();
+}
+
+function pvReset() {
+  if (pvCarryBusy) return;
+  pvTotal = 0;
+  pvRender();
+}
+
+/* ==================== 活動三：公尺數線 ==================== */
+const A3_X0 = 25;     // 0 刻度 x
+const A3_STEP = 25;   // 每 0.1 的 px
+const CN_NUM = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+let act3Tenths = 7;
+
+function setRuler(v) {
+  let idx = parseInt(v, 10);
+  if (isNaN(idx)) idx = 0;
+  act3Tenths = Math.max(0, Math.min(10, idx));
+  const slider = document.getElementById("a3-slider");
+  if (slider && slider.value !== String(act3Tenths)) slider.value = String(act3Tenths);
+  renderAct3();
+}
+
+function rulerClick(evt) {
+  const svg = document.getElementById("a3-svg");
+  if (!svg || !evt) return;
+  const r = svg.getBoundingClientRect();
+  const xr = (evt.clientX - r.left) / r.width * 300;
+  let idx = Math.round((xr - A3_X0) / A3_STEP);
+  setRuler(idx);
+}
+
+function renderAct3() {
+  const n = act3Tenths;
+  const x = A3_X0 + n * A3_STEP;
+  const pencil = document.getElementById("a3-pencil");
+  const lenbar = document.getElementById("a3-lenbar");
+  const callout = document.getElementById("a3-callout");
+  const stat = document.getElementById("act3-stat");
+  const bubble = document.getElementById("act3-bubble");
+
+  if (pencil) pencil.setAttribute("transform", "translate(" + x + ", 0)");
+  if (lenbar) lenbar.setAttribute("width", String(x - A3_X0));
+  if (callout) {
+    const cx = Math.max(42, Math.min(258, x));
+    callout.setAttribute("x", String(cx));
+    callout.textContent = (n / 10).toFixed(1) + " 公尺";
+  }
+  if (stat) {
+    if (n === 0) stat.textContent = "0 公尺 ＝ 0/10 ＝ 0 個 0.1（起點）";
+    else if (n === 10) stat.textContent = "1 公尺 ＝ 10/10 ＝ 10 個 0.1（全長！）";
+    else stat.textContent = (n / 10).toFixed(1) + " 公尺 ＝ " + n + "/10 公尺 ＝ " + n + " 個 0.1 公尺";
+  }
+  if (bubble) {
+    let html;
+    if (n === 0) {
+      html = "💡 起點！滑動鉛筆或點尺上的刻度，看看每格 0.1 公尺有多長！";
+      bubble.classList.remove("warn");
+    } else if (n === 10) {
+      html = "🏆 10 個 0.1 公尺剛好鋪滿全長 ＝ <b>1 公尺</b>（10/10）！";
+      bubble.classList.add("warn");
+    } else {
+      html = "💡 " + (n / 10).toFixed(1) + " 公尺就是 " + n + " 格 0.1 刻度！" + (n / 10).toFixed(1) + " ＝ " + n + "/10 ＝ " + n + " 個 0.1，讀作「零點" + CN_NUM[n] + "」！";
+      bubble.classList.remove("warn");
+    }
+    bubble.innerHTML = html;
+  }
+  notifyHeight();
+}
+
+/* ==================== 活動四：比大小與加減 ==================== */
+let a4Mode = "cmp"; // "cmp" | "ops"
+
+function setA4Mode(mode) {
+  a4Mode = mode;
+  const cmpBtn = document.getElementById("btn-a4-cmp");
+  const opsBtn = document.getElementById("btn-a4-ops");
+  const cmpView = document.getElementById("a4-compare");
+  const opsView = document.getElementById("a4-ops");
+  if (cmpBtn) cmpBtn.classList.toggle("active", mode === "cmp");
+  if (opsBtn) opsBtn.classList.toggle("active", mode === "ops");
+  if (cmpView) cmpView.style.display = mode === "cmp" ? "block" : "none";
+  if (opsView) opsView.style.display = mode === "ops" ? "block" : "none";
+  notifyHeight();
+}
+
+/* ---- 模式 A：長條比大小 ---- */
+const CMP_PAIRS = [
+  { a: 0.8, b: 1.2, note: "1.2 超過 1 全長（1 個 1 ＋ 2 個 0.1），0.8 只有 8 個 0.1、不到 1 → <b>1.2 ＞ 0.8</b>！" },
+  { a: 0.5, b: 0.4, note: "兩個都不滿 1，直接比十分位：5 個 0.1 比 4 個 0.1 多 → <b>0.5 ＞ 0.4</b>！" },
+  { a: 1.3, b: 0.7, note: "1.3 超過 1 全長，0.7 還差 3 格才到 1 → <b>1.3 ＞ 0.7</b>！" },
+  { a: 1.0, b: 0.9, note: "1.0 剛好 10 個 0.1 全滿，0.9 只有 9 個 0.1 → <b>1.0 ＞ 0.9</b>！" }
+];
+let cmpIdx = 0;
+const A4_X0 = 42, A4_PX = 106; // 每 1.0 的 px 寬
+
+function nextCmpPair() {
+  cmpIdx = (cmpIdx + 1) % CMP_PAIRS.length;
+  renderCmp();
+}
+
+function renderCmp() {
+  const p = CMP_PAIRS[cmpIdx];
+  const barA = document.getElementById("a4-barA");
+  const barB = document.getElementById("a4-barB");
+  const labA = document.getElementById("a4-labA");
+  const labB = document.getElementById("a4-labB");
+  const rel = document.getElementById("a4-rel");
+  const bubble = document.getElementById("act4-cmp-bubble");
+  const big = Math.max(p.a, p.b), small = Math.min(p.a, p.b);
+  const sym = big === small ? "＝" : "＞";
+
+  if (barA) barA.setAttribute("width", String(p.a * A4_PX));
+  if (barB) barB.setAttribute("width", String(p.b * A4_PX));
+  if (labA) { labA.setAttribute("x", String(A4_X0 + p.a * A4_PX + 5)); labA.textContent = p.a.toFixed(1); }
+  if (labB) { labB.setAttribute("x", String(A4_X0 + p.b * A4_PX + 5)); labB.textContent = p.b.toFixed(1); }
+  if (rel) rel.textContent = big.toFixed(1) + " " + sym + " " + small.toFixed(1);
+  if (bubble) bubble.innerHTML = "💡 " + p.note;
+  notifyHeight();
+}
+
+/* ---- 模式 B：小數點對齊加減（直式逐步） ---- */
+const OPS_PROBLEMS = [
+  { op: "＋", a: "0.4", b: "0.3", carry: false, borrow: false,
+    s1: "十分位先算：4 ＋ 3 ＝ 7", s2: "個位 0 ＋ 0 ＝ 0 → 答案是 <b>0.7</b>！" },
+  { op: "＋", a: "0.8", b: "0.5", carry: true, borrow: false,
+    s1: "十分位先算：8 ＋ 5 ＝ 13，滿 10 進 1！寫 3，進 ① 給個位", s2: "個位 0 ＋ 0 ＋ 進來的 ① ＝ 1 → 答案是 <b>1.3</b>！" },
+  { op: "－", a: "1.5", b: "0.6", carry: false, borrow: true,
+    s1: "十分位 5 − 6 不夠減！向個位借 1 作 10：15 − 6 ＝ 9", s2: "個位借走 1 剩 0 → 答案是 <b>0.9</b>！" },
+  { op: "－", a: "2.7", b: "1.4", carry: false, borrow: false,
+    s1: "十分位先算：7 − 4 ＝ 3", s2: "個位 2 − 1 ＝ 1 → 答案是 <b>1.3</b>！" }
+];
+let opIdx = 0;
+let opStep = 0; // 0:未算 1:十分位 2:完成
+
+function opStepNext() {
+  if (opStep < 2) {
+    opStep++;
+  } else {
+    opIdx = (opIdx + 1) % OPS_PROBLEMS.length;
+    opStep = 0;
+  }
+  renderOps();
+}
+
+function opNextProblem() {
+  opIdx = (opIdx + 1) % OPS_PROBLEMS.length;
+  opStep = 0;
+  renderOps();
+}
+
+function renderOps() {
+  const p = OPS_PROBLEMS[opIdx];
+  const ai = p.a.split(".")[0], at = p.a.split(".")[1];
+  const bi = p.b.split(".")[0], bt = p.b.split(".")[1];
+  const vm = document.getElementById("a4-vm");
+  const stat = document.getElementById("a4-op-stat");
+  const bubble = document.getElementById("act4-op-bubble");
+  const stepBtn = document.getElementById("btn-op-step");
+  if (!vm) return;
+
+  // 預先計算結果（模擬直式）
+  let resI, resT;
+  if (p.op === "＋") {
+    const sum = (parseInt(at, 10) + parseInt(bt, 10));
+    resT = sum % 10;
+    resI = parseInt(ai, 10) + parseInt(bi, 10) + (sum >= 10 ? 1 : 0);
+  } else {
+    let t = parseInt(at, 10), i = parseInt(ai, 10);
+    if (t < parseInt(bt, 10)) { t += 10; i -= 1; }
+    resT = t - parseInt(bt, 10);
+    resI = i - parseInt(bi, 10);
+  }
+
+  const showCarry = p.op === "＋" && p.carry && opStep >= 1;
+  const showBorrow = p.op === "－" && p.borrow && opStep >= 1;
+  const showResult = opStep >= 2;
+
+  // A 的十分位格子（借位時顯示 5→15）
+  let atCell = at;
+  if (showBorrow) {
+    atCell = '<div class="vm-stack"><span class="vm-add10">' + (parseInt(at, 10) + 10) + '</span><span class="vm-strike">' + at + '</span></div>';
+  }
+  // A 的個位格子（借位時劃線）
+  let aiCell = ai;
+  if (showBorrow) aiCell = '<span class="vm-strike">' + ai + '</span>';
+
+  let html = "";
+  // 表頭
+  html += '<div class="vm-head"></div><div class="vm-head">個位</div><div class="vm-head"></div><div class="vm-head">十分位</div>';
+  // 進位 / 借位標記列
+  html += '<div></div><div class="vm-carry">' + (showCarry ? "①" : (showBorrow ? "↖借1" : "")) + '</div><div></div><div></div>';
+  // 被計算數列
+  html += '<div class="vm-op">' + p.op + '</div><div class="vm-cell">' + aiCell + '</div><div class="vm-dot">.</div><div class="vm-cell">' + atCell + '</div>';
+  // 第二列
+  html += '<div></div><div class="vm-cell">' + bi + '</div><div class="vm-dot">.</div><div class="vm-cell">' + bt + '</div>';
+  // 橫線
+  html += '<div class="vm-line"></div>';
+  // 答案列
+  html += '<div></div><div class="vm-cell vm-result">' + (showResult ? resI : "？") + '</div><div class="vm-dot vm-result">' + (showResult ? "." : "？") + '</div><div class="vm-cell vm-result">' + (showResult ? resT : "？") + '</div>';
+
+  vm.innerHTML = html;
+
+  if (stat) {
+    if (opStep === 0) stat.textContent = "小數點對齊，準備開始！（第 " + (opIdx + 1) + " 題／共 " + OPS_PROBLEMS.length + " 題）";
+    else if (opStep === 1) stat.textContent = "第 1 步：十分位先算";
+    else stat.textContent = "🎉 完成！（第 " + (opIdx + 1) + " 題／共 " + OPS_PROBLEMS.length + " 題）";
+  }
+  if (bubble) {
+    let htmlB;
+    if (opStep === 0) {
+      htmlB = "💡 小數點要對齊！整數對整數、十分位對十分位，才不會算錯喔！";
+      bubble.classList.remove("warn");
+    } else if (opStep === 1) {
+      htmlB = "💡 " + p.s1;
+      bubble.classList.toggle("warn", p.carry || p.borrow);
+    } else {
+      htmlB = "🎉 " + p.s2;
+      bubble.classList.remove("warn");
+    }
+    bubble.innerHTML = htmlB;
+  }
+  if (stepBtn) stepBtn.textContent = opStep >= 2 ? "✅ 下一題" : "▶️ 下一步";
+  notifyHeight();
+}
+
+/* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
+let currentTtsAudio = null;
+let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
+
+function cleanTextForSpeech(text) {
+  if (!text) return "";
+  return text.replace(/[\u{1F300}-\u{1F9FF}]/gu, "")
+             .replace(/[🔴⭕📏📐🧭🕵️💡✨🌟🎯⚠️🎉❌✅↔️🌀🔄📌➕➖▶️♻️⚖️✏️🟨🟠🟡]/g, "")
+             .trim();
+}
+
+function stopSpeech() {
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.src = "";
+    } catch (e) {}
+    currentTtsAudio = null;
+  }
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+  isSpeaking = false;
+  updateVoiceButtons(false);
+}
+
+function playVoiceText(rawText) {
+  const clean = cleanTextForSpeech(rawText);
+  if (!clean) return;
+
+  speechEpoch++;
+  const thisEpoch = speechEpoch;
+
+  stopSpeech();
+
+  const primaryUrl = `/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+  const fallbackCloudUrl = `https://math3-bank.pages.dev/api/tts?text=${encodeURIComponent(clean)}&voice=zh-TW-HsiaoChenNeural`;
+
+  const audio = new Audio();
+  currentTtsAudio = audio;
+  let hasFallback = false;
+
+  function doWebSpeechFallback() {
+    if (hasFallback || speechEpoch !== thisEpoch) return;
+    hasFallback = true;
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = "zh-TW";
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
+                    voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
+    if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  const timer = setTimeout(() => {
+    if (speechEpoch === thisEpoch && (!audio.duration || audio.paused)) {
+      doWebSpeechFallback();
+    }
+  }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
+
+  audio.oncanplay = () => {
+    clearTimeout(timer);
+    if (speechEpoch === thisEpoch) {
+      audio.play().catch(doWebSpeechFallback);
+    }
+  };
+
+  audio.onerror = () => {
+    clearTimeout(timer);
+    if (audio.src.includes("/api/tts") && !audio.src.includes("math3-bank.pages.dev")) {
+      audio.src = fallbackCloudUrl;
+      audio.load();
+    } else {
+      doWebSpeechFallback();
+    }
+  };
+
+  audio.src = primaryUrl;
+  audio.load();
+}
+
+const ACT_VOICES = {
+  1: "活動一：十等分與零點一的誕生。把一整條色紙平均分成十格，塗一格就是十分之一，寫成小數零點一。中間的圓點叫做小數點，用來分開整數和不滿一的部分。塗滿十格，十個零點一剛好就是整數一喔！",
+  2: "活動二：一位小數位值計數盒。小數點左邊是個位，放整數一；右邊是十分位，放零點一。按加零點一，十分位就多一顆珠子。集滿十顆就打包進位，變成個位的一顆！",
+  3: "活動三：公尺數線上的小數。把一公尺平均分成十格，每一格就是零點一公尺。滑動鉛筆停在零點七，就是十分之七公尺，也是七個零點一公尺喔！",
+  4: "活動四：比大小與小數點對齊加減。比大小時，可以用一全長當關卡，超過一的全長就比較大。直式加減時，小數點要對齊，十分位和十分位相加減，滿十就進一！"
+};
+
+function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
+  playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
+}
+
+function goToQuiz() {
+  if (window.parent && window.parent.switchToExamMode) {
+    window.parent.switchToExamMode();
+  } else {
+    alert("已完成課綱探索活動！請點擊上方「🎯 真題測驗」開始作答！");
+  }
+}
+
+/* ==================== postMessage 高度同步 ==================== */
+function notifyHeight() {
+  try {
+    const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    window.parent.postMessage({ type: "resize", height: h }, "*");
+  } catch (e) {}
+}
+window.addEventListener("load", notifyHeight);
+window.addEventListener("resize", notifyHeight);
+
+/* 初始渲染 */
+renderAct1();
+pvRender();
+setRuler(7);
+setA4Mode("cmp");
+renderCmp();
+renderOps();
+</script>
+</body>
+</html>
