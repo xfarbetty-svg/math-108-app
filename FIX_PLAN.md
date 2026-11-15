@@ -84,9 +84,9 @@ d:\ANTIGRAVITY\028-1_國小數學APP\
   - 驗證指令: `node tools/verify_g3_new_concepts.js` (ALL 3 LABS Exit Code 0)
   - 施工單位: 本地整合驗證完成
 
-- [ ] **Step 5: 部署閉環與雲端驗真**
+- [x] **Step 5: 部署閉環與雲端驗真**
   - 執行指令: `.\deploy.ps1`
-  - 驗證: Cloudflare Pages 邊緣探測 HTTP 200，真機手機 390px 驗收通過
+  - 驗證: Cloudflare Pages 邊緣探測 HTTP 200，版號 `20261115_143425` 吻合，全網生效！
 
 ---
 
