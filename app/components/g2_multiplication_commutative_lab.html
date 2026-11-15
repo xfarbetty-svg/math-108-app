@@ -295,21 +295,16 @@
 <script>
     // 語音輔助函式
     function speakText(text) {
-        if (window.AudioManager) {
+        if (window.AudioManager && typeof window.AudioManager.play === 'function') {
             window.AudioManager.play(text);
-        } else {
-            const ut = new SpeechSynthesisUtterance(text);
-            ut.lang = 'zh-TW';
-            speechSynthesis.speak(ut);
         }
+    
     }
 
     function stopSpeech() {
         if (window.AudioManager) {
             // AudioManager 通常會自動處理單例
-        } else {
-            speechSynthesis.cancel();
-        }
+        } /* 降級防護：未載入 AudioManager 靜默不朗讀 */
     }
 
     // 全域狀態

@@ -347,13 +347,10 @@
     ];
 
     function speakText(text) {
-        if (window.AudioManager) {
+        if (window.AudioManager && typeof window.AudioManager.play === 'function') {
             window.AudioManager.play(text);
-        } else {
-            const ut = new SpeechSynthesisUtterance(text);
-            ut.lang = 'zh-TW';
-            speechSynthesis.speak(ut);
         }
+    
     }
 
     function switchAct(act) {

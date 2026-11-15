@@ -257,14 +257,11 @@
         };
 
         function speakText(text) {
-            if (window.AudioManager) {
+            if (window.AudioManager && typeof window.AudioManager.play === 'function') {
                 window.AudioManager.play(text);
-            } else {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-TW';
-                speechSynthesis.speak(utterance);
             }
         }
+        
 
         function switchAct(n) {
             currentAct = n;

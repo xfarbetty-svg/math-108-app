@@ -381,10 +381,8 @@
     let currentAct = 1;
     const audio = window.AudioManager || {
         play: (t, cb) => { 
-            const s = new SpeechSynthesisUtterance(t);
-            s.lang = 'zh-TW';
-            if(cb && cb.onEnd) s.onend = cb.onEnd;
-            speechSynthesis.speak(s);
+            /* 降級防護：未載入 AudioManager 靜默不朗讀，嚴禁直呼原生 speechSynthesis */
+            if(cb && cb.onEnd) setTimeout(cb.onEnd, 500);
         }
     };
 

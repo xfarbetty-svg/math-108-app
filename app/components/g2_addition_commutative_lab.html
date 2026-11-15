@@ -289,12 +289,7 @@
     const speakText = (text, callback) => {
         if (window.AudioManager) {
             window.AudioManager.play(text, { onEnd: callback });
-        } else {
-            const ut = new SpeechSynthesisUtterance(text);
-            ut.lang = 'zh-TW';
-            ut.onend = callback;
-            speechSynthesis.speak(ut);
-        }
+        } /* 降級防護：未載入 AudioManager 靜默不朗讀 */
     };
 
     let currentAct = 1;
