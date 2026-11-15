@@ -42,18 +42,23 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: 10px;
 }
 
-/* ===== 頂部 4 大活動選單 ===== */
+/* ===== 頂部活動選單（水平滑動膠囊，活動四、活動五無限擴充不破版） ===== */
 .activity-nav {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   background: #ebe3d5;
-  padding: 3px;
+  padding: 4px;
   border-radius: 999px;
-  gap: 3px;
+  flex-wrap: nowrap;
 }
+.activity-nav::-webkit-scrollbar { display: none; }
 .act-btn {
-  padding: 7px 4px;
-  font-size: 11.5px;
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  font-size: 12px;
   font-weight: 800;
   border-radius: 999px;
   color: var(--ink-soft);
@@ -219,12 +224,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 <div class="concept-wrap">
 
-  <!-- 頂部 4 大活動切換標籤 -->
+  <!-- 頂部活動選單（水平滑動膠囊，活動四、活動五無限擴充不破版） -->
   <nav class="activity-nav">
-    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🎒 水壺實測</button>
-    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🚰 1800mL喝水</button>
-    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🍊 2.7L小數</button>
-    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🎮 自由沙盒</button>
+    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🎒 活動一 · 水壺實測</button>
+    <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🚰 活動二 · 1800mL喝水</button>
+    <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🍊 活動三 · 2.7L小數</button>
+    <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🧪 活動四 · 量杯沙箱</button>
   </nav>
 
   <!-- ==================== 活動一：我的水壺容量實測 ==================== -->
@@ -447,16 +452,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     </div>
   </section>
 
-  <!-- ==================== 活動四：自由量杯沙盒 ==================== -->
+  <!-- ==================== 活動四：量杯沙箱 ==================== -->
   <section class="act-card" id="act-4-view" style="display:none;">
     <div class="card-head">
-      <span class="card-badge">自由探索沙盒</span>
+      <span class="card-badge">課綱探索活動四</span>
       <button class="btn-tts" onclick="playVoice(4)">
         <span>🔊</span>
         <span>聽導讀</span>
       </button>
     </div>
-    <div class="card-title">🧪 自由量杯沙盒 · 隨意倒水玩量感</div>
+    <div class="card-title">🧪 活動四：量杯沙箱 · 隨意倒水玩量感</div>
     <div class="card-desc">
       零壓力隨心倒水！把眼藥水、多多、水壺、鮮奶倒進 2000mL 透明量杯，觀察刻度與單位換算！
     </div>

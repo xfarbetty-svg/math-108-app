@@ -148,8 +148,8 @@ function setUnitMode(mode) {
         frame.src = CONCEPT_COMPONENTS[code];
       }
     }
-    $("progressNum").textContent = "🌱 概念探索";
-    $("progressSource").textContent = "108 課綱官方導讀 · 自由沙盒 · 零壓力找量感";
+    $("progressNum").textContent = "";
+    $("progressSource").textContent = "";
     $("dots").style.display = "none";
     $("stageTitle").style.display = "none";
   } else {
