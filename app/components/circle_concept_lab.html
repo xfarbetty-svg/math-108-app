@@ -575,7 +575,6 @@ function selectPart(part) {
     nameTag.setAttribute("fill", "#16a34a");
   }
   if (bubble) bubble.innerHTML = "💡 " + info.text;
-  playVoiceText(info.voice);
 }
 
 /* ==================== 活動二：半徑處處等長 ＆ 直徑＝半徑×2 ==================== */
@@ -729,7 +728,6 @@ function drawCircle() {
       if (bubble) {
         bubble.innerHTML = `🎉 畫好了！這個圓的<b>半徑 ${c3Opening} 公分</b>、<b>直徑 ${(c3Opening * 2)} 公分</b>（直徑 ＝ 半徑 × 2）！`;
       }
-      playVoiceText(`畫好了！圓規張開${c3Opening}公分，畫出的圓半徑就是${c3Opening}公分，直徑是${c3Opening * 2}公分！`);
     }
   }, 22);
 }
@@ -761,12 +759,19 @@ function pickLine(key) {
     if (fb.ok) bubble.classList.remove("warn");
     bubble.innerHTML = "💡 " + fb.text;
   }
-  playVoiceText(fb.voice);
 }
 
 /* ==================== 語音朗讀系統 (Edge-TTS 台灣曉臻 + 三級降級) ==================== */
 let currentTtsAudio = null;
 let speechEpoch = 0;
+let isSpeaking = false;
+
+function updateVoiceButtons(active) {
+  document.querySelectorAll(".btn-tts").forEach(btn => {
+    btn.innerHTML = active ? "<span>⏹</span><span>停止</span>" : "<span>🔊</span><span>聽導讀</span>";
+    btn.classList.toggle("speaking", active);
+  });
+}
 
 function cleanTextForSpeech(text) {
   if (!text) return "";
@@ -786,6 +791,8 @@ function stopSpeech() {
   if ("speechSynthesis" in window) {
     window.speechSynthesis.cancel();
   }
+  isSpeaking = false;
+  updateVoiceButtons(false);
 }
 
 function playVoiceText(rawText) {
@@ -816,6 +823,18 @@ function playVoiceText(rawText) {
     const twVoice = voices.find(v => v.name && (v.name.includes("HsiaoChen") || v.name.includes("曉臻") || v.name.includes("Yating") || v.name.includes("雅婷") || v.name.includes("Taiwan") || v.name.includes("臺灣"))) ||
                     voices.find(v => (v.lang === "zh-TW" || v.lang === "zh_TW") && !v.lang.toLowerCase().includes("hk"));
     if (twVoice) u.voice = twVoice;
+    u.onstart = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = true;
+        updateVoiceButtons(true);
+      }
+    };
+    u.onend = u.onerror = () => {
+      if (speechEpoch === thisEpoch) {
+        isSpeaking = false;
+        updateVoiceButtons(false);
+      }
+    };
     window.speechSynthesis.speak(u);
   }
 
@@ -824,6 +843,20 @@ function playVoiceText(rawText) {
       doWebSpeechFallback();
     }
   }, 2500);
+
+  audio.onplay = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = true;
+      updateVoiceButtons(true);
+    }
+  };
+
+  audio.onended = () => {
+    if (speechEpoch === thisEpoch) {
+      isSpeaking = false;
+      updateVoiceButtons(false);
+    }
+  };
 
   audio.oncanplay = () => {
     clearTimeout(timer);
@@ -852,7 +885,12 @@ const ACT_VOICES = {
   3: "活動三：圓規畫圓。金屬針固定在圓心，鉛筆腳張開的距離就是半徑。調好張開距離，按下開始畫圓，轉一圈就畫出漂亮的圓囉！",
   4: "活動四：迷思小偵探。圓裡有四條線段，只有一條是真正的直徑。直徑要通過圓心，兩端都要在圓周上，仔細找找看吧！"
 };
+
 function playVoice(actNum) {
+  if (isSpeaking) {
+    stopSpeech();
+    return;
+  }
   playVoiceText(ACT_VOICES[actNum] || ACT_VOICES[1]);
 }
 
