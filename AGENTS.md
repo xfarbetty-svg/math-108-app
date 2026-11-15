@@ -272,7 +272,18 @@
      - 「兩個聲音搶話（重音）」：在 `shell.js` 與組件建立**硬性發聲互斥鎖（Exclusive Lock）**，並在概念探索模式智慧隱藏頂部「聽題目」，杜絕競態重音。
   4. 雙硬閘門與線上節點實測驗真：`verify_g3_remaining_concepts.js`（9大單元 390px 實機全綠）、`verify_angle_concept.js`、`verify_app_shell.js`、`verify_circle_concept.js`、`test_tts_endpoint.py` 全部 Exit Code 0。
   5. 實體發布線上生效：執行 `.\deploy.ps1` 遞增版號，GitHub 倉庫與 Cloudflare Pages（https://math-108.pages.dev）發布完成，HTTPS 探針確認 Build `20261115_165533` 100% 生效！
-- [ ] 下一步：人類手機實測驗收（體驗手指拖曳三角板與無重音語音），依指示接續開啟二年級（G2）核心單元或三年級剩餘 7 個條目。
+- [x] Session 46 三年級最後 7 大單元概念小教室 100% 落地 ＆ 三年級 24/24 全量大滿貫（Grand Slam）（2026-11-15 17:52）：
+  1. 落地 7 套四幕式概念實驗室：`N-3-16` 重量 (`weight_concept_lab.html`)、`N-3-17` 時間 (`time_concept_lab.html`)、`S-3-2` 正方形長方形 (`square_rectangle_lab.html`)、`S-3-4` 幾何形體操作 (`solid_geometry_lab.html`)、`R-3-1` 乘除互逆 (`multiplication_division_lab.html`)、`R-3-2` 數量模式與推理 (`pattern_reasoning_lab.html`)、`D-3-1` 一維與二維表格 (`table_cross_lab.html`)。
+  2. 課綱條目全量連通：三年級 24/24 條目全部標記 ready，全專案累計開放 35/131 條目（一年級 11/11 + 三年級 24/24 雙年級 100% 大滿貫！）。
+  3. 全域守門員與 CDP 測試全綠通過。
+- [x] Session 47 人類實機盲審回饋（Plan-PR 閉環）＆ 深度互動點擊守門員升級（2026-11-15 18:52）：
+  1. 人類盲審抓出 R-3-2 跳跳蛙不能跳與找規律數列空白：精準定位 `<script>` 遺失業務函數根因，完成外科手術式修復（青蛙拋物線跳躍、SVG 虛線弧線、火柴棒公式疊加、數列初始卡片渲染、差值氣泡揭示、S-3-2 四邊標記、3D 摺紙對摺、面積鋪格）。
+  2. 守門員全面升級為深度 CDP 點擊斷言：`tools/verify_g3_remaining_concepts.js` 真實模擬點擊按鈕，斷言 DOM 位移與狀態改變，16 套概念小教室全部 Exit Code 0 全綠！
+  3. 實體發布線上生效：執行 `python tools/release.py`（Build 20261115_185028），GitHub 與 Cloudflare Pages（https://math-108.pages.dev）發布完成，遠端 HTTPS 探測確認生效。
+- [ ] 下一步：
+  - 【待修復】概念小教室語音升級：目前概念小教室內部使用 `window.speechSynthesis`（手機原生機械音），下個 Session 將全面替換對齊為外層測驗使用的 Cloudflare Edge-TTS 端點 (`/api/tts?text=...` 台灣自然女聲 `zh-TW-HsiaoChenNeural`)。
+  - 【單元推進】三年級 24/24 全量大滿貫已收官，接續推進二年級（G2）核心單元。
+
 
 
 ---

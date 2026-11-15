@@ -1,5 +1,26 @@
 # 斷點交接日誌 (Handoff Log)
 
+## ⏯️ 目前做到哪（Session 47：2026-11-15 18:52）
+
+本 Session 遵照使用者 `/plan-pr 不能動` 實機盲審回饋，執行鋼鐵 Plan-PR 閉環修復與交付驗收：
+1. **問題根因**：先前在處理腳本截斷時，`pattern_reasoning_lab.html` (R-3-2) 與 `square_rectangle_lab.html` (S-3-2) 之 `<script>` 遺失了部分業務函數定義（如 `frogJump()`, `addSquare()`, `nextSeq()`, `revealDiff()`, `animateFold()`, `fillGrid()`, `markSides()`），導致點擊無響應、數列中央空白。
+2. **手術級精修 (Surgical-Fix)**：
+   - `pattern_reasoning_lab.html`：補齊完整業務邏輯。Act 1 青蛙具備 CSS 拋物線位移與 SVG 虛線弧線、荷葉刻度標籤；Act 2 支援火柴正方形增加與公式及時推導；Act 3 初始渲染 5 張數列卡片（告別空白），點擊揭示規律彈出紅色差值氣泡；Act 4 尋寶挑戰互動答題反饋。
+   - `square_rectangle_lab.html`：補齊 `markSides()`（四邊/對邊刻度線標記）、`animateFold()`（3D 摺紙對摺重合動畫）、`fillGrid()`（逐格非同步鋪設 15 塊方格面積動畫）。
+3. **守門員全面升級為深度 CDP 點擊斷言**：
+   - 升級 `tools/verify_g3_remaining_concepts.js`，對全部 16 套概念小教室（含本次 7 大新單元）進行手機 390px 視口零橫向溢出、4 幕活動切換、真實點擊斷言（青蛙 transform 位移、SVG 弧線存在、火柴增加、數列非空白、差值氣泡、四邊標記、3D摺紙 folded、方格鋪滿）、Console Errors 0 全綠 Exit Code 0。
+4. **實體自動化發布與雲端驗真**：
+   - 執行 `python tools/release.py`（Build 20261115_185028），自動跑通守門員、Git Commit & Push、Cloudflare Pages 邊緣節點實體部署，HTTPS 探測 HTTP 200 吻合！
+   - 正式網址：`https://math-108.pages.dev`
+
+### 5. ⚠️ 使用者盲審重大回饋：語音還是舊的語音（技術債分析與解法）
+- **問題現象**：使用者在手機實機盲審時發現：「語音還是舊的語音」。
+- **根因分析**：
+  - 外層 `shell.js` 的真題測驗「🔊 聽題目」，調用的是 Cloudflare Pages Functions 後端直連的 Edge-TTS 高音質台灣自然女聲（`/api/tts?text=...`，微軟 `zh-TW-HsiaoChenNeural` 曉臻）。
+  - 但這批概念實驗室（例如 `pattern_reasoning_lab.html`、`square_rectangle_lab.html` 等）內部定義的 `speak()` 函數，依然直接使用瀏覽器原生 `window.speechSynthesis`（Web Speech API），在手機上會調用手機系統預設的舊式機械音，導致音質截然不同、體驗割裂！
+- **下一步開工任務（P0）**：
+  - 在各概念小教室中統一封裝通用語音模組，優先 `fetch('/api/tts?text=' + encodeURIComponent(text))` 播放高音質自然語音音訊，若離線或出錯才回退至 `window.speechSynthesis`，讓全站語音音色 100% 統一為台灣曉臻自然音色！
+
 ## ⏯️ 目前做到哪（Session 46：2026-11-15 17:52）
 
 本 Session 遵照使用者最高方針：「由通道三（035 金鑰池）主責深思規劃與架構、通道一/二協同施工、AGY 第一棒嚴格機械化守門防偽」，正式將**三年級 108 課綱官方 24 大單元 100% 全量大滿貫（Grand Slam）全部攻克完畢**！全專案已開放 35/131 條目（一年級 11/11 全滿貫 + 三年級 24/24 全滿貫），全量自動化守門員與 CDP 測試全綠通過：
