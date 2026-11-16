@@ -708,11 +708,11 @@ function a3Render() {
   var line = document.createElement("div");
   line.className = "vline";
   grid.appendChild(line);
-  [m.resT, m.resO].forEach(function (c, idx) {
+  [a3Cell("", ""), m.resT, m.resO].forEach(function (c, idx) {
     var div = document.createElement("div");
     div.className = "vc " + c.cls;
     div.innerHTML = c.txt;
-    if (a3Step >= 1 && idx === (a3Step === 1 ? 1 : 0) && c.txt !== "?") div.classList.add("hit");
+    if (a3Step >= 1 && idx === (a3Step === 1 ? 2 : 1) && c.txt !== "?") div.classList.add("hit");
     grid.appendChild(div);
   });
   var label = document.getElementById("a3-step-label");
@@ -785,6 +785,9 @@ function a4RenderMini() {
   var line = document.createElement("div");
   line.className = "vline";
   mini.appendChild(line);
+  var emptyDiv = document.createElement("div");
+  emptyDiv.className = "vc";
+  mini.appendChild(emptyDiv);
   [[resT, "tens"], [resO, "ones"]].forEach(function (pair) {
     var div = document.createElement("div");
     var isBlank = pair[1] === q.blank;

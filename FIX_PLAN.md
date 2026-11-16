@@ -155,3 +155,19 @@
 > 詳細計畫書請參閱獨立新檔：[`reports/PLAN_G2_EXAM_AND_LAB_AUDIT.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/PLAN_G2_EXAM_AND_LAB_AUDIT.md)  
 > 推進策略：使用者選定 **方案 A（單元單兵閉環推進法）**，首發試點：**N-2-1 一千以內的數**。
 
+---
+
+## 6. 二年級第二單元：G2-N-2-2 加減算式與直式計算高階真題工程 (2026-11-16 升級)
+> 完整考卷全通讀選題報告：[`reports/PLAN_G2_N22_EXAM_AUDIT.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/PLAN_G2_N22_EXAM_AUDIT.md)
+
+- **目標**：完成內湖 112-1 與獅湖 113-1 期中考 N-2-2 範疇 5 道高階思維真題（線段模型、文具店購物、天平數感）之純 SVG 教具組件與題庫封裝。
+- **題目清單**：
+  - [x] **Step 1 (Q1)**: 彩帶 90cm 用掉一些剩 58cm 線段模型 (`g2_n22_q1_tape_ribbon_demo.html`) `[VISUAL]` (已由 AGY 法官眼睛實機審查 PASS，線段 58:32 真確比例、零溢出)
+  - [ ] **Step 2 (Q2)**: 文具店買手電筒42與自動筆29進位直式 (`g2_n22_q2_store_add_demo.html`) `[VISUAL]`
+  - [ ] **Step 3 (Q3)**: 珊珊55元買自動筆29元退位直式 (`g2_n22_q3_store_sub_demo.html`) `[VISUAL]`
+  - [ ] **Step 4 (Q4)**: 44+34 與 44+22 高階數感天平比大小 (`g2_n22_q4_balance_compare_demo.html`) `[VISUAL]`
+  - [ ] **Step 5 (Q5)**: 緞帶剪掉47剩68原長跨百進位拼合 (`g2_n22_q5_ribbon_splice_demo.html`) `[VISUAL]`
+  - [ ] **Step 6 (Data & Gate)**: 題庫資料 `data/units/G2/N-2-2.json` 封裝與 `tools/verify_g2_n22_cdp.js` 驗證 (Exit 0)
+
+
+

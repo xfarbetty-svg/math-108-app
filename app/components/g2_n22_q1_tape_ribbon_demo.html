@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-2-Q01 彩帶用掉多少（線段圖）</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:8px 10px 14px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:8px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:10px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:15px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.tape-svg { display:block; width:100%; height:auto; }
+.t-in { font-size:13.5px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-left { font-size:12.5px; font-weight:800; fill:#175e4c; text-anchor:middle; }
+.t-cut { font-size:11.5px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-cut .q { fill:var(--red); font-size:13px; }
+.t-scis { font-size:14px; fill:var(--ink-soft); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:8px 6px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:8px 30px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+/* ---- 直式退位算式（答對後動態揭曉） ---- */
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-grid { display:grid; grid-template-columns:30px 34px 34px; justify-content:center; align-items:end; row-gap:2px; font-size:21px; font-weight:800; text-align:center; }
+.v-grid .mk { font-size:11px; font-weight:800; color:var(--red); align-self:start; line-height:1; padding-bottom:1px; }
+.v-grid .dg.strike { text-decoration:line-through 2.5px rgba(214,69,69,.85); color:var(--ink); }
+.v-grid .op { color:var(--ink-soft); }
+.v-grid .vline { grid-column:1 / 4; border-top:2px solid var(--ink); margin-top:2px; }
+.v-grid .res { color:var(--mint-deep); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+.vq.show .mk-o { animation:pop .3s .15s both; }
+.vq.show .mk-t { animation:pop .3s .55s both; }
+.vq.show .res-o { animation:pop .3s .95s both; }
+.vq.show .res-t { animation:pop .3s 1.35s both; }
+.vq.show .v-note { animation:fade .4s 1.7s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>112-1 內湖 期中 五、5</small>彩帶有 90 公分，布置布告欄用掉一些後，還剩下 58 公分，布置布告欄用掉幾公分的彩帶？</p>
+  </div>
+  <div class="card">
+    <!-- 線段圖：上層全長 90；下層左 58（綠）＋右 32（剪刀虛線）。比例嚴格 58:32＝219.1:120.9 -->
+    <svg class="tape-svg" viewBox="0 0 360 110" role="img" aria-label="彩帶線段圖：原長 90 公分，剩下 58 公分，用掉幾公分">
+      <rect x="10" y="14" width="340" height="30" rx="6" fill="var(--lemon)" stroke="var(--ink)" stroke-width="1.6"/>
+      <text x="180" y="34" class="t-in">原長 90 公分</text>
+      <line x1="229.1" y1="48" x2="229.1" y2="68" stroke="var(--ink-soft)" stroke-width="1.5" stroke-dasharray="4 4"/>
+      <text x="229.1" y="65" class="t-scis">✂</text>
+      <rect x="10" y="72" width="219.1" height="30" rx="6" fill="var(--mint)" stroke="var(--mint-deep)" stroke-width="1.6"/>
+      <text x="119.6" y="92" class="t-left">剩下 58 公分</text>
+      <rect x="229.1" y="72" width="120.9" height="30" rx="6" fill="var(--paper)" stroke="var(--ink-soft)" stroke-width="1.6" stroke-dasharray="5 4"/>
+      <text x="289.6" y="92" class="t-cut">✂ 用掉 <tspan class="q">？</tspan> 公分</text>
+    </svg>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-grid">
+      <span></span><span class="mk mk-t">8</span><span class="mk mk-o">10</span>
+      <span></span><span class="dg strike">9</span><span class="dg strike">0</span>
+      <span class="op">－</span><span class="dg">5</span><span class="dg">8</span>
+      <span class="vline"></span>
+      <span></span><span class="dg res res-t">3</span><span class="dg res res-o">2</span>
+    </div>
+    <p class="v-notes">個位：<b>0 減 8 不夠減</b>，向十位借 1 個十當作 10 個一 → <b>10 − 8 = 2</b><br>十位：9 借走 1 剩下 8 → <b>8 − 5 = 3</b></p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['28 公分', '32 公分', '38 公分', '42 公分'];
+  var ANSWER = 1;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！90 − 58 = 32，用掉 32 公分。';
+      vq.classList.add('show');
+      say('答對！90 減 58 等於 32，布置布告欄用掉 32 公分。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：全長 90 公分，扣掉剩下的 58 公分，就是用掉的長度喔！';
+    say('再想想看：全長 90 公分，扣掉剩下的 58 公分，就是用掉的長度喔！');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-2-Q01', answer: 1 };
+})();
+</script>
+</body>
+</html>
