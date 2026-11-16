@@ -1,60 +1,30 @@
 # 斷點交接日誌 (Handoff Log)
 
-## ⏯️ 目前做到哪（Session 50：2026-11-16 06:12）
+## ⏯️ 目前做到哪（Session 51：2026-11-16 09:25 收工存證）
 
-本 Session 遵照使用者最高指示「1+2」，推進二年級 (G2) 概念探索小教室，**達成 100% 全量 24 大單元大滿貫歷史性里程碑**：
-- **Wave 3（最後 2 單元）100% 收官**：
-  - `S-2-3` 直尺操作 (`g2_ruler_drawing_lab.html`)
-  - `S-2-4` 平面圖形的邊長 (`g2_perimeter_lab.html`)
-- **Wave 4（6 單元終極大收官）100% 大滿貫落地**：
-  - `S-2-5` 面積（具體操作） (`g2_area_square_lab.html`)
-  - `R-2-1` 大小關係與遞移律 (`g2_transitive_law_lab.html`)
-  - `R-2-2` 加法交換律與結合律 (`g2_addition_commutative_lab.html`)
-  - `R-2-3` 乘法交換律 (`g2_multiplication_commutative_lab.html`)
-  - `R-2-4` 加法與減法的關係 (`g2_addition_subtraction_relation_lab.html`)
-  - `D-2-1` 分類與呈現 (`g2_data_classify_lab.html`)
-- **G2 總計完工 24 / 24 單元（進度達成 100%！）**
+本 Session 針對使用者反饋之「題目多樣性（增加臺北名校）」與「解耦題目與概念小教室」進行重大重構與發布：
 
-全程恪守 AGY 決策架構與監工、手腳上鎖不手寫大檔案業務代碼、升級 `dispatch_worker.py` 通道三 (035 Key Pool 8把 Key 輪詢) 支援自動代碼原子落盤、微軟曉臻高音質自然語音全面接入、全量 25 套 G2 概念實驗室 CDP 實機硬閘驗收全綠通過！
+1. **臺北市內湖國小 111 ~ 113 三學年度 G2 段考真題全自動爬取與入庫（12 份大滿貫）**：
+   - 突破民間站點限制，直接定位臺北市南湖國小註冊組官方公開雲端庫。
+   - 開發專屬爬蟲 `tools/crawl_nhes_g2_exams.py`，全自動下載 12 份原始 PDF（經 PyMuPDF 驗收抬頭皆為「臺北市內湖區內湖國民小學」）。
+   - 涵蓋 111（康軒）、112（南一）、113（翰林）全學年期中/期末考卷，全數收錄於 `EXAM REAL/G2/` 並更新 `EXAM REAL/EXAM_INDEX.md`。
 
-### 🛡️ 守門員全量驗收
-- `node tools/verify_g2_concept_labs.js`：**25 套全綠通過 (Exit 0)**！
-  - 390px 視口零橫溢 (scrollWidth=390)
-  - 四幕切換按鈕 100% 有效 (tab-act1~4, act-1~4-view)
-  - 音訊接口完備 (AudioManager.play)
-  - 最大 stage 高度全部 $\le 420\text{px}$
-  - Console 0 報錯
-- `node tools/verify_app_shell.js`：**PASS (Exit 0, 6 年級 131 條目大廳總檢全綠)**
-- `python tests/test_tts_endpoint.py`：**PASS (Exit 0, 微軟曉臻高音質簽章特徵全綠)**
+2. **徹底解耦架構：G2 概念探索小教室 24 套全面正式上線**：
+   - 針對使用者「題目是題目、小教室是小教室，小教室做完了應該先上線讓大家看」之深刻洞察，打破原有題庫與小教室強行綁定的死鎖。
+   - 在 `app/shell.js` 與 `app/index.html` 構建「概念探索小教室快捷專區（24 套全部解鎖）」，支援點擊膠囊按鈕直達四階光影互動教具。
+   - 破除 Service Worker 與腳本快取（更新版號 `math108-v20261116_091421`）。
+   - 9 大守門員測試（含新增之 `tests/verify_concept_hub_cdp.js` 實機通訊）全部通過（Exit Code 0）。
+   - 實體部署至 Cloudflare Pages 邊緣節點（正式網址：`https://math-108.pages.dev`），遠端驗真 100% 生效！
+
+3. **上班時間與非監督模式（Unattended Pipeline）之架構構想確立**：
+   - 確立「核心代碼實體寫保護（Core Frozen）」＋「離線真題沙盒提取提案庫（reports/drafts/）」＋「客觀二次硬驗算（Math Verifier）」＋「下班一鍵批閱看板（Review Dashboard）」之標準非監督施工模式。
 
 ---
 
-## 🚦 目前狀態
+## ⏭️ 下次從哪裡接續（Actionable Next Steps）
 
-- **可運行狀態**：全站、G1/G2/G3 概念小教室與微軟曉臻語音完美運行，純前端離線可用。
-- **已註冊路由**：`app/shell.js` 中已完整註冊 G2 全部 24 大單元：
-  `N-2-1` ~ `N-2-14`、`S-2-1` ~ `S-2-5`、`R-2-1` ~ `R-2-4`、`D-2-1`。
-- **施工進度**：二年級 (G2) 24 大單元概念實驗室 100% 大滿貫！
-
----
-
-## ➡️ 下一步（Next Session 開工指引）
-
-下次開工時，直接輸入「開工」或「接續」，即可進入：
-1. **二階段：497 題真題映射 (Verbatim Real Exam)**：
-   - 盤點 028 庫存之 497 題二年級真題題庫，映射至各單元 `data/g2_*.json`。
-   - 建立各題型之日系繪本教具與驗收守門員。
-2. **四~六年級骨架推進 (Phase 5)**。
-
----
-
-## ⚠️ 注意事項
-
-- **語音規範**：所有新建實驗室必須 `<script src="../js/audio_manager.js"></script>` 並使用 `AudioManager.play(text)`。
-- **算力排程**：通道一 (OpenCode CLI) 與通道三 (035 Key Pool 輪詢) 均具備完整原子代碼寫入能力，AGY 嚴禁動手寫業務代碼。
-
----
-
-## 🕐 最後更新
-- **時間**：2026-11-16 06:12 (Session 50 大滿貫完工)
-- **更新者**：Antigravity (AGY) @ DESKTOP-6ELKIRH
+1. **使用者手機體驗驗收**：
+   - 隨時可在手機瀏覽器開啟 `https://math-108.pages.dev`，點擊「二年級」頂部之「🎨 概念探索小教室」24 套教具。
+2. **啟動 PLAN+PR 流程之第一步：N-2-1 真題打樣**：
+   - 調度通道三（035 金鑰池 / Gemini 2.5 Pro），從 `EXAM REAL/G2/` 內湖國小真題提取 N-2-1（一百以內的數）4~6 題。
+   - Python 數學腳本二次客觀硬驗算，產出 `data/units/G2/N-2-1.json` 候選檔與打樣審查報告，供使用者過目審查。
