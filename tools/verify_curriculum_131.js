@@ -52,7 +52,8 @@ const EXPECTED_READY_CODES = [
   'N-1-1', 'N-1-2', 'N-1-3', 'N-1-4', 'N-1-5', 'N-1-6', 'S-1-1', 'S-1-2', 'R-1-1', 'R-1-2', 'D-1-1',
   'N-3-1', 'N-3-2', 'N-3-3', 'N-3-4', 'N-3-5', 'N-3-6', 'N-3-7', 'N-3-8', 'N-3-9', 'N-3-10', 'N-3-11',
   'N-3-12', 'N-3-13', 'S-3-1', 'N-3-14', 'N-3-15', 'S-3-3',
-  'N-3-16', 'N-3-17', 'S-3-2', 'S-3-4', 'R-3-1', 'R-3-2', 'D-3-1'
+  'N-3-16', 'N-3-17', 'S-3-2', 'S-3-4', 'R-3-1', 'R-3-2', 'D-3-1',
+  'N-2-1'
 ];
 const readyUnits = all.filter((u) => u.status === 'ready');
 check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);
@@ -83,6 +84,18 @@ try {
   check(true, 'N-1-1 四題教具 component_path 全部存在於 app/');
 } catch (err) {
   check(false, 'data/units/G1/N-1-1.json 驗證失敗 → ' + err.message);
+}
+
+// 5b. G2 N-2-1 題庫 SSOT 存在且 5 題（113-1/112-1/111-1 內湖段考真題）
+try {
+  const unitG2 = JSON.parse(fs.readFileSync('data/units/G2/N-2-1.json', 'utf8'));
+  check(unitG2.questions && unitG2.questions.length === 5, 'data/units/G2/N-2-1.json 題庫 5 題（SSOT）');
+  unitG2.questions.forEach((q) => {
+    if (!fs.existsSync('app/' + q.component_path)) check(false, '教具檔缺失: ' + q.component_path);
+  });
+  check(true, 'N-2-1 五題教具 component_path 全部存在於 app/');
+} catch (err) {
+  check(false, 'data/units/G2/N-2-1.json 驗證失敗 → ' + err.message);
 }
 
 // 6. shell.js 已對齊新骨架（name 欄位、已開放 x/y、upcoming 卡片流）

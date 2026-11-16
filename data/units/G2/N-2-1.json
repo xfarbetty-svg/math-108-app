@@ -1,0 +1,129 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G2-N-2-1",
+  "curriculum_code": "N-2-1",
+  "grade": 2,
+  "unit_name": "一千以內的數",
+  "source_paper": "臺北市內湖國小 111~113 學年度第一學期 二年級期中數學試卷",
+  "verified_by": "段考真題原文對齊（task_card_g2_n21_exam.md）",
+  "questions": [
+    {
+      "id": "G2-N-2-1-Q01",
+      "exam_source": "內湖國小 113-1 期中",
+      "section": "一、選擇題",
+      "question_num": "1",
+      "title": "150 是幾個十",
+      "stem": "150是幾個十合起來的？",
+      "choices": ["5 個十", "15 個十", "150 個十", "105 個十"],
+      "answer_index": 1,
+      "answer_raw": "15 個十",
+      "component": "ten_group_demo",
+      "component_path": "components/g2_n21_q1_ten_group_demo.html",
+      "explanation": {
+        "concept": "課綱重點：位值單位換算——1 個百＝10 個十，150 是 1 個百加 5 個十。",
+        "steps": [
+          "先把 150 拆成 100 和 50。",
+          "100 是 10 條十格條捆成的，就是 10 個十。",
+          "50 是 5 條十格條，就是 5 個十。",
+          "10 ＋ 5 ＝ 15，所以 150 是 15 個十合起來的。"
+        ],
+        "trap": "看到 150 裡有「150」就直覺選「150 個十」是陷阱！要用位值單位換算，不是照抄數字。"
+      }
+    },
+    {
+      "id": "G2-N-2-1-Q02",
+      "exam_source": "內湖國小 111-1 期中",
+      "section": "一、選擇題",
+      "question_num": "1",
+      "title": "120 是幾個十",
+      "stem": "120 是幾個十合起來的？",
+      "choices": ["2 個十", "12 個十", "120 個十", "102 個十"],
+      "answer_index": 1,
+      "answer_raw": "12 個十",
+      "component": "ten_bundle_demo",
+      "component_path": "components/g2_n21_q2_ten_bundle_demo.html",
+      "explanation": {
+        "concept": "課綱重點：10 個十聚成一個百，120 是 1 個百再加 2 個十。",
+        "steps": [
+          "一疊 10 枚十元硬幣聚成 1 個百，就是 10 個十。",
+          "旁邊還有 2 枚十元，就是 2 個十。",
+          "10 ＋ 2 ＝ 12，所以 120 是 12 個十合起來的。"
+        ],
+        "trap": "只看到個位的 2 就選「2 個十」會漏掉整疊百！整疊 10 枚也要數進去。"
+      }
+    },
+    {
+      "id": "G2-N-2-1-Q03",
+      "exam_source": "內湖國小 112-1 期中",
+      "section": "二、填空題",
+      "question_num": "3",
+      "title": "百十個積木與定位板",
+      "stem": "2 個百、7 個十和 8 個一合起來是(　　)。在定位板上記作：",
+      "choices": [
+        "278，百位記 2、十位記 7、個位記 8",
+        "287，百位記 2、十位記 8、個位記 7",
+        "270，百位記 2、十位記 7、個位記 0",
+        "728，百位記 7、十位記 2、個位記 8"
+      ],
+      "answer_index": 0,
+      "answer_raw": "278，百位記 2、十位記 7、個位記 8",
+      "component": "place_value_board_demo",
+      "component_path": "components/g2_n21_q3_place_value_board_demo.html",
+      "explanation": {
+        "concept": "課綱重點：位值表徵——百、十、個位各對應百格板、十格條、小方塊，位置決定大小。",
+        "steps": [
+          "百位有 2 塊百格板，記 2。",
+          "十位有 7 條十格條，記 7。",
+          "個位有 8 個小方塊，記 8。",
+          "由左到右寫下 2、7、8，就是 278。"
+        ],
+        "trap": "把 7 個十和 8 個一對調就會寫成 287！每種積木只能記在自己的位置上。"
+      }
+    },
+    {
+      "id": "G2-N-2-1-Q04",
+      "exam_source": "內湖國小 112-1 期中",
+      "section": "二、填空題",
+      "question_num": "7-(1)",
+      "title": "三位數比大小 300 與 299",
+      "stem": "在 □ 中填入 ＞、＜ 或 ＝：\n300 □ 299",
+      "choices": ["＞", "＜", "＝"],
+      "answer_index": 0,
+      "answer_raw": "＞",
+      "component": "compare_300_299_demo",
+      "component_path": "components/g2_n21_q4_compare_300_299_demo.html",
+      "explanation": {
+        "concept": "課綱重點：三位數比大小從最高位（百位）比起，百位相同才比十位。",
+        "steps": [
+          "左邊 300 有 3 塊百格板，右邊 299 只有 2 塊百格板。",
+          "3 個百 ＞ 2 個百，百位已經分出勝負。",
+          "後面的十位、個位不用再比，300 ＞ 299。"
+        ],
+        "trap": "299 的「9」看起來大，但比大小一定從百位開始，不能由個位往前比。"
+      }
+    },
+    {
+      "id": "G2-N-2-1-Q05",
+      "exam_source": "內湖國小 111-1 期中",
+      "section": "二、填空題",
+      "question_num": "2-(2)",
+      "title": "規律數數 115 往後倒數",
+      "stem": "按照順序填填看：\n115 — (　　) — (　　) — 100 — 95",
+      "choices": ["110、105", "120、125", "114、113", "105、110"],
+      "answer_index": 0,
+      "answer_raw": "110、105",
+      "component": "number_sequence_115_demo",
+      "component_path": "components/g2_n21_q5_number_sequence_115_demo.html",
+      "explanation": {
+        "concept": "課綱重點：規律數數——觀察已知數的差，找出「每次減 5」的倒數規律。",
+        "steps": [
+          "先看已知的 100 和 95：100 − 95 ＝ 5，是往回倒數。",
+          "規律是每次減 5：115 − 5 ＝ 110。",
+          "再減 5：110 − 5 ＝ 105。",
+          "驗算：105 − 5 ＝ 100、100 − 5 ＝ 95，完全吻合。"
+        ],
+        "trap": "倒數時每次減的數要一樣！若誤以為「遞減 1」會填成 114、113。"
+      }
+    }
+  ]
+}

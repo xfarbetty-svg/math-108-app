@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-1-Q02 120是幾個十</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --coral:#ff8a65; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:8px 10px 14px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:8px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:10px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:15px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.coins { display:flex; align-items:center; justify-content:center; gap:10px; }
+.bundle { text-align:center; }
+.dime-stack { display:flex; flex-direction:column; align-items:center; }
+.dime { width:34px; height:14px; border-radius:50%; background:var(--coral); border:1.5px solid rgba(0,0,0,.3); box-shadow:inset 0 2px 3px rgba(255,255,255,.55); }
+.bundle .dime { margin-top:-6px; }
+.bundle .dime:first-child { margin-top:0; }
+.bundle100 { position:relative; }
+.bundle100 .dime { background:var(--mint); }
+.bundle-label { font-size:11px; font-weight:800; color:var(--mint-deep); margin-top:4px; }
+.plus { font-size:20px; font-weight:800; color:var(--ink-soft); }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:8px 6px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:8px 30px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>111-1 內湖 期中 一、1</small>120 是幾個十合起來的？</p>
+  </div>
+  <div class="card coins">
+    <div class="bundle bundle100">
+      <div class="dime-stack" id="stack100"></div>
+      <div class="bundle-label">10 個十元＝100</div>
+    </div>
+    <div class="plus">＋</div>
+    <div class="bundle">
+      <div class="dime-stack" id="stack20"></div>
+      <div class="bundle-label">2 個十元＝20</div>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var dime = '<div class="dime"></div>';
+  document.getElementById('stack100').innerHTML = dime.repeat(10);
+  document.getElementById('stack20').innerHTML = dime.repeat(2);
+  var CHOICES = ['2 個十', '12 個十', '120 個十', '102 個十'];
+  var ANSWER = 1;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！10 個十聚成 1 個百，再加 2 個十，120 就是 12 個十。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：一疊 10 枚十元是 1 個百，數一數總共有幾疊加幾枚？';
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-1-Q02', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
