@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>臺北市內湖國小 G2 數學段考試卷收集器</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --border: #e2e8f0;
+      --success: #16a34a;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 30px 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      padding: 24px 32px;
+      border: 1px solid var(--border);
+    }
+    h1 {
+      margin-top: 0;
+      color: #1e3a8a;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: normal;
+    }
+    .steps {
+      background: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+    }
+    .steps ol {
+      margin: 6px 0 0 20px;
+      padding: 0;
+    }
+    .steps li {
+      margin-bottom: 6px;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    button.btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    button.btn-primary:hover {
+      background: #1d4ed8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #475569;
+    }
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .tag-kang { background: #fef3c7; color: #b45309; }
+    .tag-nan { background: #e0e7ff; color: #4338ca; }
+    .tag-han { background: #dcfce7; color: #15803d; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>
+    🏫 臺北市內湖國小 G2 數學段考試卷收集台
+    <span class="badge">111 ~ 113+114 學年度全覆蓋</span>
+  </h1>
+
+  <div class="steps">
+    <strong>📋 下載與自動入庫三步驟：</strong>
+    <ol>
+      <li>點擊下方【直達 tcool.cc 臺北市試卷搜尋】按鈕（開新分頁直接查看篩選結果）。</li>
+      <li>在開啟的頁面中，點擊各試卷右側的 <strong>「題目」</strong> 圖示即可下載原始考卷 PDF。</li>
+      <li>下載後在終端機執行 <code>python tools/import_downloaded_exams.py</code>，即可自動歸檔至 <code>EXAM REAL/G2/</code>！</li>
+    </ol>
+  </div>
+
+  <div class="actions">
+    <!-- Form Page 1: 包含 114 與 113下期末 -->
+    <form action="https://www.tcool.cc/" method="post" target="_blank" style="margin: 0;">
+      <input type="hidden" name="grade" value="2">
+      <input type="hidden" name="subject" value="數學">
+      <input type="hidden" name="city" value="臺北市">
+      <input type="hidden" name="p" value="1">
+      <button type="submit" class="btn-primary">🌐 開啟第 1 頁 (114 與 113下期末)</button>
+    </form>
+
+    <!-- Form Page 2: 包含 113 與 112 -->
+    <form action="https://www.tcool.cc/" method="post" target="_blank" style="margin: 0;">
+      <input type="hidden" name="grade" value="2">
+      <input type="hidden" name="subject" value="數學">
+      <input type="hidden" name="city" value="臺北市">
+      <input type="hidden" name="p" value="2">
+      <button type="submit" class="btn-primary">🌐 開啟第 2 頁 (113下期中 ~ 112下期中)</button>
+    </form>
+
+    <!-- Form Page 3: 包含 112上 與 111全學年 -->
+    <form action="https://www.tcool.cc/" method="post" target="_blank" style="margin: 0;">
+      <input type="hidden" name="grade" value="2">
+      <input type="hidden" name="subject" value="數學">
+      <input type="hidden" name="city" value="臺北市">
+      <input type="hidden" name="p" value="3">
+      <button type="submit" class="btn-primary">🌐 開啟第 3 頁 (112上 ~ 111全學年)</button>
+    </form>
+  </div>
+
+  <h3>📚 目標試卷清單 (16 份段考試卷)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50px;">編號</th>
+        <th>學校</th>
+        <th>學年度與段考</th>
+        <th>版本</th>
+        <th>試卷 ID</th>
+        <th>頁碼分流</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>01</td><td>內湖國小</td><td><strong>114下 期末2</strong></td><td><span class="tag tag-han">翰林</span></td><td>20004049</td><td>第 1 頁</td></tr>
+      <tr><td>02</td><td>內湖國小</td><td><strong>114下 期中1</strong></td><td><span class="tag tag-han">翰林</span></td><td>20004027</td><td>第 1 頁</td></tr>
+      <tr><td>03</td><td>內湖國小</td><td><strong>114上 期末2</strong></td><td><span class="tag tag-han">翰林</span></td><td>20004005</td><td>第 1 頁</td></tr>
+      <tr><td>04</td><td>內湖國小</td><td><strong>114上 期中1</strong></td><td><span class="tag tag-han">翰林</span></td><td>20003986</td><td>第 1 頁</td></tr>
+      <tr style="background:#f0fdf4;"><td>05</td><td>內湖國小</td><td><strong>113下 期末2</strong></td><td><span class="tag tag-han">翰林</span></td><td>20000374</td><td>第 1 頁</td></tr>
+      <tr style="background:#f0fdf4;"><td>06</td><td>內湖國小</td><td><strong>113下 期中1</strong></td><td><span class="tag tag-han">翰林</span></td><td>20000351</td><td>第 2 頁</td></tr>
+      <tr style="background:#f0fdf4;"><td>07</td><td>內湖國小</td><td><strong>113上 期末2</strong></td><td><span class="tag tag-han">翰林</span></td><td>20000328</td><td>第 2 頁</td></tr>
+      <tr style="background:#f0fdf4;"><td>08</td><td>內湖國小</td><td><strong>113上 期中1</strong></td><td><span class="tag tag-han">翰林</span></td><td>20000308</td><td>第 2 頁</td></tr>
+      <tr style="background:#fdf4ff;"><td>09</td><td>內湖國小</td><td><strong>112下 期末2</strong></td><td><span class="tag tag-nan">南一</span></td><td>20000466</td><td>第 2 頁</td></tr>
+      <tr style="background:#fdf4ff;"><td>10</td><td>內湖國小</td><td><strong>112下 期中1</strong></td><td><span class="tag tag-nan">南一</span></td><td>20000441</td><td>第 2 頁</td></tr>
+      <tr style="background:#fdf4ff;"><td>11</td><td>內湖國小</td><td><strong>112上 期末2</strong></td><td><span class="tag tag-nan">南一</span></td><td>20000416</td><td>第 3 頁</td></tr>
+      <tr style="background:#fdf4ff;"><td>12</td><td>內湖國小</td><td><strong>112上 期中1</strong></td><td><span class="tag tag-nan">南一</span></td><td>20000394</td><td>第 3 頁</td></tr>
+      <tr style="background:#fffbeb;"><td>13</td><td>內湖國小</td><td><strong>111下 期末2</strong></td><td><span class="tag tag-kang">康軒</span></td><td>20001579</td><td>第 3 頁</td></tr>
+      <tr style="background:#fffbeb;"><td>14</td><td>內湖國小</td><td><strong>111下 期中1</strong></td><td><span class="tag tag-kang">康軒</span></td><td>20001578</td><td>第 3 頁</td></tr>
+      <tr style="background:#fffbeb;"><td>15</td><td>內湖國小</td><td><strong>111上 期末2</strong></td><td><span class="tag tag-kang">康軒</span></td><td>20001577</td><td>第 3 頁</td></tr>
+      <tr style="background:#fffbeb;"><td>16</td><td>內湖國小</td><td><strong>111上 期中1</strong></td><td><span class="tag tag-kang">康軒</span></td><td>20001576</td><td>第 3 頁</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

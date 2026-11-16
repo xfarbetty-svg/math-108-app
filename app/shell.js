@@ -89,6 +89,33 @@ function renderGrade() {
       </button>`;
   }).join("");
 
+  const conceptUnits = g.units.filter((u) => !!CONCEPT_COMPONENTS[u.code]);
+  let conceptBannerHtml = "";
+  if (conceptUnits.length > 0) {
+    conceptBannerHtml = `
+      <div class="concept-hub-card">
+        <div class="concept-hub-header">
+          <div class="concept-hub-title-group">
+            <span class="hub-icon">🎨</span>
+            <div>
+              <div class="hub-title">概念探索小教室 · 實體教具全開放</div>
+              <div class="hub-desc">免做題先體驗 · 四階光影互動 · 曉臻自然女聲語音</div>
+            </div>
+          </div>
+          <span class="hub-badge">${conceptUnits.length} 套全部解鎖</span>
+        </div>
+        <div class="concept-chips-grid">
+          ${conceptUnits.map((u) => `
+            <button class="btn-concept-chip" data-code="${u.code}">
+              <span class="chip-dot">🌱</span>
+              <span class="chip-code">${u.code}</span>
+              <span class="chip-title">${u.title}</span>
+            </button>
+          `).join("")}
+        </div>
+      </div>`;
+  }
+
   view.innerHTML = `
     <div class="grade-hero">
       <div class="hero-card">
@@ -96,12 +123,46 @@ function renderGrade() {
         <h2>${g.name} · 共 ${g.units.length} 大條目</h2>
         <p>已開放 ${readyCount}/${g.units.length} · 真題全部來自實體段考試卷，人類三端盲審通過才開放</p>
       </div>
+      ${conceptBannerHtml}
     </div>
     <div class="unit-list">${cards}</div>`;
 
   view.querySelectorAll(".unit-card.ready").forEach((card) => {
     card.addEventListener("click", () => openUnit(card.dataset.code));
   });
+
+  view.querySelectorAll(".btn-concept-chip").forEach((btn) => {
+    btn.addEventListener("click", () => openConceptLab(btn.dataset.code));
+  });
+}
+
+/* ---------- 概念探索小教室獨立直達通道 ---------- */
+function openConceptLab(code) {
+  const comp = CONCEPT_COMPONENTS[code];
+  if (!comp) return;
+  const g = state.curriculum.grades.find((x) => x.grade === state.grade) || { grade: 2 };
+  const unitMeta = g.units ? g.units.find((u) => u.code === code) : null;
+  state.unitCode = code;
+  state.unit = {
+    code: code,
+    title: unitMeta ? unitMeta.title : code,
+    grade: g.grade,
+    question_count: 0,
+    verified_source: "概念探索小教室先行版",
+    questions: []
+  };
+  showView("stageView");
+  $("progressNum").textContent = "🌱 概念探索";
+  $("progressSource").textContent = unitMeta ? `${unitMeta.code} · ${unitMeta.title}` : code;
+  const tabs = $("unitModeTabs");
+  if (tabs) tabs.style.display = "none";
+  const conceptWrap = $("unitConceptWrap");
+  const examWrap = $("unitExamWrap");
+  if (conceptWrap) conceptWrap.style.display = "block";
+  if (examWrap) examWrap.style.display = "none";
+  const frame = $("conceptFrame");
+  if (frame) frame.src = comp;
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* ---------- 載入單元資料（SSOT：不內嵌題目副本） ---------- */

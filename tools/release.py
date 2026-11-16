@@ -94,6 +94,23 @@ def bump_version_and_cache():
             print(f"   ✓ app/index.html 腳本快取標籤已替換為 shell.js?v={timestamp}")
         else:
             print(f"   - app/index.html 腳本標籤未變更")
+
+    # 3. 更新 app/sw.js 中的 CACHE_NAME
+    sw_path = os.path.join(ROOT, "app", "sw.js")
+    if os.path.exists(sw_path):
+        with open(sw_path, "r", encoding="utf-8") as f:
+            sw_content = f.read()
+        new_sw = re.sub(
+            r'const CACHE_NAME = "math108-[^"]*";',
+            f'const CACHE_NAME = "math108-v{timestamp}";',
+            sw_content
+        )
+        if new_sw != sw_content:
+            with open(sw_path, "w", encoding="utf-8") as f:
+                f.write(new_sw)
+            print(f"   ✓ app/sw.js 快取名稱已替換為 math108-v{timestamp}")
+        else:
+            print(f"   - app/sw.js 快取名稱未變更")
     return timestamp
 
 def main():
@@ -114,6 +131,7 @@ def main():
         ["node", "tools/verify_g3_new_concepts.js"],
         ["node", "tools/verify_g3_remaining_concepts.js"],
         ["node", "tools/verify_g2_concept_labs.js"],
+        ["node", "tests/verify_concept_hub_cdp.js"],
         ["python", "tests/test_tts_endpoint.py"]
     ]
     for g in gates:

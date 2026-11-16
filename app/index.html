@@ -325,6 +325,98 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   #stageView .stage-nav button { font-size: 12.5px; }
   #stageView .btn-check-main { font-size: 14px; min-height: 42px !important; }
 }
+/* ---------- 概念探索實驗室快捷專區樣式 ---------- */
+.concept-hub-card {
+  margin-top: 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #fffbf2 100%);
+  border: 1.5px solid #ffcc80;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(255, 140, 0, 0.08);
+}
+.concept-hub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+.concept-hub-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.concept-hub-title-group .hub-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.concept-hub-title-group .hub-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #d84315;
+}
+.concept-hub-title-group .hub-desc {
+  font-size: 11.5px;
+  color: #8d6e63;
+  margin-top: 2px;
+}
+.concept-hub-header .hub-badge {
+  background: #ffecb3;
+  color: #e65100;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid #ffe082;
+}
+.concept-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+.btn-concept-chip {
+  background: #ffffff;
+  border: 1.5px solid #ffb74d;
+  color: #bf360c;
+  border-radius: 10px;
+  padding: 7px 11px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+.btn-concept-chip:hover {
+  background: #fff3e0;
+  border-color: #f57c00;
+  transform: translateY(-1px);
+}
+.btn-concept-chip:active {
+  transform: scale(0.97);
+  background: #ffe0b2;
+}
+.btn-concept-chip .chip-dot {
+  font-size: 13px;
+}
+.btn-concept-chip .chip-code {
+  font-family: ui-monospace, monospace;
+  font-size: 11.5px;
+  color: #e65100;
+  background: #fff8e1;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.btn-concept-chip .chip-title {
+  color: #3e2723;
+}
 @media (min-width: 700px) {
   .unit-list { grid-template-columns: 1fr 1fr; }
   .stage-title { font-size: 19px; }
@@ -408,6 +500,6 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 </main>
 
 <script src="js/audio_manager.js"></script>
-<script src="shell.js?v=20261116_064420"></script>
+<script src="shell.js?v=20261116_091421"></script>
 </body>
 </html>
