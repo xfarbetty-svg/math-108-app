@@ -169,5 +169,77 @@
   - [ ] **Step 5 (Q5)**: 緞帶剪掉47剩68原長跨百進位拼合 (`g2_n22_q5_ribbon_splice_demo.html`) `[VISUAL]`
   - [ ] **Step 6 (Data & Gate)**: 題庫資料 `data/units/G2/N-2-2.json` 封裝與 `tools/verify_g2_n22_cdp.js` 驗證 (Exit 0)
 
+---
+
+## 7. 二年級第四單元：G2-N-2-4 簡單加減估算 歷屆真題與教具閉環工程 (2026-11-17 啟動)
+> 完整考卷探勘與規格計畫書：[`reports/PLAN_G2_N24_ESTIMATION_EXAM_AUDIT.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/PLAN_G2_N24_ESTIMATION_EXAM_AUDIT.md)
+
+- **目標**：從 `EXAM REAL/G2/` 34 份實體段考中挑選出 5 道涵蓋生活購物、預算檢驗、整十整百概數之高階真題，由工兵梯隊派工封裝題庫與純 SVG 教具組件，經 CDP 390px 實機出圖與 AGY 視覺多模態眼睛審核，確認無誤後整合至前端大廳。
+- **題目清單**：
+  - [ ] **Step 1 (Q1)**: 內湖 111-2 體育用品店 3 物估算湊 500 元 (`g2_n24_q1_sports_estimate.html`) `[VISUAL]`
+  - [ ] **Step 2 (Q2)**: 內湖 112-2 美食餐廳帶 1000 元買蛋糕三明治夠不夠 (`g2_n24_q2_restaurant_budget.html`) `[VISUAL]`
+  - [ ] **Step 3 (Q3)**: 內湖 112-1 文具店鉛筆盒與自動筆買兩樣大約幾元 (`g2_n24_q3_stationery_estimate.html`) `[VISUAL]`
+  - [ ] **Step 4 (Q4)**: 永安 113-2 算式 299+200 最接近整百數定位 (`g2_n24_q4_numberline_estimate.html`) `[VISUAL]`
+  - [ ] **Step 5 (Q5)**: 獅湖 111-2 零用錢 203+199 大約多少錢整百匯流 (`g2_n24_q5_pocket_money_estimate.html`) `[VISUAL]`
+  - [ ] **Step 6 (Data & Gate)**: 題庫資料 `data/units/G2/N-2-4.json` 封裝與驗收守門員 `tools/verify_g2_n24.js` (Exit 0)
+  - [ ] **Step 7 (Integration)**: 更新 `curriculum.json` 狀態為 ready，CDP 實機雙分頁大廳驗收
 
 
+
+
+
+
+---
+
+# 🎯 當前執行工程：G2-N-2-3 加減應用問題真題題庫與互動教具交付 (PLAN+PR Protocol v3.1)
+
+> 規劃日期：2026-11-17  
+> 架構審核：通道三 (035 金鑰池 Gemini 2.5 Pro 首席架構師核准)  
+> 執行模式：PLAN+PR Protocol v3.1（雙簽門禁 + 工兵單步施工 + CDP 390px 實機出圖 + 軌道 B 眼睛覆核）  
+
+## 1. 核心規格與邊界 (Given-When-Then)
+
+- **Given (情境前提)**：
+  - 二年級第三單元 N-2-3【加減應用問題】需要建立真實考題題庫與互動微教具。
+  - 考題 100% 來自臺北市內湖國小（113-1/111-1）與高雄市獅湖國小（113-1）段考真題，精選 6 題涵蓋加數未知、被加數未知、減數未知、逆向比較（易錯）、進階兩步驟加減、高階兩步驟複合等題型，杜絕重複與死板純計算。
+  - 語音呼叫微軟曉臻高音質語音（`AudioManager.play(text)`），全站單例。
+- **When (觸發條件)**：
+  - 人類確認計畫後，派發工兵生成 `data/units/G2/N-2-3.json`、6 套互動微組件 `app/components/g2_n23_q*.html`，並撰寫專屬 CDP 驗證腳本 `tools/verify_g2_n23_cdp.js`。
+- **Then (交付成果)**：
+  - 6 題題庫 JSON 嚴格對齊真題原文、圖形要求與解答。
+  - 6 套日系繪本微組件支援 390px 視口單屏無滾動（高 $\le 420\text{px}$）、具備真實指針事件、零劇透。
+  - 執行 `tools/verify_g2_n23_cdp.js` 驗證 Exit Code 0，產出 `_scratch/verify/preview_390.png` 與 sidecar JSON。
+  - 經 AGY 本地實機多模態眼睛審核無文字壓線、無組件穿模後，更新 `data/curriculum.json` 並通過 `tools/verify_curriculum_131.js`。
+- **嚴格禁區**：
+  - 嚴禁 AGY 手寫業務代碼。
+  - 嚴禁靜態死圖或假按鈕。
+  - 學生作答前嚴禁在 DOM 渲染解析或答案提示。
+
+## 2. 通用功能與接口驗收地圖 (Feature Map)
+
+| 編號 | 功能模組 | 描述 | 驗收標準與指令 |
+| :--- | :--- | :--- | :--- |
+| **F-01** | **真題題庫資料契約** | `data/units/G2/N-2-3.json` 6 題真題封裝 | `node -e "const d=require('./data/units/G2/N-2-3.json'); console.log(d.questions.length);"` 回傳 6 |
+| **F-02** | **微教具動態渲染組件** | `app/components/g2_n23_q[1-6]_*.html` 6 套微教具 | `[VISUAL]` 390px 視口高 $\le 420\text{px}$，支援括號未知數與直式運算 |
+| **F-03** | **CDP 實機自動化硬門禁** | `tools/verify_g2_n23_cdp.js` 逐題實測 | 390×844 視口零溢出、零報錯、正錯解邏輯斷言全通過，Exit Code 0 |
+| **F-04** | **全站課綱 131 閉環總檢** | `tools/verify_curriculum_131.js` 納入 N-2-3 | 131 條目通過、N-2-3 標記 ready (6題) 且題庫組件齊全，Exit Code 0 |
+
+## 3. 微粒度單步施工清單 (Step-by-Step Checklist)
+
+- [x] **Step 1: 建立 N-2-3 題庫資料契約與 CDP 驗證骨架**
+  - 工兵生成 `data/units/G2/N-2-3.json`（6 題完整資料）與 `tools/verify_g2_n23_cdp.js` 測試框架。
+  - 驗收：`node -e "require('./data/units/G2/N-2-3.json')"` 成功解析。
+- [x] **Step 2: 實作 6 套互動微教具組件**
+  - Q1: `app/components/g2_n23_q1_cookies_demo.html` (起司草莓餅乾 Bar Model)
+  - Q2: `app/components/g2_n23_q2_pingpong_demo.html` (桌球社男女生加減互逆)
+  - Q3: `app/components/g2_n23_q3_anya_book_demo.html` (安妮亞看故事書進度條)
+  - Q4: `app/components/g2_n23_q4_jumprope_compare_demo.html` (跳繩比賽逆向比較線段)
+  - Q5: `app/components/g2_n23_q5_bus287_flow_demo.html` (287公車上下車兩步驟)
+  - Q6: `app/components/g2_n23_q6_fair_crepe_demo.html` (美食嘉年華購物兩步驟複合)
+  - 驗收：`node tools/verify_g2_n23_cdp.js` 退出碼 0。
+- [x] **Step 3: 實機截圖出圖與 AGY 軌道 B 多模態審查**
+  - 執行全域出圖腳本產出 `_scratch/verify/preview_390.png` 與 sidecar JSON。
+  - AGY 調用 `read_file` 進行眼睛覆核（無穿模、文字無壓線、單屏合規）。
+- [x] **Step 4: 課綱大廳 131 整合與收工**
+  - 更新 `data/curriculum.json` 中 N-2-3 狀態為 `ready`（6 題）。
+  - 執行 `node tools/verify_curriculum_131.js` 驗收 Exit Code 0。

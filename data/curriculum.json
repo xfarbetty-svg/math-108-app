@@ -121,17 +121,17 @@
           "code": "N-2-3",
           "title": "解題（加減應用問題）",
           "full_text": "解題：加減應用問題。加數、被加數、減數、被減數未知之應用解題。連結加與減的關係（R-2-4）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 6,
+          "verified_source": "臺北市內湖國小 113-1/111-1 與高雄市獅湖國小 113-1 段考真題"
         },
         {
           "code": "N-2-4",
           "title": "解題（簡單加減估算）",
           "full_text": "解題：簡單加減估算。具體生活情境。以百位數估算為主。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "臺北市內湖國小 111-2／112-1／112-2、高雄市永安國小 113-2 與高雄市獅湖國小 111-2 段考真題"
         },
         {
           "code": "N-2-5",
