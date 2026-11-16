@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-4-Q03 文具店整十數估算</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --sky: #4ea8de;
+  --lemon: #ffd166;
+  --coral: #ff8a65;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  padding: 4px 0;
+}
+.prod {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fdfbf7;
+  padding: 6px 2px 5px;
+  text-align: center;
+  transition: all 0.18s;
+}
+.prod svg { display: block; margin: 0 auto 3px; }
+.prod .p-name { font-size: 10.5px; font-weight: 800; display: block; }
+.prod .p-price { font-size: 11px; font-weight: 900; color: #b45309; display: block; }
+.prod.sel { border-color: var(--mint-deep); background: #eafaf4; transform: translateY(-2px); }
+/* 十格概數磁吸條 */
+.mag {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+.mag .bar { text-align: center; }
+.mag .bar .cells { display: inline-flex; gap: 2px; }
+.mag .bar .cell {
+  width: 12px; height: 18px;
+  border-radius: 3px;
+  background: #b9e4d6;
+  border: 1px solid var(--mint-deep);
+}
+.mag .bar .lbl { font-size: 10px; font-weight: 800; color: var(--ink-soft); display: block; margin-top: 2px; }
+.est-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--mint-deep);
+  background: #eafaf4;
+  border-radius: 999px;
+  padding: 4px 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 4px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>112-1 內湖 期中 四、1.(1)</small>文具店貨架展示：手電筒 42 元、自動鉛筆 29 元、鉛筆盒 39 元、剪刀 58 元。買一個鉛筆盒和一枝自動鉛筆，大約是幾元？</p>
+  </div>
+  <div class="card">
+    <div class="shelf" id="shelf"></div>
+    <div class="mag" id="mag">
+      <div class="bar"><span class="cells" id="cells-a"></span><span class="lbl">鉛筆盒</span></div>
+      <div class="bar"><span class="cells" id="cells-b"></span><span class="lbl">自動鉛筆</span></div>
+    </div>
+    <div class="est-hint" id="hint">點下方選項，看 39 和 29 吸到哪個整十數</div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var PRODS = [
+    { n: '手電筒', p: 42 },
+    { n: '自動鉛筆', p: 29 },
+    { n: '鉛筆盒', p: 39 },
+    { n: '剪刀', p: 58 }
+  ];
+  var ICONS = [
+    '<svg width="28" height="26" viewBox="0 0 28 26"><rect x="10" y="4" width="8" height="18" rx="2" fill="none" stroke="#ffd166" stroke-width="2"/><path d="M10 8 L6 4 L6 22 L10 18" fill="none" stroke="#ffd166" stroke-width="2" stroke-linejoin="round"/></svg>',
+    '<svg width="28" height="26" viewBox="0 0 28 26"><path d="M14 3 L14 19 M10 22 L18 22" stroke="#4ea8de" stroke-width="2.4" stroke-linecap="round"/></svg>',
+    '<svg width="28" height="26" viewBox="0 0 28 26"><rect x="5" y="9" width="18" height="12" rx="3" fill="none" stroke="#318a70" stroke-width="2.2"/><path d="M11 9 a3 3 0 0 1 6 0" fill="none" stroke="#318a70" stroke-width="2"/></svg>',
+    '<svg width="28" height="26" viewBox="0 0 28 26"><circle cx="9" cy="18" r="4" fill="none" stroke="#ff8a65" stroke-width="2.2"/><circle cx="19" cy="18" r="4" fill="none" stroke="#ff8a65" stroke-width="2.2"/><path d="M12 15 L18 6 M16 15 L10 6" stroke="#ff8a65" stroke-width="2.2" stroke-linecap="round"/></svg>'
+  ];
+  var CHOICES = ['70 元', '80 元', '90 元', '60 元'];
+  var ANSWER = 0;
+  var picked = -1;
+
+  var shelf = document.getElementById('shelf');
+  PRODS.forEach(function (prod, i) {
+    var d = document.createElement('div');
+    d.className = 'prod';
+    d.id = 'prod-' + i;
+    d.innerHTML = ICONS[i] + '<span class="p-name">' + prod.n + '</span><span class="p-price">' + prod.p + ' 元</span>';
+    shelf.appendChild(d);
+  });
+
+  function fillCells(id, tens) {
+    var box = document.getElementById(id);
+    box.innerHTML = '';
+    for (var i = 0; i < tens; i++) {
+      var c = document.createElement('i');
+      c.className = 'cell';
+      box.appendChild(c);
+    }
+  }
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      document.getElementById('prod-2').classList.add('sel');
+      document.getElementById('prod-1').classList.add('sel');
+      fillCells('cells-a', 4);
+      fillCells('cells-b', 3);
+      document.getElementById('hint').textContent = '39→約40（4 個十）、29→約30（3 個十），40＋30＝70 元，你選的是 ' + c;
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！39→約40、29→約30，40＋30＝70 元（精算 39＋29＝68，最接近的整十數正是 70）。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：39 最接近哪個整十數？29 最接近哪個整十數？把兩個概數加起來看看。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-4-Q03', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

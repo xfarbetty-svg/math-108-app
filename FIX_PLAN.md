@@ -176,13 +176,14 @@
 
 - **目標**：從 `EXAM REAL/G2/` 34 份實體段考中挑選出 5 道涵蓋生活購物、預算檢驗、整十整百概數之高階真題，由工兵梯隊派工封裝題庫與純 SVG 教具組件，經 CDP 390px 實機出圖與 AGY 視覺多模態眼睛審核，確認無誤後整合至前端大廳。
 - **題目清單**：
-  - [ ] **Step 1 (Q1)**: 內湖 111-2 體育用品店 3 物估算湊 500 元 (`g2_n24_q1_sports_estimate.html`) `[VISUAL]`
-  - [ ] **Step 2 (Q2)**: 內湖 112-2 美食餐廳帶 1000 元買蛋糕三明治夠不夠 (`g2_n24_q2_restaurant_budget.html`) `[VISUAL]`
-  - [ ] **Step 3 (Q3)**: 內湖 112-1 文具店鉛筆盒與自動筆買兩樣大約幾元 (`g2_n24_q3_stationery_estimate.html`) `[VISUAL]`
-  - [ ] **Step 4 (Q4)**: 永安 113-2 算式 299+200 最接近整百數定位 (`g2_n24_q4_numberline_estimate.html`) `[VISUAL]`
-  - [ ] **Step 5 (Q5)**: 獅湖 111-2 零用錢 203+199 大約多少錢整百匯流 (`g2_n24_q5_pocket_money_estimate.html`) `[VISUAL]`
-  - [ ] **Step 6 (Data & Gate)**: 題庫資料 `data/units/G2/N-2-4.json` 封裝與驗收守門員 `tools/verify_g2_n24.js` (Exit 0)
-  - [ ] **Step 7 (Integration)**: 更新 `curriculum.json` 狀態為 ready，CDP 實機雙分頁大廳驗收
+  - [x] **Step 1 (Q1)**: 內湖 111-2 體育用品店 3 物估算湊 500 元 (`g2_n24_q1_sports_estimate.html`) `[VISUAL]` (已由 AGY 實機眼睛審核 PASS，高 355px，零溢出)
+  - [x] **Step 2 (Q2)**: 內湖 112-2 美食餐廳帶 1000 元買蛋糕三明治夠不夠 (`g2_n24_q2_restaurant_budget.html`) `[VISUAL]` (已由 AGY 實機眼睛審核 PASS，高 321px，零溢出)
+  - [x] **Step 3 (Q3)**: 內湖 112-1 文具店鉛筆盒與自動筆買兩樣大約幾元 (`g2_n24_q3_stationery_estimate.html`) `[VISUAL]` (已由 AGY 實機眼睛審核 PASS，高 374px，零溢出)
+  - [x] **Step 4 (Q4)**: 永安 113-2 算式 299+200 最接近整百數定位 (`g2_n24_q4_numberline_estimate.html`) `[VISUAL]` (經外科手術精修游標初位，已由 AGY 實機眼睛審核 PASS，高 313px，零溢出)
+  - [x] **Step 5 (Q5)**: 獅湖 111-2 零用錢 203+199 大約多少錢整百匯流 (`g2_n24_q5_pocket_money_estimate.html`) `[VISUAL]` (已由 AGY 實機眼睛審核 PASS，高 311px，零溢出)
+  - [x] **Step 6 (Data & Gate)**: 題庫資料 `data/units/G2/N-2-4.json` 封裝與驗收守門員 `tools/verify_g2_n24.js` (Exit 0)
+  - [ ] **Step 7 (Integration & Deploy)**: 使用者確認截圖雙簽放行後，執行全站發布檢查與線上部署
+
 
 
 

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-4-Q05 零用錢整百匯流估算</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --sky: #4ea8de;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.banks { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 4px 0; }
+.bank { text-align: center; }
+.bank svg { display: block; margin: 0 auto 2px; }
+.bank .b-lbl { font-size: 10.5px; font-weight: 800; color: var(--ink-soft); display: block; }
+.bank .b-val { font-size: 13px; font-weight: 900; color: #b45309; display: block; }
+.flow-arrow { font-size: 16px; font-weight: 900; color: var(--mint-deep); }
+.est-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--mint-deep);
+  background: #eafaf4;
+  border-radius: 999px;
+  padding: 4px 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 4px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>111-2 獅湖 期中 一、5</small>小歆有 203 元，媽媽又給她 199 元，小歆大約有多少錢？</p>
+  </div>
+  <div class="card">
+    <div class="banks">
+      <div class="bank" id="bank-a">
+        <svg width="46" height="40" viewBox="0 0 46 40"><ellipse cx="23" cy="34" rx="16" ry="5" fill="#e5d5c0"/><path d="M8 20 a15 13 0 0 1 30 0 v10 a4 4 0 0 1 -4 4 H12 a4 4 0 0 1 -4 -4 Z" fill="#f4a261" stroke="#b45309" stroke-width="1.8"/><rect x="19" y="2" width="8" height="7" rx="2" fill="#b45309"/><text x="23" y="27" font-size="9" font-weight="900" text-anchor="middle" fill="#7c2d12">203</text></svg>
+        <span class="b-lbl">小歆原有</span><span class="b-val">203 元</span>
+      </div>
+      <span class="flow-arrow">＋</span>
+      <div class="bank" id="bank-b">
+        <svg width="46" height="40" viewBox="0 0 46 40"><ellipse cx="23" cy="34" rx="16" ry="5" fill="#e5d5c0"/><path d="M8 20 a15 13 0 0 1 30 0 v10 a4 4 0 0 1 -4 4 H12 a4 4 0 0 1 -4 -4 Z" fill="#8ecae6" stroke="#1d3557" stroke-width="1.8"/><rect x="19" y="2" width="8" height="7" rx="2" fill="#1d3557"/><text x="23" y="27" font-size="9" font-weight="900" text-anchor="middle" fill="#0b2545">199</text></svg>
+        <span class="b-lbl">媽媽給</span><span class="b-val">199 元</span>
+      </div>
+      <span class="flow-arrow">＝</span>
+      <div class="bank" id="bank-sum">
+        <svg width="46" height="40" viewBox="0 0 46 40"><rect x="6" y="10" width="34" height="24" rx="5" fill="#eafaf4" stroke="#318a70" stroke-width="2"/><text id="sum-val" x="23" y="27" font-size="10" font-weight="900" text-anchor="middle" fill="#318a70">？</text></svg>
+        <span class="b-lbl">概數盒</span><span class="b-val">大約？元</span>
+      </div>
+    </div>
+    <div class="est-hint" id="hint">點下方選項：兩筆錢各自吸到最接近的整百數，再匯流</div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['400 元', '300 元', '500 元', '200 元'];
+  var ANSWER = 0;
+  var picked = -1;
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      document.getElementById('bank-a').style.transform = 'translateY(-2px)';
+      document.getElementById('bank-b').style.transform = 'translateY(-2px)';
+      document.getElementById('sum-val').textContent = '200＋200';
+      document.getElementById('hint').textContent = '203→約200、199→約200，200＋200＝400 元，你選的是 ' + c;
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！203→約200、199→約200，200＋200＝400 元（精算 203＋199＝402，最接近 400）。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：203 和 199 各自最接近哪個整百數？兩個概數加起來是多少？';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-4-Q05', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

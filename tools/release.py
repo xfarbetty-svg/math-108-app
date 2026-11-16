@@ -129,6 +129,7 @@ def main():
         ["node", "tools/verify_audio_singleton.js"],
         ["node", "tools/verify_g2_n21_cdp.js"],
         ["node", "tools/verify_g2_n22_cdp.js"],
+        ["node", "tools/verify_g2_n23_cdp.js"],
         ["node", "tools/verify_circle_concept.js"],
         ["node", "tools/verify_g3_new_concepts.js"],
         ["node", "tools/verify_g3_remaining_concepts.js"],

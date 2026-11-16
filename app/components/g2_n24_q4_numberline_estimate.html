@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-4-Q04 數線估算 299＋200</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --sky: #4ea8de;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+.numline-card { padding: 8px 10px 4px; }
+.numline-card svg { display: block; width: 100%; height: auto; }
+.est-hint {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--mint-deep);
+  background: #eafaf4;
+  border-radius: 999px;
+  padding: 4px 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>113-2 永安 期中 一、3</small>下面哪一個數最接近「299＋200」的答案？</p>
+  </div>
+  <div class="card numline-card">
+    <svg viewBox="0 0 360 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="數線 0 到 600">
+      <line x1="20" y1="96" x2="340" y2="96" stroke="#3d3a34" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M336 92 L344 96 L336 100" fill="none" stroke="#3d3a34" stroke-width="2.5" stroke-linejoin="round"/>
+      <g id="ticks"></g>
+      <line id="snap-line" x1="0" y1="30" x2="0" y2="92" stroke="#318a70" stroke-width="1.6" stroke-dasharray="3 3" opacity="0"/>
+      <path id="arc" d="" fill="none" stroke="#ff8a65" stroke-width="2.6" stroke-dasharray="5 4" opacity="0"/>
+      <text id="arc-label" x="0" y="0" font-size="12" font-weight="900" fill="#c2410c" text-anchor="middle" opacity="0">＋200</text>
+      <circle id="land" cx="0" cy="96" r="6" fill="#ff8a65" opacity="0"/>
+      <g id="cursor">
+        <circle cx="0" cy="96" r="6" fill="#4ea8de"/>
+        <rect x="-15" y="38" width="30" height="18" rx="4" fill="#4ea8de"/>
+        <text x="0" y="51.5" font-size="11" font-weight="900" text-anchor="middle" fill="#fff">299</text>
+      </g>
+    </svg>
+    <div class="est-hint" id="hint">點下方選項：299 會吸到最接近的整百數，再向右跳 200</div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['500', '400', '300', '600'];
+  var ANSWER = 0;
+  var picked = -1;
+  var X0 = 20, X1 = 340, VMAX = 600;
+  function vx(v) { return X0 + (X1 - X0) * v / VMAX; }
+
+  var ticks = document.getElementById('ticks');
+  for (var v = 0; v <= 600; v += 100) {
+    var t = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    t.setAttribute('x1', vx(v)); t.setAttribute('x2', vx(v));
+    t.setAttribute('y1', 90); t.setAttribute('y2', 102);
+    t.setAttribute('stroke', '#3d3a34'); t.setAttribute('stroke-width', '2');
+    ticks.appendChild(t);
+    var lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    lbl.setAttribute('x', vx(v)); lbl.setAttribute('y', 118);
+    lbl.setAttribute('font-size', '11'); lbl.setAttribute('font-weight', '800');
+    lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('fill', '#3d3a34');
+    lbl.textContent = v;
+    ticks.appendChild(lbl);
+  }
+
+  // 初始化游標位置在 299（約 300 刻度左側）
+  var initX = vx(299);
+  var curInit = document.getElementById('cursor');
+  curInit.querySelector('circle').setAttribute('cx', initX);
+  curInit.querySelector('rect').setAttribute('x', initX - 15);
+  curInit.querySelector('text').setAttribute('x', initX);
+
+  function showPath(vFrom, vTo, jump) {
+    var fx = vx(vFrom), tx = vx(vTo);
+    var snap = document.getElementById('snap-line');
+    snap.setAttribute('x1', fx); snap.setAttribute('x2', fx); snap.setAttribute('opacity', 1);
+    var arc = document.getElementById('arc');
+    arc.setAttribute('d', 'M' + fx + ' 96 Q' + ((fx + tx) / 2) + ' 30 ' + tx + ' 96');
+    arc.setAttribute('opacity', 1);
+    var al = document.getElementById('arc-label');
+    al.setAttribute('x', (fx + tx) / 2); al.setAttribute('y', 34);
+    al.textContent = jump; al.setAttribute('opacity', 1);
+    var land = document.getElementById('land');
+    land.setAttribute('cx', tx); land.setAttribute('opacity', 1);
+    var cur = document.getElementById('cursor');
+    cur.querySelector('circle').setAttribute('cx', fx);
+    cur.querySelector('rect').setAttribute('x', fx - 15);
+    cur.querySelector('text').setAttribute('x', fx);
+  }
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      showPath(300, 500, '＋200');
+      document.getElementById('hint').textContent = '299 只差 1 就到 300：299→約300，300＋200＝500，你選的是 ' + c;
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！299→約300，300＋200＝500；精算 299＋200＝499，和 500 只差 1。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：299 在數線上非常靠近哪個整百數？先吸上去，再往右跳 200 格看看落在哪。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-4-Q04', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
