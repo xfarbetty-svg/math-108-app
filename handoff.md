@@ -1,39 +1,42 @@
 # 斷點交接日誌 (Handoff Log)
 
-## ⏯️ 目前做到哪（Session 56：2026-11-17 04:50 收工存證）
+## ⏯️ 目前做到哪（Session 57：2026-11-17 05:12 實體交付收工存證）
 
-本 Session 聚焦「直式對位 Bug 實機修復」、「高階思維真題規格升級 (v2.0)」與「Q1 彩帶線段模型真題組件完工」，並落實「帶眼睛法官」實機視覺閉環：
+本 Session 依照使用者「拒絕頻繁提問打擾、不跳題、一次性大步推進」最高指令，完成 **G2-N-2-1 與 G2-N-2-2 雙單元 10 題高階真題 100% 完工、全量 CDP 驗真、視覺親眼審查通過並實體部署上線**：
 
-1. **🛠️ 實機排版瑕疵修復 (Bug Fixed)**：
-   - 修復 [`app/components/g2_vertical_addition_subtraction_lab.html`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/app/components/g2_vertical_addition_subtraction_lab.html) Act 3（規律大發現）與 Act 4（小小挑戰賽）直式結果列少了一格運算子佔位 div 導致答案整體向左錯位一格的 Bug。
-   - 經 `node tools/verify_g2_concept_labs.js` 驗收：**Exit Code 0**，25 套全綠。
+1. **🛠️ G2-N-2-1 題目升級與去重（修復圖文不符與重複題型）**：
+   - 剔除 Q1/Q2 撞題的「150 是幾個十」與「120 是幾個十」，將 Q1 升級為段考高階思維題：**「用 3、0、8 三張數字卡，排出的最大三位數是多少？（830）」**。
+   - 產出日系卡牌動態教具 [`app/components/g2_n21_q1_ten_group_demo.html`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/app/components/g2_n21_q1_ten_group_demo.html)，百十個位卡槽動態互動。
+   - 外科手術修復 Q4（300 與 299）右側 9 條十格條橫向溢出問題，改為直立排列，完美居中。
+   - 經 `node tools/verify_g2_n21_cdp.js` 驗收：**Exit Code 0**，5 題全綠。
 
-2. **📋 G2-N-2-2 高階思維真題規格落盤 (Plan Updated)**：
-   - 採納使用者建議，全面捨棄死板純計算，改為線段模型、文具店生活題與天平數感真題。
-   - 規格報告：[`reports/PLAN_G2_N22_EXAM_AUDIT.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/PLAN_G2_N22_EXAM_AUDIT.md)
-   - 宏觀計畫：[`FIX_PLAN.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/FIX_PLAN.md#L160-L173)
+2. **🎖️ G2-N-2-2 五道高階段考真題全量完工 (100% 大滿貫)**：
+   - **Q1**: 彩帶 90cm 剪掉一些剩 58cm 線段模型（`g2_n22_q1_tape_ribbon_demo.html`）
+   - **Q2**: 文具店買手電筒 42 元與自動鉛筆 29 元進位直式小黑板（`g2_n22_q2_store_add_demo.html`）
+   - **Q3**: 珊珊 55 元買自動鉛筆 29 元退位直式小黑板（`g2_n22_q3_store_sub_demo.html`）
+   - **Q4**: 44+34 與 44+22 高階數感天平比大小（`g2_n22_q4_balance_compare_demo.html`）
+   - **Q5**: 緞帶剪掉 47 剩 68 原長跨百加法拼合（`g2_n22_q5_ribbon_splice_demo.html`）
+   - 封裝題庫資料：[`data/units/G2/N-2-2.json`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/data/units/G2/N-2-2.json)
+   - 經 `node tools/verify_g2_n22_cdp.js` 驗收：**Exit Code 0**，5 題全綠（高度 306~351px 嚴格 $\le 420\text{px}$）。
 
-3. **🎖️ Q1 彩帶線段模型組件完工與視覺審核通過 (Step 1 Done)**：
-   - 產出檔案：[`app/components/g2_n22_q1_tape_ribbon_demo.html`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/app/components/g2_n22_q1_tape_ribbon_demo.html)
-   - 題目：112-1 內湖國小期中考 五、5（彩帶 90cm 用掉一些剩 58cm）。
-   - 視覺驗收：CDP 截圖 `_scratch/verify/preview_g2_n22_q1.png`，AGY 親眼多模態審查通過（58:32 真確比例、零溢出、二位數退位直式動態展開）。
-   - 計畫打勾：`FIX_PLAN.md` Step 1 已勾選。
+3. **👁️ 雙簽視覺驗收閉環 (AGY 親眼審查)**：
+   - 執行 `tools/capture_g2_10q.js` 產出 10 張 390px 實機截圖（`_scratch/verify/shot_g2_n_2_*.png`），AGY 多模態視覺審查確認：**10 題皆零橫向溢出、零穿模、字體清爽、算理圖解真確**。
 
-4. **🌐 實體發布至 Cloudflare Pages**：
-   - 透過 `tools/release.py` 自動化硬閘門完成全量檢測、commit、push 與部署，更新已上線至 `https://math-108.pages.dev`。
+4. **🌐 課綱大廳解鎖與自動化發布**：
+   - 更新 `data/curriculum.json`，G2 解鎖狀態正式推進至 **2/24**（N-2-1 與 N-2-2 開放）。
+   - 透過 `tools/release.py` 自動化硬閘門完成 11 道守門員檢測、Git Commit、Push，並實體部署至 Cloudflare Pages：`https://math-108.pages.dev`（Build `20261117_050849`）。
 
 ---
 
 ## 🚦 目前狀態
 
-- **已完成**：G2-N-2-2 概念實驗室直式對位修復 + Q1 真題教具完工與線上發布。
-- **當前斷點**：`FIX_PLAN.md` Step 1 已完成，待進行 Step 2。
+- **已完成**：G2-N-2-1（5題）與 G2-N-2-2（5題）雙單元真題題庫與專屬互動教具 100% 落地並上線。
+- **當前斷點**：G2-N-2-1、N-2-2 大滿貫完成，下一步將切入 **G2-N-2-3（解題：加減應用）**。
 
 ---
 
 ## ➡️ 下一步（開工接續任務）
 
-1. **推進 Step 2 (Q2)**：
-   - 題目：內湖國小 112-1 四、文具店生活題（買手電筒 42 元與自動鉛筆 29 元進位直式）。
-   - 產出組件：`app/components/g2_n22_q2_store_add_demo.html`。
-2. **依序完成 Q3~Q5** 並封裝 `data/units/G2/N-2-2.json` 題庫。
+1. **推進 G2-N-2-3（解題：加減應用）**：
+   - 依據單元工廠化流水線，一次性精選段考真題（兩步驟加減、乘法前置情境題）、編寫教具組件與封裝題庫 JSON。
+   - 批次出圖驗收，解鎖 G2 3/24。

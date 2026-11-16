@@ -156,19 +156,19 @@ html, body {
       <div class="num-card">0</div>
       <div class="num-card">8</div>
     </div>
-    <div class="arrow-down">排排看：百位放最大數字 8</div>
+    <div class="arrow-down" id="arrow-hint">排排看：點選下方選項放入定位板</div>
     <div class="board-slots">
-      <div class="slot filled">
+      <div class="slot" id="slot-box-h">
         <span class="slot-tag">百位</span>
-        <span class="slot-val" id="slot-h">8</span>
+        <span class="slot-val" id="slot-h">?</span>
       </div>
-      <div class="slot filled">
+      <div class="slot" id="slot-box-t">
         <span class="slot-tag">十位</span>
-        <span class="slot-val" id="slot-t">3</span>
+        <span class="slot-val" id="slot-t">?</span>
       </div>
-      <div class="slot filled">
+      <div class="slot" id="slot-box-u">
         <span class="slot-tag">個位</span>
-        <span class="slot-val" id="slot-u">0</span>
+        <span class="slot-val" id="slot-u">?</span>
       </div>
     </div>
   </div>
@@ -209,6 +209,10 @@ html, body {
     document.getElementById('slot-h').textContent = h;
     document.getElementById('slot-t').textContent = t;
     document.getElementById('slot-u').textContent = u;
+    document.getElementById('slot-box-h').classList.add('filled');
+    document.getElementById('slot-box-t').classList.add('filled');
+    document.getElementById('slot-box-u').classList.add('filled');
+    document.getElementById('arrow-hint').textContent = '你排出的數是：' + h + t + u;
   }
 
   var banner = document.getElementById('banner');
