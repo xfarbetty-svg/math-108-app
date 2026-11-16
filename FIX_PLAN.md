@@ -148,3 +148,10 @@
 2. **語音硬性標準**：各 HTML 一律包含 `<script src="../js/audio_manager.js"></script>` 並調用 `window.AudioManager.play()`，禁用 `speechSynthesis`。
 3. **單屏緊湊**：教具高度嚴格 $\le 420\text{px}$，手機視口 390px 寬度 100% 入屏免橫向滑動。
 4. **單步即停與雙簽放行**：AGY 每推進一步，必須收到工兵的「PR 實機驗證存根」，審核通過後方可進行下一步。
+
+---
+
+## 5. 新階段：二年級真題題庫封裝與概念小教室雙軌閉環 (PLAN+PR)
+> 詳細計畫書請參閱獨立新檔：[`reports/PLAN_G2_EXAM_AND_LAB_AUDIT.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/PLAN_G2_EXAM_AND_LAB_AUDIT.md)  
+> 推進策略：使用者選定 **方案 A（單元單兵閉環推進法）**，首發試點：**N-2-1 一千以內的數**。
+

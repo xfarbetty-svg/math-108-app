@@ -175,6 +175,7 @@ async function openUnit(code, initialQIndex = 0) {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error("HTTP " + res.status);
     state.unit = await res.json();
+    if (!state.unit.code) state.unit.code = code;
   } catch (err) {
     showDegraded("<!-- DEGRADED:單元題庫載入失敗（" + url + "）→ " + err.message + "。請以本機伺服器開啟：python -m http.server 8000 -->");
     return;
@@ -257,7 +258,7 @@ function setUnitMode(mode) {
     const btnSpeak = $("btnSpeak");
     if (btnSpeak) btnSpeak.style.display = "none";
     const frame = $("conceptFrame");
-    const code = state.unit ? state.unit.code : null;
+    const code = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
     if (frame && code && CONCEPT_COMPONENTS[code]) {
       if (!frame.src || !frame.src.includes(CONCEPT_COMPONENTS[code])) {
         frame.src = CONCEPT_COMPONENTS[code];
@@ -287,7 +288,7 @@ let heightTimer = null;
 
 function renderStage() {
   showView("stageView");
-  const code = state.unit ? state.unit.code : null;
+  const code = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
   const tabs = $("unitModeTabs");
   const btnConcept = $("btnModeConcept");
   const btnExam = $("btnModeExam");

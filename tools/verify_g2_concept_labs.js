@@ -34,7 +34,7 @@ function resolveUnits() {
   const argIdx = process.argv.indexOf('--unit');
   let arg = argIdx !== -1 ? process.argv[argIdx + 1] : null;
   const compDir = path.join(process.cwd(), 'app', 'components');
-  const all = fs.readdirSync(compDir).filter((f) => /^g2_.*\.html$/.test(f)).sort();
+  const all = fs.readdirSync(compDir).filter((f) => /^g2_.*_lab\.html$/.test(f)).sort();
   if (!arg) {
     if (all.length === 0) throw new Error('app/components/ 下找不到任何 g2_*.html');
     return all;

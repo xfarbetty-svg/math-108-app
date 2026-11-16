@@ -101,7 +101,7 @@
 - **One-Screen 單屏緊湊防抖**：純 SVG/CSS 日系繪本風，教具高 $\le 420\text{px}$，外層總高 $\le 740\text{px}$ 免滑動。
 - **機械化三硬閘門驗收體系**：
   - 閘門一（靜態資料契約）：`verify_<unit>.js`（結構、stem、正解、教具檔案存在）。
-  - 閘門二（動態 CDP 實機測量）：`verify_<unit>_cdp.js`（390×844 視口實測高 $\le 420\text{px}$、零報錯）。
+  - 閘門二（動態 CDP 實機測量與視覺審查）：`verify_<unit>_cdp.js`（390×844 視口實測高 $\le 420\text{px}$、零報錯）＋ `capture_preview.js` 實機截圖經 AGY 眼睛視覺審查無穿模無文字遮擋。
   - 閘門三（課綱大廳總檢）：`verify_curriculum_131.js`（131 條目、開放單元累計、帳實閉環）。
 
 ---
