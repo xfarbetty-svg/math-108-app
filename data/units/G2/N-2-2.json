@@ -1,0 +1,127 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G2-N-2-2",
+  "curriculum_code": "N-2-2",
+  "code": "N-2-2",
+  "grade": 2,
+  "unit_name": "加減算式與直式計算",
+  "source_paper": "臺北市內湖國小 112-1 與高雄市獅湖國小 113-1 二年級期中數學試卷",
+  "verified_by": "段考真題高階思維審核（PLAN_G2_N22_EXAM_AUDIT.md）",
+  "questions": [
+    {
+      "id": "G2-N-2-2-Q01",
+      "exam_source": "內湖國小 112-1 期中",
+      "section": "五、應用題",
+      "question_num": "5",
+      "title": "彩帶剪掉剩餘線段模型",
+      "stem": "一條彩帶長 90 公分，包裝禮物用掉一些後，還剩下 58 公分。包裝禮物用掉了幾公分的彩帶？",
+      "choices": ["28 公分", "32 公分", "38 公分", "42 公分"],
+      "answer_index": 1,
+      "answer_raw": "32 公分",
+      "component": "tape_ribbon_demo",
+      "component_path": "components/g2_n22_q1_tape_ribbon_demo.html",
+      "explanation": {
+        "concept": "課綱重點：減法線段模型（部分-全體）——已知全長 90cm 與剩餘 58cm，求用掉的部分用減法 90 - 58。",
+        "steps": [
+          "看線段圖：全長是 90 公分。",
+          "扣掉剩下的 58 公分，就是用掉的部分：90 − 58。",
+          "直式計算：個位 0 不夠減 8，向十位借 1 當 10，10 − 8 ＝ 2。",
+          "十位 9 借 1 剩 8，8 − 5 ＝ 3。所以用掉了 32 公分。"
+        ],
+        "trap": "如果誤把 90 和 58 相加變成 148 公分，用掉的竟然比整條彩帶還長，完全不合理！"
+      }
+    },
+    {
+      "id": "G2-N-2-2-Q02",
+      "exam_source": "內湖國小 112-1 期中",
+      "section": "四、應用題",
+      "question_num": "1",
+      "title": "文具店買文具（進位加法）",
+      "stem": "小明買了一支手電筒 42 元和一支自動鉛筆 29 元，一共要付多少元？",
+      "choices": ["71 元", "61 元", "70 元", "69 元"],
+      "answer_index": 0,
+      "answer_raw": "71 元",
+      "component": "store_add_demo",
+      "component_path": "components/g2_n22_q2_store_add_demo.html",
+      "explanation": {
+        "concept": "課綱重點：二位數直式進位加法——個位相加滿十，必須向十位進 1。",
+        "steps": [
+          "列出算式：42 ＋ 29。",
+          "個位相加：2 ＋ 9 ＝ 11，個位寫 1，向十位進 1。",
+          "十位相加：1（進位）＋ 4 ＋ 2 ＝ 7。",
+          "合起來是 71 元。"
+        ],
+        "trap": "忘記將個位滿十進位的 1 加進十位，就會誤算成 61 元！"
+      }
+    },
+    {
+      "id": "G2-N-2-2-Q03",
+      "exam_source": "內湖國小 112-1 期中",
+      "section": "四、應用題",
+      "question_num": "2",
+      "title": "買文具找錢（退位減法）",
+      "stem": "珊珊有 55 元，買了一支 29 元的自動鉛筆，還剩下多少元？",
+      "choices": ["26 元", "36 元", "24 元", "34 元"],
+      "answer_index": 0,
+      "answer_raw": "26 元",
+      "component": "store_sub_demo",
+      "component_path": "components/g2_n22_q3_store_sub_demo.html",
+      "explanation": {
+        "concept": "課綱重點：二位數直式退位減法——個位不夠減時，向十位借 1 當 10 再減。",
+        "steps": [
+          "列出算式：55 − 29。",
+          "個位計算：5 不夠減 9，向十位借 1 當 10，15 − 9 ＝ 6。",
+          "十位計算：十位 5 被借走 1 剩下 4，4 − 2 ＝ 2。",
+          "答案剩下 26 元。"
+        ],
+        "trap": "十位借出 1 之後忘記扣掉，直接用 5 − 2 ＝ 3 就會誤算成 36 元！"
+      }
+    },
+    {
+      "id": "G2-N-2-2-Q04",
+      "exam_source": "獅湖國小 113-1 期中",
+      "section": "三、填空題",
+      "question_num": "(2)",
+      "title": "天平數感比大小",
+      "stem": "不計算，在 □ 中填入 ＞、＜ 或 ＝：\n44 ＋ 34　□　44 ＋ 22",
+      "choices": ["＞", "＜", "＝"],
+      "answer_index": 0,
+      "answer_raw": "＞",
+      "component": "balance_compare_demo",
+      "component_path": "components/g2_n22_q4_balance_compare_demo.html",
+      "explanation": {
+        "concept": "課綱重點：加法等量與數感比較——被加數相同時，加數越大，和就越大。",
+        "steps": [
+          "觀察兩邊算式：左邊是 44 ＋ 34，右邊是 44 ＋ 22。",
+          "兩邊都有相同的 44（基礎相同）。",
+          "比較另一個加數：34 ＞ 22。",
+          "加得比較多的一邊比較大，所以 44 ＋ 34 ＞ 44 ＋ 22。"
+        ],
+        "trap": "這題不需要花時間硬算直式！直接用數感觀察加數大小，1 秒就能看出答案。"
+      }
+    },
+    {
+      "id": "G2-N-2-2-Q05",
+      "exam_source": "內湖國小 112-1 期中",
+      "section": "五、應用題",
+      "question_num": "3",
+      "title": "緞帶拼合（加法跨百進位）",
+      "stem": "一條緞帶剪掉 47 公分後，還剩下 68 公分。這條緞帶原來長多少公分？",
+      "choices": ["115 公分", "105 公分", "114 公分", "21 公分"],
+      "answer_index": 0,
+      "answer_raw": "115 公分",
+      "component": "ribbon_splice_demo",
+      "component_path": "components/g2_n22_q5_ribbon_splice_demo.html",
+      "explanation": {
+        "concept": "課綱重點：加法還原原長與跨百二位數直式——剪掉的部分 ＋ 剩下的部分 ＝ 原來全長。",
+        "steps": [
+          "列出算式：47 ＋ 68。",
+          "個位相加：7 ＋ 8 ＝ 15，個位寫 5，向十位進 1。",
+          "十位相加：1（進位）＋ 4 ＋ 6 ＝ 11，十位寫 1，向百位進 1。",
+          "百位寫 1，得到 115 公分。"
+        ],
+        "trap": "看到「剪掉」就反射動作寫成減法 68 − 47 ＝ 21，會把題目徹底看反！求「原來」必須把剪掉的加回來。"
+      }
+    }
+  ]
+}

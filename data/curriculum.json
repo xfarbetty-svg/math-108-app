@@ -113,9 +113,9 @@
           "code": "N-2-2",
           "title": "加減算式與直式計算",
           "full_text": "加減算式與直式計算：用位值理解多位數加減計算的原理與方法。初期可操作、橫式、直式等方法並陳，二年級最後歸結於直式計算，做為後續更大位數計算之基礎。直式計算的基礎為位值概念與基本加減法，教師須說明直式計算的合理性。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "臺北市內湖國小 112-1 與高雄市獅湖國小 113-1 段考真題"
         },
         {
           "code": "N-2-3",

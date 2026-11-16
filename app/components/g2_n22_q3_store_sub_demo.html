@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-2-Q03 買文具找錢（二位數退位減法）</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint: #7bc9b2;
+  --mint-deep: #318a70;
+  --lemon: #ffd166;
+  --coral: #ff8a65;
+  --sky: #4ea8de;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+/* 情境卡 + 直式借位小黑板 */
+.sub-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 6px;
+  gap: 10px;
+}
+.wallet-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  background: #fdfbf7;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+}
+.pill {
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 900;
+}
+.pill-have { background: #e0f2fe; color: #0369a1; }
+.pill-cost { background: #fee2e2; color: #b91c1c; }
+
+.vertical-board {
+  background: #2b3a4a;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: "Courier New", monospace;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.3;
+  min-width: 110px;
+  text-align: right;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+.borrow-row { font-size: 11px; color: var(--lemon); height: 14px; }
+.v-line { border-bottom: 2px solid #fff; margin: 3px 0; }
+.v-ans { color: var(--lemon); }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>112-1 內湖 期中 四、2</small>珊珊有 55 元，買了一支 29 元的自動鉛筆，還剩下多少元？</p>
+  </div>
+  <div class="card sub-stage">
+    <div class="wallet-box">
+      <div class="info-row">
+        <span>👛 原有</span>
+        <span class="pill pill-have">55 元</span>
+      </div>
+      <div class="info-row">
+        <span>✏️ 買筆</span>
+        <span class="pill pill-cost">－29 元</span>
+      </div>
+    </div>
+    <div class="vertical-board">
+      <div class="borrow-row" id="v-borrow">⁴ ⑩ </div>
+      <div>  5 5</div>
+      <div>－2 9</div>
+      <div class="v-line"></div>
+      <div class="v-ans" id="v-res">? 6</div>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['26 元', '36 元', '24 元', '34 元'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      if (c === '26 元') {
+        document.getElementById('v-borrow').textContent = '⁴ ⑩ ';
+        document.getElementById('v-res').textContent = '2 6';
+      } else if (c === '36 元') {
+        document.getElementById('v-borrow').textContent = '  ';
+        document.getElementById('v-res').textContent = '3 6';
+      } else {
+        document.getElementById('v-borrow').textContent = '  ';
+        document.getElementById('v-res').textContent = c.replace(' 元', '');
+      }
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！個位 5 不夠減 9，向十位借 1 當 10，15−9＝6；十位 5 借 1 剩 4，4−2＝2，剩下 26 元。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：個位 5 不夠減 9，要向十位借位！十位借出 1 之後只剩下 4 喔。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-2-Q03', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
