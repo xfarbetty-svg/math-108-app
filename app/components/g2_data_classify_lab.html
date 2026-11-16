@@ -279,6 +279,7 @@
         <!-- Act 1 -->
         <div id="act-1-view" class="act-panel">
             <div class="title-box">文具大整理</div>
+            <p id="act1-hint" style="font-size: 13px; color: #555; margin: 0 0 6px 0; text-align: center; font-weight: bold;">👇 點選散落的文具，親手把它們收進對應的盒子！</p>
             <div class="stationery-area" id="drop-zone">
                 <!-- Items will be generated here -->
             </div>
@@ -338,6 +339,11 @@
         <!-- Act 4 -->
         <div id="act-4-view" class="act-panel hidden">
             <div class="title-box">統計小專家</div>
+            <div class="ref-summary-box" style="width: 100%; background: #fff8e7; border: 2px dashed var(--ink); border-radius: 10px; padding: 6px 10px; margin-bottom: 10px; font-size: 13px; display: flex; justify-content: space-around; align-items: center;">
+                <div>🍎 蘋果：<b>7</b> 個 (正 ㄒ)</div>
+                <div>🍌 香蕉：<b>5</b> 個 (正)</div>
+                <div>🍓 草莓：<b>8</b> 個 (正 丅)</div>
+            </div>
             <div id="quiz-container" style="width: 100%;">
                 <!-- Q1 -->
                 <div class="quiz-card" id="q1">
@@ -393,25 +399,68 @@
     };
 
     // 初始化 Act 1 文具
+    const act1Counts = { pencil: 0, eraser: 0, ruler: 0 };
+    const targets = { pencil: 'box-pencil', eraser: 'box-eraser', ruler: 'box-ruler' };
+    const targetNames = { pencil: '鉛筆盒', eraser: '橡皮擦盒', ruler: '直尺盒' };
+
     function initAct1() {
         const zone = document.getElementById('drop-zone');
         zone.innerHTML = '';
+        act1Counts.pencil = 0;
+        act1Counts.eraser = 0;
+        act1Counts.ruler = 0;
         const types = ['pencil', 'eraser', 'ruler'];
-        const counts = { pencil: 4, eraser: 3, ruler: 3 };
+        const totalCounts = { pencil: 4, eraser: 3, ruler: 3 };
         
-        Object.keys(counts).forEach(type => {
-            for(let i=0; i<counts[type]; i++) {
+        Object.keys(totalCounts).forEach(type => {
+            for(let i=0; i<totalCounts[type]; i++) {
                 const el = document.createElement('div');
                 el.className = `item ${type}`;
                 el.dataset.type = type;
-                el.style.left = Math.random() * 300 + 20 + 'px';
-                el.style.top = Math.random() * 100 + 20 + 'px';
+                el.dataset.sorted = "false";
+                el.style.left = Math.random() * 280 + 20 + 'px';
+                el.style.top = Math.random() * 90 + 20 + 'px';
                 el.style.transform = `rotate(${Math.random()*360}deg)`;
+                el.style.cursor = 'pointer';
                 el.innerHTML = getSVG(type);
+
+                // 小朋友親自點選分類
+                el.onclick = () => {
+                    if (el.dataset.sorted === "true") return;
+                    el.dataset.sorted = "true";
+                    el.style.pointerEvents = 'none';
+                    const box = document.getElementById(targets[type]).getBoundingClientRect();
+                    const stage = document.querySelector('.stage').getBoundingClientRect();
+                    el.style.left = (box.left - stage.left + 30) + 'px';
+                    el.style.top = (box.top - stage.top + 20) + 'px';
+                    el.style.transform = 'rotate(0deg) scale(0.8)';
+                    act1Counts[type]++;
+                    const badge = document.getElementById(`count-${type}`);
+                    badge.innerText = act1Counts[type];
+                    badge.style.opacity = 1;
+
+                    audio.play(`收進${targetNames[type]}！現在有 ${act1Counts[type]} 個！`);
+                    checkAct1Complete();
+                };
+
                 zone.appendChild(el);
             }
         });
-        document.querySelectorAll('.count-badge').forEach(b => b.style.opacity = 0);
+        document.querySelectorAll('.count-badge').forEach(b => {
+            b.innerText = '0';
+            b.style.opacity = 0;
+        });
+        const hint = document.getElementById('act1-hint');
+        if (hint) hint.innerHTML = '👇 點選散落的文具，親手把它們收進對應的盒子！';
+    }
+
+    function checkAct1Complete() {
+        const totalSorted = act1Counts.pencil + act1Counts.eraser + act1Counts.ruler;
+        if (totalSorted === 10) {
+            const hint = document.getElementById('act1-hint');
+            if (hint) hint.innerHTML = '🎉 <b>太棒了！你親手把所有文具都分門別類整理好了！</b>';
+            audio.play("好厲害！所有文具都整齊地收好了，你是整理小達人！");
+        }
     }
 
     function getSVG(type) {
@@ -429,8 +478,8 @@
 
         const btn = document.getElementById('action-btn');
         if(act === 1) {
-            btn.innerText = "一鍵分類";
-            audio.play("按照特徵分門別類，雜亂的東西一下子就整理清楚了！");
+            btn.innerText = "自動歸位";
+            audio.play("點一點散落的文具，把他們收進對應的盒子吧！");
         } else if(act === 2) {
             btn.innerText = "畫正字記號";
             audio.play("一個完整的正字有 5 劃，表示 5 個，數起來又快又清楚！");
@@ -447,22 +496,11 @@
 
     function handleMainAction() {
         if(currentAct === 1) {
-            const items = document.querySelectorAll('.item');
-            const targets = { pencil: 'box-pencil', eraser: 'box-eraser', ruler: 'box-ruler' };
-            const counts = { pencil: 0, eraser: 0, ruler: 0 };
-
+            const items = Array.from(document.querySelectorAll('.item')).filter(el => el.dataset.sorted !== "true");
             items.forEach((item, idx) => {
                 setTimeout(() => {
-                    const type = item.dataset.type;
-                    const box = document.getElementById(targets[type]).getBoundingClientRect();
-                    const stage = document.querySelector('.stage').getBoundingClientRect();
-                    item.style.left = (box.left - stage.left + 30) + 'px';
-                    item.style.top = (box.top - stage.top + 20) + 'px';
-                    item.style.transform = 'rotate(0deg) scale(0.8)';
-                    counts[type]++;
-                    document.getElementById(`count-${type}`).innerText = counts[type];
-                    document.getElementById(`count-${type}`).style.opacity = 1;
-                }, idx * 150);
+                    item.click();
+                }, idx * 180);
             });
         } else if(currentAct === 2) {
             drawAllTally();
@@ -531,8 +569,17 @@
                 b.className = 'block';
                 b.style.backgroundColor = colors[key];
                 b.style.opacity = 0;
+                b.style.display = 'flex';
+                b.style.alignItems = 'center';
+                b.style.justifyContent = 'center';
+                b.style.color = '#3d3a34';
+                b.style.fontSize = '12px';
+                b.style.fontWeight = '900';
+                b.style.cursor = 'pointer';
+                b.innerText = String(i + 1); /* 由下而上清晰標註 1, 2, 3... */
+
                 b.onclick = () => {
-                    audio.play(`${key === 'apple' ? '蘋果' : key === 'banana' ? '香蕉' : '草莓'}有 ${data[key]} 個`);
+                    audio.play(`${key === 'apple' ? '蘋果' : key === 'banana' ? '香蕉' : '草莓'}第 ${i + 1} 個積木！`);
                     b.classList.add('active');
                     setTimeout(() => b.classList.remove('active'), 500);
                 };
