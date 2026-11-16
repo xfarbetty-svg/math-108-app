@@ -135,19 +135,19 @@
         },
         {
           "code": "N-2-5",
-          "title": "解題（100 元、500 元、100）",
+          "title": "解題（100 元、500 元、1000 元）",
           "full_text": "解題：100 元、500 元、1000 元。以操作活動為主兼及計算。容許多元策略，協助建立數感。包含已學習之更小幣值。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "臺北市內湖國小 112-2 與高雄市獅湖國小 111-2 二年級期中數學試卷（工單 T_G2_N25_MONEY.md 指定規格）"
         },
         {
           "code": "N-2-6",
           "title": "乘法",
           "full_text": "乘法：乘法的意義與應用。在學習乘法過程，逐步發展「倍」的概念，做為統整乘法應用情境的語言。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "高雄市獅湖國小 113-1 期末與臺北市內湖國小 113-1／112-1／111-1 期末段考真題（工單 T-G2-N26 指定規格）"
         },
         {
           "code": "N-2-7",

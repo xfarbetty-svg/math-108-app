@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-6-Q01 乘法定義概念鏡</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 10px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.mirror { text-align: center; }
+.mirror-title { font-size: 11px; font-weight: 900; color: #c05621; letter-spacing: 2px; margin-bottom: 2px; }
+.matrix-box { display: flex; justify-content: center; }
+.matrix-label { display: inline-block; margin-top: 3px; border-radius: 999px; padding: 3px 14px; font-size: 12px; font-weight: 900; background: #ffedd5; color: #c05621; transition: all 0.2s; }
+.matrix-label.alt { background: #e0f2fe; color: #0369a1; }
+.toggle-btn {
+  margin-top: 5px;
+  border: 2px solid #c05621;
+  background: #fff;
+  color: #c05621;
+  border-radius: 999px;
+  padding: 4px 16px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.toggle-btn:active { transform: scale(0.94); }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>113-1 獅湖 期末 一、3</small>下面哪一個說法不是「3×5」？</p>
+  </div>
+  <div class="card mirror">
+    <div class="mirror-title">✦ 乘法定義概念鏡 ✦</div>
+    <div class="matrix-box" id="matrix"></div>
+    <div class="matrix-label" id="matrix-label">3 的 5 倍：5 組 3 顆</div>
+    <div><button type="button" class="toggle-btn" id="toggle">照镜子看「5 有 3 個」長怎樣</button></div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['5 有 3 個', '3 的 5 倍', '3 有 5 個', '3＋3＋3＋3＋3'];
+  var ANSWER = 0;
+  var picked = -1;
+  var mode = 'a'; /* a = 3 的 5 倍（5 組 3 顆）; b = 5 有 3 個（3 組 5 顆） */
+
+  var matrix = document.getElementById('matrix');
+  var label = document.getElementById('matrix-label');
+  var toggle = document.getElementById('toggle');
+
+  function dot(x, y, r, fill, stroke) {
+    return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.5"/>';
+  }
+
+  function render() {
+    var svg = '<svg width="300" height="96" viewBox="0 0 300 96">';
+    if (mode === 'a') {
+      /* 3×5：5 組，每組 3 顆（直排 3 顆） */
+      for (var g = 0; g < 5; g++) {
+        svg += '<rect x="' + (8 + g * 58) + '" y="10" width="46" height="66" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-width="1.4"/>';
+        for (var d = 0; d < 3; d++) {
+          svg += dot(31 + g * 58, 26 + d * 22, 7.5, '#fb923c', '#c05621');
+        }
+      }
+      svg += '<text x="150" y="92" font-size="10" font-weight="900" text-anchor="middle" fill="#9a3412">每組 3 顆 × 共 5 組 ＝ 15 顆</text>';
+    } else {
+      /* 5×3：3 組，每組 5 顆（直排 5 顆） */
+      for (var g2 = 0; g2 < 3; g2++) {
+        svg += '<rect x="' + (8 + g2 * 96) + '" y="6" width="86" height="76" rx="8" fill="#eff6ff" stroke="#7dd3fc" stroke-width="1.4"/>';
+        for (var d2 = 0; d2 < 5; d2++) {
+          svg += dot(25 + g2 * 96, 20 + d2 * 15, 6, '#38bdf8', '#0369a1');
+        }
+      }
+      svg += '<text x="150" y="94" font-size="10" font-weight="900" text-anchor="middle" fill="#075985">每組 5 顆 × 共 3 組 ＝ 15 顆</text>';
+    }
+    svg += '</svg>';
+    matrix.innerHTML = svg;
+    label.textContent = mode === 'a' ? '3 的 5 倍：5 組 3 顆（3×5）' : '5 有 3 個：3 組 5 顆（5×3）';
+    label.className = mode === 'a' ? 'matrix-label' : 'matrix-label alt';
+    toggle.textContent = mode === 'a' ? '照鏡子看「5 有 3 個」長怎樣' : '照鏡子看「3 的 5 倍」長怎樣';
+  }
+
+  toggle.addEventListener('click', function () { mode = mode === 'a' ? 'b' : 'a'; render(); hide(); });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！「5 有 3 個」是每份 5、有 3 份，記作 5×3；而 3×5 是「3 的 5 倍」「3 有 5 個」或 3＋3＋3＋3＋3。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：照照概念鏡——每份是 3、有 5 份才是 3×5；每份是 5、只有 3 份的是哪一個說法？';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-6-Q01', answer: ANSWER };
+
+  render();
+})();
+</script>
+</body>
+</html>

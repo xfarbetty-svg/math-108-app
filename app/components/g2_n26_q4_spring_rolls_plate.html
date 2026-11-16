@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-6-Q04 美食春捲盤</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 10px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.table { text-align: center; }
+.table-title { font-size: 11px; font-weight: 900; color: #92400e; letter-spacing: 2px; margin-bottom: 3px; }
+.plate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; justify-items: center; }
+.plate {
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 2px;
+  transition: all 0.15s;
+  background: radial-gradient(circle, #f8fafc 58%, #e2e8f0 60%, #cbd5e1 100%);
+  box-shadow: 0 2px 5px rgba(60, 40, 10, 0.15);
+}
+.plate.lit { box-shadow: 0 0 0 3px #f59e0b; background: radial-gradient(circle, #fffbeb 58%, #fde68a 60%, #f59e0b 100%); }
+.hint-line { margin-top: 3px; font-size: 11px; font-weight: 800; color: #92400e; }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>113-1 內湖 期末 六、(1)</small>家人點了 6 盤炸春捲，每盤有 4 個炸春捲，請問他們一共點了多少個炸春捲？</p>
+  </div>
+  <div class="card table">
+    <div class="table-title">✦ 木桌托盤：點一盤亮一盤 ✦</div>
+    <div class="plate-grid" id="plate-grid"></div>
+    <div class="hint-line" id="hint">點盤子分組數一數</div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['24 個', '20 個', '28 個', '10 個'];
+  var ANSWER = 0;
+  var picked = -1;
+  var lit = 0;
+
+  var grid = document.getElementById('plate-grid');
+  var hint = document.getElementById('hint');
+
+  function plateSVG(l) {
+    /* 一盤 4 條金黃春捲 */
+    var rollFill = l ? '#f59e0b' : '#fbbf24';
+    var rollDark = l ? '#b45309' : '#d97706';
+    var s = '<svg width="58" height="58" viewBox="0 0 58 58">';
+    s += '<circle cx="29" cy="29" r="26" fill="none" stroke="#94a3b8" stroke-width="1.2"/>';
+    var pos = [[18, 14], [32, 14], [18, 32], [32, 32]];
+    for (var i = 0; i < 4; i++) {
+      s += '<rect x="' + pos[i][0] + '" y="' + pos[i][1] + '" width="16" height="10" rx="5" fill="' + rollFill + '" stroke="' + rollDark + '" stroke-width="1.4"/>';
+      s += '<line x1="' + (pos[i][0] + 3) + '" y1="' + (pos[i][1] + 5) + '" x2="' + (pos[i][0] + 13) + '" y2="' + (pos[i][1] + 5) + '" stroke="' + rollDark + '" stroke-width="0.8" stroke-dasharray="2 2"/>';
+    }
+    s += '</svg>';
+    return s;
+  }
+
+  function render() {
+    var html = '';
+    for (var p = 0; p < 6; p++) {
+      html += '<div class="plate' + (p < lit ? ' lit' : '') + '" data-i="' + p + '" title="第 ' + (p + 1) + ' 盤">' + plateSVG(p < lit) + '</div>';
+    }
+    grid.innerHTML = html;
+    Array.prototype.forEach.call(grid.children, function (el) {
+      el.addEventListener('click', function () {
+        var i = Number(el.getAttribute('data-i'));
+        lit = Math.min(6, i + 1);
+        render();
+        hide();
+      });
+    });
+    if (lit === 0) {
+      hint.textContent = '點盤子分組數一數';
+    } else if (lit === 6) {
+      hint.textContent = '6 盤全部點亮：4×6＝24 個炸春捲！';
+    } else {
+      hint.textContent = '點到第 ' + lit + ' 盤：4 連加 ' + (lit - 1) + ' 次＋4 ＝ ' + (lit * 4) + ' 個';
+    }
+  }
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！每盤 4 個、共 6 盤，4×6＝24，一共 24 個炸春捲（驗算：4＋4＋4＋4＋4＋4＝24）。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：一盤亮起來是 4，兩盤是 8……6 盤全部點亮是多少？這是「幾個 4」的乘法問題喔。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-6-Q04', answer: ANSWER };
+
+  render();
+})();
+</script>
+</body>
+</html>

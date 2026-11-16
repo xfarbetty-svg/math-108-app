@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-6-Q02 美麗珠串手鍊</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 10px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.stand { text-align: center; }
+.stand-title { font-size: 11px; font-weight: 900; color: #b83b8a; letter-spacing: 2px; margin-bottom: 2px; }
+.shelf { display: flex; flex-direction: column; gap: 1px; align-items: center; }
+.hint-chips { display: flex; justify-content: center; gap: 8px; margin-top: 3px; }
+.hint-chip {
+  border: 2px solid #f3c5e2;
+  background: #fff;
+  color: #b83b8a;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 11.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.hint-chip.on-unit { border-color: #e11d8f; background: #fce7f3; box-shadow: 0 0 0 3px rgba(225, 29, 143, 0.15); }
+.hint-chip.on-count { border-color: #7c3aed; background: #ede9fe; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>113-1 內湖 期末 一、(3)</small>一串手鍊有 9 顆珠子，7 串有多少顆珠子？乘法算式記作？</p>
+  </div>
+  <div class="card stand">
+    <div class="stand-title">✦ 手鍊陳列架 ✦</div>
+    <div class="shelf" id="shelf"></div>
+    <div class="hint-chips">
+      <button type="button" class="hint-chip" id="chip-unit">單位量：每串 9 顆</button>
+      <button type="button" class="hint-chip" id="chip-count">個數：共 7 串</button>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['9 × 7', '7 × 9', '9 × 9', '7 × 7'];
+  var ANSWER = 0;
+  var picked = -1;
+  var BEADS = ['#ef7bab', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444', '#14b8a6', '#f97316', '#6366f1'];
+
+  var shelf = document.getElementById('shelf');
+  var chipUnit = document.getElementById('chip-unit');
+  var chipCount = document.getElementById('chip-count');
+  var highlight = null; /* 'unit' | 'count' | null */
+
+  function render() {
+    var html = '';
+    for (var s = 0; s < 7; s++) {
+      var line = '<svg width="344" height="16" viewBox="0 0 344 16">';
+      for (var b = 0; b < 9; b++) {
+        var x = 6 + b * 38;
+        if (highlight === 'unit') {
+          line += '<circle cx="' + (x + 6) + '" cy="8" r="5.5" fill="' + BEADS[b % BEADS.length] + '" stroke="#e11d8f" stroke-width="2"/>';
+        } else {
+          line += '<circle cx="' + (x + 6) + '" cy="8" r="5.5" fill="' + BEADS[b % BEADS.length] + '" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>';
+        }
+      }
+      line += '<text x="340" y="12" font-size="9" font-weight="900" text-anchor="end" fill="#9d8f7f">' + (s + 1) + '</text>';
+      line += '</svg>';
+      html += line;
+    }
+    shelf.innerHTML = html;
+    chipUnit.className = highlight === 'unit' ? 'hint-chip on-unit' : 'hint-chip';
+    chipCount.className = highlight === 'count' ? 'hint-chip on-count' : 'hint-chip';
+    if (highlight === 'count') {
+      shelf.innerHTML = html.replace(/<svg/g, '<svg style="background:linear-gradient(180deg,rgba(124,58,237,0.10),rgba(124,58,237,0.02));border-radius:6px;"');
+    }
+  }
+
+  chipUnit.addEventListener('click', function () { highlight = highlight === 'unit' ? null : 'unit'; render(); hide(); });
+  chipCount.addEventListener('click', function () { highlight = highlight === 'count' ? null : 'count'; render(); hide(); });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！單位量「每串 9 顆」寫前面，個數「7 串」寫後面，記作 9×7＝63 顆珠子。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：被乘數要寫單位量——每串幾顆珠子？有幾串？哪一個寫在前面？';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-6-Q02', answer: ANSWER };
+
+  render();
+})();
+</script>
+</body>
+</html>
