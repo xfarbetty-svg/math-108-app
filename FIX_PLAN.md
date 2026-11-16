@@ -182,7 +182,7 @@
   - [x] **Step 4 (Q4)**: 永安 113-2 算式 299+200 最接近整百數定位 (`g2_n24_q4_numberline_estimate.html`) `[VISUAL]` (經外科手術精修游標初位，已由 AGY 實機眼睛審核 PASS，高 313px，零溢出)
   - [x] **Step 5 (Q5)**: 獅湖 111-2 零用錢 203+199 大約多少錢整百匯流 (`g2_n24_q5_pocket_money_estimate.html`) `[VISUAL]` (已由 AGY 實機眼睛審核 PASS，高 311px，零溢出)
   - [x] **Step 6 (Data & Gate)**: 題庫資料 `data/units/G2/N-2-4.json` 封裝與驗收守門員 `tools/verify_g2_n24.js` (Exit 0)
-  - [ ] **Step 7 (Integration & Deploy)**: 使用者確認截圖雙簽放行後，執行全站發布檢查與線上部署
+  - [x] **Step 7 (Integration & Deploy)**: 使用者確認截圖雙簽放行，全站守門員全綠通過，執行 Cloudflare Pages 正式發布上線
 
 
 

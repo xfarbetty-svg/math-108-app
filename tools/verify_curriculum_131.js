@@ -122,6 +122,18 @@ try {
   check(false, 'data/units/G2/N-2-3.json 驗證失敗 → ' + err.message);
 }
 
+// 5e. G2 N-2-4 題庫 SSOT 存在且 5 題（111-2/112-2/112-1 內湖 / 113-2 永安 / 111-2 獅湖估算真題）
+try {
+  const unitN24 = JSON.parse(fs.readFileSync('data/units/G2/N-2-4.json', 'utf8'));
+  check(unitN24.questions && unitN24.questions.length === 5, 'data/units/G2/N-2-4.json 題庫 5 題（SSOT）');
+  unitN24.questions.forEach((q) => {
+    if (!fs.existsSync('app/' + q.component_path)) check(false, '教具檔缺失: ' + q.component_path);
+  });
+  check(true, 'N-2-4 五題教具 component_path 全部存在於 app/');
+} catch (err) {
+  check(false, 'data/units/G2/N-2-4.json 驗證失敗 → ' + err.message);
+}
+
 // 6. shell.js 已對齊新骨架（name 欄位、已開放 x/y、upcoming 卡片流）
 const shell = fs.readFileSync('app/shell.js', 'utf8');
 check(shell.includes('g.name'), 'shell.js renderNav 使用 name 欄位');
