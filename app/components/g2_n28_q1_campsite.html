@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-8-Q01 夏令營分組比賽</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 10px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 4px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 6px 10px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 14.5px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.camp { text-align: center; }
+.camp-title { font-size: 11px; font-weight: 900; color: #0e7490; letter-spacing: 2px; margin-bottom: 2px; }
+.camp-stage { display: flex; justify-content: center; }
+.camp-line { font-size: 13.5px; font-weight: 900; color: #0e7490; margin-top: 2px; min-height: 17px; }
+.flip-btn {
+  margin-top: 3px;
+  border: 2px solid #0e7490;
+  background: #fff;
+  color: #0e7490;
+  border-radius: 999px;
+  padding: 3px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.flip-btn:active { transform: scale(0.94); }
+.mode-label { display: inline-block; margin-left: 8px; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 900; background: #cffafe; color: #0e7490; }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card camp">
+    <p class="stem"><small>114-1 永安 期末 五、(1)</small>夏令營分組比賽，每一組有 6 個男生和 4 個女生，8 組共有幾個人？</p>
+    <div class="camp-title">✦ 夏令營分組露營盤 ✦</div>
+    <div class="camp-stage" id="camp-stage"></div>
+    <div class="camp-line" id="camp-line"></div>
+    <div>
+      <button type="button" class="flip-btn" id="flip">展開 8 頂帳篷</button>
+      <span class="mode-label" id="mode-label">目前：1 頂帳篷</span>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['80 個人', '72 個人', '48 個人', '32 個人'];
+  var ANSWER = 0;
+  var picked = -1;
+  var revealed = false;
+
+  var stage = document.getElementById('camp-stage');
+  var line = document.getElementById('camp-line');
+  var flipBtn = document.getElementById('flip');
+  var modeLabel = document.getElementById('mode-label');
+
+  function tent(x, y, w, h, fill, stroke) {
+    var s = '';
+    s += '<path d="M' + x + ' ' + (y + h) + ' L' + (x + w / 2) + ' ' + y + ' L' + (x + w) + ' ' + (y + h) + ' Z" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.5" stroke-linejoin="round"/>';
+    s += '<path d="M' + (x + w / 2 - 5) + ' ' + (y + h) + ' L' + (x + w / 2) + ' ' + (y + h - 9) + ' L' + (x + w / 2 + 5) + ' ' + (y + h) + ' Z" fill="#fef3c7"/>';
+    return s;
+  }
+
+  /* 每組：6 藍點（男）+ 4 紅點（女）合流為 10 人 */
+  function campSVG(isRevealed) {
+    var s = '<svg width="316" height="150" viewBox="0 0 316 150">';
+    if (!isRevealed) {
+      s += tent(38, 40, 74, 46, '#a7f3d0', '#047857');
+      s += '<text x="75" y="104" font-size="11" font-weight="900" text-anchor="middle" fill="#3d3a34">第 1 組的帳篷</text>';
+      for (var i = 0; i < 6; i++) {
+        s += '<circle cx="' + (44 + i * 11) + '" cy="120" r="4" fill="#93c5fd" stroke="#1e40af" stroke-width="1"/>';
+      }
+      for (var j = 0; j < 4; j++) {
+        s += '<circle cx="' + (116 + j * 11) + '" cy="120" r="4" fill="#fca5a5" stroke="#b91c1c" stroke-width="1"/>';
+      }
+      s += '<text x="40" y="138" font-size="10" font-weight="900" fill="#1e40af">男生 6 個</text>';
+      s += '<text x="112" y="138" font-size="10" font-weight="900" fill="#b91c1c">女生 4 個</text>';
+      s += '<text x="238" y="70" font-size="12" font-weight="900" text-anchor="middle" fill="#64748b">還有 7 組…</text>';
+      s += '<text x="238" y="90" font-size="11" font-weight="900" text-anchor="middle" fill="#64748b">？個人在營地</text>';
+    } else {
+      s += tent(6, 46, 40, 26, '#a7f3d0', '#047857');
+      s += '<text x="26" y="86" font-size="9.5" font-weight="900" text-anchor="middle" fill="#065f46">6＋4</text>';
+      s += '<text x="26" y="98" font-size="9.5" font-weight="900" text-anchor="middle" fill="#065f46">＝10 人</text>';
+      for (var k = 0; k < 8; k++) {
+        var tx = 62 + k * 31;
+        s += tent(tx, 46, 26, 18, '#fcd34d', '#b45309');
+        s += '<text x="' + (tx + 13) + '" y="76" font-size="8.5" font-weight="900" text-anchor="middle" fill="#92400e">10</text>';
+      }
+      s += '<text x="180" y="94" font-size="10" font-weight="900" text-anchor="middle" fill="#64748b">8 組，每組 10 人</text>';
+      s += '<rect x="42" y="108" width="212" height="16" rx="8" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>';
+      s += '<text x="148" y="120" font-size="11" font-weight="900" text-anchor="middle" fill="#065f46">10 人 × 8 組 ＝ 10×8 ＝ 80</text>';
+      s += '<text x="148" y="142" font-size="11" font-weight="900" text-anchor="middle" fill="#3d3a34">8 組共有 80 人</text>';
+    }
+    s += '</svg>';
+    return s;
+  }
+
+  function render() {
+    stage.innerHTML = campSVG(revealed);
+    if (revealed) {
+      line.textContent = '先加：6＋4＝10（人／組）→ 再乘：10×8';
+      modeLabel.textContent = '目前：已展開';
+      flipBtn.textContent = '收回帳篷';
+    } else {
+      line.textContent = '每一組有 6 個男生和 4 個女生';
+      modeLabel.textContent = '目前：1 頂帳篷';
+      flipBtn.textContent = '展開 8 頂帳篷';
+    }
+  }
+
+  flipBtn.addEventListener('click', function () { revealed = !revealed; render(); hide(); });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, answer: '', msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！先算每組 6＋4＝10 人，再算 10×8＝80 人。';
+      return { ok: true, answer: CHOICES[picked] };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：兩步驟要先把每組的男生和女生合起來（6＋4＝10），再乘以 8 組，不是只算男生或女生。';
+    return { ok: false, answer: CHOICES[picked] };
+  };
+
+  window.__q = { id: 'G2-N-2-8-Q01', correct_index: ANSWER, choices: CHOICES };
+
+  render();
+})();
+</script>
+</body>
+</html>
