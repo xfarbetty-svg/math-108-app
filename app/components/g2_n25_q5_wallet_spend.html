@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-5-Q05 零用錢錢包</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.scene { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.wallet-zone {
+  border: 2px solid #d97706;
+  border-radius: 10px;
+  background: #fdf7ec;
+  padding: 6px 8px;
+  text-align: center;
+  min-width: 150px;
+}
+.wallet-zone h4 { font-size: 10.5px; font-weight: 900; color: #854d0e; margin-bottom: 3px; }
+.bills { display: flex; justify-content: center; flex-wrap: wrap; gap: 3px; min-height: 26px; }
+.bill {
+  border: none; background: none; padding: 0; cursor: pointer; line-height: 0;
+  transition: transform 0.18s;
+}
+.bill.sel { transform: translateY(-5px); }
+.book {
+  border: 2px solid #93c5fd;
+  border-radius: 10px;
+  background: #eff6ff;
+  padding: 6px 10px;
+  text-align: center;
+}
+.book span { display: block; font-size: 11px; font-weight: 900; color: #1d4ed8; }
+.picked {
+  display: inline-block; margin-top: 6px; border-radius: 999px; padding: 3px 14px;
+  font-size: 11.5px; font-weight: 900; background: #fdf7ec; color: #854d0e; transition: all 0.2s;
+}
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>111-2 獅湖 期中</small>小歆原有 1 張 500 元和 3 張 100 元，買了一本 380 元的字典，還剩下多少元？</p>
+  </div>
+  <div class="card">
+    <div class="scene">
+      <div class="wallet-zone">
+        <h4>小歆的錢包（點鈔票付錢）</h4>
+        <div class="bills" id="bills"></div>
+      </div>
+      <div class="book">
+        <svg width="34" height="28" viewBox="0 0 34 28"><rect x="6" y="4" width="22" height="20" rx="2" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><line x1="10" y1="4" x2="10" y2="24" stroke="#1d4ed8" stroke-width="1.8"/><line x1="14" y1="10" x2="24" y2="10" stroke="#93c5fd" stroke-width="1.6"/><line x1="14" y1="15" x2="24" y2="15" stroke="#93c5fd" stroke-width="1.6"/></svg>
+        <span>字典 380 元</span>
+      </div>
+    </div>
+    <div class="picked" id="picked-chip">已挑出：0 元</div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['420 元', '520 元', '320 元', '480 元'];
+  var ANSWER = 0;
+  var picked = -1;
+  /* 錢包內容：1 張 500 元 + 3 張 100 元（依題幹，不變） */
+  var WALLET = [500, 100, 100, 100];
+  var paid = [];
+
+  var billsBox = document.getElementById('bills');
+  var chip = document.getElementById('picked-chip');
+
+  function billSvg(v) {
+    if (v === 500) {
+      return '<svg width="44" height="20" viewBox="0 0 44 20"><rect x="1" y="2" width="42" height="16" rx="2.5" fill="#cdeffd" stroke="#1d6f9e" stroke-width="1.5"/><text x="21.5" y="13.5" font-size="8.5" font-weight="900" text-anchor="middle" fill="#14496b">500</text></svg>';
+    }
+    return '<svg width="40" height="20" viewBox="0 0 40 20"><rect x="1" y="2" width="38" height="16" rx="2.5" fill="#fde8d7" stroke="#b45309" stroke-width="1.5"/><text x="20" y="13.5" font-size="8.5" font-weight="900" text-anchor="middle" fill="#7a3c06">100</text></svg>';
+  }
+
+  function render() {
+    var sum = 0;
+    paid.forEach(function (v) { sum += v; });
+    chip.textContent = '已挑出：' + sum + ' 元';
+  }
+
+  WALLET.forEach(function (v, idx) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bill';
+    b.setAttribute('aria-label', v + ' 元鈔票');
+    b.innerHTML = billSvg(v);
+    b.addEventListener('click', function () {
+      var i = paid.indexOf(idx);
+      if (i >= 0) { paid.splice(i, 1); b.classList.remove('sel'); }
+      else { paid.push(idx); b.classList.add('sel'); }
+      render();
+      hide();
+    });
+    billsBox.appendChild(b);
+  });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！500＋300＝800，800－380＝420，小歆還剩下 420 元。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：先把錢包裡所有的錢加起來（500＋100＋100＋100），再減去字典的 380 元。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-5-Q05', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

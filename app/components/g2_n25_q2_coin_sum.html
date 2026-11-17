@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-5-Q02 錢幣計數盤</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.trays { display: flex; justify-content: center; gap: 6px; }
+.tray {
+  flex: 1; max-width: 118px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fdfbf7;
+  padding: 6px 4px 5px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.tray.flash { border-color: #d97706; background: #fef7e8; }
+.tray h4 { font-size: 10.5px; font-weight: 900; color: #854d0e; margin-bottom: 3px; }
+.stack { min-height: 30px; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 2px; }
+.tray .num { display: block; font-size: 13px; font-weight: 900; color: var(--ink); }
+.ex-rows { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
+.ex-btn {
+  border: 2px solid #d97706;
+  background: #fff;
+  color: #b45309;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.ex-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.ex-btn:not(:disabled):active { transform: scale(0.95); }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>112-2 內湖 期中 一、⑸</small>四個百、十七個十和十二個一合起來是多少元？</p>
+  </div>
+  <div class="card">
+    <div class="trays">
+      <div class="tray" id="tray-h">
+        <h4>百元鈔區</h4>
+        <div class="stack" id="stack-h"></div>
+        <span class="num" id="num-h">4 張</span>
+      </div>
+      <div class="tray" id="tray-t">
+        <h4>十元硬幣區</h4>
+        <div class="stack" id="stack-t"></div>
+        <span class="num" id="num-t">17 個</span>
+      </div>
+      <div class="tray" id="tray-o">
+        <h4>一元硬幣區</h4>
+        <div class="stack" id="stack-o"></div>
+        <span class="num" id="num-o">12 個</span>
+      </div>
+    </div>
+    <div class="ex-rows">
+      <button type="button" class="ex-btn" id="ex-ones">滿十換十：10 個一 → 1 個十</button>
+      <button type="button" class="ex-btn" id="ex-tens">滿十換百：10 個十 → 1 張百</button>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['582 元', '472 元', '572 元', '592 元'];
+  var ANSWER = 0;
+  var picked = -1;
+  var h = 4, t = 17, o = 12;
+
+  function iconH() {
+    return '<svg width="24" height="15" viewBox="0 0 24 15"><rect x="1" y="1.5" width="22" height="12" rx="2" fill="#cdeffd" stroke="#1d6f9e" stroke-width="1.3"/><text x="12" y="10.5" font-size="6.5" font-weight="900" text-anchor="middle" fill="#14496b">100</text></svg>';
+  }
+  function iconT() {
+    return '<svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.8" fill="#f4e5c3" stroke="#a97b1f" stroke-width="1.3"/><text x="8" y="11" font-size="6.5" font-weight="900" text-anchor="middle" fill="#7a5410">10</text></svg>';
+  }
+  function iconO() {
+    return '<svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="#eef1f4" stroke="#8a857b" stroke-width="1.2"/></svg>';
+  }
+
+  function render() {
+    var s = '';
+    for (var i = 0; i < Math.min(h, 8); i++) s += iconH();
+    document.getElementById('stack-h').innerHTML = s;
+    document.getElementById('num-h').textContent = h + ' 張';
+    s = '';
+    for (var j = 0; j < Math.min(t, 20); j++) s += iconT();
+    document.getElementById('stack-t').innerHTML = s;
+    document.getElementById('num-t').textContent = t + ' 個';
+    s = '';
+    for (var k = 0; k < Math.min(o, 20); k++) s += iconO();
+    document.getElementById('stack-o').innerHTML = s;
+    document.getElementById('num-o').textContent = o + ' 個';
+    document.getElementById('ex-ones').disabled = o < 10;
+    document.getElementById('ex-tens').disabled = t < 10;
+  }
+
+  function flash(id) {
+    var el = document.getElementById(id);
+    el.classList.add('flash');
+    setTimeout(function () { el.classList.remove('flash'); }, 350);
+  }
+
+  document.getElementById('ex-ones').addEventListener('click', function () {
+    if (o >= 10) { o -= 10; t += 1; flash('tray-o'); flash('tray-t'); render(); hide(); }
+  });
+  document.getElementById('ex-tens').addEventListener('click', function () {
+    if (t >= 10) { t -= 10; h += 1; flash('tray-t'); flash('tray-h'); render(); hide(); }
+  });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！400＋170＋12＝582（12 個一進位成 1 個十、17 個十進位成 1 個百，變成 5 個百、8 個十、2 個一）。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：用「滿十換十、滿十換百」把 12 個一和 17 個十進位，數數看最後幾個百、幾個十、幾個一。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-5-Q02', answer: ANSWER };
+
+  render();
+})();
+</script>
+</body>
+</html>

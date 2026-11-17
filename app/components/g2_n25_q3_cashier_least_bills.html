@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-5-Q03 收銀台付款天平</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 10px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 14px; font-weight: 800; line-height: 1.4; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.counter { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.coat {
+  border: 2px solid #f3c6b4; border-radius: 10px; background: #fdf3ee;
+  padding: 5px 8px; text-align: center;
+}
+.coat span { display: block; font-size: 10.5px; font-weight: 900; color: #b45309; }
+.change-box {
+  border: 2px dashed #a1a1aa; border-radius: 10px; background: #fafafa;
+  padding: 5px 10px; text-align: center;
+}
+.change-box span { display: block; font-size: 10.5px; font-weight: 900; color: #52525b; }
+.change-box b { font-size: 13px; }
+.tag-arrow { font-size: 15px; font-weight: 900; color: var(--ink-soft); }
+
+.balance { margin-top: 5px; border-top: 1px dashed var(--line); padding-top: 5px; text-align: center; }
+.balance h4 { font-size: 10.5px; font-weight: 900; color: #1d6f9e; letter-spacing: 1px; margin-bottom: 4px; }
+.stepper { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.stepper button {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid #1d6f9e; background: #fff; color: #1d6f9e;
+  font-size: 15px; font-weight: 900; cursor: pointer; transition: all 0.15s;
+}
+.stepper button:active { transform: scale(0.92); }
+.stepper .count { font-size: 12.5px; font-weight: 900; min-width: 130px; }
+.pay-state {
+  display: inline-block; margin-top: 5px; border-radius: 999px; padding: 3px 12px;
+  font-size: 11.5px; font-weight: 900; background: #fee2e2; color: #991b1b; transition: all 0.2s;
+}
+.pay-state.ok { background: #dcfce7; color: #166534; }
+
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 7px 5px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.35;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>111-2 獅湖 期中 二</small>小明帶 1000 元買了 765 元的外套，老闆要找回多少元？如果小明只用百元鈔和十元硬幣付 765 元，最少要拿幾張百元鈔？</p>
+  </div>
+  <div class="card">
+    <div class="counter">
+      <div class="coat">
+        <svg width="40" height="30" viewBox="0 0 40 30"><path d="M13 5 L17 3 L20 6 L23 3 L27 5 L29 12 L26 12 L26 26 L14 26 L14 12 L11 12 Z" fill="#f9d9c9" stroke="#b45309" stroke-width="1.6"/></svg>
+        <span>外套 765 元</span>
+      </div>
+      <div class="tag-arrow">→</div>
+      <div class="change-box">
+        <svg width="38" height="22" viewBox="0 0 38 22"><rect x="1.5" y="2" width="35" height="18" rx="2.5" fill="#e6d7f7" stroke="#6b4fa1" stroke-width="1.6"/><text x="19" y="15" font-size="9" font-weight="900" text-anchor="middle" fill="#4c3a72">1000</text></svg>
+        <span>老闆找回 <b id="change-val">？</b> 元</span>
+      </div>
+    </div>
+    <div class="balance">
+      <h4>✦ 付款天平：百元鈔要拿幾張才付得起 ✦</h4>
+      <div class="stepper">
+        <button type="button" id="minus" aria-label="減一張">−</button>
+        <span class="count" id="count-label">百元鈔 7 張＝700 元</span>
+        <button type="button" id="plus" aria-label="加一張">＋</button>
+      </div>
+      <div class="pay-state" id="pay-state">700 元 ＜ 765 元，不夠付！</div>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['找回 235 元，最少要 8 張百元鈔', '找回 235 元，最少要 7 張百元鈔', '找回 335 元，最少要 8 張百元鈔', '找回 345 元，最少要 7 張百元鈔'];
+  var ANSWER = 0;
+  var picked = -1;
+  var n = 7;
+
+  var countLabel = document.getElementById('count-label');
+  var state = document.getElementById('pay-state');
+
+  function render() {
+    var paid = n * 100;
+    countLabel.textContent = '百元鈔 ' + n + ' 張＝' + paid + ' 元';
+    if (paid >= 765) {
+      state.classList.add('ok');
+      state.textContent = paid + ' 元 ≥ 765 元，付得起！';
+    } else {
+      state.classList.remove('ok');
+      state.textContent = paid + ' 元 ＜ 765 元，不夠付！';
+    }
+  }
+
+  document.getElementById('minus').addEventListener('click', function () { if (n > 0) { n--; render(); hide(); } });
+  document.getElementById('plus').addEventListener('click', function () { if (n < 12) { n++; render(); hide(); } });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; document.getElementById('change-val').textContent = '？'; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      document.getElementById('change-val').textContent = '235';
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！1000－765＝235 元；7 張百元鈔只有 700 元不夠付，個位的 5 元十元硬幣又湊不出來，最少要 8 張百元鈔（800 元）才付得起。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：找回多少用 1000－765 算算看；百元鈔幾張才夠 765 元？用天平加加看到 765 為止。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-5-Q03', answer: ANSWER };
+
+  render();
+})();
+</script>
+</body>
+</html>

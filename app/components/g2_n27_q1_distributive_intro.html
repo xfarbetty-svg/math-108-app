@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-7-Q01 倍數合併積木條</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 10px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 15px; font-weight: 800; line-height: 1.35; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.blocks { text-align: center; }
+.blocks-title { font-size: 11px; font-weight: 900; color: #0e7490; letter-spacing: 2px; margin-bottom: 2px; }
+.bar-stage { display: flex; justify-content: center; }
+.sum-line { font-size: 13.5px; font-weight: 900; color: #0e7490; margin-top: 2px; }
+.merge-btn {
+  margin-top: 4px;
+  border: 2px solid #0e7490;
+  background: #fff;
+  color: #0e7490;
+  border-radius: 999px;
+  padding: 3px 14px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.merge-btn:active { transform: scale(0.94); }
+.mode-label { display: inline-block; margin-left: 8px; border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 900; background: #cffafe; color: #0e7490; }
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card blocks">
+    <p class="stem"><small>113-1 獅湖 期末 四、10</small>5 的 4 倍和 5 的 5 倍合起來是 5 的（ ）倍，也就是（ ）。</p>
+    <div class="blocks-title">✦ 倍數合併積木條 ✦</div>
+    <div class="bar-stage" id="bar-stage"></div>
+    <div class="sum-line" id="sum-line"></div>
+    <div>
+      <button type="button" class="merge-btn" id="merge">合併拼成 9 倍</button>
+      <span class="mode-label" id="mode-label">目前：分開</span>
+    </div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['9 倍，也就是 45', '9 倍，也就是 40', '20 倍，也就是 45', '1 倍，也就是 5'];
+  var ANSWER = 0;
+  var picked = -1;
+  var merged = false;
+
+  var stage = document.getElementById('bar-stage');
+  var sumLine = document.getElementById('sum-line');
+  var mergeBtn = document.getElementById('merge');
+  var modeLabel = document.getElementById('mode-label');
+
+  /* 藍色：5 的 4 倍（4 格）；綠色：5 的 5 倍（5 格）；合併成 9 格 */
+  function barsSVG(isMerged) {
+    var s = '<svg width="312" height="84" viewBox="0 0 312 84">';
+    var blue = '#60a5fa', green = '#34d399';
+    function row(y, blocks, color, label) {
+      var out = '';
+      for (var i = 0; i < blocks; i++) {
+        out += '<rect x="' + (8 + i * 28) + '" y="' + y + '" width="25" height="16" rx="3" fill="' + color + '" stroke="#1e3a5f" stroke-width="1"/>';
+        out += '<text x="' + (20.5 + i * 28) + '" y="' + (y + 12) + '" font-size="10" font-weight="900" text-anchor="middle" fill="#1e3a5f">5</text>';
+      }
+      out += '<text x="' + (8 + blocks * 28 + 6) + '" y="' + (y + 12) + '" font-size="10" font-weight="900" fill="#0e7490">' + label + '</text>';
+      return out;
+    }
+    if (!isMerged) {
+      s += row(12, 4, blue, '4 個 5');
+      s += row(40, 5, green, '5 個 5');
+      s += '<text x="156" y="76" font-size="10" font-weight="900" text-anchor="middle" fill="#64748b">藍：5 的 4 倍　綠：5 的 5 倍</text>';
+    } else {
+      for (var b = 0; b < 9; b++) {
+        var color = b < 4 ? blue : green;
+        s += '<rect x="' + (8 + b * 32) + '" y="30" width="29" height="20" rx="3" fill="' + color + '" stroke="#1e3a5f" stroke-width="1"/>';
+        s += '<text x="' + (22.5 + b * 32) + '" y="44" font-size="11" font-weight="900" text-anchor="middle" fill="#1e3a5f">5</text>';
+      }
+      s += '<text x="156" y="70" font-size="12" font-weight="900" text-anchor="middle" fill="#0e7490">4＋5＝9 個 5 → 5×9＝45</text>';
+      s += '<text x="156" y="18" font-size="10" font-weight="900" text-anchor="middle" fill="#64748b">合體！一整條 9 格</text>';
+    }
+    s += '</svg>';
+    return s;
+  }
+
+  function render() {
+    stage.innerHTML = barsSVG(merged);
+    if (merged) {
+      sumLine.textContent = '5 的 9 倍 ＝ 45';
+      modeLabel.textContent = '目前：合併';
+      mergeBtn.textContent = '拆回來看看';
+    } else {
+      sumLine.textContent = '4 個 5 ＋ 5 個 5 ＝ ？';
+      modeLabel.textContent = '目前：分開';
+      mergeBtn.textContent = '合併拼成 9 倍';
+    }
+  }
+
+  mergeBtn.addEventListener('click', function () { merged = !merged; render(); hide(); });
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！倍數可以直接相加：4 倍＋5 倍＝9 倍，5×9＝45。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：倍數合併是「倍數相加」4＋5＝9，不是相乘；再算算 5×9 等於多少？';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-7-Q01', answer: ANSWER };
+
+  render();
+})();
+</script>
+</body>
+</html>

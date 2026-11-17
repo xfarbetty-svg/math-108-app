@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-5-Q04 美食餐廳千元鈔夠不夠</title>
+<style>
+:root {
+  --ink: #3d3a34;
+  --ink-soft: #8a857b;
+  --mint-deep: #318a70;
+  --line: #f0e7da;
+  --bg: #fff9f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 14px;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(120, 90, 40, 0.08);
+}
+.stem { font-size: 14.5px; font-weight: 800; line-height: 1.4; }
+.stem small { display: block; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 2px; }
+
+.tray { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 4px 0; }
+.wallet {
+  border: 2px solid #6b4fa1;
+  border-radius: 10px;
+  background: #faf8ff;
+  padding: 6px 8px;
+  text-align: center;
+}
+.wallet svg { display: block; margin: 0 auto 2px; }
+.wallet span { font-size: 11px; font-weight: 900; color: #4c3a72; display: block; }
+.dish {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fdfbf7;
+  padding: 6px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.dish.sel { border-color: var(--mint-deep); background: #eafaf4; transform: translateY(-2px); }
+.dish span { font-size: 11px; font-weight: 900; color: #b45309; display: block; }
+.hint {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--mint-deep);
+  background: #eafaf4;
+  border-radius: 999px;
+  padding: 4px 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.opt-btn {
+  border: 2px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 6px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.opt-btn.sel { border-color: var(--mint-deep); background: #eafaf4; color: var(--mint-deep); }
+
+.footer-action { text-align: center; }
+.check-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 30px;
+  font-size: 14px;
+  font-weight: 800;
+  background: var(--mint-deep);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(49, 138, 112, 0.3);
+  cursor: pointer;
+}
+.result-banner {
+  display: none;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+.result-banner.success { display: block; background: #dcfce7; color: #166534; }
+.result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>112-2 內湖 期中 四、1.(2)</small>美食餐廳：蛋糕 198 元、三明治 105 元。媽媽帶 1000 元要買一個蛋糕和一個三明治，請問 1000 元夠不夠？買完剩下幾元？</p>
+  </div>
+  <div class="card">
+    <div class="tray">
+      <div class="wallet">
+        <svg width="44" height="28" viewBox="0 0 44 28"><rect x="2" y="4" width="40" height="20" rx="3" fill="#e6d7f7" stroke="#6b4fa1" stroke-width="1.6"/><circle cx="35" cy="14" r="3" fill="#fff"/><text x="22" y="18" font-size="9" font-weight="900" text-anchor="middle" fill="#4c3a72">1000</text></svg>
+        <span>媽媽帶 1000 元</span>
+      </div>
+      <div class="dish" id="dish-cake">
+        <svg width="34" height="28" viewBox="0 0 34 28"><rect x="5" y="14" width="24" height="10" rx="2" fill="none" stroke="#ff8a65" stroke-width="2"/><line x1="17" y1="14" x2="17" y2="9" stroke="#ff8a65" stroke-width="2"/><circle cx="17" cy="7" r="2.4" fill="#ff8a65"/></svg>
+        <span>蛋糕 198 元</span>
+      </div>
+      <div class="dish" id="dish-sand">
+        <svg width="34" height="28" viewBox="0 0 34 28"><path d="M6 12 L28 12 L17 5 Z" fill="none" stroke="#318a70" stroke-width="2"/><rect x="6" y="12" width="22" height="4" fill="none" stroke="#318a70" stroke-width="2"/><rect x="6" y="16" width="22" height="4" fill="none" stroke="#318a70" stroke-width="2"/></svg>
+        <span>三明治 105 元</span>
+      </div>
+    </div>
+    <div class="hint" id="hint">點餐點放進購物籃，再從下方選答案</div>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action">
+    <button class="check-btn" onclick="check()">檢查答案</button>
+  </div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['夠，剩下 697 元', '夠，剩下 707 元', '不夠，還差 303 元', '夠，剩下 797 元'];
+  var ANSWER = 0;
+  var picked = -1;
+
+  var optBox = document.getElementById('opts');
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      document.getElementById('dish-cake').classList.add('sel');
+      document.getElementById('dish-sand').classList.add('sel');
+      document.getElementById('hint').textContent = '先算兩樣的貨款：198＋105，再跟 1000 比大小，最後用減法算剩下的錢';
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+
+  var banner = document.getElementById('banner');
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！198＋105＝303 元，303＜1000 所以夠；1000－303＝697，買完剩下 697 元。';
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想：198＋105＝303 元，303 和 1000 誰大？夠的話再用 1000－303 算剩下的錢（注意借位）。';
+    return { ok: false, picked: picked };
+  };
+
+  window.__q = { id: 'G2-N-2-5-Q04', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
