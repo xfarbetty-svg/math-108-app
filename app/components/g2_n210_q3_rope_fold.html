@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-10-Q03 繩子對摺與分段</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --rope:#e8836f; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-label { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.tool-btn:disabled { opacity:.4; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.stage { display:none; }
+.stage.show { display:inline; }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:8px; font-size:22px; font-weight:800; }
+.v-eq .res { color:var(--mint-deep); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>繩子對摺與分段</small>一條繩子對摺 2 次，打開後可以分成幾段？每段是全部的幾分之幾？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：長彩繩依序對摺，打開後呈現 4 個等長區塊 -->
+    <svg class="scene-svg" viewBox="0 0 360 232" role="img" aria-label="繩子對摺操作">
+      <g id="stage0" class="stage show">
+        <rect x="25" y="100" width="310" height="20" rx="10" fill="var(--rope)" stroke="var(--ink)" stroke-width="1.6"/>
+        <circle cx="340" cy="110" r="7" fill="#f7a8b8" stroke="var(--ink)" stroke-width="1.4"/>
+        <text x="180" y="142" class="t-label">一條完整的繩子</text>
+      </g>
+      <g id="stage1" class="stage">
+        <path d="M85 96 Q70 96 70 110 Q70 124 85 124" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="85" y="92" width="200" height="16" rx="8" fill="var(--rope)" stroke="var(--ink)" stroke-width="1.5"/>
+        <rect x="85" y="116" width="200" height="16" rx="8" fill="#f0957f" stroke="var(--ink)" stroke-width="1.5"/>
+        <text x="185" y="156" class="t-label">對摺 1 次：變 2 層（打開是 2 段）</text>
+      </g>
+      <g id="stage2" class="stage">
+        <path d="M125 88 Q112 88 112 102 Q112 116 125 116" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="125" y="74" width="120" height="13" rx="6" fill="var(--rope)" stroke="var(--ink)" stroke-width="1.4"/>
+        <rect x="125" y="94" width="120" height="13" rx="6" fill="#f0957f" stroke="var(--ink)" stroke-width="1.4"/>
+        <rect x="125" y="114" width="120" height="13" rx="6" fill="var(--rope)" stroke="var(--ink)" stroke-width="1.4"/>
+        <rect x="125" y="134" width="120" height="13" rx="6" fill="#f0957f" stroke="var(--ink)" stroke-width="1.4"/>
+        <text x="185" y="168" class="t-label">對摺 2 次：變 4 層</text>
+      </g>
+      <g id="stage3" class="stage">
+        <rect x="25"   y="100" width="77.5" height="20" rx="0" fill="#f7a8b8" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="102.5" y="100" width="77.5" height="20" fill="#7bc9b2" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="180"  y="100" width="77.5" height="20" fill="#ffd166" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="257.5" y="100" width="77.5" height="20" rx="0" fill="#b8a7e8" stroke="var(--ink)" stroke-width="1.6"/>
+        <line x1="102.5" y1="94" x2="102.5" y2="126" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <line x1="180" y1="94" x2="180" y2="126" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <line x1="257.5" y1="94" x2="257.5" y2="126" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <text x="180" y="142" class="t-label">打開後：4 段一樣長！</text>
+      </g>
+      <text x="180" y="222" class="t-caption" id="cap">按「對摺 1 次」開始操作</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="fold1">對摺 1 次</button>
+      <button type="button" class="tool-btn" id="fold2" disabled>再對摺 1 次</button>
+      <button type="button" class="tool-btn" id="open" disabled>打開看看 ✨</button>
+      <button type="button" class="tool-btn" id="reset">重來</button>
+    </div>
+    <p class="status" id="status">繩子對摺之後，會變成幾段呢？動手摺摺看。</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>2</span><span>×</span><span>2</span><span>=</span><span class="res">4 段</span><span style="font-size:13px;font-weight:800;color:var(--ink-soft)">每段是 1/4</span></div>
+    <p class="v-notes">對摺 1 次成 <b>2 段</b>；再對摺 1 次，2 段各再對半，<br>變成 2×2＝<b>4 段</b>，每段一樣長，是全部的<b>四分之一（1/4）</b>。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['2 段，二分之一', '3 段，三分之一', '4 段，四分之一', '8 段，八分之一'];
+  var ANSWER = 2;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var cap = document.getElementById('cap');
+  var b1 = document.getElementById('fold1');
+  var b2 = document.getElementById('fold2');
+  var bOpen = document.getElementById('open');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  function show(stage) {
+    [0, 1, 2, 3].forEach(function (i) {
+      var g = document.getElementById('stage' + i);
+      g.classList.toggle('show', i === stage);
+    });
+  }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  b1.addEventListener('click', function () {
+    show(1);
+    b1.disabled = true; b2.disabled = false;
+    cap.textContent = '對摺 1 次了，再對摺一次試試看';
+    status.innerHTML = '對摺 1 次：繩子變 <b>2 層</b>，打開後是 <b>2 段</b>。';
+    say('對摺一次，繩子變兩層。');
+  });
+  b2.addEventListener('click', function () {
+    show(2);
+    b2.disabled = true; bOpen.disabled = false;
+    status.innerHTML = '對摺 2 次：繩子變 <b>4 層</b>，按「打開看看」！';
+    say('對摺兩次，繩子變四層。');
+  });
+  bOpen.addEventListener('click', function () {
+    show(3);
+    bOpen.disabled = true;
+    cap.textContent = '打開後分成 4 段一樣長的繩子';
+    status.innerHTML = '打開後：<b>4 段一樣長</b>！每段是全部的幾分之幾呢？';
+    say('打開後，繩子分成四段一樣長。');
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    show(0);
+    b1.disabled = false; b2.disabled = true; bOpen.disabled = true;
+    cap.textContent = '按「對摺 1 次」開始操作';
+    status.innerHTML = '繩子對摺之後，會變成幾段呢？動手摺摺看。';
+    hide();
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！對摺 2 次打開是 4 段，每段是四分之一。';
+      vq.classList.add('show');
+      say('答對！對摺兩次打開是四段，每段是四分之一。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：每對摺 1 次，段數就會變成 2 倍，動手摺摺看再數數。';
+    say('再想想看：每對摺一次，段數就會變成兩倍。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-10-Q03', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

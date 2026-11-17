@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-9-Q02 粽子平分與乘法語意</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-label { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-name { font-size:10.5px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:8px; font-size:22px; font-weight:800; }
+.v-eq .res { color:var(--mint-deep); }
+.v-eq .unit { font-size:13px; font-weight:800; color:var(--ink-soft); }
+.eq-chip { background:#eafaf4; border:2px solid var(--mint-deep); border-radius:8px; padding:0 10px; font-weight:800; color:var(--mint-deep); font-size:20px; cursor:pointer; }
+.eq-chip.on { background:var(--mint-deep); color:#fff; }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+.v-notes .warn { color:var(--red); }
+.reveal-act { text-align:center; margin-top:8px; }
+.reveal-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 16px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.ring { fill:none; stroke:var(--red); stroke-width:2.5; }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>粽子平分與乘法語意</small>18 個粽子平分給 6 個人，每個人分到幾個？家欣用乘法算式記成「3 × 6 ＝ 18」，請問算式中的「3」表示什麼意思？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：6 個人各一個盤子，每盤 3 個粽子（乘法分組模型 3×6=18） -->
+    <svg class="scene-svg" viewBox="0 0 360 232" role="img" aria-label="18 個粽子平分成 6 盤，每盤 3 個">
+      <defs>
+        <g id="zz">
+          <path d="M0 -9 L8.5 6 Q0 10.5 -8.5 6 Z" fill="#a8c97f" stroke="var(--ink)" stroke-width="1.3"/>
+          <path d="M-5 3 L5 3" stroke="#6f9450" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </g>
+      </defs>
+      <g id="p0"><ellipse cx="80" cy="84" rx="27" ry="7" fill="#fff" stroke="var(--ink-soft)" stroke-width="1.3"/>
+        <use href="#zz" x="67" y="70"/><use href="#zz" x="80" y="63"/><use href="#zz" x="93" y="70"/>
+        <ellipse id="ring0" class="ring" cx="80" cy="70" rx="32" ry="18" style="display:none"/>
+        <text id="tag0" class="t-name" x="80" y="44" style="display:none">每個人的 3 個</text>
+      </g>
+      <g><ellipse cx="180" cy="84" rx="27" ry="7" fill="#fff" stroke="var(--ink-soft)" stroke-width="1.3"/>
+        <use href="#zz" x="167" y="70"/><use href="#zz" x="180" y="63"/><use href="#zz" x="193" y="70"/></g>
+      <g><ellipse cx="280" cy="84" rx="27" ry="7" fill="#fff" stroke="var(--ink-soft)" stroke-width="1.3"/>
+        <use href="#zz" x="267" y="70"/><use href="#zz" x="280" y="63"/><use href="#zz" x="293" y="70"/></g>
+      <g><ellipse cx="80" cy="170" rx="27" ry="7" fill="#fff" stroke="var(--ink-soft)" stroke-width="1.3"/>
+        <use href="#zz" x="67" y="156"/><use href="#zz" x="80" y="149"/><use href="#zz" x="93" y="156"/></g>
+      <g><ellipse cx="180" cy="170" rx="27" ry="7" fill="#fff" stroke="var(--ink-soft)" stroke-width="1.3"/>
+        <use href="#zz" x="167" y="156"/><use href="#zz" x="180" y="149"/><use href="#zz" x="193" y="156"/></g>
+      <g><ellipse cx="280" cy="170" rx="27" ry="7" fill="#fff" stroke="var(--ink-soft)" stroke-width="1.3"/>
+        <use href="#zz" x="267" y="156"/><use href="#zz" x="280" y="149"/><use href="#zz" x="293" y="156"/></g>
+      <text x="180" y="112" class="t-label">↑ 6 個人，一人一盤 ↑</text>
+      <text x="180" y="224" class="t-caption">18 個粽子剛好平分完</text>
+    </svg>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq">
+      <button type="button" class="eq-chip" id="chip3">3</button><span>×</span><span>6</span><span>=</span><span class="res">18</span><span class="unit">（個）</span>
+    </div>
+    <div class="reveal-act"><button type="button" class="reveal-btn" id="look">點「3」看看它在說誰 👀</button></div>
+    <p class="v-notes">「3」是<b>單位量</b>：每個人分到 3 個粽子；<br>「6」是 6 個人；<b>3 × 6 ＝ 18</b> 個粽子。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['每個人分到 3 個粽子', '有 3 個人要分粽子', '全部有 3 個粽子', '還剩下 3 個粽子'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var chip = document.getElementById('chip3');
+  var look = document.getElementById('look');
+  var ring = document.getElementById('ring0');
+  var tag = document.getElementById('tag0');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); ring.style.display = 'none'; tag.style.display = 'none'; chip.classList.remove('on'); }
+  var lit = false;
+  function togglePoint() {
+    lit = !lit;
+    ring.style.display = lit ? '' : 'none';
+    tag.style.display = lit ? '' : 'none';
+    chip.classList.toggle('on', lit);
+    if (lit) say('3 表示每個人分到 3 個粽子。');
+  }
+  chip.addEventListener('click', togglePoint);
+  look.addEventListener('click', togglePoint);
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！「3」表示每個人分到 3 個粽子。';
+      vq.classList.add('show');
+      say('答對！3 表示每個人分到 3 個粽子。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：18 個粽子平分給 6 個人，一人一盤，數數看一盤有幾個？';
+    say('再想想看：18 個粽子平分給 6 個人，一人一盤，數數看一盤有幾個。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-9-Q02', answer: 0 };
+})();
+</script>
+</body>
+</html>

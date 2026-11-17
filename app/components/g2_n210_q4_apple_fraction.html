@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-10-Q04 蘋果平分與四分之一顆</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --apple:#ef6b6b; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-label { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-name { font-size:10.5px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.tool-btn:disabled { opacity:.4; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.wedge { transition: transform .7s ease; }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:8px; font-size:22px; font-weight:800; }
+.v-eq .res { color:var(--mint-deep); }
+.v-eq .unit { font-size:13px; font-weight:800; color:var(--ink-soft); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>蘋果平分與四分之一顆</small>媽媽把 1 顆蘋果平分給 4 個小孩，每個小孩可以得到幾顆蘋果？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：1 顆大蘋果切成 4 等瓣分給 4 位小孩 -->
+    <svg class="scene-svg" viewBox="0 0 360 240" role="img" aria-label="1 顆蘋果切成 4 等瓣，分給 4 位小孩">
+      <g id="kids">
+        <g><circle cx="75" cy="200" r="13" fill="#ffe3c9" stroke="var(--ink)" stroke-width="1.4"/><circle cx="71" cy="199" r="1.5" fill="var(--ink)"/><circle cx="79" cy="199" r="1.5" fill="var(--ink)"/><path d="M71 204 Q75 207 79 204" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round"/><text x="75" y="230" class="t-name">小孩</text></g>
+        <g><circle cx="145" cy="200" r="13" fill="#ffe3c9" stroke="var(--ink)" stroke-width="1.4"/><circle cx="141" cy="199" r="1.5" fill="var(--ink)"/><circle cx="149" cy="199" r="1.5" fill="var(--ink)"/><path d="M141 204 Q145 207 149 204" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round"/><text x="145" y="230" class="t-name">小孩</text></g>
+        <g><circle cx="215" cy="200" r="13" fill="#ffe3c9" stroke="var(--ink)" stroke-width="1.4"/><circle cx="211" cy="199" r="1.5" fill="var(--ink)"/><circle cx="219" cy="199" r="1.5" fill="var(--ink)"/><path d="M211 204 Q215 207 219 204" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round"/><text x="215" y="230" class="t-name">小孩</text></g>
+        <g><circle cx="285" cy="200" r="13" fill="#ffe3c9" stroke="var(--ink)" stroke-width="1.4"/><circle cx="281" cy="199" r="1.5" fill="var(--ink)"/><circle cx="289" cy="199" r="1.5" fill="var(--ink)"/><path d="M281 204 Q285 207 289 204" fill="none" stroke="var(--ink)" stroke-width="1.1" stroke-linecap="round"/><text x="285" y="230" class="t-name">小孩</text></g>
+      </g>
+      <g id="apple">
+        <g id="w0" class="wedge"><path d="M180 95 L180 40 A55 55 0 0 1 235 95 Z" fill="var(--apple)" stroke="var(--ink)" stroke-width="1.6"/></g>
+        <g id="w1" class="wedge"><path d="M180 95 L235 95 A55 55 0 0 1 180 150 Z" fill="#e05a5a" stroke="var(--ink)" stroke-width="1.6"/></g>
+        <g id="w2" class="wedge"><path d="M180 95 L180 150 A55 55 0 0 1 125 95 Z" fill="var(--apple)" stroke="var(--ink)" stroke-width="1.6"/></g>
+        <g id="w3" class="wedge"><path d="M180 95 L125 95 A55 55 0 0 1 180 40 Z" fill="#e05a5a" stroke="var(--ink)" stroke-width="1.6"/></g>
+        <g id="stemLeaf">
+          <rect x="177" y="30" width="6" height="14" rx="3" fill="#7a5230" stroke="var(--ink)" stroke-width="1"/>
+          <path d="M184 36 Q196 26 204 34 Q194 42 184 36 Z" fill="#7bc9b2" stroke="#318a70" stroke-width="1.2"/>
+        </g>
+      </g>
+      <text x="180" y="172" class="t-label" id="appleLabel">只有 1 顆蘋果，要分給 4 個小孩</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="cut">切成 4 等瓣 🔪</button>
+      <button type="button" class="tool-btn" id="give" disabled>分給 4 個小孩 🍎</button>
+      <button type="button" class="tool-btn" id="reset">重來</button>
+    </div>
+    <p class="status" id="status">蘋果只有 1 顆，要怎麼平分給 4 個小孩呢？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>1</span><span>÷</span><span>4</span><span>=</span><span class="res">1/4</span><span class="unit">（顆）</span></div>
+    <p class="v-notes">把 1 顆蘋果<b>切成 4 等瓣</b>，每一瓣一樣大，<br>都是 4 等分中的 1 份，所以每人得到<b>四分之一顆</b>蘋果。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['4 顆', '1 顆', '四分之一顆', '4/1 顆'];
+  var ANSWER = 2;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var label = document.getElementById('appleLabel');
+  var wedges = [document.getElementById('w0'), document.getElementById('w1'), document.getElementById('w2'), document.getElementById('w3')];
+  var stemLeaf = document.getElementById('stemLeaf');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  var KID_POS = [[75, 186], [145, 186], [215, 186], [285, 186]];
+  document.getElementById('cut').addEventListener('click', function () {
+    var spread = [[0, -8], [8, 0], [0, 8], [-8, 0]];
+    wedges.forEach(function (w, i) { w.style.transform = 'translate(' + spread[i][0] + 'px,' + spread[i][1] + 'px)'; });
+    stemLeaf.style.opacity = '.35';
+    label.textContent = '1 顆蘋果切成 4 等瓣了！';
+    status.innerHTML = '切成 <b>4 等瓣</b>了，每一瓣一樣大。按「分給 4 個小孩」。';
+    document.getElementById('cut').disabled = true;
+    document.getElementById('give').disabled = false;
+    say('蘋果切成四等瓣了。');
+  });
+  document.getElementById('give').addEventListener('click', function () {
+    wedges.forEach(function (w, i) {
+      var kx = KID_POS[i][0] - 180, ky = KID_POS[i][1] - 95;
+      w.style.transform = 'translate(' + kx + 'px,' + ky + 'px) scale(.5)';
+    });
+    stemLeaf.style.opacity = '0';
+    label.textContent = '每個小孩分到 1 瓣';
+    status.innerHTML = '每個小孩分到 <b>1 瓣</b>。1 瓣是整顆的幾分之幾呢？';
+    document.getElementById('give').disabled = true;
+    say('每個小孩分到一瓣。');
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    wedges.forEach(function (w) { w.style.transform = ''; });
+    stemLeaf.style.opacity = '1';
+    label.textContent = '只有 1 顆蘋果，要分給 4 個小孩';
+    status.innerHTML = '蘋果只有 1 顆，要怎麼平分給 4 個小孩呢？';
+    document.getElementById('cut').disabled = false;
+    document.getElementById('give').disabled = true;
+    hide();
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！1 顆平分成 4 等份，每人得到四分之一顆。';
+      vq.classList.add('show');
+      say('答對！每人得到四分之一顆蘋果。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：蘋果只有 1 顆，切成 4 等瓣後，1 瓣是 4 等分中的 1 份。';
+    say('再想想看：一瓣是四等分中的一份。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-10-Q04', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

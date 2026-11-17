@@ -53,7 +53,7 @@ const EXPECTED_READY_CODES = [
   'N-3-1', 'N-3-2', 'N-3-3', 'N-3-4', 'N-3-5', 'N-3-6', 'N-3-7', 'N-3-8', 'N-3-9', 'N-3-10', 'N-3-11',
   'N-3-12', 'N-3-13', 'S-3-1', 'N-3-14', 'N-3-15', 'S-3-3',
   'N-3-16', 'N-3-17', 'S-3-2', 'S-3-4', 'R-3-1', 'R-3-2', 'D-3-1',
-  'N-2-1', 'N-2-2', 'N-2-3', 'N-2-4', 'N-2-5', 'N-2-6', 'N-2-7', 'N-2-8'
+  'N-2-1', 'N-2-2', 'N-2-3', 'N-2-4', 'N-2-5', 'N-2-6', 'N-2-7', 'N-2-8', 'N-2-9', 'N-2-10'
 ];
 const readyUnits = all.filter((u) => u.status === 'ready');
 check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);
@@ -144,6 +144,30 @@ try {
   check(true, 'N-2-8 五題教具 component_path 全部存在於 app/');
 } catch (err) {
   check(false, 'data/units/G2/N-2-8.json 驗證失敗 → ' + err.message);
+}
+
+// 5g. G2 N-2-9 題庫 SSOT 存在且 5 題（分裝與平分真題）
+try {
+  const unitN29 = JSON.parse(fs.readFileSync('data/units/G2/N-2-9.json', 'utf8'));
+  check(unitN29.questions && unitN29.questions.length === 5, 'data/units/G2/N-2-9.json 題庫 5 題（SSOT）');
+  unitN29.questions.forEach((q) => {
+    if (!fs.existsSync('app/' + q.component_path)) check(false, '教具檔缺失: ' + q.component_path);
+  });
+  check(true, 'N-2-9 五題教具 component_path 全部存在於 app/');
+} catch (err) {
+  check(false, 'data/units/G2/N-2-9.json 驗證失敗 → ' + err.message);
+}
+
+// 5h. G2 N-2-10 題庫 SSOT 存在且 5 題（單位分數真題）
+try {
+  const unitN210 = JSON.parse(fs.readFileSync('data/units/G2/N-2-10.json', 'utf8'));
+  check(unitN210.questions && unitN210.questions.length === 5, 'data/units/G2/N-2-10.json 題庫 5 題（SSOT）');
+  unitN210.questions.forEach((q) => {
+    if (!fs.existsSync('app/' + q.component_path)) check(false, '教具檔缺失: ' + q.component_path);
+  });
+  check(true, 'N-2-10 五題教具 component_path 全部存在於 app/');
+} catch (err) {
+  check(false, 'data/units/G2/N-2-10.json 驗證失敗 → ' + err.message);
 }
 
 // 6. shell.js 已對齊新骨架（name 欄位、已開放 x/y、upcoming 卡片流）

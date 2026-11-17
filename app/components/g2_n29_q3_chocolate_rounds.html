@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-9-Q03 巧克力平分連減轉乘法</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --choc:#8a5a3b; --choc-lite:#b07b52; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-label { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.tool-btn:disabled { opacity:.4; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.given { opacity:.18; }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:8px; font-size:22px; font-weight:800; }
+.v-eq .res { color:var(--mint-deep); }
+.v-eq .unit { font-size:13px; font-weight:800; color:var(--ink-soft); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>巧克力平分：一輪一輪分分看</small>王老師買了 24 顆巧克力，平分給 8 位同學，每位同學分到幾顆？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：上排 24 顆巧克力（6×4），下排 8 位同學一人一盤，按鈕一輪一輪分 -->
+    <svg class="scene-svg" viewBox="0 0 360 252" role="img" aria-label="24 顆巧克力與 8 位同學的盤子">
+      <defs>
+        <g id="ch">
+          <rect x="-9" y="-7" width="18" height="14" rx="4" fill="var(--choc)" stroke="var(--ink)" stroke-width="1.2"/>
+          <rect x="-6" y="-5" width="12" height="6" rx="2" fill="var(--choc-lite)" stroke="none"/>
+        </g>
+        <g id="mini">
+          <rect x="-4" y="-3" width="8" height="6" rx="2" fill="var(--choc)" stroke="var(--ink)" stroke-width=".8"/>
+        </g>
+      </defs>
+      <g id="chocs"></g>
+      <line x1="18" y1="138" x2="342" y2="138" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 5"/>
+      <g id="kids"></g>
+      <text x="180" y="248" class="t-caption">8 位同學，一人一個盤子</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="r1">第 1 輪（每人 1 顆）</button>
+      <button type="button" class="tool-btn" id="r2" disabled>第 2 輪（每人 1 顆）</button>
+      <button type="button" class="tool-btn" id="r3" disabled>第 3 輪（每人 1 顆）</button>
+      <button type="button" class="tool-btn" id="reset">重來</button>
+    </div>
+    <p class="status" id="status">桌上還有 24 顆巧克力，按「第 1 輪」開始分。</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>3</span><span>×</span><span>8</span><span>=</span><span class="res">24</span><span class="unit">（顆）</span></div>
+    <p class="v-notes">每輪 8 人各拿 1 顆就用掉 8 顆：<b>24−8＝16、16−8＝8、8−8＝0</b>，<br>連分 3 輪剛好分完，就是 <b>3 個 8</b>，記成 3×8＝24，<br>每位同學分到 <b>3 顆</b>。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var CHOICES = ['2 顆', '3 顆', '4 顆', '8 顆'];
+  var ANSWER = 1;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var chocsG = document.getElementById('chocs');
+  var kidsG = document.getElementById('kids');
+  var rounds = 0;
+  var plateCounts = [];
+  var roundBtns = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  function el(name, attrs, parent) {
+    var n = document.createElementNS(SVGNS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function build() {
+    chocsG.textContent = '';
+    kidsG.textContent = '';
+    plateCounts = [0, 0, 0, 0, 0, 0, 0, 0];
+    var xs = [45, 99, 153, 207, 261, 315];
+    var ys = [46, 74, 102, 126];
+    var idx = 0;
+    ys.forEach(function (y) {
+      xs.forEach(function (x) {
+        var g = el('g', { transform: 'translate(' + x + ',' + y + ')' }, chocsG);
+        el('use', { href: '#ch' }, g);
+        g.dataset.idx = idx; idx++;
+      });
+    });
+    var kids = [
+      { x: 45,  shirt: 'var(--mint)' },  { x: 93,  shirt: 'var(--lemon)' },
+      { x: 141, shirt: 'var(--pink)' },  { x: 189, shirt: 'var(--grape)' },
+      { x: 237, shirt: '#f4b26a' },      { x: 285, shirt: '#9ec9e8' },
+      { x: 333, shirt: '#c8e29a' },      { x: 381, shirt: '#e8a8c8' }
+    ];
+    kids.forEach(function (kd, i) {
+      var cx = 33 + i * 42;
+      var g = el('g', {}, kidsG);
+      el('circle', { cx: cx, cy: 172, r: 10, fill: '#ffe3c9', stroke: 'var(--ink)', 'stroke-width': 1.3 }, g);
+      el('circle', { cx: cx - 3.2, cy: 171, r: 1.2, fill: 'var(--ink)' }, g);
+      el('circle', { cx: cx + 3.2, cy: 171, r: 1.2, fill: 'var(--ink)' }, g);
+      el('path', { d: 'M' + (cx - 4) + ' 175 Q' + cx + ' 178 ' + (cx + 4) + ' 175', fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1, 'stroke-linecap': 'round' }, g);
+      el('rect', { x: cx - 8, y: 183, width: 16, height: 10, rx: 5, fill: kd.shirt, stroke: 'var(--ink)', 'stroke-width': 1 }, g);
+      el('ellipse', { cx: cx, cy: 222, rx: 16, ry: 5.5, fill: '#fff', stroke: 'var(--ink-soft)', 'stroke-width': 1.2 }, g);
+      var cnt = el('text', { x: cx, y: 206, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 800, fill: 'var(--ink-soft)' }, g);
+      cnt.textContent = '0 顆';
+      plateCounts[i] = { node: cnt, miniG: el('g', {}, g), cx: cx, cy: 222 };
+    });
+  }
+  function updateStatus() {
+    var left = 24 - rounds * 8;
+    if (rounds === 0) status.innerHTML = '桌上還有 <b>24</b> 顆巧克力，按「第 1 輪」開始分。';
+    else if (rounds < 3) status.innerHTML = '第 ' + rounds + ' 輪分完：每人 1 顆、用掉 8 顆，桌上還剩 <b>' + left + '</b> 顆。';
+    else status.innerHTML = '第 3 輪分完：桌上 <b>0</b> 顆，剛好全部分完！';
+  }
+  function doRound(r) {
+    var chocs = chocsG.children;
+    for (var i = (r - 1) * 8; i < r * 8; i++) chocs[i].classList.add('given');
+    for (var k = 0; k < 8; k++) {
+      var p = plateCounts[k];
+      var cnt = (p.node.textContent.replace(' 顆', '') - 0 + 1);
+      p.node.textContent = cnt + ' 顆';
+      var m = el('use', { href: '#mini' }, p.miniG);
+      m.setAttribute('x', p.cx - 5);
+      m.setAttribute('y', p.cy - 3 - cnt * 6);
+    }
+    rounds = r;
+    updateStatus();
+    roundBtns.forEach(function (b, i) { b.disabled = i < r; });
+    say(rounds < 3 ? '第 ' + rounds + ' 輪分完，桌上還剩 ' + (24 - rounds * 8) + ' 顆。' : '剛好全部分完！');
+  }
+  roundBtns.forEach(function (b, i) { b.addEventListener('click', function () { doRound(i + 1); }); });
+  document.getElementById('reset').addEventListener('click', function () {
+    rounds = 0; build(); updateStatus();
+    roundBtns.forEach(function (b, i) { b.disabled = i > 0; });
+    hide();
+  });
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el2) { el2.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！連分 3 輪剛好分完，每位同學分到 3 顆。';
+      vq.classList.add('show');
+      say('答對！連分 3 輪剛好分完，每位同學分到 3 顆。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：一輪一輪分分看，分到桌上 0 顆為止，每位同學的盤子裡有幾顆？';
+    say('再想想看：一輪一輪分分看，分到桌上 0 顆為止。');
+    return { ok: false, picked: picked };
+  };
+  build();
+  updateStatus();
+  window.__q = { id: 'G2-N-2-9-Q03', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

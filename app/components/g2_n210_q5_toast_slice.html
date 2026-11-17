@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-10-Q05 土司八分之一是幾片</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --crust:#d99a4e; --crumb:#f6d9a0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-label { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.slice { cursor:pointer; transition: transform .4s ease; }
+.slice:hover { transform: translateY(-4px); }
+.slice.lift { transform: translateY(-18px); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:8px; font-size:22px; font-weight:800; }
+.v-eq .res { color:var(--mint-deep); }
+.v-eq .unit { font-size:13px; font-weight:800; color:var(--ink-soft); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>土司八分之一是幾片</small>1 條土司平分成 8 片，妹妹吃了 1/8 條土司，是吃了幾片土司？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：1 條土司平切 8 片，點一下抽起其中一片 -->
+    <svg class="scene-svg" viewBox="0 0 360 208" role="img" aria-label="一條土司平切成 8 片">
+      <g id="slices"></g>
+      <line x1="18" y1="176" x2="342" y2="176" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="180" y="200" class="t-caption" id="cap">1 條土司，平切成 8 片（點一片抽起來）</text>
+    </svg>
+    <p class="status" id="status">8 片都一樣大，每一片是整條的幾分之幾呢？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>1/8</span><span>條</span><span>=</span><span class="res">1</span><span class="unit">片</span></div>
+    <p class="v-notes">1 條土司<b>平分成 8 片</b>，每片都一樣大；<br><b>1/8 條</b>就是 8 等分中的 1 份，剛好是 <b>1 片</b>土司。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var CHOICES = ['1 片', '8 片', '1/8 片', '4 片'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var cap = document.getElementById('cap');
+  var slicesG = document.getElementById('slices');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  function el(name, attrs, parent) {
+    var n = document.createElementNS(SVGNS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function build() {
+    slicesG.textContent = '';
+    for (var i = 0; i < 8; i++) {
+      (function (i) {
+        var x = 24 + i * 40;
+        var g = el('g', { 'class': 'slice' }, slicesG);
+        el('rect', { x: x, y: 84, width: 34, height: 88, rx: 6, fill: 'var(--crumb)', stroke: 'var(--ink)', 'stroke-width': 1.4 }, g);
+        el('path', { d: 'M' + x + ' 96 Q' + (x + 17) + ' 80 ' + (x + 34) + ' 96 L' + (x + 34) + ' 88 Q' + (x + 17) + ' 74 ' + x + ' 88 Z', fill: 'var(--crust)', stroke: 'var(--ink)', 'stroke-width': 1.4 }, g);
+        var t = el('text', { x: x + 17, y: 136, 'class': 't-label' }, g);
+        t.textContent = i + 1;
+        g.addEventListener('click', function () {
+          var was = g.classList.contains('lift');
+          Array.prototype.forEach.call(slicesG.children, function (s) { s.classList.remove('lift'); });
+          if (!was) {
+            g.classList.add('lift');
+            cap.textContent = '妹妹抽起的是其中 1 片';
+            status.innerHTML = '抽起 <b>1 片</b>：1 片是 8 等分中的 <b>1 份</b>。';
+            say('抽起一片土司。');
+          } else {
+            cap.textContent = '1 條土司，平切成 8 片（點一片抽起來）';
+            status.innerHTML = '8 片都一樣大，每一片是整條的幾分之幾呢？';
+          }
+        });
+      })(i);
+    }
+  }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el2) { el2.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！1/8 條土司就是 1 片。';
+      vq.classList.add('show');
+      say('答對！八分之一條土司就是一片。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：8 等分中的 1 份，就是抽起來的那 1 片。';
+    say('再想想看：八等分中的一份就是一片。');
+    return { ok: false, picked: picked };
+  };
+  build();
+  window.__q = { id: 'G2-N-2-10-Q05', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
