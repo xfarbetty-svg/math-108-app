@@ -28,8 +28,8 @@
 
 3. **👁️ 軌道 B 多模態視覺審查與實體發布 (Stage 3 & 4)**：
    - 產出 10 張 390px 實機截圖至 `reports/previews/`。
-   - AGY 調用 `read_file` 親眼逐張多模態視覺審查：10 張截圖文字無遮擋壓線、SVG 零穿模、防劇透合規，全數判定 PASS！
-   - 執行 `tools/release.py` 自動發布：15 道確定性門禁全綠（課綱 131 閘門、CDP 視口、App Shell、TTS）、Git 提交、自動推送至 GitHub、邊緣部署至 Cloudflare Pages（Build `20261117_122936`，HTTP 200 線上探測驗真通過）。
+   - 人工與 AGY 視覺覆核：精確抓出 Q03 彩帶寬度座標偏差（原本彩帶長 150px 終點落在 8cm 刻度，已外科手術精修為 180px 終點精準落在 9cm 刻度，並重拍截圖）。
+   - 執行 `tools/release.py` 自動發布：15 道確定性門禁全綠（課綱 131 閘門、CDP 視口、App Shell、TTS）、Git 提交、自動推送至 GitHub、邊緣部署至 Cloudflare Pages（Build `20261117_125745`，HTTP 200 線上探測驗真通過）。
 
 ---
 
