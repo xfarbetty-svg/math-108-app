@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-S-2-2-Q09 特殊長方體的面組成</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:3px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:4px 6px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13px; font-weight:800; line-height:1.3; }
+.stem small { display:block; font-size:10px; font-weight:700; color:var(--ink-soft); margin-bottom:1px; }
+.stage { position:relative; width:100%; height:130px; border-radius:10px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.stage-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; filter:brightness(.92) contrast(1.05); }
+.stage-overlay { position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.45) 0%, rgba(255,249,240,.3) 100%); backdrop-filter:blur(1.5px); }
+.scene-svg { position:relative; z-index:2; display:block; width:100%; height:100%; }
+#g3d, #gnet { transform-box:fill-box; transform-origin:center; transition:opacity .45s ease, transform .45s ease; }
+#gnet { opacity:0; transform:scale(.8); pointer-events:none; }
+#gnet.open { opacity:1; transform:scale(1); pointer-events:auto; }
+#g3d.hide { opacity:0; transform:scale(.85); pointer-events:none; }
+.net-cell { cursor:pointer; transition:filter .2s; }
+.net-cell:hover { filter:brightness(1.15); }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:4px; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:4px 12px; font-size:11.5px; font-weight:800; cursor:pointer; }
+.tool-btn.on { background:var(--mint-deep); color:#fff; }
+.status { text-align:center; font-size:11.5px; font-weight:800; color:var(--ink-soft); min-height:16px; margin-top:3px; }
+.status b { color:var(--mint-deep); }
+.t-lab { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-shape { font-size:9px; font-weight:800; fill:rgba(61,58,52,.75); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:9px; padding:4px 3px; font-size:12px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border:none; border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); cursor:pointer; }
+.result-banner { display:none; border-radius:10px; padding:6px 10px; font-size:12px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>特殊長方體的面組成</small>觀察某個特殊長方體盒子，下面哪一個敘述是對的？拆解平鋪來辨析！</p>
+  </div>
+  <div class="card">
+    <div class="stage">
+      <img src="../assets/demo/bg_desk.webp" class="stage-bg" alt="書桌背景">
+      <div class="stage-overlay"></div>
+      <svg class="scene-svg" viewBox="0 0 360 150" role="img" aria-label="特殊長方體拆解觀察">
+        <ellipse cx="195" cy="134" rx="80" ry="6" fill="rgba(61,58,52,.12)"/>
+        <!-- 立體：特殊長方體（長 90、兩端 46×46 正方形面） -->
+        <g id="g3d">
+          <polygon points="180,10 258,55 258,101 180,56" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <polygon points="180,10 140,78 140,124 180,56" fill="rgba(147,197,253,.2)" stroke="rgba(61,58,52,.35)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <polygon points="180,56 258,101 218,124 140,124" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <polygon points="180,10 258,55 218,78 140,78" fill="#fff2b2" stroke="#fffdf8" stroke-width="1"/>
+          <polygon points="140,78 218,78 218,124 140,124" fill="#ffd166" stroke="#fffdf8" stroke-width="1"/>
+          <polygon points="258,55 218,78 218,124 258,101" fill="#93c5fd" stroke="#fffdf8" stroke-width="1"/>
+          <line x1="180" y1="10" x2="258" y2="55" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="258" y1="55" x2="218" y2="78" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="218" y1="78" x2="140" y2="78" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="140" y1="78" x2="180" y2="10" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="258" y1="55" x2="258" y2="101" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="218" y1="78" x2="218" y2="124" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="140" y1="78" x2="140" y2="124" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="258" y1="101" x2="218" y2="124" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="218" y1="124" x2="140" y2="124" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="180" y1="10" x2="180" y2="56" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <line x1="180" y1="56" x2="258" y2="101" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <line x1="180" y1="56" x2="140" y2="124" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <text x="238" y="92" class="t-shape">正方形面</text>
+          <text x="179" y="105" class="t-shape">長方形面</text>
+        </g>
+        <!-- 平鋪展開：4 個長方形 + 2 個正方形（1-4-1 排法；外層定位、內層 gnet 做淡入縮放） -->
+        <g transform="translate(29,15) scale(.84)">
+          <g id="gnet">
+            <rect class="net-cell rc" x="0" y="48" width="90" height="46" fill="#ffd166" stroke="#fffdf8" stroke-width="1.5"/>
+            <rect class="net-cell rc" x="90" y="48" width="90" height="46" fill="#ffd166" stroke="#fffdf8" stroke-width="1.5"/>
+            <rect class="net-cell rc" x="180" y="48" width="90" height="46" fill="#ffd166" stroke="#fffdf8" stroke-width="1.5"/>
+            <rect class="net-cell rc" x="270" y="48" width="90" height="46" fill="#ffd166" stroke="#fffdf8" stroke-width="1.5"/>
+            <rect class="net-cell sq" x="90" y="0" width="46" height="46" fill="#93c5fd" stroke="#fffdf8" stroke-width="1.5"/>
+            <rect class="net-cell sq" x="90" y="96" width="46" height="46" fill="#93c5fd" stroke="#fffdf8" stroke-width="1.5"/>
+            <line x1="90" y1="48" x2="360" y2="48" stroke="rgba(61,58,52,.5)" stroke-width="1" stroke-dasharray="4 3"/>
+            <line x1="90" y1="94" x2="360" y2="94" stroke="rgba(61,58,52,.5)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="45" y="75" class="t-shape">長方形</text>
+            <text x="135" y="75" class="t-shape">長方形</text>
+            <text x="225" y="75" class="t-shape">長方形</text>
+            <text x="315" y="75" class="t-shape">長方形</text>
+            <text x="113" y="27" class="t-shape">正方形</text>
+            <text x="113" y="123" class="t-shape">正方形</text>
+          </g>
+        </g>
+        <text x="189" y="149" class="t-lab" id="cap">特殊長方體盒子（兩端是正方形）</text>
+      </svg>
+    </div>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="btnFold">拆解平鋪看看 ✂️</button>
+    </div>
+    <p class="status" id="status">先觀察盒子，再拆解平鋪，數一數每種形狀的面有幾個！</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" type="button" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  // SSOT：data/units/G2/S-2-2.json → G2-S-2-2-Q09（字字對齊，嚴防劇透：未作答前不顯示解析）
+  var CHOICES = ['有 4 個長方形的面和 2 個正方形的面', '有 6 個頂點', '有 6 個邊', '有 2 個長方形的面和 4 個正方形的面'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var status = document.getElementById('status');
+  var btnFold = document.getElementById('btnFold');
+  var g3d = document.getElementById('g3d');
+  var gnet = document.getElementById('gnet');
+  var cap = document.getElementById('cap');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      banner.className = 'result-banner'; banner.textContent = '';
+    });
+    optBox.appendChild(b);
+  });
+
+  var open = false;
+  btnFold.addEventListener('click', function () {
+    open = !open;
+    gnet.classList.toggle('open', open);
+    g3d.classList.toggle('hide', open);
+    btnFold.classList.toggle('on', open);
+    btnFold.textContent = open ? '摺回盒子 📦' : '拆解平鋪看看 ✂️';
+    cap.textContent = open ? '拆解後：4 個長方形＋2 個正方形' : '特殊長方體盒子（兩端是正方形）';
+    if (open) {
+      status.textContent = '拆好了！點點看每個面，它是長方形還是正方形？';
+      say('拆解平鋪，數一數長方形和正方形各有幾個。');
+    } else {
+      status.textContent = '先觀察盒子，再拆解平鋪，數一數每種形狀的面有幾個！';
+    }
+  });
+  gnet.querySelectorAll('.net-cell').forEach(function (cell) {
+    cell.addEventListener('click', function () {
+      if (!open) return;
+      gnet.querySelectorAll('.net-cell').forEach(function (c) { c.style.filter = ''; });
+      cell.style.filter = 'brightness(1.25) saturate(1.3)';
+      if (cell.classList.contains('sq')) {
+        status.innerHTML = '這是<b>正方形</b>面——像這樣的正方形面一共 <b>2 個</b>，在盒子兩端互相面對面。';
+        say('正方形面有兩個。');
+      } else {
+        status.innerHTML = '這是<b>長方形</b>面——繞著正方形面圍一圈，一共 <b>4 個</b>。所以是 4 個長方形＋2 個正方形。';
+        say('長方形面有四個。');
+      }
+    });
+  });
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！兩端的 2 個正方形面互相面對面，剩下 4 個面是長方形。';
+      say('答對！四個長方形加兩個正方形。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：先找到 2 個正方形面在哪裡（兩端互相面對面），剩下就是 4 個長方形面；不管哪種長方體都是 8 個頂點、12 條邊。';
+    say('再想想看，四個長方形加兩個正方形。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-S-2-2-Q09', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-S-2-2-Q08 長方體邊、面、頂點總計</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.stage { position:relative; width:100%; height:150px; border-radius:12px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.stage-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; filter:brightness(.92) contrast(1.05); }
+.stage-overlay { position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.45) 0%, rgba(255,249,240,.3) 100%); backdrop-filter:blur(1.5px); }
+.scene-svg { position:relative; z-index:2; display:block; width:100%; height:100%; }
+.tag { cursor:pointer; }
+.tag rect { transition:all .2s; }
+.tag.on rect { fill:#318a70; }
+.tag.on text { fill:#fff; }
+.status { text-align:center; font-size:11.5px; font-weight:800; color:var(--ink-soft); min-height:16px; margin-top:3px; }
+.status b { color:var(--mint-deep); }
+.t-num { font-size:9px; font-weight:800; fill:var(--mint-deep); text-anchor:middle; opacity:0; }
+.t-lab { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:6px 4px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border:none; border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); cursor:pointer; }
+.result-banner { display:none; border-radius:10px; padding:6px 10px; font-size:12px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>長方體邊、面、頂點總計</small>一個長方體共有幾條邊、幾個面和幾個頂點？點標籤盤點看看！</p>
+  </div>
+  <div class="card">
+    <div class="stage">
+      <img src="../assets/demo/bg_desk.webp" class="stage-bg" alt="書桌背景">
+      <div class="stage-overlay"></div>
+      <svg class="scene-svg" viewBox="0 0 360 150" role="img" aria-label="長方體空間指示圖">
+        <ellipse cx="189" cy="142" rx="72" ry="6" fill="rgba(61,58,52,.12)"/>
+        <!-- Isometric 長方體（L=88 B=44 H=52） -->
+        <g id="box">
+          <polygon class="face" points="170,14 246,58 246,110 170,66" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <polygon class="face" points="170,14 132,80 132,132 170,66" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <polygon class="face" points="170,66 246,110 208,132 132,132" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <polygon class="face" points="170,14 246,58 208,80 132,80" fill="#fff2b2" stroke="#fffdf8" stroke-width="1"/>
+          <polygon class="face" points="132,80 208,80 208,132 132,132" fill="#ffd166" stroke="#fffdf8" stroke-width="1"/>
+          <polygon class="face" points="246,58 208,80 208,132 246,110" fill="#e6b840" stroke="#fffdf8" stroke-width="1"/>
+          <line class="edge" x1="170" y1="14" x2="246" y2="58" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="246" y1="58" x2="208" y2="80" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="208" y1="80" x2="132" y2="80" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="132" y1="80" x2="170" y2="14" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="246" y1="58" x2="246" y2="110" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="208" y1="80" x2="208" y2="132" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="132" y1="80" x2="132" y2="132" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="246" y1="110" x2="208" y2="132" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge" x1="208" y1="132" x2="132" y2="132" stroke="var(--ink)" stroke-width="1.6" stroke-linecap="round"/>
+          <line class="edge edge-hid" x1="170" y1="14" x2="170" y2="66" stroke="rgba(61,58,52,.35)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <line class="edge edge-hid" x1="170" y1="66" x2="246" y2="110" stroke="rgba(61,58,52,.35)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <line class="edge edge-hid" x1="170" y1="66" x2="132" y2="132" stroke="rgba(61,58,52,.35)" stroke-width="1.4" stroke-dasharray="3 3"/>
+          <circle class="vtx" cx="170" cy="14" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+          <circle class="vtx" cx="246" cy="58" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+          <circle class="vtx" cx="208" cy="80" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+          <circle class="vtx" cx="132" cy="80" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+          <circle class="vtx" cx="170" cy="66" r="4.5" fill="#fff" stroke="rgba(61,58,52,.45)" stroke-width="1.4" stroke-dasharray="2 2"/>
+          <circle class="vtx" cx="246" cy="110" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+          <circle class="vtx" cx="208" cy="132" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+          <circle class="vtx" cx="132" cy="132" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="1.6"/>
+        </g>
+        <!-- 三個指針標籤：頂點 / 邊 / 面（可點擊） -->
+        <g id="tagV" class="tag">
+          <line x1="76" y1="36" x2="126" y2="76" stroke="#318a70" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <circle cx="126" cy="76" r="3" fill="#318a70"/>
+          <rect x="18" y="24" width="56" height="20" rx="10" fill="#ffd166" stroke="#318a70" stroke-width="1.6"/>
+          <text x="46" y="38" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">頂點</text>
+        </g>
+        <g id="tagE" class="tag">
+          <line x1="76" y1="94" x2="128" y2="108" stroke="#318a70" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <circle cx="128" cy="108" r="3" fill="#318a70"/>
+          <rect x="18" y="84" width="56" height="20" rx="10" fill="#ffd166" stroke="#318a70" stroke-width="1.6"/>
+          <text x="46" y="98" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">邊</text>
+        </g>
+        <g id="tagF" class="tag">
+          <line x1="298" y1="36" x2="238" y2="52" stroke="#318a70" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <circle cx="238" cy="52" r="3" fill="#318a70"/>
+          <rect x="288" y="24" width="56" height="20" rx="10" fill="#ffd166" stroke="#318a70" stroke-width="1.6"/>
+          <text x="316" y="38" text-anchor="middle" font-size="12" font-weight="800" fill="#3d3a34">面</text>
+        </g>
+        <text x="189" y="150" class="t-lab">長方體空間指示圖</text>
+      </svg>
+    </div>
+    <p class="status" id="status">點「頂點」「邊」「面」三個標籤，幫長方體做總數盤點！</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" type="button" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  // SSOT：data/units/G2/S-2-2.json → G2-S-2-2-Q08（字字對齊，嚴防劇透：未作答前不顯示解析）
+  var CHOICES = ['12 條邊、6 個面、8 個頂點', '8 條邊、6 個面、12 個頂點', '12 條邊、8 個面、6 個頂點', '6 條邊、12 個面、8 個頂點'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var status = document.getElementById('status');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      banner.className = 'result-banner'; banner.textContent = '';
+    });
+    optBox.appendChild(b);
+  });
+
+  var vtxs = Array.prototype.slice.call(document.querySelectorAll('#box .vtx'));
+  var edges = Array.prototype.slice.call(document.querySelectorAll('#box .edge'));
+  var faces = Array.prototype.slice.call(document.querySelectorAll('#box .face'));
+  var tags = { v: document.getElementById('tagV'), e: document.getElementById('tagE'), f: document.getElementById('tagF') };
+  var timer = null;
+
+  function clearFx() {
+    if (timer) { clearInterval(timer); timer = null; }
+    vtxs.forEach(function (v) { v.setAttribute('fill', '#fff'); v.setAttribute('stroke', v.getAttribute('stroke-dasharray') ? 'rgba(61,58,52,.45)' : 'var(--ink)'); });
+    edges.forEach(function (e) { e.setAttribute('stroke', e.classList.contains('edge-hid') ? 'rgba(61,58,52,.35)' : 'var(--ink)'); e.setAttribute('stroke-width', e.classList.contains('edge-hid') ? '1.4' : '1.6'); });
+    faces.forEach(function (f) { f.style.filter = ''; });
+    Object.keys(tags).forEach(function (k) { tags[k].classList.remove('on'); });
+  }
+  function runCount(list, each, finalMsg, finalFx, spoken) {
+    var step = 0;
+    timer = setInterval(function () {
+      if (step >= list.length) {
+        clearInterval(timer); timer = null;
+        finalFx();
+        status.innerHTML = finalMsg;
+        say(spoken);
+        return;
+      }
+      each(list[step]);
+      status.innerHTML = '盤點中：第 <b>' + (step + 1) + '</b> 個……';
+      step += 1;
+    }, 280);
+  }
+
+  tags.v.addEventListener('click', function () {
+    var wasOn = tags.v.classList.contains('on');
+    clearFx();
+    if (wasOn) { status.textContent = '點「頂點」「邊」「面」三個標籤，幫長方體做總數盤點！'; return; }
+    tags.v.classList.add('on');
+    say('指認頂點，數數看有幾個？');
+    runCount(vtxs,
+      function (v) { v.setAttribute('fill', '#ff6b6b'); v.setAttribute('stroke', '#c24141'); },
+      '頂點：上面 4 個＋下面 4 個，一共 <b>8 個頂點</b> ✔',
+      function () { vtxs.forEach(function (v) { v.setAttribute('fill', '#ff6b6b'); v.setAttribute('stroke', '#c24141'); }); },
+      '頂點一共八個！');
+  });
+  tags.e.addEventListener('click', function () {
+    var wasOn = tags.e.classList.contains('on');
+    clearFx();
+    if (wasOn) { status.textContent = '點「頂點」「邊」「面」三個標籤，幫長方體做總數盤點！'; return; }
+    tags.e.classList.add('on');
+    say('指認邊，數數看有幾條？');
+    runCount(edges,
+      function (e) { e.setAttribute('stroke', '#ff6b6b'); e.setAttribute('stroke-width', '2.6'); },
+      '邊：長、寬、高各 4 條，4＋4＋4＝<b>12 條邊</b> ✔',
+      function () { edges.forEach(function (e) { e.setAttribute('stroke', '#ff6b6b'); e.setAttribute('stroke-width', '2.6'); }); },
+      '邊一共十二條！');
+  });
+  tags.f.addEventListener('click', function () {
+    var wasOn = tags.f.classList.contains('on');
+    clearFx();
+    if (wasOn) { status.textContent = '點「頂點」「邊」「面」三個標籤，幫長方體做總數盤點！'; return; }
+    tags.f.classList.add('on');
+    say('指認面，數數看有幾個？');
+    runCount(faces,
+      function (f) { f.style.filter = 'brightness(1.2) saturate(1.25)'; },
+      '面：上下、前後、左右各一對，一共 <b>6 個面</b> ✔',
+      function () { faces.forEach(function (f) { f.style.filter = 'brightness(1.2) saturate(1.25)'; }); },
+      '面一共六個！');
+  });
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！口訣「面 6 邊 12 點 8」：12 條邊、6 個面、8 個頂點。';
+      say('答對！面六邊十二點八。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：口訣「面 6 邊 12 點 8」——面最少、邊最多、頂點 8 個，配對順序不能亂。';
+    say('再想想看，面六邊十二點八。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-S-2-2-Q08', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

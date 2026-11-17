@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-S-2-1-Q05 平面形與立體形體分類</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.stage { position:relative; width:100%; height:140px; border-radius:12px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.stage-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; filter:brightness(.92) contrast(1.05); }
+.stage-overlay { position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.45) 0%, rgba(255,249,240,.3) 100%); backdrop-filter:blur(1.5px); }
+.scene-svg { position:relative; z-index:2; display:block; width:100%; height:100%; }
+.item { cursor:pointer; }
+.item .hl { opacity:0; transition:opacity .25s; }
+.item.sel .hl { opacity:1; }
+.item .piece { transition:transform .2s; transform-box:fill-box; transform-origin:center bottom; }
+.item.sel .piece { transform:translateY(-3px); }
+.t-num { font-size:10px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.status { text-align:center; font-size:11.5px; font-weight:800; color:var(--ink-soft); min-height:16px; margin-top:3px; }
+.status b { color:var(--ink); }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border:none; border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); cursor:pointer; }
+.result-banner { display:none; border-radius:10px; padding:6px 10px; font-size:12px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>平面形與立體形體分類</small>圓形、正方形、長方體、正方體中，哪兩個是「立體形體」？點點看桌上的四樣東西！</p>
+  </div>
+  <div class="card">
+    <div class="stage">
+      <img src="../assets/demo/bg_toy_room.webp" class="stage-bg" alt="玩具房背景">
+      <div class="stage-overlay"></div>
+      <svg class="scene-svg" viewBox="0 0 360 140" role="img" aria-label="紙上的圓形與正方形，站立的長方體與正方體">
+        <!-- 左：一張紙，平面形躺在紙上 -->
+        <polygon points="34,104 158,104 190,66 66,66" fill="#fffdf8" stroke="#d8cfbf" stroke-width="1.5"/>
+        <ellipse cx="86" cy="88" rx="17" ry="7.5" fill="rgba(61,58,52,.1)"/>
+        <ellipse cx="128" cy="88" rx="22" ry="9" fill="rgba(61,58,52,.1)"/>
+        <ellipse cx="222" cy="118" rx="34" ry="5" fill="rgba(61,58,52,.12)"/>
+        <ellipse cx="290" cy="118" rx="40" ry="5" fill="rgba(61,58,52,.12)"/>
+
+        <!-- ① 圓形（平平薄薄躺在紙上） -->
+        <g class="item" id="it-circle" data-key="circle">
+          <ellipse class="hl" cx="86" cy="88" rx="20" ry="9" fill="#2a7e65" opacity="0"/>
+          <g class="piece">
+            <ellipse cx="86" cy="86" rx="17" ry="7.5" fill="#ffd166" stroke="#b8860b" stroke-width="1.5"/>
+            <path d="M75,83 Q86,79 97,83" fill="none" stroke="#fff" stroke-width="1.5" opacity=".8"/>
+          </g>
+          <text x="86" y="136" class="t-num">圓形</text>
+        </g>
+
+        <!-- ② 正方形（平平薄薄躺在紙上） -->
+        <g class="item" id="it-square" data-key="square">
+          <ellipse class="hl" cx="128" cy="88" rx="24" ry="10" fill="#2a7e65" opacity="0"/>
+          <g class="piece">
+            <polygon points="112,90 128,97 146,86 130,79" fill="#7bc9b2" stroke="#2a7e65" stroke-width="1.5" stroke-linejoin="round"/>
+          </g>
+          <text x="128" y="136" class="t-num">正方形</text>
+        </g>
+
+        <!-- ③ 正方體（立體有厚度）Isometric s=22 四階光影 -->
+        <g class="item" id="it-cube" data-key="cube">
+          <ellipse class="hl" cx="222" cy="118" rx="34" ry="6" fill="#2a7e65" opacity="0"/>
+          <g class="piece">
+            <polygon points="222,58 241,69 222,80 203,69" fill="#fff2b2" stroke="#fffdf8" stroke-width="1"/>
+            <polygon points="203,69 222,80 222,116 203,105" fill="#ffd166" stroke="#fffdf8" stroke-width="1"/>
+            <polygon points="222,80 241,69 241,105 222,116" fill="#e6b840" stroke="#fffdf8" stroke-width="1"/>
+            <polyline points="203,69 222,80 241,69" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+            <line x1="222" y1="58" x2="222" y2="116" stroke="var(--ink)" stroke-width="1.2"/>
+            <polygon points="222,58 241,69 222,80 203,69" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
+          </g>
+          <text x="222" y="136" class="t-num">正方體</text>
+        </g>
+
+        <!-- ④ 長方體（立體有厚度）拉長盒子 -->
+        <g class="item" id="it-box" data-key="box">
+          <ellipse class="hl" cx="290" cy="118" rx="40" ry="6" fill="#2a7e65" opacity="0"/>
+          <g class="piece">
+            <polygon points="272,62 316,74 272,86 228,74" fill="#fff2b2" stroke="#fffdf8" stroke-width="1"/>
+            <polygon points="228,74 272,86 272,112 228,100" fill="#ffd166" stroke="#fffdf8" stroke-width="1"/>
+            <polygon points="272,86 316,74 316,100 272,112" fill="#e6b840" stroke="#fffdf8" stroke-width="1"/>
+            <polyline points="228,74 272,86 316,74" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+            <line x1="272" y1="62" x2="272" y2="112" stroke="var(--ink)" stroke-width="1.2"/>
+            <polygon points="272,62 316,74 272,86 228,74" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
+          </g>
+          <text x="290" y="136" class="t-num">長方體</text>
+        </g>
+      </svg>
+    </div>
+    <p class="status" id="status">點一樣東西：它是<b>平平薄薄</b>的，還是<b>有厚度</b>的？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" type="button" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ["長方體和正方體", "圓形和正方形", "正方形和長方體", "圓形和正方體"];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var status = document.getElementById('status');
+  var TEXTS = {
+    circle: '圓形：<b>平平薄薄</b>的，躺在紙上，只有長和寬。',
+    square: '正方形：<b>平平薄薄</b>的，躺在紙上，只有長和寬。',
+    cube: '正方體：<b>立體</b>！有厚度，站起來占了空間。',
+    box: '長方體：<b>立體</b>！有厚度，站起來占了空間。'
+  };
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  ['circle', 'square', 'cube', 'box'].forEach(function (key) {
+    document.getElementById('it-' + key).addEventListener('click', function () {
+      ['circle', 'square', 'cube', 'box'].forEach(function (k) {
+        document.getElementById('it-' + k).classList.toggle('sel', k === key);
+      });
+      status.innerHTML = TEXTS[key];
+      say(TEXTS[key].replace(/<[^>]+>/g, ''));
+    });
+  });
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！長方體和正方體有厚度、占空間，是立體形體；圓形和正方形是平平的平面形。';
+      say('答對！長方體和正方體是立體形體。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：最後一個字是「形」就是平面形，「體」才是立體形體喔！';
+    say('再想想看：有體字的才是立體形體。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-S-2-1-Q05', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

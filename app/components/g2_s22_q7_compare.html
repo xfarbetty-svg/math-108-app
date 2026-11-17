@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-S-2-2-Q07 正方體與長方體的面比較</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.stage { position:relative; width:100%; height:150px; border-radius:12px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.stage-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; filter:brightness(.92) contrast(1.05); }
+.stage-overlay { position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.45) 0%, rgba(255,249,240,.3) 100%); backdrop-filter:blur(1.5px); }
+.scene-svg { position:relative; z-index:2; display:block; width:100%; height:100%; }
+.face-click { cursor:pointer; transition:filter .2s; }
+.face-click:hover { filter:brightness(1.15); }
+.status { text-align:center; font-size:11.5px; font-weight:800; color:var(--ink-soft); min-height:16px; margin-top:3px; }
+.status b { color:var(--mint-deep); }
+.t-lab { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-hint { font-size:9.5px; font-weight:800; fill:#b45309; text-anchor:middle; }
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:6px 4px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border:none; border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); cursor:pointer; }
+.result-banner { display:none; border-radius:10px; padding:6px 10px; font-size:12px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>正方體與長方體的面比較</small>選出正確的答案：先點點看兩個盒子的面，比一比！</p>
+  </div>
+  <div class="card">
+    <div class="stage">
+      <img src="../assets/demo/bg_desk.webp" class="stage-bg" alt="書桌背景">
+      <div class="stage-overlay"></div>
+      <svg class="scene-svg" viewBox="0 0 360 150" role="img" aria-label="長方體與正方體對比">
+        <ellipse cx="110" cy="108" rx="56" ry="6" fill="rgba(61,58,52,.12)"/>
+        <ellipse cx="265" cy="108" rx="42" ry="6" fill="rgba(61,58,52,.12)"/>
+        <!-- 左：長方體（L=64 B=28 H=28，左右兩端是正方形面） -->
+        <g id="cuboid">
+          <polygon class="fc" points="95,28 150,60 150,88 95,56" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <polygon class="fc sq" points="95,28 71,74 71,102 95,56" fill="rgba(147,197,253,.2)" stroke="rgba(61,58,52,.35)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <polygon class="fc" points="95,56 150,88 126,102 71,102" fill="rgba(255,209,102,.12)" stroke="rgba(61,58,52,.35)" stroke-width="1.1" stroke-dasharray="3 3"/>
+          <polygon class="fc" points="95,28 150,60 126,74 71,74" fill="#fff2b2" stroke="#fffdf8" stroke-width="1"/>
+          <polygon class="fc" points="71,74 126,74 126,102 71,102" fill="#ffd166" stroke="#fffdf8" stroke-width="1"/>
+          <polygon class="fc sq" points="150,60 126,74 126,102 150,88" fill="#93c5fd" stroke="#fffdf8" stroke-width="1"/>
+          <line x1="95" y1="28" x2="150" y2="60" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="150" y1="60" x2="126" y2="74" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="126" y1="74" x2="71" y2="74" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="71" y1="74" x2="95" y2="28" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="150" y1="60" x2="150" y2="88" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="126" y1="74" x2="126" y2="102" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="71" y1="74" x2="71" y2="102" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="150" y1="88" x2="126" y2="102" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="126" y1="102" x2="71" y2="102" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="95" y1="28" x2="95" y2="56" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <line x1="95" y1="56" x2="150" y2="88" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <line x1="95" y1="56" x2="71" y2="102" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        </g>
+        <text x="110" y="122" class="t-lab">長方體（藍色面點點看）</text>
+        <text x="110" y="134" class="t-hint">右端面是正方形！</text>
+        <!-- 右：正方體（s=28） -->
+        <g id="cube">
+          <polygon class="fc" points="265,46 289,60 265,74 241,60" fill="#fff2b2" stroke="#fffdf8" stroke-width="1"/>
+          <polygon class="fc" points="241,60 265,74 265,102 241,88" fill="#ffd166" stroke="#fffdf8" stroke-width="1"/>
+          <polygon class="fc" points="265,74 289,60 289,88 265,102" fill="#e6b840" stroke="#fffdf8" stroke-width="1"/>
+          <line x1="265" y1="46" x2="289" y2="60" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="289" y1="60" x2="265" y2="74" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="265" y1="74" x2="241" y2="60" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="241" y1="60" x2="265" y2="46" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="265" y1="74" x2="265" y2="102" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="241" y1="60" x2="241" y2="88" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="289" y1="60" x2="289" y2="88" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="241" y1="88" x2="265" y2="102" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="265" y1="102" x2="289" y2="88" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="265" y1="46" x2="265" y2="74" stroke="rgba(61,58,52,.35)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        </g>
+        <text x="265" y="122" class="t-lab">正方體</text>
+        <text x="265" y="134" class="t-hint">每個面都一樣？</text>
+      </svg>
+    </div>
+    <p class="status" id="status">點點看兩個盒子的每一個面，它們是什麼形狀？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" type="button" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  // SSOT：data/units/G2/S-2-2.json → G2-S-2-2-Q07（字字對齊，嚴防劇透：未作答前不顯示解析）
+  var CHOICES = ['正方體有 6 個面，每個面一定都是正方形', '長方體有 6 個面，每個面一定都是長方形', '長方體的 6 個面大小都一樣', '長方體的頂點比正方體多'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var status = document.getElementById('status');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      banner.className = 'result-banner'; banner.textContent = '';
+    });
+    optBox.appendChild(b);
+  });
+
+  function flash(poly) {
+    Array.prototype.forEach.call(document.querySelectorAll('.fc'), function (f) { f.style.filter = ''; });
+    poly.style.filter = 'brightness(1.25) saturate(1.3)';
+  }
+  document.querySelectorAll('#cuboid .fc').forEach(function (poly) {
+    poly.addEventListener('click', function () {
+      flash(poly);
+      var isSquare = poly.classList.contains('sq');
+      if (isSquare) {
+        status.innerHTML = '這個面是<b>正方形</b>！長方體的面不一定都是長方形，也可以有 <b>2 個正方形面</b>。';
+        say('這個面是正方形，長方體也可以有兩個正方形的面。');
+      } else {
+        status.innerHTML = '這個面是<b>長方形</b>；不過長方體的面不一定都是長方形，也可以有 <b>2 個正方形面</b>（左右兩端）。';
+        say('長方體的面不一定都是長方形，也可以有兩個正方形面。');
+      }
+    });
+  });
+  document.querySelectorAll('#cube .fc').forEach(function (poly) {
+    poly.addEventListener('click', function () {
+      flash(poly);
+      status.innerHTML = '正方體 <b>6 個面一定都是正方形</b>，而且 6 個面都一樣大。';
+      say('正方體六個面一定都是正方形。');
+    });
+  });
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！正方體的 6 個面一定都是（一樣大的）正方形。';
+      say('答對！正方體六個面都是正方形。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：有一種長方體有 2 個面是正方形，所以「一定都是長方形」不對；兩種形體的頂點一樣都是 8 個。';
+    say('再想想看，正方體六個面都是正方形。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-S-2-2-Q07', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

@@ -217,17 +217,17 @@
           "code": "S-2-1",
           "title": "物體之幾何特徵",
           "full_text": "物體之幾何特徵：以操作活動為主。進行辨認與描述之活動。藉由實際物體認識簡單幾何形體（包含平面圖形與立體形體），並連結幾何概念（如長、短、大、小等）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "高雄市獅湖國小 113-2、臺北市內湖國小 111-2/113-2 期末/期中段考真題（034 Anatomy 純向量 + 036 繪本底圖）"
         },
         {
           "code": "S-2-2",
           "title": "簡單幾何形體",
           "full_text": "簡單幾何形體：以操作活動為主。包含平面圖形與立體形體。辨認與描述平面圖形與立體形體的幾何特徵並做分類。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "高雄市永安國小 113-2、高雄市獅湖國小 113-2、臺北市內湖國小 111-2 期中/期末段考真題（034 Anatomy 純向量 + 036 繪本底圖）"
         },
         {
           "code": "S-2-3",

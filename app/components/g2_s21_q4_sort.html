@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-S-2-1-Q04 長方體物品分類</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.stage { position:relative; width:100%; height:140px; border-radius:12px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.stage-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; filter:brightness(.92) contrast(1.05); }
+.stage-overlay { position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.45) 0%, rgba(255,249,240,.3) 100%); backdrop-filter:blur(1.5px); }
+.scene-svg { position:relative; z-index:2; display:block; width:100%; height:100%; }
+.bin { cursor:pointer; }
+.bin .hl { opacity:0; transition:opacity .2s; }
+.bin.sel .hl, .bin.done .hl { opacity:1; }
+.bin-label { font-size:10.5px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+@keyframes shake { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+.bin.shake { animation:shake .35s; transform-box:fill-box; }
+.chips { display:flex; justify-content:center; gap:6px; margin-top:4px; }
+.chip { border:2px solid var(--line); background:#fff; border-radius:999px; padding:4px 12px; font-size:12px; font-weight:800; color:var(--ink); cursor:pointer; transition:all .15s; }
+.chip.sel { border-color:var(--lemon); background:#fff3bf; }
+.chip.done { opacity:.45; pointer-events:none; text-decoration:line-through; }
+.status { text-align:center; font-size:11.5px; font-weight:800; color:var(--ink-soft); min-height:16px; margin-top:3px; }
+.status b { color:var(--ink); }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border:none; border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); cursor:pointer; }
+.result-banner { display:none; border-radius:10px; padding:6px 10px; font-size:12px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>長方體物品分類</small>骰子、面紙盒、鞋盒、積木中，哪兩樣通常是長方體？先玩玩看：把物品收進對的盒子裡！</p>
+  </div>
+  <div class="card">
+    <div class="stage">
+      <img src="../assets/demo/bg_toy_room.webp" class="stage-bg" alt="玩具房背景">
+      <div class="stage-overlay"></div>
+      <svg class="scene-svg" viewBox="0 0 360 140" role="img" aria-label="長方體收納盒與正方體收納盒">
+        <ellipse cx="92" cy="112" rx="60" ry="6" fill="rgba(61,58,52,.12)"/>
+        <ellipse cx="250" cy="112" rx="46" ry="6" fill="rgba(61,58,52,.12)"/>
+
+        <!-- 長方體收納盒（左，開口可視） -->
+        <g class="bin" id="binLong" data-key="long">
+          <ellipse class="hl" cx="92" cy="112" rx="60" ry="7" fill="#2a7e65" opacity="0"/>
+          <polygon points="40,52 144,52 130,64 54,64" fill="#b9e2d6" stroke="#318a70" stroke-width="1.5"/>
+          <polygon points="40,52 54,64 54,100 40,88" fill="#a8dfd0" stroke="#318a70" stroke-width="1.5"/>
+          <polygon points="144,52 130,64 130,100 144,88" fill="#5fb39e" stroke="#318a70" stroke-width="1.5"/>
+          <g id="longInside"></g>
+          <rect x="54" y="64" width="76" height="36" fill="#7bc9b2" stroke="#318a70" stroke-width="1.5"/>
+          <text x="92" y="130" class="bin-label">長方體收納盒</text>
+        </g>
+
+        <!-- 正方體收納盒（右） -->
+        <g class="bin" id="binCube" data-key="cube">
+          <ellipse class="hl" cx="250" cy="112" rx="46" ry="7" fill="#2a7e65" opacity="0"/>
+          <polygon points="208,54 292,54 280,66 220,66" fill="#fbe3a2" stroke="#b8860b" stroke-width="1.5"/>
+          <polygon points="208,54 220,66 220,100 208,88" fill="#f5d372" stroke="#b8860b" stroke-width="1.5"/>
+          <polygon points="292,54 280,66 280,100 292,88" fill="#e6b840" stroke="#b8860b" stroke-width="1.5"/>
+          <g id="cubeInside"></g>
+          <rect x="220" y="66" width="60" height="34" fill="#ffd166" stroke="#b8860b" stroke-width="1.5"/>
+          <text x="250" y="130" class="bin-label">正方體收納盒</text>
+        </g>
+      </svg>
+    </div>
+    <div class="chips" id="chips">
+      <button type="button" class="chip" data-name="dice">🎲 骰子</button>
+      <button type="button" class="chip" data-name="tissue">🧻 面紙盒</button>
+      <button type="button" class="chip" data-name="shoe">👟 鞋盒</button>
+      <button type="button" class="chip" data-name="block">🧱 積木</button>
+    </div>
+    <p class="status" id="status">點一個物品，再點收納盒，幫它分類！</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" type="button" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ["面紙盒和鞋盒", "骰子和積木", "骰子和鞋盒", "面紙盒和積木"];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var status = document.getElementById('status');
+  var HOME = { dice: '🎲 骰子', tissue: '🧻 面紙盒', shoe: '👟 鞋盒', block: '🧱 積木' };
+  var CORRECT_BIN = { dice: 'binCube', tissue: 'binLong', shoe: 'binLong', block: 'binCube' };
+  var ICON = {
+    dice: '<rect x="-7" y="-7" width="14" height="14" rx="3" fill="#fff" stroke="#3d3a34" stroke-width="1.5"/><circle cx="-2.5" cy="-2.5" r="1.4" fill="#3d3a34"/><circle cx="2.5" cy="-2.5" r="1.4" fill="#3d3a34"/><circle cx="0" cy="0" r="1.4" fill="#3d3a34"/><circle cx="-2.5" cy="2.5" r="1.4" fill="#3d3a34"/><circle cx="2.5" cy="2.5" r="1.4" fill="#3d3a34"/>',
+    tissue: '<rect x="-9" y="-6" width="18" height="12" rx="2" fill="#f7a8b8" stroke="#d16a7f" stroke-width="1.5"/><path d="M-2,-6 Q0,-10 2,-6" fill="none" stroke="#d16a7f" stroke-width="1.5"/>',
+    shoe: '<path d="M-9,4 L-9,-1 Q-9,-3 -6,-3 L3,-3 Q8,-3 9,1 L9,4 Z" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.5"/>',
+    block: '<rect x="-8" y="-8" width="16" height="16" rx="2" fill="#fb923c" stroke="#c2410c" stroke-width="1.5"/><line x1="-8" y1="0" x2="8" y2="0" stroke="#c2410c" stroke-width="1"/>'
+  };
+  var NAMES = { dice: '骰子', tissue: '面紙盒', shoe: '鞋盒', block: '積木' };
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; }
+
+  var current = null;
+  var binLong = document.getElementById('binLong');
+  var binCube = document.getElementById('binCube');
+  var chips = document.querySelectorAll('#chips .chip');
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      if (chip.classList.contains('done')) return;
+      current = chip.dataset.name;
+      chips.forEach(function (c) { c.classList.toggle('sel', c === chip); });
+      binLong.classList.toggle('sel', false);
+      binCube.classList.toggle('sel', false);
+      status.innerHTML = '選了 <b>' + HOME[current] + '</b>，要收進哪一個盒子？';
+    });
+  });
+
+  function place(bin, key) {
+    if (!current) {
+      status.innerHTML = '先點下面一個物品，再來點盒子！';
+      return;
+    }
+    if (CORRECT_BIN[current] === key) {
+      var inside = bin.querySelector('[id$="Inside"]');
+      var NS = 'http://www.w3.org/2000/svg';
+      var g = document.createElementNS(NS, 'g');
+      var slot = inside.children.length;
+      var cx = key === 'long' ? 70 + slot * 44 : 235 + slot * 30;
+      var cy = key === 'long' ? 60 : 62;
+      g.setAttribute('transform', 'translate(' + cx + ',' + cy + ')');
+      g.innerHTML = ICON[current];
+      inside.appendChild(g);
+      chips.forEach(function (c) { if (c.dataset.name === current) { c.classList.add('done'); c.classList.remove('sel'); } });
+      bin.classList.add('done');
+      say(NAMES[current] + '收進去了！');
+      if (document.querySelectorAll('#chips .chip.done').length === 4) {
+        status.innerHTML = '全部收好了！<b>長長扁扁</b>的東西進了長方體盒，<b>方方正正</b>的進了正方體盒。';
+        say('全部收好了！');
+      } else {
+        status.innerHTML = '✓ <b>' + HOME[current] + '</b> 收好了！換下一個物品。';
+      }
+      current = null;
+      bin.classList.remove('sel');
+    } else {
+      bin.classList.remove('shake');
+      void bin.getBoundingClientRect();
+      bin.classList.add('shake');
+      status.innerHTML = '嗯……再摸摸看 <b>' + HOME[current] + '</b> 的形狀：是方方正正的，還是長長扁扁的？';
+      say('再摸摸看它的形狀，是方方的還是長長扁扁的？');
+    }
+  }
+  binLong.addEventListener('click', function () { place(binLong, 'long'); });
+  binCube.addEventListener('click', function () { place(binCube, 'cube'); });
+
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！面紙盒和鞋盒長長扁扁，是長方體；骰子和積木方方正正，是正方體。';
+      say('答對！面紙盒和鞋盒是長方體。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：骰子每個面一樣大，是正方體；長長扁扁的盒子才是長方體喔！';
+    say('再想想看：長長扁扁的盒子才是長方體。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-S-2-1-Q04', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
