@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-12-Q08 容器容量個別單位比較</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --juice:#f5a25d; --milk:#fffdf8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); }
+.opts { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 2px; font-size:13px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:18px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>容器容量個別單位比較（倒滿杯數）</small>1 壺果汁剛好可以倒滿 5 個水杯，1 瓶鮮奶剛好可以倒滿 3 個相同的水杯，哪一個的容量比較大？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：左果汁壺倒 5 杯、右鮮奶瓶倒 3 杯 -->
+    <svg class="scene-svg" viewBox="0 0 360 224" role="img" aria-label="果汁壺倒出5杯與鮮奶瓶倒出3杯">
+      <text x="180" y="18" class="t-caption">用「相同的水杯」當作量杯</text>
+      <g id="pitcher">
+        <path d="M40 46 L40 92 Q40 100 48 100 L72 100 Q80 100 80 92 L80 46 Q60 40 40 46 Z" fill="var(--juice)" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="52" y="30" width="16" height="14" rx="3" fill="var(--juice)" stroke="var(--ink)" stroke-width="1.4"/>
+        <text x="60" y="116" class="t-num" text-anchor="middle">果汁壺</text>
+      </g>
+      <g id="milk">
+        <path d="M280 40 L280 100 L312 100 L312 40 L302 28 L290 28 Z" fill="var(--milk)" stroke="var(--ink)" stroke-width="1.6"/>
+        <rect x="284" y="48" width="24" height="14" rx="3" fill="#cde8f7" stroke="none"/>
+        <text x="296" y="116" class="t-num" text-anchor="middle">鮮奶瓶</text>
+      </g>
+      <g id="cupsL"></g>
+      <g id="cupsR"></g>
+      <line x1="150" y1="20" x2="150" y2="120" stroke="var(--ink-soft)" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <text x="180" y="150" class="t-caption">倒滿的杯數越多，容量就越大</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">倒倒看，排排看 🥤</button>
+    </div>
+    <p class="status" id="status">同樣大小的杯子，一壺能倒滿幾杯？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>果汁 5 杯</span><span>＞</span><span class="res">鮮奶 3 杯</span></div>
+    <p class="v-notes">兩邊的<b>水杯一樣大</b>，杯數可以直接比。<br>果汁能倒滿 <b>5 杯</b>，鮮奶只能倒滿 <b>3 杯</b>，<br>所以<b>果汁</b>的容量比較大。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['鮮奶', '果汁', '一樣大', '不一定'];
+  var ANSWER = 1;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var tool = document.getElementById('tool');
+  var on = false;
+  var NS = 'http://www.w3.org/2000/svg';
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  function cup(g, x, y, fill) {
+    var path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', 'M' + x + ' ' + y + ' L' + (x + 2) + ' ' + (y + 22) + ' Q' + (x + 13) + ' ' + (y + 26) + ' ' + (x + 24) + ' ' + (y + 22) + ' L' + (x + 26) + ' ' + y + ' Z');
+    path.setAttribute('fill', fill);
+    path.setAttribute('stroke', 'var(--ink)');
+    path.setAttribute('stroke-width', 1.4);
+    g.appendChild(path);
+    var liq = document.createElementNS(NS, 'path');
+    liq.setAttribute('d', 'M' + (x + 3) + ' ' + (y + 8) + ' L' + (x + 4.5) + ' ' + (y + 20) + ' Q' + (x + 13) + ' ' + (y + 23.5) + ' ' + (x + 21.5) + ' ' + (y + 20) + ' L' + (x + 23) + ' ' + (y + 8) + ' Z');
+    liq.setAttribute('fill', fill);
+    liq.setAttribute('opacity', 0.9);
+    g.appendChild(liq);
+  }
+  function buildCups() {
+    var cupsL = document.getElementById('cupsL');
+    var cupsR = document.getElementById('cupsR');
+    while (cupsL.firstChild) cupsL.removeChild(cupsL.firstChild);
+    while (cupsR.firstChild) cupsR.removeChild(cupsR.firstChild);
+    if (!on) return;
+    for (var i = 0; i < 5; i++) cup(cupsL, 98 + (i % 3) * 30, 30 + Math.floor(i / 3) * 32, 'var(--juice)');
+    for (var j = 0; j < 3; j++) cup(cupsR, 218 + (j % 3) * 30, 30 + Math.floor(j / 3) * 32, '#f3f0e8');
+  }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  tool.addEventListener('click', function () {
+    on = !on;
+    buildCups();
+    status.innerHTML = on ? '倒好了！<b>左邊排 5 杯</b>、<b>右邊排 3 杯</b>，杯子都一樣大。' : '同樣大小的杯子，一壺能倒滿幾杯？';
+    if (on) say('果汁倒滿五杯，鮮奶倒滿三杯，杯子都一樣大。');
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！果汁能倒滿 5 杯，比鮮奶的 3 杯多，果汁容量比較大。';
+      vq.classList.add('show');
+      say('答對！果汁能倒滿五杯，容量比較大。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：杯子一樣大時，倒滿的杯數越多，容量就越大。';
+    say('再想想看：倒滿的杯數越多，容量越大。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-12-Q08', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

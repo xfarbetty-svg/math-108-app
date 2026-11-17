@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-11-Q04 捲尺比對與最短推理</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:12.5px; font-weight:800; line-height:1.4; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); }
+.opts { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 2px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:16px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>捲尺比對與最短推理</small>小玲在教室撿到一捆 95 公分的捲尺，老師說長度最短的人才是捲尺的主人。小婷的捲尺長 106 公分，小莉的捲尺比小婷長，小芳的捲尺比小婷短。這捆捲尺是誰的？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：三捲捲尺展開條帶並排，以 106 公分為基準 -->
+    <svg class="scene-svg" viewBox="0 0 360 224" role="img" aria-label="三位小朋友的捲尺展開並排比較">
+      <text x="180" y="18" class="t-caption">三捲捲尺排排站（起點都對齊）</text>
+      <rect x="70" y="36" width="156" height="20" rx="10" fill="var(--grape)" stroke="var(--ink)" stroke-width="1.4"/>
+      <rect x="70" y="76" width="127" height="20" rx="10" fill="var(--mint)"  stroke="var(--ink)" stroke-width="1.4"/>
+      <rect x="70" y="116" width="114" height="20" rx="10" fill="var(--lemon)" stroke="var(--ink)" stroke-width="1.4"/>
+      <text x="64" y="50"  class="t-num" text-anchor="end">小莉</text>
+      <text x="64" y="90"  class="t-num" text-anchor="end">小婷</text>
+      <text x="64" y="130" class="t-num" text-anchor="end">小芳</text>
+      <line x1="197" y1="28" x2="197" y2="148" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <text x="203" y="30" class="t-num" text-anchor="start">小婷 106 公分</text>
+      <g id="found" opacity="0">
+        <line x1="184" y1="28" x2="184" y2="148" stroke="var(--red)" stroke-width="2" stroke-dasharray="5 3"/>
+        <text x="178" y="160" class="t-num" text-anchor="middle" fill="var(--red)">撿到的 95 公分</text>
+      </g>
+      <text x="180" y="182" class="t-caption">紅線（95 公分）落在誰的範圍？</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">疊上撿到的 95 公分 📏</button>
+    </div>
+    <p class="status" id="status">把三捲捲尺排好隊，誰長誰短比一比。</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>小莉</span><span>＞</span><span>小婷 106</span><span>＞</span><span class="res">小芳</span></div>
+    <p class="v-notes">小莉比 106 公分<b>更長</b>，小芳比 106 公分<b>更短</b>。<br>撿到的 <b>95 公分</b>比 106 公分短，<br>所以最短的就是<b>小芳的捲尺</b>。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['小婷的', '小莉的', '小芳的', '無法判斷'];
+  var ANSWER = 2;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var tool = document.getElementById('tool');
+  var on = false;
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  tool.addEventListener('click', function () {
+    on = !on;
+    document.getElementById('found').setAttribute('opacity', on ? '1' : '0');
+    status.innerHTML = on ? '紅線是撿到的 <b>95 公分</b>：它比小婷的 <b>106 公分</b>還要短。' : '把三捲捲尺排好隊，誰長誰短比一比。';
+    if (on) say('九十五公分比一百零六公分還要短。');
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！三人之中小芳的捲尺最短，95 公分的捲尺是小芳的。';
+      vq.classList.add('show');
+      say('答對！最短的是小芳的捲尺。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：先把三人排成「誰比誰長」，再找出最短的那一位。';
+    say('再想想看：先排出長短順序，再找最短的。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-11-Q04', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

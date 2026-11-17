@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-11-Q02 生活長度量感估測</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); }
+.t-tag { font-size:10.5px; font-weight:800; fill:var(--ink); }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:17px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>生活長度量感估測</small>日常生活中，下面哪一個物品的長度描述最合理？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：同一把比例尺下，黑板／公車／學生長度並排 -->
+    <svg class="scene-svg" viewBox="0 0 360 224" role="img" aria-label="黑板、公車與學生身高在同一把比例尺下比較">
+      <text x="180" y="18" class="t-caption">把它們排在一起比一比（同一把尺）</text>
+      <g opacity="0" id="labels">
+        <text x="332" y="58"  class="t-tag" text-anchor="end">約 4 公尺</text>
+        <text x="332" y="104" class="t-tag" text-anchor="end">約 12 公尺</text>
+        <text x="332" y="150" class="t-tag" text-anchor="end">約 120 公分</text>
+      </g>
+      <g id="bars">
+        <rect x="60" y="46" width="85" height="18" rx="9" fill="var(--mint)"  stroke="var(--ink)" stroke-width="1.4" data-full="0"/>
+        <rect x="60" y="92" width="256" height="18" rx="9" fill="var(--grape)" stroke="var(--ink)" stroke-width="1.4" data-full="1"/>
+        <rect x="60" y="138" width="26" height="18" rx="9" fill="var(--lemon)" stroke="var(--ink)" stroke-width="1.4" data-full="2"/>
+      </g>
+      <line x1="60" y1="38" x2="60" y2="170" stroke="var(--ink)" stroke-width="2"/>
+      <text x="54" y="60"  class="t-num" text-anchor="end">黑板</text>
+      <text x="54" y="106" class="t-num" text-anchor="end">公車</text>
+      <text x="54" y="152" class="t-num" text-anchor="end">學生</text>
+      <circle cx="73" cy="147" r="7" fill="#fffdf8" stroke="var(--ink)" stroke-width="1.4"/>
+      <text x="180" y="182" class="t-caption">誰長誰短？再想想單位合不合理</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">標上長度與單位 🏷️</button>
+    </div>
+    <p class="status" id="status">先比一比誰長誰短，再想想每個描述的單位合不合理。</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>大物品用</span><span class="res">公尺</span><span>，小物品用</span><span class="res">公分</span></div>
+    <p class="v-notes">黑板長約 <b>4 公尺</b>、公車長約 <b>12 公尺</b>，<br>課桌椅高約 <b>75 公分</b>、鉛筆長約 <b>15 公分</b>。<br>小物品用公尺會變成巨大怪獸，大物品用公分會縮成螞蟻！</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['公車長 12 公分', '課桌椅高 75 公尺', '鉛筆長 15 公尺', '教室黑板長 4 公尺'];
+  var ANSWER = 3;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var tool = document.getElementById('tool');
+  var on = false;
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  tool.addEventListener('click', function () {
+    on = !on;
+    document.getElementById('labels').setAttribute('opacity', on ? '1' : '0');
+    status.innerHTML = on ? '同一把尺下：<b>黑板</b>和<b>公車</b>是很長的大物品，<b>學生</b>只有一點點長。' : '先比一比誰長誰短，再想想每個描述的單位合不合理。';
+    if (on) say('把它們排在同一把尺上，黑板和公車很長，學生只有一點點。');
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！教室黑板長約 4 公尺，用公尺描述大物品才合理。';
+      vq.classList.add('show');
+      say('答對！教室黑板長約四公尺。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：先想那個物品到底多大，小物品誤用公尺、大物品誤用公分都不合理。';
+    say('再想想看：先想物品多大，再選單位。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-11-Q02', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

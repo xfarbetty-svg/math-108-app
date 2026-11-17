@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-12-Q10 面積圖形分割與正方形換算</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --tri:#7bc9b2; --sq:#b8a7e8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:12.5px; font-weight:800; line-height:1.4; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); }
+.opts { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 2px; font-size:12.5px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:17px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>面積圖形分割與正方形換算</small>2 張三角形圖卡拼出的面積和 1 張正方形圖卡一樣大。小新用了 14 張三角形圖卡和 3 張正方形圖卡拼成圖形，這個圖形相當於幾張三角形圖卡的面積？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：3 張正方形（可分解為 2 張三角形）＋ 三角形圖卡群 -->
+    <svg class="scene-svg" viewBox="0 0 360 224" role="img" aria-label="三張正方形圖卡與三角形圖卡群，可分解換算">
+      <text x="180" y="18" class="t-caption">小新拼好的圖形</text>
+      <g id="squares"></g>
+      <g id="split" opacity="0"></g>
+      <text x="150" y="120" class="t-num" text-anchor="middle">3 張正方形</text>
+      <g id="tris"></g>
+      <text x="286" y="44" class="t-num" text-anchor="middle">14 張三角形</text>
+      <text x="180" y="146" class="t-num" text-anchor="middle">2 張三角形 ＝ 1 張正方形</text>
+      <text x="180" y="176" class="t-caption">正方形拆開後，全部換成三角形一起數</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">分解正方形 🔺</button>
+    </div>
+    <p class="status" id="status">每張正方形都等於 2 張三角形，拆開來一起數數看。</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>14＋3×2</span><span>＝</span><span>14＋6</span><span>＝</span><span class="res">20 張</span></div>
+    <p class="v-notes">1 張正方形＝<b>2 張三角形</b>，所以 3 張正方形＝<b>6 張三角形</b>。<br>全部換成三角形：14＋6＝<b>20 張</b>，<br>相當於 <b>20 張三角形圖卡</b>的面積。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['17 張', '20 張', '11 張', '23 張'];
+  var ANSWER = 1;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var tool = document.getElementById('tool');
+  var on = false;
+  var NS = 'http://www.w3.org/2000/svg';
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  function poly(g, pts, fill) {
+    var p = document.createElementNS(NS, 'polygon');
+    p.setAttribute('points', pts);
+    p.setAttribute('fill', fill);
+    p.setAttribute('stroke', 'var(--ink)');
+    p.setAttribute('stroke-width', 1.4);
+    p.setAttribute('stroke-linejoin', 'round');
+    g.appendChild(p);
+  }
+  function build() {
+    var squares = document.getElementById('squares');
+    var split = document.getElementById('split');
+    var tris = document.getElementById('tris');
+    [squares, split, tris].forEach(function (g) { while (g.firstChild) g.removeChild(g.firstChild); });
+    for (var s = 0; s < 3; s++) {
+      var x = 58 + s * 44;
+      var y = 44;
+      if (!on) {
+        var r = document.createElementNS(NS, 'rect');
+        r.setAttribute('x', x); r.setAttribute('y', y);
+        r.setAttribute('width', 36); r.setAttribute('height', 36);
+        r.setAttribute('rx', 3);
+        r.setAttribute('fill', 'var(--sq)');
+        r.setAttribute('stroke', 'var(--ink)');
+        r.setAttribute('stroke-width', 1.6);
+        squares.appendChild(r);
+      } else {
+        poly(split, x + ',' + y + ' ' + (x + 36) + ',' + y + ' ' + x + ',' + (y + 36), 'var(--tri)');
+        poly(split, (x + 36) + ',' + y + ' ' + (x + 36) + ',' + (y + 36) + ' ' + x + ',' + (y + 36), '#5ab89d');
+      }
+    }
+    for (var i = 0; i < 7; i++) {
+      var tx = 232 + (i % 4) * 26, ty = 52 + Math.floor(i / 4) * 30;
+      poly(tris, (tx + 11) + ',' + ty + ' ' + tx + ',' + (ty + 22) + ' ' + (tx + 22) + ',' + (ty + 22), 'var(--tri)');
+    }
+    for (var j = 0; j < 7; j++) {
+      var ux = 244 + (j % 4) * 26, uy = 88 + Math.floor(j / 4) * 30;
+      poly(tris, (ux + 11) + ',' + uy + ' ' + ux + ',' + (uy + 22) + ' ' + (ux + 22) + ',' + (uy + 22), '#5ab89d');
+    }
+  }
+  build();
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  tool.addEventListener('click', function () {
+    on = !on;
+    build();
+    status.innerHTML = on ? '拆開了！<b>每張正方形都變成 2 張三角形</b>，現在全部都是三角形。' : '每張正方形都等於 2 張三角形，拆開來一起數數看。';
+    if (on) say('正方形拆開，每張都變成兩張三角形。');
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！3 張正方形＝6 張三角形，14＋6＝20 張。';
+      vq.classList.add('show');
+      say('答對！十四加六，一共二十張三角形。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：正方形不能直接加，要先換算成 2 張三角形再合起來。';
+    say('再想想看：先把正方形換算成三角形。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-12-Q10', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

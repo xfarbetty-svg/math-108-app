@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-12-Q06 方格面積計數與顏色比較</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; --grey:#c9c4ba; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); }
+.opts { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 2px; font-size:13px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:18px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>方格面積計數與顏色比較</small>下圖長方形是由一樣大小的方格組成，白色佔 9 格，灰色佔 7 格，哪一種顏色佔的面積比較大？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本場景：4x4 方格盤，白 9 格灰 7 格 -->
+    <svg class="scene-svg" viewBox="0 0 360 224" role="img" aria-label="4x4方格盤，白色9格與灰色7格">
+      <text x="180" y="18" class="t-caption">一樣大小的方格拼成的長方形</text>
+      <g id="grid"></g>
+      <text x="70" y="112" class="t-num" text-anchor="end">白色 9 格</text>
+      <text x="70" y="136" class="t-num" text-anchor="end">灰色 7 格</text>
+      <rect x="76" y="103" width="14" height="14" fill="#fffdf8" stroke="var(--ink)" stroke-width="1.2"/>
+      <rect x="76" y="127" width="14" height="14" fill="var(--grey)" stroke="var(--ink)" stroke-width="1.2"/>
+      <text x="180" y="200" class="t-caption">格數越多，面積就越大</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">逐一點亮數格子 ✨</button>
+    </div>
+    <p class="status" id="status">一格一格數：白色和灰色各佔幾格？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="v-eq"><span>白色 9 格</span><span>＞</span><span class="res">灰色 7 格</span></div>
+    <p class="v-notes">每個格子<b>一樣大</b>，格數就是最好的比較單位。<br>白色 <b>9 格</b>比灰色 <b>7 格</b>多，<br>所以<b>白色</b>佔的面積比較大。</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CHOICES = ['白色', '灰色', '一樣大', '無法比較'];
+  var ANSWER = 0;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var tool = document.getElementById('tool');
+  var on = false;
+  var NS = 'http://www.w3.org/2000/svg';
+  var GREY = [[0,1],[0,3],[1,1],[1,3],[2,0],[2,2],[3,0]];
+  var CS = 34, GAP = 4, X0 = 104, Y0 = 24;
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  (function buildGrid() {
+    var grid = document.getElementById('grid');
+    var greySet = {};
+    GREY.forEach(function (p) { greySet[p[0] + '-' + p[1]] = true; });
+    var wi = 0, gi = 0;
+    var WNUM = ['１','２','３','４','５','６','７','８','９'];
+    var GNUM = ['１','２','３','４','５','６','７'];
+    for (var r = 0; r < 4; r++) {
+      for (var c = 0; c < 4; c++) {
+        var x = X0 + c * (CS + GAP), y = Y0 + r * (CS + GAP);
+        var isGrey = greySet[r + '-' + c];
+        var rect = document.createElementNS(NS, 'rect');
+        rect.setAttribute('x', x); rect.setAttribute('y', y);
+        rect.setAttribute('width', CS); rect.setAttribute('height', CS);
+        rect.setAttribute('rx', 4);
+        rect.setAttribute('fill', isGrey ? 'var(--grey)' : '#fffdf8');
+        rect.setAttribute('stroke', 'var(--ink)');
+        rect.setAttribute('stroke-width', 1.4);
+        grid.appendChild(rect);
+        if (on) {
+          var t = document.createElementNS(NS, 'text');
+          t.setAttribute('x', x + CS / 2); t.setAttribute('y', y + CS / 2 + 5);
+          t.setAttribute('class', 't-num'); t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('fill', isGrey ? '#6f6a60' : 'var(--mint-deep)');
+          t.textContent = isGrey ? GNUM[gi++] : WNUM[wi++];
+          grid.appendChild(t);
+        }
+      }
+    }
+  })();
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  tool.addEventListener('click', function () {
+    on = !on;
+    buildGrid();
+    status.innerHTML = on ? '點亮了！<b>白色 9 格</b>、<b>灰色 7 格</b>，一格一格數清楚。' : '一格一格數：白色和灰色各佔幾格？';
+    if (on) say('白色九格，灰色七格。');
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！白色 9 格比灰色 7 格多，白色面積比較大。';
+      vq.classList.add('show');
+      say('答對！白色九格，面積比較大。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：每個格子一樣大，數一數兩種顏色各有幾格再比。';
+    say('再想想看：一格一格數清楚再比。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-12-Q06', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
