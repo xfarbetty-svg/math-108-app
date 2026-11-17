@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-13-Q01 鐘面構造與單位誤區</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-note { font-size:10.5px; font-weight:800; fill:var(--mint-deep); text-anchor:start; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.video-guide-banner { margin-bottom:8px; text-align:center; }
+.video-link { display:inline-flex; align-items:center; gap:6px; background:#ff0000; color:#fff; text-decoration:none; padding:4px 12px; border-radius:999px; font-size:12px; font-weight:800; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:18px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+#zoomG { opacity:0; transition:opacity .4s; }
+svg.zoomed #zoomG { opacity:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>鐘面構造與單位誤區</small>有關鐘面，下列哪一個敘述不正確？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本鐘面：12 大格 60 小格，短針時針（短）＋長針分針（長） -->
+    <svg class="scene-svg" id="scene" viewBox="0 0 360 224" role="img" aria-label="標準鐘面，短針與長針，12 大格 60 小格">
+      <text x="180" y="18" class="t-caption">標準鐘面：12 大格・60 小格</text>
+      <circle cx="105" cy="118" r="84" fill="#fffdf8" stroke="var(--ink)" stroke-width="3"/>
+      <circle cx="105" cy="118" r="6" fill="var(--ink)"/>
+      <g id="ticks"></g>
+      <g id="nums"></g>
+      <line id="hourHand" x1="105" y1="118" x2="105" y2="82" stroke="var(--mint-deep)" stroke-width="8" stroke-linecap="round"/>
+      <line id="minHand" x1="105" y1="118" x2="105" y2="48" stroke="#4A90E2" stroke-width="5" stroke-linecap="round"/>
+      <g id="zoomG">
+        <path id="bigCellArc" fill="none" stroke="var(--lemon)" stroke-width="9" opacity=".9"/>
+        <g id="smallTicks" stroke="var(--red)" stroke-width="2"></g>
+        <text x="105" y="20" class="t-num" text-anchor="middle" fill="var(--red)">1 大格裡有 5 小格</text>
+        <text x="205" y="92" class="t-note">分針走 1 大格＝5 小格＝5 分鐘</text>
+        <text x="205" y="112" class="t-note">分針走 1 小格＝1 分鐘</text>
+        <text x="205" y="132" class="t-note">時針走 1 大格＝1 小時</text>
+        <text x="205" y="152" class="t-note">短針＝時針・長針＝分針</text>
+      </g>
+      <text x="280" y="196" class="t-num">12 大格 × 5 小格＝60 小格</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">放大第一大格 🔍</button>
+    </div>
+    <p class="status" id="status">鐘面上的大格和小格，各代表幾分鐘？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="video-guide-banner">
+      <a class="video-link" href="https://youtu.be/cP9GA_MXfDc" target="_blank" rel="noopener noreferrer">📺 觀看教學微影片《龜兔指針大賽跑》</a>
+    </div>
+    <div class="v-eq"><span>1 大格</span><span>＝</span><span>5 小格</span><span>＝</span><span class="res">5 分鐘</span></div>
+    <p class="v-notes">分針走 <b>1 小格</b>是 1 分鐘，走 <b>1 大格</b>（5 小格）就是 <b>5 分鐘</b>；<br>時針走 1 大格是 1 小時。短針叫做時針、長針叫做分針，<br>「6 點」就是「6 時」——只有「分針走一大格＝1 分鐘」是錯的！</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CX = 105, CY = 118;
+  var NS = 'http://www.w3.org/2000/svg';
+  function polar(deg, r) { var a = deg * Math.PI / 180; return [CX + r * Math.sin(a), CY - r * Math.cos(a)]; }
+  // 60 小格刻度：每 5 格一個大刻度
+  var ticks = document.getElementById('ticks');
+  for (var i = 0; i < 60; i++) {
+    var major = i % 5 === 0;
+    var p1 = polar(i * 6, major ? 84 : 84), p2 = polar(i * 6, major ? 74 : 79);
+    var ln = document.createElementNS(NS, 'line');
+    ln.setAttribute('x1', p1[0]); ln.setAttribute('y1', p1[1]);
+    ln.setAttribute('x2', p2[0]); ln.setAttribute('y2', p2[1]);
+    ln.setAttribute('stroke', major ? '#3d3a34' : '#b9b2a6');
+    ln.setAttribute('stroke-width', major ? 2.4 : 1);
+    ticks.appendChild(ln);
+  }
+  // 12 個數字
+  var nums = document.getElementById('nums');
+  for (var n = 1; n <= 12; n++) {
+    var p = polar(n * 30, 62);
+    var t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', p[0]); t.setAttribute('y', p[1] + 4);
+    t.setAttribute('class', 't-num'); t.setAttribute('fill', '#3d3a34');
+    t.setAttribute('font-size', '13'); t.setAttribute('font-weight', '800');
+    t.textContent = n;
+    nums.appendChild(t);
+  }
+  // 第一大格放大弧（12 → 1）與 5 小格高亮
+  var arc = document.getElementById('bigCellArc');
+  var a0 = polar(0, 90), a1 = polar(30, 90);
+  arc.setAttribute('d', 'M' + a0[0] + ' ' + a0[1] + ' A90 90 0 0 1 ' + a1[0] + ' ' + a1[1]);
+  var sg = document.getElementById('smallTicks');
+  for (var s = 0; s <= 5; s++) {
+    var q1 = polar(s * 6, 92), q2 = polar(s * 6, 84);
+    var sl = document.createElementNS(NS, 'line');
+    sl.setAttribute('x1', q1[0]); sl.setAttribute('y1', q1[1]);
+    sl.setAttribute('x2', q2[0]); sl.setAttribute('y2', q2[1]);
+    sg.appendChild(sl);
+  }
+  // 指針：9 時 5 分
+  document.getElementById('hourHand').setAttribute('transform', 'rotate(' + (9 * 30 + 5 / 60 * 30) + ' ' + CX + ' ' + CY + ')');
+  document.getElementById('minHand').setAttribute('transform', 'rotate(30 ' + CX + ' ' + CY + ')');
+
+  var CHOICES = ['短針又叫做時針', '長針又叫做分針', '上午 6 點就是上午 6 時', '分針走一大格就是走了 1 分鐘'];
+  var ANSWER = 3;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  var status = document.getElementById('status');
+  var tool = document.getElementById('tool');
+  var scene = document.getElementById('scene');
+  var on = false;
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  tool.addEventListener('click', function () {
+    on = !on;
+    scene.classList.toggle('zoomed', on);
+    status.innerHTML = on ? '放大了！<b>1 大格＝5 小格</b>：分針走 1 大格是 <b>5 分鐘</b>，時針走 1 大格是 <b>1 小時</b>。' : '鐘面上的大格和小格，各代表幾分鐘？';
+    if (on) say('一大格裡有五小格，分針走一大格是五分鐘。');
+  });
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！分針走 1 大格是 5 分鐘，不是 1 分鐘。';
+      vq.classList.add('show');
+      say('答對！分針走一大格是五分鐘，不是一分鐘。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：1 大格裡有幾個小格？分針走 1 小格才是 1 分鐘。';
+    say('再想想看：一大格裡有五小格。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-13-Q01', answer: ANSWER };
+})();
+</script>
+</body>
+</html>

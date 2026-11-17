@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-N-2-14-Q09 跨月份營隊天數推導</title>
+<style>
+:root { --ink:#3d3a34; --ink-soft:#8a857b; --mint:#7bc9b2; --mint-deep:#318a70; --lemon:#ffd166; --line:#f0e7da; --bg:#fff9f0; --red:#d64545; --paper:#fffdf8; --pink:#f7a8b8; --grape:#b8a7e8; }
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
+.wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.stem { font-size:13.5px; font-weight:800; line-height:1.35; }
+.stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
+.scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
+.t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
+.t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
+.t-note { font-size:10.5px; font-weight:800; fill:var(--mint-deep); text-anchor:start; }
+.opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
+.footer-action { text-align:center; }
+.check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
+.result-banner { display:none; border-radius:10px; padding:7px 10px; font-size:12.5px; font-weight:700; line-height:1.4; text-align:center; }
+.result-banner.success { display:block; background:#dcfce7; color:#166534; }
+.result-banner.fail { display:block; background:#fee2e2; color:#991b1b; }
+.tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.tool-btn { border:2px solid var(--mint-deep); background:#eafaf4; color:var(--mint-deep); border-radius:999px; padding:6px 14px; font-size:12.5px; font-weight:800; cursor:pointer; }
+.status { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); min-height:18px; }
+.status b { color:var(--ink); }
+.vq { display:none; background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:10px 12px 12px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.vq.show { display:block; }
+.video-guide-banner { margin-bottom:8px; text-align:center; }
+.video-link { display:inline-flex; align-items:center; gap:6px; background:#ff0000; color:#fff; text-decoration:none; padding:4px 12px; border-radius:999px; font-size:12px; font-weight:800; }
+.v-eq { display:flex; justify-content:center; align-items:baseline; gap:6px; font-size:18px; font-weight:800; }
+.v-eq .res { color:var(--red); }
+.v-notes { margin-top:8px; font-size:11.5px; font-weight:700; line-height:1.55; color:var(--ink-soft); text-align:center; }
+.v-notes b { color:var(--ink); }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+@keyframes pop { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+.vq.show .v-eq { animation:pop .3s .15s both; }
+.vq.show .v-notes { animation:fade .4s .8s both; }
+#sumNote { opacity:0; transition:opacity .4s; }
+#flag { transition:transform .25s; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <p class="stem"><small>跨月份營隊天數推導</small>阿吉參加積木營隊需要 9 天，從 4 月 26 日開始，請問幾月幾日營隊結束？</p>
+  </div>
+  <div class="card">
+    <!-- 日系繪本雙月曆：4 月（小月 30 天）走完翻頁到 5 月，旗幟停在 5 月 4 日 -->
+    <svg class="scene-svg" id="scene" viewBox="0 0 360 224" role="img" aria-label="4 月與 5 月月曆，營隊從 4 月 26 日起 9 天">
+      <text x="120" y="16" class="t-caption">4 月走完 → 翻頁 → 5 月</text>
+      <!-- 4 月卡：尾端 26～30 -->
+      <rect x="14" y="22" width="150" height="86" rx="10" fill="#fffdf8" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="14" y="22" width="150" height="24" rx="10" fill="var(--pink)"/>
+      <text x="89" y="39" class="t-num" fill="#fff" font-size="11.5">4 月（小月・30 天）</text>
+      <g id="aprGrid"></g>
+      <!-- 5 月卡：1～7 -->
+      <rect x="196" y="22" width="150" height="86" rx="10" fill="#fffdf8" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="196" y="22" width="150" height="24" rx="10" fill="var(--mint)"/>
+      <text x="271" y="39" class="t-num" fill="#fff" font-size="11.5">5 月</text>
+      <g id="mayGrid"></g>
+      <text x="180" y="126" class="t-num">26 日起：4 月有 30−26＋1＝5 天</text>
+      <text x="180" y="144" class="t-num">9−5＝4 天要走進 5 月</text>
+      <g id="sumNote">
+        <text x="180" y="164" class="t-num" fill="var(--red)" font-size="12">4 月 5 天＋5 月 4 天＝9 天</text>
+      </g>
+      <!-- 進度小旗 -->
+      <g id="flag">
+        <line x1="0" y1="0" x2="0" y2="-16" stroke="var(--ink)" stroke-width="2"/>
+        <path d="M0 -16 L12 -12 L0 -8 Z" fill="var(--red)"/>
+      </g>
+      <text x="180" y="196" class="t-num" id="dayCount">營隊第 0 天</text>
+      <text x="180" y="214" class="t-num">點小旗一步步走 9 天！</text>
+    </svg>
+    <div class="tools">
+      <button type="button" class="tool-btn" id="tool">往後走 9 天 🚩</button>
+      <button type="button" class="tool-btn" id="reset">重新開始 ↺</button>
+    </div>
+    <p class="status" id="status">4 月 26 日算第 1 天，9 天後走到哪裡？</p>
+  </div>
+  <div class="opts" id="opts"></div>
+  <div class="footer-action"><button class="check-btn" onclick="check()">檢查答案</button></div>
+  <div class="result-banner" id="banner"></div>
+  <div class="vq" id="vq" aria-live="polite">
+    <div class="video-guide-banner">
+      <a class="video-link" href="https://youtu.be/8eyE6HICK7A" target="_blank" rel="noopener noreferrer">📺 觀看教學微影片《大月小月彩虹溜滑梯與二月彩蛋》</a>
+    </div>
+    <div class="v-eq"><span>4 月 5 天</span><span>＋</span><span>5 月 4 天</span><span>＝</span><span class="res">5 月 4 日結束</span></div>
+    <p class="v-notes"><b>4 月是小月只有 30 天</b>：26、27、28、29、30 共 <b>5 天</b>；<br>9−5＝<b>4 天</b>走進 5 月：1、2、3、4 日，<br>所以營隊在 <b>5 月 4 日</b>結束。4 月沒有 34 日喔！</p>
+  </div>
+</div>
+<script src="../js/audio_manager.js"></script>
+<script>
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  function buildCells(groupId, days, x0, y0, cw, ch, perRow) {
+    var g = document.getElementById(groupId);
+    var map = {};
+    days.forEach(function (d, i) {
+      var col = i % perRow, row = Math.floor(i / perRow);
+      var x = x0 + col * cw, y = y0 + row * ch;
+      var r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', x); r.setAttribute('y', y);
+      r.setAttribute('width', cw - 3); r.setAttribute('height', ch - 3);
+      r.setAttribute('rx', 4);
+      r.setAttribute('fill', '#fff'); r.setAttribute('stroke', 'var(--line)');
+      r.setAttribute('stroke-width', '1.4');
+      g.appendChild(r);
+      var t = document.createElementNS(NS, 'text');
+      t.setAttribute('x', x + (cw - 3) / 2); t.setAttribute('y', y + (ch - 3) / 2 + 4);
+      t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('font-size', '10'); t.setAttribute('font-weight', '800');
+      t.setAttribute('fill', '#3d3a34');
+      t.textContent = d;
+      g.appendChild(t);
+      map[d] = { x: x, y: y, cx: x + (cw - 3) / 2, cy: y + (ch - 3) / 2, rect: r };
+    });
+    return map;
+  }
+  var APR = buildCells('aprGrid', [26, 27, 28, 29, 30], 22, 54, 29, 24, 5);
+  var MAY = buildCells('mayGrid', [1, 2, 3, 4, 5, 6, 7], 204, 54, 29, 24, 5);
+  // 9 天路徑：4/26→4/30（5 天），5/1→5/4（4 天）
+  var ROUTE = [
+    { m: 4, d: 26, c: APR }, { m: 4, d: 27, c: APR }, { m: 4, d: 28, c: APR },
+    { m: 4, d: 29, c: APR }, { m: 4, d: 30, c: APR },
+    { m: 5, d: 1, c: MAY }, { m: 5, d: 2, c: MAY }, { m: 5, d: 3, c: MAY }, { m: 5, d: 4, c: MAY }
+  ];
+  var flag = document.getElementById('flag');
+  var dayCount = document.getElementById('dayCount');
+  var sumNote = document.getElementById('sumNote');
+  var status = document.getElementById('status');
+  var timer = null;
+  function clearAll() {
+    if (timer) { clearInterval(timer); timer = null; }
+    ROUTE.forEach(function (s) { s.c[s.d].rect.setAttribute('fill', '#fff'); });
+    flag.setAttribute('transform', 'translate(-50,-50)');
+    dayCount.textContent = '營隊第 0 天';
+    sumNote.setAttribute('opacity', '0');
+  }
+  function flagTo(c) { flag.setAttribute('transform', 'translate(' + c.cx + ',' + (c.cy - 10) + ')'); }
+  flagTo(ROUTE[0].c[26]);
+  document.getElementById('tool').addEventListener('click', function () {
+    clearAll();
+    var i = 0;
+    timer = setInterval(function () {
+      if (i >= ROUTE.length) {
+        clearInterval(timer); timer = null;
+        sumNote.setAttribute('opacity', '1');
+        status.innerHTML = '走完了！4 月 <b>5 天</b>＋5 月 <b>4 天</b>，旗幟停在 <b>5 月 4 日</b>。';
+        if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play('旗幟停在五月四日。');
+        return;
+      }
+      var s = ROUTE[i];
+      s.c[s.d].rect.setAttribute('fill', 'var(--lemon)');
+      flagTo(s.c[s.d]);
+      i++;
+      dayCount.textContent = '營隊第 ' + i + ' 天：' + s.m + ' 月 ' + s.d + ' 日';
+    }, 300);
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    clearAll();
+    flagTo(ROUTE[0].c[26]);
+    status.textContent = '4 月 26 日算第 1 天，9 天後走到哪裡？';
+  });
+
+  var CHOICES = ['5 月 3 日', '5 月 4 日', '5 月 5 日', '4 月 34 日'];
+  var ANSWER = 1;
+  var picked = -1;
+  var optBox = document.getElementById('opts');
+  var banner = document.getElementById('banner');
+  var vq = document.getElementById('vq');
+  function say(text) { if (window.AudioManager && typeof window.AudioManager.play === 'function') window.AudioManager.play(text); }
+  CHOICES.forEach(function (c, i) {
+    var b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', function () {
+      picked = i;
+      Array.prototype.forEach.call(optBox.children, function (el) { el.classList.remove('sel'); });
+      b.classList.add('sel');
+      hide();
+    });
+    optBox.appendChild(b);
+  });
+  function hide() { banner.className = 'result-banner'; banner.textContent = ''; vq.classList.remove('show'); }
+  window.check = function () {
+    if (picked < 0) return { ok: false, picked: picked, msg: '請先選一個答案' };
+    if (picked === ANSWER) {
+      banner.className = 'result-banner success';
+      banner.textContent = '答對！4 月走 5 天、5 月走 4 天，營隊 5 月 4 日結束。';
+      vq.classList.add('show');
+      say('答對！五月四日結束。');
+      return { ok: true, picked: picked };
+    }
+    banner.className = 'result-banner fail';
+    banner.textContent = '再想想看：4 月只有 30 天，26 日起到月底有幾天？';
+    say('再想想看：四月是小月，只有三十天。');
+    return { ok: false, picked: picked };
+  };
+  window.__q = { id: 'G2-N-2-14-Q09', answer: ANSWER };
+})();
+</script>
+</body>
+</html>
