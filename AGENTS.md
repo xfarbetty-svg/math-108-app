@@ -82,9 +82,10 @@
 
 ## 🚨 核心防錯與工兵派工鋼印（最高優先級）
 
-1. **嚴禁 Agent 自行動手寫業務代碼或拼造假題庫**：
-   - AGY 是架構師、監工與驗收者，絕對禁止使用 Python 腳本硬編碼題目內容、正則拼裝 JSON 或偽造靜態死圖！
-   - 題目辨識、解析與互動元件撰寫，一律指派 OpenCode CLI 施工。
+1. **嚴禁 AGY 本體動筆撰寫 PLAN 與業務代碼（$0 額度鋼印）**：
+   - **Plan 階段強制限速**：試卷題型分析、Given-When-Then 藍圖與任務卡草擬，**強制調用 MCP 通道三（035 金鑰池 `ask_gemini_pool`）**，嚴禁 AGY 在主對話框直接推導或草擬大篇幅任務卡浪費主額度！
+   - **Exec 階段嚴禁動手**：題庫 JSON 封裝、純 SVG 教具組件與測試腳本，**一律指派通道一（OpenCode CLI）施工**，AGY 零業務代碼寫入權 (`WRITE-FILE LOCKED`)。
+   - **AGY 法定職責**：調度通道三出藍圖 -> 雙簽放行 -> 派工 OpenCode -> 親自執行軌道 B 多模態視覺審查 (`read_file`) -> 執行 `tools/release.py` 自動發布。
 2. **唯一標準派工通道**：
    - 派工指令：`python tools/dispatch_worker.py --file <task_card.md> "任務簡述"`
    - 嚴格遵守 Step-by-Step 單步推進底層規格（`--format json --auto --standalone stdin=DEVNULL encoding=utf-8`）。
