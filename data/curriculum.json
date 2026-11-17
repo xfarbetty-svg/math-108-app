@@ -185,17 +185,17 @@
           "code": "N-2-11",
           "title": "長度（「公分」、「公尺」）",
           "full_text": "長度：「公分」、「公尺」。實測、量感、估測與計算。單位換算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "臺北市內湖國小 111-2 期末/112-2 期中、高雄市獅湖國小 111-2 期中/113-1 期中與高雄市永安國小 114-1 期末段考真題（工單 T-G2-N211-N212 指定規格）"
         },
         {
           "code": "N-2-12",
           "title": "容量、重量、面積",
           "full_text": "容量、重量、面積：以操作活動為主。此階段量的教學應包含初步認識、直接比較、間接比較（含個別單位）。不同的量應分不同的單元學習。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "臺北市內湖國小 111-1 期中/期末、高雄市獅湖國小 113-1 期中/期末與 114-1 期中段考真題（工單 T-G2-N211-N212 指定規格）"
         },
         {
           "code": "N-2-13",

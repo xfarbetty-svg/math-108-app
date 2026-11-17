@@ -126,6 +126,7 @@ def main():
     gates = [
         ["node", "tools/verify_curriculum_131.js"],
         ["node", "tools/verify_g2_n29_n210_cdp.js"],
+        ["node", "tools/verify_g2_n211_n212_cdp.js"],
         ["node", "tools/verify_app_shell.js"],
         ["node", "tools/verify_audio_singleton.js"],
         ["node", "tools/verify_g2_n21_cdp.js"],
@@ -151,7 +152,7 @@ def main():
     run_cmd(["git", "add", "."])
     status_proc = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True)
     if status_proc.stdout.strip():
-        commit_msg = f"release: 發布新版 (Build {build_version}) - 落地 G2-N-2-9 與 G2-N-2-10 雙單元真題題庫與微教具"
+        commit_msg = f"release: 發布新版 (Build {build_version}) - 落地 G2-N-2-11 與 G2-N-2-12 雙單元真題題庫與微教具"
         run_cmd(["git", "commit", "-m", commit_msg])
     else:
         print("   (無新增變更，跳過 commit)")
