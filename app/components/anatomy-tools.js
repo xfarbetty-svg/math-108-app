@@ -142,20 +142,38 @@
       this._view = 'iso';
       this._interactive = true;
       this._rotation = 0;
+      this._autoplay = false;
+      this._autoplayTimer = null;
+      this._autoplayStep = 0;
+      this._autoplayRunning = false;
+      this._autoplayLabel = '';
     }
 
     static get observedAttributes() {
-      return ['blocks', 'view', 'interactive', 'rotation'];
+      return ['blocks', 'view', 'interactive', 'rotation', 'autoplay'];
     }
 
     connectedCallback() {
       this.parseAttributes();
       this.render();
+      if (this._autoplay) {
+        this.startAutoplay();
+      }
     }
 
-    attributeChangedCallback() {
-      this.parseAttributes();
-      this.render();
+    disconnectedCallback() {
+      this.stopAutoplay();
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue) {
+        this.parseAttributes();
+        this.render();
+        if (name === 'autoplay') {
+          if (this._autoplay) this.startAutoplay();
+          else this.stopAutoplay();
+        }
+      }
     }
 
     parseAttributes() {
@@ -173,6 +191,49 @@
       if (this.hasAttribute('view')) this._view = this.getAttribute('view');
       if (this.hasAttribute('interactive')) this._interactive = this.getAttribute('interactive') !== 'false';
       if (this.hasAttribute('rotation')) this._rotation = parseInt(this.getAttribute('rotation') || '0', 10);
+      this._autoplay = this.hasAttribute('autoplay') && this.getAttribute('autoplay') !== 'false';
+    }
+
+    startAutoplay() {
+      this.stopAutoplay();
+      const steps = [
+        { view: 'iso', rotation: 0, label: '3D 立體全景' },
+        { view: 'top', rotation: 0, label: '俯視圖 (從上往下看)' },
+        { view: 'front', rotation: 0, label: '正視圖 (從正面看)' },
+        { view: 'side', rotation: 0, label: '側視圖 (從右側看)' },
+        { view: 'iso', rotation: 90, label: '3D 旋轉 90°' },
+        { view: 'iso', rotation: 0, label: '演示完畢 · 自由探索' }
+      ];
+      this._autoplayStep = 0;
+      this._autoplayRunning = true;
+
+      const runNextStep = () => {
+        if (!this._autoplayRunning) return;
+        const s = steps[this._autoplayStep];
+        if (s) {
+          this._view = s.view;
+          this._rotation = s.rotation;
+          this._autoplayLabel = s.label;
+          this.render();
+        }
+        this._autoplayStep++;
+        if (this._autoplayStep < steps.length) {
+          this._autoplayTimer = setTimeout(runNextStep, 2000); // 5 步 x 2s = 10 秒電影演示
+        } else {
+          this._autoplayTimer = null;
+          this._autoplayRunning = false;
+          this.render();
+        }
+      };
+      runNextStep();
+    }
+
+    stopAutoplay() {
+      if (this._autoplayTimer) {
+        clearTimeout(this._autoplayTimer);
+        this._autoplayTimer = null;
+      }
+      this._autoplayRunning = false;
     }
 
     getRotatedBlocks() {
@@ -220,6 +281,21 @@
             height: auto;
             overflow: visible;
           }
+          .autoplay-banner {
+            font-size: 11.5px;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            padding: 4px 8px;
+            margin-bottom: 8px;
+            text-align: center;
+            animation: pulse 1.5s infinite ease-in-out;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+          }
           .toolbar {
             display: flex;
             gap: 6px;
@@ -248,6 +324,11 @@
             font-weight: bold;
           }
         </style>
+        ${this._autoplayRunning ? `
+          <div class="autoplay-banner">
+            🎬 10秒電影演示：${this._autoplayLabel}（點擊下方按鈕可接管自由操作）
+          </div>
+        ` : ''}
         <div class="canvas-wrap">
           ${contentHtml}
         </div>
@@ -265,6 +346,7 @@
       if (this._interactive) {
         this.shadowRoot.querySelectorAll('button[data-view]').forEach(btn => {
           btn.addEventListener('click', (e) => {
+            this.stopAutoplay();
             this._view = e.target.getAttribute('data-view');
             this.render();
           });
@@ -272,6 +354,7 @@
         const rotBtn = this.shadowRoot.querySelector('button[data-action="rotate"]');
         if (rotBtn) {
           rotBtn.addEventListener('click', () => {
+            this.stopAutoplay();
             this._rotation = (this._rotation + 90) % 360;
             this.render();
           });

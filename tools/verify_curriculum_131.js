@@ -53,7 +53,7 @@ const EXPECTED_READY_CODES = [
   'N-3-1', 'N-3-2', 'N-3-3', 'N-3-4', 'N-3-5', 'N-3-6', 'N-3-7', 'N-3-8', 'N-3-9', 'N-3-10', 'N-3-11',
   'N-3-12', 'N-3-13', 'S-3-1', 'N-3-14', 'N-3-15', 'S-3-3',
   'N-3-16', 'N-3-17', 'S-3-2', 'S-3-4', 'R-3-1', 'R-3-2', 'D-3-1',
-  'N-2-1', 'N-2-2', 'N-2-3', 'N-2-4', 'N-2-5', 'N-2-6', 'N-2-7', 'N-2-8', 'N-2-9', 'N-2-10', 'N-2-11', 'N-2-12'
+  'N-2-1', 'N-2-2', 'N-2-3', 'N-2-4', 'N-2-5', 'N-2-6', 'N-2-7', 'N-2-8', 'N-2-9', 'N-2-10', 'N-2-11', 'N-2-12', 'N-2-13', 'N-2-14'
 ];
 const readyUnits = all.filter((u) => u.status === 'ready');
 check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);
@@ -192,6 +192,30 @@ try {
   check(true, 'N-2-12 五題教具 component_path 全部存在於 app/');
 } catch (err) {
   check(false, 'data/units/G2/N-2-12.json 驗證失敗 → ' + err.message);
+}
+
+// 5k. G2 N-2-13 題庫 SSOT 存在且 5 題（鐘面的時刻真題）
+try {
+  const unitN213 = JSON.parse(fs.readFileSync('data/units/G2/N-2-13.json', 'utf8'));
+  check(unitN213.questions && unitN213.questions.length === 5, 'data/units/G2/N-2-13.json 題庫 5 題（SSOT）');
+  unitN213.questions.forEach((q) => {
+    if (!fs.existsSync('app/' + q.component_path)) check(false, '教具檔缺失: ' + q.component_path);
+  });
+  check(true, 'N-2-13 五題教具 component_path 全部存在於 app/');
+} catch (err) {
+  check(false, 'data/units/G2/N-2-13.json 驗證失敗 → ' + err.message);
+}
+
+// 5l. G2 N-2-14 題庫 SSOT 存在且 5 題（時間年月星期日真題）
+try {
+  const unitN214 = JSON.parse(fs.readFileSync('data/units/G2/N-2-14.json', 'utf8'));
+  check(unitN214.questions && unitN214.questions.length === 5, 'data/units/G2/N-2-14.json 題庫 5 題（SSOT）');
+  unitN214.questions.forEach((q) => {
+    if (!fs.existsSync('app/' + q.component_path)) check(false, '教具檔缺失: ' + q.component_path);
+  });
+  check(true, 'N-2-14 五題教具 component_path 全部存在於 app/');
+} catch (err) {
+  check(false, 'data/units/G2/N-2-14.json 驗證失敗 → ' + err.message);
 }
 
 // 6. shell.js 已對齊新骨架（name 欄位、已開放 x/y、upcoming 卡片流）

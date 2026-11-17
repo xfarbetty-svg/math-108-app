@@ -318,6 +318,17 @@ function renderQuestion() {
   $("progressSource").textContent = q.exam_source + " · " + q.section + " · 第 " + q.question_num + " 題";
   $("stageTitle").textContent = q.title;
 
+  // Shorts 影片解題導流
+  const btnVideo = $("btnShortsVideo");
+  if (btnVideo) {
+    if (q.video_url) {
+      btnVideo.href = q.video_url;
+      btnVideo.style.display = "inline-flex";
+    } else {
+      btnVideo.style.display = "none";
+    }
+  }
+
   // 進度圓點
   $("dots").innerHTML = state.unit.questions.map((_, i) =>
     `<span class="dot ${i === state.qIndex ? "on" : state.visited.has(state.unit.questions[i].id) ? "done" : ""}"></span>`).join("");
@@ -371,6 +382,13 @@ function renderResult() {
       <div class="rexp">${q.answer_raw}</div>
       <div class="rlabel">🧠 算理解析</div>
       <div class="rexp">${typeof q.explanation === "string" ? q.explanation : [q.explanation.concept].concat(q.explanation.steps).join("；")}</div>
+      ${q.video_url ? `
+        <div class="rvideo" style="margin: 10px 0 6px 0;">
+          <a href="${q.video_url}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #ef4444, #dc2626);color:#ffffff;text-decoration:none;padding:7px 15px;border-radius:8px;font-size:12.5px;font-weight:bold;box-shadow:0 2px 8px rgba(239,68,68,0.35);transition:transform 0.15s ease;">
+            📺 觀看 Shorts 解題影片
+          </a>
+        </div>
+      ` : ''}
       <div class="rdemo">${state.visited.has(q.id) ? "🖐 已實機操作教具：" : "— 未操作教具："}${q.component_path || q.component}</div>
     </div>`).join("");
 

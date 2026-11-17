@@ -201,17 +201,17 @@
           "code": "N-2-13",
           "title": "鐘面的時刻",
           "full_text": "鐘面的時刻：以操作活動為主。以鐘面時針與分針之位置認識「幾時幾分」。含兩整時時刻之間的整時點數（時間加減的前置經驗）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "臺北市內湖國小 113-1/112-1/111-1 與高雄市獅湖國小 113-1 期末段考真題（工單 T_G2_N213_N214_BATCH.md 指定規格）"
         },
         {
           "code": "N-2-14",
           "title": "時間（「年」、「月」、「星期」、「日）",
           "full_text": "時間：「年」、「月」、「星期」、「日」。理解所列時間單位之關係與約定。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "高雄市永安國小 114-1/111-2、高雄市獅湖國小 111-2/114-2 與臺北市內湖國小 112-2 段考真題（工單 T_G2_N213_N214_BATCH.md 指定規格）"
         },
         {
           "code": "S-2-1",
