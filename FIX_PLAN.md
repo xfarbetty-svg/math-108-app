@@ -30,21 +30,21 @@
 
 ## 3. 驗收接口地圖 (Acceptance Map F-01 ~ F-04)
 
-- [ ] **F-01: [VISUAL] 48:52 雙欄單屏響應式佈局**
+- [x] **F-01: [VISUAL] 48:52 雙欄單屏響應式佈局**
   - **規格**：左側 48% 角色舞台、右側 52% 向量教具黑板；390px 手機視口 100% 入屏，高度 $\le 420\text{px}$，全屏總高 $\le 740\text{px}$ 無橫向捲軸。
-  - **驗收命令**：`node "C:\Users\PXP\.gemini\config\skills\plan-pr\scripts\capture_preview.js" app/scenes/g3_n39_theater/index.html _scratch/verify/preview_390.png --width 390 --height 844`
+  - **驗收命令**：`node "C:\Users\PXP\.gemini\config\skills\plan-pr\scripts\capture_preview.js" app/scenes/g3_n39_theater/index.html _scratch/verify/preview_390.png --width 390 --height 844`（✅ 驗收通過，SHA: d5844f40d82b）
 
-- [ ] **F-02: [VISUAL] 12 等分向量分數長條動態著色**
+- [x] **F-02: [VISUAL] 12 等分向量分數長條動態著色**
   - **規格**：SVG 向量渲染，精確 12 等分，前 3 格藍色、後續 7 格橘色，支援金色導引光圈點數動畫與標籤切換。
-  - **驗收命令**：`python "C:\Users\PXP\.gemini\config\skills\plan-pr\scripts\verify_visual_qa.py" _scratch/verify/preview_390.png`（Exit 0 驗無穿模、文字無遮擋）。
+  - **驗收命令**：`python "C:\Users\PXP\.gemini\config\skills\plan-pr\scripts\verify_visual_qa.py" _scratch/verify/preview_390.png`（✅ 驗收通過，035 多模態機器盲審 Exit 0）。
 
 - [ ] **F-03: 微軟 Edge-TTS 曉臻語音與時間軸同步**
   - **規格**：語音音訊與台詞字幕 WebVTT 時間軸精確對齊，動作切換延遲 $\le 100\text{ms}$。
   - **驗收命令**：檢查 `audio/g3_n39_hsiaochen.mp3` 檔案存在且時長與各幕字幕戳記相符。
 
-- [ ] **F-04: 同分母加法互動驗收與除錯回饋**
+- [x] **F-04: 同分母加法互動驗收與除錯回饋**
   - **規格**：具備真實點選互動；若選錯 $\frac{10}{24}$ 觸發迷思糾正提示（米米 surprise），選對 $\frac{10}{12}$ 觸發成功慶祝（米米 cheer）。
-  - **驗收命令**：自動化無頭測試點擊驗證與回饋狀態檢查。
+  - **驗收命令**：自動化無頭測試點擊驗證與回饋狀態檢查（✅ 通道三 035 原廠驗收審查 PASS）。
 
 ---
 
