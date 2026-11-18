@@ -142,6 +142,7 @@ def main():
         ["node", "tools/verify_g3_remaining_concepts.js"],
         ["node", "tools/verify_g2_concept_labs.js"],
         ["node", "tests/verify_concept_hub_cdp.js"],
+        ["node", "tests/verify_g3_n39_theater_cdp.js"],
         ["python", "tests/test_tts_endpoint.py"]
     ]
     for g in gates:
@@ -156,7 +157,7 @@ def main():
     run_cmd(["git", "add", "."])
     status_proc = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True)
     if status_proc.stdout.strip():
-        commit_msg = f"release: 發布新版 (Build {build_version}) - 落地 G2-S-2-3/S-2-4/S-2-5/R-2-1 四單元真題題庫與 034 向量微教具 (開放 55/131)"
+        commit_msg = f"release: 發布新版 (Build {build_version}) - 裝配 G3 N-3-9 Wan 2.2 四幕擬物黏土視訊與曉臻雙軌劇院 (開放 59/131)"
         run_cmd(["git", "commit", "-m", commit_msg])
     else:
         print("   (無新增變更，跳過 commit)")
