@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wan 2.2 四幕原生視訊實體檢視器 — 白兔米米 (N-3-9)</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --card: #152238;
+    --border: #243b60;
+    --gold: #f1c40f;
+    --mint: #2ecc71;
+    --text: #f8fafc;
+    --sub: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(ellipse at 50% 0%, #1a2942 0%, #0b1220 70%);
+    color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+  .header {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: var(--sub);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .toolbar {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .btn:hover {
+    background: #1e3354;
+    border-color: var(--gold);
+  }
+  .btn-primary {
+    background: #2563eb;
+    border-color: #3b82f6;
+  }
+  .grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--gold);
+  }
+  .badge {
+    background: rgba(46, 204, 113, 0.2);
+    border: 1px solid var(--mint);
+    color: var(--mint);
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: bold;
+  }
+  .video-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 832 / 480;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .card-desc {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+    background: rgba(0,0,0,0.25);
+    padding: 8px;
+    border-radius: 6px;
+    min-height: 52px;
+  }
+  .controls {
+    display: flex;
+    gap: 6px;
+    justify-content: space-between;
+  }
+  .controls button {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #e2e8f0;
+    padding: 5px 0;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .controls button:hover {
+    background: rgba(255,255,255,0.15);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎬 Wan 2.2 TI2V-5B 四幕原片動態檢視面板</h1>
+  <p>白兔米米 (Golden Seed: 30105) 實體 MP4 連續動態驗收。預設自動靜音循環播放，可使用控制列逐格慢放檢視。</p>
+</div>
+
+<div class="toolbar">
+  <button class="btn btn-primary" onclick="playAll()">▶ 全部播放</button>
+  <button class="btn" onclick="pauseAll()">⏸ 全部暫停</button>
+  <button class="btn" onclick="setSpeed(0.5)">🐢 0.5x 慢速檢視</button>
+  <button class="btn" onclick="setSpeed(1.0)">⚡ 1.0x 正常速度</button>
+  <button class="btn" onclick="setSpeed(0.25)">🔍 0.25x 超微距慢放</button>
+</div>
+
+<div class="grid">
+  <!-- Act 1 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Act 1: 數塊數</div>
+      <div class="badge">迎賓與指向黑板</div>
+    </div>
+    <div class="video-box">
+      <video id="v1" src="video/mimi_n39_act1.mp4" controls autoplay loop muted playsinline></video>
+    </div>
+    <div class="card-desc">
+      <strong>動作語意</strong>：待機呼吸 ➔ 流暢抬起右手指向右方 52% 向量黑板演武場。<br>
+      <strong>規格</strong>：832×480 | 16 fps | 33 幀 | 2.06 秒
+    </div>
+    <div class="controls">
+      <button onclick="togglePlay('v1')">播放/暫停</button>
+      <button onclick="restart('v1')">重播</button>
+      <button onclick="toggleFullscreen('v1')">全螢幕</button>
+    </div>
+  </div>
+
+  <!-- Act 2 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Act 2: 12塊裡的幾塊</div>
+      <div class="badge">專注引導與點頭</div>
+    </div>
+    <div class="video-box">
+      <video id="v2" src="video/mimi_n39_act2.mp4" controls autoplay loop muted playsinline></video>
+    </div>
+    <div class="card-desc">
+      <strong>動作語意</strong>：眼神專注凝聚 ➔ 微幅點頭強調分母 12 塊，手指精準指向教學區。<br>
+      <strong>規格</strong>：832×480 | 16 fps | 33 幀 | 2.06 秒
+    </div>
+    <div class="controls">
+      <button onclick="togglePlay('v2')">播放/暫停</button>
+      <button onclick="restart('v2')">重播</button>
+      <button onclick="toggleFullscreen('v2')">全螢幕</button>
+    </div>
+  </div>
+
+  <!-- Act 3 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Act 3: 算式抽象化</div>
+      <div class="badge">頓悟驚喜 (Eureka)</div>
+    </div>
+    <div class="video-box">
+      <video id="v3" src="video/mimi_n39_act3.mp4" controls autoplay loop muted playsinline></video>
+    </div>
+    <div class="card-desc">
+      <strong>動作語意</strong>：雙眼睜大向上頓悟 ➔ 露出驚喜靈動微笑，發現分子相加規律。<br>
+      <strong>規格</strong>：832×480 | 16 fps | 33 幀 | 2.06 秒
+    </div>
+    <div class="controls">
+      <button onclick="togglePlay('v3')">播放/暫停</button>
+      <button onclick="restart('v3')">重播</button>
+      <button onclick="toggleFullscreen('v3')">全螢幕</button>
+    </div>
+  </div>
+
+  <!-- Act 4 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Act 4: 互動驗收</div>
+      <div class="badge">算式完成歡呼</div>
+    </div>
+    <div class="video-box">
+      <video id="v4" src="video/mimi_n39_act4.mp4" controls autoplay loop muted playsinline></video>
+    </div>
+    <div class="card-desc">
+      <strong>動作語意</strong>：雙臂高高舉起 ➔ 笑瞇了眼開懷微躍歡呼，慶祝通關。<br>
+      <strong>規格</strong>：832×480 | 16 fps | 33 幀 | 2.06 秒
+    </div>
+    <div class="controls">
+      <button onclick="togglePlay('v4')">播放/暫停</button>
+      <button onclick="restart('v4')">重播</button>
+      <button onclick="toggleFullscreen('v4')">全螢幕</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const vids = ['v1', 'v2', 'v3', 'v4'].map(id => document.getElementById(id));
+
+  function playAll() { vids.forEach(v => v.play()); }
+  function pauseAll() { vids.forEach(v => v.pause()); }
+  function setSpeed(rate) { vids.forEach(v => v.playbackRate = rate); }
+  function togglePlay(id) {
+    const v = document.getElementById(id);
+    if (v.paused) v.play(); else v.pause();
+  }
+  function restart(id) {
+    const v = document.getElementById(id);
+    v.currentTime = 0;
+    v.play();
+  }
+  function toggleFullscreen(id) {
+    const v = document.getElementById(id);
+    if (v.requestFullscreen) v.requestFullscreen();
+    else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+  }
+</script>
+
+</body>
+</html>
