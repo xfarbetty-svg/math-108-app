@@ -57,3 +57,18 @@
 
 - **涉案 Commit 鋼印**：`0f1318a`（由工兵自動提交：`G3-N-3-9 咪咪草莓派概念小教室：avatar四狀態組件+75秒影音互動頁+靜態閘門驗收(44/44 PASS)`）。可供 025 直接透過 `git show 0f1318a` 提取完整代碼證據。
 - **當前本機狀態**：`handoff.md` 已完整更新，涉案任務卡已封存於 `docs/tasks/task_card_g3_n39_mimi_video.md`，現場 100% 保持原樣不擅自篡改，全面靜候 `025_audit` 介入調閱與定讞。
+
+---
+
+### 五、 `025_audit` 全域稽核定讞與處置回執 (2026-11-18 14:50)
+
+1. **偵查定讞**：
+   - 涉案之扁平 2D 草莓派代碼定性為「未落實資產前置調研與違規跳過 035 規劃之瑕疵產物」。
+   - `025_audit` 已執行手術式復原：`git revert 0f1318a`（Commit 雜湊：`73ff2d1`），乾淨清除涉案之 3 個前端與測試檔案。
+   - 現場殘留預覽死圖 `reports/previews/g3_n39_mimi_preview.png` 已實體清除。
+2. **法典加固**：
+   - `028-1/AGENTS.md` 已補齊「禁止以企劃草案 (Proposal) 之名偷跑 PLAN」與「跨專案資產前置強檢 (Pre-flight Inspection)」兩條鋼印。
+3. **後續開工標準指南 (Next Session)**：
+   - 下一任 Agent 接手時，直接掛載引用 `036_local_painter/theater/assets_hosts/g3_mimi/` 之 4 段 3D 黏土 SVD-XT 視頻。
+   - 嚴格比照 `036_local_painter/theater/concept_theater_g2_n22.html`（二年級波波）之 48:52 影院架構出圖與施工。
+   - 題型對齊 N-3-9 核心探究深度（巧克力長條與單位分數累加）。

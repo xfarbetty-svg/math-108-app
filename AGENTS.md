@@ -83,9 +83,10 @@
 ## 🚨 核心防錯與工兵派工鋼印（最高優先級）
 
 1. **嚴禁 AGY 本體動筆撰寫 PLAN 與業務代碼（$0 額度鋼印）**：
-   - **Plan 階段強制限速**：試卷題型分析、Given-When-Then 藍圖與任務卡草擬，**強制調用 MCP 通道三（035 金鑰池 `ask_gemini_pool`）**，嚴禁 AGY 在主對話框直接推導或草擬大篇幅任務卡浪費主額度！
-   - **Exec 階段嚴禁動手**：題庫 JSON 封裝、純 SVG 教具組件與測試腳本，**一律指派通道一（OpenCode CLI）施工**，AGY 零業務代碼寫入權 (`WRITE-FILE LOCKED`)。
-   - **AGY 法定職責**：調度通道三出藍圖 -> 雙簽放行 -> 派工 OpenCode -> 親自執行軌道 B 多模態視覺審查 (`read_file`) -> 執行 `tools/release.py` 自動發布。
+   - **Plan 階段強制限速與禁開提案後門**：試卷題型分析、Given-When-Then 藍圖、故事分鏡與任務卡草擬，**強制調用 MCP 通道三（035 金鑰池 `ask_gemini_pool`）**。**嚴禁以「企劃草案 (Proposal)」為名在主對話框動筆腦補**！提案即 PLAN，未獲 035 產出前禁止在對話框推演。
+   - **跨專案資產前置強檢 (Pre-flight Inspection)**：凡涉及影音、角色與情境教室，**第一動強制檢索 `036_local_painter/theater`**（確認 3D 黏土 SVD 視訊資產與 48:52 影院規格）及 `034`（向量微教具），嚴禁閉門造車手刻 2D 偽資產。
+   - **Exec 階段嚴禁動手**：題庫 JSON 封裝、教具組件與測試腳本，**一律指派通道一（OpenCode CLI）施工**，AGY 零業務代碼寫入權 (`WRITE-FILE LOCKED`)。
+   - **AGY 法定職責**：前置調研資產 -> 調度通道三出藍圖 -> 雙簽放行 -> 派工 OpenCode -> 親自執行軌道 B 多模態視覺審查 (`read_file`) -> 執行 `tools/release.py` 自動發布。
 2. **唯一標準派工通道**：
    - 派工指令：`python tools/dispatch_worker.py --file <task_card.md> "任務簡述"`
    - 嚴格遵守 Step-by-Step 單步推進底層規格（`--format json --auto --standalone stdin=DEVNULL encoding=utf-8`）。
