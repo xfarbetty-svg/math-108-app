@@ -5,42 +5,37 @@
 ---
 
 ## ⏯️ 目前做到哪
-- **Wan 2.2 TI2V-5B 四幕視訊實機推論全量完工 (100% 大滿貫)**：
-  - 在 036 RTX 5060 成功以黃金定裝照 `sample_mimi_seed30105.png` 為底圖，全量產出 N-3-9 四幕視訊：
-    - `mimi_n39_act1.mp4` (迎賓與指向黑板，459 KB, Exit 0)
-    - `mimi_n39_act2.mp4` (專注引導與點頭，395 KB, 經通道三大腦語義解耦修復，Exit 0)
-    - `mimi_n39_act3.mp4` (發現分數規律驚喜 Eureka Moment，549 KB, Exit 0)
-    - `mimi_n39_act4.mp4` (算式完成歡呼，702 KB, Exit 0)
-  - 每幕首幀、中幀、末幀全部通過 AGY 多模態視覺審查（見 `ACT1~4_WAN2_REVIEW.md` 系列報告），白兔米米特徵 100% 穩定，無任何走樣、畸變或語義污染。
-- **G3 N-3-9 概念劇院視訊裝配完工**：
-  - 四幕視訊全數落盤至 `app/scenes/g3_n39_theater/video/`。
-  - 工兵升級 `app/scenes/g3_n39_theater/index.html`：左側 48% 舞台嵌入 `<video id="mimiVideo">`，支援換幕自動切換、音視頻聯動、以及 SVG 平滑回退保護機制。
-- **CDP 實機驗證全綠 (ALL PASS)**：
-  - 執行 `node tests/verify_g3_n39_theater_cdp.js`（Exit Code 0）。
-  - 390×844 手機視口實測：舞台高 244px $\le 420\text{px}$，總高 479px $\le 844\text{px}$（一屏入眼零滾動），四幕動態切換正常，Console 零 Error。
-  - 實機截圖出具於 [`N39_THEATER_CDP_VERIFICATION.md`](file:///C:/Users/PXP/.gemini/antigravity/brain/a07bbebd-cd7a-40b7-b264-156a608e59ce/N39_THEATER_CDP_VERIFICATION.md)。
+- **Wan 2.2 TI2V-5B 四幕擬物黏土視訊與劇院裝配大滿貫完工**：
+  - 036 RTX 5060 依序推論四幕高畫質視訊（`mimi_n39_act{1..4}.mp4`），全部通過 AGY 多模態視覺審查（特徵穩定度 100%）。
+  - `app/scenes/g3_n39_theater/index.html` 完成裝配：左側 48% Wan 2.2 舞台影片 + 右側 52% 向量黑板演武場 + 曉臻四幕語音完整同步。
+- **20 道硬閘門 CDP 實機測量全綠 (ALL PASS)**：
+  - `tests/verify_g3_n39_theater_cdp.js` 實測：舞台高 244px $\le 420\text{px}$、總高 479px $\le 844\text{px}$ 免滾動一屏入眼、Console 零報錯。
+- **全站正式發布 Cloudflare Pages 上線 (Build 20261119_010510)**：
+  - 執行 `tools/release.py` 自動化發布管線（Exit Code 0）。
+  - 快取破除、Git 鋼印推送、Cloudflare Pages 邊緣部署與在線 HTTPS 探測全部 100% 驗真生效。
+  - 線上正式體驗網址：[`https://math-108.pages.dev`](https://math-108.pages.dev)
+  - 專屬劇院網址：[`https://math-108.pages.dev/app/scenes/g3_n39_theater/`](https://math-108.pages.dev/app/scenes/g3_n39_theater/)
 
 ---
 
 ## 🚦 目前狀態與客觀事實
-- 🟢 **當前狀態**：四幕 Wan 2.2 視訊推論、多模態審查、劇院裝配與 CDP 實機測量驗收已 100% 完成。
-- 🧱 **資產位置**：
-  - 視訊資產：`app/scenes/g3_n39_theater/video/mimi_n39_act{1..4}.mp4`
-  - 劇院入口：`app/scenes/g3_n39_theater/index.html`
-  - 驗證腳本：`tests/verify_g3_n39_theater_cdp.js`
-  - 實機截圖：`reports/screenshots/theater_n39_cdp.png`
+- 🟢 **當前狀態**：全線驗收通過、發布上線、working tree clean。
+- 🌐 **線上正式網址**：
+  - 首頁：`https://math-108.pages.dev`
+  - G3 N-3-9 劇院：`https://math-108.pages.dev/app/scenes/g3_n39_theater/`
+  - GitHub 倉庫：`https://github.com/xfarbetty-svg/math-108-app`
 
 ---
 
 ## ➡️ 下一步接續目標 (Next Steps)
-1. **全站發布與門禁**：
-   - 執行 `tools/release.py` 自動化門禁進行 Cloudflare Pages 發布驗收。
-2. **課綱總表與大廳鏈接**：
-   - 檢查 `verify_curriculum_131.js`，確認 N-3-9 劇院條目正常掛載。
+1. **下一單元概念劇院擴展**：
+   - 可依 G3 課綱清單接續為下一個核心難點單元（如 N-3-10 分數大小比較，或 G3 乘除進階）建構 48:52 黏土劇院。
+2. **日常巡檢與體檢**：
+   - 執行 `/retro` 或相關複盤程序，維持架構標準與零債務。
 
 ---
 
 ## 🕐 最後更新
-- **時間**：2026-11-19 00:03
+- **時間**：2026-11-19 01:08
 - **更新者**：Antigravity (Gemini 3.8 Flash) @ DESKTOP-6ELKIRH
-- **測試狀態**：✅ CDP 實機測量全綠 (ALL PASS, Exit Code 0)
+- **線上發布狀態**：🎉 Cloudflare Pages 邊緣同步驗真 PASS (Build 20261119_010510)
