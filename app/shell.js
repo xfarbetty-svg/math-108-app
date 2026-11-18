@@ -199,8 +199,8 @@ async function openUnit(code, initialQIndex = 0) {
 
 /* ---------- 單元內建模式切換（概念小教室 vs 真題測驗） ---------- */
 const UNIT_CONCEPT_MOVIES = {
-  "N-2-1": "https://youtu.be/1Kk8-PbRXD8",
-  "N-2-2": "https://youtu.be/YQeDijIl9ss"
+  "N-2-1": "assets/video/g2_n21_concept_final.mp4",
+  "N-2-2": "assets/video/g2_n22_concept_final.mp4"
 };
 
 const CONCEPT_COMPONENTS = {
