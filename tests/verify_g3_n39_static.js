@@ -1,15 +1,15 @@
 /**
- * tests/verify_g3_n39_static.js — G3-N-3-9 咪咪果凍盒 5 幕靜態打樣截圖驗收（階段一）
+ * tests/verify_g3_n39_static.js — G3-N-3-9 咪咪果凍盒 v2.0 五幕靜態打樣驗收
  *
- * 驗收項目：
- *   1. 載入 app/components/g3_n39_static_preview.html?shot=1 ~ 5（Puppeteer + 本機 Chrome/Edge）
- *   2. 每幕截圖至 reports/previews/g3_n39_s01.png ~ s05.png（> 20KB）
- *   3. 每幕零 JS 錯誤、零資源載入失敗（含咪咪立繪）
- *   4. 唯一道具防線：果凍盒恰好 12 格，填充數 3/10/10/10/10，無披薩蛋糕字樣
- *   5. 文圖一致性：各幕分數與提示文字逐項比對
+ * v2.0 分鏡契約：
+ *   S01 直覺的陷阱：兩盤果凍（3 + 7）＋算式 3/12 + 7/12 = ? ＋小夥伴 10/24 迷思氣泡
+ *   S02 建立基準：12 格盒裝入 3 顆，標註 3 個 1/12 盒＝3/12 盒
+ *   S03 動態累加：續放 7 顆至 10 顆，4~10 點數軌跡
+ *   S04 痛擊迷思：12 格實物 vs 24 格虛構巨盒（紅叉＋裂痕）
+ *   S05 算理大成：3/12 + 7/12 = 10/12 盒 ✅＋金牌口訣「盒子沒變大，分母就不動！」
  *
  * 執行：node tests/verify_g3_n39_static.js [--headed]
- * 依賴：npm i（puppeteer-core，复用系統已安裝的 Chrome / Edge，不額外下載 Chromium）
+ * 依賴：npm i（puppeteer-core，复用系統已安裝的 Chrome / Edge）
  * 回傳：全數 PASS → process.exit(0)；任一 FAIL → process.exit(1)
  */
 'use strict';
@@ -21,7 +21,8 @@ const { pathToFileURL } = require('node:url');
 const ROOT = path.resolve(__dirname, '..');
 const PAGE_FILE = path.join(ROOT, 'app', 'components', 'g3_n39_static_preview.html');
 const OUT_DIR = path.join(ROOT, 'reports', 'previews');
-const MIN_BYTES = 20 * 1024;
+const MIN_BYTES = 30 * 1024;
+const EXPECTED_VERSION = '2.0';
 
 const CHROME_CANDIDATES = [
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -34,64 +35,102 @@ const SHOTS = [
   {
     shot: 1,
     file: 'g3_n39_s01.png',
-    filled: 3,
-    title: '情境導入',
-    check: (probe) => [
-      ['Shot01 標題為情境導入', probe.tagText === '情境導入'],
-      ['Shot01 字幕含 3/12', probe.captions.some((t) => /這是一盒的/.test(t))],
-      ['Shot01 果凍盒 3 格有果凍', probe.jellyCount === 3 && probe.cellCount === 12]
+    tag: '直覺的陷阱',
+    title: '直覺的陷阱',
+    pose: 'confused',
+    poseLabel: '困惑',
+    badge: '？',
+    speech: '有同學說答案是 10/24 盒……嗯？真的是這樣嗎？我們拿盒子裝裝看！',
+    check: (p) => [
+      ['S01 算式為 3/12 + 7/12 = ?', p.equation.join(',') === '312,712' && p.qmark === true],
+      ['S01 左盤恰好 3 顆果凍', p.leftPlateJellies === 3],
+      ['S01 右盤恰好 7 顆果凍', p.rightPlateJellies === 7],
+      ['S01 左右兩盤共 2 個盤子', p.plateCards === 2],
+      ['S01 小夥伴搶答氣泡出現 10/24', p.peerFrac === '1024' && p.myth === '1024'],
+      ['S01 小夥伴台詞含「我知道」與 3＋7＝10', /我知道/.test(p.peerText) && /3＋7＝10/.test(p.peerText)]
     ]
   },
   {
     shot: 2,
     file: 'g3_n39_s02.png',
-    filled: 10,
-    title: '問題提出',
-    check: (probe) => [
-      ['Shot02 算式為 3/12 + 7/12 = ?', JSON.stringify(probe.equation) === JSON.stringify(['312', '712']) && probe.qmark],
-      ['Shot02 果凍盒共 10 格有果凍', probe.jellyCount === 10 && probe.cellCount === 12],
-      ['Shot02 字幕說明 10 格', probe.captions.some((t) => /10 格/.test(t))]
+    tag: '建立基準',
+    title: '12 格果凍盒出場',
+    pose: 'point',
+    poseLabel: '指盒',
+    badge: '👈',
+    speech: '看！這是一個 12 格的果凍盒，放進 3 顆，就是 3 個十二分之一，也就是十二分之三盒。',
+    check: (p) => [
+      ['S02 果凍盒為 12 格（4 欄 x 3 列）', p.cellCount === 12 && p.boxCols === 4 && p.boxRows === 3],
+      ['S02 果凍盒填充 3 顆', p.jellyCount === 3],
+      ['S02 盒內 3 格標示 1/12', p.unitLabels === 3],
+      ['S02 標註含「3 個 1/12 盒」', /3個/.test(p.unitNote) && p.unitNoteFracs.join(',') === '112,312'],
+      ['S02 標註含「也就是 3/12 盒」', /也就是/.test(p.unitNote) && p.unitNoteFracs.includes('312')],
+      ['S02 尚未出現點數標記', p.countLabels.length === 0]
     ]
   },
   {
     shot: 3,
     file: 'g3_n39_s03.png',
-    filled: 10,
-    title: '陷阱警示',
-    check: (probe) => [
-      ['Shot03 出現錯誤答案 10/24', probe.trapFrac === '1024'],
-      ['Shot03 出現大紅叉', probe.trapX === true],
-      ['Shot03 提示「盒子沒有變成 24 格呀！」', probe.trapNote === '盒子沒有變成24格呀！'],
-      ['Shot03 果凍盒仍為 12 格（非 24 格）', probe.jellyCount === 10 && probe.cellCount === 12]
+    tag: '動態累加',
+    title: '一顆一顆放進去',
+    pose: 'count',
+    poseLabel: '數數',
+    badge: '🔢',
+    speech: '現在把另外 7 顆也放進同一個盒子裡……一顆、兩顆……加上原來的，一共放了 10 顆！',
+    check: (p) => [
+      ['S03 果凍盒仍為 12 格', p.cellCount === 12],
+      ['S03 果凍盒累積至 10 顆', p.jellyCount === 10],
+      ['S03 點數標記恰好 7 個', p.countLabels.length === 7],
+      ['S03 點數標記為 4,5,6,7,8,9,10', p.countLabels.join(',') === '4,5,6,7,8,9,10'],
+      ['S03 點數軌跡連線存在', p.countPath === true],
+      ['S03 圖例含「10 顆」', /10顆/.test(p.legend)]
     ]
   },
   {
     shot: 4,
     file: 'g3_n39_s04.png',
-    filled: 10,
-    title: '算理拆解',
-    check: (probe) => [
-      ['Shot04 12 格全部標示 1/12', probe.unitLabels === 12],
-      ['Shot04 算理列為 3+7=10 個 1/12', probe.mathFracs.length === 3 && probe.mathFracs.every((f) => f === '112') && probe.mathCounts.join(',') === '3,7,10'],
-      ['Shot04 單位提示卡存在', probe.hint === true],
-      ['Shot04 果凍盒 12 格邊框發光（金色）', probe.glowStroke === true]
+    tag: '痛擊迷思',
+    title: '桌上的盒子根本沒有變成 24 格呀！',
+    pose: 'eureka',
+    poseLabel: '頓悟',
+    badge: '💡',
+    speech: '你看！裝完 10 顆，盒子還是眼前這個 12 格的盒子，根本沒有變成 24 格呀！分母是盒子的規格，絕對不能相加！',
+    check: (p) => [
+      ['S04 真實盒為 12 格並裝 10 顆', p.realCells === 12 && p.realJellies === 10],
+      ['S04 虛構巨盒為 24 格並裝 10 顆', p.fakeCells === 24 && p.fakeJellies === 10],
+      ['S04 虛構 24 格盒打上紅叉', p.fakeX === true && p.crossStroke === 'rgb(232, 39, 12)'],
+      ['S04 虛構巨盒出現 3 道裂痕', p.cracks === 3],
+      ['S04 規格標籤為 12 格／24 格', p.realChip === '12格' && p.fakeChip === '24格'],
+      ['S04 圖說含「真實」與「虛構」', /真實/.test(p.realLabel + p.fakeLabel) && /虛構/.test(p.fakeLabel)],
+      ['S04 真實盒未被紅叉標記', p.realHasCross === false],
+      ['S04 醒目標題命中任務卡原文', /桌上的盒子根本沒有變成\s*24\s*格呀！/.test(p.title)]
     ]
   },
   {
     shot: 5,
     file: 'g3_n39_s05.png',
-    filled: 10,
-    title: '正確解答',
-    check: (probe) => [
-      ['Shot05 解答為 10/12 盒', probe.resultFrac === '1012' && probe.resultUnit === '盒'],
-      ['Shot05 算式為 3/12 + 7/12 = 10/12', probe.equation.join(',') === '312,712,1012' && probe.resultFrac === '1012'],
-      ['Shot05 10 顆果凍金色光暈', probe.jellyCount === 10 && probe.goldGlow === true],
-      ['Shot05 勝利彩帶存在', probe.ribbon === true]
+    tag: '算理大成',
+    title: '拍板定案',
+    pose: 'cheer',
+    poseLabel: '歡呼',
+    badge: '🎉',
+    speech: '所以是 10 個十二分之一，一共是十二分之十盒！記住喔：盒子沒變大，分母就不動！',
+    check: (p) => [
+      ['S05 果凍盒 12 格裝滿 10 顆', p.cellCount === 12 && p.jellyCount === 10],
+      ['S05 定案算式含 3/12、7/12、(3+7)/12、10/12', p.equation.join(',') === '312,712,3+712,1012'],
+      ['S05 答案為 10/12 盒', p.resultFrac === '1012' && p.resultUnit === '盒'],
+      ['S05 正確勾選標記存在', p.checkOk === true],
+      ['S05 金牌口訣「盒子沒變大，分母就不動！」', /盒子沒變大，分母就不動！/.test(p.plaque)],
+      ['S05 10 顆果凍發出金色光暈', p.goldGlow === true],
+      ['S05 勝利彩帶（confetti）存在', p.confetti === true]
     ]
   }
 ];
 
 const FORBIDDEN_WORDS = ['披薩', '蛋糕', '圓盤', '草莓派'];
+
+/* DOM 探針統一去空白，預期字串比照辦理 */
+const squash = (s) => String(s).replace(/\s+/g, '');
 
 function findChrome() {
   for (const p of CHROME_CANDIDATES) if (fs.existsSync(p)) return p;
@@ -107,46 +146,85 @@ async function probeShot(page) {
     const q = (s) => document.querySelector(s);
     const qa = (s) => Array.from(document.querySelectorAll(s));
     const txt = (el) => (el ? el.textContent.replace(/\s+/g, '') : '');
-    const box = q('#jelly-box');
-    const layout = (() => {
-      const p = q('.board-zone');
-      return p ? p.getBoundingClientRect().width : 0;
-    })();
+    const rect = (s) => { const el = q(s); return el ? el.getBoundingClientRect() : null; };
+    const stage = q('#stage');
+    const left = q('.left-pane');
+    const right = q('.right-pane');
+    const slot = q('#board-slot');
+    const stageRect = stage.getBoundingClientRect();
+    const leftRect = left.getBoundingClientRect();
+    const rightRect = right.getBoundingClientRect();
+    const slotRect = slot.getBoundingClientRect();
+    const mimi = q('#mimi');
+    const real = q('[data-compare="real"]');
+    const fake = q('[data-compare="fake"]');
+    const fakeX = q('.fake-x');
+    const crossLine = fakeX ? fakeX.querySelector('line') : null;
+    const countPath = q('.count-path');
+
     return {
+      version: window.__N39_VERSION__,
       shot: window.__N39_SHOT__,
-      cellCount: qa('#jelly-box [data-cell]').length,
-      jellyCount: qa('#jelly-box [data-jelly]').length,
-      viewBox: box ? box.getAttribute('viewBox') : null,
-      primaryImg: q('#mimi') ? q('#mimi').getAttribute('src') : null,
-      primaryImgLoaded: (() => { const im = q('#mimi'); return !!im && im.complete && im.naturalWidth > 0; })(),
-      allImgs: qa('img').map((i) => i.getAttribute('src')),
       tagText: txt(q('#shot-tag-text')),
       title: txt(q('#board-title')),
-      captions: qa('.caption').map((el) => el.textContent.replace(/\s+/g, ' ').trim()),
       speech: txt(q('#speech-text')),
-      equation: qa('.equation .frac').map((f) => f.textContent.replace(/\s+/g, '')),
+      pose: stage.getAttribute('data-pose'),
+      portraitPose: q('#portrait').getAttribute('data-pose'),
+      poseLabel: txt(q('#pose-label')),
+      badge: txt(q('#pose-badge')),
+      mimiSrc: mimi ? mimi.getAttribute('src') : null,
+      mimiLoaded: !!mimi && mimi.complete && mimi.naturalWidth > 0,
+      allImgs: qa('img').map((i) => i.getAttribute('src')),
+      equation: qa('#equation .frac').map((f) => f.textContent.replace(/\s+/g, '')),
       qmark: !!q('.equation .qmark'),
-      trapFrac: txt(q('.trap-card .frac')),
-      trapNote: txt(q('.trap-note')),
-      trapX: !!q('.trap-x'),
+      plateCards: qa('[data-plate]').length,
+      leftPlateJellies: qa('[data-plate="left"] [data-jelly]').length,
+      rightPlateJellies: qa('[data-plate="right"] [data-jelly]').length,
+      peerFrac: txt(q('.peer-bubble .frac')),
+      peerText: txt(q('.peer-bubble')),
+      myth: q('.peer-bubble') ? q('.peer-bubble').getAttribute('data-myth') : null,
+      cellCount: qa('#jelly-box [data-cell]').length,
+      jellyCount: qa('#jelly-box [data-jelly]').length,
+      boxCols: q('#jelly-box') ? Number(q('#jelly-box').getAttribute('data-cols')) : 0,
+      boxRows: q('#jelly-box') ? Number(q('#jelly-box').getAttribute('data-rows')) : 0,
       unitLabels: qa('#jelly-box .unit-label').length,
-      mathFracs: qa('.math-line .frac').map((f) => f.textContent.replace(/\s+/g, '')),
-      mathCounts: qa('.math-line .cnt').map((c) => c.textContent.replace(/個/g, '').replace(/\s+/g, '')),
-      hint: !!q('.hint-card'),
-      ribbon: !!q('.ribbon'),
+      unitNote: txt(q('.unit-note')),
+      unitNoteFracs: qa('.unit-note .frac').map((f) => f.textContent.replace(/\s+/g, '')),
+      countLabels: qa('.count-label').map((c) => txt(c.querySelector('text'))),
+      countPath: !!countPath,
+      legend: txt(q('.count-legend')),
+      realCells: real ? real.querySelectorAll('[data-cell]').length : 0,
+      realJellies: real ? real.querySelectorAll('[data-jelly]').length : 0,
+      realChip: real ? txt(real.querySelector('.spec-chip')) : '',
+      realLabel: real ? txt(real.querySelector('figcaption')) : '',
+      realHasCross: real ? !!real.querySelector('.fake-x') : false,
+      fakeCells: fake ? fake.querySelectorAll('[data-cell]').length : 0,
+      fakeJellies: fake ? fake.querySelectorAll('[data-jelly]').length : 0,
+      fakeChip: fake ? txt(fake.querySelector('.spec-chip')) : '',
+      fakeLabel: fake ? txt(fake.querySelector('figcaption')) : '',
+      fakeX: !!fakeX,
+      crossStroke: crossLine ? getComputedStyle(crossLine).stroke : null,
+      cracks: qa('.cracks [data-crack]').length,
       resultFrac: txt(q('.equation .result .frac')),
       resultUnit: txt(q('.equation .result .unit')),
-      glowStroke: (() => {
-        const g = q('#jelly-box .glass');
-        if (!g) return false;
-        return getComputedStyle(g).stroke === 'rgb(255, 201, 77)';
-      })(),
+      checkOk: !!q('.check-ok'),
+      plaque: txt(q('.gold-plaque')),
       goldGlow: (() => {
         const j = q('#jelly-box .jelly-body');
         return j ? getComputedStyle(j).filter !== 'none' : false;
       })(),
-      overflowX: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      boardWidth: Math.round(layout)
+      confetti: !!q('.confetti'),
+      forbiddenHit: ['披薩', '蛋糕', '圓盤', '草莓派'].filter((w) => document.body.innerText.indexOf(w) > -1),
+      stageW: Math.round(stageRect.width),
+      stageH: Math.round(stageRect.height),
+      stageRatio: stageRect.width / stageRect.height,
+      leftRatio: leftRect.width / stageRect.width,
+      rightRatio: rightRect.width / stageRect.width,
+      stageScrollOverflow: stage.scrollHeight - stage.clientHeight,
+      slotOverflow: slot.scrollHeight - slot.clientHeight,
+      leftFits: q('#portrait').getBoundingClientRect().bottom <= leftRect.bottom + 1,
+      rightFits: slotRect.bottom <= rightRect.bottom + 1,
+      overflowX: document.documentElement.scrollWidth - document.documentElement.clientWidth
     };
   });
 }
@@ -185,64 +263,102 @@ async function probeShot(page) {
 
       await page.goto(`${pageURL}?shot=${spec.shot}`, { waitUntil: 'load', timeout: 30000 });
       await page.waitForFunction(
-        () => window.__N39_READY__ === true && window.__N39_SHOT__ === Number(new URLSearchParams(location.search).get('shot')) &&
+        () => window.__N39_READY__ === true &&
+          window.__N39_SHOT__ === Number(new URLSearchParams(location.search).get('shot')) &&
           (window.__N39_IMG_ERROR__ === true || (document.getElementById('mimi') && document.getElementById('mimi').naturalWidth > 0)),
         { timeout: 15000 }
       );
       await page.evaluate(() => document.fonts && document.fonts.ready);
       await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
 
-      const probe = await probeShot(page);
-      const checks = spec.check(probe);
-      checks.forEach(([name, ok]) => (ok ? pass(`S0${spec.shot} ${name}`) : fail(`S0${spec.shot} ${name}`, JSON.stringify(probe))));
+      const p = await probeShot(page);
+      const n = spec.shot;
 
-      // ---- 唯一道具與文圖防線 ----
-      if (probe.cellCount === 12 && probe.jellyCount === spec.filled) pass(`S0${spec.shot} 12 格果凍盒契約（filled=${spec.filled}）`);
-      else fail(`S0${spec.shot} 12 格果凍盒契約`, `cellCount=${probe.cellCount}, jellyCount=${probe.jellyCount}`);
+      // ---- v2.0 通用契約 ----
+      if (p.version === EXPECTED_VERSION) pass(`S0${n} 打樣版本為 v2.0`);
+      else fail(`S0${n} 打樣版本`, String(p.version));
 
-      if (probe.viewBox === '0 0 440 330') pass(`S0${spec.shot} 果凍盒為 4x3 長方形（viewBox 440x330）`);
-      else fail(`S0${spec.shot} 果凍盒比例`, String(probe.viewBox));
+      if (p.shot === n) pass(`S0${n} 載入幕次正確`);
+      else fail(`S0${n} 載入幕次`, String(p.shot));
 
-      const noForbidden = FORBIDDEN_WORDS.every((w) => !probe.speech.includes(w) && probe.captions.join('').indexOf(w) === -1);
-      if (noForbidden) pass(`S0${spec.shot} 無披薩／蛋糕／圓盤字樣`);
-      else fail(`S0${spec.shot} 出現禁用道具字樣`, probe.captions.join('|'));
+      if (p.tagText === spec.tag) pass(`S0${n} 幕次標籤為「${spec.tag}」`);
+      else fail(`S0${n} 幕次標籤`, p.tagText);
 
-      const allMimi = probe.allImgs.length > 0 && probe.allImgs.every((s) => s === null || /assets\/characters\/g3_mimi\//.test(s));
-      if (allMimi) pass(`S0${spec.shot} 立繪來源皆為 036 g3_mimi 貼圖`);
-      else fail(`S0${spec.shot} 立繪來源異常`, JSON.stringify(probe.allImgs));
+      if (p.title === squash(spec.title)) pass(`S0${n} 黑板標題為「${spec.title}」`);
+      else fail(`S0${n} 黑板標題`, p.title);
 
-      if (probe.primaryImg && probe.primaryImg.indexOf('mimi_') > -1 && probe.primaryImg.indexOf('.png') > -1 && probe.primaryImgLoaded) {
-        pass(`S0${spec.shot} 咪咪立繪已載入（naturalWidth > 0）`);
+      if (p.speech === squash(spec.speech)) pass(`S0${n} 咪咪台詞 100% 對齊 v2.0`);
+      else fail(`S0${n} 咪咪台詞`, p.speech);
+
+      if (p.pose === spec.pose && p.portraitPose === spec.pose) pass(`S0${n} 咪咪姿態切換為 ${spec.poseLabel}`);
+      else fail(`S0${n} 咪咪姿態`, `stage=${p.pose} portrait=${p.portraitPose}`);
+
+      if (p.poseLabel === spec.poseLabel) pass(`S0${n} 姿態標籤為「${spec.poseLabel}」`);
+      else fail(`S0${n} 姿態標籤`, p.poseLabel);
+
+      if (p.badge === spec.badge) pass(`S0${n} 情緒徽章為 ${spec.badge}`);
+      else fail(`S0${n} 情緒徽章`, p.badge);
+
+      if (p.mimiSrc && /assets\/characters\/g3_mimi\/mimi_.*\.png/.test(p.mimiSrc)) pass(`S0${n} 立繪來源為 036 g3_mimi 貼圖`);
+      else fail(`S0${n} 立繪來源異常`, String(p.mimiSrc));
+
+      if (p.mimiLoaded) pass(`S0${n} 咪咪立繪已載入（naturalWidth > 0）`);
+      else fail(`S0${n} 咪咪立繪載入失敗`, String(p.mimiSrc));
+
+      const allMimi = p.allImgs.length > 0 && p.allImgs.every((s) => s === null || /assets\/characters\/g3_mimi\//.test(s));
+      if (allMimi) pass(`S0${n} 全頁立繪皆來自 g3_mimi`);
+      else fail(`S0${n} 立繪來源混雜`, JSON.stringify(p.allImgs));
+
+      if (p.forbiddenHit.length === 0) pass(`S0${n} 無披薩／蛋糕／圓盤字樣`);
+      else fail(`S0${n} 出現禁用道具字樣`, p.forbiddenHit.join('|'));
+
+      if (p.overflowX <= 1) pass(`S0${n} 無水平溢出`);
+      else fail(`S0${n} 水平溢出`, `${p.overflowX}px`);
+
+      if (Math.abs(p.stageRatio - 16 / 9) < 0.01) pass(`S0${n} 主視窗 16:9（${p.stageW}x${p.stageH}）`);
+      else fail(`S0${n} 主視窗非 16:9`, `${p.stageW}x${p.stageH} ratio=${p.stageRatio.toFixed(3)}`);
+
+      if (Math.abs(p.leftRatio - 0.48) < 0.012 && Math.abs(p.rightRatio - 0.52) < 0.012) {
+        pass(`S0${n} 左右嚴格 48:52（${(p.leftRatio * 100).toFixed(1)}% : ${(p.rightRatio * 100).toFixed(1)}%）`);
       } else {
-        fail(`S0${spec.shot} 咪咪立繪載入失敗`, `${probe.primaryImg} loaded=${probe.primaryImgLoaded}`);
+        fail(`S0${n} 左右比例`, `${(p.leftRatio * 100).toFixed(1)}% : ${(p.rightRatio * 100).toFixed(1)}%`);
       }
 
-      if (probe.overflowX <= 1) pass(`S0${spec.shot} 無水平溢出`);
-      else fail(`S0${spec.shot} 水平溢出`, `${probe.overflowX}px`);
+      if (p.stageScrollOverflow <= 1) pass(`S0${n} 主視窗無垂直溢出`);
+      else fail(`S0${n} 主視窗垂直溢出`, `${p.stageScrollOverflow}px`);
 
-      if (pageErrors.length === 0) pass(`S0${spec.shot} 無 JavaScript 錯誤`);
-      else fail(`S0${spec.shot} JavaScript 錯誤`, pageErrors.join(' | '));
+      if (p.slotOverflow <= 1) pass(`S0${n} 右側黑板內容完整入框`);
+      else fail(`S0${n} 右側黑板內容溢出`, `${p.slotOverflow}px`);
 
-      if (consoleErrors.length === 0) pass(`S0${spec.shot} 無 console error`);
-      else fail(`S0${spec.shot} console error`, consoleErrors.join(' | '));
+      if (p.leftFits) pass(`S0${n} 咪咪立繪完整入框`);
+      else fail(`S0${n} 咪咪立繪超出左欄`, 'portrait bottom > pane bottom');
 
-      if (requestFailures.length === 0) pass(`S0${spec.shot} 資源載入零失敗`);
-      else fail(`S0${spec.shot} 資源載入失敗`, requestFailures.join(' | '));
+      if (p.rightFits) pass(`S0${n} 黑板內容未超出右欄`);
+      else fail(`S0${n} 黑板內容超出右欄`, 'board-slot bottom > pane bottom');
+
+      // ---- 各幕專屬契約 ----
+      spec.check(p).forEach(([name, ok]) => (ok ? pass(name) : fail(name, JSON.stringify(p))));
+
+      // ---- 執行環境零錯誤 ----
+      if (pageErrors.length === 0) pass(`S0${n} 無 JavaScript 錯誤`);
+      else fail(`S0${n} JavaScript 錯誤`, pageErrors.join(' | '));
+
+      if (consoleErrors.length === 0) pass(`S0${n} 無 console error`);
+      else fail(`S0${n} console error`, consoleErrors.join(' | '));
+
+      if (requestFailures.length === 0) pass(`S0${n} 資源載入零失敗`);
+      else fail(`S0${n} 資源載入失敗`, requestFailures.join(' | '));
 
       // ---- 截圖：只拍 16:9 打樣主視窗 ----
       const outPath = path.join(OUT_DIR, spec.file);
       const stage = await page.$('#stage');
       assert(stage, '找不到 #stage');
       const box = await stage.boundingBox();
-      assert(box && box.width > 800, `Shot ${spec.shot} stage 尺寸異常：${JSON.stringify(box)}`);
-      const ratio = box.width / box.height;
-      if (Math.abs(ratio - 16 / 9) < 0.02) pass(`S0${spec.shot} 主視窗 16:9（${Math.round(box.width)}x${Math.round(box.height)}）`);
-      else fail(`S0${spec.shot} 主視窗非 16:9`, `${box.width}x${box.height} ratio=${ratio.toFixed(3)}`);
-
+      assert(box && box.width > 800, `Shot ${n} stage 尺寸異常：${JSON.stringify(box)}`);
       await stage.screenshot({ path: outPath, type: 'png' });
       const size = fs.existsSync(outPath) ? fs.statSync(outPath).size : 0;
-      if (size > MIN_BYTES) pass(`S0${spec.shot} 截圖 ${spec.file} 已產出（${(size / 1024).toFixed(1)}KB）`);
-      else fail(`S0${spec.shot} 截圖不足 20KB`, `${spec.file} = ${size}B`);
+      if (size > MIN_BYTES) pass(`S0${n} 截圖 ${spec.file} 已產出（${(size / 1024).toFixed(1)}KB）`);
+      else fail(`S0${n} 截圖不足 30KB`, `${spec.file} = ${size}B`);
     }
   } catch (err) {
     fail('執行例外', err && err.stack ? err.stack.split('\n')[0] : String(err));
@@ -251,7 +367,7 @@ async function probeShot(page) {
     await browser.close();
   }
 
-  console.log('\n===== G3-N-3-9 咪咪果凍盒 靜態打樣截圖驗收 =====');
+  console.log('\n===== G3-N-3-9 咪咪果凍盒 v2.0 靜態打樣驗收 =====');
   results.forEach((r) => console.log(r));
   console.log(`\n合計 ${results.length} 項：PASS ${results.length - failures.length} / FAIL ${failures.length}`);
   console.log(`截圖目錄：${OUT_DIR}`);
@@ -260,7 +376,7 @@ async function probeShot(page) {
     console.error(`\n[FAIL] ${failures.length} 項未通過：\n - ${failures.join('\n - ')}`);
     process.exit(1);
   }
-  console.log('\n[PASS] 5 幕靜態打樣與截圖全部通過。');
+  console.log('\n[PASS] v2.0 五幕靜態打樣與截圖全部通過。');
   process.exit(0);
 })().catch((err) => {
   console.error('[FATAL]', err && err.stack ? err.stack : err);
