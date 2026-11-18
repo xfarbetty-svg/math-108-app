@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G3-N-3-9 咪咪的草莓派 · 分數概念小教室（影音互動）</title>
+<style>
+:root {
+  --bg: #fff9f0; --card: #ffffff; --ink: #3d3a34; --ink-soft: #8a857b;
+  --pie: #f4694b; --pie-deep: #d94f33; --crust: #f3c97b; --crust-deep: #d9910d;
+  --gold: #ffd166; --gold-deep: #d9910d; --line: #f0e7da;
+  --shadow: 0 6px 18px rgba(120, 90, 40, 0.10); --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%; max-width: 100vw; overflow-x: hidden;
+  background: var(--bg); color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  padding: 8px 10px 16px;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+/* ============ 版面：一屏緊湊（390px 零橫向溢出） ============ */
+.wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.header { display: flex; align-items: center; gap: 8px; padding: 2px 4px; }
+.header .badge {
+  background: var(--pie); color: #fff; font-weight: 900; font-size: 11px;
+  padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+}
+.header h1 { font-size: 17px; font-weight: 900; letter-spacing: .5px; }
+
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 10px 12px; border: 1.5px solid var(--line); }
+
+/* 模式切換 */
+.mode-tabs { display: flex; gap: 6px; }
+.mode-tabs button {
+  flex: 1; min-height: 44px; border-radius: 12px; font-weight: 900; font-size: 14px;
+  background: #f5eee1; color: var(--ink-soft); transition: all .2s;
+}
+.mode-tabs button.active { background: var(--pie); color: #fff; box-shadow: 0 3px 10px rgba(244,105,75,.35); }
+
+/* ============ 影音劇場 ============ */
+.theater { position: relative; }
+.stage-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+.mimi-slot { width: 92px; flex: 0 0 92px; }
+.bubble {
+  flex: 1; background: #fff5ee; border: 2px solid #ffd9c9; border-radius: 14px;
+  padding: 8px 10px; font-size: 13.5px; line-height: 1.55; min-height: 74px;
+  position: relative; font-weight: 600; color: #5a4636;
+}
+.bubble::before {
+  content: ''; position: absolute; left: -8px; top: 18px;
+  border: 8px solid transparent; border-right-color: #ffd9c9; border-left: 0;
+}
+.subtitle-tag { color: var(--ink-soft); font-size: 11px; font-weight: 700; }
+
+/* 草莓派 SVG 舞台 */
+.pie-stage { display: flex; justify-content: center; padding: 2px 0; }
+.pie-stage svg { width: min(100%, 300px); height: auto; display: block; }
+.sector { cursor: pointer; transform-box: fill-box; transform-origin: center; transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .5s; }
+.sector.eaten { transform: translate(46px, -40px) scale(.82); opacity: 1; }
+.sector.eaten + .sector.ghost, .sector.ghost { opacity: .32; }
+.sector.flash-gold { animation: gold-flash 1.1s ease-in-out infinite; }
+@keyframes gold-flash { 0%,100%{ filter: drop-shadow(0 0 0 rgba(255,209,102,0)); } 50%{ filter: drop-shadow(0 0 6px rgba(255,209,102,.95)); } }
+.straw { transition: opacity .4s; }
+
+/* 分數看板 */
+.frac-board {
+  display: flex; align-items: center; justify-content: center; gap: 14px; padding: 4px 0 2px;
+}
+.frac {
+  display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1;
+  font-weight: 900; color: var(--ink);
+}
+.frac .num { font-size: 40px; transition: transform .45s cubic-bezier(.34,1.56,.64,1), color .3s; }
+.frac .bar { width: 62px; height: 5px; background: var(--ink); border-radius: 3px; margin: 3px 0; }
+.frac .den { font-size: 40px; transition: transform .45s cubic-bezier(.34,1.56,.64,1), color .3s; }
+.frac .num.bump, .frac .den.bump { transform: scale(1.28); color: var(--pie-deep); }
+.zhuyin {
+  font-size: 14px; font-weight: 900; color: var(--gold-deep); background: #fff6da;
+  border: 2px dashed var(--gold); border-radius: 10px; padding: 4px 10px;
+  opacity: 0; transform: scale(.6); transition: all .45s cubic-bezier(.34,1.56,.64,1);
+}
+.zhuyin.show { opacity: 1; transform: scale(1); }
+
+/* 播放控制 */
+.progress-track { height: 8px; border-radius: 4px; background: #f0e4d4; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--pie), var(--gold)); border-radius: 4px; transition: width .95s linear; }
+.player-controls { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.player-controls button {
+  min-height: 44px; min-width: 44px; border-radius: 12px; font-weight: 900; font-size: 14px;
+  background: #f5eee1; color: var(--ink);
+}
+.player-controls #btn-play { background: var(--pie); color: #fff; min-width: 74px; }
+.timecode { margin-left: auto; font-size: 12px; font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* 口訣黑板 */
+.motto {
+  display: none; text-align: center; background: #2f4f3e; color: #ffe9b8;
+  border-radius: 12px; padding: 8px 10px; font-weight: 900; font-size: 14.5px; line-height: 1.6;
+  letter-spacing: 1px;
+}
+.motto.show { display: block; animation: motto-in .5s ease-out both; }
+@keyframes motto-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* CTA */
+.cta {
+  display: none; width: 100%; min-height: 48px; border-radius: 14px;
+  background: linear-gradient(90deg, var(--gold), #ffb347); color: #5a3a00;
+  font-weight: 900; font-size: 15px; letter-spacing: 1px; margin-top: 6px;
+  box-shadow: 0 4px 12px rgba(217,145,13,.35);
+}
+.cta.show { display: block; animation: motto-in .5s .2s ease-out both; }
+
+/* ============ 自由探究模式 ============ */
+.free-panel { display: none; }
+.free-panel.show { display: block; }
+.free-tip { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 4px; }
+.free-btns { display: flex; gap: 6px; }
+.free-btns button {
+  flex: 1; min-height: 44px; border-radius: 12px; font-weight: 900; font-size: 13px;
+  background: #f5eee1; color: var(--ink); transition: all .2s;
+}
+.free-btns button.active { background: var(--pie); color: #fff; }
+.free-frac { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 4px; }
+.free-frac .frac .num, .free-frac .frac .den { font-size: 32px; }
+.free-read { font-size: 14px; font-weight: 900; color: var(--pie-deep); }
+
+@media (min-width: 420px) {
+  .mimi-slot { width: 104px; flex-basis: 104px; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="header">
+    <span class="badge">G3-N-3-9</span>
+    <h1>咪咪的草莓派 🥧 · 分數概念小教室</h1>
+  </header>
+
+  <div class="mode-tabs" role="tablist">
+    <button id="tab-theater" class="active" role="tab" aria-selected="true">🎬 影音故事</button>
+    <button id="tab-free" role="tab" aria-selected="false">✋ 自由探究</button>
+  </div>
+
+  <!-- ================= 影音劇場模式 ================= -->
+  <section id="theater-panel" class="card theater">
+    <div class="stage-top">
+      <div class="mimi-slot"><mimi-rabbit id="mimi" state="normal"></mimi-rabbit></div>
+      <div class="bubble" id="bubble" aria-live="polite">
+        <span class="subtitle-tag">咪咪說…</span>
+        <div id="subtitle">點「▶ 播放」開始 75 秒的草莓派故事！</div>
+      </div>
+    </div>
+
+    <div class="pie-stage">
+      <svg id="pie-svg" viewBox="0 0 320 240" role="img" aria-label="草莓派教具">
+        <g id="pie-group"></g>
+      </svg>
+    </div>
+
+    <div class="frac-board">
+      <div class="frac">
+        <span class="num" id="frac-num">0</span>
+        <span class="bar"></span>
+        <span class="den" id="frac-den">4</span>
+      </div>
+      <span class="zhuyin" id="zhuyin">ㄙˋ ㄈㄣ ㄓ ㄧ</span>
+    </div>
+
+    <div class="motto" id="motto">🥧 分母在下看平分，分子在上看幾份！</div>
+    <button class="cta" id="btn-cta">✋ 換我動手切切看 →</button>
+
+    <div class="progress-track" aria-label="播放進度"><div class="progress-fill" id="progress"></div></div>
+    <div class="player-controls">
+      <button id="btn-play">▶ 播放</button>
+      <button id="btn-restart" aria-label="重新播放">↺</button>
+      <span class="timecode" id="timecode">00 / 75s</span>
+    </div>
+  </section>
+
+  <!-- ================= 自由探究模式 ================= -->
+  <section id="free-panel" class="card free-panel">
+    <p class="free-tip">咪咪邀你動手做！按鈕切派，或直接點扇形把它吃掉 🍓</p>
+    <div class="pie-stage">
+      <svg id="free-pie-svg" viewBox="0 0 320 240" role="img" aria-label="自由探究草莓派"></svg>
+    </div>
+    <div class="free-btns">
+      <button id="fb-whole" class="active">完整 1 個派</button>
+      <button id="fb-cut">平分成 4 塊</button>
+      <button id="fb-eat1">吃掉 1 塊</button>
+      <button id="fb-eat2">吃掉 2 塊</button>
+    </div>
+    <div class="free-frac">
+      <div class="frac">
+        <span class="num" id="free-num">1</span>
+        <span class="bar"></span>
+        <span class="den" id="free-den">1</span>
+      </div>
+      <span class="free-read" id="free-read">讀作：一個派</span>
+    </div>
+  </section>
+</div>
+
+<script src="../js/audio_manager.js"></script>
+<script src="./mimi_rabbit_avatar.js"></script>
+<script>
+(function () {
+  'use strict';
+  var TTS_LINES = { s1: '', s2: '', s3: '', s4: '', s5: '' };
+  var T = 75; // 總片長 75 秒
+
+  /* ==================== 純 SVG 草莓派：嚴格 90 度扇形幾何 ==================== */
+  var CX = 160, CY = 128, R = 96;
+  function sectorPath(a0, a1) {
+    var x0 = CX + R * Math.cos(a0), y0 = CY + R * Math.sin(a0);
+    var x1 = CX + R * Math.cos(a1), y1 = CY + R * Math.sin(a1);
+    return 'M' + CX + ' ' + CY + ' L' + x0.toFixed(2) + ' ' + y0.toFixed(2) +
+           ' A' + R + ' ' + R + ' 0 0 1 ' + x1.toFixed(2) + ' ' + y1.toFixed(2) + ' Z';
+  }
+  // 4 等份 → 每份嚴格 360/4 = 90 度（軍規四：嚴禁不等分假動畫）
+  var STEP = Math.PI * 2 / 4;
+  var STRAWBERRIES = [[152, 96], [186, 118], [150, 152], [122, 124]];
+
+  function buildPie(svg, opts) {
+    opts = opts || {};
+    svg.textContent = '';
+    // 每個 SVG 自帶漸層 defs（避免 display:none 容器跨 SVG 引用失效）
+    var gradId = opts.gradId || 'pieRed';
+    var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    defs.innerHTML = '<radialGradient id="' + gradId + '" cx="50%" cy="45%" r="60%">' +
+      '<stop offset="0%" stop-color="#ff8a70"/><stop offset="100%" stop-color="#e2543a"/></radialGradient>';
+    svg.appendChild(defs);
+    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('id', 'pie-group');
+    svg.appendChild(g);
+
+    for (var i = 0; i < 4; i++) {
+      var a0 = -Math.PI / 2 + STEP * i; // 自 12 點鐘起順時針
+      var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d', sectorPath(a0, a0 + STEP));
+      p.setAttribute('fill', 'url(#' + gradId + ')');
+      p.setAttribute('stroke', '#fff');
+      p.setAttribute('stroke-width', '3');
+      p.setAttribute('class', 'sector');
+      p.setAttribute('data-idx', String(i));
+      p.setAttribute('aria-label', '第' + (i + 1) + '塊扇形，90度等分');
+      g.appendChild(p);
+    }
+    // 草莓裝飾（完整派專屬，切塊後移除避免穿模）
+    STRAWBERRIES.forEach(function (s, k) {
+      var st = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      st.setAttribute('class', 'straw'); st.setAttribute('data-idx', String(k));
+      st.innerHTML = '<path d="M' + s[0] + ' ' + (s[1] + 9) + ' q -8 -12 0 -16 q 8 4 0 16" fill="#e2543a"/>' +
+        '<path d="M' + (s[0] - 4) + ' ' + (s[1] - 8) + ' l 4 -5 l 4 5 z" fill="#4caf50"/>';
+      g.appendChild(st);
+    });
+    return g;
+  }
+
+  function setPieState(svg, mode) {
+    var sectors = svg.querySelectorAll('.sector');
+    var straws = svg.querySelectorAll('.straw');
+    // 重置
+    sectors.forEach(function (s) { s.classList.remove('eaten', 'ghost', 'flash-gold'); });
+    straws.forEach(function (s) { s.style.display = (mode === 'whole') ? '' : 'none'; });
+
+    if (mode === 'whole') { sectors.forEach(function (s) { s.style.opacity = '1'; }); return; }
+
+    var eatenCount = mode === 'eaten1' ? 1 : mode === 'eaten2' ? 2 : 0;
+    for (var i = 0; i < eatenCount; i++) sectors[i].classList.add('eaten');
+    // 剩餘扇形呈半透明輪廓（分鏡：漂浮脫離的 1 塊 vs 半透明其餘 3 塊）
+    for (var j = eatenCount; j < 4; j++) if (eatenCount > 0) sectors[j].classList.add('ghost');
+  }
+
+  /* ==================== 75 秒分鏡腳本（逐秒時間軸） ==================== */
+  var SCENES = [
+    { t: 0, d: 10, state: 'normal', pie: 'whole', num: 0, line: '哈囉！我是咪咪！🐰 今天我烤了一個香噴噴的圓形草莓派，想和好朋友們一起分享！', key: 's1' },
+    { t: 10, d: 15, state: 'confused', pie: 'eaten1', num: 1, line: '看我的魔法小刀，切！切！平分成了 4 塊！咪咪吃掉了其中的 1 塊……咦？這不能用整數 1 個來數了，該怎麼記下來呢？', key: 's2' },
+    { t: 25, d: 20, state: 'eureka', pie: 'eaten1', num: 1, line: '別擔心！這時候就要請出神奇的「分數」啦！看下面的數字叫做分母，代表平分成 4 份；上面的數字叫做分子，代表拿走的 1 份！讀作：四分之一！', key: 's3' },
+    { t: 45, d: 15, state: 'eureka', pie: 'eaten2', num: 2, line: '那如果咪咪太嘴饞，又吃掉 1 塊呢？沒錯！就是 2 個四分之一，合起來叫做——四分之二個派喔！', key: 's4' },
+    { t: 60, d: 15, state: 'happy', pie: 'eaten2', num: 2, line: '記住咪咪的小口訣：「分母在下看平分，分子在上看幾份！」換你動手切切看囉！', key: 's5' }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var mimi = $('mimi'), subtitle = $('subtitle'), pieSvg = $('pie-svg');
+  var fracNum = $('frac-num'), fracDen = $('frac-den'), zhuyin = $('zhuyin');
+  var progress = $('progress'), timecode = $('timecode'), btnPlay = $('btn-play');
+  var motto = $('motto'), cta = $('btn-cta');
+
+  var playing = false, elapsed = 0, timer = null, sceneIdx = -1;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function setTime(t) {
+    progress.style.width = (t / T * 100).toFixed(1) + '%';
+    timecode.textContent = pad(t) + ' / ' + T + 's';
+  }
+
+  function applyScene(sc, subPhase) {
+    mimi.setState(sc.state);
+    subtitle.textContent = sc.line;
+    setPieState(pieSvg, sc.pie);
+    fracDen.textContent = '4';
+    if (sc.num > 0) { fracNum.textContent = String(sc.num); }
+    // 教學特效分相位：25s 場景先高亮分母，8 秒後高亮分子 + 注音
+    fracDen.classList.remove('bump'); fracNum.classList.remove('bump');
+    zhuyin.classList.remove('show');
+    if (sc.key === 's3' && subPhase === 'den') {
+      fracDen.classList.add('bump');
+      pieSvg.querySelectorAll('.sector').forEach(function (s) { s.classList.add('flash-gold'); });
+    } else if (sc.key === 's3' && subPhase === 'num') {
+      pieSvg.querySelectorAll('.sector').forEach(function (s) { s.classList.remove('flash-gold'); });
+      fracNum.classList.add('bump');
+      zhuyin.classList.add('show');
+    } else {
+      pieSvg.querySelectorAll('.sector').forEach(function (s) { s.classList.remove('flash-gold'); });
+    }
+    if (sc.key === 's4') { fracNum.classList.add('bump'); setTimeout(function () { fracNum.classList.remove('bump'); }, 900); }
+    // 60s 場景：口訣黑板 + CTA
+    motto.classList.toggle('show', sc.key === 's5');
+    cta.classList.toggle('show', sc.key === 's5');
+  }
+
+  function playScene(i) {
+    sceneIdx = i;
+    var sc = SCENES[i];
+    applyScene(sc, 'den');
+    if (window.AudioManager) window.AudioManager.play(sc.line);
+    if (sc.key === 's3') {
+      // 8 秒後進入「分子 + 注音」相位（音畫同步：分母先講、分子後講）
+      sc._phaseTimer = setTimeout(function () { if (playing && sceneIdx === i) applyScene(sc, 'num'); }, 8000);
+    }
+  }
+
+  function tick() {
+    elapsed++;
+    setTime(elapsed);
+    var sc = SCENES[sceneIdx];
+    var nextIdx = -1;
+    for (var i = 0; i < SCENES.length; i++) if (elapsed === SCENES[i].t + SCENES[i].d) { nextIdx = i + 1; break; }
+    if (nextIdx >= 0) {
+      if (nextIdx >= SCENES.length) { stop(true); return; }
+      playScene(nextIdx);
+    } else if (sc && sc.key === 's3' && elapsed === 25 + 8) {
+      applyScene(sc, 'num'); // 冗餘保險：相位觸發
+    }
+  }
+
+  function start() {
+    if (playing) return;
+    playing = true;
+    btnPlay.textContent = '⏸ 暫停';
+    if (sceneIdx < 0 || elapsed === 0) { elapsed = 0; setTime(0); playScene(0); }
+    timer = setInterval(tick, 1000);
+  }
+  function stop(finished) {
+    playing = false;
+    clearInterval(timer); timer = null;
+    SCENES.forEach(function (s) { if (s._phaseTimer) clearTimeout(s._phaseTimer); });
+    if (window.AudioManager) window.AudioManager.stop();
+    btnPlay.textContent = finished ? '↺ 再看一次' : '▶ 播放';
+    if (finished) { elapsed = 0; sceneIdx = -1; setTime(0); }
+  }
+
+  btnPlay.addEventListener('click', function () { playing ? stop(false) : start(); });
+  $('btn-restart').addEventListener('click', function () { stop(false); elapsed = 0; sceneIdx = -1; setTime(0); applyScene(SCENES[0], 'den'); start(); });
+  cta.addEventListener('click', function () { switchMode('free'); });
+  cta.addEventListener('click', function () { if (window.AudioManager) window.AudioManager.play('換你動手切切看囉！'); });
+
+  /* ==================== 模式切換 ==================== */
+  function switchMode(mode) {
+    var theater = mode === 'theater';
+    $('tab-theater').classList.toggle('active', theater);
+    $('tab-free').classList.toggle('active', !theater);
+    $('theater-panel').style.display = theater ? '' : 'none';
+    $('free-panel').classList.toggle('show', !theater);
+    if (!theater && window.AudioManager) window.AudioManager.stop();
+    if (theater) { mimi.setState(sceneIdx >= 0 ? SCENES[sceneIdx].state : 'normal'); }
+  }
+  $('tab-theater').addEventListener('click', function () { switchMode('theater'); });
+  $('tab-free').addEventListener('click', function () { switchMode('free'); });
+
+  /* ==================== 自由探究模式 ==================== */
+  var freeSvg = $('free-pie-svg'), freeNum = $('free-num'), freeDen = $('free-den'), freeRead = $('free-read');
+  var freeMode = 'whole';
+  var READS = {
+    whole: ['1', '1', '讀作：一個派（還沒切喔！）'],
+    cut4: ['0', '4', '平分成 4 份，還沒拿走任何一份'],
+    eaten1: ['1', '4', '讀作：四分之一'],
+    eaten2: ['2', '4', '讀作：四分之二（就是 2 個四分之一！）']
+  };
+  function applyFree() {
+    setPieState(freeSvg, freeMode);
+    var r = READS[freeMode];
+    freeNum.textContent = r[0]; freeDen.textContent = r[1]; freeRead.textContent = r[2];
+    ['fb-whole', 'fb-cut', 'fb-eat1', 'fb-eat2'].forEach(function (id, i) {
+      $(id).classList.toggle('active', ['whole', 'cut4', 'eaten1', 'eaten2'][i] === freeMode);
+    });
+  }
+  $('fb-whole').addEventListener('click', function () { freeMode = 'whole'; applyFree(); });
+  $('fb-cut').addEventListener('click', function () { freeMode = 'cut4'; applyFree(); });
+  $('fb-eat1').addEventListener('click', function () { freeMode = 'eaten1'; applyFree(); });
+  $('fb-eat2').addEventListener('click', function () { freeMode = 'eaten2'; applyFree(); });
+  // 直接點扇形吃掉（真實事件監聽：動態 vs 靜態分級軍規四）
+  freeSvg.addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target.closest('.sector') : null;
+    if (!t) return;
+    var idx = Number(t.getAttribute('data-idx'));
+    if (freeMode === 'whole' || freeMode === 'cut4') freeMode = idx >= 2 ? 'eaten2' : 'eaten1';
+    else if (freeMode === 'eaten1') freeMode = 'eaten2';
+    else freeMode = 'cut4';
+    applyFree();
+    if (window.AudioManager) window.AudioManager.play(READS[freeMode][2]);
+  });
+
+  /* ==================== 初始化 ==================== */
+  buildPie(pieSvg, { gradId: 'pieRedMain' });
+  buildPie(freeSvg, { gradId: 'pieRedFree' });
+  applyFree();
+  applyScene(SCENES[0], 'den');
+  setTime(0);
+  window.__mimiLesson = { SCENES: SCENES, setPieState: setPieState, switchMode: switchMode };
+})();
+</script>
+</body>
+</html>
