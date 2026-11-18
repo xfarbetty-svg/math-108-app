@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #5C9EAD;
+            --accent-color: #FF8E72;
+            --bg-color: #FDFCF0;
+            --card-bg: #FFFFFF;
+            --text-color: #4A4A4A;
+            --success-color: #88B04B;
+            --fail-color: #E66767;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: "Microsoft JhengHei", sans-serif;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background-color: var(--bg-color);
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .visual-area {
+            width: 100%;
+            height: 120px;
+            flex-shrink: 0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .opt-btn {
+            background: var(--card-bg);
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            padding: 12px 5px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .opt-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #F0F7F8;
+        }
+
+        .opt-btn.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .controls {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
+
+        .check-btn {
+            width: 120px;
+            padding: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #D47259;
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #D47259;
+        }
+
+        #feedback {
+            height: 24px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        #feedback.success { color: var(--success-color); }
+        #feedback.fail { color: var(--fail-color); }
+
+        .svg-card-text {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            font-weight: bold;
+            fill: #4A4A4A;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="header-title">請將 208、280、199 依照「由小到大」排列</div>
+
+    <div class="visual-area">
+        <svg viewBox="0 0 400 120" width="100%" height="100%">
+            <!-- Card 1: 208 -->
+            <rect x="20" y="10" width="100" height="80" rx="15" fill="#E1F5FE" stroke="#81D4FA" stroke-width="3" />
+            <circle cx="100" cy="30" r="12" fill="#81D4FA" opacity="0.3" />
+            <text x="70" y="60" text-anchor="middle" font-size="28" class="svg-card-text">208</text>
+            
+            <!-- Card 2: 280 -->
+            <rect x="150" y="10" width="100" height="80" rx="15" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="3" />
+            <rect x="220" y="60" width="20" height="20" rx="4" fill="#A5D6A7" opacity="0.3" />
+            <text x="200" y="60" text-anchor="middle" font-size="28" class="svg-card-text">280</text>
+            
+            <!-- Card 3: 199 -->
+            <rect x="280" y="10" width="100" height="80" rx="15" fill="#FFF3E0" stroke="#FFCC80" stroke-width="3" />
+            <path d="M350 20 L370 40 M370 20 L350 40" stroke="#FFCC80" stroke-width="3" opacity="0.4" />
+            <text x="330" y="60" text-anchor="middle" font-size="28" class="svg-card-text">199</text>
+
+            <!-- Decorative elements -->
+            <circle cx="40" cy="105" r="5" fill="#FF8E72" />
+            <circle cx="60" cy="105" r="5" fill="#5C9EAD" />
+            <circle cx="80" cy="105" r="5" fill="#FFCC80" />
+            <line x1="100" y1="105" x2="380" y2="105" stroke="#DDD" stroke-dasharray="4" />
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <button class="opt-btn" onclick="selectOption(0)">280 < 208 < 199</button>
+        <button class="opt-btn" onclick="selectOption(1)">199 < 280 < 208</button>
+        <button class="opt-btn" onclick="selectOption(2)">199 < 208 < 280</button>
+        <button class="opt-btn" onclick="selectOption(3)">208 < 199 < 280</button>
+    </div>
+
+    <div class="controls">
+        <div id="feedback"></div>
+        <button class="check-btn" onclick="check()">檢查答案</button>
+    </div>
+</div>
+
+<script>
+    let currentSelection = -1;
+    const correctIndex = 2;
+
+    function selectOption(index) {
+        currentSelection = index;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            if (i === index) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('feedback').className = '';
+    }
+
+    window.check = function() {
+        const feedback = document.getElementById('feedback');
+        if (currentSelection === -1) {
+            feedback.innerText = '請先選擇一個選項';
+            feedback.className = 'fail';
+            return;
+        }
+
+        if (currentSelection === correctIndex) {
+            feedback.innerText = '太棒了！答對了！';
+            feedback.className = 'success';
+        } else {
+            feedback.innerText = '再試試看喔！';
+            feedback.className = 'fail';
+        }
+    };
+</script>
+
+</body>
+</html>

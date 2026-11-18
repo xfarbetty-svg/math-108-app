@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>三角形的周長計算</title>
+    <style>
+        :root {
+            --primary: #318a70;
+            --secondary: #7bc9b2;
+            --accent: #ff85a1;
+            --warm-yellow: #ffd166;
+            --bg-paper: #fff9f0;
+            --text-dark: #3d3a34;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--bg-paper) url('../assets/demo/bg_desk.webp') center/cover;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 12px;
+        }
+
+        /* 遮罩層增加質感 */
+        .wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .stage {
+            flex: 1;
+            max-height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .side-path {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 6;
+            stroke-linecap: round;
+            cursor: pointer;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+
+        .side-path:hover, .side-path.active {
+            stroke: var(--accent);
+            stroke-width: 8;
+        }
+
+        .triangle-fill {
+            fill: var(--secondary);
+            fill-opacity: 0.2;
+        }
+
+        .label-text {
+            font-size: 14px;
+            font-weight: bold;
+            fill: var(--text-dark);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .label-text.visible {
+            opacity: 1;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .opt-btn {
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .opt-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .opt-btn.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            height: 50px;
+        }
+
+        .check-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #d66d85;
+            transition: transform 0.1s;
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #d66d85;
+        }
+
+        #feedback {
+            font-weight: bold;
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #feedback.success { color: var(--primary); opacity: 1; }
+        #feedback.fail { color: var(--accent); opacity: 1; }
+
+        .hint {
+            font-size: 0.85rem;
+            color: #888;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="content">
+        <div class="header">
+            測量三角形，三條邊分別長 3、4、5 公分，求周長是多少公分？
+        </div>
+        
+        <div class="hint">點擊三角形的邊，看看長度是多少！</div>
+
+        <div class="stage">
+            <svg viewBox="0 0 300 160">
+                <!-- Triangle Fill -->
+                <polygon points="100,130 220,130 100,40" class="triangle-fill" />
+                
+                <!-- Side 1: 4cm (Bottom) -->
+                <line x1="100" y1="130" x2="220" y2="130" class="side-path" onclick="toggleSide(0)" id="side0" />
+                <text x="160" y="150" text-anchor="middle" class="label-text" id="label0">4 公分</text>
+                
+                <!-- Side 2: 5cm (Hypotenuse) -->
+                <line x1="220" y1="130" x2="100" y2="40" class="side-path" onclick="toggleSide(1)" id="side1" />
+                <text x="175" y="80" text-anchor="middle" class="label-text" id="label1">5 公分</text>
+                
+                <!-- Side 3: 3cm (Left) -->
+                <line x1="100" y1="40" x2="100" y2="130" class="side-path" onclick="toggleSide(2)" id="side2" />
+                <text x="80" y="90" text-anchor="middle" class="label-text" id="label2">3 公分</text>
+            </svg>
+        </div>
+
+        <div class="options-grid">
+            <div class="opt-btn" onclick="selectOption(0)">10公分</div>
+            <div class="opt-btn" onclick="selectOption(1)">11公分</div>
+            <div class="opt-btn" onclick="selectOption(2)">12公分</div>
+            <div class="opt-btn" onclick="selectOption(3)">15公分</div>
+        </div>
+
+        <div class="footer">
+            <div id="feedback">請選擇答案</div>
+            <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedIdx = -1;
+    const correctIdx = 2;
+
+    function toggleSide(idx) {
+        const side = document.getElementById(`side${idx}`);
+        const label = document.getElementById(`label${idx}`);
+        side.classList.toggle('active');
+        label.classList.toggle('visible');
+    }
+
+    function selectOption(idx) {
+        selectedIdx = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+        document.getElementById('feedback').style.opacity = 0;
+    }
+
+    function checkAnswer() {
+        const feedback = document.getElementById('feedback');
+        if (selectedIdx === -1) {
+            feedback.textContent = "請先選擇一個答案";
+            feedback.className = "fail";
+            return;
+        }
+
+        if (selectedIdx === correctIdx) {
+            feedback.textContent = "太棒了！3 + 4 + 5 = 12";
+            feedback.className = "success";
+            // 全部高亮
+            for(let i=0; i<3; i++) {
+                document.getElementById(`side${i}`).classList.add('active');
+                document.getElementById(`label${i}`).classList.add('visible');
+            }
+        } else {
+            feedback.textContent = "再試試看，把三條邊加起來！";
+            feedback.className = "fail";
+        }
+    }
+
+    // 暴露給全域
+    window.check = checkAnswer;
+</script>
+
+</body>
+</html>

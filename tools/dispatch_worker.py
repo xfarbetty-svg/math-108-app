@@ -25,11 +25,19 @@ LOCAL_FREE_MODELS = [
 def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
     """通道三：035 Key Pool 本地 8把 Key 輪詢閘道 (http://127.0.0.1:4000/v1)"""
     print("[Worker Dispatch CH3] 正在派工至通道三 (035 Key Pool 8把 Key 閘道)...")
+    is_json = ".json" in prompt or (task_file and ".json" in task_file)
+    if is_json:
+        req_note = "【重要要求】請務必輸出標準純 JSON 檔案內容，以 ```json ... ``` 包覆，嚴禁包含任何 HTML 標籤，嚴禁任何省略、註釋跳過或佔位符！"
+        sys_note = "你是一個資深架構師與題庫工程師，嚴格按照任務卡實作資料契約。只輸出繁體中文的純 JSON 格式內容，不要任何無關寒暄。"
+    else:
+        req_note = "【重要要求】請務必輸出完整可運行的 HTML 檔案全文，包含完整的 CSS 與 JavaScript，嚴禁任何省略、註釋跳過或佔位符！"
+        sys_note = "你是一個資深專業前端與互動教具工程師，嚴格按照任務卡實作代碼。只輸出繁體中文的 HTML 完整代碼，不要任何無關寒暄。"
+
     full_prompt = prompt
     if task_file and os.path.isfile(task_file):
         try:
             with open(task_file, "r", encoding="utf-8") as f:
-                full_prompt = f"【任務卡內容】\n{f.read()}\n\n【執行指令】\n{prompt}\n\n【重要要求】請務必輸出完整可運行的 HTML 檔案全文，包含完整的 CSS 與 JavaScript，嚴禁任何省略、註釋跳過或佔位符！"
+                full_prompt = f"【任務卡內容】\n{f.read()}\n\n【執行指令】\n{prompt}\n\n{req_note}"
         except Exception as e:
             print(f"[Worker Dispatch CH3] 讀取任務卡失敗: {e}", file=sys.stderr)
 
@@ -37,7 +45,7 @@ def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
     payload = {
         "model": "gemini-2.5-flash",
         "messages": [
-            {"role": "system", "content": "你是一個資深專業前端與互動教具工程師，嚴格按照任務卡實作代碼。只輸出繁體中文的 HTML 完整代碼，不要任何無關寒暄。"},
+            {"role": "system", "content": sys_note},
             {"role": "user", "content": full_prompt}
         ],
         "temperature": 0.2
@@ -55,19 +63,31 @@ def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
             print(f"[Worker Dispatch CH3] 成功完成，耗時 {elapsed:.2f}s，HTTP {resp.status}")
             output_text = data["choices"][0]["message"]["content"]
             
-            # 尋找目標檔案路徑並原子寫入
-            target_match = re.search(r"app/components/[a-zA-Z0-9_\-]+\.html", full_prompt)
+            # 尋找目標檔案路徑並原子寫入 (優先從指令 prompt 擷取，其次才從 full_prompt 搜尋)
+            target_match = re.search(r"(?:app/components/[a-zA-Z0-9_\-]+\.html|data/units/[a-zA-Z0-9_\-/]+\.json)", prompt)
+            if not target_match:
+                target_match = re.search(r"(?:app/components/[a-zA-Z0-9_\-]+\.html|data/units/[a-zA-Z0-9_\-/]+\.json)", full_prompt)
             if target_match:
                 target_path = target_match.group(0)
                 code = output_text
-                code_match = re.search(r"```(?:html)?\s*([\s\S]*?)```", output_text, re.IGNORECASE)
-                if code_match:
-                    code = code_match.group(1).strip()
-                elif "<!DOCTYPE html>" in output_text:
-                    start = output_text.find("<!DOCTYPE html>")
-                    end = output_text.rfind("</html>")
-                    if end != -1:
-                        code = output_text[start:end+7].strip()
+                if target_path.endswith(".json"):
+                    code_match = re.search(r"```(?:json)?\s*([\s\S]*?)```", output_text, re.IGNORECASE)
+                    if code_match:
+                        code = code_match.group(1).strip()
+                    elif "{" in output_text and "}" in output_text:
+                        start = output_text.find("{")
+                        end = output_text.rfind("}")
+                        if end != -1:
+                            code = output_text[start:end+1].strip()
+                else:
+                    code_match = re.search(r"```(?:html)?\s*([\s\S]*?)```", output_text, re.IGNORECASE)
+                    if code_match:
+                        code = code_match.group(1).strip()
+                    elif "<!DOCTYPE html>" in output_text:
+                        start = output_text.find("<!DOCTYPE html>")
+                        end = output_text.rfind("</html>")
+                        if end != -1:
+                            code = output_text[start:end+7].strip()
 
                 target_dir = os.path.dirname(target_path)
                 os.makedirs(target_dir, exist_ok=True)

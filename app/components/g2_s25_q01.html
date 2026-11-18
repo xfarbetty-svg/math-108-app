@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-5 面積操作微教具 Q01</title>
+    <style>
+        :root {
+            --ink: #3d3a34;
+            --soft-green: #7bc9b2;
+            --deep-mint: #318a70;
+            --warm-yellow: #ffd166;
+            --coral-pink: #ff85a1;
+            --paper: #fff9f0;
+            --bg-desk: #e8e2d9;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ccc;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            color: var(--ink);
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--paper) url('../assets/demo/bg_desk.webp') center/cover no-repeat;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+        }
+
+        /* 遮罩層增加質感 */
+        .wrap::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--deep-mint);
+            background: rgba(123, 201, 178, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            margin: 8px 0;
+            line-height: 1.4;
+            font-weight: bold;
+        }
+
+        .stage {
+            flex: 0 0 100px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px dashed var(--soft-green);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .opt-btn {
+            background: white;
+            border: 2px solid var(--soft-green);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--ink);
+            font-weight: bold;
+        }
+
+        .opt-btn:hover { background: var(--paper); }
+        .opt-btn.active {
+            background: var(--soft-green);
+            color: white;
+            transform: scale(0.98);
+        }
+
+        .footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .check-btn {
+            background: var(--deep-mint);
+            color: white;
+            border: none;
+            padding: 6px 28px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #256a56;
+            transition: all 0.1s;
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #256a56;
+        }
+
+        #feedback {
+            font-size: 0.9rem;
+            height: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        #feedback.success { color: var(--deep-mint); }
+        #feedback.fail { color: var(--coral-pink); }
+
+        /* SVG 繪圖樣式 */
+        .sticker {
+            fill: var(--warm-yellow);
+            stroke: #e6b800;
+            stroke-width: 1;
+            rx: 2;
+        }
+        .label-text {
+            font-size: 14px;
+            font-weight: bold;
+            fill: var(--ink);
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="content">
+        <div class="header">
+            <h1>面積個別單位比較</h1>
+            <p class="question-text">甲圖形貼了 8 張貼紙，乙圖形貼了 10 張貼紙，哪一個圖形的面積比較大？</p>
+        </div>
+
+        <div class="stage">
+            <!-- 甲圖形 SVG -->
+            <svg width="140" height="100" viewBox="0 0 140 100">
+                <text x="70" y="20" text-anchor="middle" class="label-text">甲圖形</text>
+                <!-- 4x2 貼紙 -->
+                <g transform="translate(30, 30)">
+                    <rect class="sticker" x="0" y="0" width="18" height="18" />
+                    <rect class="sticker" x="20" y="0" width="18" height="18" />
+                    <rect class="sticker" x="40" y="0" width="18" height="18" />
+                    <rect class="sticker" x="60" y="0" width="18" height="18" />
+                    <rect class="sticker" x="0" y="20" width="18" height="18" />
+                    <rect class="sticker" x="20" y="20" width="18" height="18" />
+                    <rect class="sticker" x="40" y="20" width="18" height="18" />
+                    <rect class="sticker" x="60" y="20" width="18" height="18" />
+                </g>
+                <text x="70" y="85" text-anchor="middle" font-size="12" fill="#666">(8張)</text>
+            </svg>
+
+            <!-- 乙圖形 SVG -->
+            <svg width="140" height="100" viewBox="0 0 140 100">
+                <text x="70" y="20" text-anchor="middle" class="label-text">乙圖形</text>
+                <!-- 5x2 貼紙 -->
+                <g transform="translate(20, 30)">
+                    <rect class="sticker" x="0" y="0" width="18" height="18" />
+                    <rect class="sticker" x="20" y="0" width="18" height="18" />
+                    <rect class="sticker" x="40" y="0" width="18" height="18" />
+                    <rect class="sticker" x="60" y="0" width="18" height="18" />
+                    <rect class="sticker" x="80" y="0" width="18" height="18" />
+                    <rect class="sticker" x="0" y="20" width="18" height="18" />
+                    <rect class="sticker" x="20" y="20" width="18" height="18" />
+                    <rect class="sticker" x="40" y="20" width="18" height="18" />
+                    <rect class="sticker" x="60" y="20" width="18" height="18" />
+                    <rect class="sticker" x="80" y="20" width="18" height="18" />
+                </g>
+                <text x="70" y="85" text-anchor="middle" font-size="12" fill="#666">(10張)</text>
+            </svg>
+        </div>
+
+        <div class="options-grid">
+            <button class="opt-btn" onclick="selectOption(0)">甲圖形</button>
+            <button class="opt-btn" onclick="selectOption(1)">乙圖形</button>
+            <button class="opt-btn" onclick="selectOption(2)">一樣大</button>
+            <button class="opt-btn" onclick="selectOption(3)">無法比較</button>
+        </div>
+
+        <div class="footer">
+            <div id="feedback"></div>
+            <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedIndex = -1;
+    const correctIndex = 1;
+    const feedbackEl = document.getElementById('feedback');
+    const buttons = document.querySelectorAll('.opt-btn');
+
+    function selectOption(index) {
+        selectedIndex = index;
+        buttons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+        feedbackEl.textContent = "";
+        feedbackEl.className = "";
+    }
+
+    function checkAnswer() {
+        if (selectedIndex === -1) {
+            feedbackEl.textContent = "請先選擇一個答案喔！";
+            feedbackEl.className = "fail";
+            return;
+        }
+
+        if (selectedIndex === correctIndex) {
+            feedbackEl.textContent = "太棒了！乙圖形貼紙較多，面積較大。";
+            feedbackEl.className = "success";
+        } else {
+            feedbackEl.textContent = "再數數看，哪邊的貼紙數量比較多？";
+            feedbackEl.className = "fail";
+        }
+    }
+
+    // 自動化驗證契約
+    window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
+</script>
+
+</body>
+</html>

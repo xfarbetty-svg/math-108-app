@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-3 直尺操作微教具 Q05</title>
+    <style>
+        :root {
+            --primary: #318a70;
+            --secondary: #7bc9b2;
+            --accent: #ffd166;
+            --text: #3d3a34;
+            --paper: #fff9f0;
+            --bg: #e0e0e0;
+            --clip-a: #4a90e2;
+            --clip-b: #e94e77;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: url('../assets/demo/bg_desk.webp') center/cover no-repeat, var(--paper);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        .stage {
+            height: 150px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .opt-btn {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 10px 5px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .opt-btn.selected {
+            border-color: var(--primary);
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .check-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #256a56;
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #256a56;
+        }
+
+        .feedback {
+            font-weight: bold;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* SVG Styles */
+        .ruler-body { fill: #fff; stroke: #ccc; stroke-width: 1; }
+        .tick { stroke: #333; stroke-width: 1; }
+        .tick-long { stroke-width: 1.5; }
+        .ruler-text { font-size: 10px; fill: #666; font-family: Arial; }
+        
+        .clip { cursor: pointer; transition: filter 0.3s; }
+        .clip:hover { filter: brightness(1.1); }
+        .clip-label { font-size: 12px; font-weight: bold; }
+
+        .diff-highlight {
+            fill: var(--accent);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .correct-anim { animation: bounce 0.5s ease infinite; }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="overlay"></div>
+    <div class="content">
+        <div class="header">
+            甲迴紋針從刻度 0 到 4，乙迴紋針從刻度 2 到 7。誰比較長？相差幾公分？
+        </div>
+
+        <div class="stage" id="stage">
+            <svg width="360" height="140" viewBox="0 0 360 140">
+                <!-- Ruler -->
+                <rect x="20" y="80" width="320" height="40" rx="4" class="ruler-body" />
+                <g id="ticks"></g>
+                
+                <!-- Paperclip A (甲) -->
+                <g class="clip" id="clipA" transform="translate(30, 45)">
+                    <rect x="0" y="0" width="120" height="12" rx="6" fill="none" stroke="#4a90e2" stroke-width="4" />
+                    <path d="M10,6 H110" stroke="#4a90e2" stroke-width="2" />
+                    <text x="-15" y="10" class="clip-label" fill="#4a90e2">甲</text>
+                </g>
+
+                <!-- Paperclip B (乙) -->
+                <g class="clip" id="clipB" transform="translate(90, 20)">
+                    <rect x="0" y="0" width="150" height="12" rx="6" fill="none" stroke="#e94e77" stroke-width="4" />
+                    <path d="M10,6 H140" stroke="#e94e77" stroke-width="2" />
+                    <text x="-15" y="10" class="clip-label" fill="#e94e77">乙</text>
+                </g>
+
+                <!-- Difference Highlight -->
+                <rect id="diffRect" x="150" y="15" width="30" height="50" class="diff-highlight" rx="4" />
+            </svg>
+        </div>
+
+        <div class="options" id="options">
+            <div class="opt-btn" onclick="selectOpt(0)">甲比較長，相差1公分</div>
+            <div class="opt-btn" onclick="selectOpt(1)">乙比較長，相差1公分</div>
+            <div class="opt-btn" onclick="selectOpt(2)">甲比較長，相差2公分</div>
+            <div class="opt-btn" onclick="selectOpt(3)">乙比較長，相差2公分</div>
+        </div>
+
+        <div class="footer">
+            <div class="feedback" id="feedback">請選擇一個答案</div>
+            <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const correctIdx = 1;
+    let selectedIdx = -1;
+
+    // Generate Ruler Ticks
+    const ticksG = document.getElementById('ticks');
+    for (let i = 0; i <= 10; i++) {
+        const x = 30 + i * 30;
+        // CM ticks
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x); line.setAttribute("y1", 80);
+        line.setAttribute("x2", x); line.setAttribute("y2", 95);
+        line.setAttribute("class", "tick tick-long");
+        ticksG.appendChild(line);
+
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", x - 3); txt.setAttribute("y", 110);
+        txt.setAttribute("class", "ruler-text");
+        txt.textContent = i;
+        ticksG.appendChild(txt);
+
+        // MM ticks
+        if (i < 10) {
+            for (let j = 1; j < 10; j++) {
+                const mx = x + j * 3;
+                const mline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                mline.setAttribute("x1", mx); mline.setAttribute("y1", 80);
+                mline.setAttribute("x2", mx); mline.setAttribute("y2", (j === 5 ? 90 : 85));
+                mline.setAttribute("class", "tick");
+                ticksG.appendChild(mline);
+            }
+        }
+    }
+
+    function selectOpt(idx) {
+        selectedIdx = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+        document.getElementById('feedback').style.opacity = 0;
+    }
+
+    function checkAnswer() {
+        const feedback = document.getElementById('feedback');
+        const diffRect = document.getElementById('diffRect');
+        
+        if (selectedIdx === -1) {
+            feedback.textContent = "尚未選擇喔！";
+            feedback.style.opacity = 1;
+            feedback.style.color = "#e94e77";
+            return;
+        }
+
+        if (selectedIdx === correctIdx) {
+            feedback.classList.add('success'); feedback.classList.remove('fail');
+            feedback.textContent = "太棒了！答對了 ✨";
+            feedback.style.color = "var(--primary)";
+            diffRect.style.opacity = 0.3; // Show comparison highlight
+            document.getElementById('clipB').classList.add('correct-anim');
+        } else {
+            feedback.classList.add('fail'); feedback.classList.remove('success');
+            feedback.textContent = "再試試看，算算看長度差。";
+            feedback.style.color = "#e94e77";
+            diffRect.style.opacity = 0;
+            document.getElementById('clipB').classList.remove('correct-anim');
+        }
+        feedback.style.opacity = 1;
+    }
+
+    // Interaction: Click clips to show length
+    document.getElementById('clipA').addEventListener('click', () => {
+        feedback.textContent = "甲迴紋針：4 - 0 = 4 公分"; feedback.style.opacity = 1;
+    });
+    document.getElementById('clipB').addEventListener('click', () => {
+        feedback.textContent = "乙迴紋針：7 - 2 = 5 公分"; feedback.style.opacity = 1;
+    });
+window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
+</script>
+
+</body>
+</html>

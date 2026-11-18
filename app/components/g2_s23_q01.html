@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-3 直尺操作微教具 Q01</title>
+    <style>
+        :root {
+            --ink: #3d3a34;
+            --mint: #7bc9b2;
+            --dark-mint: #318a70;
+            --yellow: #ffd166;
+            --paper: #fff9f0;
+            --white: #ffffff;
+            --gray: #e0e0e0;
+            --accent: #ff85a1;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--paper) url('../assets/demo/bg_desk.webp') center/cover;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 柔和遮罩層 */
+        .wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 0;
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            padding: 12px 15px 5px;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+        }
+        .header::before {
+            content: 'Q1';
+            background: var(--mint);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .stage {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 140px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .svg-container {
+            width: 380px;
+            height: 120px;
+        }
+
+        .question-text {
+            position: relative;
+            z-index: 1;
+            padding: 0 20px;
+            font-size: 16px;
+            color: var(--ink);
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px 20px;
+        }
+
+        .opt-btn {
+            background: var(--white);
+            border: 2px solid var(--gray);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .opt-btn:hover { background: #f9f9f9; }
+        .opt-btn.selected {
+            border-color: var(--mint);
+            background: #eafff9;
+            color: var(--dark-mint);
+            font-weight: bold;
+        }
+
+        .action-area {
+            position: relative;
+            z-index: 1;
+            padding: 0 20px 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .check-btn {
+            background: var(--dark-mint);
+            color: white;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #256b57;
+            transition: transform 0.1s;
+        }
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #256b57;
+        }
+
+        .feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 10;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .feedback.show {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .feedback .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .feedback .msg {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .feedback .close-btn {
+            background: var(--mint);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* SVG 動態效果 */
+        .pencil { transition: transform 0.5s ease-out; cursor: pointer; }
+        .pencil:hover { transform: translateY(-2px); }
+        .magnifier { pointer-events: none; }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="header">長度量量看</div>
+    
+    <div class="stage">
+        <svg class="svg-container" viewBox="0 0 380 120">
+            <!-- 直尺本體 (留出左右邊界 padding) -->
+            <rect x="0" y="60" width="380" height="50" rx="6" fill="#ffffff" stroke="#3d3a34" stroke-width="1.5" />
+            
+            <!-- 刻度繪製 (0-12cm) 每1cm=30px -->
+            <g id="ticks">
+                <!-- JS 動態生成或手動寫入 -->
+                <script>
+                    const g = document.currentScript.parentElement;
+                    for(let i=0; i<=12; i++) {
+                        let x = 10 + i * 30;
+                        // 大刻度
+                        let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1", x); line.setAttribute("y1", 60);
+                        line.setAttribute("x2", x); line.setAttribute("y2", 75);
+                        line.setAttribute("stroke", "#3d3a34");
+                        line.setAttribute("stroke-width", "1.5");
+                        g.appendChild(line);
+                        
+                        // 數字
+                        let txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        txt.setAttribute("x", x); txt.setAttribute("y", 95);
+                        txt.setAttribute("text-anchor", "middle");
+                        txt.setAttribute("font-size", "12");
+                        txt.setAttribute("fill", "#3d3a34");
+                        txt.textContent = i;
+                        g.appendChild(txt);
+
+                        // 小刻度
+                        if(i < 12) {
+                            for(let j=1; j<10; j++) {
+                                let sx = x + j * 3;
+                                let sline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                                sline.setAttribute("x1", sx); sline.setAttribute("y1", 60);
+                                sline.setAttribute("x2", sx); sline.setAttribute("y2", j===5 ? 70 : 65);
+                                sline.setAttribute("stroke", "#3d3a34");
+                                sline.setAttribute("stroke-width", "0.5");
+                                g.appendChild(sline);
+                            }
+                        }
+                    }
+                </script>
+            </g>
+
+            <!-- 鉛筆 (0到8公分) -->
+            <g class="pencil" id="pencilObj">
+                <!-- 筆身 -->
+                <rect x="10" y="25" width="240" height="18" fill="#ffd166" rx="2" />
+                <rect x="10" y="25" width="240" height="6" fill="#ffeb3b" opacity="0.5" rx="2" />
+                <!-- 筆尖 -->
+                <path d="M 250 25 L 265 34 L 250 43 Z" fill="#f3e5ab" />
+                <path d="M 260 31 L 265 34 L 260 37 Z" fill="#3d3a34" />
+                <!-- 橡皮擦端 -->
+                <rect x="0" y="25" width="10" height="18" fill="#ff85a1" rx="2" />
+                <rect x="8" y="25" width="4" height="18" fill="#cccccc" />
+            </g>
+
+            <!-- 放大鏡/指針輔助 -->
+            <g class="magnifier" id="mag">
+                <circle cx="250" cy="60" r="18" fill="none" stroke="#318a70" stroke-width="2" stroke-dasharray="2,2" />
+                <line x1="250" y1="45" x2="250" y2="75" stroke="#318a70" stroke-width="1" />
+            </g>
+        </svg>
+    </div>
+
+    <div class="question-text">
+        這枝鉛筆的一端對準刻度 0，另一端對準刻度 8，請問這枝鉛筆有多長？
+    </div>
+
+    <div class="options-grid" id="options">
+        <div class="opt-btn" onclick="selectOpt(0)">6 公分</div>
+        <div class="opt-btn" onclick="selectOpt(1)">7 公分</div>
+        <div class="opt-btn" onclick="selectOpt(2)">8 公分</div>
+        <div class="opt-btn" onclick="selectOpt(3)">9 公分</div>
+    </div>
+
+    <div class="action-area">
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+
+    <div class="feedback" id="feedback">
+        <div class="icon" id="fb-icon">🌟</div>
+        <div class="msg" id="fb-msg">太棒了！</div>
+        <button class="close-btn" onclick="closeFeedback()">繼續</button>
+    </div>
+</div>
+
+<script>
+    let selectedIndex = -1;
+    const correctIndex = 2;
+
+    function selectOpt(index) {
+        selectedIndex = index;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            if(i === index) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+        
+        // 微動態：點擊時鉛筆跳一下
+        const pencil = document.getElementById('pencilObj');
+        pencil.style.transform = 'translateY(-5px)';
+        setTimeout(() => pencil.style.transform = 'translateY(0)', 200);
+    }
+
+    function checkAnswer() {
+        if(selectedIndex === -1) {
+            fbMsg.textContent = '請先選擇一個答案喔！'; fb.classList.add('show'); return;
+        }
+
+        const fb = document.getElementById('feedback');
+        const fbIcon = document.getElementById('fb-icon');
+        const fbMsg = document.getElementById('fb-msg');
+
+        if(selectedIndex === correctIndex) {
+            fbIcon.textContent = '🌟';
+            fbMsg.textContent = '答對了！鉛筆長度是 8 公分。';
+            fbMsg.style.color = 'var(--dark-mint)';
+            fb.classList.add('success'); fb.classList.remove('fail');
+        } else {
+            fbIcon.textContent = '💡';
+            fbMsg.textContent = '再試試看，看鉛筆尖對準哪個數字？';
+            fbMsg.style.color = '#e67e22';
+            fb.classList.add('fail'); fb.classList.remove('success');
+        }
+        
+        fb.classList.add('show');
+    }
+
+    function closeFeedback() {
+        const fb = document.getElementById('feedback');
+        fb.classList.remove('show');
+    }
+
+    // 初始化：讓放大鏡在 8cm 處閃爍一下
+    window.onload = () => {
+        const mag = document.getElementById('mag');
+        mag.style.opacity = '0';
+        setTimeout(() => {
+            mag.style.transition = 'opacity 0.5s';
+            mag.style.opacity = '1';
+        }, 500);
+    };
+window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
+</script>
+
+</body>
+</html>

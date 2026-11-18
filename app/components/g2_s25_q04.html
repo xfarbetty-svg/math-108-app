@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #5d8aa8;
+            --secondary-color: #f4f1de;
+            --accent-color: #e07a5f;
+            --correct-color: #81b29a;
+            --wrong-color: #e07a5f;
+            --text-color: #3d405b;
+            --bg-color: #fdfcf0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eee;
+            font-family: "Microsoft JhengHei", sans-serif;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 6px;
+            line-height: 1.35;
+            font-weight: bold;
+        }
+
+        .visual-area {
+            flex: 1;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #fffef5;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 2px dashed #d1d1d1;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .opt-btn {
+            padding: 6px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .opt-btn.selected {
+            border-color: var(--primary-color);
+            background-color: #eef6fb;
+            transform: scale(0.98);
+        }
+
+        .check-btn {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 6px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .check-btn:active {
+            background-color: #4a6e86;
+        }
+
+        #feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: none;
+            z-index: 10;
+            pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .correct { background-color: var(--correct-color); color: white; }
+        .wrong { background-color: var(--wrong-color); color: white; }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        function generatePapers(cols, rows, w, h, scale) {
+            let svgStr = "";
+            const pw = w * scale;
+            const ph = h * scale;
+            for(let r=0; r<rows; r++) {
+                for(let c=0; c<cols; c++) {
+                    svgStr += `<rect x="${c*pw}" y="${r*ph}" width="${pw-1}" height="${ph-1}" fill="white" stroke="#eee" stroke-width="0.5" />`;
+                }
+            }
+            return svgStr;
+        }
+    </script>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="question-text">
+        教室的佈告欄用了 15 張 A4 紙剛好鋪滿，黑板用了 50 張同樣的 A4 紙剛好鋪滿。請問哪一個的面積比較大？
+    </div>
+
+    <div class="visual-area">
+        <svg viewBox="0 0 400 180">
+            <!-- 佈告欄 (15張紙: 5x3) -->
+            <g transform="translate(30, 40)">
+                <rect x="-5" y="-5" width="110" height="70" rx="4" fill="#8d6e63" /> <!-- 外框 -->
+                <rect x="0" y="0" width="100" height="60" rx="2" fill="#d7ccc8" /> <!-- 軟木板 -->
+                <!-- 15張紙 -->
+                <g id="papers-15">
+                    <!-- JS will populate or static SVG -->
+                    <script>
+                        document.write(generatePapers(5, 3, 20, 20, 0.8));
+                    </script>
+                </g>
+                <text x="50" y="85" text-anchor="middle" font-size="12" fill="#5d4037" font-weight="bold">佈告欄 (15張)</text>
+            </g>
+
+            <!-- 黑板 (50張紙: 10x5) -->
+            <g transform="translate(180, 20)">
+                <rect x="-5" y="-5" width="210" height="110" rx="4" fill="#455a64" /> <!-- 外框 -->
+                <rect x="0" y="0" width="200" height="100" rx="2" fill="#2d3e50" /> <!-- 黑板面 -->
+                <!-- 50張紙 -->
+                <g id="papers-50">
+                    <script>
+                        document.write(generatePapers(10, 5, 20, 20, 0.8, 0, 0));
+                    </script>
+                </g>
+                <text x="100" y="125" text-anchor="middle" font-size="12" fill="#263238" font-weight="bold">黑板 (50張)</text>
+            </g>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <div class="opt-btn" onclick="selectOption(0)">1. 佈告欄</div>
+        <div class="opt-btn" onclick="selectOption(1)">2. 黑板</div>
+        <div class="opt-btn" onclick="selectOption(2)">3. 一樣大</div>
+        <div class="opt-btn" onclick="selectOption(3)">4. 不能比較</div>
+    </div>
+
+    <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+
+    <div id="feedback"></div>
+</div>
+
+<script>
+    // 輔助生成 SVG 紙張
+    function generatePapers(cols, rows, w, h, scale) {
+        let svgStr = "";
+        const pw = w * scale;
+        const ph = h * scale;
+        for(let r=0; r<rows; r++) {
+            for(let c=0; c<cols; c++) {
+                svgStr += `<rect x="${c*pw}" y="${r*ph}" width="${pw-1}" height="${ph-1}" fill="white" stroke="#eee" stroke-width="0.5" />`;
+            }
+        }
+        return svgStr;
+    }
+
+    let selectedIdx = -1;
+    const correctIdx = 1;
+
+    function selectOption(idx) {
+        selectedIdx = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+    }
+
+    function checkAnswer() {
+        if (selectedIdx === -1) return;
+
+        const feedback = document.getElementById('feedback');
+        const isCorrect = selectedIdx === correctIdx;
+
+        feedback.textContent = isCorrect ? "太棒了！正確" : "再試試看喔！";
+        feedback.className = isCorrect ? "correct success" : "wrong fail";
+        feedback.style.display = "block";
+
+        setTimeout(() => {
+            feedback.style.display = "none";
+        }, 1500);
+    }
+
+    // 外部契約
+    window.check = function() {
+        return {
+            score: selectedIdx === correctIdx ? 1 : 0,
+            isCorrect: selectedIdx === correctIdx,
+            userAnswer: selectedIdx
+        };
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-5 面積操作微教具 Q02</title>
+    <style>
+        :root {
+            --color-main: #3d3a34;
+            --color-primary: #7bc9b2;
+            --color-primary-dark: #318a70;
+            --color-accent: #ffd166;
+            --color-red: #ff85a1;
+            --color-blue: #4a90e2;
+            --color-bg: #fff9f0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--color-bg) url('../assets/demo/bg_desk.webp') center/cover no-repeat;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        /* 遮罩層增加質感 */
+        .wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            color: var(--color-main);
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .stage {
+            height: 100px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #d1ccc0;
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .opt-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .opt-btn {
+            background: white;
+            border: 2px solid #d1ccc0;
+            border-radius: 8px;
+            padding: 6px 8px;
+            font-size: 0.95rem;
+            color: var(--color-main);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .opt-btn:hover {
+            background: #fdf6e3;
+        }
+
+        .opt-btn.selected {
+            border-color: var(--color-primary);
+            background: #e8f5f1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .footer {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding-bottom: 8px;
+        }
+
+        .check-btn {
+            width: 100%;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 3px 0 var(--color-primary-dark);
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--color-primary-dark);
+        }
+
+        #feedback {
+            min-height: 24px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            width: 100%;
+            padding: 4px;
+            visibility: hidden;
+        }
+
+        #feedback.success {
+            visibility: visible;
+            color: #2d6a4f;
+            background: #d8f3dc;
+        }
+
+        #feedback.fail {
+            visibility: visible;
+            color: #a4161a;
+            background: #ffccd5;
+        }
+
+        /* SVG 動畫與樣式 */
+        .paper-red { fill: var(--color-red); stroke: #e66a85; stroke-width: 2; }
+        .paper-blue { fill: var(--color-blue); stroke: #357abd; stroke-width: 2; }
+        .paper-outline { fill: none; stroke: var(--color-main); stroke-width: 1; stroke-dasharray: 4 2; }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="content">
+        <div class="header">
+            <p class="title">紅色的色紙和藍色的色紙疊在一起，紅色完全蓋住藍色且還有多出的部分，哪一張色紙面積比較小？</p>
+        </div>
+
+        <div class="stage">
+            <svg class="svg-container" viewBox="0 0 300 130">
+                <!-- 陰影效果 -->
+                <rect x="85" y="25" width="130" height="90" fill="rgba(0,0,0,0.05)" rx="4" />
+                
+                <!-- 藍色色紙 (被蓋在下面) -->
+                <rect class="paper-blue" x="100" y="35" width="100" height="70" rx="2" />
+                <text x="150" y="75" fill="white" font-size="14" text-anchor="middle" font-weight="bold">藍色</text>
+                
+                <!-- 紅色色紙 (蓋在上面，半透明示意) -->
+                <rect class="paper-red" x="85" y="20" width="130" height="90" rx="2" fill-opacity="0.85" />
+                <text x="150" y="45" fill="white" font-size="14" text-anchor="middle" font-weight="bold">紅色色紙</text>
+                
+                <!-- 標示多出的部分 -->
+                <path d="M 85 20 L 100 20 L 100 35 L 85 35 Z" fill="var(--color-accent)" fill-opacity="0.3" />
+                <circle cx="92" cy="27" r="3" fill="var(--color-accent)" />
+            </svg>
+        </div>
+
+        <div class="opt-grid">
+            <button class="opt-btn" onclick="selectOption(0)">紅色色紙</button>
+            <button class="opt-btn" onclick="selectOption(1)">藍色色紙</button>
+            <button class="opt-btn" onclick="selectOption(2)">一樣小</button>
+            <button class="opt-btn" onclick="selectOption(3)">無法判斷</button>
+        </div>
+
+        <div class="footer">
+            <div id="feedback">請選擇一個答案</div>
+            <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedIdx = -1;
+    const correctIdx = 1;
+    const feedbackEl = document.getElementById('feedback');
+    const optBtns = document.querySelectorAll('.opt-btn');
+
+    function selectOption(index) {
+        selectedIdx = index;
+        optBtns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === index);
+        });
+        feedbackEl.style.visibility = 'hidden';
+        feedbackEl.classList.remove('success', 'fail');
+    }
+
+    function checkAnswer() {
+        if (selectedIdx === -1) {
+            feedbackEl.textContent = "請先選擇一個選項喔！";
+            feedbackEl.className = "fail";
+            feedbackEl.style.visibility = "visible";
+            return;
+        }
+
+        if (selectedIdx === correctIdx) {
+            feedbackEl.textContent = "太棒了！藍色被完全蓋住，所以它比較小。";
+            feedbackEl.className = "success";
+        } else {
+            feedbackEl.textContent = "再想想看，哪一張被蓋在下面且面積較小？";
+            feedbackEl.className = "fail";
+        }
+        feedbackEl.style.visibility = "visible";
+    }
+
+    // 自動化驗證契約
+    window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
+</script>
+
+</body>
+</html>

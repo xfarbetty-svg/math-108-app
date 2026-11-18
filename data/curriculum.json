@@ -233,33 +233,33 @@
           "code": "S-2-3",
           "title": "直尺操作",
           "full_text": "直尺操作：測量長度。報讀公分數。指定長度之線段作圖。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度新北/高雄/台中/桃園國小段考真題（034 Anatomy 純向量）"
         },
         {
           "code": "S-2-4",
           "title": "平面圖形的邊長",
           "full_text": "平面圖形的邊長：以操作活動與直尺實測為主。認識特殊幾何圖形的邊長關係。含周長的計算活動。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度新北/高雄/台中/桃園國小段考真題（034 Anatomy 純向量）"
         },
         {
           "code": "S-2-5",
           "title": "面積（以具體操作為主）",
           "full_text": "面積：以具體操作為主。初步認識、直接比較、間接比較（含個別單位）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度新北/高雄/台中/桃園國小段考真題（034 Anatomy 純向量）"
         },
         {
           "code": "R-2-1",
           "title": "大小關係與遞移律",
           "full_text": "大小關係與遞移律：「>」與「<」符號在算式中的意義，大小的遞移關係。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度全國國小數學段考真題庫（034 Anatomy 純向量）"
         },
         {
           "code": "R-2-2",

@@ -1,0 +1,152 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G2-S-2-3",
+  "curriculum_code": "S-2-3",
+  "code": "S-2-3",
+  "grade": 2,
+  "unit_name": "直尺操作與長度測量",
+  "source_paper": "Track A 處方落盤",
+  "verified_by": "Gemini 2.5 Pro",
+  "questions": [
+    {
+      "id": "G2-S-2-3-Q01",
+      "exam_source": "G2-S-2-3",
+      "section": "基礎測量",
+      "question_num": "Q01",
+      "title": "基礎長度測量",
+      "stem": "有一枝鉛筆，一端對準直尺的刻度「0」，另一端對準刻度「8」，請問這枝鉛筆長幾公分？",
+      "choices": [
+        "6公分",
+        "7公分",
+        "8公分",
+        "9公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "8公分",
+      "component": "g2_s23_q01",
+      "component_path": "components/g2_s23_q01.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "長度測量的起點與終點",
+        "steps": [
+          "確認物體左端對準刻度 0。",
+          "觀察物體右端所對應的刻度數值。",
+          "右端對準 8，代表長度就是 8 公分。"
+        ],
+        "trap": "誤以為要從 1 開始數，或沒看清楚起點是否為 0。"
+      }
+    },
+    {
+      "id": "G2-S-2-3-Q02",
+      "exam_source": "G2-S-2-3",
+      "section": "非零起點測量",
+      "question_num": "Q02",
+      "title": "非零起點長度計算",
+      "stem": "一條緞帶的左端對準直尺刻度「3」，右端對準刻度「10」，這條緞帶長幾公分？",
+      "choices": [
+        "7公分",
+        "10公分",
+        "13公分",
+        "3公分"
+      ],
+      "answer_index": 0,
+      "answer_raw": "7公分",
+      "component": "g2_s23_q02",
+      "component_path": "components/g2_s23_q02.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "兩刻度間的距離計算",
+        "steps": [
+          "找出右端的刻度是 10。",
+          "找出左端的刻度是 3。",
+          "使用減法計算：10 - 3 = 7 公分。"
+        ],
+        "trap": "直接把右端的刻度 10 當作答案，忽略了起點不是 0。"
+      }
+    },
+    {
+      "id": "G2-S-2-3-Q03",
+      "exam_source": "G2-S-2-3",
+      "section": "測量觀念",
+      "question_num": "Q03",
+      "title": "直尺正確使用方法",
+      "stem": "關於使用直尺測量物體長度，下列哪一個敘述是正確的？",
+      "choices": [
+        "從尺的最邊緣（沒有刻度的地方）開始量",
+        "物體的一端要對準刻度「0」開始量",
+        "一定要從刻度「1」開始量",
+        "隨便對準一個刻度就可以，不用對齊"
+      ],
+      "answer_index": 1,
+      "answer_raw": "物體的一端要對準刻度「0」開始量",
+      "component": "g2_s23_q03",
+      "component_path": "components/g2_s23_q03.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "正確測量基準點",
+        "steps": [
+          "直尺的邊緣通常有一小段空白，不是 0。",
+          "測量時必須將物體邊緣與刻度 0 對齊。",
+          "對齊 0 才能直接讀取另一端的數值作為長度。"
+        ],
+        "trap": "容易將尺的物理邊緣誤認為是測量的起點。"
+      }
+    },
+    {
+      "id": "G2-S-2-3-Q04",
+      "exam_source": "G2-S-2-3",
+      "section": "線段繪製",
+      "question_num": "Q04",
+      "title": "線段繪製觀念",
+      "stem": "老師要求畫一條「5 公分長」的直線，小華從刻度「2」開始畫，應畫到刻度幾？",
+      "choices": [
+        "刻度5",
+        "刻度6",
+        "刻度7",
+        "刻度8"
+      ],
+      "answer_index": 2,
+      "answer_raw": "刻度7",
+      "component": "g2_s23_q04",
+      "component_path": "components/g2_s23_q04.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "起點與長度的加法關係",
+        "steps": [
+          "已知起點是刻度 2。",
+          "需要畫出的長度是 5 公分。",
+          "計算終點：2 + 5 = 7，所以要畫到刻度 7。"
+        ],
+        "trap": "看到 5 公分就直接畫到刻度 5。"
+      }
+    },
+    {
+      "id": "G2-S-2-3-Q05",
+      "exam_source": "G2-S-2-3",
+      "section": "長度比較",
+      "question_num": "Q05",
+      "title": "迴紋針長度比較",
+      "stem": "甲迴紋針從刻度 0 量到 4；乙迴紋針從刻度 2 量到 7。哪一個比較長？相差幾公分？",
+      "choices": [
+        "甲比較長，相差1公分",
+        "乙比較長，相差1公分",
+        "甲比較長，相差2公分",
+        "乙比較長，相差2公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "乙比較長，相差1公分",
+      "component": "g2_s23_q05",
+      "component_path": "components/g2_s23_q05.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "長度計算與比較",
+        "steps": [
+          "計算甲長度：4 - 0 = 4 公分。",
+          "計算乙長度：7 - 2 = 5 公分。",
+          "比較：5 > 4，乙較長；相差 5 - 4 = 1 公分。"
+        ],
+        "trap": "只看終點刻度（7 > 4）而忽略了乙的起點是 2。"
+      }
+    }
+  ]
+}

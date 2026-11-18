@@ -125,6 +125,10 @@ def main():
     print("\n[S1] 執行全量確定性守門員檢驗...")
     gates = [
         ["node", "tools/verify_curriculum_131.js"],
+        ["node", "tools/verify_g2_s23_cdp.js"],
+        ["node", "tools/verify_g2_s24_cdp.js"],
+        ["node", "tools/verify_g2_s25_cdp.js"],
+        ["node", "tools/verify_g2_r21_cdp.js"],
         ["node", "tools/verify_g2_n29_n210_cdp.js"],
         ["node", "tools/verify_g2_n211_n212_cdp.js"],
         ["node", "tools/verify_app_shell.js"],
@@ -152,7 +156,7 @@ def main():
     run_cmd(["git", "add", "."])
     status_proc = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True)
     if status_proc.stdout.strip():
-        commit_msg = f"release: 發布新版 (Build {build_version}) - 落地 G2-N-2-11 與 G2-N-2-12 雙單元真題題庫與微教具"
+        commit_msg = f"release: 發布新版 (Build {build_version}) - 落地 G2-S-2-3/S-2-4/S-2-5/R-2-1 四單元真題題庫與 034 向量微教具 (開放 55/131)"
         run_cmd(["git", "commit", "-m", commit_msg])
     else:
         print("   (無新增變更，跳過 commit)")

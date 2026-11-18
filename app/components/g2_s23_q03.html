@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-3 直尺操作微教具 Q03</title>
+    <style>
+        :root {
+            --ink: #3d3a34;
+            --soft-green: #7bc9b2;
+            --deep-mint: #318a70;
+            --warm-yellow: #ffd166;
+            --paper: #fff9f0;
+            --white: #ffffff;
+            --error: #e63946;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            max-height: 420px;
+            background: var(--paper) url('../assets/demo/bg_desk.webp') center/cover;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 4px solid var(--white);
+        }
+
+        /* 遮罩層 */
+        .wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 0;
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            padding: 12px 15px;
+            background: var(--deep-mint);
+            color: var(--white);
+            font-size: 1.05rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stage {
+            position: relative;
+            z-index: 1;
+            height: 140px;
+            margin: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            border: 2px dashed var(--soft-green);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .ruler-container {
+            position: relative;
+            width: 320px;
+            height: 80px;
+        }
+
+        .crayon {
+            position: absolute;
+            top: 5px;
+            left: 20px; /* Initial position: aligned to edge */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .guide-line {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--error);
+            opacity: 0.6;
+            display: none;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            background: var(--warm-yellow);
+            border: none;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--ink);
+            cursor: pointer;
+            box-shadow: 0 2px 0 #d4af37;
+        }
+        .toggle-btn:active { transform: translateY(2px); box-shadow: none; }
+
+        .options {
+            position: relative;
+            z-index: 1;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .opt-btn {
+            background: var(--white);
+            border: 2px solid var(--soft-green);
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+        }
+
+        .opt-btn.selected {
+            background: var(--soft-green);
+            color: var(--white);
+        }
+
+        .actions {
+            position: relative;
+            z-index: 1;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .check-btn {
+            background: var(--warm-yellow);
+            color: var(--ink);
+            border: none;
+            padding: 8px 40px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #e6b800;
+        }
+
+        .check-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #e6b800; }
+
+        .feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 10;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 80%;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feedback.show { transform: translate(-50%, -50%) scale(1); }
+        .feedback h2 { margin: 0 0 10px; font-size: 1.5rem; }
+        .feedback p { margin: 0 0 15px; color: #666; font-size: 0.9rem; }
+        .feedback button {
+            background: var(--deep-mint);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .hint {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--deep-mint);
+            background: rgba(255,255,255,0.8);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="header">Q3：使用直尺測量長度時，哪一個方法才是正確的？</div>
+    
+    <div class="stage">
+        <div class="hint">點擊按鈕觀察對齊位置</div>
+        <div class="ruler-container">
+            <!-- Ruler SVG -->
+            <svg width="320" height="60" viewBox="0 0 320 60" style="position:absolute; bottom:0;">
+                <rect x="0" y="10" width="320" height="40" fill="#fff" stroke="#3d3a34" stroke-width="2" rx="4"/>
+                <!-- Ticks -->
+                <g id="ticks"></g>
+            </svg>
+            
+            <!-- Crayon SVG -->
+            <div class="crayon" id="crayon">
+                <svg width="120" height="25" viewBox="0 0 120 25">
+                    <path d="M0 12.5 L15 0 L110 0 Q120 0 120 12.5 Q120 25 110 25 L15 25 Z" fill="#4a90e2" />
+                    <path d="M15 0 L20 0 L20 25 L15 25 Z" fill="rgba(0,0,0,0.1)" />
+                    <circle cx="105" cy="12.5" r="5" fill="white" opacity="0.3" />
+                </svg>
+            </div>
+            
+            <!-- Red Guide Line -->
+            <div class="guide-line" id="guideLine"></div>
+        </div>
+        <button class="toggle-btn" onclick="toggleAlignment()">切換對齊方式</button>
+    </div>
+
+    <div class="options" id="options">
+        <div class="opt-btn" onclick="selectOption(0)">從尺的最邊緣（沒有刻度的地方）開始量</div>
+        <div class="opt-btn" onclick="selectOption(1)">物體的一端要對準刻度「0」開始量</div>
+        <div class="opt-btn" onclick="selectOption(2)">一定要從刻度「1」開始量</div>
+        <div class="opt-btn" onclick="selectOption(3)">隨便對準一個刻度就可以，不用對齊</div>
+    </div>
+
+    <div class="actions">
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+
+    <div class="feedback" id="feedback">
+        <h2 id="resultTitle"></h2>
+        <p id="resultText"></p>
+        <button onclick="closeFeedback()">再試一次</button>
+    </div>
+</div>
+
+<script>
+    const ticksG = document.getElementById('ticks');
+    const crayon = document.getElementById('crayon');
+    const guideLine = document.getElementById('guideLine');
+    let isAlignedToZero = false;
+    let selectedIdx = -1;
+    const correctIdx = 1;
+
+    // Generate Ruler Ticks
+    // 0 mark is at x=30
+    const startX = 30;
+    const step = 25; // 1cm = 25px
+    for (let i = 0; i <= 10; i++) {
+        const x = startX + i * step;
+        // Major tick
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x); line.setAttribute("y1", 10);
+        line.setAttribute("x2", x); line.setAttribute("y2", 30);
+        line.setAttribute("stroke", "#3d3a34");
+        line.setAttribute("stroke-width", "1.5");
+        ticksG.appendChild(line);
+
+        // Text
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", x); txt.setAttribute("y", 45);
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("font-size", "12");
+        txt.setAttribute("fill", "#3d3a34");
+        txt.textContent = i;
+        ticksG.appendChild(txt);
+
+        // Minor ticks
+        if (i < 10) {
+            for (let j = 1; j < 10; j++) {
+                const mx = x + (j * step / 10);
+                const mline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                mline.setAttribute("x1", mx); mline.setAttribute("y1", 10);
+                mline.setAttribute("x2", mx); mline.setAttribute("y2", j === 5 ? 22 : 18);
+                mline.setAttribute("stroke", "#3d3a34");
+                mline.setAttribute("stroke-width", "0.5");
+                ticksG.appendChild(mline);
+            }
+        }
+    }
+
+    function toggleAlignment() {
+        isAlignedToZero = !isAlignedToZero;
+        if (isAlignedToZero) {
+            crayon.style.transform = `translateX(${startX - 20}px)`;
+            guideLine.style.display = 'block';
+            guideLine.style.left = `${startX}px`;
+        } else {
+            crayon.style.transform = `translateX(0px)`;
+            guideLine.style.display = 'block';
+            guideLine.style.left = `20px`;
+        }
+    }
+
+    function selectOption(idx) {
+        selectedIdx = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+    }
+
+    function checkAnswer() {
+        if (selectedIdx === -1) {
+            title.textContent = "請選擇答案"; text.textContent = "請先點選一個選項喔！"; feedback.classList.add("show"); return;
+        }
+
+        const feedback = document.getElementById('feedback');
+        const title = document.getElementById('resultTitle');
+        const text = document.getElementById('resultText');
+
+        if (selectedIdx === correctIdx) {
+            title.innerHTML = "🌟 太棒了！"; feedback.classList.add("success"); feedback.classList.remove("fail");
+            title.style.color = "var(--deep-mint)";
+            text.innerHTML = "沒錯！測量時要將物體的一端對準刻度「0」，量出來的長度才是準確的喔！";
+            // Auto align to zero for visual reinforcement
+            isAlignedToZero = false;
+            toggleAlignment();
+        } else {
+            title.innerHTML = "再想想看？";
+            title.style.color = "var(--error)";
+            text.innerHTML = "仔細觀察直尺，最前面的邊緣通常沒有刻度，如果從那裡開始量會不準確喔。";
+        }
+        feedback.classList.add('show');
+    }
+
+    function closeFeedback() {
+        document.getElementById('feedback').classList.remove('show');
+    }
+
+    // Initial state
+    guideLine.style.left = `20px`;
+    guideLine.style.display = 'block';
+window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
+</script>
+
+</body>
+</html>

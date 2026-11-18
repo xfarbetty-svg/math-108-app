@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --success-color: #00b894;
+            --fail-color: #d63031;
+            --bg-color: #f9f9f9;
+            --text-color: #2d3436;
+            --btn-bg: #ffffff;
+            --btn-border: #dfe6e9;
+            --btn-active: #a29bfe;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eee;
+            font-family: "Microsoft JhengHei", sans-serif;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background-color: var(--bg-color);
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-area {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .visual-area {
+            width: 100%;
+            height: 120px;
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .opt-btn {
+            padding: 10px;
+            border: 2px solid var(--btn-border);
+            background: var(--btn-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .opt-btn:hover {
+            border-color: var(--btn-active);
+        }
+
+        .opt-btn.selected {
+            background-color: var(--btn-active);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .check-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .check-btn:active {
+            transform: scale(0.98);
+        }
+
+        #feedback {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            height: 24px;
+            font-size: 1rem;
+        }
+
+        #feedback.success { color: var(--success-color); }
+        #feedback.fail { color: var(--fail-color); }
+
+        /* SVG Styling */
+        .character-label {
+            font-size: 10px;
+            fill: #636e72;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="question-area">
+        小明比小華高，小華比小強高，請問誰最高？
+    </div>
+
+    <div class="visual-area">
+        <svg viewBox="0 0 300 120" width="100%" height="120">
+            <!-- 基準線 -->
+            <line x1="20" y1="110" x2="280" y2="110" stroke="#b2bec3" stroke-width="2" stroke-dasharray="4" />
+            
+            <!-- 小明 (最高) -->
+            <g transform="translate(60, 110)">
+                <rect x="-15" y="-80" width="30" height="80" rx="5" fill="#ff7675" />
+                <circle cx="0" cy="-90" r="12" fill="#fab1a0" />
+                <circle cx="-4" cy="-92" r="1.5" fill="#2d3436" />
+                <circle cx="4" cy="-92" r="1.5" fill="#2d3436" />
+                <path d="M -3 -86 Q 0 -84 3 -86" fill="none" stroke="#2d3436" stroke-width="1" />
+                <text y="10" class="character-label">小明</text>
+            </g>
+
+            <!-- 小華 (中) -->
+            <g transform="translate(150, 110)">
+                <rect x="-15" y="-60" width="30" height="60" rx="5" fill="#fdcb6e" />
+                <circle cx="0" cy="-70" r="12" fill="#ffeaa7" />
+                <circle cx="-4" cy="-72" r="1.5" fill="#2d3436" />
+                <circle cx="4" cy="-72" r="1.5" fill="#2d3436" />
+                <path d="M -3 -66 Q 0 -64 3 -66" fill="none" stroke="#2d3436" stroke-width="1" />
+                <text y="10" class="character-label">小華</text>
+            </g>
+
+            <!-- 小強 (矮) -->
+            <g transform="translate(240, 110)">
+                <rect x="-15" y="-40" width="30" height="40" rx="5" fill="#55efc4" />
+                <circle cx="0" cy="-50" r="12" fill="#81ecec" />
+                <circle cx="-4" cy="-52" r="1.5" fill="#2d3436" />
+                <circle cx="4" cy="-52" r="1.5" fill="#2d3436" />
+                <path d="M -3 -46 Q 0 -44 3 -46" fill="none" stroke="#2d3436" stroke-width="1" />
+                <text y="10" class="character-label">小強</text>
+            </g>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <div class="opt-btn" onclick="selectOption(0)">1. 小明</div>
+        <div class="opt-btn" onclick="selectOption(1)">2. 小華</div>
+        <div class="opt-btn" onclick="selectOption(2)">3. 小強</div>
+        <div class="opt-btn" onclick="selectOption(3)">4. 無法比較</div>
+    </div>
+
+    <button class="check-btn" onclick="check()">檢查答案</button>
+    <div id="feedback"></div>
+</div>
+
+<script>
+    let selectedIndex = -1;
+    const correctIndex = 0;
+
+    function selectOption(index) {
+        selectedIndex = index;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            if (i === index) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = '';
+    }
+
+    window.check = function() {
+        const feedback = document.getElementById('feedback');
+        if (selectedIndex === -1) {
+            feedback.textContent = '請先選擇一個答案';
+            feedback.className = 'fail';
+            return;
+        }
+
+        if (selectedIndex === correctIndex) {
+            feedback.textContent = '太棒了！答對了！';
+            feedback.className = 'success';
+        } else {
+            feedback.textContent = '再試試看喔！';
+            feedback.className = 'fail';
+        }
+    };
+</script>
+
+</body>
+</html>

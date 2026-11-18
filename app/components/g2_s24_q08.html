@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-4 Q08 長方形的對邊與周長</title>
+    <style>
+        :root {
+            --primary-color: #318a70;
+            --secondary-color: #7bc9b2;
+            --accent-color: #ff85a1;
+            --warn-color: #ffd166;
+            --text-color: #3d3a34;
+            --bg-paper: #fff9f0;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--bg-paper) url('../assets/demo/bg_desk.webp') center/cover;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 柔和遮罩層 */
+        .wrap::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 249, 240, 0.85);
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 15px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0 0 5px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .title::before {
+            content: "Q8";
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+        }
+
+        .question {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-color);
+        }
+
+        /* 舞台區域 */
+        .stage {
+            height: 140px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .side-path {
+            stroke-width: 6;
+            stroke-linecap: round;
+            cursor: pointer;
+            transition: stroke 0.3s, stroke-width 0.3s;
+            fill: none;
+        }
+
+        .side-path.inactive { stroke: #ccc; }
+        .side-path.active-long { stroke: var(--accent-color); stroke-width: 8; }
+        .side-path.active-short { stroke: var(--secondary-color); stroke-width: 8; }
+
+        .shape-fill {
+            fill: #fff;
+            stroke: #3d3a34;
+            stroke-width: 2;
+        }
+
+        .label-text {
+            font-size: 14px;
+            font-weight: bold;
+            fill: var(--text-color);
+            pointer-events: none;
+        }
+
+        /* 選項區域 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .opt-btn {
+            background: var(--white);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .opt-btn:hover { background: #f9f9f9; }
+        .opt-btn.selected {
+            border-color: var(--primary-color);
+            background: #e8f5f1;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* 控制區域 */
+        .controls {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .check-btn {
+            flex: 1;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #256a56;
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #256a56;
+        }
+
+        #feedback {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 10px;
+            padding: 10px;
+            visibility: hidden;
+        }
+
+        #feedback.success {
+            visibility: visible;
+            background: #e8f5f1;
+            color: var(--primary-color);
+        }
+
+        #feedback.fail {
+            visibility: visible;
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.75rem;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="content">
+        <div class="header">
+            <h1 class="title">長方形的對邊與周長</h1>
+            <div class="question">
+                長方形的長邊是 5 公分，短邊是 3 公分。因為對邊一樣長，請問它的周長是多少公分？
+            </div>
+        </div>
+
+        <div class="stage">
+            <svg viewBox="0 0 300 140">
+                <!-- 長方形主體 -->
+                <rect x="75" y="30" width="150" height="80" class="shape-fill" />
+                
+                <!-- 互動邊線 - 長邊 (Top & Bottom) -->
+                <line x1="75" y1="30" x2="225" y2="30" class="side-path inactive" id="side-top" onclick="highlight('long')" />
+                <line x1="75" y1="110" x2="225" y2="110" class="side-path inactive" id="side-bottom" onclick="highlight('long')" />
+                
+                <!-- 互動邊線 - 短邊 (Left & Right) -->
+                <line x1="75" y1="30" x2="75" y2="110" class="side-path inactive" id="side-left" onclick="highlight('short')" />
+                <line x1="225" y1="30" x2="225" y2="110" class="side-path inactive" id="side-right" onclick="highlight('short')" />
+
+                <!-- 標籤 -->
+                <text x="150" y="22" text-anchor="middle" class="label-text">5 cm</text>
+                <text x="150" y="125" text-anchor="middle" class="label-text">5 cm</text>
+                <text x="50" y="75" text-anchor="middle" class="label-text">3 cm</text>
+                <text x="250" y="75" text-anchor="middle" class="label-text">3 cm</text>
+            </svg>
+            <div class="hint">點擊邊長看看對邊！</div>
+        </div>
+
+        <div class="options-grid">
+            <div class="opt-btn" onclick="selectOption(0)">8公分</div>
+            <div class="opt-btn" onclick="selectOption(1)">13公分</div>
+            <div class="opt-btn" onclick="selectOption(2)">15公分</div>
+            <div class="opt-btn" onclick="selectOption(3)">16公分</div>
+        </div>
+
+        <div class="controls">
+            <div id="feedback">請選擇答案</div>
+            <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedIndex = -1;
+    const correctIndex = 3;
+    const options = document.querySelectorAll('.opt-btn');
+    const feedback = document.getElementById('feedback');
+
+    function selectOption(index) {
+        selectedIndex = index;
+        options.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === index);
+        });
+        feedback.style.visibility = 'hidden';
+    }
+
+    function highlight(type) {
+        const longs = ['side-top', 'side-bottom'];
+        const shorts = ['side-left', 'side-right'];
+        
+        // Reset all
+        [...longs, ...shorts].forEach(id => {
+            document.getElementById(id).className = 'side-path inactive';
+        });
+
+        if (type === 'long') {
+            longs.forEach(id => document.getElementById(id).className = 'side-path active-long');
+        } else {
+            shorts.forEach(id => document.getElementById(id).className = 'side-path active-short');
+        }
+    }
+
+    function checkAnswer() {
+        if (selectedIndex === -1) {
+            feedback.textContent = "請先選擇一個答案";
+            feedback.className = "fail";
+            feedback.style.visibility = "visible";
+            return;
+        }
+
+        if (selectedIndex === correctIndex) {
+            feedback.textContent = "太棒了！5+3+5+3=16";
+            feedback.className = "success";
+            // 答對時全亮
+            document.querySelectorAll('.side-path').forEach(el => {
+                el.classList.remove('inactive');
+                el.style.stroke = '#318a70';
+            });
+        } else {
+            feedback.textContent = "再試試看，要把四條邊都加起來喔！";
+            feedback.className = "fail";
+        }
+        feedback.style.visibility = "visible";
+    }
+
+    // 暴露給外部調用
+    window.check = checkAnswer;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G2-S-2-4",
+  "curriculum_code": "S-2-4",
+  "code": "G2-S-2-4",
+  "grade": 2,
+  "unit_name": "平面圖形的邊長與周長",
+  "source_paper": "Track A 處方落盤",
+  "verified_by": "Gemini 2.5 Pro",
+  "questions": [
+    {
+      "id": "G2-S-2-4-Q06",
+      "exam_source": "G2-S-2-4",
+      "section": "平面圖形的邊長與周長",
+      "question_num": "Q06",
+      "title": "三角形的周長計算",
+      "stem": "測量一個三角形，三條邊分別長 3 公分、4 公分、5 公分，這個三角形的周界長度（周長）是多少公分？",
+      "choices": [
+        "10公分",
+        "11公分",
+        "12公分",
+        "15公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "12公分",
+      "component": "GeometryPerimeter",
+      "component_path": "components/g2_s24_q06.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "周長是指封閉圖形所有邊長的總和。",
+        "steps": [
+          "確認三角形的三條邊長分別為 3 公分、4 公分與 5 公分。",
+          "將三條邊的長度相加：3 + 4 + 5 = 12。",
+          "得出周界總長度為 12 公分。"
+        ],
+        "trap": "計算時漏掉其中一條邊，或是將邊長相乘。"
+      }
+    },
+    {
+      "id": "G2-S-2-4-Q07",
+      "exam_source": "G2-S-2-4",
+      "section": "平面圖形的邊長與周長",
+      "question_num": "Q07",
+      "title": "正方形的周長特性",
+      "stem": "一個正方形的每條邊都是 4 公分長，正方形四條邊都一樣長，它的周長是多少公分？",
+      "choices": [
+        "8公分",
+        "12公分",
+        "16公分",
+        "20公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "16公分",
+      "component": "GeometryPerimeter",
+      "component_path": "components/g2_s24_q07.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "正方形的四條邊長度皆相等。",
+        "steps": [
+          "確認正方形有 4 条邊，且每條邊都是 4 公分。",
+          "將四條邊長相加：4 + 4 + 4 + 4 = 16。",
+          "得出正方形的周長為 16 公分。"
+        ],
+        "trap": "誤以為正方形只有兩條邊，或是只計算了三條邊。"
+      }
+    },
+    {
+      "id": "G2-S-2-4-Q08",
+      "exam_source": "G2-S-2-4",
+      "section": "平面圖形的邊長與周長",
+      "question_num": "Q08",
+      "title": "長方形的對邊與周長",
+      "stem": "一個長方形的長邊是 5 公分，短邊是 3 公分。因為對面的邊一樣長，請問它的四條邊合起來（周長）是多少公分？",
+      "choices": [
+        "8公分",
+        "13公分",
+        "15公分",
+        "16公分"
+      ],
+      "answer_index": 3,
+      "answer_raw": "16公分",
+      "component": "GeometryPerimeter",
+      "component_path": "components/g2_s24_q08.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "長方形有兩組對邊，對邊的長度相等。",
+        "steps": [
+          "找出長方形的四條邊：兩條長邊各 5 公分，兩條短邊各 3 公分。",
+          "將四條邊全部加起來：5 + 3 + 5 + 3 = 16。",
+          "得出長方形的周長為 16 公分。"
+        ],
+        "trap": "只把一條長和一條短相加（5 + 3 = 8），忘記長方形共有四條邊。"
+      }
+    },
+    {
+      "id": "G2-S-2-4-Q09",
+      "exam_source": "G2-S-2-4",
+      "section": "平面圖形的邊長與周長",
+      "question_num": "Q09",
+      "title": "多邊形的周長應用",
+      "stem": "一個正五邊形的每一條邊都是 2 公分，小螞蟻沿著花圃外圍走完一圈，總共走了多少公分？",
+      "choices": [
+        "8公分",
+        "10公分",
+        "12公分",
+        "14公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "10公分",
+      "component": "GeometryPerimeter",
+      "component_path": "components/g2_s24_q09.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "多邊形走一圈的長度即為該圖形的周長。",
+        "steps": [
+          "確認正五邊形共有 5 條邊，且每條邊長度都是 2 公分。",
+          "計算總長度：2 + 2 + 2 + 2 + 2 = 10。",
+          "得出小螞蟻總共走了 10 公分。"
+        ],
+        "trap": "記錯五邊形的邊數，例如誤算為四條邊或六條邊。"
+      }
+    },
+    {
+      "id": "G2-S-2-4-Q10",
+      "exam_source": "G2-S-2-4",
+      "section": "平面圖形的邊長與周長",
+      "question_num": "Q10",
+      "title": "周長展開與比較",
+      "stem": "把一個每邊長 3 公分的正方形和一個長 4 公分、寬 2 公分的長方形的邊界剪開拉成一條直線，哪一個展開後的直線比較長？",
+      "choices": [
+        "正方形比較長",
+        "長方形比較長",
+        "一樣長",
+        "無法比較"
+      ],
+      "answer_index": 2,
+      "answer_raw": "一樣長",
+      "component": "GeometryPerimeter",
+      "component_path": "components/g2_s24_q10.html",
+      "video_url": "",
+      "explanation": {
+        "concept": "圖形邊界展開後的直線長度等於該圖形的周長。",
+        "steps": [
+          "計算正方形周長：3 + 3 + 3 + 3 = 12 公分。",
+          "計算長方形周長：4 + 2 + 4 + 2 = 12 公分。",
+          "比較兩者結果，發現都是 12 公分，所以一樣長。"
+        ],
+        "trap": "直覺認為長方形的邊長有 4 公分比正方形的 3 公分大，就判斷長方形較長。"
+      }
+    }
+  ]
+}

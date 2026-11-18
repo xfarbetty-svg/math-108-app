@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #5d5cde;
+            --success-color: #4caf50;
+            --fail-color: #f44336;
+            --bg-color: #fdfbf7;
+            --ball-red: #e74c3c;
+            --ball-green: #27ae60;
+            --ball-blue: #2980b9;
+            --wood: #d4a373;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background-color: var(--bg-color);
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .question-area {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .opt-btn {
+            padding: 12px 8px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            text-align: center;
+            color: #444;
+        }
+
+        .opt-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .opt-btn.selected {
+            border-color: var(--primary-color);
+            background-color: #eef2ff;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: auto;
+            padding-bottom: 10px;
+        }
+
+        .check-btn {
+            width: 120px;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        #feedback {
+            height: 24px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .success { color: var(--success-color); }
+        .fail { color: var(--fail-color); }
+
+        /* SVG Styling */
+        .scale-base { fill: #8d6e63; }
+        .scale-beam { stroke: var(--wood); stroke-width: 4; stroke-linecap: round; }
+        .ball { stroke: rgba(0,0,0,0.1); stroke-width: 1; }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="question-area">
+        紅球比綠球重，綠球比藍球重，<br>下列哪一個敘述是正確的？
+    </div>
+
+    <div class="svg-container">
+        <!-- 天平 1: 紅 > 綠 (紅球重下沉，綠球輕上升) -->
+        <svg width="180" height="120" viewBox="0 0 180 120">
+            <path d="M70 100 L110 100 L90 70 Z" class="scale-base" />
+            <g transform="rotate(-15, 90, 75)">
+                <line x1="20" y1="75" x2="160" y2="75" class="scale-beam" />
+                <!-- 左側：紅球 (重，下沉) -->
+                <circle cx="30" cy="55" r="18" fill="var(--ball-red)" class="ball" />
+                <text x="30" y="60" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">紅</text>
+                <!-- 右側：綠球 (輕，上升) -->
+                <circle cx="150" cy="55" r="18" fill="var(--ball-green)" class="ball" />
+                <text x="150" y="60" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">綠</text>
+            </g>
+            <text x="90" y="115" text-anchor="middle" font-size="12" fill="#555" font-weight="bold">紅球重 (下沉)</text>
+        </svg>
+
+        <!-- 天平 2: 綠 > 藍 (綠球重下沉，藍球輕上升) -->
+        <svg width="180" height="120" viewBox="0 0 180 120">
+            <path d="M70 100 L110 100 L90 70 Z" class="scale-base" />
+            <g transform="rotate(-15, 90, 75)">
+                <line x1="20" y1="75" x2="160" y2="75" class="scale-beam" />
+                <!-- 左側：綠球 (重，下沉) -->
+                <circle cx="30" cy="55" r="18" fill="var(--ball-green)" class="ball" />
+                <text x="30" y="60" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">綠</text>
+                <!-- 右側：藍球 (輕，上升) -->
+                <circle cx="150" cy="55" r="18" fill="var(--ball-blue)" class="ball" />
+                <text x="150" y="60" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">藍</text>
+            </g>
+            <text x="90" y="115" text-anchor="middle" font-size="12" fill="#555" font-weight="bold">綠球重 (下沉)</text>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <div class="opt-btn" onclick="selectOption(0)">1. 藍球比紅球重</div>
+        <div class="opt-btn" onclick="selectOption(1)">2. 紅球比藍球重</div>
+        <div class="opt-btn" onclick="selectOption(2)">3. 三顆球一樣重</div>
+        <div class="opt-btn" onclick="selectOption(3)">4. 藍球最重</div>
+    </div>
+
+    <div class="controls">
+        <div id="feedback"></div>
+        <button class="check-btn" onclick="checkAnswer()">送出答案</button>
+    </div>
+</div>
+
+<script>
+    let selectedIdx = -1;
+    const correctIdx = 1;
+
+    function selectOption(idx) {
+        selectedIdx = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            if (i === idx) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('feedback').className = '';
+    }
+
+    function checkAnswer() {
+        if (selectedIdx === -1) {
+            const feedback = document.getElementById('feedback');
+            feedback.innerText = '請選擇一個答案';
+            feedback.className = 'fail';
+            return;
+        }
+
+        const isCorrect = selectedIdx === correctIdx;
+        const feedback = document.getElementById('feedback');
+        
+        if (isCorrect) {
+            feedback.innerText = '太棒了！答對了！';
+            feedback.className = 'success';
+        } else {
+            feedback.innerText = '再試試看喔！';
+            feedback.className = 'fail';
+        }
+    }
+
+    // 外部契約介面
+    window.check = function() {
+        if (selectedIdx === -1) return null;
+        return selectedIdx === correctIdx;
+    };
+</script>
+
+</body>
+</html>

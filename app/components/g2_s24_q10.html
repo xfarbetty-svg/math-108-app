@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-4 Q10 周長展開與比較</title>
+    <style>
+        :root {
+            --ink: #3d3a34;
+            --soft-green: #7bc9b2;
+            --mint: #318a70;
+            --warm-yellow: #ffd166;
+            --coral: #ff85a1;
+            --paper: #fff9f0;
+            --bg-desk: #e8e2d9;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-desk);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--paper);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 4px solid #fff;
+        }
+
+        /* Header & Question */
+        .header {
+            padding: 12px 16px;
+            background: var(--mint);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        /* Stage Area */
+        .stage {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at center, #ffffff 0%, #fdf8f0 100%);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        svg {
+            width: 100%;
+            height: 160px;
+        }
+
+        .label-text {
+            font-size: 12px;
+            fill: var(--ink);
+            font-weight: bold;
+        }
+
+        /* Controls */
+        .controls {
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: #f0ede5;
+        }
+
+        .opt-btn {
+            background: white;
+            border: 2px solid #d1ccc0;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 14px;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .opt-btn.selected {
+            background: var(--warm-yellow);
+            border-color: #f4a261;
+            transform: translateY(-2px);
+        }
+
+        .action-area {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+        }
+
+        .check-btn {
+            background: var(--coral);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #d66d85;
+        }
+
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #d66d85;
+        }
+
+        .unfold-btn {
+            background: var(--soft-green);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            display: none;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #feedback.success {
+            display: block;
+            background: var(--soft-green);
+            color: white;
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #feedback.fail {
+            display: block;
+            background: var(--coral);
+            color: white;
+            animation: shake 0.4s;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+            25% { transform: translate(-50%, -50%) translateX(-10px); }
+            75% { transform: translate(-50%, -50%) translateX(10px); }
+        }
+
+        /* SVG Animation Classes */
+        .edge {
+            stroke-width: 3;
+            stroke-linecap: round;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="header">
+        Q10：正方形(邊長3cm)與長方形(長4cm,寬2cm)的邊界剪開拉成直線，哪一個比較長？
+    </div>
+
+    <div class="stage">
+        <svg id="mainSvg" viewBox="0 0 300 160">
+            <!-- Square Group -->
+            <g id="squareGroup">
+                <text x="40" y="25" class="label-text">正方形 (3×4=12)</text>
+                <line id="s1" class="edge" stroke="#318a70" x1="60" y1="40" x2="120" y2="40" />
+                <line id="s2" class="edge" stroke="#318a70" x1="120" y1="40" x2="120" y2="100" />
+                <line id="s3" class="edge" stroke="#318a70" x1="120" y1="100" x2="60" y2="100" />
+                <line id="s4" class="edge" stroke="#318a70" x1="60" y1="100" x2="60" y2="40" />
+                <!-- Labels for square -->
+                <text id="sl1" x="85" y="35" class="label-text" text-anchor="middle">3</text>
+                <text id="sl2" x="125" y="75" class="label-text">3</text>
+            </g>
+
+            <!-- Rectangle Group -->
+            <g id="rectGroup">
+                <text x="180" y="25" class="label-text">長方形 (4+2)×2=12</text>
+                <line id="r1" class="edge" stroke="#ff85a1" x1="180" y1="50" x2="260" y2="50" />
+                <line id="r2" class="edge" stroke="#ff85a1" x1="260" y1="50" x2="260" y2="90" />
+                <line id="r3" class="edge" stroke="#ff85a1" x1="260" y1="90" x2="180" y2="90" />
+                <line id="r4" class="edge" stroke="#ff85a1" x1="180" y1="90" x2="180" y2="50" />
+                <!-- Labels for rect -->
+                <text id="rl1" x="215" y="45" class="label-text" text-anchor="middle">4</text>
+                <text id="rl2" x="265" y="75" class="label-text">2</text>
+            </g>
+        </svg>
+        <div id="feedback"></div>
+    </div>
+
+    <div class="controls">
+        <div class="opt-btn" onclick="selectOpt(0)">正方形比較長</div>
+        <div class="opt-btn" onclick="selectOpt(1)">長方形比較長</div>
+        <div class="opt-btn" onclick="selectOpt(2)">一樣長</div>
+        <div class="opt-btn" onclick="selectOpt(3)">無法比較</div>
+    </div>
+
+    <div class="action-area">
+        <button class="unfold-btn" onclick="toggleUnfold()">展開比對</button>
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+</div>
+
+<script>
+    let selectedIdx = -1;
+    let isUnfolded = false;
+    const correctIdx = 2;
+
+    function selectOpt(idx) {
+        selectedIdx = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+    }
+
+    function toggleUnfold() {
+        isUnfolded = !isUnfolded;
+        const btn = document.querySelector('.unfold-btn');
+        btn.innerText = isUnfolded ? "還原圖形" : "展開比對";
+
+        // Scale: 1cm = 20px. Total 12cm = 240px.
+        // Base Y for comparison lines
+        const yS = 60;
+        const yR = 100;
+        const startX = 30;
+
+        if (isUnfolded) {
+            // Square Unfold (3,3,3,3) -> 60,60,60,60 px
+            updateLine('s1', startX, yS, startX + 60, yS);
+            updateLine('s2', startX + 60, yS, startX + 120, yS);
+            updateLine('s3', startX + 120, yS, startX + 180, yS);
+            updateLine('s4', startX + 180, yS, startX + 240, yS);
+            
+            // Rect Unfold (4,2,4,2) -> 80,40,80,40 px
+            updateLine('r1', startX, yR, startX + 80, yR);
+            updateLine('r2', startX + 80, yR, startX + 120, yR);
+            updateLine('r3', startX + 120, yR, startX + 200, yR);
+            updateLine('r4', startX + 200, yR, startX + 240, yR);
+
+            // Hide labels
+            setOpacity(['sl1', 'sl2', 'rl1', 'rl2', 'squareGroup text', 'rectGroup text'], 0);
+        } else {
+            // Restore Square
+            updateLine('s1', 60, 40, 120, 40);
+            updateLine('s2', 120, 40, 120, 100);
+            updateLine('s3', 120, 100, 60, 100);
+            updateLine('s4', 60, 100, 60, 40);
+
+            // Restore Rect
+            updateLine('r1', 180, 50, 260, 50);
+            updateLine('r2', 260, 50, 260, 90);
+            updateLine('r3', 260, 90, 180, 90);
+            updateLine('r4', 180, 90, 180, 50);
+
+            // Show labels
+            setOpacity(['sl1', 'sl2', 'rl1', 'rl2', 'squareGroup text', 'rectGroup text'], 1);
+        }
+    }
+
+    function updateLine(id, x1, y1, x2, y2) {
+        const el = document.getElementById(id);
+        el.setAttribute('x1', x1);
+        el.setAttribute('y1', y1);
+        el.setAttribute('x2', x2);
+        el.setAttribute('y2', y2);
+    }
+
+    function setOpacity(ids, val) {
+        ids.forEach(id => {
+            const els = document.querySelectorAll(id.includes(' ') ? id : '#' + id);
+            els.forEach(el => el.style.opacity = val);
+        });
+    }
+
+    function checkAnswer() {
+        if (selectedIdx === -1) return;
+        const feedback = document.getElementById('feedback');
+        feedback.classList.remove('success', 'fail');
+        
+        if (selectedIdx === correctIdx) {
+            feedback.innerText = "太棒了！兩者周長都是 12 公分";
+            feedback.classList.add('success');
+        } else {
+            feedback.innerText = "再想一下，算算看周長是多少？";
+            feedback.classList.add('fail');
+        }
+
+        setTimeout(() => {
+            feedback.classList.remove('success', 'fail');
+        }, 2000);
+    }
+
+    window.check = checkAnswer;
+</script>
+
+</body>
+</html>

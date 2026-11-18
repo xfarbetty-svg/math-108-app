@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-S-2-4 平面圖形周長 - Q07</title>
+    <style>
+        :root {
+            --ink: #3d3a34;
+            --mint: #7bc9b2;
+            --dark-mint: #318a70;
+            --yellow: #ffd166;
+            --pink: #ff85a1;
+            --paper: #fff9f0;
+            --bg-desk: rgba(255, 249, 240, 0.9);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            overflow: hidden;
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 480px;
+            height: 420px;
+            background: var(--bg-desk);
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.5) 0%, rgba(200,200,200,0.1) 100%);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 標題與題目區 */
+        .header {
+            padding: 12px 15px 5px;
+            color: var(--ink);
+        }
+        .question {
+            font-size: 16px;
+            line-height: 1.4;
+            font-weight: bold;
+            margin: 0;
+        }
+        .hint {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* 舞台區 */
+        .stage {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-height: 110px; min-height: 90px;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .shape-side {
+            cursor: pointer;
+            stroke-width: 6;
+            stroke: #ccc;
+            fill: none;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        .shape-side.active {
+            stroke: var(--mint);
+            stroke-width: 8;
+        }
+        .shape-side:hover {
+            stroke: var(--dark-mint);
+        }
+
+        /* 流光動畫 */
+        .flow-light {
+            stroke: var(--yellow);
+            stroke-width: 4;
+            stroke-dasharray: 10, 50;
+            stroke-linecap: round;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .active + .flow-light {
+            opacity: 1;
+            animation: dash 1.5s linear infinite;
+        }
+        @keyframes dash {
+            from { stroke-dashoffset: 60; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .marker {
+            fill: var(--pink);
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .marker.show { opacity: 1; }
+
+        /* 等長標記 (||) */
+        .equal-mark {
+            stroke: var(--pink);
+            stroke-width: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .equal-mark.show { opacity: 1; }
+
+        /* 選項區 */
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px 20px;
+        }
+        .opt-btn {
+            background: white;
+            border: 2px solid var(--mint);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 16px;
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .opt-btn:active { transform: scale(0.95); }
+        .opt-btn.selected {
+            background: var(--mint);
+            color: white;
+        }
+
+        /* 控制區 */
+        .controls {
+            padding: 10px 20px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .check-btn {
+            background: var(--dark-mint);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #256a56;
+        }
+        .check-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #256a56;
+        }
+
+        #feedback {
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 100px;
+        }
+        #feedback.success { color: var(--dark-mint); }
+        #feedback.fail { color: var(--pink); }
+
+        /* 算式提示 */
+        .formula {
+            position: absolute;
+            bottom: 5px;
+            right: 15px;
+            font-size: 14px;
+            color: var(--dark-mint);
+            background: rgba(255,255,255,0.7);
+            padding: 2px 8px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="header">
+        <p class="question">正方形的每條邊都是 4 公分長，正方形四條邊都一樣長，它的周長是多少公分？</p>
+        <p class="hint">點擊正方形的邊，看看它的長度！</p>
+    </div>
+
+    <div class="stage">
+        <svg viewBox="0 0 400 150">
+            <!-- 正方形邊線 (Top, Right, Bottom, Left) -->
+            <!-- Top -->
+            <path id="side0" class="shape-side" d="M 160 35 L 240 35" onclick="toggleSide(0)" />
+            <path class="flow-light" d="M 160 35 L 240 35" />
+            <line class="equal-mark" x1="198" y1="30" x2="198" y2="40" />
+            <line class="equal-mark" x1="202" y1="30" x2="202" y2="40" />
+            <text id="txt0" class="marker" x="190" y="25">4cm</text>
+
+            <!-- Right -->
+            <path id="side1" class="shape-side" d="M 240 35 L 240 115" onclick="toggleSide(1)" />
+            <path class="flow-light" d="M 240 35 L 240 115" />
+            <line class="equal-mark" x1="235" y1="73" x2="245" y2="73" />
+            <line class="equal-mark" x1="235" y1="77" x2="245" y2="77" />
+            <text id="txt1" class="marker" x="250" y="80">4cm</text>
+
+            <!-- Bottom -->
+            <path id="side2" class="shape-side" d="M 240 115 L 160 115" onclick="toggleSide(2)" />
+            <path class="flow-light" d="M 240 115 L 160 115" />
+            <line class="equal-mark" x1="198" y1="110" x2="198" y2="120" />
+            <line class="equal-mark" x1="202" y1="110" x2="202" y2="120" />
+            <text id="txt2" class="marker" x="190" y="135">4cm</text>
+
+            <!-- Left -->
+            <path id="side3" class="shape-side" d="M 160 115 L 160 35" onclick="toggleSide(3)" />
+            <path class="flow-light" d="M 160 115 L 160 35" />
+            <line class="equal-mark" x1="155" y1="73" x2="165" y2="73" />
+            <line class="equal-mark" x1="155" y1="77" x2="165" y2="77" />
+            <text id="txt3" class="marker" x="120" y="80">4cm</text>
+        </svg>
+        <div id="formula-box" class="formula">4 + 4 + 4 + 4 = 16</div>
+    </div>
+
+    <div class="options">
+        <div class="opt-btn" onclick="selectOption(0)">8公分</div>
+        <div class="opt-btn" onclick="selectOption(1)">12公分</div>
+        <div class="opt-btn" onclick="selectOption(2)">16公分</div>
+        <div class="opt-btn" onclick="selectOption(3)">20公分</div>
+    </div>
+
+    <div class="controls">
+        <div id="feedback"></div>
+        <button class="check-btn" onclick="checkAnswer()">檢查答案</button>
+    </div>
+</div>
+
+<script>
+    let currentSelection = -1;
+    const correctIndex = 2;
+    const sidesClicked = [false, false, false, false];
+
+    function toggleSide(idx) {
+        const side = document.getElementById(`side${idx}`);
+        const txt = document.getElementById(`txt${idx}`);
+        const marks = document.querySelectorAll('.equal-mark');
+        
+        side.classList.toggle('active');
+        txt.classList.toggle('show');
+        
+        // 顯示對應的等長標記
+        const markPair = [marks[idx*2], marks[idx*2+1]];
+        markPair.forEach(m => m.classList.toggle('show'));
+
+        sidesClicked[idx] = side.classList.contains('active');
+        
+        // 如果四條邊都點開了，顯示算式提示
+        if (sidesClicked.every(v => v === true)) {
+            document.getElementById('formula-box').style.display = 'block';
+        } else {
+            document.getElementById('formula-box').style.display = 'none';
+        }
+    }
+
+    function selectOption(idx) {
+        currentSelection = idx;
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('selected', i === idx);
+        });
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = '';
+    }
+
+    function checkAnswer() {
+        const feedback = document.getElementById('feedback');
+        if (currentSelection === -1) {
+            feedback.textContent = '請選擇一個答案';
+            feedback.className = 'fail';
+            return;
+        }
+
+        if (currentSelection === correctIndex) {
+            feedback.textContent = '太棒了！答對了';
+            feedback.className = 'success';
+            // 全部點亮
+            for(let i=0; i<4; i++) {
+                if(!sidesClicked[i]) toggleSide(i);
+            }
+        } else {
+            feedback.textContent = '再試試看喔！';
+            feedback.className = 'fail';
+        }
+    }
+
+    window.check = checkAnswer;
+</script>
+
+</body>
+</html>
