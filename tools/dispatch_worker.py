@@ -15,11 +15,12 @@ import tempfile
 import time
 import urllib.request
 
-OPENCODE_DEFAULT_MODEL = "opencode/glm-5.3-flash-free"
+OPENCODE_DEFAULT_MODEL = "opencode/deepseek-v4.1-flash-free"
 LOCAL_FREE_MODELS = [
-    "opencode/glm-5.3-flash-free",
     "opencode/deepseek-v4.1-flash-free",
-    "opencode/minimax-m3.1-flash-free"
+    "opencode/big-pickle",
+    "opencode/mimo-v2.6-flash-free",
+    "opencode/nemotron-3.5-lightning-free"
 ]
 
 def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:
@@ -128,7 +129,9 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
         cmd = ["ssh", "-n", "a-server", f"opencode run -m {target_model} --format json --auto --standalone \"{escaped_prompt}\""]
         print(f"[Worker Dispatch CH2] 正在派工至 A-SERVER OpenCode (Model: {target_model})...")
     else:
-        cmd = ["opencode", "run", "--format", "json", "--auto", "--standalone", "-m", model]
+        import shutil
+        opencode_bin = shutil.which("opencode") or "opencode"
+        cmd = [opencode_bin, "run", "--format", "json", "--auto", "--standalone", "-m", model]
         if task_file and os.path.isfile(task_file):
             cmd.extend(["-f", task_file])
         cmd.append(prompt)
@@ -143,7 +146,7 @@ def run_worker(prompt: str, task_file: str = None, model: str = OPENCODE_DEFAULT
             text=True,
             encoding="utf-8",
             errors="replace",
-            shell=(channel == 1),
+            shell=False,
             timeout=timeout
         )
         elapsed = time.time() - t0

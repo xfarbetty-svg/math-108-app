@@ -1,0 +1,12 @@
+{
+  "name": "028-1-math-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "G3-N-3-9 靜態打樣截圖驗收（Puppeteer + 系統 Chrome，純前端零打包）",
+  "scripts": {
+    "verify:g3-n39-static": "node tests/verify_g3_n39_static.js"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.18.1"
+  }
+}
