@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>G3-N-3-9 咪咪果凍盒概念小教室 · 5 幕靜態打樣（階段一）</title>
+<!--
+  G3-N-3-9 簡單分數的加減（同分母）｜咪咪概念小教室
+  階段一：靜態畫家打樣（不播放動畫，僅切換 5 幕定格畫面供視覺審查）
+  唯一道具：12 格長方形水晶果凍盒（3x4）。嚴禁披薩、蛋糕、圓盤、任何非 12 格圖形。
+  左 48% 咪咪立繪（036 theater GOLDEN_MASTER 貼圖）／右 52% 向量果凍盒與算式。
+  驗收：node tests/verify_g3_n39_static.js
+-->
+<style>
+:root {
+  --bg: #f4efe6;
+  --card: #fffdf8;
+  --ink: #3d3a34;
+  --ink-soft: #857f73;
+  --mint: #7bc9b2;
+  --mint-deep: #2f8a70;
+  --lemon: #ffd166;
+  --gold: #f2b23e;
+  --coral: #ff8a65;
+  --coral-deep: #e8553a;
+  --sky: #8ecae6;
+  --line: #ece2d3;
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--ink); }
+body {
+  font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", -apple-system, "Segoe UI", sans-serif;
+  display: flex; flex-direction: column; align-items: center;
+  min-height: 100vh; padding: 16px 12px 20px;
+  overflow-x: hidden;
+}
+
+/* ===== 16:9 打樣主視窗：嚴格 48 : 52 ===== */
+.stage {
+  width: min(1280px, 100%);
+  aspect-ratio: 16 / 9;
+  display: grid;
+  grid-template-columns: 48fr 52fr;
+  background: var(--card);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 18px 48px rgba(120, 92, 46, 0.16);
+  position: relative;
+}
+
+/* ===== 左 48%：咪咪立繪 ===== */
+.left-pane {
+  position: relative;
+  padding: 22px 20px 18px 24px;
+  display: flex; flex-direction: column;
+  gap: 12px;
+  background:
+    radial-gradient(120% 90% at 12% 8%, #eef8ef 0%, rgba(238, 248, 239, 0) 62%),
+    linear-gradient(160deg, #dcecdf 0%, #cfe4d8 48%, #c3ded3 100%);
+  overflow: hidden;
+}
+.left-pane::before,
+.left-pane::after {
+  content: ""; position: absolute; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.42); pointer-events: none;
+}
+.left-pane::before { width: 210px; height: 210px; left: -70px; bottom: -60px; }
+.left-pane::after { width: 130px; height: 130px; right: -44px; top: -36px; }
+
+.speech {
+  position: relative; z-index: 2;
+  align-self: flex-start; max-width: 96%;
+  background: #fff;
+  border: 2px solid #e6f0e6;
+  border-radius: 18px 18px 18px 6px;
+  padding: 11px 15px;
+  font-size: 15.5px; line-height: 1.5; font-weight: 600;
+  color: #41503f;
+  box-shadow: 0 6px 16px rgba(64, 96, 74, 0.10);
+}
+.speech .who {
+  display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em;
+  color: var(--mint-deep); margin-bottom: 3px;
+}
+.speech .frac { font-weight: 800; }
+
+.portrait {
+  position: relative; z-index: 1;
+  flex: 1 1 auto; min-height: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 6px solid #ffffff;
+  box-shadow: 0 12px 26px rgba(62, 92, 72, 0.18);
+  background: #a9c4ad;
+}
+.portrait img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 30%;
+  transform: scale(1.02);
+}
+.portrait .nameplate {
+  position: absolute; left: 10px; bottom: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 999px; padding: 5px 13px;
+  font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em;
+  color: #3f6d58;
+  box-shadow: 0 3px 10px rgba(40, 70, 52, 0.16);
+}
+.portrait .nameplate small { font-weight: 600; color: #7d9a8a; font-size: 10px; letter-spacing: 0.14em; }
+
+/* ===== 右 52%：果凍盒與算式 ===== */
+.right-pane {
+  position: relative;
+  padding: 20px 26px 18px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px;
+  background:
+    linear-gradient(rgba(244, 239, 230, 0) 0%, rgba(244, 239, 230, 0.55) 100%),
+    repeating-linear-gradient(0deg, #fffdf8 0 31px, #f6f0e4 31px 32px),
+    repeating-linear-gradient(90deg, #fffdf8 0 31px, #f6f0e4 31px 32px);
+  background-color: #fffdf8;
+  border-left: 2px dashed #e8ddcb;
+}
+
+.shot-tag {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #e8f6ef; color: #2f8a70;
+  border: 1.5px solid #c6e8da; border-radius: 999px;
+  padding: 5px 14px; font-size: 13px; font-weight: 800; letter-spacing: 0.06em;
+}
+.shot-tag .num {
+  display: inline-grid; place-items: center;
+  width: 19px; height: 19px; border-radius: 50%;
+  background: var(--mint-deep); color: #fff; font-size: 11.5px;
+}
+.board-title {
+  font-size: 25px; font-weight: 900; letter-spacing: 0.02em; line-height: 1.25;
+  color: #36332d; text-align: center;
+}
+
+/* 算式列 */
+.equation {
+  display: flex; align-items: center; justify-content: center; flex-wrap: nowrap;
+  gap: 9px; font-size: 30px; font-weight: 800; line-height: 1;
+  color: #3d3a34; white-space: nowrap;
+}
+.equation .op { font-size: 26px; color: #9a917f; font-weight: 800; }
+.equation .qmark {
+  display: inline-grid; place-items: center;
+  min-width: 46px; height: 46px; padding: 0 8px;
+  border-radius: 12px; background: #fff4d6; border: 2.5px dashed var(--gold);
+  color: #b8791c; font-size: 26px;
+}
+.equation .result {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(180deg, #ffe9a8, #ffd166);
+  border: 2.5px solid #e9a92c; border-radius: 14px;
+  padding: 5px 14px; color: #8a4d05;
+  box-shadow: 0 4px 0 #e3a52a;
+}
+.equation .unit { font-size: 22px; font-weight: 900; color: #5b5549; }
+
+/* 分數排版 */
+.frac {
+  display: inline-flex; flex-direction: column; align-items: center;
+  vertical-align: middle; line-height: 1.06; font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.frac > span { display: block; padding: 0 0.16em; }
+.frac > .den { border-top: 2.5px solid currentColor; padding-top: 0.04em; }
+
+/* 果凍盒 */
+.board-zone { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.jelly-box {
+  width: 100%; max-width: 500px; height: auto;
+  filter: drop-shadow(0 12px 18px rgba(120, 150, 170, 0.18));
+}
+.jelly-box .glass {
+  fill: rgba(255, 255, 255, 0.72);
+  stroke: #b8d9e8; stroke-width: 2.5;
+}
+.jelly-box .glass-shine {
+  fill: #ffffff; opacity: 0.55;
+}
+.jelly-box .cell { transition: none; }
+
+/* 幕次狀態 */
+.stage[data-shot="3"] .jelly-box { opacity: 0.38; filter: grayscale(0.45) drop-shadow(0 10px 14px rgba(120, 150, 170, 0.12)); }
+.stage[data-shot="4"] .jelly-box .glass {
+  stroke: #ffc94d; stroke-width: 3.5;
+  filter: drop-shadow(0 0 5px rgba(255, 198, 60, 0.95));
+}
+.stage[data-shot="4"] .jelly-box .unit-label {
+  opacity: 1;
+}
+.jelly-box .unit-label {
+  font-size: 10px; font-weight: 800; fill: #a8801f;
+  text-anchor: middle; opacity: 0;
+}
+.stage[data-shot="5"] .jelly-box .jelly-body {
+  filter: drop-shadow(0 0 7px rgba(255, 196, 40, 0.95));
+}
+.stage[data-shot="5"] .jelly-box .glass {
+  stroke: #f3d27c; stroke-width: 3;
+}
+.stage[data-shot="5"] .jelly-box .jelly-ring {
+  opacity: 1;
+}
+
+/* 陷阱警示層 */
+.trap-overlay {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
+.trap-card {
+  position: relative;
+  background: #fff;
+  border: 4px solid #ff6b4a;
+  border-radius: 22px;
+  padding: 16px 34px 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  box-shadow: 0 16px 32px rgba(200, 60, 30, 0.22);
+  transform: rotate(-2deg);
+}
+.trap-wrong {
+  font-size: 60px; font-weight: 900; color: #d9361c; line-height: 1;
+  display: flex; align-items: center;
+}
+.trap-card .frac { font-size: 40px; color: #d9361c; }
+.trap-x { width: 68px; height: 68px; margin-left: 6px; }
+.trap-x line { stroke: #e8270c; stroke-width: 12; stroke-linecap: round; }
+.trap-note {
+  font-size: 15px; font-weight: 900; color: #c0392b; letter-spacing: 0.02em;
+}
+
+/* 單位提示 / 說明卡 */
+.hint-card {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff8e6; border: 2px solid #f3d58b; border-radius: 14px;
+  padding: 8px 14px; font-size: 17px; font-weight: 800; color: #8a5a12;
+}
+.hint-card .unit-cell {
+  width: 30px; height: 30px; border-radius: 7px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2.5px solid #ffc94d;
+  display: grid; place-items: center;
+  font-size: 10.5px; color: #a8801f; font-weight: 900;
+  box-shadow: 0 0 8px rgba(255, 198, 60, 0.85);
+}
+.caption {
+  font-size: 18px; font-weight: 800; color: #5f594d; text-align: center; letter-spacing: 0.01em;
+}
+.caption .frac { color: #2f8a70; }
+.caption .hl {
+  background: linear-gradient(transparent 58%, #ffe08a 58%);
+  padding: 0 2px;
+}
+.math-line {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: 22px; font-weight: 900; color: #3d3a34; white-space: nowrap;
+}
+.math-line .frac { color: #c2701a; }
+.math-line .op { color: #9a917f; }
+.math-line .cnt { color: #2f8a70; }
+
+/* 勝利彩帶 */
+.ribbon {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(180deg, #ffe9a8, #ffcf5c);
+  border: 2.5px solid #e9a92c; border-radius: 999px;
+  padding: 6px 20px; font-size: 17px; font-weight: 900; color: #7d4604;
+  box-shadow: 0 4px 0 #e3a52a;
+}
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti i {
+  position: absolute; width: 9px; height: 9px; border-radius: 2px;
+  opacity: 0.9;
+}
+
+/* 底部幕次切換 */
+.shot-nav {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  margin-top: 14px; max-width: 1280px;
+}
+.shot-nav button {
+  font-family: inherit; cursor: pointer;
+  border: 2px solid #e3d8c6; background: #fffdf8; color: #7a7264;
+  border-radius: 999px; padding: 8px 16px; font-size: 14px; font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.shot-nav button:hover { border-color: #bfdccf; color: #2f8a70; }
+.shot-nav button[aria-current="true"] {
+  background: #2f8a70; border-color: #2f8a70; color: #fff;
+  box-shadow: 0 4px 12px rgba(47, 138, 112, 0.28);
+}
+
+@media (max-width: 820px) {
+  .stage { border-radius: 18px; }
+  .left-pane { padding: 14px 12px 14px 16px; gap: 8px; }
+  .speech { font-size: 12.5px; padding: 8px 11px; border-radius: 14px 14px 14px 5px; }
+  .right-pane { padding: 14px 14px 12px; gap: 8px; }
+  .board-title { font-size: 18px; }
+  .equation { font-size: 22px; gap: 6px; }
+  .equation .qmark { min-width: 34px; height: 34px; font-size: 20px; border-radius: 9px; }
+  .caption { font-size: 14px; }
+  .math-line { font-size: 15px; gap: 4px; }
+  .trap-card { padding: 10px 18px 12px; border-width: 3px; }
+  .trap-wrong { font-size: 38px; }
+  .trap-card .frac { font-size: 26px; }
+  .trap-x { width: 42px; height: 42px; }
+  .trap-note { font-size: 12px; }
+  .hint-card { font-size: 13px; padding: 6px 10px; }
+  .ribbon { font-size: 13px; padding: 5px 14px; }
+  .shot-nav button { padding: 7px 12px; font-size: 12.5px; }
+  .shot-tag { font-size: 11px; padding: 4px 10px; }
+}
+@media (max-width: 560px) {
+  body { padding: 8px 6px 14px; }
+  .stage { aspect-ratio: auto; min-height: 470px; grid-template-columns: 1fr; grid-template-rows: 34% 66%; }
+  .right-pane { border-left: none; border-top: 2px dashed #e8ddcb; }
+  .portrait { border-width: 4px; }
+}
+</style>
+</head>
+<body>
+  <div class="stage" id="stage" data-shot="1">
+    <section class="left-pane" aria-label="咪咪角色區">
+      <div class="speech" id="speech">
+        <span class="who">咪咪 MIMI</span>
+        <span id="speech-text">今天我們來看看咪咪的果凍盒，裡面有幾顆果凍呢？</span>
+      </div>
+      <div class="portrait">
+        <img id="mimi" alt="咪咪立繪" draggable="false">
+        <span class="nameplate">咪咪 <small>MIMI</small></span>
+      </div>
+    </section>
+
+    <section class="right-pane" aria-label="果凍盒與算式區">
+      <div class="shot-tag" id="shot-tag"><span class="num">1</span><span id="shot-tag-text">情境導入</span></div>
+      <h1 class="board-title" id="board-title">咪咪的果凍盒</h1>
+      <div id="board-slot" class="board-zone"></div>
+    </section>
+  </div>
+
+  <nav class="shot-nav" id="shot-nav" aria-label="幕次切換">
+    <button type="button" data-shot-btn="1">① 情境導入</button>
+    <button type="button" data-shot-btn="2">② 問題提出</button>
+    <button type="button" data-shot-btn="3">③ 陷阱警示</button>
+    <button type="button" data-shot-btn="4">④ 算理拆解</button>
+    <button type="button" data-shot-btn="5">⑤ 正確解答</button>
+  </nav>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- 唯一道具：12 格（3 列 x 4 行）水晶果凍盒幾何 ---------- */
+  var COLS = 4, ROWS = 3, CELLS = COLS * ROWS; // 12
+  var VB_W = 440, VB_H = 330;
+  var PAD = 10, GAP = 12;
+  var CELL_W = (VB_W - PAD * 2 - (COLS - 1) * GAP) / COLS;   // 96
+  var CELL_H = (VB_H - PAD * 2 - (ROWS - 1) * GAP) / ROWS;   // 95.33
+
+  var BASE_COLORS = ['#ff7fa8', '#ffa45e', '#ffe066'];                 // 原有的 3 顆
+  var ADDED_COLORS = ['#8fd8b0', '#7fc8ef', '#c9a2ef', '#ff9fc6',      // 補入的 7 顆（不同色）
+                      '#9fe0d0', '#f7b267', '#b0a4ff'];
+
+  /* 每一幕果凍填充格（固定順序：先 3 顆原有，再 7 顆新放入） */
+  var SHOT_FILLED = {
+    1: 3,
+    2: 10,
+    3: 10,
+    4: 10,
+    5: 10
+  };
+
+  var SPEECH = {
+    1: '今天我們來看看咪咪的果凍盒，裡面有幾顆果凍呢？',
+    2: '咪咪又放進 7 顆果凍，這樣一共是多少盒呢？',
+    3: '咦？有人寫 10/24？可是盒子沒有變成 24 格呀！',
+    4: '把每一格都看成 1/12，3 個加上 7 個就好數了！',
+    5: '答對了！10 個 1/12 就是 10/12 盒，大獲全勝！'
+  };
+
+  var SHOT_NAME = { 1: '情境導入', 2: '問題提出', 3: '陷阱警示', 4: '算理拆解', 5: '正確解答' };
+
+  var TITLES = {
+    1: '咪咪的果凍盒',
+    2: '又放進 7 顆果凍',
+    3: '哪裡怪怪的？',
+    4: '每一格都是 1/12',
+    5: '咪咪答對了！'
+  };
+
+  /* ---------- SVG 小工具 ---------- */
+  function cellXY(i) {
+    var col = i % COLS, row = Math.floor(i / COLS);
+    return { x: PAD + col * (CELL_W + GAP), y: PAD + row * (CELL_H + GAP) };
+  }
+
+  function frac(n, d) {
+    return '<span class="frac"><span class="num">' + n + '</span><span class="den">' + d + '</span></span>';
+  }
+
+  function buildBox(filledCount, shot) {
+    var defs = [];
+    var body = [];
+    for (var i = 0; i < CELLS; i++) {
+      var p = cellXY(i);
+      var filled = i < filledCount;
+      body.push('<g class="cell" data-cell="' + i + '">');
+      body.push('<rect class="glass" x="' + p.x + '" y="' + p.y + '" width="' + CELL_W + '" height="' + CELL_H + '" rx="14"/>');
+      body.push('<rect class="glass-shine" x="' + (p.x + 12) + '" y="' + (p.y + 10) + '" width="' + (CELL_W - 24) + '" height="9" rx="4.5"/>');
+      if (filled) {
+        var color = i < 3 ? BASE_COLORS[i] : ADDED_COLORS[i - 3];
+        var gid = 'jg' + i;
+        defs.push('<linearGradient id="' + gid + '" x1="0" y1="0" x2="0.35" y2="1">' +
+          '<stop offset="0%" stop-color="' + color + '"/>' +
+          '<stop offset="58%" stop-color="' + color + '"/>' +
+          '<stop offset="100%" stop-color="' + shade(color, -0.16) + '"/>' +
+          '</linearGradient>');
+        body.push('<g class="jelly-group" data-jelly="' + i + '">');
+        body.push('<rect class="jelly-ring" x="' + (p.x + 7) + '" y="' + (p.y + 7) + '" width="' + (CELL_W - 14) + '" height="' + (CELL_H - 14) + '" rx="20" fill="none" stroke="#ffd44d" stroke-width="3" opacity="0"/>');
+        body.push('<rect class="jelly-body" x="' + (p.x + 8) + '" y="' + (p.y + 9) + '" width="' + (CELL_W - 16) + '" height="' + (CELL_H - 18) + '" rx="19" fill="url(#' + gid + ')"/>');
+        body.push('<ellipse cx="' + (p.x + 34) + '" cy="' + (p.y + 32) + '" rx="11" ry="6.5" fill="#ffffff" opacity="0.62"/>');
+        body.push('<ellipse cx="' + (p.x + 62) + '" cy="' + (p.y + 22) + '" rx="4" ry="2.6" fill="#ffffff" opacity="0.45"/>');
+        body.push('</g>');
+      }
+      if (shot === 4) {
+        body.push('<text class="unit-label" x="' + (p.x + CELL_W / 2) + '" y="' + (p.y + CELL_H - 13) + '">1/12</text>');
+      }
+      body.push('</g>');
+    }
+    return '<svg class="jelly-box" id="jelly-box" data-filled="' + filledCount + '" viewBox="0 0 ' + VB_W + ' ' + VB_H +
+      '" role="img" aria-label="12 格長方形水晶果凍盒，其中 ' + filledCount + ' 格有果凍">' +
+      '<defs>' + defs.join('') + '</defs>' + body.join('') + '</svg>';
+  }
+
+  function shade(hex, amt) {
+    var n = parseInt(hex.slice(1), 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    r = Math.max(0, Math.min(255, Math.round(r + 255 * amt)));
+    g = Math.max(0, Math.min(255, Math.round(g + 255 * amt)));
+    b = Math.max(0, Math.min(255, Math.round(b + 255 * amt)));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  /* ---------- 各幕右側內容（文圖 100% 對齊任務卡） ---------- */
+  function boardHTML(shot) {
+    if (shot === 1) {
+      return buildBox(3, 1) +
+        '<div class="caption">這是一盒的 ' + frac(3, 12) + '</div>';
+    }
+    if (shot === 2) {
+      return '<div class="equation">' + frac(3, 12) +
+        '<span class="op">＋</span>' + frac(7, 12) +
+        '<span class="op">＝</span><span class="qmark">?</span></div>' +
+        buildBox(10, 2) +
+        '<div class="caption">果凍盒裡現在有 <span class="hl">10 格</span> 果凍</div>';
+    }
+    if (shot === 3) {
+      return buildBox(10, 3) +
+        '<div class="trap-overlay"><div class="trap-card">' +
+          '<div class="trap-wrong">' + frac(10, 24) +
+            '<svg class="trap-x" viewBox="0 0 100 100" aria-hidden="true">' +
+              '<line x1="16" y1="16" x2="84" y2="84"/><line x1="84" y1="16" x2="16" y2="84"/>' +
+            '</svg></div>' +
+          '<div class="trap-note">盒子沒有變成 24 格呀！</div>' +
+        '</div></div>' +
+        '<div class="caption">分母是「一盒分成幾格」，不是把盒子變多！</div>';
+    }
+    if (shot === 4) {
+      return buildBox(10, 4) +
+        '<div class="hint-card"><span class="unit-cell">1/12</span>每一格都是 1 個 ' + frac(1, 12) + '，一盒共 12 格</div>' +
+        '<div class="math-line"><span class="cnt">3 個</span>' + frac(1, 12) +
+          '<span class="op">＋</span><span class="cnt">7 個</span>' + frac(1, 12) +
+          '<span class="op">＝</span><span class="cnt">10 個</span>' + frac(1, 12) + '</div>';
+    }
+    return '<div class="equation">' + frac(3, 12) +
+        '<span class="op">＋</span>' + frac(7, 12) +
+        '<span class="op">＝</span><span class="result">' + frac(10, 12) + '<span class="unit">盒</span></span></div>' +
+      buildBox(10, 5) +
+      '<div class="ribbon">10 個 ' + frac(1, 12) + ' 合起來就是 ' + frac(10, 12) + ' 盒，大獲全勝！</div>' +
+      confettiHTML();
+  }
+
+  function confettiHTML() {
+    var colors = ['#ff7fa8', '#ffd166', '#8fd8b0', '#7fc8ef', '#c9a2ef', '#ffa45e'];
+    var out = '<div class="confetti" aria-hidden="true">';
+    for (var i = 0; i < 18; i++) {
+      var left = (i * 37 + 11) % 96;
+      var top = (i * 53 + 7) % 92;
+      var rot = (i * 37) % 180;
+      out += '<i style="left:' + left + '%;top:' + top + '%;background:' + colors[i % colors.length] +
+        ';transform:rotate(' + rot + 'deg)"></i>';
+    }
+    return out + '</div>';
+  }
+
+  /* ---------- 幕次切換 ---------- */
+  var stage = document.getElementById('stage');
+  var slot = document.getElementById('board-slot');
+  var speechText = document.getElementById('speech-text');
+  var mimi = document.getElementById('mimi');
+  var tagNum = document.querySelector('#shot-tag .num');
+  var tagText = document.getElementById('shot-tag-text');
+  var title = document.getElementById('board-title');
+
+  var MIMI_IMG = {
+    front: '../assets/characters/g3_mimi/mimi_front_1024.png',
+    speaking: '../assets/characters/g3_mimi/mimi_speaking_1024.png',
+    point: '../assets/characters/g3_mimi/mimi_ready_point_1024.png'
+  };
+  /* 階段一打樣：036 目前三張貼圖的服裝／場景不一致（黃圍巾／粉領／粉圍巾），
+     同一支 5 幕分鏡若混用會讓咪咪「換衣服」，故一律採同一張 GOLDEN_MASTER 立繪。
+     待 036 補齊同服裝表情組後，再於階段二換用 speaking／surprise 表情。 */
+  var SHOT_MIMI = { 1: 'front', 2: 'front', 3: 'front', 4: 'front', 5: 'front' };
+
+  function render(shot) {
+    stage.dataset.shot = String(shot);
+    slot.innerHTML = boardHTML(shot);
+    speechText.textContent = SPEECH[shot];
+    tagNum.textContent = String(shot);
+    tagText.textContent = SHOT_NAME[shot];
+    title.textContent = TITLES[shot];
+    var src = MIMI_IMG[SHOT_MIMI[shot]];
+    if (mimi.getAttribute('src') !== src) mimi.setAttribute('src', src);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-shot-btn]'), function (b) {
+      b.setAttribute('aria-current', Number(b.dataset.shotBtn) === shot ? 'true' : 'false');
+    });
+    window.__N39_SHOT__ = shot;
+  }
+
+  function shotFromUrl() {
+    var m = /[?&]shot=([1-5])\b/.exec(location.search);
+    if (m) return Number(m[1]);
+    var h = /#shot-?([1-5])\b/.exec(location.hash);
+    return h ? Number(h[1]) : 1;
+  }
+
+  document.getElementById('shot-nav').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-shot-btn]');
+    if (!btn) return;
+    render(Number(btn.dataset.shotBtn));
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      var next = window.__N39_SHOT__ + (e.key === 'ArrowRight' ? 1 : -1);
+      if (next >= 1 && next <= 5) render(next);
+    }
+  });
+
+  render(shotFromUrl());
+
+  /* ---------- 就緒訊號（截圖腳本等待） ---------- */
+  function markReady() {
+    window.__N39_READY__ = true;
+    document.documentElement.dataset.ready = 'true';
+  }
+  var imgOk = mimi.complete && mimi.naturalWidth > 0;
+  if (imgOk) markReady();
+  else mimi.addEventListener('load', markReady, { once: true });
+  mimi.addEventListener('error', function () {
+    window.__N39_IMG_ERROR__ = true;
+    markReady();
+  }, { once: true });
+})();
+</script>
+</body>
+</html>
