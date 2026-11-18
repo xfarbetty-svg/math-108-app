@@ -1,0 +1,70 @@
+{
+  "video_path": "D:\\ANTIGRAVITY\\028-1_國小數學APP\\app\\scenes\\g3_n39_theater\\video\\g3_n39_full_theater.mp4",
+  "duration": 84.744,
+  "video_stream": {
+    "codec": "h264",
+    "resolution": "1280x720",
+    "fps": "25/1",
+    "nb_frames": "2117"
+  },
+  "audio_stream": {
+    "codec": "aac",
+    "sample_rate": "24000"
+  },
+  "acts": [
+    {
+      "pass": true,
+      "teacher_occlusion": "合規（未被遮擋）",
+      "spatial_integration": "合規（一體化教室）",
+      "math_clarity": "合規",
+      "layout_typography": "合規",
+      "summary": "畫面完全符合審查標準，米米老師站位清晰無遮擋，巧克力分率算理表達準確且視覺風格統一。",
+      "flaws": [],
+      "act": 1,
+      "title": "Act 1: 情境導入 (5.0s)"
+    },
+    {
+      "pass": true,
+      "teacher_occlusion": "合規（未被遮擋）",
+      "spatial_integration": "合規（一體化教室）",
+      "math_clarity": "合規",
+      "layout_typography": "合規",
+      "summary": "畫面視覺呈現高度統一且溫馨，米米老師站位獨立且無任何遮擋，巧克力教具之分份與算理完全一致，符合嚴格審查標準。",
+      "flaws": [],
+      "act": 2,
+      "title": "Act 2: 單位分數 (30.0s)"
+    },
+    {
+      "pass": true,
+      "teacher_occlusion": "合規（未被遮擋）",
+      "spatial_integration": "合規（一體化教室）",
+      "math_clarity": "合規",
+      "layout_typography": "合規",
+      "summary": "畫面視覺呈現優良的一體化教室空間，米米老師站位獨立且完全無遮擋，黑板上的巧克力分率運算邏輯與顏色標示完全正確。",
+      "flaws": [],
+      "act": 3,
+      "title": "Act 3: 核心算理 (55.0s)"
+    },
+    {
+      "pass": true,
+      "teacher_occlusion": "合規（未被遮擋）",
+      "spatial_integration": "合規（一體化教室）",
+      "math_clarity": "合規",
+      "layout_typography": "合規",
+      "summary": "畫面視覺呈現高度統一的日系繪本風格，米米老師站位獨立且無任何遮擋，數學算理表達精確且排版清晰舒適。",
+      "flaws": [],
+      "act": 4,
+      "title": "Act 4: 總結互動 (75.0s)"
+    }
+  ],
+  "total_review": {
+    "pass": true,
+    "teacher_occlusion": "合規（未被遮擋）",
+    "spatial_integration": "合規（一體化教室）",
+    "math_clarity": "合規",
+    "layout_typography": "合規",
+    "summary": "全片影格視覺高度統一，米米老師站位清晰無遮擋，巧克力平分與分數加法算理完全正確。",
+    "flaws": []
+  },
+  "all_pass": true
+}
