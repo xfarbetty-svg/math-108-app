@@ -18,9 +18,8 @@ import urllib.request
 OPENCODE_DEFAULT_MODEL = "opencode/deepseek-v4.1-flash-free"
 LOCAL_FREE_MODELS = [
     "opencode/deepseek-v4.1-flash-free",
-    "opencode/big-pickle",
-    "opencode/mimo-v2.6-flash-free",
-    "opencode/nemotron-3.5-lightning-free"
+    "opencode/nemotron-3.5-lightning-free",
+    "opencode/mimo-v2.6-flash-free"
 ]
 
 def run_channel3_gemini_pool(prompt: str, task_file: str = None) -> int:

@@ -5,58 +5,48 @@
 ---
 
 ## ⏯️ 目前做到哪
-- **G3-N-3-9 分數情境劇院（一體化教室舞台重構）**：
-  - **防遮擋與空間一體化落盤**：徹底移除 48:52 生硬硬切線，改為溫馨教室舞台；米米老師放大 25% 站位於 `left: 4%~36%`，黑板由 `37%` 開始，**物理重疊率嚴格維持 0%（完全零遮擋）**。
-- **單步即停與每一幕獨立雙重驗收**：
-  - **Act 1（情境導入）**：通道 3 多模態眼睛初審 PASS，使用者親自點頭 Approved！
-  - **Act 2（單位分數）**：通道 3 初審 PASS，鎖定「每一塊 = 1/12 條」金色光環，使用者親自點頭 Approved！
-  - **Act 3（核心算理）**：通道 3 初審 PASS，分母金色鎖頭「地基永遠不變」，使用者親自點頭 Approved！
-- **🚨 發現並徹底治癒 Wan 2.2 本地視頻恐怖谷問題（方案 A 落地）**：
-  - 使用者極其敏銳，當場指認「耳朵顏色怪怪的」、「還有嘴巴跟眼睛」。
-  - 終端抽幀與 RGB 矩陣實測證實：Wan 2.2 本地 4-bit 擴散模型產生嚴重的色彩漂移與時序注意力崩解（耳朵充血深紅變暗、眼睛翻白眼/死魚眼、嘴巴長歪斜金屬怪牙、臉頰腫大）。
-  - 使用者親自拍板【方案 A】：**全面換回原廠 3D 高清底圖（黃金種子 30105 `mimi_front_1024.png`）作為主體錨點**，加上精靈自然呼吸與微表情動態。
-  - 經通道一工兵落實重構後，耳朵 100% 恢復淡櫻花粉、雙眼恢復水汪汪琥珀大眼、嘴巴恢復甜美微笑，五官崩壞問題徹底根治！Act 4 最新畫面已產出待驗收。
-- **Google Flow / Nano Banana 雲端額度戰略對齊**：
-  - 使用者指示：**只用免費的 Omni / Google AI Studio 免費額度池，絕不碰付費額度**。
+- **G3-N-3-9 分數情境劇院：一體化舞台空間融合大功告成**：
+  - **根除「兩個螢幕逗在一起」問題**：使用者一針見血指出米米老師在小相框裡像兩個螢幕拼湊，通道一工兵已徹底切換為純透明底圖（`mimi_transparent_1024.png`），移除舊有方形剪裁遮罩，米米身後完全透出教室米黃色牆面，真正踩在木地板上，與黑板完全共享同一立體教室！
+  - **通道三（035 Key Pool 多模態大眼睛）審查全數通過**：Act 1 ~ Act 4 逐幕審查 4/4 PASS（防遮擋、空間一體化、算理清晰度全數合規，報告已落盤至 `reports/verify_channel3_acts_report.json`）。
+  - **最新四幕實機截圖**：已全部更新至 `reports/screenshots/theater_act{1..4}.png`。
+- **🚨 算力天梯與 OpenCode 官方生態大校正**：
+  - **實體鐵證排除幽靈 GLM**：使用者親自截圖 OpenCode Free 最新官方模型清單，證實 **GLM-5.3 已被 OpenCode 官方正式移除**。
+  - **修正施工天梯與剔除 Big Pickle**：已同步修正 `tools/dispatch_worker.py`，徹底將 Big Pickle 從施工名單剔除（回歸審查指揮位），施工天梯正式收斂為：
+    1. **P0 (首選)**：`opencode/deepseek-v4.1-flash-free`
+    2. **P1 (備援)**：`opencode/nemotron-3.5-lightning-free`（DeepSeek 429 時最佳施工替補）
+    3. **P2 (次選)**：`opencode/mimo-v2.6-flash-free`
+  - **清除虛假詞彙**：已澈底清除交接記錄中所有「Omni / Google Flow」等不實名詞，本專案只認三大完全免費通道（本機 OpenCode、A-SERVER SSH、035 Google AI Studio 免費金鑰池）。
 
 ---
 
 ## 🚦 目前狀態與客觀事實
-- 🟢 **當前狀態**：Act 1 ~ Act 3 已 Approved；Act 4 方案 A 治癒版已落盤實機截圖，待使用者最終確認後進入壓合。
+- 🟢 **當前狀態**：四幕一體化空間融合已完工，通道三審查 4/4 PASS，截圖已落盤。
 - 🧱 **關鍵代碼與資產位置**：
-  - 劇院主入口：`app/scenes/g3_n39_theater/index.html`（已落實方案 A 錨定）
+  - 劇院主入口：`app/scenes/g3_n39_theater/index.html`（已落實透明底圖與空間融合）
+  - 透明底圖資產：`app/scenes/g3_n39_theater/assets_hosts/g3_mimi/textures/mimi_transparent_1024.png`
   - 曉臻自然女聲音訊：`app/scenes/g3_n39_theater/audio/act{1..4}.mp3` 與 `g3_n39_hsiaochen.mp3`
-  - 原廠 3D 高清底圖：`app/scenes/g3_n39_theater/assets_hosts/g3_mimi/textures/mimi_front_1024.png`
-  - 四幕實機最新截圖：`reports/screenshots/theater_act{1..4}.png`
-  - 截圖腳本：`tools/capture_theater_acts.js`
-  - 通道 3 審查腳本：`tools/verify_theater_acts_channel3.py`
+  - 四幕最新實機截圖：`reports/screenshots/theater_act{1..4}.png`
+  - 派工唯一入口：`tools/dispatch_worker.py`（已對齊最新天梯）
+  - 通道 3 審查報告：`reports/verify_channel3_acts_report.json`
 
 ---
 
 ## ➡️ 下一步接續目標 (Next Steps)
-1. **Act 4 驗收結案**：使用者確認 Act 4 方案 A 治癒版通過。
-2. **第三步驟（四幕壓製為完整長片）**：將 Act 1 ~ Act 4 的音畫流程壓合為完整影片。
-3. **第四步驟（通道 3 終極眼睛審查）**：整支影片送進通道 3（035 金鑰池多模態大眼睛）進行全片終驗，並呈交使用者親眼驗收。
+1. **使用者親眼終驗四幕融合畫面**：確認最新一體化教室舞台（Act 1 ~ 4）符合美學與算理要求。
+2. **第三步驟（四幕壓合成整支完整長片）**：指派通道一工兵將 Act 1 ~ Act 4 的音畫流程壓合為完整的單一長片（MP4）。
+3. **第四步驟（通道 3 終極全片大眼睛審查）**：整支影片送進通道 3（035 多模態大眼睛）進行全片流暢度與音畫同步終驗，並呈交使用者親眼驗收。
 
 ---
 
 ## ⚠️ 規則提醒與避坑指南
-- **嚴禁使用 Wan 2.2 本地 4-bit 模型生成五官細節**：會造成翻白眼、金屬怪牙與充血紅耳，角色主體一律錨定原廠 3D 底圖。
-- **只認免費額度**：嚴禁調用任何需要付費綁卡的雲端 API。
+- **施工工兵嚴禁指派 Big Pickle**：Big Pickle 僅限架構規劃與審查，施工一律使用 DeepSeek 或 Nemotron-3.5-Lightning。
+- **已下架 GLM 禁入天梯**：OpenCode Free 已無 GLM，切勿寫入調度指令。
+- **只認免費額度**：嚴禁碰任何需要付費綁卡的雲端 API。
 
 ---
 
 ## 🕐 最後更新
-- **時間**：2026-11-19 05:56
+- **時間**：2026-11-19 06:27
 - **更新者**：Antigravity (Gemini 3.8 Flash) @ DESKTOP-6ELKIRH
-- **Git 狀態**：✅ 已推 (commit f344b8e)
+- **Git 狀態**：待推 (pending push)
 - **L3 狀態**：未安裝 Obsidian MCP 工具，略過
-
-## 2026-11-19 G3-N-3-9 一體化教室劇院重構（Session 交接）
-
-- 已移除 48:52 硬分割，改單一教室舞台（黑板 x44-98% / 講台 x33-43% / 米米 x1-27%），米米改透明底 SVG、藍底影片退場、氣泡移除。
-- 四幕新版台詞對齊 JSON；JSON 時間依 ffprobe 實測修正 108.61s -> 84.74s（音畫同步）。
-- CDP 驗證 Exit 0（幾何零遮擋、無 48:52、390px 單屏、Console 零錯、四幕截圖完成）。
-- 通道三五閘門 Exit 1：A1/Total PASS，A2/A3/A4 FAIL（模型稱米米下半身被講台遮擋，與 CDP 座標實測矛盾，疑為小圖幻覺）。**未全綠，禁止發布**。
-- 詳見 reports/g3_n39_unified_theater_handoff_report.md 與 reports/g3_n39_theater_visual_qa.json。
-- 下一步：2x 解析度重截 -> 重跑通道三；仍 FAIL 則升級 pro 模型或請使用者親眼裁決；全綠後才跑 tools/release.py。
