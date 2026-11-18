@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小熊小老師的算數教室：從99到1000 (2.5D 嘴型與骨架動態版)</title>
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --bg-dark: #0f172a;
+      --panel-bg: rgba(15, 23, 42, 0.9);
+      --accent-gold: #fbbf24;
+      --accent-blue: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .header-bar {
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-comfort {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #34d399;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* 主舞台 (16:9 比例) */
+    .stage-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      background: #1e293b;
+    }
+
+    /* 固定主舞台底圖：100% 乾淨空工坊，背景絕對靜止 0 晃動 */
+    .stage-camera-rig {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      transform: none !important;
+    }
+    .stage-backdrop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* 原生 3D 背景雙分鏡平滑淡入切換 (Native 3D Pose Crossfade，0剪貼、0斷臂、100% 皮克斯畫質) */
+    .stage-backdrop {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .stage-backdrop-cheer {
+      opacity: 0;
+      z-index: 2;
+    }
+    .stage-backdrop-cheer.active {
+      opacity: 1;
+    }
+
+    /* 眼神與手勢狀態徽章 (右上角提示) */
+    .bear-speech-bubble {
+      position: absolute;
+      right: 14%;
+      top: 6%;
+      background: rgba(255, 255, 255, 0.96);
+      color: #0f172a;
+      border-radius: 16px;
+      padding: 9px 18px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 2px var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: bubbleBounce 3s infinite ease-in-out;
+      z-index: 20;
+    }
+    .bear-speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 35%;
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: rgba(255, 255, 255, 0.96) transparent;
+      display: block;
+      width: 0;
+    }
+
+    @keyframes bubbleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* 教學聚焦點動態導引光圈 (高雅金色波紋光環) */
+    .pedagogical-focus-ring {
+      position: absolute;
+      left: 28%;
+      top: 62%;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid rgba(251, 191, 36, 0.85);
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.28) 0%, rgba(251, 191, 36, 0.05) 70%, transparent 100%);
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: focusPulse 2s infinite ease-in-out;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 20;
+    }
+    .focus-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 10px #fbbf24;
+    }
+    @keyframes focusPulse {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.22); opacity: 1; filter: drop-shadow(0 0 10px #fbbf24); }
+    }
+
+    /* --- 桌面 3D 積木操作區 --- */
+    .workbench-overlay {
+      position: absolute;
+      left: 6%;
+      top: 50%;
+      width: 44%;
+      height: 40%;
+      perspective: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .blocks-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transform: rotateX(28deg) rotateZ(-3deg);
+      transition: all 0.5s ease;
+    }
+
+    /* 立體十格長條 */
+    .ten-strip-3d {
+      position: absolute;
+      width: 20px;
+      height: 140px;
+      background: linear-gradient(135deg, #fb923c, #ea580c);
+      border-radius: 3px;
+      border-bottom: 5px solid #9a3412;
+      box-shadow: 2px 6px 12px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255,255,255,0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2px;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ten-strip-segment {
+      width: 100%;
+      height: 8.5%;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 1px;
+      border: 1px solid rgba(154, 52, 18, 0.4);
+    }
+
+    /* 立體單格小積木 */
+    .one-cube-3d {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: linear-gradient(135deg, #4ade80, #16a34a);
+      border-radius: 3px;
+      border-bottom: 4px solid #14532d;
+      box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255,255,255,0.7);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* 立體百格板 */
+    .hundred-plate-3d {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 6px;
+      border-bottom: 8px solid rgba(0, 0, 0, 0.35);
+      border-right: 4px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255,255,255,0.7);
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: 1.5px;
+      padding: 3px;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cell-grid {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 1px;
+    }
+
+    /* 10 個百立體堆疊金庫 */
+    .stack-container {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      left: 100px;
+      top: 10px;
+      transform-style: preserve-3d;
+    }
+
+    .stack-layer {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 5px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: 1.5px;
+      padding: 3px;
+      border-bottom: 7px solid rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .layer-badge {
+      position: absolute;
+      right: -42px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #fff;
+      background: rgba(15, 23, 42, 0.88);
+      border-radius: 4px;
+      padding: 2px 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    /* 頂部即時算數計數板 */
+    .counter-pill {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      z-index: 20;
+    }
+    .counter-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .counter-label {
+      font-size: 0.65rem;
+      color: #94a3b8;
+    }
+    .counter-val {
+      font-size: 1.25rem;
+      color: var(--accent-gold);
+    }
+
+    /* 底部旁白字幕條 */
+    .caption-banner {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 12px;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      z-index: 20;
+    }
+    .caption-banner span.highlight {
+      color: var(--accent-gold);
+      text-decoration: underline;
+    }
+
+    /* 1000 定格金牌 */
+    .climax-badge {
+      position: absolute;
+      top: 15%;
+      left: 28%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      color: #fff;
+      font-size: 2.2rem;
+      font-weight: 900;
+      padding: 8px 24px;
+      border-radius: 999px;
+      box-shadow: 0 0 40px rgba(251, 191, 36, 0.8);
+      border: 3px solid #fff;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 30;
+      pointer-events: none;
+    }
+    .climax-badge.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* 控制面板 */
+    .controls-panel {
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 14px;
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .timeline-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .timeline-bar {
+      flex: 1;
+      height: 8px;
+      background: #334155;
+      border-radius: 999px;
+      position: relative;
+      cursor: pointer;
+    }
+    .timeline-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .buttons-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .playback-btns {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: #334155;
+      color: #fff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      background: #475569;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .phase-selectors {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+    .btn-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-chip.active {
+      background: var(--accent-gold);
+      color: #0f172a;
+      font-weight: 800;
+      border-color: var(--accent-gold);
+    }
+
+    /* 手機直式 (390px) 響應式優化 */
+    @media (max-width: 640px) {
+      body {
+        padding: 8px 4px;
+      }
+      .header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .header-title {
+        font-size: 1.05rem;
+        flex-wrap: wrap;
+      }
+      .counter-pill {
+        top: 4px;
+        left: 4px;
+        padding: 3px 8px;
+        gap: 6px;
+        border-radius: 8px;
+      }
+      .counter-item .counter-label {
+        font-size: 0.52rem;
+      }
+      .counter-item .counter-val {
+        font-size: 0.85rem;
+      }
+      .bear-speech-bubble {
+        right: 4px;
+        top: 4px;
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        border-radius: 10px;
+        max-width: 48%;
+      }
+      .caption-banner {
+        bottom: 6px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        width: 94%;
+        border-radius: 8px;
+      }
+      .controls-bar {
+        padding: 10px 8px;
+        gap: 8px;
+      }
+      .buttons-row {
+        gap: 8px;
+      }
+      .btn {
+        padding: 6px 10px;
+        font-size: 0.82rem;
+      }
+      .btn-chip {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <div class="header-title">
+      <span>🪵 小熊小老師的算數教室</span>
+      <span class="badge-comfort">🎬 沉浸式固定舞台觀念影院 · 036 實裝</span>
+    </div>
+    <div style="font-size: 0.85rem; color: #94a3b8;">
+      N-2-1 一千以內的數 (99+1=100 → 1000)
+    </div>
+  </div>
+
+  <!-- 主舞台 -->
+  <div class="stage-wrapper" id="stageWrapper">
+    <!-- 方案 A：原生 3D 原圖雙分鏡淡入切換 (Native 3D Pose Crossfade，0剪貼、0斷臂、100% 皮克斯畫質) -->
+    <div class="stage-camera-rig" id="stageCamera">
+      <img src="stage_fixed_bear.png" alt="小熊木匠主講舞台" class="stage-backdrop" id="stageImg1">
+      <img src="stage_bear_p4_cheer.png" alt="小熊慶祝比讚舞台" class="stage-backdrop stage-backdrop-cheer" id="stageImg2">
+    </div>
+
+    <!-- 教學聚焦點動態導引光圈 -->
+    <div class="pedagogical-focus-ring" id="pedagogicalFocus">
+      <div class="focus-dot"></div>
+    </div>
+
+    <!-- 右上角小熊對話狀態框 -->
+    <div class="bear-speech-bubble" id="bearBubble">
+      <span style="font-size: 1.3rem;" id="bearEmoji">🐻</span>
+      <span id="bearSpeechText">小朋友你看，桌上有 99 個小積木！</span>
+    </div>
+
+    <!-- 頂部算數即時指示牌 -->
+    <div class="counter-pill">
+      <div class="counter-item">
+        <span class="counter-label">百 (Hundreds)</span>
+        <span class="counter-val" id="cntHundreds">0</span>
+      </div>
+      <div style="color: #64748b; font-size: 1.2rem;">/</div>
+      <div class="counter-item">
+        <span class="counter-label">十 (Tens)</span>
+        <span class="counter-val" id="cntTens">9</span>
+      </div>
+      <div style="color: #64748b; font-size: 1.2rem;">/</div>
+      <div class="counter-item">
+        <span class="counter-label">一 (Ones)</span>
+        <span class="counter-val" id="cntOnes">9</span>
+      </div>
+      <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.2); margin: 0 4px;"></div>
+      <div class="counter-item">
+        <span class="counter-label">總數 (Total)</span>
+        <span class="counter-val" style="color:#38bdf8;" id="cntTotal">99</span>
+      </div>
+    </div>
+
+    <!-- 1000 定格金牌 -->
+    <div class="climax-badge" id="climaxBadge">✨ 1000 ✨</div>
+
+    <!-- 桌面積木操作區 (精準座落於左側木桌上，不遮擋小熊) -->
+    <div class="workbench-overlay">
+      <div class="blocks-container" id="blocksArea"></div>
+    </div>
+
+    <!-- 底部旁白字幕條 (通道三真實口白) -->
+    <div class="caption-banner" id="captionText">
+      小朋友你看，桌上有99個小積木，再加1個會變成什麼呢？
+    </div>
+  </div>
+
+  <!-- 控制面板 -->
+  <div class="controls-panel">
+    <div class="timeline-container">
+      <span id="timeLabel" style="font-size: 0.85rem; font-family: monospace; width: 44px;">00:00</span>
+      <div class="timeline-bar" id="timelineBar">
+        <div class="timeline-fill" id="timelineFill"></div>
+      </div>
+      <span style="font-size: 0.85rem; font-family: monospace; color: #94a3b8;">00:20</span>
+    </div>
+
+    <div class="buttons-row">
+      <div class="playback-btns">
+        <button class="btn btn-primary" id="btnPlayPause">▶ 播放</button>
+        <button class="btn" id="btnRestart">↺ 重頭演繹</button>
+        <button class="btn" id="btnAudioToggle">🔊 音效: 開</button>
+      </div>
+
+      <div class="phase-selectors">
+        <button class="btn-chip active" data-time="0">① 99組成 (指桌面)</button>
+        <button class="btn-chip" data-time="4">② 滿十進百 (雙手引導)</button>
+        <button class="btn-chip" data-time="8">③ 100疊1000 (抬手望天)</button>
+        <button class="btn-chip" data-time="15">④ 1000金庫 (比大拇指)</button>
+        <button class="btn-chip" data-time="18">⑤ 圓滿結課 (鼓掌歡呼)</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL_SECONDS = 20;
+    let currentTime = 0;
+    let isPlaying = false;
+    let audioEnabled = true;
+    let timerId = null;
+
+    // 10 層百格板獨立立體色彩光譜
+    const LAYER_PALETTES = [
+      { name: '1百', bg: 'linear-gradient(135deg, #38bdf8, #0284c7)', border: '#0369a1' },
+      { name: '2百', bg: 'linear-gradient(135deg, #34d399, #059669)', border: '#047857' },
+      { name: '3百', bg: 'linear-gradient(135deg, #a3e635, #65a30d)', border: '#4d7c0f' },
+      { name: '4百', bg: 'linear-gradient(135deg, #facc15, #ca8a04)', border: '#a16207' },
+      { name: '5百', bg: 'linear-gradient(135deg, #fbbf24, #d97706)', border: '#b45309' },
+      { name: '6百', bg: 'linear-gradient(135deg, #fb923c, #ea580c)', border: '#c2410c' },
+      { name: '7百', bg: 'linear-gradient(135deg, #f87171, #dc2626)', border: '#b91c1c' },
+      { name: '8百', bg: 'linear-gradient(135deg, #e879f9, #c026d3)', border: '#a21caf' },
+      { name: '9百', bg: 'linear-gradient(135deg, #818cf8, #4f46e5)', border: '#3730a3' },
+      { name: '1000', bg: 'linear-gradient(135deg, #fef08a, #eab308)', border: '#854d0e' },
+    ];
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 440, type = 'sine', duration = 0.08) {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    const blocksArea = document.getElementById('blocksArea');
+    const captionText = document.getElementById('captionText');
+    const cntHundreds = document.getElementById('cntHundreds');
+    const cntTens = document.getElementById('cntTens');
+    const cntOnes = document.getElementById('cntOnes');
+    const cntTotal = document.getElementById('cntTotal');
+    const timeLabel = document.getElementById('timeLabel');
+    const timelineFill = document.getElementById('timelineFill');
+    const timelineBar = document.getElementById('timelineBar');
+    const btnPlayPause = document.getElementById('btnPlayPause');
+    const btnRestart = document.getElementById('btnRestart');
+    const btnAudioToggle = document.getElementById('btnAudioToggle');
+    const climaxBadge = document.getElementById('climaxBadge');
+    const phaseChips = document.querySelectorAll('.btn-chip');
+    const stageCamera = document.getElementById('stageCamera');
+    const stageImg1 = document.getElementById('stageImg1');
+    const stageImg2 = document.getElementById('stageImg2');
+    const pedagogicalFocus = document.getElementById('pedagogicalFocus');
+    const bearSpeechText = document.getElementById('bearSpeechText');
+
+    function renderFrame(t) {
+      const sec = Math.floor(t);
+      timeLabel.textContent = `00:${sec < 10 ? '0' + sec : sec}`;
+      timelineFill.style.width = `${(t / TOTAL_SECONDS) * 100}%`;
+
+      phaseChips.forEach(chip => {
+        const chipTime = parseFloat(chip.dataset.time);
+        chip.classList.toggle('active', t >= chipTime && (chipTime === 18 ? t <= 20 : t < chipTime + 4));
+      });
+
+      if (t < 4) {
+        // --- Phase 1: 0~4s (聚焦99積木，原生小熊手指木桌引導視線) ---
+        stageImg2.classList.remove('active');
+        climaxBadge.classList.remove('show');
+        pedagogicalFocus.style.display = 'flex';
+        pedagogicalFocus.style.left = '26%';
+        pedagogicalFocus.style.top = '62%';
+        pedagogicalFocus.style.width = '70px';
+        pedagogicalFocus.style.height = '70px';
+
+        captionText.innerHTML = '小朋友你看，桌上有 <span class="highlight">99 個小積木</span>，再加 1 個會變成什麼呢？';
+        cntHundreds.textContent = '0';
+        cntTens.textContent = '9';
+        cntOnes.textContent = '9';
+        cntTotal.textContent = '99';
+
+        bearSpeechText.textContent = '小朋友你看，桌上有 99 個小積木！';
+
+        let html = '';
+        for (let i = 0; i < 9; i++) {
+          html += `
+            <div class="ten-strip-3d" style="left: ${15 + i * 24}px; top: 15px;">
+              ${Array(10).fill('<div class="ten-strip-segment"></div>').join('')}
+            </div>
+          `;
+        }
+        for (let i = 0; i < 9; i++) {
+          const col = Math.floor(i / 5);
+          const row = i % 5;
+          html += `<div class="one-cube-3d" style="left: ${240 + col * 22}px; top: ${25 + row * 22}px;"></div>`;
+        }
+        blocksArea.innerHTML = html;
+
+      } else if (t < 8) {
+        // --- Phase 2: 4~8s (滿十進百合體，原生小熊專注視線) ---
+        stageImg2.classList.remove('active');
+        climaxBadge.classList.remove('show');
+        const p2Progress = (t - 4) / 4;
+
+        pedagogicalFocus.style.display = 'flex';
+        pedagogicalFocus.style.left = '22%';
+        pedagogicalFocus.style.top = '60%';
+        pedagogicalFocus.style.width = '84px';
+        pedagogicalFocus.style.height = '84px';
+
+        bearSpeechText.textContent = '滿十進位！變成一片大大的百格板！';
+
+        if (p2Progress < 0.4) {
+          captionText.innerHTML = '看！第 10 顆方塊跳進來湊成 10！滿十進位囉！';
+          cntHundreds.textContent = '0';
+          cntTens.textContent = '9';
+          cntOnes.textContent = '10';
+          cntTotal.textContent = '99+1';
+
+          let html = '';
+          for (let i = 0; i < 9; i++) {
+            html += `
+              <div class="ten-strip-3d" style="left: ${15 + i * 24}px; top: 15px;">
+                ${Array(10).fill('<div class="ten-strip-segment"></div>').join('')}
+              </div>
+            `;
+          }
+          for (let i = 0; i < 9; i++) {
+            const col = Math.floor(i / 5);
+            const row = i % 5;
+            html += `<div class="one-cube-3d" style="left: ${240 + col * 22}px; top: ${25 + row * 22}px;"></div>`;
+          }
+          const bounceTop = 25 + 4 * 22 - Math.sin(p2Progress * 2.5 * Math.PI) * 35;
+          html += `<div class="one-cube-3d" style="left: ${240 + 1 * 22}px; top: ${bounceTop}px; box-shadow: 0 0 14px #4ade80;"></div>`;
+          blocksArea.innerHTML = html;
+
+        } else if (p2Progress < 0.7) {
+          captionText.innerHTML = '滿 10 個一換成 1 個十，湊成 <span class="highlight">10 個十</span>！';
+          cntHundreds.textContent = '0';
+          cntTens.textContent = '10';
+          cntOnes.textContent = '0';
+          cntTotal.textContent = '100';
+
+          let html = '';
+          for (let i = 0; i < 10; i++) {
+            const glow = i === 9 ? 'box-shadow: 0 0 16px #fbbf24;' : '';
+            html += `
+              <div class="ten-strip-3d" style="left: ${15 + i * 24}px; top: 15px; ${glow}">
+                ${Array(10).fill('<div class="ten-strip-segment"></div>').join('')}
+              </div>
+            `;
+          }
+          blocksArea.innerHTML = html;
+
+        } else {
+          captionText.innerHTML = '哇！滿十進位，變成了一片大大的 <span class="highlight">百格板</span>，這就是 100 喔！';
+          cntHundreds.textContent = '1';
+          cntTens.textContent = '0';
+          cntOnes.textContent = '0';
+          cntTotal.textContent = '100';
+
+          const snapRatio = (p2Progress - 0.7) / 0.3;
+          const leftPos = 15 + snapRatio * 65;
+          blocksArea.innerHTML = `
+            <div class="hundred-plate-3d" style="left: ${leftPos}px; top: 10px; background: ${LAYER_PALETTES[0].bg}; border-bottom-color: ${LAYER_PALETTES[0].border};">
+              ${Array(100).fill('<div class="cell-grid"></div>').join('')}
+            </div>
+          `;
+        }
+
+      } else if (t < 15) {
+        // --- Phase 3: 8~15s (100疊1000：原生小熊穩定導讀，百格板層層堆疊) ---
+        stageImg2.classList.remove('active');
+        climaxBadge.classList.remove('show');
+        const p3Progress = (t - 8) / 7;
+        const layerCount = Math.min(10, Math.floor(p3Progress * 10) + 1);
+
+        pedagogicalFocus.style.display = 'flex';
+        pedagogicalFocus.style.left = '20%';
+        pedagogicalFocus.style.top = `${62 - layerCount * 3.4}%`;
+        pedagogicalFocus.style.width = '100px';
+        pedagogicalFocus.style.height = '48px';
+
+        captionText.innerHTML = `如果我們把 10 片百格板像疊疊樂一樣疊起來，現在疊到 <span class="highlight">${layerCount * 100}</span>！`;
+        cntHundreds.textContent = layerCount;
+        cntTens.textContent = '0';
+        cntOnes.textContent = '0';
+        cntTotal.textContent = layerCount * 100;
+
+        bearSpeechText.textContent = `第 ${layerCount} 個百！層層堆疊到 ${layerCount * 100}！`;
+
+        let layersHtml = '';
+        for (let i = 0; i < layerCount; i++) {
+          const yOffset = -i * 13;
+          const palette = LAYER_PALETTES[i];
+          layersHtml += `
+            <div class="stack-layer" style="left: 80px; top: ${25 + yOffset}px; z-index: ${i + 1}; background: ${palette.bg}; border-bottom: 7px solid ${palette.border};">
+              ${Array(100).fill('<div class="cell-grid"></div>').join('')}
+              <div class="layer-badge">第${i + 1}層 · ${palette.name}</div>
+            </div>
+          `;
+        }
+        blocksArea.innerHTML = `<div class="stack-container">${layersHtml}</div>`;
+
+      } else if (t < 18) {
+        // --- Phase 4: 15~18s (1000金色立方體定格歡慶：平滑淡入小熊原生 3D 比讚慶祝鏡頭) ---
+        stageImg2.classList.add('active');
+        climaxBadge.classList.add('show');
+        pedagogicalFocus.style.display = 'none';
+
+        captionText.innerHTML = '看！這就是閃閃發光的 <span class="highlight" style="font-size:1.35rem; color:#fde047;">1000 金色大立方體</span>，你學會了嗎？';
+        cntHundreds.textContent = '10';
+        cntTens.textContent = '0';
+        cntOnes.textContent = '0';
+        cntTotal.textContent = '1000';
+
+        bearSpeechText.textContent = '🐻 太棒了！我們完成了 1000 大積木！';
+
+        let layersHtml = '';
+        for (let i = 0; i < 10; i++) {
+          const yOffset = -i * 13;
+          const palette = LAYER_PALETTES[i];
+          layersHtml += `
+            <div class="stack-layer" style="left: 80px; top: ${25 + yOffset}px; z-index: ${i + 1}; background: ${palette.bg}; border-bottom: 7px solid ${palette.border}; box-shadow: 0 0 18px rgba(251, 191, 36, 0.4);">
+              ${Array(100).fill('<div class="cell-grid"></div>').join('')}
+              <div class="layer-badge">第${i + 1}層 · ${palette.name}</div>
+            </div>
+          `;
+        }
+        blocksArea.innerHTML = `<div class="stack-container" style="filter: drop-shadow(0 0 28px rgba(251, 191, 36, 0.65));">${layersHtml}</div>`;
+
+      } else {
+        // --- Phase 5: 18~20s (圓滿結課歡呼) ---
+        stageImg2.classList.add('active');
+        climaxBadge.classList.add('show');
+        pedagogicalFocus.style.display = 'none';
+
+        captionText.innerHTML = '🎉 太棒了！我們下次見！';
+        cntHundreds.textContent = '10';
+        cntTens.textContent = '0';
+        cntOnes.textContent = '0';
+        cntTotal.textContent = '1000';
+
+        bearSpeechText.textContent = '太棒了！我們下次見！';
+
+        let layersHtml = '';
+        for (let i = 0; i < 10; i++) {
+          const yOffset = -i * 13;
+          const palette = LAYER_PALETTES[i];
+          layersHtml += `
+            <div class="stack-layer" style="left: 80px; top: ${25 + yOffset}px; z-index: ${i + 1}; background: ${palette.bg}; border-bottom: 7px solid ${palette.border}; box-shadow: 0 0 18px rgba(251, 191, 36, 0.4);">
+              ${Array(100).fill('<div class="cell-grid"></div>').join('')}
+              <div class="layer-badge">第${i + 1}層 · ${palette.name}</div>
+            </div>
+          `;
+        }
+        blocksArea.innerHTML = `<div class="stack-container" style="filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.7));">${layersHtml}</div>`;
+      }
+    }
+
+    function startPlay() {
+      if (isPlaying) return;
+      isPlaying = true;
+      btnPlayPause.textContent = '⏸ 暫停';
+      btnPlayPause.classList.remove('btn-primary');
+
+      function step() {
+        if (!isPlaying) return;
+        currentTime += 0.1;
+        if (currentTime >= TOTAL_SECONDS) {
+          currentTime = TOTAL_SECONDS;
+          renderFrame(currentTime);
+          pausePlay();
+          return;
+        }
+        renderFrame(currentTime);
+        timerId = setTimeout(() => requestAnimationFrame(step), 100);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function pausePlay() {
+      isPlaying = false;
+      btnPlayPause.textContent = '▶ 播放';
+      btnPlayPause.classList.add('btn-primary');
+      if (timerId) clearTimeout(timerId);
+    }
+
+    btnPlayPause.addEventListener('click', () => {
+      if (isPlaying) pausePlay();
+      else {
+        if (currentTime >= TOTAL_SECONDS) currentTime = 0;
+        startPlay();
+      }
+    });
+
+    btnRestart.addEventListener('click', () => {
+      pausePlay();
+      currentTime = 0;
+      renderFrame(0);
+      startPlay();
+    });
+
+    btnAudioToggle.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      btnAudioToggle.textContent = audioEnabled ? '🔊 音效: 開' : '🔇 音效: 關';
+    });
+
+    timelineBar.addEventListener('click', (e) => {
+      const rect = timelineBar.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      currentTime = Math.max(0, Math.min(TOTAL_SECONDS, pos * TOTAL_SECONDS));
+      renderFrame(currentTime);
+    });
+
+    phaseChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        pausePlay();
+        currentTime = parseFloat(chip.dataset.time);
+        renderFrame(currentTime);
+      });
+    });
+
+    renderFrame(0);
+  </script>
+</body>
+</html>
