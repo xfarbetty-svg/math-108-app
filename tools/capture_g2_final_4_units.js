@@ -1,6 +1,6 @@
 /**
  * tools/capture_g2_final_4_units.js
- * 一鍵產出 G2-R-2-2, R-2-3, R-2-4, D-2-1 四大單元 (20題) 的 390px 實機截圖供 036 視覺審查
+ * 一鍵產出 G2-R-2-2, R-2-3, R-2-4, D-2-1 四大單元 (20題) 的 390px 實機截圖供 035 視覺審查
  */
 'use strict';
 const { spawn } = require('node:child_process');
