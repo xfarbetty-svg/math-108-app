@@ -49,5 +49,14 @@
 ## 🕐 最後更新
 - **時間**：2026-11-19 05:56
 - **更新者**：Antigravity (Gemini 3.8 Flash) @ DESKTOP-6ELKIRH
-- **Git 狀態**：待推（待使用者確認 commit 訊息後推送）
+- **Git 狀態**：✅ 已推 (commit f344b8e)
 - **L3 狀態**：未安裝 Obsidian MCP 工具，略過
+
+## 2026-11-19 G3-N-3-9 一體化教室劇院重構（Session 交接）
+
+- 已移除 48:52 硬分割，改單一教室舞台（黑板 x44-98% / 講台 x33-43% / 米米 x1-27%），米米改透明底 SVG、藍底影片退場、氣泡移除。
+- 四幕新版台詞對齊 JSON；JSON 時間依 ffprobe 實測修正 108.61s -> 84.74s（音畫同步）。
+- CDP 驗證 Exit 0（幾何零遮擋、無 48:52、390px 單屏、Console 零錯、四幕截圖完成）。
+- 通道三五閘門 Exit 1：A1/Total PASS，A2/A3/A4 FAIL（模型稱米米下半身被講台遮擋，與 CDP 座標實測矛盾，疑為小圖幻覺）。**未全綠，禁止發布**。
+- 詳見 reports/g3_n39_unified_theater_handoff_report.md 與 reports/g3_n39_theater_visual_qa.json。
+- 下一步：2x 解析度重截 -> 重跑通道三；仍 FAIL 則升級 pro 模型或請使用者親眼裁決；全綠後才跑 tools/release.py。

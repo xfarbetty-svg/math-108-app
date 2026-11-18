@@ -56,8 +56,9 @@
   /* ==================================================================
      一體化教室舞台：單一空間，無 48:52 硬分割
      水平分帶（幾何零遮擋）：
-       米米 x∈[1%,27%]  |  講台 x∈[29%,42%]  |  黑板 x∈[44%,98%]
+       米米 x∈[2%,36%]  |  講台 x∈[29%,36%]（與米米搭接）  |  黑板 x∈[37%,96%]
      z-index：底圖 0 < 光 1 < 黑板 2 < 講台 3 < 米米 5 < 氣泡 6 < 字幕 8
+     米米改用透明底精靈，直接踩在木地板上並帶接觸陰影，消除小螢幕相框感
      ================================================================== */
   .stage-wrapper {
     position: relative; width: 100%; max-width: 1000px;
@@ -237,20 +238,29 @@
     background: rgba(60, 32, 10, 0.22); border-radius: 2px;
   }
 
-  /* 米米：原廠 3D 黏土高清底圖為唯一視覺錨點（mimi_front_1024.png），z=5，與黑板幾何零重疊 */
+  /* 米米：透明底 3D 黏土精靈（mimi_transparent_1024.png），直接融入教室空間，z=5，與黑板幾何零重疊 */
   .mimi-zone {
-    position: absolute; z-index: 5; left: 4%; width: 32%; bottom: 25%; height: 64%;
+    position: absolute; z-index: 5; left: 2%; width: 34%; bottom: 25%; height: 64%;
     display: flex; align-items: flex-end; justify-content: center; pointer-events: none;
   }
-  .mimi-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
-  /* 原廠 3D 黏土米米本尊：完整還原琥珀大眼／櫻花粉耳／粉嫩小鼻／薄荷綠吊帶褲（附木釦） */
+  .mimi-wrap {
+    position: relative; width: 100%; height: 100%; isolation: isolate;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  /* 腳下接觸陰影：讓米米真實踩在木地板上，強化與教室同一空間的立體深度 */
+  .mimi-wrap::after {
+    content: ''; position: absolute; z-index: -1;
+    left: 50%; bottom: -3%; transform: translateX(-50%);
+    width: 76%; height: 11%; border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(70, 34, 10, 0.5) 0%, rgba(70, 34, 10, 0.22) 45%, transparent 72%);
+    pointer-events: none;
+  }
+  /* 原廠 3D 黏土米米本尊（透明底）：完整還原琥珀大眼／櫻花粉耳／粉嫩小鼻／薄荷綠吊帶褲（附木釦） */
   .mimi-anchor {
     position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-    object-fit: cover; object-position: 65% center;
-    -webkit-mask-image: radial-gradient(ellipse 92% 96% at 50% 56%, #000 62%, transparent 100%);
-    mask-image: radial-gradient(ellipse 92% 96% at 50% 56%, #000 62%, transparent 100%);
+    object-fit: cover; object-position: 60% center;
     transform-origin: 50% 82%;
-    filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42));
+    filter: drop-shadow(0 6px 8px rgba(70, 34, 10, 0.32));
     will-change: transform, filter;
   }
   /* 純淨自然的微表情：說話呼吸微動／答對歡呼雀躍／答錯好奇歪頭 */
@@ -293,7 +303,7 @@
   }
   .caption-banner.speaking { box-shadow: 0 0 0 2px rgba(253, 230, 138, 0.45), 0 10px 22px rgba(0, 0, 0, 0.55); border-color: rgba(253, 230, 138, 0.72); }
   .mimi-speech-bubble.speaking { box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38), 0 0 0 2px var(--gold), 0 0 14px rgba(241, 196, 15, 0.35); }
-  .mimi-wrap.speaking .mimi-anchor { filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42)) drop-shadow(0 0 10px rgba(253, 230, 138, 0.42)); }
+  .mimi-wrap.speaking .mimi-anchor { filter: drop-shadow(0 6px 8px rgba(70, 34, 10, 0.32)) drop-shadow(0 0 10px rgba(253, 230, 138, 0.42)); }
 
   /* ---------- 控制列 ---------- */
   .controls-panel {
@@ -425,11 +435,11 @@
     <!-- 中間：講台 -->
     <div class="podium" id="podium" aria-hidden="true"></div>
 
-    <!-- 左側：米米老師原廠 3D 黏土高清底圖（唯一視覺錨點），與黑板幾何零重疊 -->
+    <!-- 左側：米米老師透明底精靈（唯一視覺錨點），直接踩在教室木地板上，與黑板幾何零重疊 -->
     <div class="mimi-speech-bubble" id="mimiBubble">🐰 哈囉小朋友！今天我們有一條平分成 12 塊的巧克力喔！</div>
     <div class="mimi-zone" id="mimiZone">
       <div class="mimi-wrap" id="mimiWrap">
-        <img id="mimiAnchor" class="mimi-anchor" src="assets_hosts/g3_mimi/textures/mimi_front_1024.png" alt="原廠 3D 黏土白兔米米老師" aria-hidden="true">
+        <img id="mimiAnchor" class="mimi-anchor" src="assets_hosts/g3_mimi/textures/mimi_transparent_1024.png" alt="原廠 3D 黏土白兔米米老師" aria-hidden="true">
       </div>
     </div>
 
