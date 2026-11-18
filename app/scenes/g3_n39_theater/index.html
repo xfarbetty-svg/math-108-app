@@ -214,6 +214,22 @@
     filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42));
     transition: transform 0.35s ease;
   }
+  .mimi-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42));
+    display: block;
+  }
+  .mimi-wrap.has-video .mimi-svg {
+    display: none;
+  }
+  .mimi-wrap.no-video .mimi-video {
+    display: none;
+  }
+  .mimi-wrap.no-video .mimi-svg {
+    display: block;
+  }
 
   /* 角色待機呼吸動畫 */
   .mimi-body {
@@ -278,6 +294,10 @@
     50% { transform: rotate(16deg) translateY(-3px); }
   }
   .mimi-wrap.tilt .mimi-svg {
+    transform: rotate(-7deg) translateX(-2px);
+    transform-origin: 50% 88%;
+  }
+  .mimi-wrap.tilt .mimi-video {
     transform: rotate(-7deg) translateX(-2px);
     transform-origin: 50% 88%;
   }
@@ -853,7 +873,8 @@
       <!-- 左側 48%：米米角色安全區 -->
       <div class="actor-zone">
         <div class="mimi-speech-bubble" id="mimiBubble">🐰 哈囉小朋友！今天我們有 1 條平分成 12 塊的巧克力喔！</div>
-        <div class="mimi-wrap" id="mimiWrap">
+        <div class="mimi-wrap has-video" id="mimiWrap">
+          <video id="mimiVideo" class="mimi-video" playsinline muted autoplay loop src="video/mimi_n39_act1.mp4"></video>
           <svg class="mimi-svg" viewBox="0 0 200 280" role="img" aria-label="白兔米米，穿著薄荷綠吊帶褲，正伸手指向右側黑板">
             <defs>
               <radialGradient id="furGrad" cx="42%" cy="30%" r="78%">
@@ -1032,15 +1053,25 @@
   };
   const FULL_DURATION = TIMELINE.acts[TIMELINE.acts.length - 1].end;
 
+  /* ---------- Wan 2.2 四幕影片（相對路徑，支援離線） ---------- */
+  const ACT_VIDEOS = [
+    'video/mimi_n39_act1.mp4',
+    'video/mimi_n39_act2.mp4',
+    'video/mimi_n39_act3.mp4',
+    'video/mimi_n39_act4.mp4'
+  ];
+
   let playMode = 'full'; // 'full' | 'act'
   let actIndex = 0;
   let isPlaying = false;
   let seeking = false;
   let lastPhase = -1;
   let quizAnswered = null;
+  let videoBroken = false;
 
   const mimiBubble = document.getElementById('mimiBubble');
   const mimiWrap = document.getElementById('mimiWrap');
+  const mimiVideo = document.getElementById('mimiVideo');
   const captionText = document.getElementById('captionText');
   const cntBlue = document.getElementById('cntBlue');
   const cntOrange = document.getElementById('cntOrange');
@@ -1141,6 +1172,38 @@
     mimiBubble.classList.toggle('speaking', !!on);
   }
 
+  /* ---------- 影片播放 / 幕次切換 / 容錯回退 ---------- */
+  function playMimiVideo() {
+    if (videoBroken) return;
+    try {
+      const p = mimiVideo.play();
+      if (p && typeof p.catch === 'function') p.catch(() => { /* 自動播放受阻時靜默降級 */ });
+    } catch (e) { /* 影片不可用時略過 */ }
+  }
+
+  function pauseMimiVideo() {
+    if (videoBroken) return;
+    try { mimiVideo.pause(); } catch (e) { /* 已卸載時忽略 */ }
+  }
+
+  function syncPhaseVideo(phase) {
+    if (videoBroken) return;
+    const next = ACT_VIDEOS[phase] || ACT_VIDEOS[0];
+    if (mimiVideo.getAttribute('src') !== next) {
+      mimiVideo.setAttribute('src', next);
+      try { mimiVideo.load(); } catch (e) { /* 尚未就緒時略過 */ }
+    }
+    if (isPlaying) playMimiVideo();
+  }
+
+  mimiVideo.addEventListener('error', () => {
+    // 影片缺失或解碼失敗：平滑回退至原版 SVG 米米
+    videoBroken = true;
+    mimiWrap.classList.remove('has-video');
+    mimiWrap.classList.add('no-video');
+    try { mimiVideo.pause(); } catch (e) { /* 已卸載時忽略 */ }
+  });
+
   function updatePlayButton() {
     if (isPlaying) {
       btnPlayPause.textContent = '⏸ 暫停';
@@ -1230,6 +1293,9 @@
         quizFb.className = 'quiz-fb';
       }
     }
+
+    // 左側 48% 舞台影片與幕次同步（換幕才換檔，播放中自動續播）
+    syncPhaseVideo(phase);
   }
 
   function renderFrame(t) {
@@ -1262,6 +1328,7 @@
   function pausePlay(updateUi) {
     isPlaying = false;
     try { audio.pause(); } catch (e) { /* 離線/解碼異常時靜默降級 */ }
+    pauseMimiVideo();
     setSpeaking(false);
     if (updateUi !== false) updatePlayButton();
   }
@@ -1277,6 +1344,7 @@
       await audio.play();
       isPlaying = true;
       setSpeaking(true);
+      playMimiVideo();
       updatePlayButton();
     } catch (e) {
       // 自動播放受阻等情境：優雅降級等待使用者點擊後解鎖
@@ -1316,6 +1384,10 @@
     lastPhase = -1;
     setMode('full', 0);
     renderFrame(0);
+    // 重播：影片歸零並重新起播
+    if (!videoBroken) {
+      try { mimiVideo.currentTime = 0; } catch (e) { /* 尚未就緒時略過 */ }
+    }
     playFromCurrent();
   }
 
@@ -1348,6 +1420,7 @@
 
   audio.addEventListener('ended', () => {
     isPlaying = false;
+    pauseMimiVideo();
     setSpeaking(false);
     updatePlayButton();
     renderFrame(getTotalSeconds());
@@ -1357,6 +1430,7 @@
     // 非拖曳造成的暫停同步狀態
     if (!audio.ended) {
       isPlaying = false;
+      pauseMimiVideo();
       setSpeaking(false);
       updatePlayButton();
     }
@@ -1365,6 +1439,7 @@
   audio.addEventListener('play', () => {
     isPlaying = true;
     setSpeaking(true);
+    playMimiVideo();
     updatePlayButton();
   });
 
@@ -1406,6 +1481,10 @@
       lastPhase = -1;
       setMode('act', phase);
       renderFrame(0);
+      // 點選幕次：影片從該幕開頭播放
+      if (!videoBroken) {
+        try { mimiVideo.currentTime = 0; } catch (e) { /* 尚未就緒時略過 */ }
+      }
       // 點選幕次即播對應分段語音
       playFromCurrent();
     });
