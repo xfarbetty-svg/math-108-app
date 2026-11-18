@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-R-2-2 Q02 水果秤重累加數線</title>
+<style>
+:root { --red:#e74c3c; --blue:#2980b9; --green:#27ae60; --gold:#f5b301; --ink:#3a3a3a; --bg:#fffaf0; }
+body { margin:0; display:flex; justify-content:center; align-items:center; background:#e8e8e8; font-family:"Microsoft JhengHei",sans-serif; }
+.wrap { width:100%; max-width:480px; height:420px; background:var(--bg); box-sizing:border-box; overflow:hidden; position:relative; display:flex; flex-direction:column; padding:12px 14px; border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+.question-area { font-size:.95rem; font-weight:bold; color:var(--ink); text-align:center; margin-bottom:6px; line-height:1.4; }
+.canvas-area { flex:1; min-height:0; display:flex; justify-content:center; align-items:center; margin-bottom:6px; }
+.canvas-area svg { width:100%; height:100%; }
+.options-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; }
+.opt-btn { padding:8px 6px; border:2px solid #ddd; border-radius:10px; background:#fff; cursor:pointer; font-size:.92rem; transition:all .2s; text-align:center; }
+.opt-btn:hover { border-color:var(--blue); background:#f0f7ff; }
+.opt-btn.selected { background:var(--blue); color:#fff; border-color:var(--blue); }
+.controls { display:flex; flex-direction:column; align-items:center; gap:4px; }
+#feedback { height:20px; font-weight:bold; font-size:.92rem; text-align:center; }
+#feedback.success { color:var(--green); }
+#feedback.fail { color:var(--red); }
+.check-btn { padding:9px 42px; background:#ffcc80; border:none; border-radius:22px; font-size:1.05rem; font-weight:bold; color:#5d4037; cursor:pointer; box-shadow:0 3px 0 #ef6c00; }
+.check-btn:active { transform:translateY(2px); box-shadow:0 1px 0 #ef6c00; }
+.tool-btn { padding:5px 16px; background:#fff; border:2px solid var(--blue); color:var(--blue); border-radius:16px; font-size:.88rem; font-weight:bold; cursor:pointer; }
+.tool-btn:active { transform:translateY(1px); }
+.toolbar { display:flex; justify-content:center; gap:8px; margin-bottom:4px; }
+.fruit { cursor:pointer; transition: transform .7s cubic-bezier(.34,1.56,.64,1); }
+.fruit:hover { filter: brightness(1.06); }
+#needleG { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .7s cubic-bezier(.34,1.56,.64,1); }
+.arc { opacity:0; }
+.arc.on { opacity:1; }
+#cumDot { transition: cx .7s; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="question-area">一顆西瓜重 9 公斤，一顆哈密瓜重 3 公斤，一袋葡萄重 1 公斤，三樣水果共重多少公斤？</div>
+  <div class="toolbar"><button class="tool-btn" id="btnReset">🔄 拿出重來</button></div>
+  <div class="canvas-area">
+    <svg viewBox="0 0 440 200" preserveAspectRatio="xMidYMid meet">
+      <!-- 三樣水果 -->
+      <g class="fruit" id="fruit9" data-k="9">
+        <circle cx="75" cy="48" r="26" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+        <path d="M62 30 Q70 48 62 66 M75 22 Q80 48 75 74 M88 30 Q81 48 88 66" stroke="#1e8449" stroke-width="2.5" fill="none"/>
+        <text x="75" y="55" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">9</text>
+        <text x="75" y="90" font-size="11" fill="#555" text-anchor="middle">西瓜 9公斤</text>
+      </g>
+      <g class="fruit" id="fruit3" data-k="3">
+        <ellipse cx="175" cy="50" rx="24" ry="21" fill="#f39c12" stroke="#d68910" stroke-width="2"/>
+        <path d="M157 42 L193 58 M157 58 L193 42 M163 34 L188 64 M188 34 L163 64" stroke="#e67e22" stroke-width="1" fill="none" opacity=".7"/>
+        <text x="175" y="57" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+        <text x="175" y="90" font-size="11" fill="#555" text-anchor="middle">哈密瓜 3公斤</text>
+      </g>
+      <g class="fruit" id="fruit1" data-k="1">
+        <circle cx="252" cy="42" r="6" fill="#8e44ad"/><circle cx="263" cy="42" r="6" fill="#8e44ad"/>
+        <circle cx="246" cy="52" r="6" fill="#7d3c98"/><circle cx="257" cy="52" r="6" fill="#8e44ad"/><circle cx="268" cy="52" r="6" fill="#7d3c98"/>
+        <circle cx="252" cy="62" r="6" fill="#8e44ad"/><circle cx="263" cy="62" r="6" fill="#7d3c98"/>
+        <path d="M257 30 Q262 24 268 26" stroke="#27ae60" stroke-width="2.5" fill="none"/>
+        <text x="257" y="90" font-size="11" fill="#555" text-anchor="middle">葡萄 1公斤</text>
+        <text x="278" y="58" font-size="13" font-weight="bold" fill="#8e44ad">1</text>
+      </g>
+      <!-- 秤 -->
+      <circle cx="350" cy="64" r="30" fill="#fff" stroke="#8d6e63" stroke-width="3"/>
+      <text x="350" y="30" font-size="12" font-weight="bold" fill="#8d6e63" text-anchor="middle" id="readout">0 公斤</text>
+      <g transform="translate(350,64)">
+        <line x1="-24" y1="0" x2="24" y2="0" stroke="#d7ccc8" stroke-width="1"/>
+        <line x1="0" y1="-24" x2="0" y2="24" stroke="#d7ccc8" stroke-width="1"/>
+        <g id="needleG"><line x1="0" y1="6" x2="0" y2="-22" stroke="#e74c3c" stroke-width="3"/><circle r="3.5" fill="#e74c3c"/></g>
+      </g>
+      <rect x="310" y="128" width="80" height="10" rx="3" fill="#8d6e63"/>
+      <ellipse cx="350" cy="122" rx="46" ry="8" fill="#ffb74d" stroke="#ef6c00" stroke-width="2"/>
+      <!-- 數線 -->
+      <g id="numline">
+        <line x1="40" y1="178" x2="410" y2="178" stroke="#555" stroke-width="2"/>
+        <text x="40" y="194" font-size="9" fill="#777" text-anchor="middle">0</text>
+        <circle id="cumDot" cx="40" cy="178" r="5" fill="#e74c3c"/>
+      </g>
+    </svg>
+  </div>
+  <div class="options-grid">
+    <div class="opt-btn" data-idx="0">1. 12 公斤</div>
+    <div class="opt-btn" data-idx="1">2. 13 公斤</div>
+    <div class="opt-btn" data-idx="2">3. 14 公斤</div>
+    <div class="opt-btn" data-idx="3">4. 11 公斤</div>
+  </div>
+  <div class="controls">
+    <div id="feedback"></div>
+    <button class="check-btn" onclick="submitAnswer()">檢查答案</button>
+  </div>
+</div>
+<script>
+let selectedIdx = null;
+const correctIdx = 1;
+const feedbackEl = document.getElementById('feedback');
+const optBtns = document.querySelectorAll('.opt-btn');
+
+optBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    optBtns.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedIdx = parseInt(btn.getAttribute('data-idx'));
+    feedbackEl.textContent = '';
+    feedbackEl.className = '';
+  });
+});
+
+/* --- 水果上秤 + 動態累加數線 --- */
+const X0 = 40, PERKG = 370 / 14, LINE_Y = 178;
+const fruits = [...document.querySelectorAll('.fruit')];
+const needleG = document.getElementById('needleG');
+const readout = document.getElementById('readout');
+const numline = document.getElementById('numline');
+const cumDot = document.getElementById('cumDot');
+let total = 0, lastX = X0, placedCount = 0;
+const slots = [[300, 96], [340, 100], [380, 96]];
+const colors = ['#e74c3c', '#f39c12', '#8e44ad'];
+
+function xAt(kg) { return X0 + PERKG * kg; }
+
+/* 建立刻度（每 1 公斤一細刻度，每 2 公斤標數字） */
+(function buildTicks() {
+  for (let kg = 1; kg <= 14; kg++) {
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    const major = kg % 2 === 0;
+    t.setAttribute('x1', xAt(kg)); t.setAttribute('x2', xAt(kg));
+    t.setAttribute('y1', LINE_Y - (major ? 5 : 3));
+    t.setAttribute('y2', LINE_Y + (major ? 5 : 3));
+    t.setAttribute('stroke', major ? '#555' : '#aaa');
+    t.setAttribute('stroke-width', major ? '1.6' : '1');
+    numline.appendChild(t);
+    if (major) {
+      const lab = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lab.setAttribute('x', xAt(kg)); lab.setAttribute('y', '194');
+      lab.setAttribute('font-size', '9'); lab.setAttribute('fill', '#777');
+      lab.setAttribute('text-anchor', 'middle');
+      lab.textContent = kg;
+      numline.appendChild(lab);
+    }
+  }
+})();
+
+fruits.forEach((fruit, i) => {
+  fruit.addEventListener('click', () => {
+    if (fruit.dataset.placed) return;
+    fruit.dataset.placed = '1';
+    const k = +fruit.dataset.k;
+    const [sx, sy] = slots[placedCount];
+    /* 各水果視覺中心：西瓜(75,48) 哈密瓜(175,50) 葡萄(257,55) */
+    const center = { 9: [75, 48], 3: [175, 50], 1: [257, 55] }[k];
+    fruit.style.transform = 'translate(' + (sx - center[0]) + 'px,' + (sy - center[1]) + 'px)';
+    placedCount++;
+    const prev = total; total += k;
+    /* 指針與讀數 */
+    needleG.style.transform = 'rotate(' + (total / 14 * 180 - 90) + 'deg)';
+    readout.textContent = total + ' 公斤';
+    /* 數線弧段 */
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const x1 = xAt(prev), x2 = xAt(total), mx = (x1 + x2) / 2;
+    const h = Math.max(14, Math.min(40, (x2 - x1) * 0.6));
+    path.setAttribute('d', 'M' + x1 + ' ' + LINE_Y + ' Q' + mx + ' ' + (LINE_Y - h) + ' ' + x2 + ' ' + LINE_Y);
+    path.setAttribute('stroke', colors[i]); path.setAttribute('stroke-width', '3.5');
+    path.setAttribute('fill', 'none'); path.setAttribute('class', 'arc dyn');
+    path.setAttribute('pathLength', '1');
+    path.style.strokeDasharray = '1'; path.style.strokeDashoffset = '1';
+    path.style.transition = 'stroke-dashoffset .7s ease, opacity .3s';
+    numline.appendChild(path);
+    requestAnimationFrame(() => { path.classList.add('on'); path.style.strokeDashoffset = '0'; });
+    /* 端點數字 */
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', x2); label.setAttribute('y', LINE_Y - h - 4);
+    label.setAttribute('font-size', '12'); label.setAttribute('font-weight', 'bold');
+    label.setAttribute('fill', colors[i]); label.setAttribute('text-anchor', 'middle');
+    label.textContent = total; label.setAttribute('class', 'dyn'); numline.appendChild(label);
+    cumDot.setAttribute('cx', x2);
+  });
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  total = 0; lastX = X0; placedCount = 0;
+  fruits.forEach(f => { delete f.dataset.placed; f.style.transform = ''; });
+  needleG.style.transform = 'rotate(-90deg)';
+  readout.textContent = '0 公斤';
+  [...numline.querySelectorAll('.dyn')].forEach(el => el.remove());
+  cumDot.setAttribute('cx', X0);
+  feedbackEl.textContent = ''; feedbackEl.className = '';
+});
+
+function submitAnswer() {
+  if (selectedIdx === null) {
+    feedbackEl.textContent = '請先選擇一個答案';
+    feedbackEl.className = 'fail';
+    return;
+  }
+  const result = window.check();
+  if (result.isCorrect) {
+    feedbackEl.textContent = '太棒了！9＋3＋1＝13，三樣水果共重 13 公斤！';
+    feedbackEl.className = 'success';
+  } else {
+    feedbackEl.textContent = '再算一次喔！每一樣水果都要放上秤，別漏掉任何一樣！';
+    feedbackEl.className = 'fail';
+  }
+}
+
+/* 034 規範契約 */
+window.check = function() {
+  const isCorrect = (selectedIdx === correctIdx);
+  return { isCorrect: isCorrect, score: isCorrect ? 100 : 0 };
+};
+</script>
+</body>
+</html>

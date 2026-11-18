@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-R-2-3 Q08 乘法交換律天平</title>
+    <style>
+        :root {
+            --primary-color: #ff8c94;
+            --secondary-color: #a8e6cf;
+            --bg-color: #fff9f0;
+            --text-color: #5d5d5d;
+            --accent-color: #ffd3b6;
+            --success-color: #ffaaa5;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 700px;
+            background-color: var(--bg-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 15px;
+            background-color: var(--accent-color);
+            text-align: center;
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            border-bottom: 3px dashed #fff;
+        }
+
+        .question-box {
+            padding: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            background: white;
+            margin: 10px;
+            border-radius: 15px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+        }
+
+        .visual-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #balance-svg {
+            width: 90%;
+            height: auto;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .option-btn {
+            padding: 12px 8px;
+            border: 2px solid var(--accent-color);
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--secondary-color);
+            border-color: #81c784;
+            color: #2e7d32;
+        }
+
+        .option-btn.wrong {
+            background-color: #ffcdd2;
+            border-color: #e57373;
+            color: #c62828;
+        }
+
+        #feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .weight-label {
+            font-size: 10px;
+            font-weight: bold;
+            fill: #5d5d5d;
+            pointer-events: none;
+        }
+
+        /* 動畫效果 */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .correct-anim { animation: bounce 0.5s ease infinite; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div class="header">單元：兩數相乘的順序不影響其積</div>
+    
+    <div class="question-box">
+        天平左盤放 3 個 6 公斤砝碼，右盤放 6 個 3 公斤砝碼，天平會怎樣？
+    </div>
+
+    <div class="visual-area">
+        <svg id="balance-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- 底座 -->
+            <path d="M150 280 L250 280 L230 240 L170 240 Z" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
+            <rect x="195" y="100" width="10" height="140" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
+            
+            <!-- 指針刻度盤 -->
+            <circle cx="200" cy="100" r="20" fill="white" stroke="#8d6e63" stroke-width="2"/>
+            <line x1="200" y1="85" x2="200" y2="95" stroke="#e57373" stroke-width="3" id="pointer"/>
+            
+            <!-- 橫桿 (100% 水平) -->
+            <g id="beam">
+                <rect x="50" y="95" width="300" height="10" rx="5" fill="#a1887f" stroke="#5d4037" stroke-width="2"/>
+                
+                <!-- 左盤吊繩與盤子 -->
+                <g id="left-pan">
+                    <line x1="70" y1="105" x2="70" y2="180" stroke="#8d6e63" stroke-width="2"/>
+                    <path d="M30 180 Q70 210 110 180" fill="none" stroke="#8d6e63" stroke-width="3"/>
+                    <ellipse cx="70" cy="185" rx="45" ry="8" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/>
+                    
+                    <!-- 左盤砝碼: 3個 6kg -->
+                    <g transform="translate(45, 155)">
+                        <rect x="0" y="0" width="20" height="25" rx="3" fill="#ffd54f" stroke="#fbc02d" />
+                        <text x="10" y="17" text-anchor="middle" class="weight-label">6k</text>
+                    </g>
+                    <g transform="translate(60, 155)">
+                        <rect x="0" y="0" width="20" height="25" rx="3" fill="#ffd54f" stroke="#fbc02d" />
+                        <text x="10" y="17" text-anchor="middle" class="weight-label">6k</text>
+                    </g>
+                    <g transform="translate(75, 155)">
+                        <rect x="0" y="0" width="20" height="25" rx="3" fill="#ffd54f" stroke="#fbc02d" />
+                        <text x="10" y="17" text-anchor="middle" class="weight-label">6k</text>
+                    </g>
+                </g>
+
+                <!-- 右盤吊繩與盤子 -->
+                <g id="right-pan">
+                    <line x1="330" y1="105" x2="330" y2="180" stroke="#8d6e63" stroke-width="2"/>
+                    <path d="M290 180 Q330 210 370 180" fill="none" stroke="#8d6e63" stroke-width="3"/>
+                    <ellipse cx="330" cy="185" rx="45" ry="8" fill="#cfd8dc" stroke="#78909c" stroke-width="2"/>
+                    
+                    <!-- 右盤砝碼: 6個 3kg (分兩層) -->
+                    <!-- 下層 -->
+                    <g transform="translate(305, 165)">
+                        <rect x="0" y="0" width="15" height="15" rx="2" fill="#81d4fa" stroke="#29b6f6" />
+                        <text x="7.5" y="11" text-anchor="middle" class="weight-label" style="font-size:7px">3k</text>
+                    </g>
+                    <g transform="translate(322, 165)">
+                        <rect x="0" y="0" width="15" height="15" rx="2" fill="#81d4fa" stroke="#29b6f6" />
+                        <text x="7.5" y="11" text-anchor="middle" class="weight-label" style="font-size:7px">3k</text>
+                    </g>
+                    <g transform="translate(339, 165)">
+                        <rect x="0" y="0" width="15" height="15" rx="2" fill="#81d4fa" stroke="#29b6f6" />
+                        <text x="7.5" y="11" text-anchor="middle" class="weight-label" style="font-size:7px">3k</text>
+                    </g>
+                    <!-- 上層 -->
+                    <g transform="translate(305, 148)">
+                        <rect x="0" y="0" width="15" height="15" rx="2" fill="#81d4fa" stroke="#29b6f6" />
+                        <text x="7.5" y="11" text-anchor="middle" class="weight-label" style="font-size:7px">3k</text>
+                    </g>
+                    <g transform="translate(322, 148)">
+                        <rect x="0" y="0" width="15" height="15" rx="2" fill="#81d4fa" stroke="#29b6f6" />
+                        <text x="7.5" y="11" text-anchor="middle" class="weight-label" style="font-size:7px">3k</text>
+                    </g>
+                    <g transform="translate(339, 148)">
+                        <rect x="0" y="0" width="15" height="15" rx="2" fill="#81d4fa" stroke="#29b6f6" />
+                        <text x="7.5" y="11" text-anchor="middle" class="weight-label" style="font-size:7px">3k</text>
+                    </g>
+                </g>
+            </g>
+        </svg>
+        <div id="feedback"></div>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">保持平衡</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">左邊下沉</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">右邊下沉</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">無法判斷</button>
+    </div>
+</div>
+
+<script>
+    const correctIndex = 0;
+    let answered = false;
+
+    function checkAnswer(index, btn) {
+        if (answered) return;
+        
+        const feedback = document.getElementById('feedback');
+        const buttons = document.querySelectorAll('.option-btn');
+
+        if (index === correctIndex) {
+            answered = true;
+            btn.classList.add('correct');
+            feedback.textContent = "✨ 太棒了！ ✨";
+            feedback.style.display = "block";
+            feedback.style.backgroundColor = "#a8e6cf";
+            feedback.style.color = "#2e7d32";
+            
+            // 簡單的成功動畫
+            document.getElementById('beam').classList.add('correct-anim');
+            
+            // 顯示算理提示
+            setTimeout(() => {
+                alert("算理：\n左邊：6 × 3 = 18 公斤\n右邊：3 × 6 = 18 公斤\n兩邊一樣重，所以保持平衡！");
+            }, 500);
+        } else {
+            btn.classList.add('wrong');
+            feedback.textContent = "再試試看喔！";
+            feedback.style.display = "block";
+            feedback.style.backgroundColor = "#ffcdd2";
+            feedback.style.color = "#c62828";
+            
+            setTimeout(() => {
+                feedback.style.display = "none";
+                btn.classList.remove('wrong');
+            }, 1500);
+        }
+    }
+</script>
+
+</body>
+</html>

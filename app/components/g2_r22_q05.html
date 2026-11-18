@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-R-2-2 Q05 - 最佳計算策略</title>
+    <style>
+        :root {
+            --bg-color: #FFF9EB;
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --accent-color: #FFD93D;
+            --text-color: #444;
+            --card-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 740px;
+            background-color: var(--bg-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border: 4px solid #5D4037;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .unit-tag {
+            display: inline-block;
+            background: #5D4037;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .question-box {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid #FFD93D;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        #visual-stage {
+            flex: 1;
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 15px;
+            border: 2px dashed #CCC;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+            padding: 0 10px;
+        }
+
+        .num-card {
+            width: 80px;
+            height: 100px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-53 { background-color: #FF6B6B; border: 4px solid #E55B5B; }
+        .card-27 { background-color: #4ECDC4; border: 4px solid #3DBDB4; }
+        .card-14 { background-color: #45B7D1; border: 4px solid #3AA6BD; }
+
+        .card-label {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #DDD;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:active { transform: scale(0.98); }
+        .option-btn.correct { background-color: #D4EDDA; border-color: #28A745; color: #155724; }
+        .option-btn.wrong { background-color: #F8D7DA; border-color: #DC3545; color: #721C24; }
+
+        .option-prefix {
+            width: 28px;
+            height: 28px;
+            background: #EEE;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        #feedback-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        .feedback-icon { width: 100px; height: 100px; margin-bottom: 20px; }
+
+        /* Animations */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes merge {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(40px); opacity: 0; }
+        }
+
+        .highlight {
+            animation: bounce 0.5s infinite;
+            box-shadow: 0 0 15px #FFD93D;
+            z-index: 10;
+        }
+
+        .bracket-svg {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div class="header">
+        <span class="unit-tag">G2-R-2-2 三數相加</span>
+        <div class="question-box">
+            計算 <span style="color:#FF6B6B">53</span> + <span style="color:#4ECDC4">27</span> + <span style="color:#45B7D1">14</span> 時，哪一種計算步驟最簡便？
+        </div>
+    </div>
+
+    <div id="visual-stage">
+        <div class="card-container" id="card-wrap">
+            <div class="num-card card-53" id="c53">
+                53
+                <span class="card-label">個位是 3</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #999;">+</div>
+            <div class="num-card card-27" id="c27">
+                27
+                <span class="card-label">個位是 7</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: #999;">+</div>
+            <div class="num-card card-14" id="c14">
+                14
+                <span class="card-label">個位是 4</span>
+            </div>
+        </div>
+
+        <!-- SVG Bracket for visual guidance -->
+        <svg class="bracket-svg" id="bracket" viewBox="0 0 200 60">
+            <path d="M 20,10 Q 20,50 100,50 Q 180,50 180,10" fill="none" stroke="#FFD93D" stroke-width="4" stroke-linecap="round" />
+            <text x="100" y="40" text-anchor="middle" font-weight="bold" fill="#5D4037" font-size="14">湊成 80</text>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">
+            <span class="option-prefix">A</span> (53 + 27) + 14
+        </button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">
+            <span class="option-prefix">B</span> 53 + (27 + 14)
+        </button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">
+            <span class="option-prefix">C</span> (53 + 14) + 27
+        </button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">
+            <span class="option-prefix">D</span> 都不簡便
+        </button>
+    </div>
+
+    <div id="feedback-overlay">
+        <div id="feedback-content" style="text-align: center;">
+            <svg class="feedback-icon" id="icon-success" viewBox="0 0 100 100" style="display:none">
+                <circle cx="50" cy="50" r="45" fill="#4ECDC4"/>
+                <path d="M30 50 L45 65 L70 35" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <svg class="feedback-icon" id="icon-error" viewBox="0 0 100 100" style="display:none">
+                <circle cx="50" cy="50" r="45" fill="#FF6B6B"/>
+                <path d="M35 35 L65 65 M65 35 L35 65" fill="none" stroke="white" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <h2 id="feedback-text" style="color: var(--text-color);">太棒了！</h2>
+            <p id="feedback-subtext">53+27=80，湊十法最快！</p>
+            <button onclick="resetQuiz()" style="padding: 10px 30px; background: #5D4037; color: white; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer;">再試一次</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const correctIndex = 0;
+    let isLocked = false;
+
+    function checkAnswer(index, btn) {
+        if (isLocked) return;
+        isLocked = true;
+
+        const allBtns = document.querySelectorAll('.option-btn');
+        const c53 = document.getElementById('c53');
+        const c27 = document.getElementById('c27');
+        const bracket = document.getElementById('bracket');
+
+        if (index === correctIndex) {
+            btn.classList.add('correct');
+            
+            // Visual Animation for "Make Ten"
+            c53.classList.add('highlight');
+            c27.classList.add('highlight');
+            bracket.style.display = 'block';
+
+            setTimeout(() => {
+                showFeedback(true);
+            }, 1500);
+        } else {
+            btn.classList.add('wrong');
+            showFeedback(false);
+        }
+    }
+
+    function showFeedback(isCorrect) {
+        const overlay = document.getElementById('feedback-overlay');
+        const successIcon = document.getElementById('icon-success');
+        const errorIcon = document.getElementById('icon-error');
+        const text = document.getElementById('feedback-text');
+        const subtext = document.getElementById('feedback-subtext');
+
+        overlay.style.display = 'flex';
+        if (isCorrect) {
+            successIcon.style.display = 'block';
+            errorIcon.style.display = 'none';
+            text.innerText = "答對了！";
+            subtext.innerText = "53 的 3 和 27 的 7 可以湊成十，\n先算 (53 + 27) = 80 最簡便！";
+        } else {
+            successIcon.style.display = 'none';
+            errorIcon.style.display = 'block';
+            text.innerText = "再想想看...";
+            subtext.innerText = "找找看哪兩個數字的個位數\n加起來剛好是 10 呢？";
+        }
+    }
+
+    function resetQuiz() {
+        isLocked = false;
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => {
+            b.classList.remove('correct', 'wrong');
+        });
+        
+        document.getElementById('c53').classList.remove('highlight');
+        document.getElementById('c27').classList.remove('highlight');
+        document.getElementById('bracket').style.display = 'none';
+        document.getElementById('feedback-overlay').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

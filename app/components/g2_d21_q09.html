@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-D-2-1 Q09 - 直條圖差距計算</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --mango-color: #ffb347;
+            --guava-color: #77dd77;
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .unit-tag {
+            display: inline-block;
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            margin-bottom: 20px;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #f0f7ff;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        #feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            height: 24px;
+        }
+
+        /* SVG Styling */
+        .bar {
+            transition: height 1s ease-out, y 1s ease-out;
+        }
+        .grid-line {
+            stroke: #eee;
+            stroke-width: 1;
+        }
+        .axis-line {
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .diff-line {
+            stroke: #f44336;
+            stroke-width: 2;
+            stroke-dasharray: 4;
+        }
+        .label-text {
+            font-size: 12px;
+            fill: #666;
+        }
+        .value-text {
+            font-size: 14px;
+            font-weight: bold;
+            fill: #333;
+        }
+        .diff-tag {
+            fill: #f44336;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="unit-tag">G2-D-2-1 分類與呈現</div>
+    <div class="question-text">
+        觀察下方的水果統計圖，喜歡「芒果」的人比喜歡「芭樂」的多幾個人？
+    </div>
+
+    <div class="chart-container">
+        <svg width="100%" height="100%" viewBox="0 0 300 220">
+            <!-- 網格線 (每5人一格) -->
+            <line x1="40" y1="170" x2="280" y2="170" class="axis-line" /> <!-- 基準線 0 -->
+            <line x1="40" y1="120" x2="280" y2="120" class="grid-line" /> <!-- 5 -->
+            <line x1="40" y1="70" x2="280" y2="70" class="grid-line" />  <!-- 10 -->
+            <line x1="40" y1="20" x2="280" y2="20" class="grid-line" />  <!-- 15 -->
+
+            <!-- 刻度文字 -->
+            <text x="25" y="175" class="label-text">0</text>
+            <text x="25" y="125" class="label-text">5</text>
+            <text x="20" y="75" class="label-text">10</text>
+            <text x="20" y="25" class="label-text">15</text>
+
+            <!-- 芒果直條 (15人) -->
+            <rect x="70" y="20" width="40" height="150" fill="var(--mango-color)" class="bar" />
+            <text x="75" y="190" class="label-text">芒果</text>
+            <text x="82" y="15" class="value-text">15</text>
+
+            <!-- 芭樂直條 (8人) -->
+            <!-- 8人對應 y = 170 - (8 * 10) = 90 -->
+            <rect x="160" y="90" width="40" height="80" fill="var(--guava-color)" class="bar" />
+            <text x="165" y="190" class="label-text">芭樂</text>
+            <text x="172" y="85" class="value-text">8</text>
+
+            <!-- 差距標註 -->
+            <!-- 從芭樂頂部(y=90)畫虛線到芒果直條 -->
+            <line x1="160" y1="90" x2="110" y2="90" class="diff-line" />
+            <!-- 垂直雙向箭頭或標示 -->
+            <path d="M 125 20 L 125 90" fill="none" stroke="#f44336" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+            <text x="132" y="60" class="diff-tag">多 7 人</text>
+
+            <!-- 定義箭頭 -->
+            <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 Z" fill="#f44336" />
+                </marker>
+            </defs>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">7 人</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">6 人</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">8 人</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">5 人</button>
+    </div>
+
+    <div id="feedback"></div>
+</div>
+
+<script>
+    const correctIndex = 0;
+    let answered = false;
+
+    function checkAnswer(index, btn) {
+        if (answered) return;
+        
+        const feedback = document.getElementById('feedback');
+        const buttons = document.querySelectorAll('.option-btn');
+
+        if (index === correctIndex) {
+            btn.classList.add('correct');
+            feedback.innerHTML = '✨ 太棒了！15 - 8 = 7 ✨';
+            feedback.style.color = 'var(--success-color)';
+            answered = true;
+            triggerSuccessEffect();
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerHTML = '再試試看喔！觀察高度差。';
+            feedback.style.color = 'var(--error-color)';
+            setTimeout(() => {
+                btn.classList.remove('wrong');
+                feedback.innerHTML = '';
+            }, 1500);
+        }
+    }
+
+    function triggerSuccessEffect() {
+        // 簡單的縮放動畫
+        const bar = document.querySelector('rect[fill="var(--mango-color)"]');
+        bar.style.filter = 'brightness(1.1)';
+        setTimeout(() => bar.style.filter = 'brightness(1)', 500);
+    }
+</script>
+
+</body>
+</html>

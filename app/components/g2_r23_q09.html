@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-3 Q09 巧克力矩陣比對</title>
+    <style>
+        :root {
+            --primary-color: #6d4c41;
+            --secondary-color: #ffcc80;
+            --correct-color: #4caf50;
+            --wrong-color: #f44336;
+            --bg-color: #fff9f0;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        .visual-area {
+            width: 100%;
+            height: 180px;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #333;
+            margin: 5px 0;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background-color: #fff3e0;
+            border-color: var(--secondary-color);
+        }
+
+        .option-btn.selected {
+            background-color: var(--secondary-color);
+            border-color: #fb8c00;
+        }
+
+        .feedback {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 8px;
+            visibility: hidden;
+        }
+
+        .feedback.show {
+            visibility: visible;
+        }
+
+        .feedback.correct {
+            background-color: #e8f5e9;
+            color: var(--correct-color);
+        }
+
+        .feedback.wrong {
+            background-color: #ffebee;
+            color: var(--wrong-color);
+        }
+
+        .total-badge {
+            font-size: 12px;
+            fill: #6d4c41;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">單元：兩數相乘的順序</div>
+    
+    <div class="visual-area">
+        <svg viewBox="0 0 400 180" width="100%" height="100%">
+            <!-- Left Side: 3 boxes of 9 -->
+            <text x="20" y="20" font-size="14" fill="#555" font-weight="bold">甲買法：3 盒，每盒 9 顆</text>
+            <g id="groupA">
+                <!-- Box 1 -->
+                <rect x="15" y="30" width="50" height="50" rx="5" fill="none" stroke="#ffb74d" stroke-width="2" />
+                <!-- Box 2 -->
+                <rect x="75" y="30" width="50" height="50" rx="5" fill="none" stroke="#ffb74d" stroke-width="2" />
+                <!-- Box 3 -->
+                <rect x="135" y="30" width="50" height="50" rx="5" fill="none" stroke="#ffb74d" stroke-width="2" />
+                
+                <!-- Chocolates in Box 1 -->
+                <g transform="translate(15, 30)">
+                    <circle cx="12" cy="12" r="4" fill="#6d4c41" /><circle cx="25" cy="12" r="4" fill="#6d4c41" /><circle cx="38" cy="12" r="4" fill="#6d4c41" />
+                    <circle cx="12" cy="25" r="4" fill="#6d4c41" /><circle cx="25" cy="25" r="4" fill="#6d4c41" /><circle cx="38" cy="25" r="4" fill="#6d4c41" />
+                    <circle cx="12" cy="38" r="4" fill="#6d4c41" /><circle cx="25" cy="38" r="4" fill="#6d4c41" /><circle cx="38" cy="38" r="4" fill="#6d4c41" />
+                </g>
+                <!-- Chocolates in Box 2 -->
+                <g transform="translate(75, 30)">
+                    <circle cx="12" cy="12" r="4" fill="#6d4c41" /><circle cx="25" cy="12" r="4" fill="#6d4c41" /><circle cx="38" cy="12" r="4" fill="#6d4c41" />
+                    <circle cx="12" cy="25" r="4" fill="#6d4c41" /><circle cx="25" cy="25" r="4" fill="#6d4c41" /><circle cx="38" cy="25" r="4" fill="#6d4c41" />
+                    <circle cx="12" cy="38" r="4" fill="#6d4c41" /><circle cx="25" cy="38" r="4" fill="#6d4c41" /><circle cx="38" cy="38" r="4" fill="#6d4c41" />
+                </g>
+                <!-- Chocolates in Box 3 -->
+                <g transform="translate(135, 30)">
+                    <circle cx="12" cy="12" r="4" fill="#6d4c41" /><circle cx="25" cy="12" r="4" fill="#6d4c41" /><circle cx="38" cy="12" r="4" fill="#6d4c41" />
+                    <circle cx="12" cy="25" r="4" fill="#6d4c41" /><circle cx="25" cy="25" r="4" fill="#6d4c41" /><circle cx="38" cy="25" r="4" fill="#6d4c41" />
+                    <circle cx="12" cy="38" r="4" fill="#6d4c41" /><circle cx="25" cy="38" r="4" fill="#6d4c41" /><circle cx="38" cy="38" r="4" fill="#6d4c41" />
+                </g>
+                <text x="70" y="100" class="total-badge" id="countA">共 9 × 3 = 27 顆</text>
+            </g>
+
+            <!-- Right Side: 9 boxes of 3 -->
+            <text x="220" y="20" font-size="14" fill="#555" font-weight="bold">乙買法：9 盒，每盒 3 顆</text>
+            <g id="groupB">
+                <!-- 9 small boxes -->
+                <g transform="translate(220, 30)">
+                    <!-- Row 1 -->
+                    <rect x="0" y="0" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <rect x="55" y="0" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <rect x="110" y="0" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <!-- Row 2 -->
+                    <rect x="0" y="30" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <rect x="55" y="30" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <rect x="110" y="30" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <!-- Row 3 -->
+                    <rect x="0" y="60" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <rect x="55" y="60" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+                    <rect x="110" y="60" width="45" height="20" rx="3" fill="none" stroke="#81c784" stroke-width="1.5" />
+
+                    <!-- Dots (simplified representation) -->
+                    <g fill="#6d4c41">
+                        <circle cx="10" cy="10" r="3"/><circle cx="22" cy="10" r="3"/><circle cx="34" cy="10" r="3"/>
+                        <circle cx="65" cy="10" r="3"/><circle cx="77" cy="10" r="3"/><circle cx="89" cy="10" r="3"/>
+                        <circle cx="120" cy="10" r="3"/><circle cx="132" cy="10" r="3"/><circle cx="144" cy="10" r="3"/>
+                        
+                        <circle cx="10" cy="40" r="3"/><circle cx="22" cy="40" r="3"/><circle cx="34" cy="40" r="3"/>
+                        <circle cx="65" cy="40" r="3"/><circle cx="77" cy="40" r="3"/><circle cx="89" cy="40" r="3"/>
+                        <circle cx="120" cy="40" r="3"/><circle cx="132" cy="40" r="3"/><circle cx="144" cy="40" r="3"/>
+
+                        <circle cx="10" cy="70" r="3"/><circle cx="22" cy="70" r="3"/><circle cx="34" cy="70" r="3"/>
+                        <circle cx="65" cy="70" r="3"/><circle cx="77" cy="70" r="3"/><circle cx="89" cy="70" r="3"/>
+                        <circle cx="120" cy="70" r="3"/><circle cx="132" cy="70" r="3"/><circle cx="144" cy="70" r="3"/>
+                    </g>
+                </g>
+                <text x="260" y="140" class="total-badge" id="countB">共 3 × 9 = 27 顆</text>
+            </g>
+            
+            <!-- Comparison Line -->
+            <line x1="200" y1="20" x2="200" y2="150" stroke="#eee" stroke-dasharray="4" />
+        </svg>
+    </div>
+
+    <div class="question-text">
+        巧克力一盒有 9 顆，買 3 盒；跟一盒 3 顆，買 9 盒，哪種買法得到的巧克力比較多？
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0)">一樣多（都是 27 顆）</button>
+        <button class="option-btn" onclick="checkAnswer(1)">一盒 9 顆的比較多</button>
+        <button class="option-btn" onclick="checkAnswer(2)">一盒 3 顆的比較多</button>
+        <button class="option-btn" onclick="checkAnswer(3)">不一定</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+</div>
+
+<script>
+    const correctIndex = 0;
+    let answered = false;
+
+    function checkAnswer(index) {
+        if (answered) return;
+
+        const feedback = document.getElementById('feedback');
+        const buttons = document.querySelectorAll('.option-btn');
+        
+        // Highlight selection
+        buttons[index].classList.add('selected');
+        answered = true;
+
+        if (index === correctIndex) {
+            feedback.textContent = "太棒了！乘法交換律：9 × 3 = 3 × 9";
+            feedback.className = "feedback show correct";
+            animateSuccess();
+        } else {
+            feedback.textContent = "再想一下，算算看總數喔！";
+            feedback.className = "feedback show wrong";
+            buttons[correctIndex].style.borderColor = "var(--correct-color)";
+        }
+    }
+
+    function animateSuccess() {
+        const groupA = document.getElementById('groupA');
+        const groupB = document.getElementById('groupB');
+        
+        let scale = 1;
+        let growing = true;
+        
+        const interval = setInterval(() => {
+            scale = growing ? 1.05 : 1;
+            groupA.setAttribute('transform', `scale(${scale})`);
+            groupB.setAttribute('transform', `scale(${scale})`);
+            growing = !growing;
+        }, 300);
+
+        setTimeout(() => clearInterval(interval), 1800);
+    }
+</script>
+
+</body>
+</html>

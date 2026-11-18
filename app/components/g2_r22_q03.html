@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-R-2-2 Q03 交換律卡組</title>
+<style>
+:root { --red:#e74c3c; --blue:#2980b9; --green:#27ae60; --gold:#f5b301; --ink:#3a3a3a; --bg:#fffaf0; }
+body { margin:0; display:flex; justify-content:center; align-items:center; background:#e8e8e8; font-family:"Microsoft JhengHei",sans-serif; }
+.wrap { width:100%; max-width:480px; height:420px; background:var(--bg); box-sizing:border-box; overflow:hidden; position:relative; display:flex; flex-direction:column; padding:12px 14px; border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+.question-area { font-size:1rem; font-weight:bold; color:var(--ink); text-align:center; margin-bottom:6px; line-height:1.4; }
+.canvas-area { flex:1; min-height:0; display:flex; justify-content:center; align-items:center; margin-bottom:6px; }
+.canvas-area svg { width:100%; height:100%; }
+.options-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; }
+.opt-btn { padding:8px 6px; border:2px solid #ddd; border-radius:10px; background:#fff; cursor:pointer; font-size:.92rem; transition:all .2s; text-align:center; }
+.opt-btn:hover { border-color:var(--blue); background:#f0f7ff; }
+.opt-btn.selected { background:var(--blue); color:#fff; border-color:var(--blue); }
+.controls { display:flex; flex-direction:column; align-items:center; gap:4px; }
+#feedback { height:20px; font-weight:bold; font-size:.92rem; text-align:center; }
+#feedback.success { color:var(--green); }
+#feedback.fail { color:var(--red); }
+.check-btn { padding:9px 42px; background:#ffcc80; border:none; border-radius:22px; font-size:1.05rem; font-weight:bold; color:#5d4037; cursor:pointer; box-shadow:0 3px 0 #ef6c00; }
+.check-btn:active { transform:translateY(2px); box-shadow:0 1px 0 #ef6c00; }
+.tool-btn { padding:5px 16px; background:#fff; border:2px solid var(--blue); color:var(--blue); border-radius:16px; font-size:.88rem; font-weight:bold; cursor:pointer; }
+.tool-btn:active { transform:translateY(1px); }
+.toolbar { display:flex; justify-content:center; gap:8px; margin-bottom:4px; }
+.mcard { transition: transform .55s cubic-bezier(.45,0,.55,1); }
+.mcard rect { transition: stroke .15s; }
+.mcard.alien rect { stroke:#e74c3c !important; stroke-width:4; stroke-dasharray:6,3; animation: shake .5s; }
+@keyframes shake { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="question-area">下列哪一個算式的答案和 7＋6＋3 不一樣？</div>
+  <div class="toolbar"><button class="tool-btn" id="btnShuffle">🔄 換順序看看</button></div>
+  <div class="canvas-area">
+    <svg viewBox="0 0 440 150" preserveAspectRatio="xMidYMid meet">
+      <g class="mcard" id="mc7">
+        <rect x="68" y="24" width="64" height="64" rx="12" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+        <text x="100" y="68" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle">7</text>
+      </g>
+      <g class="mcard" id="mc6">
+        <rect x="173" y="24" width="64" height="64" rx="12" fill="#2980b9" stroke="#1f618d" stroke-width="2"/>
+        <text x="205" y="68" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle">6</text>
+      </g>
+      <g class="mcard" id="mc3">
+        <rect x="278" y="24" width="64" height="64" rx="12" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+        <text x="310" y="68" font-size="28" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
+      </g>
+      <text x="152" y="66" font-size="26" font-weight="bold" fill="#666" text-anchor="middle">＋</text>
+      <text x="257" y="66" font-size="26" font-weight="bold" fill="#666" text-anchor="middle">＋</text>
+      <text x="360" y="66" font-size="26" font-weight="bold" fill="#666" text-anchor="middle">＝</text>
+      <rect x="376" y="34" width="56" height="46" rx="10" fill="#f5b301" stroke="#b7950b" stroke-width="2"/>
+      <text x="404" y="67" font-size="24" font-weight="bold" fill="#fff" text-anchor="middle" id="sumChip">16</text>
+      <text x="220" y="126" font-size="13" fill="#888" text-anchor="middle">數字卡是 7、6、3，點選項看看卡片排得出來嗎？</text>
+    </svg>
+  </div>
+  <div class="options-grid">
+    <div class="opt-btn" data-idx="0">1. 7＋3＋6</div>
+    <div class="opt-btn" data-idx="1">2. 6＋3＋7</div>
+    <div class="opt-btn" data-idx="2">3. 6＋7＋4</div>
+    <div class="opt-btn" data-idx="3">4. 3＋6＋7</div>
+  </div>
+  <div class="controls">
+    <div id="feedback"></div>
+    <button class="check-btn" onclick="submitAnswer()">檢查答案</button>
+  </div>
+</div>
+<script>
+let selectedIdx = null;
+const correctIdx = 2;
+const feedbackEl = document.getElementById('feedback');
+const optBtns = document.querySelectorAll('.opt-btn');
+
+optBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    optBtns.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedIdx = parseInt(btn.getAttribute('data-idx'));
+    feedbackEl.textContent = '';
+    feedbackEl.className = '';
+    tryArrange(btn.textContent);
+  });
+});
+
+/* --- 交換順序卡組：任何排列都是 7、6、3 → ＝16 --- */
+const slotX = [100, 205, 310];
+const homeX = { 7: 100, 6: 205, 3: 310 };
+const cardEls = { 7: document.getElementById('mc7'), 6: document.getElementById('mc6'), 3: document.getElementById('mc3') };
+let order = [7, 6, 3];
+const perms = [
+  [7, 6, 3], [7, 3, 6], [6, 7, 3], [6, 3, 7], [3, 7, 6], [3, 6, 7]
+];
+let permIdx = 0;
+
+function applyOrder(seq) {
+  order = seq.slice();
+  seq.forEach((v, i) => {
+    cardEls[v].style.transform = 'translateX(' + (slotX[i] - homeX[v]) + 'px)';
+  });
+}
+
+function clearAlien() { Object.values(cardEls).forEach(el => el.classList.remove('alien')); }
+
+/* 點選項：排得出來就真的排；排不出來（數字被換掉）該卡抖動警示 */
+function tryArrange(text) {
+  clearAlien();
+  const digits = (text.match(/\d/g) || []).map(Number);
+  if (digits.length !== 3) return;
+  const isPerm = digits.slice().sort().join('') === '367';
+  if (isPerm) { applyOrder(digits); return; }
+  /* 數字被換掉（如 4）：前兩張照排，第三張卡抖動警示排不出來 */
+  const seq = [];
+  digits.forEach(d => { if ([7, 6, 3].includes(d) && !seq.includes(d)) seq.push(d); });
+  [7, 6, 3].forEach(v => { if (!seq.includes(v)) seq.push(v); });
+  applyOrder(seq);
+  const alienCard = cardEls[seq[2]];
+  alienCard.classList.add('alien');
+  setTimeout(clearAlien, 1100);
+}
+
+document.getElementById('btnShuffle').addEventListener('click', () => {
+  clearAlien();
+  permIdx = (permIdx + 1) % perms.length;
+  applyOrder(perms[permIdx]);
+});
+
+function submitAnswer() {
+  if (selectedIdx === null) {
+    feedbackEl.textContent = '請先選擇一個答案';
+    feedbackEl.className = 'fail';
+    return;
+  }
+  const result = window.check();
+  if (result.isCorrect) {
+    feedbackEl.textContent = '太棒了！6＋7＋4 把 3 換成了 4，算出來是 17，跟 16 不一樣！';
+    feedbackEl.className = 'success';
+  } else {
+    feedbackEl.textContent = '再看看喔！只要數字還是 7、6、3，怎麼換順序答案都是 16。';
+    feedbackEl.className = 'fail';
+  }
+}
+
+/* 034 規範契約 */
+window.check = function() {
+  const isCorrect = (selectedIdx === correctIdx);
+  return { isCorrect: isCorrect, score: isCorrect ? 100 : 0 };
+};
+</script>
+</body>
+</html>

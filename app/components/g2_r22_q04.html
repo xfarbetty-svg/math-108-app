@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-2 Q04 天平比較</title>
+    <style>
+        :root {
+            --bg-color: #fdfaf2;
+            --wood-color: #d2a679;
+            --metal-color: #95a5a6;
+            --accent-pink: #ffb7b2;
+            --accent-blue: #a2d2ff;
+            --accent-green: #b9fbc0;
+            --text-dark: #5d4037;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eee;
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+        }
+
+        .container {
+            width: 420px;
+            height: 420px;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            fill: var(--text-dark);
+            text-anchor: middle;
+        }
+
+        .expression {
+            font-size: 18px;
+            font-weight: bold;
+            fill: var(--text-dark);
+        }
+
+        .number-box {
+            rx: 8;
+            ry: 8;
+            stroke-width: 2;
+            stroke: #5d4037;
+        }
+
+        .bracket-label {
+            font-size: 14px;
+            fill: #795548;
+            font-weight: bold;
+        }
+
+        /* 動畫效果：輕微呼吸感 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+        .scale-group {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- 背景裝飾 -->
+        <circle cx="420" cy="0" r="100" fill="#fff9c4" opacity="0.5" />
+        <circle cx="0" cy="420" r="80" fill="#e1f5fe" opacity="0.5" />
+
+        <!-- 標題 -->
+        <text x="210" y="40" class="title">加法結合律：天平平衡</text>
+        <text x="210" y="65" font-size="14" fill="#8d6e63" text-anchor="middle">比較 (46 + 18) + 4 與 46 + (18 + 4)</text>
+
+        <!-- 天平底座 -->
+        <path d="M160 380 Q210 370 260 380 L270 400 L150 400 Z" fill="#8d6e63" />
+        <rect x="202" y="180" width="16" height="200" rx="8" fill="#a1887f" />
+        
+        <!-- 刻度盤 -->
+        <circle cx="210" cy="180" r="25" fill="#eee" stroke="#8d6e63" stroke-width="2" />
+        <line x1="210" y1="160" x2="210" y2="170" stroke="#8d6e63" stroke-width="2" />
+        <line x1="195" y1="170" x2="200" y2="175" stroke="#8d6e63" stroke-width="1" />
+        <line x1="225" y1="170" x2="220" y2="175" stroke="#8d6e63" stroke-width="1" />
+        
+        <!-- 指針 (垂直 0 刻度) -->
+        <line x1="210" y1="180" x2="210" y2="155" stroke="#e53935" stroke-width="3" stroke-linecap="round" />
+
+        <!-- 天平橫梁 (100% 水平) -->
+        <g class="scale-group">
+            <rect x="60" y="175" width="300" height="10" rx="5" fill="#d2a679" />
+            <circle cx="210" cy="180" r="6" fill="#5d4037" />
+
+            <!-- 左側吊繩與托盤 -->
+            <g transform="translate(80, 185)">
+                <line x1="0" y1="0" x2="-40" y2="80" stroke="#bcaaa4" stroke-width="2" />
+                <line x1="0" y1="0" x2="40" y2="80" stroke="#bcaaa4" stroke-width="2" />
+                <path d="M-50 80 L50 80 Q50 100 0 100 Q-50 100 -50 80 Z" fill="#cfd8dc" stroke="#90a4ae" stroke-width="2" />
+                
+                <!-- 左側內容 (46+18)+4 -->
+                <g transform="translate(-35, 35)">
+                    <!-- (46+18) 組合 -->
+                    <rect x="0" y="0" width="50" height="35" class="number-box" fill="#ffccbc" />
+                    <text x="25" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#d84315">(46+18)</text>
+                    <!-- +4 -->
+                    <rect x="55" y="10" width="20" height="25" class="number-box" fill="#c8e6c9" />
+                    <text x="65" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#2e7d32">4</text>
+                </g>
+                <text x="0" y="125" class="expression" text-anchor="middle">(46 + 18) + 4</text>
+                <text x="0" y="145" font-size="16" fill="#5d4037" font-weight="bold" text-anchor="middle">= 68</text>
+            </g>
+
+            <!-- 右側吊繩與托盤 -->
+            <g transform="translate(340, 185)">
+                <line x1="0" y1="0" x2="-40" y2="80" stroke="#bcaaa4" stroke-width="2" />
+                <line x1="0" y1="0" x2="40" y2="80" stroke="#bcaaa4" stroke-width="2" />
+                <path d="M-50 80 L50 80 Q50 100 0 100 Q-50 100 -50 80 Z" fill="#cfd8dc" stroke="#90a4ae" stroke-width="2" />
+                
+                <!-- 右側內容 46+(18+4) -->
+                <g transform="translate(-45, 35)">
+                    <!-- 46 -->
+                    <rect x="0" y="10" width="30" height="25" class="number-box" fill="#fff9c4" />
+                    <text x="15" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#fbc02d">46</text>
+                    <!-- (18+4) 組合 -->
+                    <rect x="35" y="0" width="55" height="35" class="number-box" fill="#bbdefb" />
+                    <text x="62" y="23" text-anchor="middle" font-size="14" font-weight="bold" fill="#1976d2">(18+4)</text>
+                </g>
+                <text x="0" y="125" class="expression" text-anchor="middle">46 + (18 + 4)</text>
+                <text x="0" y="145" font-size="16" fill="#5d4037" font-weight="bold" text-anchor="middle">= 68</text>
+            </g>
+        </g>
+
+        <!-- 等號與結論 -->
+        <g transform="translate(210, 310)">
+            <rect x="-20" y="-15" width="40" height="30" rx="5" fill="#fff" stroke="#8d6e63" stroke-dasharray="2,2" />
+            <text x="0" y="7" text-anchor="middle" font-size="24" font-weight="bold" fill="#5d4037">=</text>
+        </g>
+        
+        <text x="210" y="360" text-anchor="middle" font-size="16" fill="#2e7d32" font-weight="bold">左右兩邊相等，天平保持平衡！</text>
+    </svg>
+</div>
+
+</body>
+</html>

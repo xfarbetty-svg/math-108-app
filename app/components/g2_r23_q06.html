@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-3 Q06 - 乘法交換律互動教具</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --bg-color: #f8f9fa;
+            --apple-red: #ff4d4d;
+            --leaf-green: #2eb82e;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .question-box {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            min-height: 3.5rem;
+        }
+
+        .visual-area {
+            background: #fff;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            height: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #apple-svg {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .apple-group {
+            transition: transform 0.8s;
+        }
+
+        .formula-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+            height: 1.5rem;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+        }
+
+        .btn-rotate {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            box-shadow: 0 4px 0 #e68a00;
+        }
+
+        .btn-rotate:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #e68a00;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px 8px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #f0f7ff;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            height: 1.2rem;
+        }
+
+        /* 蘋果元件樣式 */
+        .apple-unit {
+            transition: transform 0.8s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="question-box" id="question">
+        桌上有 5 盤蘋果，每盤 2 個；和 2 盤蘋果，每盤 5 個，總數量一樣多嗎？
+    </div>
+
+    <div class="visual-area">
+        <svg id="main-svg" width="300" height="220" viewBox="0 0 300 220">
+            <!-- 定義蘋果圖形 -->
+            <defs>
+                <g id="apple-icon">
+                    <circle cx="0" cy="0" r="14" fill="#ff4d4d" />
+                    <path d="M 0 -14 Q 3 -18 1 -22" stroke="#4d2600" fill="none" stroke-width="2"/>
+                    <ellipse cx="4" cy="-20" rx="5" ry="2.5" fill="#2eb82e" transform="rotate(-30, 4, -20)"/>
+                </g>
+                <ellipse id="plate" cx="0" cy="0" rx="45" ry="20" fill="#f0f0f0" stroke="#ddd" stroke-width="1" />
+            </defs>
+
+            <g id="viewport-group" transform="translate(150, 110)">
+                <g id="rotation-container">
+                    <!-- 蘋果與盤子將由 JS 動態生成 -->
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <div class="formula-display" id="formula">2 × 5 = 10</div>
+
+    <div class="controls">
+        <button class="btn-rotate" onclick="toggleRotation()">🔄 旋轉視角 90 度</button>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">一樣多，都是 10 個</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">5 盤的比較多</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">2 盤的比較多</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">無法比較</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+</div>
+
+<script>
+    let isRotated = false;
+    const container = document.getElementById('rotation-container');
+    const formula = document.getElementById('formula');
+    const feedback = document.getElementById('feedback');
+
+    // 初始化蘋果陣列 (5x2)
+    function initApples() {
+        container.innerHTML = '';
+        
+        // 5 盤 (垂直排列)
+        for (let i = 0; i < 5; i++) {
+            const py = (i - 2) * 42;
+            
+            // 盤子
+            const plate = document.createElementNS("http://www.w3.org/2000/svg", "use");
+            plate.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#plate");
+            plate.setAttribute("x", "0");
+            plate.setAttribute("y", py);
+            container.appendChild(plate);
+
+            // 每盤 2 個蘋果
+            for (let j = 0; j < 2; j++) {
+                const px = (j - 0.5) * 40;
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("class", "apple-unit");
+                g.setAttribute("transform", `translate(${px}, ${py})`);
+                
+                const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+                use.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#apple-icon");
+                g.appendChild(use);
+                container.appendChild(g);
+            }
+        }
+    }
+
+    function toggleRotation() {
+        isRotated = !isRotated;
+        const rotationContainer = document.getElementById('rotation-container');
+        const appleUnits = document.querySelectorAll('.apple-unit');
+        
+        if (isRotated) {
+            // 旋轉為 2x5
+            rotationContainer.style.transform = "rotate(90deg)";
+            // 修正蘋果方向，使其保持垂直
+            appleUnits.forEach(unit => {
+                unit.style.transform += " rotate(-90deg)";
+            });
+            formula.innerText = "5 × 2 = 10";
+            formula.style.color = "#e91e63";
+        } else {
+            // 回到 5x2
+            rotationContainer.style.transform = "rotate(0deg)";
+            appleUnits.forEach(unit => {
+                const currentTransform = unit.getAttribute("transform");
+                unit.style.transform = "rotate(0deg)";
+            });
+            formula.innerText = "2 × 5 = 10";
+            formula.style.color = "var(--primary-color)";
+        }
+    }
+
+    function checkAnswer(index, btn) {
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(b => b.classList.remove('correct', 'wrong'));
+
+        if (index === 0) {
+            btn.classList.add('correct');
+            feedback.innerText = "太棒了！乘法交換順序，結果不變喔！";
+            feedback.style.color = "var(--success-color)";
+            triggerWinEffect();
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerText = "再數數看，總數真的有變嗎？";
+            feedback.style.color = "var(--error-color)";
+        }
+    }
+
+    function triggerWinEffect() {
+        const svg = document.getElementById('main-svg');
+        svg.style.filter = "drop-shadow(0 0 10px gold)";
+        setTimeout(() => {
+            svg.style.filter = "none";
+        }, 1000);
+    }
+
+    // 啟動
+    initApples();
+</script>
+
+</body>
+</html>

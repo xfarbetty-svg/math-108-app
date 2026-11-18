@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-4 Q05 加減關係教具</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --success-color: #7ed321;
+            --error-color: #d0021b;
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .question-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .visual-area {
+            width: 100%;
+            height: 180px;
+            background-color: var(--bg-color);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #f0f7ff;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .feedback-text {
+            margin-top: 15px;
+            height: 24px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* SVG Animations */
+        .tape-rect {
+            transition: all 0.5s ease;
+        }
+        
+        .highlight-gap {
+            stroke: var(--secondary-color);
+            stroke-width: 3;
+            stroke-dasharray: 5,5;
+            fill: rgba(245, 166, 35, 0.1);
+            opacity: 0;
+        }
+
+        .visible {
+            opacity: 1 !important;
+        }
+
+        .fade-out {
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="question-header">
+        如果 <span style="color:var(--primary-color)">A</span> + <span style="color:var(--success-color)">15</span> = <span style="color:var(--secondary-color)">B</span>，<br>那麼 <span style="color:var(--secondary-color)">B</span> － <span style="color:var(--primary-color)">A</span> 等於多少？
+    </div>
+
+    <div class="visual-area">
+        <svg width="360" height="160" viewBox="0 0 360 160">
+            <!-- B Total Line -->
+            <rect id="rectB" x="30" y="30" width="300" height="40" rx="5" fill="#f5a623" opacity="0.8" />
+            <text x="180" y="55" text-anchor="middle" fill="white" font-weight="bold">B (全部)</text>
+            
+            <!-- A Part -->
+            <rect id="rectA" x="30" y="90" width="180" height="40" rx="5" fill="#4a90e2" />
+            <text id="textA" x="120" y="115" text-anchor="middle" fill="white" font-weight="bold">A</text>
+            
+            <!-- 15 Part -->
+            <rect id="rect15" x="210" y="90" width="120" height="40" rx="5" fill="#7ed321" />
+            <text id="text15" x="270" y="115" text-anchor="middle" fill="white" font-weight="bold">15</text>
+
+            <!-- Relationship Indicator -->
+            <path id="gapIndicator" d="M 210 80 L 210 140" stroke="#333" stroke-width="2" stroke-dasharray="4" opacity="0" />
+            <rect id="highlightBox" x="210" y="30" width="120" height="100" class="highlight-gap" />
+            
+            <!-- Labels -->
+            <text id="formulaLabel" x="180" y="155" text-anchor="middle" font-size="14" fill="#666">線段圖：A 與 15 合起來是 B</text>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">15</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">0</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">30</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">無法確定</button>
+    </div>
+
+    <div id="feedback" class="feedback-text"></div>
+</div>
+
+<script>
+    const correctAnswer = 0;
+    let answered = false;
+
+    function checkAnswer(index, btn) {
+        if (answered) return;
+        
+        const feedback = document.getElementById('feedback');
+        const rectA = document.getElementById('rectA');
+        const textA = document.getElementById('textA');
+        const highlightBox = document.getElementById('highlightBox');
+        const gapIndicator = document.getElementById('gapIndicator');
+        const formulaLabel = document.getElementById('formulaLabel');
+
+        if (index === correctAnswer) {
+            answered = true;
+            btn.classList.add('correct');
+            feedback.innerText = "太棒了！B 減去 A 剩下的就是 15。";
+            feedback.style.color = "var(--success-color)";
+            
+            // 動態視覺效果：展示 B - A = 15
+            rectA.classList.add('fade-out');
+            textA.classList.add('fade-out');
+            highlightBox.classList.add('visible');
+            gapIndicator.classList.add('visible');
+            formulaLabel.innerHTML = "算式：<tspan fill='#f5a623'>B</tspan> － <tspan fill='#4a90e2'>A</tspan> ＝ <tspan fill='#7ed321' font-weight='bold'>15</tspan>";
+            
+            // 慶祝小動畫
+            btn.style.transform = "scale(1.1)";
+            setTimeout(() => btn.style.transform = "scale(1)", 200);
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerText = "再想一想，看線段圖的關係喔！";
+            feedback.style.color = "var(--error-color)";
+            setTimeout(() => {
+                btn.classList.remove('wrong');
+            }, 1000);
+        }
+    }
+</script>
+
+</body>
+</html>

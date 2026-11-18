@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-D-2-1 Q07 分類與呈現 - 正字記號</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #4caf50;
+            --error: #f44336;
+            --bg: #f9f9f9;
+            --text: #333;
+            --stroke: #2c3e50;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            padding: 20px;
+            border: 2px solid #eee;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .unit-tag {
+            display: inline-block;
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .question {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        /* SVG 劃記區域 */
+        .tally-container {
+            background: #fffdf0;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tally-svg {
+            width: 280px;
+            height: 80px;
+        }
+
+        .stroke {
+            stroke: var(--stroke);
+            stroke-width: 4;
+            stroke-linecap: round;
+            fill: none;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        /* 控制按鈕 */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-demo {
+            flex: 1;
+            padding: 10px;
+            background: #fff;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-demo:active { background: var(--primary); color: white; }
+
+        /* 選項區域 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .option-btn:hover { border-color: var(--primary); background: #f0f7ff; }
+        .option-btn.correct { background: var(--success); color: white; border-color: var(--success); }
+        .option-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
+
+        /* 回饋訊息 */
+        #feedback {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            min-height: 24px;
+            font-size: 1.1rem;
+        }
+
+        .count-badge {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: #ff9800;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        @keyframes draw {
+            from { stroke-dashoffset: 50; }
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="header">
+        <span class="unit-tag">G2-D-2-1 分類與呈現</span>
+        <div class="question">
+            小明用「正」字記錄班上投給小熊的人數，記錄為「正正下」，代表一共有多少人？
+        </div>
+    </div>
+
+    <div class="tally-container">
+        <div class="count-badge">目前劃記：<span id="count-num">0</span></div>
+        <svg class="tally-svg" viewBox="0 0 280 80" id="svg-canvas">
+            <!-- 劃記會由 JS 動態生成 -->
+        </svg>
+    </div>
+
+    <div class="controls">
+        <button class="btn-demo" onclick="addStroke()">增加 1 劃</button>
+        <button class="btn-demo" onclick="resetTally()" style="border-color:#999; color:#999;">重置</button>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">13 人</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">10 人</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">12 人</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">14 人</button>
+    </div>
+
+    <div id="feedback"></div>
+</div>
+
+<script>
+    let currentCount = 0;
+    const maxCount = 13;
+    const svgCanvas = document.getElementById('svg-canvas');
+    const countNum = document.getElementById('count-num');
+    const feedback = document.getElementById('feedback');
+
+    // 正字劃記座標定義 (相對座標)
+    const strokesData = [
+        { x1: 10, y1: 15, x2: 50, y2: 15 }, // 1. 一 (上橫)
+        { x1: 30, y1: 15, x2: 30, y2: 35 }, // 2. 丨 (中豎)
+        { x1: 30, y1: 35, x2: 50, y2: 35 }, // 3. 一 (中橫)
+        { x1: 10, y1: 15, x2: 10, y2: 55 }, // 4. 丨 (左豎)
+        { x1: 10, y1: 55, x2: 50, y2: 55 }  // 5. 一 (下橫)
+    ];
+
+    function renderTally() {
+        svgCanvas.innerHTML = '';
+        for (let i = 0; i < currentCount; i++) {
+            const charIndex = Math.floor(i / 5); // 第幾個字
+            const strokeIndex = i % 5;           // 該字的第幾劃
+            const offsetX = charIndex * 70;      // 每個字間距 70
+
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            const data = strokesData[strokeIndex];
+            
+            line.setAttribute("x1", data.x1 + offsetX);
+            line.setAttribute("y1", data.y1);
+            line.setAttribute("x2", data.x2 + offsetX);
+            line.setAttribute("y2", data.y2);
+            line.setAttribute("class", "stroke");
+            
+            // 模擬書寫動畫
+            const length = Math.sqrt(Math.pow(data.x2 - data.x1, 2) + Math.pow(data.y2 - data.y1, 2));
+            line.style.strokeDasharray = length;
+            line.style.strokeDashoffset = length;
+            line.style.animation = "draw 0.3s forwards";
+            
+            svgCanvas.appendChild(line);
+        }
+        countNum.innerText = currentCount;
+    }
+
+    function addStroke() {
+        if (currentCount < maxCount) {
+            currentCount++;
+            renderTally();
+            feedback.innerText = "";
+        } else {
+            feedback.innerText = "已完成「正正下」劃記！";
+            feedback.style.color = "#666";
+        }
+    }
+
+    function resetTally() {
+        currentCount = 0;
+        renderTally();
+        feedback.innerText = "";
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.className = 'option-btn';
+        });
+    }
+
+    function checkAnswer(index, btn) {
+        if (currentCount < maxCount) {
+            feedback.innerText = "請先點擊「增加 1 劃」觀察劃記過程！";
+            feedback.style.color = "#f39c12";
+            return;
+        }
+
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.className = 'option-btn');
+
+        if (index === 0) {
+            btn.classList.add('correct');
+            feedback.innerText = "太棒了！正(5) + 正(5) + 下(3) = 13";
+            feedback.style.color = "var(--success)";
+            createConfetti();
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerText = "再數數看，一個「正」是 5 劃喔！";
+            feedback.style.color = "var(--error)";
+        }
+    }
+
+    function createConfetti() {
+        // 簡單的成功特效
+        for(let i=0; i<20; i++) {
+            const dot = document.createElement('div');
+            dot.style.position = 'fixed';
+            dot.style.left = Math.random() * 100 + 'vw';
+            dot.style.top = '-10px';
+            dot.style.width = '8px';
+            dot.style.height = '8px';
+            dot.style.backgroundColor = ['#ffeb3b','#ff5722','#4caf50','#2196f3'][Math.floor(Math.random()*4)];
+            dot.style.borderRadius = '50%';
+            dot.style.zIndex = '100';
+            document.body.appendChild(dot);
+            
+            const animation = dot.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(100vh) rotate(${Math.random()*360}deg)`, opacity: 0 }
+            ], { duration: 1000 + Math.random()*1000, easing: 'cubic-bezier(0, .9, .57, 1)' });
+            
+            animation.onfinish = () => dot.remove();
+        }
+    }
+
+    // 初始化
+    renderTally();
+</script>
+
+</body>
+</html>

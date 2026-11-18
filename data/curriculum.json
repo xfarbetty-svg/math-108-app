@@ -265,33 +265,33 @@
           "code": "R-2-2",
           "title": "三數相加，順序改變不影響其和",
           "full_text": "三數相加，順序改變不影響其和：加法交換律和結合律的綜合。可併入其他教學活動。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度臺北市南湖國小/忠孝國小段考真題"
         },
         {
           "code": "R-2-3",
           "title": "兩數相乘的順序不影響其積",
           "full_text": "兩數相乘的順序不影響其積：乘法交換律。可併入其他教學活動。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度臺北市南湖國小/忠孝國小段考真題"
         },
         {
           "code": "R-2-4",
           "title": "加法與減法的關係",
           "full_text": "加法與減法的關係：加減互逆。應用於驗算與解題。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度臺北市南湖國小/忠孝國小段考真題"
         },
         {
           "code": "D-2-1",
           "title": "分類與呈現",
           "full_text": "分類與呈現：以操作活動為主。能蒐集、分類、記錄、呈現資料、生活物件或幾何形體。討論分類之中還可以再分類的情況。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 5,
+          "verified_source": "112學年度臺北市南湖國小/忠孝國小段考真題"
         }
       ]
     },

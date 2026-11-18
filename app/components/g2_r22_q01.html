@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2-R-2-2 Q01 湊十法動態卡片</title>
+<style>
+:root { --red:#e74c3c; --blue:#2980b9; --green:#27ae60; --gold:#f5b301; --ink:#3a3a3a; --bg:#fffaf0; }
+body { margin:0; display:flex; justify-content:center; align-items:center; background:#e8e8e8; font-family:"Microsoft JhengHei",sans-serif; }
+.wrap { width:100%; max-width:480px; height:420px; background:var(--bg); box-sizing:border-box; overflow:hidden; position:relative; display:flex; flex-direction:column; padding:12px 14px; border-radius:14px; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+.question-area { font-size:1rem; font-weight:bold; color:var(--ink); text-align:center; margin-bottom:6px; line-height:1.4; }
+.canvas-area { flex:1; min-height:0; display:flex; justify-content:center; align-items:center; margin-bottom:6px; }
+.canvas-area svg { width:100%; height:100%; }
+.options-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:6px; }
+.opt-btn { padding:8px 6px; border:2px solid #ddd; border-radius:10px; background:#fff; cursor:pointer; font-size:.92rem; transition:all .2s; text-align:center; }
+.opt-btn:hover { border-color:var(--blue); background:#f0f7ff; }
+.opt-btn.selected { background:var(--blue); color:#fff; border-color:var(--blue); }
+.controls { display:flex; flex-direction:column; align-items:center; gap:4px; }
+#feedback { height:20px; font-weight:bold; font-size:.92rem; text-align:center; }
+#feedback.success { color:var(--green); }
+#feedback.fail { color:var(--red); }
+.check-btn { padding:9px 42px; background:#ffcc80; border:none; border-radius:22px; font-size:1.05rem; font-weight:bold; color:#5d4037; cursor:pointer; box-shadow:0 3px 0 #ef6c00; }
+.check-btn:active { transform:translateY(2px); box-shadow:0 1px 0 #ef6c00; }
+.tool-btn { padding:5px 16px; background:#fff; border:2px solid var(--blue); color:var(--blue); border-radius:16px; font-size:.88rem; font-weight:bold; cursor:pointer; }
+.tool-btn:active { transform:translateY(1px); }
+.toolbar { display:flex; justify-content:center; gap:8px; margin-bottom:4px; }
+.card { cursor:pointer; transition: transform .35s, opacity .35s; }
+.card rect { transition: stroke .2s; }
+.card.sel rect { stroke:#f5b301; stroke-width:4; }
+.card.gone { opacity:0; transform:scale(.4); }
+#mergedCard { opacity:0; transform:scale(.5); transition: transform .45s cubic-bezier(.34,1.56,.64,1), opacity .3s; pointer-events:none; }
+#mergedCard.show { opacity:1; transform:scale(1); }
+#mergeCaption { opacity:0; transition: opacity .4s; }
+#mergeCaption.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="question-area">計算 36＋18＋4 時，先把哪兩個數相加最簡便？</div>
+  <div class="toolbar"><button class="tool-btn" id="btnReset">🔄 重玩</button></div>
+  <div class="canvas-area">
+    <svg viewBox="0 0 440 190" preserveAspectRatio="xMidYMid meet">
+      <text x="152" y="60" font-size="26" font-weight="bold" fill="#666" text-anchor="middle" id="plus1">＋</text>
+      <text x="288" y="60" font-size="26" font-weight="bold" fill="#666" text-anchor="middle" id="plus2">＋</text>
+      <g class="card" id="card0" data-v="36">
+        <rect x="38" y="20" width="92" height="66" rx="12" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+        <text x="84" y="64" font-size="30" font-weight="bold" fill="#fff" text-anchor="middle">36</text>
+      </g>
+      <g class="card" id="card1" data-v="18">
+        <rect x="174" y="20" width="92" height="66" rx="12" fill="#2980b9" stroke="#1f618d" stroke-width="2"/>
+        <text x="220" y="64" font-size="30" font-weight="bold" fill="#fff" text-anchor="middle">18</text>
+      </g>
+      <g class="card" id="card2" data-v="4">
+        <rect x="310" y="20" width="92" height="66" rx="12" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+        <text x="356" y="64" font-size="30" font-weight="bold" fill="#fff" text-anchor="middle">4</text>
+      </g>
+      <g id="mergedCard">
+        <rect x="155" y="18" width="130" height="70" rx="14" fill="#f5b301" stroke="#b7950b" stroke-width="3" id="mergedRect"/>
+        <text x="220" y="64" font-size="32" font-weight="bold" fill="#fff" text-anchor="middle" id="mergedText">40</text>
+      </g>
+      <text x="220" y="165" font-size="20" font-weight="bold" fill="#3a3a3a" text-anchor="middle" id="mergeCaption">36＋4＝40（整十）</text>
+    </svg>
+  </div>
+  <div class="options-grid">
+    <div class="opt-btn" data-idx="0">1. 36＋18</div>
+    <div class="opt-btn" data-idx="1">2. 18＋4</div>
+    <div class="opt-btn" data-idx="2">3. 36＋4</div>
+    <div class="opt-btn" data-idx="3">4. 無法決定</div>
+  </div>
+  <div class="controls">
+    <div id="feedback"></div>
+    <button class="check-btn" onclick="submitAnswer()">檢查答案</button>
+  </div>
+</div>
+<script>
+let selectedIdx = null;
+const correctIdx = 2;
+const feedbackEl = document.getElementById('feedback');
+const optBtns = document.querySelectorAll('.opt-btn');
+
+optBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    optBtns.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedIdx = parseInt(btn.getAttribute('data-idx'));
+    feedbackEl.textContent = '';
+    feedbackEl.className = '';
+  });
+});
+
+/* --- 湊十卡片互動：點兩張卡合併，能湊成整十的合體變金色 --- */
+const cards = [...document.querySelectorAll('.card')];
+const mergedCard = document.getElementById('mergedCard');
+const mergedRect = document.getElementById('mergedRect');
+const mergedText = document.getElementById('mergedText');
+const mergeCaption = document.getElementById('mergeCaption');
+const plus1 = document.getElementById('plus1');
+const plus2 = document.getElementById('plus2');
+let picked = [];
+
+function resetMerge(keepPick) {
+  cards.forEach(c => c.classList.remove('gone', 'sel'));
+  mergedCard.classList.remove('show');
+  mergeCaption.classList.remove('show');
+  plus1.style.opacity = '1';
+  plus2.style.opacity = '1';
+  picked = keepPick ? picked : [];
+}
+
+cards.forEach(card => {
+  card.addEventListener('click', () => {
+    if (mergedCard.classList.contains('show')) resetMerge(false);
+    card.classList.add('sel');
+    picked.push(card);
+    if (picked.length === 2) {
+      const a = +picked[0].dataset.v, b = +picked[1].dataset.v;
+      const sum = a + b;
+      picked.forEach(c => { c.classList.remove('sel'); c.classList.add('gone'); });
+      plus1.style.opacity = '0';
+      plus2.style.opacity = '0';
+      const round10 = sum % 10 === 0;
+      mergedRect.setAttribute('fill', round10 ? '#f5b301' : '#9e9e9e');
+      mergedText.textContent = sum;
+      mergeCaption.textContent = a + '＋' + b + '＝' + sum + (round10 ? '（整十）' : '');
+      mergedCard.classList.add('show');
+      mergeCaption.classList.add('show');
+      picked = [];
+    }
+  });
+});
+
+document.getElementById('btnReset').addEventListener('click', () => resetMerge(false));
+
+function submitAnswer() {
+  if (selectedIdx === null) {
+    feedbackEl.textContent = '請先選擇一個答案';
+    feedbackEl.className = 'fail';
+    return;
+  }
+  const result = window.check();
+  if (result.isCorrect) {
+    feedbackEl.textContent = '太棒了！36 和 4 湊成整十 40，再算 40＋18＝58！';
+    feedbackEl.className = 'success';
+  } else {
+    feedbackEl.textContent = '再試試看！找個位相加能湊成 10 的兩個數！';
+    feedbackEl.className = 'fail';
+  }
+}
+
+/* 034 規範契約 */
+window.check = function() {
+  const isCorrect = (selectedIdx === correctIdx);
+  return { isCorrect: isCorrect, score: isCorrect ? 100 : 0 };
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-4 Q02 - 加減互逆運算</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5a623;
+            --success-color: #7ed321;
+            --error-color: #d0021b;
+            --bg-color: #f9fbfd;
+            --text-color: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .unit-tag {
+            display: inline-block;
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .visual-area {
+            width: 100%;
+            height: 160px;
+            margin-bottom: 20px;
+            background: #fff;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .feedback {
+            height: 24px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* SVG Styles */
+        .tape-rect { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .label-text { font-size: 14px; font-weight: bold; fill: #555; pointer-events: none; }
+        .math-symbol { font-size: 18px; font-weight: bold; fill: #333; }
+        .highlight { fill: var(--secondary-color) !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="unit-tag">G2-R-2-4 加減法的關係</div>
+    <div class="question-text">
+        <span id="q-box" style="border: 2px solid #4a90e2; padding: 2px 10px; border-radius: 4px;">□</span> － 18 ＝ 36<br>
+        <span style="font-size: 16px; color: #666;">□ 裡的數是多少？</span>
+    </div>
+
+    <div class="visual-area">
+        <svg width="340" height="150" viewBox="0 0 340 150">
+            <!-- 全體線段 (未知) -->
+            <rect id="whole-bar" x="40" y="20" width="260" height="30" rx="5" fill="none" stroke="#ccc" stroke-dasharray="5,5" stroke-width="2" />
+            <text id="whole-label" x="170" y="40" text-anchor="middle" class="label-text">?</text>
+            
+            <!-- 部分線段 1 (36) -->
+            <rect id="part-36" x="40" y="80" width="173" height="30" rx="5" fill="#7ed321" opacity="0.8" class="tape-rect" />
+            <text id="label-36" x="126" y="100" text-anchor="middle" class="label-text" fill="white">36</text>
+            
+            <!-- 部分線段 2 (18) -->
+            <rect id="part-18" x="213" y="80" width="87" height="30" rx="5" fill="#4a90e2" opacity="0.8" class="tape-rect" />
+            <text id="label-18" x="256" y="100" text-anchor="middle" class="label-text" fill="white">18</text>
+
+            <!-- 箭頭與符號 -->
+            <path d="M 40 60 L 300 60" stroke="#999" stroke-width="1" marker-end="url(#arrow)" />
+            <text x="170" y="75" text-anchor="middle" class="label-text" style="font-size: 10px;">全部的量</text>
+            
+            <!-- 逆向運算提示 -->
+            <g id="hint-group" opacity="0">
+                <text x="170" y="135" text-anchor="middle" class="math-symbol">36 ＋ 18 ＝ 54</text>
+            </g>
+        </svg>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">54</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">18</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">44</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">28</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+</div>
+
+<script>
+    const correctAnswer = 0;
+    let solved = false;
+
+    function checkAnswer(index, btn) {
+        if (solved) return;
+
+        const feedback = document.getElementById('feedback');
+        const qBox = document.getElementById('q-box');
+        
+        if (index === correctAnswer) {
+            solved = true;
+            btn.classList.add('correct');
+            feedback.innerText = "太棒了！減法可以用加法找回原來的數。";
+            feedback.style.color = "var(--success-color)";
+            qBox.innerText = "54";
+            qBox.style.backgroundColor = "var(--success-color)";
+            qBox.style.color = "white";
+            
+            animateSuccess();
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerText = "再試試看！想一想，全部是多少？";
+            feedback.style.color = "var(--error-color)";
+            setTimeout(() => {
+                btn.classList.remove('wrong');
+            }, 500);
+        }
+    }
+
+    function animateSuccess() {
+        const part36 = document.getElementById('part-36');
+        const part18 = document.getElementById('part-18');
+        const label36 = document.getElementById('label-36');
+        const label18 = document.getElementById('label-18');
+        const wholeBar = document.getElementById('whole-bar');
+        const wholeLabel = document.getElementById('whole-label');
+        const hintGroup = document.getElementById('hint-group');
+
+        // 1. 兩段向上移動合併
+        part36.setAttribute('y', '20');
+        label36.setAttribute('y', '40');
+        part18.setAttribute('y', '20');
+        label18.setAttribute('y', '40');
+
+        // 2. 虛線框變實線並變色
+        setTimeout(() => {
+            wholeBar.setAttribute('stroke', 'var(--success-color)');
+            wholeBar.setAttribute('stroke-dasharray', '0');
+            wholeBar.setAttribute('fill', '#f0fff0');
+            wholeLabel.innerText = "54";
+            wholeLabel.classList.add('highlight');
+            
+            // 3. 顯示算式
+            hintGroup.style.opacity = "1";
+            hintGroup.style.transition = "opacity 0.5s";
+        }, 600);
+    }
+</script>
+
+<svg style="display:none">
+    <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#999" />
+        </marker>
+    </defs>
+</svg>
+
+</body>
+</html>

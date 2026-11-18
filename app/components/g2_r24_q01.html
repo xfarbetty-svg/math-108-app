@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-4 Q01 - 加減互逆線段圖</title>
+    <style>
+        :root {
+            --primary-gold: #FFD700;
+            --part-blue: #3498db;
+            --part-green: #2ecc71;
+            --bg-color: #f9f9f9;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 600px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .question-area {
+            padding: 20px;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            min-height: 80px;
+        }
+
+        .canvas-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 200px;
+        }
+
+        .btn-action {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 0 #d35400;
+        }
+
+        .btn-action:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #d35400;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 20px;
+            background-color: #f0f4f8;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #cbd5e0;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: #4a90e2;
+            background-color: #ebf8ff;
+        }
+
+        .option-btn.correct {
+            background-color: #c6f6d5;
+            border-color: #38a169;
+            color: #2f855a;
+        }
+
+        .option-btn.wrong {
+            background-color: #fed7d7;
+            border-color: #e53e3e;
+            color: #c53030;
+        }
+
+        #blue-segment {
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+
+        .feedback-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">單元：加法與減法的關係</div>
+    
+    <div class="question-area">
+        已知 <strong>45 + 27 = 72</strong>，<br>
+        那麼 <strong>72 - 45 = <span id="answer-box">?</span></strong>
+    </div>
+
+    <div class="canvas-area">
+        <button class="btn-action" id="removeBtn" onclick="removePart()">點擊移走 45</button>
+        
+        <svg class="svg-container" viewBox="0 0 400 180">
+            <!-- 全長標示線 -->
+            <path d="M 20 30 L 20 20 L 380 20 L 380 30" fill="none" stroke="#d4af37" stroke-width="2" />
+            <text x="200" y="15" text-anchor="middle" font-size="16" fill="#b8860b" font-weight="bold">全長 72</text>
+
+            <!-- 線段圖底座 -->
+            <rect x="20" y="40" width="360" height="50" fill="#eee" stroke="#ccc" stroke-width="1" rx="5" />
+            
+            <!-- 藍色線段 (45) -->
+            <g id="blue-segment">
+                <rect x="20" y="40" width="225" height="50" fill="var(--part-blue)" rx="5" />
+                <text x="132" y="72" text-anchor="middle" fill="white" font-size="20" font-weight="bold">45</text>
+                <text x="132" y="115" text-anchor="middle" fill="var(--part-blue)" font-size="14">移走這部分</text>
+            </g>
+
+            <!-- 綠色線段 (27) -->
+            <g id="green-segment">
+                <rect x="245" y="40" width="135" height="50" fill="var(--part-green)" rx="5" />
+                <text x="312" y="72" text-anchor="middle" fill="white" font-size="20" font-weight="bold">27</text>
+                <text x="312" y="115" text-anchor="middle" fill="var(--part-green)" font-size="14">剩下</text>
+            </g>
+
+            <!-- 基準線 -->
+            <line x1="20" y1="90" x2="380" y2="90" stroke="#333" stroke-width="2" />
+        </svg>
+    </div>
+
+    <div class="options-grid" id="options">
+        <div class="option-btn" onclick="checkAnswer(0, this)">27</div>
+        <div class="option-btn" onclick="checkAnswer(1, this)">45</div>
+        <div class="option-btn" onclick="checkAnswer(2, this)">72</div>
+        <div class="option-btn" onclick="checkAnswer(3, this)">17</div>
+    </div>
+
+    <div id="feedback" class="feedback-overlay"></div>
+</div>
+
+<script>
+    let isRemoved = false;
+    const correctIndex = 0;
+
+    function removePart() {
+        const blue = document.getElementById('blue-segment');
+        const btn = document.getElementById('removeBtn');
+        
+        if (!isRemoved) {
+            blue.classList.add('hidden');
+            btn.innerText = '還原線段';
+            isRemoved = true;
+        } else {
+            blue.classList.remove('hidden');
+            btn.innerText = '點擊移走 45';
+            isRemoved = false;
+        }
+    }
+
+    function checkAnswer(index, element) {
+        const feedback = document.getElementById('feedback');
+        const answerBox = document.getElementById('answer-box');
+        
+        // 清除之前的狀態
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.classList.remove('correct', 'wrong'));
+
+        if (index === correctIndex) {
+            element.classList.add('correct');
+            feedback.innerText = '⭕';
+            feedback.style.display = 'block';
+            feedback.style.color = '#2ecc71';
+            answerBox.innerText = '27';
+            answerBox.style.color = '#2ecc71';
+            
+            // 自動觸發動畫
+            if (!isRemoved) removePart();
+            
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 1500);
+        } else {
+            element.classList.add('wrong');
+            feedback.innerText = '❌';
+            feedback.style.display = 'block';
+            feedback.style.color = '#e74c3c';
+            
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 1000);
+        }
+    }
+</script>
+
+</body>
+</html>

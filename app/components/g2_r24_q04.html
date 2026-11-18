@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-R-2-4 Q04 加減互逆：存錢筒的秘密</title>
+    <style>
+        :root {
+            --bg-color: #fff9f0;
+            --primary-color: #ff9a9e;
+            --secondary-color: #a1887f;
+            --accent-color: #ffd700;
+            --text-color: #5d4037;
+            --success-color: #81c784;
+            --error-color: #e57373;
+            --font-main: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: var(--font-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 420px;
+            height: 600px;
+            background-color: var(--bg-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 5px solid #fff;
+        }
+
+        .question-box {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .visual-area {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #main-svg {
+            width: 100%;
+            height: 220px;
+        }
+
+        #tape-diagram-svg {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .option-btn:hover {
+            background-color: #fff5f5;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: #66bb6a;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: #ef5350;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 0 #e57373;
+        }
+
+        .action-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #e57373;
+        }
+
+        #feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+        }
+
+        @keyframes coinIn {
+            0% { transform: translate(150px, -50px); opacity: 1; }
+            100% { transform: translate(0px, 0px); opacity: 0; }
+        }
+
+        .coin-anim {
+            animation: coinIn 0.8s ease-in forwards;
+        }
+
+        .hint-text {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="question-box">
+        小華存錢筒裡原來有一些錢，今天放入 50 元後變成 120 元，存錢筒裡原有多少元？
+    </div>
+
+    <div class="visual-area">
+        <button class="action-btn" id="actionBtn" onclick="putCoin()">放入 50 元</button>
+        
+        <svg id="main-svg" viewBox="0 0 300 200">
+            <!-- Piggy Bank Body -->
+            <ellipse cx="150" cy="110" rx="70" ry="55" fill="#ffc1cc" stroke="#5d4037" stroke-width="3" />
+            <!-- Ears -->
+            <path d="M100 70 L90 40 L120 60 Z" fill="#ffc1cc" stroke="#5d4037" stroke-width="2" />
+            <path d="M200 70 L210 40 L180 60 Z" fill="#ffc1cc" stroke="#5d4037" stroke-width="2" />
+            <!-- Snout -->
+            <ellipse cx="150" cy="120" rx="20" ry="15" fill="#ff9a9e" stroke="#5d4037" stroke-width="2" />
+            <circle cx="143" cy="120" r="3" fill="#5d4037" />
+            <circle cx="157" cy="120" r="3" fill="#5d4037" />
+            <!-- Eyes -->
+            <circle cx="125" cy="95" r="4" fill="#5d4037" />
+            <circle cx="175" cy="95" r="4" fill="#5d4037" />
+            <!-- Legs -->
+            <rect x="110" y="155" width="15" height="20" rx="5" fill="#ffc1cc" stroke="#5d4037" stroke-width="2" />
+            <rect x="175" y="155" width="15" height="20" rx="5" fill="#ffc1cc" stroke="#5d4037" stroke-width="2" />
+            
+            <!-- Coin Slot -->
+            <rect x="130" y="60" width="40" height="8" rx="4" fill="#5d4037" />
+
+            <!-- Dynamic Text inside Pig -->
+            <text id="pigText" x="150" y="115" text-anchor="middle" font-size="24" font-weight="bold" fill="#5d4037">?</text>
+            
+            <!-- Flying Coin -->
+            <g id="flyingCoin" style="display:none;">
+                <circle cx="150" cy="50" r="18" fill="#ffd700" stroke="#b8860b" stroke-width="2" />
+                <text x="150" y="56" text-anchor="middle" font-size="14" font-weight="bold" fill="#b8860b">50</text>
+            </g>
+
+            <!-- Total Label -->
+            <g id="totalLabel" style="opacity:0;">
+                <rect x="110" y="10" width="80" height="30" rx="10" fill="white" stroke="#ff9a9e" stroke-width="2" />
+                <text x="150" y="31" text-anchor="middle" font-size="16" font-weight="bold" fill="#e57373">共 120 元</text>
+            </g>
+        </svg>
+
+        <!-- Tape Diagram (線段圖) -->
+        <svg id="tape-diagram-svg" viewBox="0 0 300 80">
+            <!-- Total Line -->
+            <line x1="20" y1="10" x2="280" y2="10" stroke="#5d4037" stroke-width="2" />
+            <line x1="20" y1="5" x2="20" y2="15" stroke="#5d4037" stroke-width="2" />
+            <line x1="280" y1="5" x2="280" y2="15" stroke="#5d4037" stroke-width="2" />
+            <text x="150" y="30" text-anchor="middle" font-size="14" fill="#5d4037">全部 120 元</text>
+
+            <!-- Segments -->
+            <rect x="20" y="40" width="180" height="25" fill="#bbdefb" stroke="#1976d2" stroke-width="2" />
+            <text x="110" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#0d47a1">原來 (?)</text>
+            
+            <rect x="200" y="40" width="80" height="25" fill="#c8e6c9" stroke="#388e3c" stroke-width="2" />
+            <text x="240" y="58" text-anchor="middle" font-size="14" font-weight="bold" fill="#1b5e20">50</text>
+        </svg>
+        <div class="hint-text">點擊按鈕觀察變化，再選擇正確答案</div>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(this, 70)">70 元</button>
+        <button class="option-btn" onclick="checkAnswer(this, 170)">170 元</button>
+        <button class="option-btn" onclick="checkAnswer(this, 60)">60 元</button>
+        <button class="option-btn" onclick="checkAnswer(this, 80)">80 元</button>
+    </div>
+
+    <div id="feedback"></div>
+</div>
+
+<script>
+    let isAnimated = false;
+
+    function putCoin() {
+        if (isAnimated) return;
+        isAnimated = true;
+
+        const coin = document.getElementById('flyingCoin');
+        const pigText = document.getElementById('pigText');
+        const totalLabel = document.getElementById('totalLabel');
+        const actionBtn = document.getElementById('actionBtn');
+
+        coin.style.display = 'block';
+        coin.classList.add('coin-anim');
+
+        setTimeout(() => {
+            pigText.textContent = "120";
+            pigText.setAttribute('fill', '#e57373');
+            totalLabel.style.opacity = '1';
+            actionBtn.style.display = 'none';
+        }, 700);
+    }
+
+    function checkAnswer(btn, value) {
+        const feedback = document.getElementById('feedback');
+        
+        // Reset all buttons
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong');
+        });
+
+        if (value === 70) {
+            btn.classList.add('correct');
+            feedback.textContent = "⭕";
+            feedback.style.opacity = "1";
+            document.getElementById('pigText').textContent = "70 + 50";
+            
+            // Show the math logic
+            setTimeout(() => {
+                alert("太棒了！\n算式：120 - 50 = 70\n原來存錢筒裡有 70 元。");
+            }, 500);
+        } else {
+            btn.classList.add('wrong');
+            feedback.textContent = "❌";
+            feedback.style.opacity = "1";
+            setTimeout(() => {
+                feedback.style.opacity = "0";
+            }, 800);
+        }
+    }
+</script>
+
+</body>
+</html>

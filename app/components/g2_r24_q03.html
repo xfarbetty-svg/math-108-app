@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-R-2-4 Q03 減法驗算天平</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .question-area {
+            padding: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            background: #fffbe6;
+            border-bottom: 2px dashed #ffe58f;
+        }
+
+        .visual-area {
+            height: 220px;
+            position: relative;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #balance-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .options-area {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            background: #f0f7ff;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option-btn.wrong {
+            background: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .feedback {
+            height: 40px;
+            text-align: center;
+            font-weight: bold;
+            padding-bottom: 10px;
+        }
+
+        /* Animation Classes */
+        .beam-move {
+            transition: transform 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+        
+        .weight-fade {
+            transition: opacity 0.5s ease-in;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">單元：加法與減法的關係</div>
+    <div class="question-area">
+        要檢查 <b>80 － 23 ＝ 57</b> 的計算是否正確，可以用哪一個算式來驗算？
+    </div>
+
+    <div class="visual-area">
+        <svg id="balance-svg" viewBox="0 0 400 220">
+            <!-- Base -->
+            <path d="M180 200 L220 200 L200 160 Z" fill="#666" />
+            <rect x="150" y="200" width="100" height="5" rx="2" fill="#444" />
+
+            <!-- Beam Group -->
+            <g id="beam-group" class="beam-move" style="transform-origin: 200px 160px;">
+                <!-- Main Beam -->
+                <rect x="80" y="155" width="240" height="10" rx="5" fill="#8d6e63" />
+                <circle cx="200" cy="160" r="4" fill="#333" />
+                
+                <!-- Left Pan Hanger -->
+                <g id="left-pan-group" class="beam-move" style="transform-origin: 100px 160px;">
+                    <line x1="100" y1="160" x2="100" y2="190" stroke="#999" stroke-width="2" />
+                    <path d="M60 190 Q100 210 140 190" fill="none" stroke="#666" stroke-width="3" />
+                    <!-- Weights on Left -->
+                    <g id="weights-left" style="opacity: 0;">
+                        <rect x="70" y="170" width="30" height="20" fill="#4a90e2" rx="3" />
+                        <text x="85" y="185" font-size="12" fill="white" text-anchor="middle">57</text>
+                        <rect x="105" y="170" width="25" height="20" fill="#4caf50" rx="3" />
+                        <text x="117.5" y="185" font-size="12" fill="white" text-anchor="middle">23</text>
+                    </g>
+                </g>
+
+                <!-- Right Pan Hanger -->
+                <g id="right-pan-group" class="beam-move" style="transform-origin: 300px 160px;">
+                    <line x1="300" y1="160" x2="300" y2="190" stroke="#999" stroke-width="2" />
+                    <path d="M260 190 Q300 210 340 190" fill="none" stroke="#666" stroke-width="3" />
+                    <!-- Weights on Right -->
+                    <g id="weights-right" style="opacity: 0;">
+                        <rect x="280" y="170" width="40" height="20" fill="#ffc107" rx="3" />
+                        <text x="300" y="185" font-size="14" fill="#333" font-weight="bold" text-anchor="middle">80</text>
+                    </g>
+                </g>
+            </g>
+            
+            <!-- Center Indicator -->
+            <line x1="200" y1="130" x2="200" y2="150" stroke="#f44336" stroke-width="2" stroke-dasharray="2,2" />
+        </svg>
+    </div>
+
+    <div class="options-area" id="options">
+        <button class="option-btn" onclick="checkAnswer(0)">57 ＋ 23</button>
+        <button class="option-btn" onclick="checkAnswer(1)">80 ＋ 23</button>
+        <button class="option-btn" onclick="checkAnswer(2)">57 － 23</button>
+        <button class="option-btn" onclick="checkAnswer(3)">80 ＋ 57</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+</div>
+
+<script>
+    const beamGroup = document.getElementById('beam-group');
+    const leftPanGroup = document.getElementById('left-pan-group');
+    const rightPanGroup = document.getElementById('right-pan-group');
+    const weightsLeft = document.getElementById('weights-left');
+    const weightsRight = document.getElementById('weights-right');
+    const feedback = document.getElementById('feedback');
+    const buttons = document.querySelectorAll('.option-btn');
+
+    let isAnswered = false;
+
+    function checkAnswer(index) {
+        if (isAnswered) return;
+        
+        // Reset styles
+        buttons.forEach(btn => btn.classList.remove('correct', 'wrong'));
+
+        if (index === 0) {
+            // Correct Answer: 57 + 23 = 80
+            isAnswered = true;
+            buttons[index].classList.add('correct');
+            feedback.innerHTML = '<span style="color: var(--success-color)">太棒了！驗算就是把減掉的加回來。</span>';
+            
+            // Animation: Balance levels out
+            weightsLeft.style.opacity = "1";
+            weightsRight.style.opacity = "1";
+            updateBalance(0);
+        } else {
+            // Wrong Answer
+            buttons[index].classList.add('wrong');
+            feedback.innerHTML = '<span style="color: var(--error-color)">再想想看，驗算要用反過來的運算喔！</span>';
+            
+            // Animation: Tilt to show imbalance
+            weightsLeft.style.opacity = "1";
+            weightsRight.style.opacity = "1";
+            
+            if (index === 1) updateBalance(-15); // 80+23 is heavier on left
+            if (index === 2) updateBalance(15);  // 57-23 is lighter on left
+            if (index === 3) updateBalance(-15); // 80+57 is heavier on left
+            
+            setTimeout(() => {
+                if (isAnswered) return;
+                weightsLeft.style.opacity = "0";
+                weightsRight.style.opacity = "0";
+                updateBalance(0);
+                buttons[index].classList.remove('wrong');
+                feedback.innerHTML = "";
+            }, 2000);
+        }
+    }
+
+    /**
+     * Updates the rotation of the beam and counter-rotates the pans to keep them vertical.
+     * @param {number} deg - Degrees to rotate (0 is balanced).
+     */
+    function updateBalance(deg) {
+        beamGroup.style.transform = `rotate(${deg}deg)`;
+        // Counter-rotate pans so they stay upright
+        leftPanGroup.style.transform = `rotate(${-deg}deg)`;
+        rightPanGroup.style.transform = `rotate(${-deg}deg)`;
+    }
+
+    // Initial state: slightly tilted to look "waiting"
+    window.onload = () => {
+        // No weights initially
+    };
+</script>
+
+</body>
+</html>

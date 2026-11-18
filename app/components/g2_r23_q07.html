@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G2-R-2-3 Q07 乘法交換律教具</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f9f9f9;
+            --grid-border: #ddd;
+            --highlight-bg: #fff9c4;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            max-height: 740px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 8px;
+        }
+
+        .header {
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .question-area {
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .math-box {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 2px dashed var(--secondary-color);
+            border-radius: 4px;
+            vertical-align: middle;
+            line-height: 40px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .visual-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--bg-color);
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-height: 320px;
+        }
+
+        .grid-cell {
+            fill: white;
+            stroke: var(--grid-border);
+            stroke-width: 1;
+        }
+
+        .grid-label {
+            font-size: 12px;
+            fill: #666;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .diagonal {
+            stroke: #ccc;
+            stroke-width: 1;
+            stroke-dasharray: 4;
+        }
+
+        .highlight-cell {
+            fill: var(--highlight-bg);
+            stroke: var(--secondary-color);
+            stroke-width: 2;
+        }
+
+        .result-text {
+            font-size: 14px;
+            font-weight: bold;
+            fill: #333;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .options-area {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: #fff;
+        }
+
+        .opt-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .opt-btn:active {
+            transform: scale(0.95);
+        }
+
+        .opt-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .opt-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        #feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        .animate-pop {
+            animation: pop 0.8s ease-out forwards;
+        }
+
+        .connection-line {
+            fill: none;
+            stroke: var(--secondary-color);
+            stroke-width: 2;
+            stroke-dasharray: 5;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div class="header">單元：兩數相乘的順序不影響其積</div>
+    
+    <div class="question-area">
+        8 × 4 = 4 × <div id="answer-box" class="math-box">?</div>
+        <br>
+        <small style="font-size: 0.9rem; color: #666;">□ 裡要填什麼？</small>
+    </div>
+
+    <div class="visual-area">
+        <!-- SVG 乘法表視覺化 -->
+        <svg viewBox="0 0 320 320" id="multiplication-svg">
+            <!-- 背景網格 -->
+            <g id="grid-group"></g>
+            <!-- 對角線 -->
+            <line x1="30" y1="30" x2="300" y2="300" class="diagonal" />
+            <!-- 高亮對稱點 -->
+            <rect id="cell-8-4" x="120" y="240" width="30" height="30" class="highlight-cell" />
+            <rect id="cell-4-8" x="240" y="120" width="30" height="30" class="highlight-cell" />
+            
+            <text x="135" y="257" class="result-text">32</text>
+            <text x="255" y="137" class="result-text">32</text>
+
+            <!-- 連接弧線 -->
+            <path d="M 135 240 Q 180 180 240 135" class="connection-line" />
+            
+            <!-- 標籤 -->
+            <text x="135" y="285" class="grid-label" style="fill:var(--secondary-color); font-weight:bold;">8 × 4</text>
+            <text x="285" y="137" class="grid-label" style="fill:var(--secondary-color); font-weight:bold;">4 × 8</text>
+        </svg>
+    </div>
+
+    <div class="options-area">
+        <button class="opt-btn" onclick="checkAnswer(0, this)">8</button>
+        <button class="opt-btn" onclick="checkAnswer(1, this)">4</button>
+        <button class="opt-btn" onclick="checkAnswer(2, this)">32</button>
+        <button class="opt-btn" onclick="checkAnswer(3, this)">12</button>
+    </div>
+
+    <div id="feedback"></div>
+</div>
+
+<script>
+    const svgNS = "http://www.w3.org/2000/svg";
+    const gridGroup = document.getElementById('grid-group');
+    const cellSize = 30;
+    const offset = 30;
+
+    // 初始化 9x9 乘法表網格
+    function initGrid() {
+        for (let i = 0; i <= 9; i++) {
+            for (let j = 0; j <= 9; j++) {
+                if (i === 0 && j === 0) continue;
+
+                const x = j * cellSize;
+                const y = i * cellSize;
+
+                if (i === 0 || j === 0) {
+                    // 繪製標籤
+                    const text = document.createElementNS(svgNS, "text");
+                    text.setAttribute("x", x + cellSize / 2);
+                    text.setAttribute("y", y + cellSize / 2);
+                    text.setAttribute("class", "grid-label");
+                    text.textContent = i === 0 ? j : i;
+                    gridGroup.appendChild(text);
+                } else {
+                    // 繪製格子
+                    const rect = document.createElementNS(svgNS, "rect");
+                    rect.setAttribute("x", x);
+                    rect.setAttribute("y", y);
+                    rect.setAttribute("width", cellSize);
+                    rect.setAttribute("height", cellSize);
+                    rect.setAttribute("class", "grid-cell");
+                    gridGroup.appendChild(rect);
+                }
+            }
+        }
+    }
+
+    function checkAnswer(index, btn) {
+        const feedback = document.getElementById('feedback');
+        const answerBox = document.getElementById('answer-box');
+        
+        // 正確答案索引為 0 (數值 8)
+        if (index === 0) {
+            btn.classList.add('correct');
+            feedback.textContent = '⭕';
+            feedback.className = 'animate-pop';
+            answerBox.textContent = '8';
+            answerBox.style.borderStyle = 'solid';
+            answerBox.style.color = 'var(--success-color)';
+            answerBox.style.borderColor = 'var(--success-color)';
+            
+            // 觸發視覺特效
+            document.getElementById('cell-8-4').style.fill = '#ffeb3b';
+            document.getElementById('cell-4-8').style.fill = '#ffeb3b';
+            
+            // 鎖定所有按鈕
+            const buttons = document.querySelectorAll('.opt-btn');
+            buttons.forEach(b => b.disabled = true);
+        } else {
+            btn.classList.add('wrong');
+            feedback.textContent = '❌';
+            feedback.className = 'animate-pop';
+            
+            setTimeout(() => {
+                btn.classList.remove('wrong');
+                feedback.className = '';
+            }, 800);
+        }
+    }
+
+    // 啟動
+    initGrid();
+</script>
+
+</body>
+</html>

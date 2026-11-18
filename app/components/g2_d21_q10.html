@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-D-2-1 Q10 - 二維分類統計</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --highlight-bg: #fff9c4;
+            --highlight-border: #fbc02d;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .unit-tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .table-container {
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border: 2px solid #ddd;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 5px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f1f1f1;
+            color: #555;
+        }
+
+        .row-header {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            width: 80px;
+        }
+
+        /* 高亮目標單元格 */
+        .target-cell {
+            background-color: var(--highlight-bg);
+            border: 2px solid var(--highlight-border);
+            font-weight: bold;
+            color: #d35400;
+            position: relative;
+        }
+
+        .target-cell::after {
+            content: "★";
+            position: absolute;
+            top: -2px;
+            right: 2px;
+            font-size: 0.7rem;
+        }
+
+        .highlight-row {
+            background-color: rgba(255, 249, 196, 0.3);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+        .option-btn:hover {
+            background-color: #f0f0f0;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        #feedback {
+            margin-top: 15px;
+            height: 24px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div class="unit-tag">G2-D-2-1 分類與呈現</div>
+    <div class="question-text">
+        在運動會統計表中，既是「<span style="color:#e67e22">二年級</span>」而且「<span style="color:#2980b9">參加跑步</span>」的學生共有幾位？
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>項目 \ 年級</th>
+                    <th>一年級</th>
+                    <th style="color:#e67e22; border-bottom: 2px solid #e67e22;">二年級</th>
+                    <th>三年級</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header" style="color:#2980b9; border-right: 2px solid #2980b9;">跑步</td>
+                    <td>6</td>
+                    <td id="target" class="target-cell">8</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td class="row-header">跳遠</td>
+                    <td>4</td>
+                    <td>7</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td class="row-header">擲球</td>
+                    <td>5</td>
+                    <td>9</td>
+                    <td>6</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer(0, this)">8 位</button>
+        <button class="option-btn" onclick="checkAnswer(1, this)">12 位</button>
+        <button class="option-btn" onclick="checkAnswer(2, this)">6 位</button>
+        <button class="option-btn" onclick="checkAnswer(3, this)">10 位</button>
+    </div>
+
+    <div id="feedback"></div>
+    <div class="hint">提示：找找看「二年級」那一直行與「跑步」那一橫列交叉的地方。</div>
+</div>
+
+<script>
+    const correctIndex = 0;
+    let answered = false;
+
+    function checkAnswer(index, btn) {
+        if (answered) return;
+        
+        const feedback = document.getElementById('feedback');
+        const targetCell = document.getElementById('target');
+        
+        if (index === correctIndex) {
+            btn.classList.add('correct');
+            feedback.innerText = "太棒了！答對了 ✨";
+            feedback.style.color = "var(--success-color)";
+            targetCell.style.backgroundColor = "#2ecc71";
+            targetCell.style.color = "white";
+            targetCell.style.borderColor = "#27ae60";
+            answered = true;
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerText = "再試試看喔！";
+            feedback.style.color = "var(--error-color)";
+            
+            // 震動效果
+            btn.style.transform = "translateX(5px)";
+            setTimeout(() => btn.style.transform = "translateX(-5px)", 50);
+            setTimeout(() => btn.style.transform = "translateX(0)", 100);
+            
+            setTimeout(() => {
+                if (!answered) {
+                    btn.classList.remove('wrong');
+                    feedback.innerText = "";
+                }
+            }, 1000);
+        }
+    }
+
+    // 初始動畫：引導視覺
+    window.onload = () => {
+        const target = document.getElementById('target');
+        target.style.transition = "all 0.5s ease";
+        setTimeout(() => {
+            target.style.transform = "scale(1.1)";
+            setTimeout(() => {
+                target.style.transform = "scale(1)";
+            }, 300);
+        }, 500);
+    };
+</script>
+
+</body>
+</html>

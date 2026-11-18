@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G2-D-2-1 Q06 分類與呈現</title>
+    <style>
+        :root {
+            --primary-red: #FF4136;
+            --primary-blue: #0074D9;
+            --primary-green: #2ECC40;
+            --bg-color: #F8F9FA;
+            --text-color: #2D3436;
+        }
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #ECECEC;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #6C5CE7;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .question-box {
+            padding: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            border-bottom: 2px dashed #DDD;
+        }
+        .canvas-area {
+            position: relative;
+            height: 280px;
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+        .svg-stage {
+            width: 100%;
+            height: 100%;
+        }
+        .shape {
+            transition: transform 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            cursor: pointer;
+        }
+        .zone-label {
+            font-size: 14px;
+            font-weight: bold;
+            fill: #AAA;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .controls {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-classify {
+            background: #FDCB6E;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #E1B12C;
+            transition: 0.2s;
+        }
+        .btn-classify:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #E1B12C;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: #F1F2F6;
+        }
+        .option-btn {
+            background: white;
+            border: 2px solid #DFE6E9;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option-btn:hover {
+            border-color: #6C5CE7;
+            background: #F0EFFF;
+        }
+        .option-btn.correct {
+            background: #55E6C1;
+            border-color: #218C74;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: #FF7675;
+            border-color: #D63031;
+            color: white;
+        }
+        #feedback {
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">單元：分類與呈現 (G2-D-2-1)</div>
+    <div class="question-box">
+        畫面中有許多幾何圖形，數數看，<b>紅色</b>的圖形共有幾個？
+    </div>
+
+    <div class="canvas-area">
+        <svg class="svg-stage" id="stage">
+            <!-- 分類區域標籤 -->
+            <text x="40" y="30" class="zone-label" id="label-red">紅色欄位</text>
+            <text x="240" y="30" class="zone-label" id="label-others">其他顏色</text>
+            
+            <!-- 紅色圖形 (目標 4 個) -->
+            <g class="shape red" id="s1" data-color="red" transform="translate(180, 60)">
+                <circle r="22" fill="#FF4136" stroke="#B22222" stroke-width="2"/>
+            </g>
+            <g class="shape red" id="s2" data-color="red" transform="translate(50, 180)">
+                <rect x="-20" y="-20" width="40" height="40" fill="#FF4136" stroke="#B22222" stroke-width="2"/>
+            </g>
+            <g class="shape red" id="s3" data-color="red" transform="translate(320, 220)">
+                <polygon points="0,-25 22,15 -22,15" fill="#FF4136" stroke="#B22222" stroke-width="2"/>
+            </g>
+            <g class="shape red" id="s4" data-color="red" transform="translate(250, 140)">
+                <rect x="-25" y="-15" width="50" height="30" fill="#FF4136" stroke="#B22222" stroke-width="2"/>
+            </g>
+
+            <!-- 其他顏色圖形 -->
+            <g class="shape blue" id="s5" data-color="blue" transform="translate(80, 80)">
+                <polygon points="0,-25 22,15 -22,15" fill="#0074D9" stroke="#003E75" stroke-width="2"/>
+            </g>
+            <g class="shape green" id="s6" data-color="green" transform="translate(340, 70)">
+                <rect x="-20" y="-20" width="40" height="40" fill="#2ECC40" stroke="#1B5E20" stroke-width="2"/>
+            </g>
+        </svg>
+    </div>
+
+    <div class="controls">
+        <button class="btn-classify" onclick="classifyShapes()">🔍 按顏色分類整理</button>
+    </div>
+
+    <div id="feedback"></div>
+
+    <div class="options-grid">
+        <div class="option-btn" onclick="checkAnswer(this, 0)">4 個</div>
+        <div class="option-btn" onclick="checkAnswer(this, 1)">3 個</div>
+        <div class="option-btn" onclick="checkAnswer(this, 2)">5 個</div>
+        <div class="option-btn" onclick="checkAnswer(this, 3)">2 個</div>
+    </div>
+</div>
+
+<script>
+    let classified = false;
+
+    function classifyShapes() {
+        const reds = document.querySelectorAll('.shape[data-color="red"]');
+        const others = document.querySelectorAll('.shape:not([data-color="red"])');
+        
+        // 顯示標籤
+        document.getElementById('label-red').style.opacity = '1';
+        document.getElementById('label-others').style.opacity = '1';
+
+        // 紅色靠左對齊排列
+        reds.forEach((el, index) => {
+            const targetY = 70 + (index * 60);
+            el.style.transform = `translate(70px, ${targetY}px)`;
+        });
+
+        // 其他靠右對齊排列
+        others.forEach((el, index) => {
+            const targetY = 70 + (index * 60);
+            el.style.transform = `translate(280px, ${targetY}px)`;
+        });
+
+        classified = true;
+    }
+
+    function checkAnswer(btn, index) {
+        const feedback = document.getElementById('feedback');
+        const allBtns = document.querySelectorAll('.option-btn');
+        
+        // 清除狀態
+        allBtns.forEach(b => {
+            b.classList.remove('correct', 'wrong');
+        });
+
+        if (index === 0) {
+            btn.classList.add('correct');
+            feedback.innerHTML = "✨ 太棒了！紅色圖形真的有 4 個！";
+            feedback.style.color = "#218C74";
+            
+            if(!classified) {
+                setTimeout(classifyShapes, 500);
+            }
+        } else {
+            btn.classList.add('wrong');
+            feedback.innerHTML = "❌ 再數一次看看喔！";
+            feedback.style.color = "#D63031";
+        }
+    }
+
+    // 初始隨機微調位置增加真實感
+    window.onload = () => {
+        const shapes = document.querySelectorAll('.shape');
+        shapes.forEach(s => {
+            const currentTransform = s.getAttribute('transform');
+            // 保持原位，僅作為初始化確認
+        });
+    };
+</script>
+
+</body>
+</html>
