@@ -14,7 +14,7 @@ const SCENE_PATH = 'app/scenes/g3_n39_theater/index.html';
 const SHOT_PATH = path.join(ROOT, 'reports', 'screenshots', 'theater_n39_cdp.png');
 const VIEWPORT = { width: 390, height: 844 };
 const MAX_STAGE_HEIGHT = 420;
-const ACT_VIDEOS = [1, 2, 3, 4].map((n) => `video/mimi_n39_act${n}.mp4`);
+const MIMI_TEXTURE = 'assets_hosts/g3_mimi/textures/mimi_front_1024.png';
 
 const CHROME_CANDIDATES = [
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
@@ -227,36 +227,85 @@ async function main() {
     await waitFor('頁面載入', async () => (await evaluate('document.readyState')) === 'complete', 15000);
     lines.push('PASS 靜態伺服器與 390x844 視口導航成功');
 
-    // 1) #mimiVideo 存在且正常渲染
-    const videoProbe = `(() => {
-      const v = document.getElementById('mimiVideo');
-      if (!v) return { ok: false, msg: '#mimiVideo 不存在' };
-      const r = v.getBoundingClientRect();
-      const cs = getComputedStyle(v);
-      const ok = v.videoWidth > 0 && v.videoHeight > 0 && v.readyState >= 2 && !v.error &&
-        r.width > 0 && r.height > 0 && cs.display !== 'none' && cs.visibility !== 'hidden';
-      return { ok, msg: 'readyState=' + v.readyState + ' size=' + v.videoWidth + 'x' + v.videoHeight +
-        ' rect=' + Math.round(r.width) + 'x' + Math.round(r.height) +
-        ' display=' + cs.display + ' error=' + (v.error ? v.error.code : 'none') };
+    // 1) 原廠 3D 黏土高清底圖為唯一視覺錨點：Wan 2.2 影片與 SVG 假兔零殘留
+    const mimiProbe = `(() => {
+      const anchor = document.getElementById('mimiAnchor');
+      const video = document.querySelector('#mimiZone video, video.mimi-video, #mimiVideo');
+      const svg = document.querySelector('#mimiZone svg');
+      if (!anchor) return { ok: false, msg: '3D 角色錨點缺漏' };
+      const r = anchor.getBoundingClientRect();
+      const cs = getComputedStyle(anchor);
+      const src = anchor.getAttribute('src') || '';
+      const ok = r.width > 0 && r.height > 0 && cs.display !== 'none' && cs.visibility !== 'hidden'
+        && video === null && svg === null && src === '${MIMI_TEXTURE}';
+      return { ok, msg: 'anchor ' + Math.round(r.width) + 'x' + Math.round(r.height) +
+        ' display=' + cs.display + ' src=' + src + ' video=' + (video ? 'FOUND' : 'none') + ' svg=' + (svg ? 'FOUND' : 'none') };
     })()`;
-    let videoState;
-    await waitFor('#mimiVideo 渲染', async () => {
-      videoState = await evaluate(videoProbe);
-      return videoState.ok === true;
+    let mimiState;
+    await waitFor('#mimiAnchor 原廠 3D 黏土高清底圖渲染', async () => {
+      mimiState = await evaluate(mimiProbe);
+      return mimiState.ok === true;
     }, 15000);
-    lines.push(`PASS #mimiVideo 存在且正常渲染 (${videoState.msg})`);
+    lines.push(`PASS 原廠高清底圖為唯一視覺錨點、Wan 2.2 影片與 SVG 假兔零殘留 (${mimiState.msg})`);
 
-    // 2) Act 1 ~ Act 4 幕次切換，src 依序切換
-    for (let i = 0; i < ACT_VIDEOS.length; i++) {
-      const expected = ACT_VIDEOS[i];
+    // 1b) 空間契約：米米 x∈[4%,36%]、黑板 x∈[37%,96%]，幾何零重疊且米米位於前景
+    const occlusion = await evaluate(`(() => {
+      const b = (sel) => { const e = document.querySelector(sel); if (!e) return null; const r = e.getBoundingClientRect(); return { left:r.left, right:r.right, top:r.top, bottom:r.bottom, z:parseInt(getComputedStyle(e).zIndex,10) || 0 }; };
+      const m = b('#mimiZone'), p = b('#podium'), k = b('#blackboard'), c = b('#captionText'), s = b('.stage-wrapper');
+      if (!m || !p || !k || !c || !s) return { ok:false, msg:'分帶元素缺漏' };
+      const pct = (v) => (v - s.left) / (s.right - s.left) * 100;
+      const gapBoard = k.left - m.right;
+      const gapPodium = k.left - p.right;
+      const layoutOk = Math.abs(pct(m.left) - 4) < 1 && Math.abs(pct(m.right) - 36) < 1
+        && Math.abs(pct(k.left) - 37) < 1 && Math.abs(pct(k.right) - 96) < 1;
+      return {
+        ok: gapBoard >= 0 && gapPodium >= 0 && layoutOk && m.z > p.z && m.z > k.z && m.bottom <= c.top,
+        msg: 'mimi=[' + pct(m.left).toFixed(1) + ',' + pct(m.right).toFixed(1) + '] board=[' +
+          pct(k.left).toFixed(1) + ',' + pct(k.right).toFixed(1) + '] gaps=' +
+          gapBoard.toFixed(1) + '/' + gapPodium.toFixed(1) + 'px z=' + [m.z,p.z,k.z].join('/') +
+          ' layoutOk=' + layoutOk
+      };
+    })()`);
+    lines.push(occlusion.ok
+      ? `PASS 米米[4%,36%]與黑板[37%,96%]幾何零重疊且米米位於前景 (${occlusion.msg})`
+      : `FAIL 米米／黑板空間契約破壞 (${occlusion.msg})`);
+
+    // 2) Act 1 ~ Act 4 幕次切換：底圖錨點恆定，絕無影片層復活
+    for (let i = 0; i < 4; i++) {
       await evaluate(`document.querySelector('.btn-chip[data-phase="${i}"]').click(); true`);
-      let actual;
-      await waitFor(`Act ${i + 1} src`, async () => {
-        actual = await evaluate(`document.getElementById('mimiVideo').getAttribute('src')`);
-        return actual === expected;
+      let state;
+      await waitFor(`Act ${i + 1} 底圖錨點`, async () => {
+        state = await evaluate(`(() => {
+          const a = document.getElementById('mimiAnchor');
+          return { src: a && a.getAttribute('src'), video: !!document.querySelector('video') };
+        })()`);
+        return state.src === MIMI_TEXTURE && state.video === false;
       }, 8000);
-      lines.push(`PASS Act ${i + 1} 切換 src = ${actual}`);
+      lines.push(`PASS Act ${i + 1} 底圖錨點不變、無影片層 (${state.src})`);
     }
+
+    // 2b) 三種純淨微動態確實掛載：說話呼吸／歡呼 -8px／歪頭 -4deg
+    const motion = await evaluate(`(() => {
+      const wrap = document.getElementById('mimiWrap');
+      const anchor = document.getElementById('mimiAnchor');
+      const read = (cls) => {
+        wrap.classList.remove('speaking', 'cheer', 'tilt');
+        wrap.classList.add(cls);
+        return getComputedStyle(anchor).animationName;
+      };
+      const out = { speaking: read('speaking'), cheer: read('cheer'), tilt: read('tilt') };
+      const css = Array.from(document.styleSheets).flatMap((s) => {
+        try { return Array.from(s.cssRules).map((r) => r.cssText); } catch (e) { return []; }
+      }).join(' ');
+      out.cheerY = css.includes('translateY(-8px)');
+      out.tiltDeg = css.includes('rotate(-4deg)');
+      wrap.classList.remove('speaking', 'cheer', 'tilt');
+      return out;
+    })()`);
+    lines.push(motion.speaking === 'mimiBreathe' && motion.cheer === 'mimiCheer'
+      && motion.tilt === 'mimiTilt' && motion.cheerY && motion.tiltDeg
+      ? 'PASS 說話呼吸／歡呼雀躍(-8px)／好奇歪頭(-4deg) 三種微動態皆已掛載'
+      : `FAIL 微動態未按規格掛載 (${JSON.stringify(motion)})`);
 
     // 3) 尺寸：舞台 <= 420px，手機總高 <= 740px 且零橫向溢出
     const metrics = await evaluate(`(() => {
@@ -297,6 +346,49 @@ async function main() {
     lines.push(consoleErrors.length === 0
       ? 'PASS Console 零 Error'
       : `FAIL Console 錯誤 ${consoleErrors.length} 筆: ${consoleErrors.slice(0, 5).join(' | ')}`);
+
+    // 4b) 原始碼不得殘留 48:52 硬分割
+    const src = fs.readFileSync(path.join(ROOT, SCENE_PATH), 'utf8');
+    const legacy = ['width: 48%', 'width: 52%', '.actor-zone', '.blackboard-zone'].filter((k) => src.includes(k));
+    lines.push(legacy.length === 0
+      ? 'PASS 原始碼已徹底移除 48:52 硬分割'
+      : `FAIL 原始碼仍殘留硬分割: ${legacy.join(', ')}`);
+
+    // 4b-2) 原始碼不得殘留 2D 假兔 SVG 標籤與樣式
+    const svgLegacy = ['<svg', 'mimi-svg', 'mimi-ear-left', 'mimi-arm-point', 'mimi-body'].filter((k) => src.includes(k));
+    lines.push(svgLegacy.length === 0
+      ? 'PASS 原始碼已徹底移除 2D SVG 假兔標籤與樣式'
+      : `FAIL 原始碼仍殘留 2D 假兔: ${svgLegacy.join(', ')}`);
+
+    // 4b-3) 原始碼不得殘留 Wan 2.2 影片播放邏輯
+    const videoLegacy = ['<video', 'mimi_n39_act', 'mimiVideo', 'ACT_VIDEOS'].filter((k) => src.includes(k));
+    lines.push(videoLegacy.length === 0
+      ? 'PASS 原始碼已徹底移除 Wan 2.2 影片播放邏輯'
+      : `FAIL 原始碼仍殘留影片邏輯: ${videoLegacy.join(', ')}`);
+
+    // 4c) 新版四幕台詞已對齊 JSON
+    const scriptCheck = await evaluate(`(() => {
+      const cfg = window.__n39TimelineProbe;
+      const cap = document.getElementById('captionText').textContent || '';
+      return { len: cap.length, hasNew: cap.includes('超好吃') || cap.includes('分母') };
+    })()`);
+    lines.push(scriptCheck.hasNew
+      ? `PASS 新版台詞已套用 (字幕 ${scriptCheck.len} 字)`
+      : `FAIL 仍為舊版台詞 (字幕 ${scriptCheck.len} 字)`);
+
+    // 4d) 四幕個別截圖供通道三 Gate A1~A4
+    for (let i = 0; i < 4; i++) {
+      await evaluate(`document.querySelector('.btn-chip[data-phase="${i}"]').click(); true`);
+      await sleep(700);
+      const actShot = await ws.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+      const actBuf = Buffer.from(actShot.data || '', 'base64');
+      const actPath = path.join(ROOT, 'reports', 'screenshots', `theater_n39_act${i + 1}.png`);
+      fs.mkdirSync(path.dirname(actPath), { recursive: true });
+      fs.writeFileSync(actPath, actBuf);
+      lines.push(actBuf.length > 0
+        ? `PASS Act ${i + 1} 截圖 ${actPath} (${actBuf.length} bytes)`
+        : `FAIL Act ${i + 1} 截圖為空`);
+    }
 
     // 5) 截圖存檔
     const shot = await ws.send('Page.captureScreenshot', {

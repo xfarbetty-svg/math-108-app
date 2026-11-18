@@ -1,0 +1,53 @@
+{
+  "A1": {
+    "pass": true,
+    "mimi_fully_visible": true,
+    "unified_classroom": true,
+    "teaching_aid_correct": true,
+    "text_readable": true,
+    "act_specific_ok": true,
+    "flaws": []
+  },
+  "A2": {
+    "pass": false,
+    "mimi_fully_visible": false,
+    "unified_classroom": true,
+    "teaching_aid_correct": true,
+    "text_readable": true,
+    "act_specific_ok": true,
+    "flaws": [
+      "米米老師的下半身被講台遮擋，未達到「身體不得被講台遮擋」且「完整可見」的嚴格要求。"
+    ]
+  },
+  "A3": {
+    "pass": false,
+    "mimi_fully_visible": false,
+    "unified_classroom": true,
+    "teaching_aid_correct": true,
+    "text_readable": true,
+    "act_specific_ok": true,
+    "flaws": [
+      "米米老師的下半身（腿部）被講台遮擋，不符合『身體不得被講台遮擋』的完整性要求。"
+    ]
+  },
+  "A4": {
+    "pass": false,
+    "mimi_fully_visible": false,
+    "unified_classroom": true,
+    "teaching_aid_correct": true,
+    "text_readable": true,
+    "act_specific_ok": true,
+    "flaws": [
+      "米米老師的耳朵頂部被畫面邊緣裁切，且下半身被講台遮擋，不符合完整可見且不被講台遮擋的契約要求。"
+    ]
+  },
+  "Total": {
+    "pass": true,
+    "mimi_fully_visible": true,
+    "unified_classroom": true,
+    "teaching_aid_correct": true,
+    "text_readable": true,
+    "act_specific_ok": true,
+    "flaws": []
+  }
+}

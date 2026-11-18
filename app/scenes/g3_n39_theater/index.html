@@ -11,788 +11,328 @@
     --chalk-gold: #fde68a;
     --blue: #38bdf8;
     --orange: #fb923c;
-    --mint: #2ecc71;
-    --fur: #fdfefe;
-    --ear-pink: #ffd1dc;
     --amber: #ffbf00;
     --panel: rgba(15, 23, 42, 0.92);
   }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { max-width: 100%; overflow-x: hidden; }
   body {
     background: radial-gradient(ellipse at 50% 0%, #1b2a45 0%, #0b1220 55%, #070b14 100%);
     color: #f8fafc;
     font-family: system-ui, -apple-system, "Segoe UI", "Microsoft JhengHei", Roboto, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 14px 12px 18px;
-    gap: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 14px 12px 18px; gap: 10px;
   }
 
-  /* ---------- 頂部狀態欄 ---------- */
-  .header-bar {
-    width: 100%;
-    max-width: 1000px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
+  /* ---------- 頂部 ---------- */
+  .header-bar { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .header-title {
-    font-size: clamp(0.9rem, 2vw, 1.22rem);
-    font-weight: 800;
-    color: var(--chalk-gold);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    line-height: 1.25;
+    font-size: clamp(0.9rem, 2vw, 1.22rem); font-weight: 800; color: var(--chalk-gold);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; line-height: 1.25;
   }
   .badge-comfort {
-    background: rgba(46, 204, 113, 0.16);
-    border: 1px solid rgba(46, 204, 113, 0.75);
-    color: #6ee7a8;
-    padding: 3px 9px;
-    border-radius: 999px;
-    font-size: clamp(0.56rem, 1.1vw, 0.72rem);
-    font-weight: 700;
-    letter-spacing: 0.2px;
+    background: rgba(46, 204, 113, 0.16); border: 1px solid rgba(46, 204, 113, 0.75);
+    color: #6ee7a8; padding: 3px 9px; border-radius: 999px;
+    font-size: clamp(0.56rem, 1.1vw, 0.72rem); font-weight: 700; letter-spacing: 0.2px;
   }
-  .header-unit {
-    font-size: clamp(0.6rem, 1.1vw, 0.82rem);
-    color: #94a3b8;
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  /* ---------- 頂部計數指示牌 ---------- */
+  .header-unit { font-size: clamp(0.6rem, 1.1vw, 0.82rem); color: #94a3b8; text-align: right; white-space: nowrap; }
   .counter-pill {
-    width: 100%;
-    max-width: 1000px;
-    background: var(--panel);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 12px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 6px;
+    width: 100%; max-width: 1000px; background: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 12px;
+    padding: 6px 10px; display: flex; align-items: center; justify-content: space-around; gap: 6px;
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
   }
-  .counter-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1px;
-    min-width: 0;
-  }
-  .counter-label {
-    font-size: clamp(0.5rem, 1vw, 0.64rem);
-    color: #94a3b8;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-  }
-  .counter-val {
-    font-size: clamp(0.78rem, 1.7vw, 1.08rem);
-    font-weight: 800;
-    color: var(--chalk-gold);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-  }
+  .counter-item { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 0; }
+  .counter-label { font-size: clamp(0.5rem, 1vw, 0.64rem); color: #94a3b8; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .counter-val { font-size: clamp(0.78rem, 1.7vw, 1.08rem); font-weight: 800; color: var(--chalk-gold); font-variant-numeric: tabular-nums; line-height: 1.15; }
   .counter-val.blue { color: var(--blue); }
   .counter-val.orange { color: var(--orange); }
-  .counter-sep {
-    width: 1px;
-    height: 22px;
-    background: rgba(255, 255, 255, 0.14);
-    flex: 0 0 auto;
-  }
-  .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    display: inline-block;
-    flex: 0 0 auto;
-  }
+  .counter-sep { width: 1px; height: 22px; background: rgba(255, 255, 255, 0.14); flex: 0 0 auto; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
   .dot.blue { background: var(--blue); box-shadow: 0 0 6px rgba(56, 189, 248, 0.9); }
   .dot.orange { background: var(--orange); box-shadow: 0 0 6px rgba(251, 146, 60, 0.9); }
   .dot.dark { background: #334155; box-shadow: inset 0 0 0 1px #64748b; }
 
-  /* ---------- 主舞台 ---------- */
+  /* ==================================================================
+     一體化教室舞台：單一空間，無 48:52 硬分割
+     水平分帶（幾何零遮擋）：
+       米米 x∈[1%,27%]  |  講台 x∈[29%,42%]  |  黑板 x∈[44%,98%]
+     z-index：底圖 0 < 光 1 < 黑板 2 < 講台 3 < 米米 5 < 氣泡 6 < 字幕 8
+     ================================================================== */
   .stage-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 1000px;
+    position: relative; width: 100%; max-width: 1000px;
     height: clamp(240px, 44vw, 420px);
-    border-radius: 16px;
-    overflow: hidden;
-    background: #b57f4e;
+    border-radius: 16px; overflow: hidden; background: #d9b383;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
     isolation: isolate;
   }
-
-  /* 100% 共用溫馨森林木質教室底圖（木紋地板 + 天花板暖光） */
-  .stage-backdrop {
-    position: absolute;
-    inset: 0;
+  .classroom-wall {
+    position: absolute; left: 0; right: 0; top: 0; height: 74%; z-index: 0; pointer-events: none;
+    background: linear-gradient(180deg, #f8e9c9 0%, #efd9b0 70%, #e2c79a 100%);
+    box-shadow: inset 0 -8px 18px rgba(90, 50, 20, 0.16);
+  }
+  .classroom-wall::before {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 20%;
+    background: repeating-linear-gradient(90deg, #d9b383 0 26px, #c9a06f 26px 28px);
+    border-top: 3px solid #b98a55;
+  }
+  .classroom-floor {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26%; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 62% 58% at 50% -6%, rgba(255, 240, 200, 0.92) 0%, rgba(255, 232, 178, 0.42) 42%, rgba(255, 226, 160, 0) 72%),
-      repeating-linear-gradient(0deg, rgba(84, 47, 18, 0.16) 0 1px, rgba(84, 47, 18, 0) 1px 38px),
-      repeating-linear-gradient(90deg, #c68f5c 0 68px, #ad7442 68px 72px, #c9945f 72px 140px, #ad7442 140px 144px),
-      linear-gradient(180deg, #d9ab77 0%, #c68f5c 48%, #a46f3f 100%);
-    pointer-events: none;
+      repeating-linear-gradient(90deg, rgba(84, 47, 18, 0.18) 0 1px, transparent 1px 38px),
+      repeating-linear-gradient(0deg, #c68f5c 0 26px, #ad7442 26px 29px, #c9945f 29px 55px, #ad7442 55px 58px),
+      linear-gradient(180deg, #d9ab77, #a46f3f);
   }
-  .stage-backdrop::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+  .classroom-glow {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background:
-      radial-gradient(ellipse 70% 34% at 50% 100%, rgba(60, 28, 8, 0.34) 0%, rgba(60, 28, 8, 0) 70%),
-      radial-gradient(ellipse 40% 26% at 50% 4%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
-    pointer-events: none;
-  }
-  /* 天花板光源光柱 */
-  .light-shaft {
-    position: absolute;
-    left: 50%;
-    top: -18%;
-    width: 52%;
-    height: 96%;
-    transform: translateX(-50%);
-    background: radial-gradient(ellipse at 50% 0%, rgba(255, 246, 214, 0.5) 0%, rgba(255, 246, 214, 0.12) 45%, rgba(255, 246, 214, 0) 72%);
-    pointer-events: none;
-    z-index: 1;
+      radial-gradient(ellipse 60% 52% at 50% -8%, rgba(255, 246, 214, 0.55) 0%, rgba(255, 246, 214, 0) 72%),
+      radial-gradient(ellipse 74% 34% at 50% 100%, rgba(60, 28, 8, 0.3) 0%, rgba(60, 28, 8, 0) 72%);
   }
 
-  .stage-inner {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* ---------- 左側 48% 角色安全區 ---------- */
-  .actor-zone {
-    position: relative;
-    width: 48%;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0 4px 46px;
-  }
-  .mimi-wrap {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-  }
-  .mimi-svg {
-    height: 100%;
-    width: auto;
-    max-width: 96%;
-    overflow: visible;
-    filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42));
-    transition: transform 0.35s ease;
-  }
-  .mimi-video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42));
-    display: block;
-  }
-  .mimi-wrap.has-video .mimi-svg {
-    display: none;
-  }
-  .mimi-wrap.no-video .mimi-video {
-    display: none;
-  }
-  .mimi-wrap.no-video .mimi-svg {
-    display: block;
-  }
-
-  /* 角色待機呼吸動畫 */
-  .mimi-body {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: breathe 3.4s ease-in-out infinite;
-  }
-  @keyframes breathe {
-    0%, 100% { transform: scale(1, 1); }
-    50% { transform: scale(1.012, 1.028) translateY(-1px); }
-  }
-  .mimi-ear-left {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: earSwayL 4.2s ease-in-out infinite;
-  }
-  .mimi-ear-right {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: earSwayR 4.2s ease-in-out infinite;
-  }
-  @keyframes earSwayL {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(3deg); }
-  }
-  @keyframes earSwayR {
-    0%, 100% { transform: rotate(2deg); }
-    50% { transform: rotate(-3deg); }
-  }
-  .mimi-eyes {
-    transform-box: fill-box;
-    transform-origin: 50% 50%;
-    animation: blink 5.4s infinite;
-  }
-  @keyframes blink {
-    0%, 92%, 100% { transform: scaleY(1); }
-    95% { transform: scaleY(0.08); }
-  }
-  .mimi-arm-point {
-    transform-box: fill-box;
-    transform-origin: 8% 88%;
-    animation: pointSwing 2.8s ease-in-out infinite;
-  }
-  @keyframes pointSwing {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(-4deg); }
-  }
-
-  /* 互動回饋：耳朵歡呼 / 歪頭提示 */
-  .mimi-wrap.cheer .mimi-ear-left {
-    animation: earCheerL 0.35s ease-in-out 4;
-  }
-  .mimi-wrap.cheer .mimi-ear-right {
-    animation: earCheerR 0.35s ease-in-out 4;
-  }
-  @keyframes earCheerL {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(-16deg) translateY(-3px); }
-  }
-  @keyframes earCheerR {
-    0%, 100% { transform: rotate(2deg); }
-    50% { transform: rotate(16deg) translateY(-3px); }
-  }
-  .mimi-wrap.tilt .mimi-svg {
-    transform: rotate(-7deg) translateX(-2px);
-    transform-origin: 50% 88%;
-  }
-  .mimi-wrap.tilt .mimi-video {
-    transform: rotate(-7deg) translateX(-2px);
-    transform-origin: 50% 88%;
-  }
-
-  /* 角色氣泡 */
-  .mimi-speech-bubble {
-    position: absolute;
-    right: 6px;
-    top: 8px;
-    max-width: 94%;
-    background: rgba(255, 255, 255, 0.97);
-    color: var(--ink);
-    border-radius: 14px;
-    padding: 6px 10px;
-    font-size: clamp(0.58rem, 1.35vw, 0.92rem);
-    font-weight: 800;
-    line-height: 1.35;
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38), 0 0 0 2px var(--gold);
-    animation: bubbleBounce 3.2s ease-in-out infinite;
-    z-index: 6;
-  }
-  .mimi-speech-bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    right: 22%;
-    border-width: 9px 8px 0;
-    border-style: solid;
-    border-color: rgba(255, 255, 255, 0.97) transparent transparent;
-  }
-  @keyframes bubbleBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-  }
-
-  /* ---------- 右側 52% 半透明磨砂黑板演武場 ---------- */
-  .blackboard-zone {
-    position: relative;
-    width: 52%;
-    height: 100%;
-    padding: 10px 10px 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .wooden-blackboard {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    border: 4px solid #8a5a2b;
-    background: rgba(28, 52, 42, 0.72);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(253, 230, 138, 0.2);
+  /* 掛牆教室黑板（往中間聚攏居中，left: 37%，絕不遮擋米米） */
+  .blackboard {
+    position: absolute; z-index: 2;
+    left: 37%; right: 4%; top: 7%; bottom: 27%;
+    border: clamp(5px, 1vw, 10px) solid #8a5a2b; border-radius: 8px;
+    background: linear-gradient(160deg, rgba(32, 60, 48, 0.97), rgba(17, 37, 29, 0.98));
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.42), inset 0 0 0 2px rgba(253, 230, 138, 0.18), inset 0 0 26px rgba(0, 0, 0, 0.32);
     padding: clamp(5px, 1vw, 12px) clamp(6px, 1.2vw, 14px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: clamp(4px, 0.9vw, 10px);
-    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center; gap: clamp(4px, 0.9vw, 10px);
+    overflow: visible;
+  }
+  .blackboard::after {
+    content: ''; position: absolute; left: -3%; right: -3%; bottom: -11px; height: 10px;
+    background: linear-gradient(180deg, #a9723a, #7d4f24); border-radius: 0 0 4px 4px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.42); pointer-events: none;
   }
   .board-title {
-    font-size: clamp(0.66rem, 1.55vw, 1.06rem);
-    font-weight: 800;
-    color: #f8fafc;
-    letter-spacing: 0.4px;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex: 0 0 auto;
-    line-height: 1.2;
+    font-size: clamp(0.66rem, 1.55vw, 1.06rem); font-weight: 800; color: #f8fafc;
+    letter-spacing: 0.4px; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+    display: flex; align-items: center; gap: 4px; flex: 0 0 auto; line-height: 1.2;
   }
-
-  /* 12 格長條巧克力 */
-  .choc-bar-wrap {
-    position: relative;
-    width: 100%;
-    flex: 0 0 auto;
-  }
+  .choc-bar-wrap { position: relative; width: 100%; flex: 0 0 auto; }
   .choc-bar {
-    position: relative;
-    display: flex;
-    gap: 2px;
-    width: 100%;
-    height: clamp(30px, 4vw, 52px);
-    padding: 3px;
-    border-radius: 8px;
-    background: #43230c;
-    box-shadow:
-      inset 0 2px 4px rgba(0, 0, 0, 0.5),
-      0 6px 12px -4px rgba(0, 0, 0, 0.55);
+    position: relative; display: flex; gap: 2px; width: 100%;
+    height: clamp(28px, 4vw, 52px); padding: 3px; border-radius: 8px; background: #43230c;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 6px 12px -4px rgba(0, 0, 0, 0.55);
   }
   .seg {
-    flex: 1 1 0;
-    min-width: 0;
-    position: relative;
-    border-radius: 3px;
+    flex: 1 1 0; min-width: 0; position: relative; border-radius: 3px;
     transition: filter 0.35s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .seg::after {
-    content: '';
-    position: absolute;
-    inset: 1px 1px 42%;
-    border-radius: 2px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
-    pointer-events: none;
+    content: ''; position: absolute; inset: 1px 1px 42%; border-radius: 2px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0)); pointer-events: none;
   }
-  .seg.blue {
-    background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 52%, #0284c7 100%);
-    box-shadow: inset 0 -3px 0 rgba(3, 105, 161, 0.55);
-  }
-  .seg.orange {
-    background: linear-gradient(180deg, #fdba74 0%, #fb923c 52%, #ea580c 100%);
-    box-shadow: inset 0 -3px 0 rgba(154, 52, 18, 0.55);
-  }
-  .seg.dark {
-    background: linear-gradient(180deg, #5b6b82 0%, #334155 56%, #1e293b 100%);
-    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.55);
-  }
-  .seg.lit {
-    filter: brightness(1.18) saturate(1.1);
-  }
-  .seg.lit.blue {
-    box-shadow: inset 0 -3px 0 rgba(3, 105, 161, 0.55), 0 0 12px rgba(56, 189, 248, 0.95);
-  }
-  .seg.lit.orange {
-    box-shadow: inset 0 -3px 0 rgba(154, 52, 18, 0.55), 0 0 12px rgba(251, 146, 60, 0.95);
-  }
-  .seg.pop {
-    animation: segPop 0.5s ease;
-  }
-  @keyframes segPop {
-    0% { transform: translateY(0) scale(1); }
-    45% { transform: translateY(-4px) scale(1.06); }
-    100% { transform: translateY(0) scale(1); }
-  }
-
+  .seg.blue { background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 52%, #0284c7 100%); box-shadow: inset 0 -3px 0 rgba(3, 105, 161, 0.55); }
+  .seg.orange { background: linear-gradient(180deg, #fdba74 0%, #fb923c 52%, #ea580c 100%); box-shadow: inset 0 -3px 0 rgba(154, 52, 18, 0.55); }
+  .seg.dark { background: linear-gradient(180deg, #5b6b82 0%, #334155 56%, #1e293b 100%); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.55); }
+  .seg.lit { filter: brightness(1.18) saturate(1.1); }
+  .seg.lit.blue { box-shadow: inset 0 -3px 0 rgba(3, 105, 161, 0.55), 0 0 12px rgba(56, 189, 248, 0.95); }
+  .seg.lit.orange { box-shadow: inset 0 -3px 0 rgba(154, 52, 18, 0.55), 0 0 12px rgba(251, 146, 60, 0.95); }
+  .seg.pop { animation: segPop 0.5s ease; }
+  @keyframes segPop { 0% { transform: translateY(0) scale(1); } 45% { transform: translateY(-4px) scale(1.06); } 100% { transform: translateY(0) scale(1); } }
   .choc-labels {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 0 2px;
-    width: 100%;
-    margin-top: 3px;
-    padding: 0 3px;
-    font-size: clamp(0.5rem, 1.05vw, 0.72rem);
-    font-weight: 800;
-    line-height: 1.2;
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 0 2px; width: 100%;
+    margin-top: 3px; padding: 0 3px;
+    font-size: clamp(0.48rem, 1vw, 0.72rem); font-weight: 800; line-height: 1.2;
   }
-  .lbl {
-    white-space: nowrap;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(-2px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
+  .lbl { white-space: nowrap; text-align: center; opacity: 0; transform: translateY(-2px); transition: opacity 0.4s ease, transform 0.4s ease; }
   .lbl.show { opacity: 1; transform: translateY(0); }
   .lbl.blue-lbl { color: #7dd3fc; }
   .lbl.orange-lbl { color: #fdba74; }
-
   .choc-legend {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2px 8px;
-    font-size: clamp(0.46rem, 0.98vw, 0.66rem);
-    color: #d7e3dc;
-    font-weight: 700;
-    line-height: 1.25;
-    flex: 0 0 auto;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px;
+    font-size: clamp(0.46rem, 0.98vw, 0.66rem); color: #d7e3dc; font-weight: 700; line-height: 1.25; flex: 0 0 auto;
   }
-  .choc-legend span {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    white-space: nowrap;
-  }
-
-  /* 聚焦點金色脈衝光圈（第 10 塊位置） */
+  .choc-legend span { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
   .focus-ring {
-    position: absolute;
-    left: 83.333%;
-    top: 50%;
-    width: clamp(40px, 6.4vw, 74px);
-    height: clamp(40px, 6.4vw, 74px);
-    margin-left: -0.5px;
-    border-radius: 50%;
-    border: 2px solid rgba(241, 196, 15, 0.9);
+    position: absolute; left: 83.333%; top: 50%;
+    width: clamp(38px, 6vw, 74px); height: clamp(38px, 6vw, 74px);
+    border-radius: 50%; border: 2px solid rgba(241, 196, 15, 0.9);
     background: radial-gradient(circle, rgba(241, 196, 15, 0.26) 0%, rgba(241, 196, 15, 0.05) 68%, transparent 100%);
-    box-shadow: 0 0 18px rgba(241, 196, 15, 0.55);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 5;
+    box-shadow: 0 0 18px rgba(241, 196, 15, 0.55); transform: translate(-50%, -50%);
+    pointer-events: none; opacity: 0; transition: opacity 0.4s ease; z-index: 5;
   }
-  .focus-ring.on {
-    opacity: 1;
-    animation: focusPulse 2s ease-in-out infinite;
-  }
+  .focus-ring.on { opacity: 1; animation: focusPulse 2s ease-in-out infinite; }
   @keyframes focusPulse {
     0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.82; }
-    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; filter: drop-shadow(0 0 10px #f1c40f); }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
   }
-
-  /* 黑板中央內容區 */
-  .board-center {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    flex: 0 0 auto;
-    text-align: center;
-  }
+  .board-center { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; flex: 0 0 auto; text-align: center; }
   .unit-note {
-    font-size: clamp(0.78rem, 1.9vw, 1.3rem);
-    font-weight: 900;
-    color: #fff7cc;
-    text-shadow: 0 0 14px rgba(253, 230, 138, 0.85), 0 1px 0 rgba(0,0,0,0.4);
-    letter-spacing: 0.5px;
-    opacity: 0;
-    transform: scale(0.96);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    font-size: clamp(0.78rem, 1.9vw, 1.3rem); font-weight: 900; color: #fff7cc;
+    text-shadow: 0 0 14px rgba(253, 230, 138, 0.85), 0 1px 0 rgba(0, 0, 0, 0.4);
+    opacity: 0; transform: scale(0.96); transition: opacity 0.35s ease, transform 0.35s ease;
   }
-  .unit-note.show {
-    opacity: 1;
-    transform: scale(1);
-    animation: glowPulse 2.2s ease-in-out infinite;
-  }
+  .unit-note.show { opacity: 1; transform: scale(1); animation: glowPulse 2.2s ease-in-out infinite; }
   @keyframes glowPulse {
-    0%, 100% { text-shadow: 0 0 10px rgba(253,230,138,0.7), 0 1px 0 rgba(0,0,0,0.4); }
-    50% { text-shadow: 0 0 20px rgba(253,230,138,1), 0 0 6px rgba(241,196,15,0.9), 0 1px 0 rgba(0,0,0,0.4); }
+    0%, 100% { text-shadow: 0 0 10px rgba(253, 230, 138, 0.7), 0 1px 0 rgba(0, 0, 0, 0.4); }
+    50% { text-shadow: 0 0 20px rgba(253, 230, 138, 1), 0 0 6px rgba(241, 196, 15, 0.9), 0 1px 0 rgba(0, 0, 0, 0.4); }
   }
-
-  .equation-big {
-    font-size: clamp(0.95rem, 2.4vw, 1.7rem);
-    font-weight: 900;
-    color: #f8fafc;
-    line-height: 1.25;
-    letter-spacing: 0.5px;
+  .equation-big { font-size: clamp(0.8rem, 2.1vw, 1.6rem); font-weight: 900; color: #f8fafc; line-height: 1.3; letter-spacing: 0.2px; white-space: nowrap; }
+  .foundation {
+    display: inline-block; color: #fff3c4; font-weight: 900; padding: 0 3px;
+    border: 2px solid var(--gold); border-bottom-width: 4px; border-radius: 4px;
+    background: rgba(241, 196, 15, 0.2); box-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+    position: relative;
   }
-  .denom-glow {
-    color: #fde68a;
-    text-shadow: 0 0 10px rgba(241, 196, 15, 0.95), 0 0 18px rgba(241, 196, 15, 0.55);
-    font-weight: 900;
+  .foundation::before {
+    content: '🔒'; position: absolute; left: 50%; top: -0.95em; transform: translateX(-50%);
+    font-size: 0.5em; line-height: 1; text-shadow: 0 0 4px #000;
   }
   .eq-note {
-    font-size: clamp(0.52rem, 1.15vw, 0.78rem);
-    font-weight: 700;
-    color: #fef3c7;
-    background: rgba(241, 196, 15, 0.12);
-    border: 1px solid rgba(253, 230, 138, 0.45);
-    border-radius: 999px;
-    padding: 2px 10px;
-    margin-top: 2px;
+    font-size: clamp(0.5rem, 1.05vw, 0.76rem); font-weight: 700; color: #fef3c7;
+    background: rgba(241, 196, 15, 0.12); border: 1px solid rgba(253, 230, 138, 0.45);
+    border-radius: 999px; padding: 2px 8px; margin-top: 2px;
   }
-
-  .frac {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    line-height: 1;
-    margin: 0 2px;
-    font-variant-numeric: tabular-nums;
-  }
-  .frac .fnum {
-    padding: 0 3px 1px;
-    border-bottom: 2px solid currentColor;
-  }
-  .frac .fden {
-    padding: 1px 3px 0;
-  }
-
-  /* 互動驗收 */
   .quiz-card {
-    width: 100%;
-    background: rgba(56, 189, 248, 0.1);
-    border: 1px solid rgba(125, 211, 252, 0.45);
-    border-radius: 9px;
-    padding: clamp(5px, 1vw, 10px) clamp(6px, 1.1vw, 12px);
-    text-align: center;
-    flex: 0 0 auto;
+    width: 100%; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(125, 211, 252, 0.45);
+    border-radius: 9px; padding: clamp(4px, 0.9vw, 9px) clamp(6px, 1.1vw, 12px); text-align: center; flex: 0 0 auto;
   }
-  .quiz-q {
-    font-size: clamp(0.64rem, 1.45vw, 0.98rem);
-    font-weight: 800;
-    color: #e0f2fe;
-    line-height: 1.35;
-    margin-bottom: 6px;
-  }
-  .quiz-opts {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-  }
+  .quiz-q { font-size: clamp(0.6rem, 1.35vw, 0.92rem); font-weight: 800; color: #e0f2fe; line-height: 1.35; margin-bottom: 5px; }
+  .quiz-opts { display: flex; justify-content: center; gap: 8px; }
   .quiz-opt {
-    flex: 1 1 0;
-    min-height: 34px;
-    border: 1px solid rgba(253, 230, 138, 0.55);
-    background: rgba(15, 23, 42, 0.45);
-    color: #f8fafc;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: clamp(0.7rem, 1.5vw, 1rem);
-    font-weight: 800;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    padding: 4px 6px;
-    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    flex: 1 1 0; min-height: 30px; border: 1px solid rgba(253, 230, 138, 0.55);
+    background: rgba(15, 23, 42, 0.45); color: #f8fafc; border-radius: 8px;
+    font-family: inherit; font-size: clamp(0.66rem, 1.4vw, 0.94rem); font-weight: 800;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+    padding: 3px 5px; transition: background 0.2s, border-color 0.2s, transform 0.15s;
   }
   .quiz-opt:hover { background: rgba(253, 230, 138, 0.18); }
   .quiz-opt:active { transform: scale(0.97); }
-  .quiz-opt.picked-correct {
-    background: rgba(46, 204, 113, 0.32);
-    border-color: #2ecc71;
-    color: #d1fae5;
-  }
-  .quiz-opt.picked-wrong {
-    background: rgba(239, 68, 68, 0.3);
-    border-color: #ef4444;
-    color: #fee2e2;
-  }
-  .quiz-fb {
-    margin-top: 5px;
-    font-size: clamp(0.52rem, 1.1vw, 0.76rem);
-    font-weight: 800;
-    line-height: 1.3;
-    min-height: 1.2em;
-    color: #cbd5e1;
-  }
+  .quiz-opt.picked-correct { background: rgba(46, 204, 113, 0.32); border-color: #2ecc71; color: #d1fae5; }
+  .quiz-opt.picked-wrong { background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #fee2e2; }
+  .quiz-fb { margin-top: 4px; font-size: clamp(0.5rem, 1.05vw, 0.72rem); font-weight: 800; line-height: 1.3; min-height: 1.1em; color: #cbd5e1; }
   .quiz-fb.ok { color: #6ee7a8; }
   .quiz-fb.no { color: #fca5a5; }
-  [hidden] { display: none !important; }
+  .finale-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex: 0 0 auto; }
+  .medal {
+    font-size: clamp(0.62rem, 1.4vw, 0.94rem); font-weight: 900; color: #fff3c4;
+    text-shadow: 0 0 12px rgba(241, 196, 15, 0.9); white-space: nowrap;
+  }
+  .challenge-btn {
+    border: 1px solid var(--chalk-gold); background: rgba(241, 196, 15, 0.22); color: #fffbeb;
+    border-radius: 999px; padding: 4px 10px; font-family: inherit;
+    font-size: clamp(0.58rem, 1.25vw, 0.84rem); font-weight: 800; cursor: pointer; white-space: nowrap;
+  }
+  .challenge-btn:hover { background: rgba(241, 196, 15, 0.4); }
 
-  /* ---------- 底部字幕條 ---------- */
-  .caption-banner {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 94%;
-    background: rgba(11, 18, 32, 0.9);
-    border: 1px solid rgba(253, 230, 138, 0.32);
-    border-radius: 10px;
-    padding: 6px 12px;
-    text-align: center;
-    font-size: clamp(0.6rem, 1.35vw, 0.95rem);
-    font-weight: 700;
-    line-height: 1.35;
-    color: #ffffff;
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
-    z-index: 8;
-  }
-  .caption-banner .highlight {
-    color: var(--chalk-gold);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  /* ---------- 底部控制列 ---------- */
-  .controls-panel {
-    width: 100%;
-    max-width: 1000px;
-    background: #16233a;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
-    padding: 9px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  }
-  .timeline-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .time-label {
-    font-size: clamp(0.56rem, 1.1vw, 0.74rem);
-    font-family: ui-monospace, Consolas, monospace;
-    color: #cbd5e1;
-    font-variant-numeric: tabular-nums;
-  }
-  .timeline-bar {
-    flex: 1;
-    height: 8px;
-    background: #334155;
-    border-radius: 999px;
-    position: relative;
-    cursor: pointer;
-    touch-action: none;
-  }
-  .timeline-fill {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 0%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #f59e0b, #ef4444);
+  /* 講台：介於米米與黑板之間，z=3 */
+  .podium {
+    position: absolute; z-index: 3; left: 29%; width: 7%; bottom: 18%; height: 26%;
+    border-radius: 3px 3px 2px 2px;
+    background: linear-gradient(180deg, #b88147 0%, #9a6837 42%, #7d4f24 100%);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.22), 0 8px 14px rgba(0, 0, 0, 0.42);
     pointer-events: none;
   }
-  .timeline-fill::after {
-    content: '';
-    position: absolute;
-    right: -5px;
-    top: 50%;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: #fde68a;
-    transform: translateY(-50%);
-    box-shadow: 0 0 8px rgba(253, 230, 138, 0.9);
+  .podium::before {
+    content: ''; position: absolute; left: -10%; right: -10%; top: -7%; height: 14%;
+    background: linear-gradient(180deg, #d19a5c, #a06d36); border-radius: 4px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+  }
+  .podium::after {
+    content: ''; position: absolute; left: 22%; right: 22%; top: 24%; height: 46%;
+    background: rgba(60, 32, 10, 0.22); border-radius: 2px;
   }
 
-  .buttons-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+  /* 米米：原廠 3D 黏土高清底圖為唯一視覺錨點（mimi_front_1024.png），z=5，與黑板幾何零重疊 */
+  .mimi-zone {
+    position: absolute; z-index: 5; left: 4%; width: 32%; bottom: 25%; height: 64%;
+    display: flex; align-items: flex-end; justify-content: center; pointer-events: none;
   }
-  .playback-btns {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+  .mimi-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
+  /* 原廠 3D 黏土米米本尊：完整還原琥珀大眼／櫻花粉耳／粉嫩小鼻／薄荷綠吊帶褲（附木釦） */
+  .mimi-anchor {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    object-fit: cover; object-position: 65% center;
+    -webkit-mask-image: radial-gradient(ellipse 92% 96% at 50% 56%, #000 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 92% 96% at 50% 56%, #000 62%, transparent 100%);
+    transform-origin: 50% 82%;
+    filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42));
+    will-change: transform, filter;
   }
+  /* 純淨自然的微表情：說話呼吸微動／答對歡呼雀躍／答錯好奇歪頭 */
+  .mimi-wrap.speaking .mimi-anchor { animation: mimiBreathe 2.4s ease-in-out infinite; }
+  .mimi-wrap.cheer .mimi-anchor { animation: mimiCheer 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2; }
+  .mimi-wrap.tilt .mimi-anchor { animation: mimiTilt 0.55s ease-in-out 2; }
+  @keyframes mimiBreathe {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-2px) scale(1.012); }
+  }
+  @keyframes mimiCheer {
+    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+    55% { transform: translateY(-8px) scale(1.05) rotate(-1.5deg); }
+  }
+  @keyframes mimiTilt {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(-4deg) translateY(-1px); }
+  }
+  .mimi-speech-bubble {
+    display: none !important; /* 一體化舞台：台詞由底部字幕承接，氣泡绝不壓在米米頭上 */
+    position: absolute; z-index: 6; left: 1%; top: 4%; width: 40%; max-width: 40%;
+    background: rgba(255, 255, 255, 0.97); color: var(--ink); border-radius: 14px;
+    padding: 6px 10px; font-size: clamp(0.56rem, 1.25vw, 0.88rem); font-weight: 800; line-height: 1.35;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38), 0 0 0 2px var(--gold);
+    animation: bubbleBounce 3.2s ease-in-out infinite;
+  }
+  .mimi-speech-bubble::after {
+    content: ''; position: absolute; bottom: -8px; right: 18%;
+    border-width: 9px 8px 0; border-style: solid; border-color: rgba(255, 255, 255, 0.97) transparent transparent;
+  }
+  @keyframes bubbleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  /* 字幕條 */
+  .caption-banner {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 94%; background: rgba(11, 18, 32, 0.9); border: 1px solid rgba(253, 230, 138, 0.32);
+    border-radius: 10px; padding: 6px 12px; text-align: center;
+    font-size: clamp(0.58rem, 1.3vw, 0.92rem); font-weight: 700; line-height: 1.35; color: #ffffff;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55); z-index: 8;
+  }
+  .caption-banner.speaking { box-shadow: 0 0 0 2px rgba(253, 230, 138, 0.45), 0 10px 22px rgba(0, 0, 0, 0.55); border-color: rgba(253, 230, 138, 0.72); }
+  .mimi-speech-bubble.speaking { box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38), 0 0 0 2px var(--gold), 0 0 14px rgba(241, 196, 15, 0.35); }
+  .mimi-wrap.speaking .mimi-anchor { filter: drop-shadow(0 12px 10px rgba(70, 34, 10, 0.42)) drop-shadow(0 0 10px rgba(253, 230, 138, 0.42)); }
+
+  /* ---------- 控制列 ---------- */
+  .controls-panel {
+    width: 100%; max-width: 1000px; background: #16233a; border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px; padding: 9px 12px; display: flex; flex-direction: column; gap: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+  .timeline-container { display: flex; align-items: center; gap: 8px; }
+  .time-label { font-size: clamp(0.56rem, 1.1vw, 0.74rem); font-family: ui-monospace, Consolas, monospace; color: #cbd5e1; font-variant-numeric: tabular-nums; }
+  .timeline-bar { flex: 1; height: 8px; background: #334155; border-radius: 999px; position: relative; cursor: pointer; touch-action: none; }
+  .timeline-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, #f59e0b, #ef4444); pointer-events: none; }
+  .timeline-fill::after {
+    content: ''; position: absolute; right: -5px; top: 50%; width: 11px; height: 11px;
+    border-radius: 50%; background: #fde68a; transform: translateY(-50%); box-shadow: 0 0 8px rgba(253, 230, 138, 0.9);
+  }
+  .buttons-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .playback-btns { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .btn {
-    background: #2b3d5c;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    min-height: 32px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: clamp(0.62rem, 1.2vw, 0.86rem);
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: background 0.2s, transform 0.15s;
-    white-space: nowrap;
+    background: #2b3d5c; color: #fff; border: none; padding: 6px 12px; min-height: 32px; border-radius: 8px;
+    font-family: inherit; font-size: clamp(0.62rem, 1.2vw, 0.86rem); font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px; transition: background 0.2s, transform 0.15s; white-space: nowrap;
   }
   .btn:hover { background: #3b5175; }
   .btn:active { transform: scale(0.97); }
-  .btn-primary {
-    background: #f59e0b;
-    color: #1a1005;
-  }
+  .btn-primary { background: #f59e0b; color: #1a1005; }
   .btn-primary:hover { background: #fbbf24; }
-
-  .phase-selectors {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .phase-selectors { display: flex; gap: 6px; flex-wrap: wrap; }
   .btn-chip {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    color: #cbd5e1;
-    padding: 5px 10px;
-    min-height: 30px;
-    border-radius: 7px;
-    font-family: inherit;
-    font-size: clamp(0.56rem, 1.1vw, 0.76rem);
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); color: #cbd5e1;
+    padding: 5px 10px; min-height: 30px; border-radius: 7px; font-family: inherit;
+    font-size: clamp(0.56rem, 1.1vw, 0.76rem); font-weight: 700; cursor: pointer; white-space: nowrap;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
   .btn-chip:hover { background: rgba(255, 255, 255, 0.14); }
-  .btn-chip.active {
-    background: var(--chalk-gold);
-    border-color: var(--chalk-gold);
-    color: #0f172a;
-    font-weight: 800;
-  }
+  .btn-chip.active { background: var(--chalk-gold); border-color: var(--chalk-gold); color: #0f172a; font-weight: 800; }
+  [hidden] { display: none !important; }
 
-  /* ---------- 手機 390px 單屏緊湊 ---------- */
   @media (max-width: 640px) {
-    body {
-      padding: 8px 6px 10px;
-      gap: 7px;
-      justify-content: flex-start;
-    }
+    body { padding: 8px 6px 10px; gap: 7px; justify-content: flex-start; }
     .header-bar { align-items: flex-start; }
     .header-unit { display: none; }
     .counter-pill { padding: 5px 6px; border-radius: 10px; }
@@ -800,11 +340,9 @@
     .counter-val { font-size: 0.82rem; }
     .counter-sep { height: 18px; }
     .stage-wrapper { height: 244px; border-radius: 12px; }
-    .actor-zone { padding-bottom: 48px; }
-    .mimi-speech-bubble { right: 2px; top: 5px; padding: 5px 7px; border-radius: 11px; }
-    .blackboard-zone { padding: 7px 6px 48px; }
-    .wooden-blackboard { border-width: 4px; border-radius: 8px; gap: 4px; }
-    .choc-bar { height: 30px; }
+    .mimi-speech-bubble { padding: 4px 6px; border-radius: 11px; top: 3%; }
+    .blackboard { gap: 3px; }
+    .choc-bar { height: 28px; }
     .controls-panel { padding: 7px 8px; gap: 6px; border-radius: 11px; }
     .btn { min-height: 34px; padding: 5px 9px; }
     .btn-chip { min-height: 30px; padding: 4px 7px; }
@@ -814,20 +352,9 @@
     .playback-btns .btn { flex: 1 1 0; justify-content: center; }
     .time-label { font-size: 0.56rem; }
   }
-
-  .caption-banner.speaking {
-    box-shadow: 0 0 0 2px rgba(253, 230, 138, 0.45), 0 10px 22px rgba(0, 0, 0, 0.55);
-    border-color: rgba(253, 230, 138, 0.72);
-  }
-  .mimi-speech-bubble.speaking {
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.38), 0 0 0 2px var(--gold), 0 0 14px rgba(241, 196, 15, 0.35);
-  }
-  .mimi-wrap.speaking .mimi-ear-left { animation-duration: 2.1s; }
-  .mimi-wrap.speaking .mimi-ear-right { animation-duration: 2.1s; }
-
   @media (prefers-reduced-motion: reduce) {
-    .mimi-body, .mimi-ear-left, .mimi-ear-right, .mimi-eyes,
-    .mimi-arm-point, .mimi-speech-bubble, .focus-ring.on, .unit-note.show { animation: none !important; }
+    .mimi-anchor, .mimi-wrap.speaking .mimi-anchor, .mimi-wrap.cheer .mimi-anchor,
+    .mimi-wrap.tilt .mimi-anchor, .mimi-speech-bubble, .focus-ring.on, .unit-note.show { animation: none !important; }
   }
 </style>
 </head>
@@ -836,204 +363,100 @@
   <div class="header-bar">
     <div class="header-title">
       <span>🐰 白兔米米的數學小教室</span>
-      <span class="badge-comfort">🎬 沉浸式固定舞台觀念影院 · N-3-9 實裝</span>
+      <span class="badge-comfort">🎬 一體化教室情境劇院 · N-3-9</span>
     </div>
     <div class="header-unit">N-3-9 簡單同分母分數：3/12 + 7/12 = 10/12</div>
   </div>
 
-  <!-- 計數指示牌 -->
   <div class="counter-pill" role="status" aria-live="polite">
-    <div class="counter-item">
-      <span class="counter-label"><i class="dot blue"></i>米米藍塊</span>
-      <span class="counter-val blue" id="cntBlue">3</span>
-    </div>
+    <div class="counter-item"><span class="counter-label"><i class="dot blue"></i>米米藍塊</span><span class="counter-val blue" id="cntBlue">3</span></div>
     <div class="counter-sep"></div>
-    <div class="counter-item">
-      <span class="counter-label"><i class="dot orange"></i>朋友橘塊</span>
-      <span class="counter-val orange" id="cntOrange">7</span>
-    </div>
+    <div class="counter-item"><span class="counter-label"><i class="dot orange"></i>朋友橘塊</span><span class="counter-val orange" id="cntOrange">7</span></div>
     <div class="counter-sep"></div>
-    <div class="counter-item">
-      <span class="counter-label">總計</span>
-      <span class="counter-val" id="cntTotal">10</span>
-    </div>
+    <div class="counter-item"><span class="counter-label">總計</span><span class="counter-val" id="cntTotal">10</span></div>
     <div class="counter-sep"></div>
-    <div class="counter-item">
-      <span class="counter-label">分數</span>
-      <span class="counter-val" id="cntFraction">—</span>
-    </div>
+    <div class="counter-item"><span class="counter-label">分數</span><span class="counter-val" id="cntFraction">—</span></div>
   </div>
 
-  <!-- 主舞台 -->
+  <!-- 一體化教室舞台（無 48:52 分割） -->
   <div class="stage-wrapper" id="stageWrapper">
-    <div class="stage-backdrop" aria-hidden="true"></div>
-    <div class="light-shaft" aria-hidden="true"></div>
+    <div class="classroom-wall" aria-hidden="true"></div>
+    <div class="classroom-floor" aria-hidden="true"></div>
+    <div class="classroom-glow" aria-hidden="true"></div>
 
-    <div class="stage-inner">
-      <!-- 左側 48%：米米角色安全區 -->
-      <div class="actor-zone">
-        <div class="mimi-speech-bubble" id="mimiBubble">🐰 哈囉小朋友！今天我們有 1 條平分成 12 塊的巧克力喔！</div>
-        <div class="mimi-wrap has-video" id="mimiWrap">
-          <video id="mimiVideo" class="mimi-video" playsinline muted autoplay loop src="video/mimi_n39_act1.mp4"></video>
-          <svg class="mimi-svg" viewBox="0 0 200 280" role="img" aria-label="白兔米米，穿著薄荷綠吊帶褲，正伸手指向右側黑板">
-            <defs>
-              <radialGradient id="furGrad" cx="42%" cy="30%" r="78%">
-                <stop offset="0%" stop-color="#FFFFFF"/>
-                <stop offset="62%" stop-color="#FDFEFE"/>
-                <stop offset="100%" stop-color="#E7ECF0"/>
-              </radialGradient>
-              <linearGradient id="overallGrad" x1="0" y1="0" x2="0.4" y2="1">
-                <stop offset="0%" stop-color="#4ade80"/>
-                <stop offset="52%" stop-color="#2ECC71"/>
-                <stop offset="100%" stop-color="#1FA75B"/>
-              </linearGradient>
-              <radialGradient id="eyeGrad" cx="38%" cy="30%" r="72%">
-                <stop offset="0%" stop-color="#FFE28A"/>
-                <stop offset="55%" stop-color="#FFBF00"/>
-                <stop offset="100%" stop-color="#C98A00"/>
-              </radialGradient>
-            </defs>
-
-            <!-- 地板投影 -->
-            <ellipse cx="98" cy="268" rx="52" ry="8" fill="rgba(58, 30, 10, 0.34)"/>
-
-            <g class="mimi-body">
-              <!-- 耳朵 -->
-              <g class="mimi-ear-left">
-                <ellipse cx="74" cy="58" rx="13" ry="40" fill="url(#furGrad)" stroke="#E3E9EE" stroke-width="1.5" transform="rotate(-9 74 92)"/>
-                <ellipse cx="74" cy="60" rx="6.5" ry="29" fill="#FFD1DC" transform="rotate(-9 74 92)"/>
-              </g>
-              <g class="mimi-ear-right">
-                <ellipse cx="126" cy="58" rx="13" ry="40" fill="url(#furGrad)" stroke="#E3E9EE" stroke-width="1.5" transform="rotate(9 126 92)"/>
-                <ellipse cx="126" cy="60" rx="6.5" ry="29" fill="#FFD1DC" transform="rotate(9 126 92)"/>
-              </g>
-
-              <!-- 身體（吊帶褲） -->
-              <rect x="63" y="158" width="74" height="80" rx="30" fill="url(#overallGrad)"/>
-              <path d="M63 186 Q100 172 137 186 L137 196 Q100 184 63 196 Z" fill="rgba(255,255,255,0.16)"/>
-              <!-- 吊帶 -->
-              <path d="M78 162 L84 148 L93 151 L87 165 Z" fill="#2ECC71" stroke="#1FA75B" stroke-width="1.2"/>
-              <path d="M122 162 L116 148 L107 151 L113 165 Z" fill="#2ECC71" stroke="#1FA75B" stroke-width="1.2"/>
-              <!-- 肚兜 -->
-              <rect x="80" y="196" width="40" height="34" rx="9" fill="rgba(255,255,255,0.2)"/>
-              <!-- 金黃鈕扣 -->
-              <circle cx="86" cy="174" r="4.2" fill="#F1C40F" stroke="#B7950B" stroke-width="1"/>
-              <circle cx="114" cy="174" r="4.2" fill="#F1C40F" stroke="#B7950B" stroke-width="1"/>
-
-              <!-- 腳掌 -->
-              <ellipse cx="80" cy="245" rx="19" ry="10" fill="url(#furGrad)" stroke="#E3E9EE" stroke-width="1.2"/>
-              <ellipse cx="118" cy="245" rx="19" ry="10" fill="url(#furGrad)" stroke="#E3E9EE" stroke-width="1.2"/>
-
-              <!-- 左手臂（自然下垂） -->
-              <path d="M68 176 Q52 194 55 214" stroke="#FDFEFE" stroke-width="15" stroke-linecap="round" fill="none"/>
-              <path d="M68 176 Q52 194 55 214" stroke="rgba(0,0,0,0.05)" stroke-width="15" stroke-linecap="round" fill="none"/>
-              <circle cx="55" cy="216" r="8.4" fill="#FDFEFE" stroke="#E3E9EE" stroke-width="1.2"/>
-
-              <!-- 右手臂（指向右側黑板） -->
-              <g class="mimi-arm-point">
-                <path d="M131 176 Q152 172 170 152" stroke="#FDFEFE" stroke-width="15" stroke-linecap="round" fill="none"/>
-                <circle cx="172" cy="150" r="8.6" fill="#FDFEFE" stroke="#E3E9EE" stroke-width="1.2"/>
-                <path d="M172 142 L178 150 L172 158" stroke="#2ECC71" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.65"/>
-              </g>
-
-              <!-- 頭 -->
-              <ellipse cx="100" cy="116" rx="47" ry="43" fill="url(#furGrad)" stroke="#E3E9EE" stroke-width="1.5"/>
-
-              <!-- 腮紅 -->
-              <ellipse cx="74" cy="128" rx="10" ry="6.2" fill="#FFD1DC" opacity="0.75"/>
-              <ellipse cx="126" cy="128" rx="10" ry="6.2" fill="#FFD1DC" opacity="0.75"/>
-
-              <!-- 眼睛（琥珀金） -->
-              <g class="mimi-eyes">
-                <ellipse cx="84" cy="114" rx="8" ry="10" fill="url(#eyeGrad)" stroke="#8A5A00" stroke-width="1.4"/>
-                <ellipse cx="116" cy="114" rx="8" ry="10" fill="url(#eyeGrad)" stroke="#8A5A00" stroke-width="1.4"/>
-                <ellipse cx="84.5" cy="115.5" rx="4" ry="5.4" fill="#231A05"/>
-                <ellipse cx="116.5" cy="115.5" rx="4" ry="5.4" fill="#231A05"/>
-                <circle cx="81.6" cy="110.6" r="2.6" fill="#FFFFFF"/>
-                <circle cx="113.6" cy="110.6" r="2.6" fill="#FFFFFF"/>
-              </g>
-
-              <!-- 鼻與嘴 -->
-              <path d="M96 128 L104 128 L100 133 Z" fill="#F1948A"/>
-              <path d="M100 133 Q100 139 94 141 M100 133 Q100 139 106 141" stroke="#C77A6E" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-
-              <!-- 鬍鬚 -->
-              <path d="M62 124 L44 119 M62 130 L44 132 M138 124 L156 119 M138 130 L156 132"
-                    stroke="#D8DEE4" stroke-width="1.6" stroke-linecap="round"/>
-            </g>
-          </svg>
+    <!-- 右側：掛牆黑板（教具與算式都在這裡） -->
+    <div class="blackboard" id="blackboard">
+      <div class="board-title">🍫 12 格長條巧克力</div>
+      <div class="choc-bar-wrap">
+        <div class="choc-bar" id="chocBar" role="img" aria-label="一條平分成 12 塊的巧克力：前 3 塊藍色、中間 7 塊橘色、最後 2 塊深灰色">
+          <div class="focus-ring" id="focusRing" aria-hidden="true"></div>
+        </div>
+        <div class="choc-labels" id="chocLabels">
+          <div class="lbl blue-lbl" id="lblBlue" style="grid-column: 1 / span 3;">3/12 條</div>
+          <div class="lbl orange-lbl" id="lblOrange" style="grid-column: 4 / span 7;">7/12 條</div>
         </div>
       </div>
-
-      <!-- 右側 52%：半透明磨砂黑板演武場 -->
-      <div class="blackboard-zone">
-        <div class="wooden-blackboard">
-          <div class="board-title">🍫 12 格長條巧克力</div>
-
-          <div class="choc-bar-wrap">
-            <div class="choc-bar" id="chocBar" role="img" aria-label="一條平分成 12 塊的巧克力：前 3 塊藍色、中間 7 塊橘色、最後 2 塊深灰色">
-              <div class="focus-ring" id="focusRing" aria-hidden="true"></div>
-            </div>
-            <div class="choc-labels" id="chocLabels">
-              <div class="lbl blue-lbl" id="lblBlue" style="grid-column: 1 / span 3;">3/12 條</div>
-              <div class="lbl orange-lbl" id="lblOrange" style="grid-column: 4 / span 7;">7/12 條</div>
-            </div>
+      <div class="choc-legend">
+        <span><i class="dot blue"></i>米米 3 塊</span>
+        <span><i class="dot orange"></i>朋友 7 塊</span>
+        <span><i class="dot dark"></i>剩下 2 塊</span>
+      </div>
+      <div class="board-center" id="boardCenter">
+        <div class="unit-note" id="unitNote">每一塊 = 1/12 條</div>
+        <div class="equation-wrap" id="equationWrap" hidden>
+          <div class="equation-big" id="equationBig"></div>
+          <div class="eq-note" id="eqNote">分母 12 是地基，永遠不變</div>
+        </div>
+        <div class="quiz-card" id="quizCard" hidden>
+          <div class="quiz-q" id="quizQ">請在黑板上點選正確答案：合起來是幾條呢？</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" type="button" id="optCorrect" data-ans="correct" aria-label="回答 12 分之 10 條">10/12 條</button>
+            <button class="quiz-opt" type="button" id="optWrong" data-ans="wrong" aria-label="回答 24 分之 10 條">10/24 條</button>
           </div>
-
-          <div class="choc-legend">
-            <span><i class="dot blue"></i>米米 3 塊</span>
-            <span><i class="dot orange"></i>朋友 7 塊</span>
-            <span><i class="dot dark"></i>剩下 2 塊</span>
-          </div>
-
-          <div class="board-center" id="boardCenter">
-            <div class="unit-note" id="unitNote">每一塊 = 1/12 條</div>
-            <div class="equation-wrap" id="equationWrap" hidden>
-              <div class="equation-big" id="equationBig"></div>
-              <div class="eq-note" id="eqNote">整條共有 12 塊（不變）</div>
-            </div>
-            <div class="quiz-card" id="quizCard" hidden>
-              <div class="quiz-q" id="quizQ">請在黑板上點選正確答案：合起來是幾條呢？</div>
-              <div class="quiz-opts">
-                <button class="quiz-opt" type="button" id="optCorrect" data-ans="correct" aria-label="回答 12 分之 10 條">10/12 條</button>
-                <button class="quiz-opt" type="button" id="optWrong" data-ans="wrong" aria-label="回答 24 分之 10 條">10/24 條</button>
-              </div>
-              <div class="quiz-fb" id="quizFb" role="status" aria-live="polite"></div>
-            </div>
-          </div>
+          <div class="quiz-fb" id="quizFb" role="status" aria-live="polite"></div>
+        </div>
+        <div class="finale-row" id="finaleRow" hidden>
+          <span class="medal" id="medal">🏅 十二分之十條！</span>
+          <button class="challenge-btn" type="button" id="challengeBtn">進入挑戰 →</button>
         </div>
       </div>
     </div>
 
-    <!-- 底部字幕條 -->
+    <!-- 中間：講台 -->
+    <div class="podium" id="podium" aria-hidden="true"></div>
+
+    <!-- 左側：米米老師原廠 3D 黏土高清底圖（唯一視覺錨點），與黑板幾何零重疊 -->
+    <div class="mimi-speech-bubble" id="mimiBubble">🐰 哈囉小朋友！今天我們有一條平分成 12 塊的巧克力喔！</div>
+    <div class="mimi-zone" id="mimiZone">
+      <div class="mimi-wrap" id="mimiWrap">
+        <img id="mimiAnchor" class="mimi-anchor" src="assets_hosts/g3_mimi/textures/mimi_front_1024.png" alt="原廠 3D 黏土白兔米米老師" aria-hidden="true">
+      </div>
+    </div>
+
     <div class="caption-banner" id="captionText" role="status" aria-live="polite">
-      一起數一數！米米拿了 3 塊，朋友拿了 7 塊，總共拿了幾塊呢？
+      嗨！小朋友，我是米米！你看，我這裡有一條超好吃的巧克力！
     </div>
   </div>
 
-  <!-- 控制列 -->
   <div class="controls-panel">
     <div class="timeline-container">
       <span class="time-label" id="timeLabel">00:00</span>
-      <div class="timeline-bar" id="timelineBar" role="slider" tabindex="0"
-           aria-label="播放進度" aria-valuemin="0" aria-valuemax="84" aria-valuenow="0">
+      <div class="timeline-bar" id="timelineBar" role="slider" tabindex="0" aria-label="播放進度" aria-valuemin="0" aria-valuemax="85" aria-valuenow="0">
         <div class="timeline-fill" id="timelineFill"></div>
       </div>
-      <span class="time-label" id="totalTimeLabel" style="color:#94a3b8;">01:23</span>
+      <span class="time-label" id="totalTimeLabel" style="color:#94a3b8;">01:24</span>
     </div>
-
     <div class="buttons-row">
       <div class="playback-btns">
         <button class="btn btn-primary" id="btnPlayPause" type="button">▶ 播放</button>
         <button class="btn" id="btnRestart" type="button">↺ 重頭演繹</button>
         <button class="btn" id="btnAudioToggle" type="button">🔊 音效: 開</button>
       </div>
-
       <div class="phase-selectors">
-        <button class="btn-chip active" type="button" data-phase="0">① 數塊數</button>
-        <button class="btn-chip" type="button" data-phase="1">② 12塊裡的幾塊</button>
-        <button class="btn-chip" type="button" data-phase="2">③ 算式抽象化</button>
-        <button class="btn-chip" type="button" data-phase="3">④ 互動驗收</button>
+        <button class="btn-chip active" type="button" data-phase="0">① 情境導入</button>
+        <button class="btn-chip" type="button" data-phase="1">② 單位分數</button>
+        <button class="btn-chip" type="button" data-phase="2">③ 核心算理</button>
+        <button class="btn-chip" type="button" data-phase="3">④ 總結互動</button>
       </div>
     </div>
   </div>
@@ -1042,75 +465,51 @@
   'use strict';
 
   const SEG_COUNT = 12;
-  const TIMELINE = {
-    full: 'audio/g3_n39_hsiaochen.mp3',
-    acts: [
-      { file: 'audio/act1.mp3', start: 0.0, duration: 17.89, end: 17.89 },
-      { file: 'audio/act2.mp3', start: 17.89, duration: 19.47, end: 37.36 },
-      { file: 'audio/act3.mp3', start: 37.36, duration: 30.79, end: 68.15 },
-      { file: 'audio/act4.mp3', start: 68.15, duration: 15.79, end: 83.94 }
-    ]
-  };
-  const FULL_DURATION = TIMELINE.acts[TIMELINE.acts.length - 1].end;
+  const TIMELINE_PATH = 'audio/g3_n39_timeline.json';
 
-  /* ---------- Wan 2.2 四幕影片（相對路徑，支援離線） ---------- */
-  const ACT_VIDEOS = [
-    'video/mimi_n39_act1.mp4',
-    'video/mimi_n39_act2.mp4',
-    'video/mimi_n39_act3.mp4',
-    'video/mimi_n39_act4.mp4'
+  /* 預設值 = ffprobe 實測 mp3 時長按比例映射至全集 84.74s；JSON 載入後覆寫 */
+  const DEFAULT_ACTS = [
+    { act: 1, id: 'act1', title: '情境導入', file: 'audio/act1.mp3', start: 0.0, duration: 22.35, end: 22.35 },
+    { act: 2, id: 'act2', title: '單位分數', file: 'audio/act2.mp3', start: 22.35, duration: 20.22, end: 42.57 },
+    { act: 3, id: 'act3', title: '核心算理', file: 'audio/act3.mp3', start: 42.57, duration: 25.17, end: 67.74 },
+    { act: 4, id: 'act4', title: '總結互動', file: 'audio/act4.mp3', start: 67.74, duration: 17.00, end: 84.74 }
+  ];
+  const TIMELINE = { full: 'audio/g3_n39_hsiaochen.mp3', acts: DEFAULT_ACTS.map((a) => Object.assign({}, a)) };
+  let FULL_DURATION = TIMELINE.acts[3].end;
+
+  let playMode = 'full', actIndex = 0, isPlaying = false, seeking = false;
+  let lastPhase = -1, quizAnswered = null;
+
+  /* 圖示標示 / 字幕。字幕內文由 JSON 的 text 覆寫（SSOT） */
+  const PHASES = [
+    { bubble: '🐰 我是米米！一條巧克力平分成 12 塊喔！',
+      caption: '嗨！小朋友，我是米米！你看，我這裡有一條超好吃的巧克力！我們把它平分成 12 塊。我拿了其中的 3 塊，好朋友拿了 7 塊！嘿嘿，你有沒有發現，我們兩個人合起來，到底是拿了這整條巧克力的幾分之幾呢？' },
+    { bubble: '🐰 1、2、3⋯⋯到 10！每一塊是 1/12 條！',
+      caption: '我們來數數看喔！3 塊加上 7 塊，1、2、3……到 10！總共是 10 塊！但是，我們要怎麼用「分數」記下來呢？別忘了，整條巧克力原本平分成了 12 塊，所以每一小塊，都是「十二分之一」條喔！' },
+    { bubble: '🐰 分母 12 是地基，永不改變！',
+      caption: '所以呀，米米的 3 塊就是十二分之三條，好朋友的 7 塊就是十二分之七條。合起來的 10 塊，就是 12 塊裡面的 10 塊，也就是——「十二分之十」條！小朋友注意看：分母 12 代表「一整條平分幾塊」，它就像房子的地基，是絕對不會變的！我們只要把上面的分子加起來就好囉！' },
+    { bubble: '🐰 分母看平分幾份，分子看拿走幾份！',
+      caption: '太棒了！答案就是十二分之十條！記住米米的祕笈：「分母看平分幾份，分子看拿走幾份」！你已經把分數相加的祕密完全搞懂囉！換你動手挑戰看看吧，掰掰！' }
   ];
 
-  let playMode = 'full'; // 'full' | 'act'
-  let actIndex = 0;
-  let isPlaying = false;
-  let seeking = false;
-  let lastPhase = -1;
-  let quizAnswered = null;
-  let videoBroken = false;
-
-  const mimiBubble = document.getElementById('mimiBubble');
-  const mimiWrap = document.getElementById('mimiWrap');
-  const mimiVideo = document.getElementById('mimiVideo');
-  const captionText = document.getElementById('captionText');
-  const cntBlue = document.getElementById('cntBlue');
-  const cntOrange = document.getElementById('cntOrange');
-  const cntTotal = document.getElementById('cntTotal');
-  const cntFraction = document.getElementById('cntFraction');
-
-  const chocBar = document.getElementById('chocBar');
-  const focusRing = document.getElementById('focusRing');
-  const lblBlue = document.getElementById('lblBlue');
-  const lblOrange = document.getElementById('lblOrange');
-
-  const unitNote = document.getElementById('unitNote');
-  const equationWrap = document.getElementById('equationWrap');
-  const equationBig = document.getElementById('equationBig');
-  const quizCard = document.getElementById('quizCard');
-  const quizFb = document.getElementById('quizFb');
-  const optCorrect = document.getElementById('optCorrect');
-  const optWrong = document.getElementById('optWrong');
-  const quizOpts = [optCorrect, optWrong];
-
-  const timeLabel = document.getElementById('timeLabel');
-  const totalTimeLabel = document.getElementById('totalTimeLabel');
-  const timelineBar = document.getElementById('timelineBar');
-  const timelineFill = document.getElementById('timelineFill');
-  const btnPlayPause = document.getElementById('btnPlayPause');
-  const btnRestart = document.getElementById('btnRestart');
-  const btnAudioToggle = document.getElementById('btnAudioToggle');
+  const $ = (id) => document.getElementById(id);
+  const mimiBubble = $('mimiBubble'), mimiWrap = $('mimiWrap'), mimiAnchor = $('mimiAnchor');
+  const captionText = $('captionText');
+  const cntBlue = $('cntBlue'), cntOrange = $('cntOrange'), cntTotal = $('cntTotal'), cntFraction = $('cntFraction');
+  const chocBar = $('chocBar'), focusRing = $('focusRing'), lblBlue = $('lblBlue'), lblOrange = $('lblOrange');
+  const unitNote = $('unitNote'), equationWrap = $('equationWrap'), equationBig = $('equationBig');
+  const quizCard = $('quizCard'), quizFb = $('quizFb'), finaleRow = $('finaleRow');
+  const optCorrect = $('optCorrect'), optWrong = $('optWrong'), quizOpts = [optCorrect, optWrong];
+  const timeLabel = $('timeLabel'), totalTimeLabel = $('totalTimeLabel');
+  const timelineBar = $('timelineBar'), timelineFill = $('timelineFill');
+  const btnPlayPause = $('btnPlayPause'), btnRestart = $('btnRestart'), btnAudioToggle = $('btnAudioToggle');
   const phaseChips = Array.from(document.querySelectorAll('.btn-chip'));
-
-  /* ---------- 音訊控制（原生 Audio API，相對路徑） ---------- */
   const audio = new Audio();
   audio.preload = 'auto';
 
-  /* ---------- 12 等分巧克力建立（前 3 藍 + 後 7 橘 + 最後 2 深底） ---------- */
-  const segKinds = [];
-  for (let i = 0; i < SEG_COUNT; i++) {
-    segKinds.push(i < 3 ? 'blue' : (i < 10 ? 'orange' : 'dark'));
-  }
-  const segEls = segKinds.map((kind, i) => {
+  /* ---------- 12 等分巧克力 ---------- */
+  const segEls = Array.from({ length: SEG_COUNT }, (_, i) => {
+    const kind = i < 3 ? 'blue' : (i < 10 ? 'orange' : 'dark');
     const el = document.createElement('div');
     el.className = `seg ${kind}`;
     el.dataset.kind = kind;
@@ -1120,349 +519,157 @@
     return el;
   });
 
-  const FRAC = (n, d, cls) => `<span class="frac ${cls || ''}"><span class="fnum">${n}</span><span class="fden">${d}</span></span>`;
-  const GFRAC = (n, color) => `<span style="color:${color}; font-weight:900;">${n}<span style="color:inherit;">/</span><span class="denom-glow">12</span></span>`;
-
-  /* ---------- 四幕狀態內容 ---------- */
-  const PHASES = [
-    {
-      bubble: '🐰 哈囉小朋友！今天我們有 1 條平分成 12 塊的巧克力喔！',
-      caption: '一起數一數！米米拿了 3 塊，朋友拿了 7 塊，總共拿了幾塊呢？'
-    },
-    {
-      bubble: '🐰 算算看：3 塊加 7 塊是 10 塊！但一整條有 12 塊喔！',
-      caption: '每一塊是 12 塊裡的 1 塊（1/12 條），那 10 塊就是 12 塊裡的 10 塊（10/12 條）！'
-    },
-    {
-      bubble: '🐰 記住喔！分母代表總共有 12 塊，永遠不變！',
-      caption: '3/12 + 7/12 = 10/12！只有上面的塊數相加，分母 12 絕對不會加成 24 喔！'
-    },
-    {
-      bubble: '🐰 換你挑戰！兩個人合起來吃了幾條巧克力呢？',
-      caption: '請在黑板上點選正確答案：合起來是幾條呢？'
-    }
-  ];
+  const FOUNDATION = (n) => `<span class="foundation">${n}</span>`;
+  const equationHTML =
+    `<span style="color:#38bdf8;">3</span>/${FOUNDATION(12)}` +
+    ` + <span style="color:#fb923c;">7</span>/${FOUNDATION(12)}` +
+    ` = <span style="color:#f1c40f;">10</span>/${FOUNDATION(12)}`;
 
   function formatTime(sec) {
     const s = Math.max(0, Math.floor(sec || 0));
-    const m = Math.floor(s / 60);
-    const r = s % 60;
-    return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
+    return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
   }
-
-  function getTotalSeconds() {
-    if (playMode === 'act') return TIMELINE.acts[actIndex].duration;
-    return FULL_DURATION;
-  }
-
+  function getTotalSeconds() { return playMode === 'act' ? TIMELINE.acts[actIndex].duration : FULL_DURATION; }
   function phaseIndexFull(t) {
-    if (t < TIMELINE.acts[1].start) return 0;
-    if (t < TIMELINE.acts[2].start) return 1;
-    if (t < TIMELINE.acts[3].start) return 2;
-    return 3;
+    for (let i = 0; i < TIMELINE.acts.length; i++) if (t < TIMELINE.acts[i].end) return i;
+    return TIMELINE.acts.length - 1;
   }
-
-  function currentPhase(t) {
-    return playMode === 'act' ? actIndex : phaseIndexFull(t);
-  }
-
+  function currentPhase(t) { return playMode === 'act' ? actIndex : phaseIndexFull(t); }
   function setSpeaking(on) {
     mimiWrap.classList.toggle('speaking', !!on);
     captionText.classList.toggle('speaking', !!on);
     mimiBubble.classList.toggle('speaking', !!on);
   }
-
-  /* ---------- 影片播放 / 幕次切換 / 容錯回退 ---------- */
-  function playMimiVideo() {
-    if (videoBroken) return;
-    try {
-      const p = mimiVideo.play();
-      if (p && typeof p.catch === 'function') p.catch(() => { /* 自動播放受阻時靜默降級 */ });
-    } catch (e) { /* 影片不可用時略過 */ }
-  }
-
-  function pauseMimiVideo() {
-    if (videoBroken) return;
-    try { mimiVideo.pause(); } catch (e) { /* 已卸載時忽略 */ }
-  }
-
-  function syncPhaseVideo(phase) {
-    if (videoBroken) return;
-    const next = ACT_VIDEOS[phase] || ACT_VIDEOS[0];
-    if (mimiVideo.getAttribute('src') !== next) {
-      mimiVideo.setAttribute('src', next);
-      try { mimiVideo.load(); } catch (e) { /* 尚未就緒時略過 */ }
-    }
-    if (isPlaying) playMimiVideo();
-  }
-
-  mimiVideo.addEventListener('error', () => {
-    // 影片缺失或解碼失敗：平滑回退至原版 SVG 米米
-    videoBroken = true;
-    mimiWrap.classList.remove('has-video');
-    mimiWrap.classList.add('no-video');
-    try { mimiVideo.pause(); } catch (e) { /* 已卸載時忽略 */ }
-  });
-
   function updatePlayButton() {
-    if (isPlaying) {
-      btnPlayPause.textContent = '⏸ 暫停';
-      btnPlayPause.classList.remove('btn-primary');
-    } else {
-      btnPlayPause.textContent = '▶ 播放';
-      btnPlayPause.classList.add('btn-primary');
-    }
+    btnPlayPause.textContent = isPlaying ? '⏸ 暫停' : '▶ 播放';
+    btnPlayPause.classList.toggle('btn-primary', !isPlaying);
   }
-
-  function clearMimiReaction() {
-    mimiWrap.classList.remove('cheer', 'tilt');
-  }
-
+  function clearMimiReaction() { mimiWrap.classList.remove('cheer', 'tilt'); }
   function resetQuiz() {
-    quizAnswered = null;
-    quizFb.textContent = '';
-    quizFb.className = 'quiz-fb';
-    quizOpts.forEach((b) => {
-      b.classList.remove('picked-correct', 'picked-wrong');
-      b.disabled = false;
-    });
+    quizAnswered = null; quizFb.textContent = ''; quizFb.className = 'quiz-fb';
+    quizOpts.forEach((b) => { b.classList.remove('picked-correct', 'picked-wrong'); b.disabled = false; });
   }
+
+  /* 原廠 3D 黏土高清底圖為唯一視覺錨點：不受幕次切換影響，僅以 CSS 微動態回應劇情 */
+  mimiAnchor.addEventListener('animationend', (e) => {
+    if (e.animationName === 'mimiCheer' || e.animationName === 'mimiTilt') clearMimiReaction();
+  });
 
   function applyPhaseVisuals(phase) {
     phaseChips.forEach((chip, i) => chip.classList.toggle('active', i === phase));
-
     const cfg = PHASES[phase];
-    // 若第 4 幕已作答，保留作答後的泡泡與回饋
-    if (!(phase === 3 && quizAnswered !== null)) {
-      mimiBubble.textContent = cfg.bubble;
-    }
+    if (!(phase === 3 && quizAnswered !== null)) mimiBubble.textContent = cfg.bubble;
     captionText.textContent = cfg.caption;
 
-    // 頂部計數：依規格第 1 幕即顯示 3、7、10
-    cntBlue.textContent = '3';
-    cntOrange.textContent = '7';
-    cntTotal.textContent = '10';
+    cntBlue.textContent = '3'; cntOrange.textContent = '7'; cntTotal.textContent = '10';
     cntFraction.textContent = phase >= 1 ? '10/12' : '—';
 
-    // 巧克力動態著色導引
     segEls.forEach((el, i) => {
-      const isTaken = i < 10;
-      el.classList.toggle('lit', isTaken);
-      // 各階段微動態：第1幕全亮已取塊、第2幕聚焦、第3幕強調
-      if (phase === 0) {
-        el.classList.toggle('pop', i < 10);
-      } else if (phase === 1) {
-        el.classList.toggle('pop', i === 9);
-      } else if (phase === 2) {
-        el.classList.toggle('pop', i < 10);
-      } else {
-        el.classList.remove('pop');
-      }
+      const taken = i < 10;
+      el.classList.toggle('lit', taken);
+      const pop = phase === 0 ? taken : (phase === 1 ? i === 9 : (phase === 2 ? taken : false));
+      el.classList.toggle('pop', pop);
     });
-
-    // 金色光圈導引：第 2 幕起標定第 10 塊位置
     focusRing.classList.toggle('on', phase >= 1);
-
-    // 分數標註顯示
     lblBlue.classList.toggle('show', phase >= 1);
     lblOrange.classList.toggle('show', phase >= 1);
 
-    // 黑板中央內容切換
     unitNote.classList.remove('show');
     equationWrap.hidden = true;
     quizCard.hidden = true;
+    finaleRow.hidden = true;
 
-    if (phase === 0) {
-      // 第 1 幕：數塊數（不額外中央提示，聚焦巧克力與字幕）
-    } else if (phase === 1) {
-      // 第 2 幕：12 塊裡的幾塊
+    if (phase === 1) {
       unitNote.textContent = '每一塊 = 1/12 條';
       unitNote.classList.add('show');
     } else if (phase === 2) {
-      // 第 3 幕：算式抽象化（分母 12 金色微光高亮）
-      equationBig.innerHTML =
-        `<span style="color:#38bdf8;">3</span>/<span class="denom-glow">12</span>` +
-        ` + <span style="color:#fb923c;">7</span>/<span class="denom-glow">12</span>` +
-        ` = <span style="color:#f1c40f;">10</span>/<span class="denom-glow">12</span>`;
+      equationBig.innerHTML = equationHTML;
       equationWrap.hidden = false;
     } else if (phase === 3) {
-      // 第 4 幕：互動驗收（未作答前不在泡泡外洩漏答案提示）
       quizCard.hidden = false;
-      if (quizAnswered === null) {
-        quizFb.textContent = '';
-        quizFb.className = 'quiz-fb';
-      }
+      finaleRow.hidden = false;
+      if (quizAnswered === null) { quizFb.textContent = ''; quizFb.className = 'quiz-fb'; }
     }
-
-    // 左側 48% 舞台影片與幕次同步（換幕才換檔，播放中自動續播）
-    syncPhaseVideo(phase);
   }
 
   function renderFrame(t) {
     const total = getTotalSeconds();
     const clamped = Math.max(0, Math.min(total, t || 0));
     const phase = currentPhase(clamped);
-
     timeLabel.textContent = formatTime(clamped);
     totalTimeLabel.textContent = formatTime(total);
     timelineFill.style.width = total > 0 ? `${(clamped / total) * 100}%` : '0%';
     timelineBar.setAttribute('aria-valuemax', String(Math.ceil(total)));
     timelineBar.setAttribute('aria-valuenow', String(Math.round(clamped)));
-
     if (phase !== lastPhase) {
-      // 切換分鏡時，若離開第4幕則清除互動狀態；進入第4幕保留當前作答
-      if (lastPhase === 3 && phase !== 3) {
-        resetQuiz();
-        clearMimiReaction();
-      }
-      if (phase !== 3) {
-        clearMimiReaction();
-      }
+      if (lastPhase === 3 && phase !== 3) { resetQuiz(); clearMimiReaction(); }
+      if (phase !== 3) clearMimiReaction();
       lastPhase = phase;
     }
-
     applyPhaseVisuals(phase);
   }
 
-  /* ---------- 播放控制 ---------- */
   function pausePlay(updateUi) {
     isPlaying = false;
-    try { audio.pause(); } catch (e) { /* 離線/解碼異常時靜默降級 */ }
-    pauseMimiVideo();
+    try { audio.pause(); } catch (e) {}
     setSpeaking(false);
     if (updateUi !== false) updatePlayButton();
   }
-
   async function playFromCurrent() {
     const total = getTotalSeconds();
-    if (!Number.isNaN(audio.duration) && audio.duration > 0 && audio.currentTime >= audio.duration - 0.05) {
-      audio.currentTime = 0;
-    } else if (audio.currentTime >= total - 0.05 && total > 0) {
-      audio.currentTime = 0;
-    }
+    if (audio.currentTime >= total - 0.05 && total > 0) audio.currentTime = 0;
     try {
-      await audio.play();
-      isPlaying = true;
-      setSpeaking(true);
-      playMimiVideo();
-      updatePlayButton();
-    } catch (e) {
-      // 自動播放受阻等情境：優雅降級等待使用者點擊後解鎖
-      isPlaying = false;
-      setSpeaking(false);
-      updatePlayButton();
-    }
+      await audio.play(); isPlaying = true; setSpeaking(true); updatePlayButton();
+    } catch (e) { isPlaying = false; setSpeaking(false); updatePlayButton(); }
   }
-
   function seek(t) {
     const total = getTotalSeconds();
     const clamped = Math.max(0, Math.min(total, t || 0));
-    try {
-      if (!Number.isNaN(audio.duration) && audio.duration > 0) {
-        audio.currentTime = Math.min(clamped, audio.duration);
-      } else {
-        audio.currentTime = clamped;
-      }
-    } catch (e) { /* 容錯：尚未就緒時略過 */ }
+    try { audio.currentTime = clamped; } catch (e) {}
     renderFrame(clamped);
   }
-
   function setMode(mode, idx) {
-    playMode = mode;
-    actIndex = typeof idx === 'number' ? idx : 0;
+    playMode = mode; actIndex = typeof idx === 'number' ? idx : 0;
     const src = playMode === 'full' ? TIMELINE.full : TIMELINE.acts[actIndex].file;
-    if (audio.getAttribute('src') !== src) {
-      audio.src = src;
-    }
-    try { audio.currentTime = 0; } catch (e) { /* 尚未載入時略過 */ }
+    if (audio.getAttribute('src') !== src) audio.src = src;
+    try { audio.currentTime = 0; } catch (e) {}
   }
-
   function restartShow() {
-    pausePlay();
-    resetQuiz();
-    clearMimiReaction();
-    lastPhase = -1;
-    setMode('full', 0);
-    renderFrame(0);
-    // 重播：影片歸零並重新起播
-    if (!videoBroken) {
-      try { mimiVideo.currentTime = 0; } catch (e) { /* 尚未就緒時略過 */ }
-    }
+    pausePlay(); resetQuiz(); clearMimiReaction(); lastPhase = -1;
+    setMode('full', 0); renderFrame(0);
     playFromCurrent();
   }
 
   btnPlayPause.addEventListener('click', () => {
-    if (isPlaying) {
-      pausePlay();
-      return;
-    }
-    // 依目前模式續播：連續播放用全景語音，特定幕次用該幕語音
+    if (isPlaying) { pausePlay(); return; }
     const src = playMode === 'full' ? TIMELINE.full : TIMELINE.acts[actIndex].file;
-    if (audio.getAttribute('src') !== src) {
-      audio.src = src;
-    }
+    if (audio.getAttribute('src') !== src) audio.src = src;
     playFromCurrent();
   });
-
-  btnRestart.addEventListener('click', () => {
-    restartShow();
-  });
-
+  btnRestart.addEventListener('click', restartShow);
   btnAudioToggle.addEventListener('click', () => {
     audio.muted = !audio.muted;
     btnAudioToggle.textContent = audio.muted ? '🔇 音效: 關' : '🔊 音效: 開';
   });
-
-  audio.addEventListener('timeupdate', () => {
-    if (seeking) return;
-    renderFrame(audio.currentTime || 0);
-  });
-
+  audio.addEventListener('timeupdate', () => { if (!seeking) renderFrame(audio.currentTime || 0); });
   audio.addEventListener('ended', () => {
-    isPlaying = false;
-    pauseMimiVideo();
-    setSpeaking(false);
-    updatePlayButton();
-    renderFrame(getTotalSeconds());
+    isPlaying = false; setSpeaking(false); updatePlayButton(); renderFrame(getTotalSeconds());
   });
-
   audio.addEventListener('pause', () => {
-    // 非拖曳造成的暫停同步狀態
-    if (!audio.ended) {
-      isPlaying = false;
-      pauseMimiVideo();
-      setSpeaking(false);
-      updatePlayButton();
-    }
+    if (!audio.ended) { isPlaying = false; setSpeaking(false); updatePlayButton(); }
   });
+  audio.addEventListener('play', () => { isPlaying = true; setSpeaking(true); updatePlayButton(); });
 
-  audio.addEventListener('play', () => {
-    isPlaying = true;
-    setSpeaking(true);
-    playMimiVideo();
-    updatePlayButton();
-  });
-
-  /* 時間軸：點擊 + 拖曳 */
   function seekFromEvent(e) {
     const rect = timelineBar.getBoundingClientRect();
-    const ratio = (e.clientX - rect.left) / rect.width;
-    seek(ratio * getTotalSeconds());
+    seek(((e.clientX - rect.left) / rect.width) * getTotalSeconds());
   }
-  timelineBar.addEventListener('pointerdown', (e) => {
-    seeking = true;
-    timelineBar.setPointerCapture(e.pointerId);
-    seekFromEvent(e);
-  });
-  timelineBar.addEventListener('pointermove', (e) => {
-    if (seeking) seekFromEvent(e);
-  });
+  timelineBar.addEventListener('pointerdown', (e) => { seeking = true; timelineBar.setPointerCapture(e.pointerId); seekFromEvent(e); });
+  timelineBar.addEventListener('pointermove', (e) => { if (seeking) seekFromEvent(e); });
   const endSeek = (e) => {
     if (!seeking) return;
     seeking = false;
-    if (timelineBar.hasPointerCapture(e.pointerId)) {
-      try { timelineBar.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-    }
+    if (timelineBar.hasPointerCapture(e.pointerId)) { try { timelineBar.releasePointerCapture(e.pointerId); } catch (err) {} }
   };
   timelineBar.addEventListener('pointerup', endSeek);
   timelineBar.addEventListener('pointercancel', endSeek);
@@ -1475,22 +682,12 @@
     chip.addEventListener('click', () => {
       const phase = parseInt(chip.dataset.phase, 10);
       if (Number.isNaN(phase)) return;
-      pausePlay();
-      resetQuiz();
-      clearMimiReaction();
-      lastPhase = -1;
-      setMode('act', phase);
-      renderFrame(0);
-      // 點選幕次：影片從該幕開頭播放
-      if (!videoBroken) {
-        try { mimiVideo.currentTime = 0; } catch (e) { /* 尚未就緒時略過 */ }
-      }
-      // 點選幕次即播對應分段語音
+      pausePlay(); resetQuiz(); clearMimiReaction(); lastPhase = -1;
+      setMode('act', phase); renderFrame(0);
       playFromCurrent();
     });
   });
 
-  /* ---------- 第 4 幕互動驗收 ---------- */
   optCorrect.addEventListener('click', () => {
     if (quizAnswered !== null) return;
     quizAnswered = 'correct';
@@ -1499,12 +696,8 @@
     quizFb.className = 'quiz-fb ok';
     quizFb.textContent = '正確！10 塊就是 10/12 條。';
     mimiBubble.textContent = '🐰 答對了！太聰明了！🎉';
-    clearMimiReaction();
-    // 觸發耳朵歡呼動畫
-    void mimiWrap.offsetWidth;
-    mimiWrap.classList.add('cheer');
+    void mimiWrap.offsetWidth; mimiWrap.classList.add('cheer');
   });
-
   optWrong.addEventListener('click', () => {
     if (quizAnswered !== null) return;
     quizAnswered = 'wrong';
@@ -1513,17 +706,32 @@
     quizFb.className = 'quiz-fb no';
     quizFb.textContent = '再想想：分母代表總共有幾塊喔！';
     mimiBubble.textContent = '🐰 不對喔！一整條一直都只有 12 塊，分母不能相加喔！💡';
-    clearMimiReaction();
-    // 觸發歪頭提示
-    void mimiWrap.offsetWidth;
-    mimiWrap.classList.add('tilt');
+    void mimiWrap.offsetWidth; mimiWrap.classList.add('tilt');
+  });
+  $('challengeBtn').addEventListener('click', () => {
+    window.location.href = '../../components/fraction_lab.html?q=7';
   });
 
-  /* ---------- 初始化 ---------- */
-  equationBig.innerHTML =
-    `<span style="color:#38bdf8;">3</span>/<span class="denom-glow">12</span>` +
-    ` + <span style="color:#fb923c;">7</span>/<span class="denom-glow">12</span>` +
-    ` = <span style="color:#f1c40f;">10</span>/<span class="denom-glow">12</span>`;
+  /* ---------- 由 JSON 載入四幕台詞與時間軸（SSOT），離線時用內建實測值 ---------- */
+  fetch(TIMELINE_PATH)
+    .then((r) => { if (!r.ok) throw new Error('timeline HTTP ' + r.status); return r.json(); })
+    .then((cfg) => {
+      if (!Array.isArray(cfg.acts) || cfg.acts.length !== 4) return;
+      cfg.acts.forEach((a, i) => {
+        const t = TIMELINE.acts[i];
+        t.title = a.title;
+        if (typeof a.start === 'number') t.start = a.start;
+        if (typeof a.duration === 'number') t.duration = a.duration;
+        if (typeof a.end === 'number') t.end = a.end;
+        if (typeof a.text === 'string' && a.text.trim()) PHASES[i].caption = a.text;
+      });
+      FULL_DURATION = TIMELINE.acts[TIMELINE.acts.length - 1].end;
+      timelineBar.setAttribute('aria-valuemax', String(Math.ceil(FULL_DURATION)));
+      renderFrame(audio.currentTime || 0);
+    })
+    .catch(() => { /* 離線 / file:// 降級：沿用內建實測值 */ });
+
+  equationBig.innerHTML = equationHTML;
   setMode('full', 0);
   renderFrame(0);
   window.addEventListener('resize', () => renderFrame(audio.currentTime || 0));
