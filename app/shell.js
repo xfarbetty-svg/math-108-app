@@ -162,6 +162,16 @@ function openConceptLab(code) {
   if (examWrap) examWrap.style.display = "none";
   const frame = $("conceptFrame");
   if (frame) frame.src = comp;
+  const btnMovie = $("btnConceptMovie");
+  if (btnMovie) {
+    const movieUrl = UNIT_CONCEPT_MOVIES[code];
+    if (movieUrl) {
+      btnMovie.href = movieUrl;
+      btnMovie.style.display = "inline-flex";
+    } else {
+      btnMovie.style.display = "none";
+    }
+  }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -188,6 +198,11 @@ async function openUnit(code, initialQIndex = 0) {
 }
 
 /* ---------- 單元內建模式切換（概念小教室 vs 真題測驗） ---------- */
+const UNIT_CONCEPT_MOVIES = {
+  "N-2-1": "https://youtu.be/1Kk8-PbRXD8",
+  "N-2-2": "https://youtu.be/YQeDijIl9ss"
+};
+
 const CONCEPT_COMPONENTS = {
   "N-2-1": "components/g2_place_value_1000_lab.html",
   "N-2-2": "components/g2_vertical_addition_subtraction_lab.html",
@@ -317,6 +332,19 @@ function renderQuestion() {
   $("progressNum").textContent = "第 " + (state.qIndex + 1) + " / " + (state.unit.question_count || state.unit.questions.length) + " 題";
   $("progressSource").textContent = q.exam_source + " · " + q.section + " · 第 " + q.question_num + " 題";
   $("stageTitle").textContent = q.title;
+
+  // 微電影導流
+  const btnMovie = $("btnConceptMovie");
+  if (btnMovie) {
+    const curCode = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
+    const movieUrl = UNIT_CONCEPT_MOVIES[curCode];
+    if (movieUrl) {
+      btnMovie.href = movieUrl;
+      btnMovie.style.display = "inline-flex";
+    } else {
+      btnMovie.style.display = "none";
+    }
+  }
 
   // Shorts 影片解題導流
   const btnVideo = $("btnShortsVideo");
