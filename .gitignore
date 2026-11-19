@@ -3,6 +3,7 @@ _scratch/
 .DS_Store
 Thumbs.db
 reports/*.png
+reports/*.mp4
 .wrangler/
 
 __pycache__/
