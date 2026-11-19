@@ -283,14 +283,35 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
   <!-- 頂部活動膠囊切換 -->
   <nav class="activity-nav">
-    <button class="act-btn active" id="tab-act1" onclick="switchAct(1)">🍰 活動一 · 平分與命名</button>
+    <button class="act-btn active" id="tab-act0" onclick="switchAct(0)">🎬 動畫課堂</button>
+    <button class="act-btn" id="tab-act1" onclick="switchAct(1)">🍰 活動一 · 平分與命名</button>
     <button class="act-btn" id="tab-act2" onclick="switchAct(2)">🍫 活動二 · 單位分數</button>
     <button class="act-btn" id="tab-act3" onclick="switchAct(3)">🆚 活動三 · 比大小</button>
     <button class="act-btn" id="tab-act4" onclick="switchAct(4)">🧩 活動四 · 加與減</button>
   </nav>
 
+  <!-- ==================== 活動零：白兔米米 84s 阿德曼實體黏土定格動畫 ==================== -->
+  <section class="act-card" id="act-0-view" style="display:flex;">
+    <div class="card-head">
+      <span class="card-badge" style="background:#fef3c7; color:#b45309;">🎬 108 課綱 N-3-9 官方影音課堂</span>
+      <span style="font-size:11px; font-weight:800; color:#8a857b;">84.75 秒全片 · 曉臻女聲配音</span>
+    </div>
+    <div class="card-title">🐰 白兔米米的巧克力冒險：同分母分數相加</div>
+    <div class="card-desc">
+      跟著全身毛絨白兔米米，一起把 12 格長條巧克力平分！看懂<b>「分母像地基不動，只有分子相加」</b>的核心算理！
+    </div>
+    <div style="width:100%; border-radius:12px; overflow:hidden; background:#000; box-shadow:0 6px 18px rgba(0,0,0,0.15); aspect-ratio: 16/9; display:flex; align-items:center; justify-content:center;">
+      <video id="clayVideo" controls playsinline preload="metadata" style="width:100%; height:100%; object-fit:cover;" src="../assets/video/g3_n39_concept_final.mp4">
+        您的瀏覽器不支援 HTML5 影片播放。
+      </video>
+    </div>
+    <div class="info-bubble" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af;">
+      💡 <b>觀片祕笈</b>：看完影片後，可以點選上方<b>「活動一 ～ 活動四」</b>進行具象教具操作與比大小挑戰喔！
+    </div>
+  </section>
+
   <!-- ==================== 活動一：平分圓盤與分數命名 ==================== -->
-  <section class="act-card" id="act-1-view">
+  <section class="act-card" id="act-1-view" style="display:none;">
     <div class="card-head">
       <span class="card-badge">課綱手冊 N-3-9 探究活動 1</span>
       <button class="btn-tts" onclick="playVoice(1)">
@@ -483,15 +504,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 <script>
 /* ==================== 頁籤切換 ==================== */
-let currentAct = 1;
+let currentAct = 0;
 function switchAct(n) {
   currentAct = n;
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 0; i <= 4; i++) {
     const tab = document.getElementById("tab-act" + i);
     const view = document.getElementById("act-" + i + "-view");
     if (tab) tab.classList.toggle("active", i === n);
     if (view) view.style.display = (i === n) ? "flex" : "none";
   }
+  const v = document.getElementById("clayVideo");
+  if (v && n !== 0) v.pause();
   // 切換時停止語音
   stopSpeech();
   notifyHeight();

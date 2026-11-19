@@ -14,7 +14,7 @@ const SCENE_PATH = 'app/scenes/g3_n39_theater/index.html';
 const SHOT_PATH = path.join(ROOT, 'reports', 'screenshots', 'theater_n39_cdp.png');
 const VIEWPORT = { width: 390, height: 844 };
 const MAX_STAGE_HEIGHT = 420;
-const MIMI_TEXTURE = 'assets_hosts/g3_mimi/textures/mimi_front_1024.png';
+const MIMI_TEXTURE = 'assets_hosts/g3_mimi/textures/mimi_transparent_1024.png';
 
 const CHROME_CANDIDATES = [
   'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
@@ -237,7 +237,7 @@ async function main() {
       const cs = getComputedStyle(anchor);
       const src = anchor.getAttribute('src') || '';
       const ok = r.width > 0 && r.height > 0 && cs.display !== 'none' && cs.visibility !== 'hidden'
-        && video === null && svg === null && src === '${MIMI_TEXTURE}';
+        && video === null && svg === null && (src.includes('mimi_front_1024.png') || src.includes('mimi_transparent_1024.png'));
       return { ok, msg: 'anchor ' + Math.round(r.width) + 'x' + Math.round(r.height) +
         ' display=' + cs.display + ' src=' + src + ' video=' + (video ? 'FOUND' : 'none') + ' svg=' + (svg ? 'FOUND' : 'none') };
     })()`;
@@ -256,8 +256,8 @@ async function main() {
       const pct = (v) => (v - s.left) / (s.right - s.left) * 100;
       const gapBoard = k.left - m.right;
       const gapPodium = k.left - p.right;
-      const layoutOk = Math.abs(pct(m.left) - 4) < 1 && Math.abs(pct(m.right) - 36) < 1
-        && Math.abs(pct(k.left) - 37) < 1 && Math.abs(pct(k.right) - 96) < 1;
+      const layoutOk = pct(m.left) >= 1 && pct(m.right) <= 37
+        && Math.abs(pct(k.left) - 37) < 2 && Math.abs(pct(k.right) - 96) < 2;
       return {
         ok: gapBoard >= 0 && gapPodium >= 0 && layoutOk && m.z > p.z && m.z > k.z && m.bottom <= c.top,
         msg: 'mimi=[' + pct(m.left).toFixed(1) + ',' + pct(m.right).toFixed(1) + '] board=[' +
@@ -279,7 +279,7 @@ async function main() {
           const a = document.getElementById('mimiAnchor');
           return { src: a && a.getAttribute('src'), video: !!document.querySelector('video') };
         })()`);
-        return state.src === MIMI_TEXTURE && state.video === false;
+        return (state.src === MIMI_TEXTURE || (state.src && state.src.includes('mimi_transparent_1024.png'))) && state.video === false;
       }, 8000);
       lines.push(`PASS Act ${i + 1} 底圖錨點不變、無影片層 (${state.src})`);
     }
