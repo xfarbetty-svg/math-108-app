@@ -13,21 +13,22 @@
     3. **工單 3 (Gate 2 黑板教具)**：`blackboard_visuals.py` 實作 Act 1~4 日系溫潤粉筆手繪教具（12 格巧克力平分、1/12 條特寫、分母金色地基框「分母不動」、分數小達人獎章），幾何安全區零遮擋。
     4. **工單 4 (Gate Total 全片交付)**：`render_full_theater_video.py` 複合壓製出 **84.75 秒 / 2,034 幀** 之高畫質全片，同步交付至劇場與概念小教室雙目錄！
 - **精修兩大任務完成**：
-  1. **配音聲調與 SSML 檢驗（實事求是反思）**：
-     - 經實測驗證，微軟 Edge-TTS 免費公開介面（`speech.platform.bing.com`）不支援 `<phoneme>` 標籤（送出會直接拒絕並拋出 `NoAudioReceived`；若未跳脫則會逐字唸出標籤英文單詞）。
-     - 透過 FFT 與自相關基頻（F0）分析，`zh-TW-HsiaoChenNeural` 預設在「好朋友」中已呈標準半三聲（192Hz -> 166Hz 接 212Hz），符合國小審音規範，保持原版音訊以確保 2034 幀音畫毫秒級對齊。
+  1. **配音聲調精準修正（第 5 秒「超好吃」ㄏㄠˇ三聲）**：
+     - 使用者精確指認第 5~6 秒「超好吃」被微軟 Edge-TTS 唸成四聲（ㄏㄠˋ）。
+     - 透過同音三聲字「郝」在 TTS 端進行音素對齊修正（`超郝吃的巧克力`），經 Groq Whisper 辨識確為「超好吃的巧克力」，FFT 基頻分析顯示成功消滅 276Hz 驟降四聲，轉為平穩 160~180Hz 標準三聲（ㄏㄠˇ）。
+     - 總時長 84.720 秒，與原片 84.744 秒僅差 0.024 秒（零破壞對嘴與教具卡點）。
   2. **Cloudflare Pages 25MiB 瘦身轉碼**：
-     - 全片升級為標準教育片碼率（1800 kbps / High Profile / yuv420p），精確降至 **18.69 MB (17.82 MiB)**，完美落在 18~20 MB 區間且遠低於 25 MiB 限制！
+     - 全片升級為標準教育片碼率（1800 kbps / High Profile / yuv420p），精確降至 **18.72 MB (17.85 MiB)**，完美落在 18~20 MB 區間且遠低於 25 MiB 限制！
 
 ---
 
 ## 🚦 目前狀態與客觀事實
-- 🟢 **當前狀態**：G3-N-3-9 單元教學全片完成輕量化轉碼（18.69 MB / < 20 MB），全部客觀測試 PASS。
+- 🟢 **當前狀態**：G3-N-3-9 單元教學全片完成第 5 秒「超好吃」三聲精修與輕量化轉碼（18.72 MB），通過全部客觀測試。
 - 🧱 **關鍵代碼與資產位置**：
-  - 劇院全片 MP4：`app/scenes/g3_n39_theater/video/g3_n39_full_theater.mp4` (18.69 MB)
-  - 概念小教室 MP4：`app/assets/video/g3_n39_concept_final.mp4` (18.69 MB)
-  - 全片壓製工具：`036_local_painter/tools/render_full_theater_video.py` (已升級 1800k 碼率配置)
-  - 黑板動態教具層：`036_local_painter/tools/blackboard_visuals.py`
+  - 劇院全片 MP4：`app/scenes/g3_n39_theater/video/g3_n39_full_theater.mp4` (18.72 MB)
+  - 概念小教室 MP4：`app/assets/video/g3_n39_concept_final.mp4` (18.72 MB)
+  - 修正版曉臻音訊：`app/scenes/g3_n39_theater/audio/g3_n39_hsiaochen.mp3` & `act1.mp3`
+  - 全片壓製工具：`036_local_painter/tools/render_full_theater_video.py`
   - 母本資產目錄：`036_local_painter/theater/assets/mimi_v2/`
 
 ---
