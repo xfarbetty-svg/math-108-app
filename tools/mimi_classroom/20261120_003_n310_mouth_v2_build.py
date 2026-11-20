@@ -7,7 +7,7 @@
   D:/NAS/XX.CF995/8.下載/Gemini_Generated_Image_88lc5488lc5488lc (1).jpg  (大張嘴)
   ready/mimi_apose_closed.png                                              (閉嘴基準)
 輸出：
-  ready/raw/mimi_mouth_half_ref.png, ready/raw/mimi_mouth_open_ref.png
+  ../g3_mimi/raw/mimi_mouth_half_ref.png, ../g3_mimi/raw/mimi_mouth_open_ref.png
   ready/mouth_frames_v2/{mouth_closed,mouth_half,mouth_open}.png
   app/assets/classroom_videos/N310_Final.mp4
   _scratch/mimi_n310/mouth_v2_check.png
@@ -47,7 +47,7 @@ MOUTH_BOX = (821, 900, 1221, 1068)  # 鼻孔下 → 下巴，含完整兔吻與�
 
 
 def prepare_assets() -> dict:
-    raw = READY / "raw"
+    raw = READY.parent / "raw"  # g3_mimi/raw/（與 ready/ 同級，符合 SSOT 規範）
     v2 = READY / "mouth_frames_v2"
     raw.mkdir(parents=True, exist_ok=True)
     v2.mkdir(parents=True, exist_ok=True)
