@@ -62,4 +62,4 @@
 ## 🕐 最後更新
 - **時間**：2026-11-20
 - **更新者**：OpenCode @ DESKTOP-6ELKIRH
-- **Git 狀態**：待回填（L2 commit + push 後更新）
+- **Git 狀態**：✅ 已推（origin/main：814722a；pre-push hook 已自動部署 Cloudflare Pages）
