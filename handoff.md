@@ -56,4 +56,4 @@
 ## 🕐 最後更新
 - **時間**：2026-11-20
 - **更新者**：Antigravity (AGY 監工) @ DESKTOP-6ELKIRH
-- **Git 狀態**：待回填（L2 完成後更新）
+- **Git 狀態**：✅ 已推（origin/main：e08cad8 + d542eb7；pre-push hook 已自動部署 Cloudflare Pages）
