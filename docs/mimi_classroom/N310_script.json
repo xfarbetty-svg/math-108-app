@@ -7,6 +7,7 @@
     "mimi_ssot_root": "../036_local_painter/theater/assets_hosts/g3_mimi/ready",
     "forbid_other_asset_roots": true,
     "read_transparent_png_directly": true,
+    "mouth_sequence_dir": "ready/mouth_frames_v2",
     "visual_model_called": false,
     "comfyui_redraw_called": false
   },
@@ -14,6 +15,7 @@
     "temp_work_dir": "_scratch/mimi_n310",
     "blackboard_dir": "_scratch/mimi_n310/blackboard",
     "blackboard_montage": "_scratch/mimi_n310/blackboard_montage.png",
+    "mouth_v2_check": "_scratch/mimi_n310/mouth_v2_check.png",
     "timeline": "_scratch/mimi_n310/timeline.json",
     "build_report": "_scratch/mimi_n310/build_report.json",
     "output_video": "app/assets/classroom_videos/N310_Final.mp4"
@@ -43,27 +45,27 @@
       "decimal_guide": "orange_vertical_dashed"
     },
     "layer3_mimi": {
-      "anchor_center": [340, 620],
+      "anchor_center": [340, 685],
       "scale_from_2048": 0.35,
       "basecolor_fill": true,
       "seamless_clone": "cv2.NORMAL_CLONE",
       "collar_guard_source_y": 510,
       "collar_guard_ramp_px": 20,
-      "mouth_patch_center_2048": [1008, 930],
-      "mouth_patch_size_2048": 256,
-      "mouth_frames_order_by_openness": [
-        "mouth_01.png",
-        "mouth_02.png",
-        "mouth_06.png",
-        "mouth_04.png",
-        "mouth_03.png",
-        "mouth_05.png"
+      "foot_shadow": true,
+      "mouth_mode": "v2_3d_smooth",
+      "mouth_patch_center_2048": [1021, 985],
+      "mouth_patch_size_2048": [400, 168],
+      "mouth_stages": [
+        "mouth_closed.png",
+        "mouth_half.png",
+        "mouth_open.png"
       ],
       "rms_gate": {
         "frame_ms": 33.3333,
         "open_threshold": 0.012,
         "hysteresis_frames": 4,
-        "lead_in_frames": 9
+        "lead_in_frames": 9,
+        "smooth_frames": 5
       }
     }
   },
