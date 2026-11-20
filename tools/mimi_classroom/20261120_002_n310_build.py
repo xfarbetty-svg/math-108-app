@@ -551,6 +551,17 @@ def prep_poses(cfg: dict, poses: set[str]) -> tuple[dict, dict]:
         rgba = cv2.resize(arr, (size, size), interpolation=cv2.INTER_AREA)
         rgb_ = cv2.cvtColor(rgba[:, :, :3], cv2.COLOR_RGB2BGR)
         alpha = rgba[:, :, 3]
+        # 硬規則 1：貼新嘴前先把舊「閉嘴微笑黑線 / 舊口腔」整塊擦成乾淨兔吻底色。
+        # 在姿勢圖 source 座標做 inpaint，底部幽靈線不可能從底層透出。
+        clean_box = cfg["layers"]["layer3_mimi"].get("mouth_clean_plate_box_2048",
+                                                      [850, 920, 1190, 1040])
+        bx0, by0 = int(round(clean_box[0] * scale)), int(round(clean_box[1] * scale))
+        bx1, by1 = int(round(clean_box[2] * scale)), int(round(clean_box[3] * scale))
+        reg = rgb_[by0:by1, bx0:bx1]
+        gray = cv2.cvtColor(reg, cv2.COLOR_BGR2GRAY)
+        old_line = (gray < 185).astype(np.uint8) * 255
+        old_line = cv2.dilate(old_line, np.ones((3, 3), np.uint8), iterations=1)
+        rgb_[by0:by1, bx0:bx1] = cv2.inpaint(reg, old_line, 5, cv2.INPAINT_TELEA)
         result[name] = (rgb_, alpha)
         meta[name] = {"source": str(p), "size": [size, size],
                       "opaque_ratio_before": round(float((np.array(Image.open(p).convert("RGBA"))[:, :, 3] > 10).mean()), 3)}
@@ -558,17 +569,21 @@ def prep_poses(cfg: dict, poses: set[str]) -> tuple[dict, dict]:
 
 
 def prep_mouths(cfg: dict) -> dict[int, tuple[np.ndarray, np.ndarray]]:
+    """讀取 mouth_frames_v2 三階段立體兔嘴（实心 + 4px 外緣羽化遮罩）。"""
     root = (ROOT / cfg["asset_policy"]["mimi_ssot_root"]).resolve()
     layer = cfg["layers"]["layer3_mimi"]
     scale = float(layer["scale_from_2048"])
-    sz = int(round(layer["mouth_patch_size_2048"] * scale))
+    pw, ph = [int(round(v * scale)) for v in layer["mouth_patch_size_2048"]]
     out = {}
-    for i, name in enumerate(layer["mouth_frames_order_by_openness"]):
-        p = root / "mouth_frames" / name
+    for i, name in enumerate(layer["mouth_stages"]):
+        p = root / "mouth_frames_v2" / name
         if not p.is_file():
-            raise FileNotFoundError(f"ready/mouth_frames 缺檔: {p}")
-        arr = np.array(Image.open(p).convert("RGBA").resize((sz, sz), Image.LANCZOS))
-        out[i] = (cv2.cvtColor(arr[:, :, :3], cv2.COLOR_RGB2BGR), arr[:, :, 3])
+            raise FileNotFoundError(f"ready/mouth_frames_v2 缺檔: {p}")
+        arr = np.array(Image.open(p).convert("RGBA").resize((pw, ph), Image.LANCZOS))
+        a = arr[:, :, 3]
+        # 硬規則 2：內部 100% 不透明；僅最外圍容許羽化（來源已 4px，這裡再收緊確保無半透明混色）
+        a = np.where(a >= 160, 255, a).astype(np.uint8)
+        out[i] = (cv2.cvtColor(arr[:, :, :3], cv2.COLOR_RGB2BGR), a)
     return out
 
 
@@ -624,6 +639,60 @@ def audio_gate(mix_path: Path, timeline: dict, cfg: dict) -> np.ndarray:
     return idx
 
 
+def audio_openness(mix_path: Path, timeline: dict, cfg: dict) -> np.ndarray:
+    """音量包絡 → 0..1 張嘴程度（僅供單階段閾值選擇，不做跨狀態混色）。"""
+    gate = cfg["layers"]["layer3_mimi"]["rms_gate"]
+    sr, fps = timeline["sample_rate_hz"], cfg["video_spec"]["fps"]
+    step = sr // fps
+    with wave.open(str(mix_path), "rb") as w:
+        pcm = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").astype(np.float32) / 32768.0
+    n = timeline["total_frames"]
+    rms = np.zeros(n, dtype=np.float32)
+    for i in range(n):
+        seg = pcm[i * step:(i + 1) * step]
+        if len(seg):
+            rms[i] = np.sqrt(np.mean(seg ** 2))
+    thr, hyst = float(gate["open_threshold"]), int(gate["hysteresis_frames"])
+    speaking = np.zeros(n, dtype=bool)
+    low = 0
+    for i in range(n):
+        if rms[i] > thr:
+            speaking[i], low = True, 0
+        else:
+            low += 1
+            speaking[i] = low <= hyst and i > 0 and speaking[i - 1]
+    for t in timeline["scenes"]:
+        s = int(round(t["visual_start"] * fps))
+        a = int(round(t["audio_start"] * fps))
+        speaking[s:min(s + int(gate["lead_in_frames"]), a)] = True
+    active = rms[speaking] if speaking.any() else np.array([0.0])
+    lo = float(np.percentile(active, 8))
+    hi = max(float(np.percentile(active, 92)), 1e-6)
+    p = np.clip((rms - lo) / (hi - lo), 0, 1)
+    p[~speaking] = 0.0
+    k = int(gate.get("smooth_frames", 5))
+    sm = np.convolve(p, np.ones(k, dtype=np.float32) / k, mode="same")
+    sm[:k], sm[-k:] = p[:k], p[-k:]
+    return sm.astype(np.float32)
+
+
+def draw_foot_shadow(frame: np.ndarray, cx: int, feet_y: int) -> None:
+    """講桌上的柔和落地投影。"""
+    from PIL import ImageDraw as _ID, ImageFilter as _IF  # noqa: PLC0415
+    layer = Image.new("RGBA", (frame.shape[1], frame.shape[0]), (0, 0, 0, 0))
+    d = _ID.Draw(layer)
+    d.ellipse((cx - 130, feet_y - 20, cx + 130, feet_y + 18), fill=(20, 16, 12, 105))
+    layer = layer.filter(_IF.GaussianBlur(16))
+    sh = np.array(layer)
+    a = (sh[:, :, 3].astype(np.float32) / 255)[:, :, None]
+    frame[:] = (sh[:, :, :3] * a + frame.astype(np.float32) * (1 - a)).astype(np.uint8)
+
+
+def pick_stage(p: float) -> int:
+    """單階段硬切換：0=閉嘴 1=微張 2=大張（嚴禁跨狀態混色）。"""
+    return 0 if p < 0.24 else (1 if p < 0.68 else 2)
+
+
 def compose_video(cfg: dict, entries: list[dict], timeline: dict, cards: dict,
                   mouths: dict, poses: dict, mix_path: Path, mouth_idx: np.ndarray) -> dict:
     W, H = cfg["video_spec"]["resolution"]
@@ -656,6 +725,8 @@ def compose_video(cfg: dict, entries: list[dict], timeline: dict, cards: dict,
         car, caa = card[:, :, :3], card[:, :, 3]
         # cv2 alpha 合成（RGBA → BGR 不需換色，因黑板為灰階/SVG 色彩，直接貼）
         alpha_composite(frame, cv2.cvtColor(car, cv2.COLOR_RGB2BGR), caa, rx, ry)
+        if layer.get("foot_shadow"):
+            draw_foot_shadow(frame, cx, int(cy + size * 0.5) - 18)
 
         spr, spa = poses[t["pose"]]
         alpha_composite(frame, spr, spa, left, top)
@@ -667,8 +738,8 @@ def compose_video(cfg: dict, entries: list[dict], timeline: dict, cards: dict,
             clone_ok += 1
         bases.append(frame)
 
-    mp_size = mouths[0][0].shape[0]
-    crop_half = mp_size // 2 + 24
+    ph, pw = mouths[0][0].shape[:2]
+    crop_half = 8  # 贴片已自帶 4px 羽化，無需大面積 clone 上下文
     out_path = ROOT / cfg["paths"]["output_video"]
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
@@ -691,26 +762,18 @@ def compose_video(cfg: dict, entries: list[dict], timeline: dict, cards: dict,
         while scene_idx + 1 < len(bases) and t >= timeline["scenes"][scene_idx + 1]["visual_start"]:
             scene_idx += 1
         frame = bases[scene_idx].copy()
-        mrgb, ma = mouths[int(mouth_idx[i])]
-        x0 = mouth_cx - mp_size // 2
-        y0 = mouth_cy - mp_size // 2
-        cx0, cy0 = max(0, x0 - crop_half), max(0, y0 - crop_half)
-        cx1, cy1 = min(W, x0 + mp_size + crop_half), min(H, y0 + mp_size + crop_half)
-        crop = frame[cy0:cy1, cx0:cx1].copy()
-        # 底色修補（透明處填臉部底色）後 NORMAL_CLONE
-        a = (ma.astype(np.float32) / 255.0)[:, :, None]
-        base = crop[y0 - cy0:y0 - cy0 + mp_size, x0 - cx0:x0 - cx0 + mp_size].astype(np.float32)
-        filled = (mrgb.astype(np.float32) * a + base * (1 - a)).astype(np.uint8)
-        sub = crop[y0 - cy0:y0 - cy0 + mp_size, x0 - cx0:x0 - cx0 + mp_size].copy()
-        try:
-            blended = cv2.seamlessClone(filled, sub, ma, (mp_size // 2, mp_size // 2), cv2.NORMAL_CLONE)
-            sel = ma > 8
-            sub[sel] = blended[sel]
-            crop[y0 - cy0:y0 - cy0 + mp_size, x0 - cx0:x0 - cx0 + mp_size] = sub
-            frame[cy0:cy1, cx0:cx1] = crop
+        # 硬規則 2：每幀只選一個階段，100% 實心覆蓋，绝不跨狀態混色。
+        mrgb, ma = mouths[pick_stage(float(mouth_idx[i]))]
+        x0 = mouth_cx - pw // 2
+        y0 = mouth_cy - ph // 2
+        ax0, ay0 = max(0, x0), max(0, y0)
+        ax1, ay1 = min(W, x0 + pw), min(H, y0 + ph)
+        if ax0 < ax1 and ay0 < ay1:
+            sx0, sy0 = ax0 - x0, ay0 - y0
+            sx1, sy1 = sx0 + (ax1 - ax0), sy0 + (ay1 - ay0)
+            # 禁 seamlessClone；僅以來源 alpha（4px 外緣羽化、內部全實心）直接貼
+            alpha_composite(frame, mrgb, ma, x0, y0)
             paste_ok += 1
-        except cv2.error as exc:
-            print(f"[DEGRADED:mouth clone 失敗 frame={i}] {str(exc)[:100]}")
         proc.stdin.write(frame.tobytes())
     proc.stdin.close()
     rc = proc.wait()
@@ -718,6 +781,42 @@ def compose_video(cfg: dict, entries: list[dict], timeline: dict, cards: dict,
         raise RuntimeError(f"ffmpeg 合成失敗 exit={rc}")
     return {"clone_ok": clone_ok, "mouth_clone_frames": paste_ok,
             "rendered_frames": n, "output": str(out_path.relative_to(ROOT)).replace("\\", "/")}
+
+
+def make_no_ghost_check(cfg: dict, timeline: dict) -> Path:
+    """連續 3 幀張嘴說話特寫，供目視確認零重影。"""
+    layer = cfg["layers"]["layer3_mimi"]
+    fps = cfg["video_spec"]["fps"]
+    scale = float(layer["scale_from_2048"])
+    size = int(round(2048 * scale))
+    left = int(layer["anchor_center"][0] - size / 2)
+    top = int(layer["anchor_center"][1] - size / 2)
+    mx, my = layer["mouth_patch_center_2048"]
+    mc_x, mc_y = int(left + mx * scale), int(top + my * scale)
+
+    cap = cv2.VideoCapture(str(ROOT / cfg["paths"]["output_video"]))
+    try:
+        sc = next(r for r in timeline["scenes"] if r["scene_id"] == "S03")
+        start = int((sc["audio_start"] + 3.0) * fps)
+        tiles = []
+        for k in range(3):
+            cap.set(cv2.CAP_PROP_POS_FRAMES, start + k)
+            ret, fr = cap.read()
+            if not ret:
+                raise RuntimeError(f"取幀失敗 frame={start + k}")
+            rgb = cv2.cvtColor(fr[mc_y - 95:mc_y + 95, mc_x - 145:mc_x + 145], cv2.COLOR_BGR2RGB)
+            tiles.append(Image.fromarray(rgb))
+    finally:
+        cap.release()
+    out = Image.new("RGB", (290 * 3, 225), "white")
+    d = ImageDraw.Draw(out)
+    for i, tile in enumerate(tiles):
+        out.paste(tile, (i * 290 + 5, 28))
+        d.text((i * 290 + 8, 6), f"speaking frame +{i}", fill="black")
+    p = ROOT / cfg["paths"]["no_ghost_check"]
+    p.parent.mkdir(parents=True, exist_ok=True)
+    out.save(p)
+    return p
 
 
 # ----------------------------------------------------------------------------
@@ -744,12 +843,13 @@ def main() -> int:
     poses_needed = {sc["mimi_pose"] for sc in entries}
     poses, pose_meta = prep_poses(cfg, poses_needed)
     mouths = prep_mouths(cfg)
-    mouth_idx = audio_gate(mix_path, timeline, cfg)
+    mouth_idx = audio_openness(mix_path, timeline, cfg)
 
-    print(f"[4/5] 三層合成 {timeline['total_frames']} frames")
+    print(f"[4/5] 三層合成 {timeline['total_frames']} frames（实心貼片／無跨幀混色）")
     comp = compose_video(cfg, entries, timeline, bb["cards"], mouths, poses, mix_path, mouth_idx)
 
     print("[5/5] 產出驗真")
+    check = make_no_ghost_check(cfg, timeline)
     dur = ffprobe_duration(ROOT / cfg["paths"]["output_video"])
     probe = run([
         "ffprobe", "-v", "error", "-select_streams", "v:0",
@@ -772,6 +872,9 @@ def main() -> int:
         "video_duration_seconds": round(dur, 4),
         "video_size_mb": round(size_mb, 2),
         "montage": str(ROOT / cfg["paths"]["blackboard_montage"]),
+        "no_ghost_check": str(check),
+        "mouth_mode": "opaque_single_stage_4px_feather",
+        "seamless_clone_on_mouth": False,
         "visual_model_called": False,
         "comfyui_redraw_called": False,
         "git_push_executed": False,

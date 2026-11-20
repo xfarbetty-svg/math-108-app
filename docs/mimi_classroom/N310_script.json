@@ -16,6 +16,7 @@
     "blackboard_dir": "_scratch/mimi_n310/blackboard",
     "blackboard_montage": "_scratch/mimi_n310/blackboard_montage.png",
     "mouth_v2_check": "_scratch/mimi_n310/mouth_v2_check.png",
+    "no_ghost_check": "_scratch/mimi_n310/no_ghost_check.png",
     "timeline": "_scratch/mimi_n310/timeline.json",
     "build_report": "_scratch/mimi_n310/build_report.json",
     "output_video": "app/assets/classroom_videos/N310_Final.mp4"
@@ -52,7 +53,8 @@
       "collar_guard_source_y": 510,
       "collar_guard_ramp_px": 20,
       "foot_shadow": true,
-      "mouth_mode": "v2_3d_smooth",
+      "mouth_mode": "opaque_single_stage_4px_feather",
+      "mouth_clean_plate_box_2048": [850, 920, 1190, 1040],
       "mouth_patch_center_2048": [1021, 985],
       "mouth_patch_size_2048": [400, 168],
       "mouth_stages": [

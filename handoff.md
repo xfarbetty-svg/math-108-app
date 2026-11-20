@@ -9,6 +9,7 @@
   - v2 升級：`tools/mimi_classroom/20261120_003_n310_mouth_v2_build.py`；原廠 3D 兔嘴兩張已歸位 `036/.../g3_mimi/raw/mimi_mouth_{half,open}_ref.png`，以 `ready/mimi_apose_closed.png` 的眼/鼻地標仿射對齊後裁出 `ready/mouth_frames_v2/{mouth_closed,mouth_half,mouth_open}.png`（取代舊扁平人嘴 `mouth_frames/`，036 AGENTS.md 已記為預設）。
   - v2 對嘴：三階段依語音包絡平滑融合、`cv2.NORMAL_CLONE`、`y>=510` 領口保護；米米垂直座標 620→685（下移 65px）並加柔和腳底投影，雙腳落地講桌。
   - v2 驗收圖：`_scratch/mimi_n310/mouth_v2_check.png`（closed/half/open＋講桌站姿）。
+  - **殘影修正（最新）**：`002` 已改為正統管線——貼嘴前以 inpaint 清掉各姿勢圖舊微笑黑線（Clean Plate），三階段貼片改 4px 外緣羽化、內部 100% 實心，單階段硬切換、禁跨幀半透明混色、`mouth` 禁用 `seamlessClone`；領口 `y>=510` 與落地腳影不變。驗收圖 `_scratch/mimi_n310/no_ghost_check.png`（連續 3 幀說話特寫）。重建 `17.41MB / 108.000s / Exit 0`。
   - 腳本：`docs/mimi_classroom/N310_script.json`（6 幕／10 姿勢庫中 7 姿勢；S06 拆 A/B 段）。
   - 成片：`app/assets/classroom_videos/N310_Final.mp4`（1920×1080／30fps／108.000s／3240 幀／18.12 MB／H.264+AAC）。
   - 圖卡：`_scratch/mimi_n310/blackboard_montage.png`（6 幕黑板拼圖，已目視驗收無穿模／無字遮擋）。

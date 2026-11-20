@@ -73,7 +73,7 @@ def prepare_assets() -> dict:
     h, w = y1 - y0, x1 - x0
     feather = np.zeros((h, w), dtype=np.float32)
     feather[10:h - 10, 10:w - 10] = 255
-    feather = cv2.GaussianBlur(feather, (0, 0), 11)
+    feather = cv2.GaussianBlur(feather, (0, 0), 1.5)  # 僅 4px 外緣羽化，內部全實心
     for name, img in stages:
         crop = img[y0:y1, x0:x1]
         rgba = np.dstack([crop, feather.astype(np.uint8)])
@@ -257,40 +257,15 @@ def make_check_montage(cfg, meta) -> Path:
 
 
 def main() -> int:
+    """資產準備後交給 002 正統管線：清洁底圖 + 單階段 100% 實心貼片 + 4px 羽化。"""
     cfg = json.loads(CFG_PATH.read_text(encoding="utf-8"))
-    print("[0] 算術斷言")
-    B.assert_arithmetic(cfg)
-    print("[1] 歸位 + 仿射對齊 + 裁切 v2 兔嘴")
-    assets = prepare_assets()
-    print("[2] TTS + 時間軸")
-    entries = B.expand_scenes(cfg)
-    rows, mix_path, timeline = B.build_audio(cfg, entries)
-    print("[3] 黑板 Layer 2")
-    bb = B.render_blackboards(cfg, entries)
-    print("[4] 準備嘴形 / 角色")
-    mouths = prep_mouths_v2(cfg)
-    poses, pose_meta = B.prep_poses(cfg, {s["mimi_pose"] for s in entries})
-    openness = audio_openness(mix_path, timeline, cfg)
-    print("[5] 三層合成 + 落地脚影")
-    comp = compose_v2(cfg, timeline, bb["cards"], mouths, poses, mix_path, openness, assets)
-    print("[6] 對比拼圖 + 驗真")
-    check = make_check_montage(cfg, assets)
-    dur = B.ffprobe_duration(ROOT / cfg["paths"]["output_video"])
-    size_mb = (ROOT / cfg["paths"]["output_video"]).stat().st_size / 1024 / 1024
-    assert abs(dur - timeline["total_duration_seconds"]) < 0.1
-    assert size_mb < 25.0
-    report = {
-        "stage": "N310_mouth_v2_rerender", "assets": assets, "timeline": timeline,
-        "composition": comp, "poses": pose_meta, "video_duration_seconds": round(dur, 4),
-        "video_size_mb": round(size_mb, 2), "check_montage": str(check),
-        "visual_model_called": False, "comfyui_redraw_called": False,
-        "git_push_executed": False, "release_executed": False,
-    }
-    (ROOT / cfg["paths"]["temp_work_dir"] / "mouth_v2_report.json").write_text(
-        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"N310_V2_OK frames={comp['rendered_frames']} duration={dur:.3f}s size={size_mb:.2f}MB")
-    print(f"CHECK={check}")
-    return 0
+    print("[1] 歸位 + 仿射對齊 + 裁切 v2 兔嘴（4px 外緣羽化）")
+    prepare_assets()
+    print("[2] 呼叫 002 正統合成管線（嚴禁跨幀半透明混色 / mouth 禁用 seamlessClone）")
+    rc = B.main()
+    if rc == 0:
+        make_check_montage(cfg, {})
+    return rc
 
 
 if __name__ == "__main__":
