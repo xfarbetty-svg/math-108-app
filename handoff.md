@@ -48,3 +48,12 @@
 - **時間**：2026-11-20
 - **更新者**：OpenCode @ DESKTOP-6ELKIRH
 - **Git 狀態**：✅ 僅本地 commit（`3344c7d` 初版 + S05 Rev2 新 commit）；**未 push**
+
+---
+
+## 📚 本輪新增：APP_PROJECT_INDEX.md（教材設計 AI 總覽）
+- 已重建根目錄 `APP_PROJECT_INDEX.md`（187 行 / 25,720 bytes，5 區塊驗證 Exit 0）。
+- 資料來源：本專案 + `D:\ANTIGRAVITY\034_anatomy_interactive_svg`（4 個正式 Web Component + 3 原型 + CLI 參數）+ `D:\ANTIGRAVITY\036_local_painter`（1~6 年級 IP 矩陣：皮皮/波波/米米/多米/凱爾/歐爾；G2 波波與 G3 米米完整，其餘僅藍圖）。
+- 誠實落差已寫入 §5.3：G4~G6 72 條題庫尚未建立；G3 宣告 240 題實際 205 題；S-3-1 id 誤用；034 無分數圓餅/位值盒/數線。
+- 使用者既有 uncommitted 變更（`docs/108課綱…md`、`reports/retros/RETRO_S39_COMPOSITE_VIDEO.md`）**未動、未 stage**。
+- 下一步：開新對話框再繼續；`git push` 仍待使用者確認 S05 畫面後執行。
