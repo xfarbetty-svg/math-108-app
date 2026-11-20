@@ -52,3 +52,22 @@
 - **時間**：2026-11-19 12:25
 - **更新者**：Antigravity (AGY 監工) @ DESKTOP-6ELKIRH
 - **Git 狀態**：✅ 已推 (origin/main)
+
+
+---
+
+## N34 米米概念小教室 — 步驟 4 斷點（2026-11-20）
+- **已完成**：四個目錄、7 張圖片複製與雜湊比對、`docs/mimi_classroom/N34_script.json`（S01 PNG 修正）、
+  `tools/mimi_classroom/20261120_001_stage1_build.py`（Exit 0）、6 段 WAV（101.64 秒）、
+  `timeline.json`、7 張去背 PNG、`stage1_report.json`。
+  - 稽核：`visual_model_called=False`、`comfyui_redraw_called=False`、`bottom_gradient=False`、
+    `foot_guard_ratio=0.06`、`tts_sources={"local_edge_tts":6}`。
+- **步驟 4 狀態**：已查證 LivePortraitKJ 全部節點 schema、驅動影片、ComfyUI 輸入目錄位置，
+  並確認原始碼中「`relative_motion_mode != off` + retargeting = 鎖頭鎖眼只動嘴唇」。
+  **但 `mimi_talking_loop.mp4` 與 `preview_lipsync.mp4` 尚未產出**（步數上限中斷）。
+- **交接文件**：`docs/mimi_classroom/N34_STEP4_HANDOFF.md` 內含完整 12 節點 API workflow、
+  參數值、Audio-Driven Gate（RMS + 0.15s 滞回）實作步驟，下個對話框直接照做即可。
+- **下一步**：開新對話框 → 讀上開交接文件 → 複製 `mimi_apose_closed.png` 進 ComfyUI input →
+  跑 workflow → 產出兩支 MP4 → 請使用者驗收 → 才進入第二階段 OpenCV 黑板合成。
+- **Git**：僅提交我新增的 `docs/mimi_classroom/`、`tools/mimi_classroom/` 與本 handoff；
+  `docs/108課綱...md` 修改與 `reports/retros/RETRO_S39_COMPOSITE_VIDEO.md` 為既有使用者工作，未動。

@@ -1,0 +1,110 @@
+{
+  "project_id": "N34",
+  "grade": "G3",
+  "curriculum_code": "N-3-4",
+  "title": "除法與長直式：商補 0 與餘數秘密",
+  "paths": {
+    "assets_root": "tools/mimi_classroom/mimi_assets",
+    "temp_work_dir": "_scratch/mimi_n34",
+    "output_video": "app/assets/classroom_videos/N34_Final.mp4"
+  },
+  "video_spec": {
+    "resolution": [1920, 1080],
+    "fps": 30,
+    "tts_voice": "zh-TW-HsiaoChenNeural",
+    "tts_rate": "-5%"
+  },
+  "layers": {
+    "layer1_bg": "classroom_bg_pure.png",
+    "layer2_blackboard_roi": {
+      "x_min": 580,
+      "y_min": 120,
+      "x_max": 1820,
+      "y_max": 780
+    },
+    "layer3_mimi": {
+      "lip_sync_source": "mimi_apose_closed.png",
+      "anchor_position": [340, 620],
+      "scale": 0.72,
+      "solid_feet_alpha": true
+    }
+  },
+  "scenes": [
+    {
+      "scene_id": "S01_Hook",
+      "mimi_pose": "mimi_apose_standard.png",
+      "narration": "各位小朋友大家好，我是米米老師！今天我們要把四百一十五顆草莓，平分裝進四個籃子裡。寫除法直式的時候，有一個超級大陷阱，好多同學都會在中間少寫一個數字喔！",
+      "blackboard_render": {
+        "action": "show_problem_intro",
+        "equation": "415 ÷ 4 = ?",
+        "visual_hint": "415 顆草莓平分給 4 個籃子",
+        "highlight_color": "#FFD966"
+      }
+    },
+    {
+      "scene_id": "S02_CommonMistake",
+      "mimi_pose": "mimi_think.png",
+      "narration": "咦？為什麼有人算出來是十三、餘三呢？你想想看，四個籃子各裝十三顆，合起來才五十二顆，剩下的草莓跑到哪裡去了？問題就出在十位數不夠分的時候喔！",
+      "blackboard_render": {
+        "action": "show_wrong_example",
+        "wrong_equation": "415 ÷ 4 = 13 ... 3 (✗)",
+        "check_math": "13 × 4 + 3 = 55 ≠ 415",
+        "highlight_color": "#FF6B6B"
+      }
+    },
+    {
+      "scene_id": "S03_Step1_Hundreds",
+      "mimi_pose": "mimi_arm_raised_clean2.png",
+      "narration": "現在跟著米米一起念長除法四口訣：商、乘、減、落！先看百位的四，四除以四，商寫一；一乘以四得四；四減四等於零；接著把十位的一順著滑梯落下來！",
+      "blackboard_render": {
+        "action": "long_division_step_1",
+        "dividend": "415",
+        "divisor": "4",
+        "quotient_visible": "1  ",
+        "step_text": "百位：4 ÷ 4 = 1（商→乘→減→落）",
+        "bring_down_digit": "1",
+        "highlight_color": "#6BCB77"
+      }
+    },
+    {
+      "scene_id": "S04_Step2_ZeroTrap",
+      "mimi_pose": "mimi_arm_raised_clean2.png",
+      "narration": "關鍵來了！落下來的一，不夠分給四個籃子怎麼辦？千萬不能直接跳過！我們要在十位的商上面，寫一個零來佔位置，然後再把個位的五落下來，變成十五！",
+      "blackboard_render": {
+        "action": "long_division_step_2",
+        "quotient_visible": "10 ",
+        "zero_alert_box": true,
+        "step_text": "十位：1 不夠除以 4 → 商補 0 佔位！",
+        "bring_down_digit": "5",
+        "current_remainder": "15",
+        "highlight_color": "#FFA500"
+      }
+    },
+    {
+      "scene_id": "S05_Step3_RemainderRule",
+      "mimi_pose": "mimi_clap.png",
+      "narration": "最後看十五除以四，商寫三，三四十二，十五減十二剩下三！檢查一下，餘數三比除數四還要小，代表真的分完不能再分了！所以答案是一百零三、餘三！",
+      "blackboard_render": {
+        "action": "long_division_step_3_complete",
+        "quotient_visible": "103",
+        "final_remainder": "3",
+        "rule_badge": "檢驗過關：餘數 3 < 除數 4",
+        "highlight_color": "#4D96FF"
+      }
+    },
+    {
+      "scene_id": "S06_Summary",
+      "mimi_pose": "mimi_thumbs_up.png",
+      "narration": "你學會了嗎？記得長除法兩大鐵則：第一，不夠分的時候商要補零；第二，餘數一定要比除數小！我們下次見囉，拜拜！",
+      "blackboard_render": {
+        "action": "show_summary_card",
+        "rules": [
+          "1. 口訣：商 → 乘 → 減 → 落",
+          "2. 鐵則一：不夠分，商要補 0",
+          "3. 鐵則二：餘數 < 除數"
+        ],
+        "highlight_color": "#FFD966"
+      }
+    }
+  ]
+}
