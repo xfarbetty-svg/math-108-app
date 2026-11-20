@@ -1,0 +1,205 @@
+{
+  "project_id": "N310",
+  "grade": "G3",
+  "curriculum_code": "N-3-10",
+  "title": "一位小數的加減與對齊：小數點排一排、整數先補 .0",
+  "asset_policy": {
+    "mimi_ssot_root": "../036_local_painter/theater/assets_hosts/g3_mimi/ready",
+    "forbid_other_asset_roots": true,
+    "read_transparent_png_directly": true,
+    "visual_model_called": false,
+    "comfyui_redraw_called": false
+  },
+  "paths": {
+    "temp_work_dir": "_scratch/mimi_n310",
+    "blackboard_dir": "_scratch/mimi_n310/blackboard",
+    "blackboard_montage": "_scratch/mimi_n310/blackboard_montage.png",
+    "timeline": "_scratch/mimi_n310/timeline.json",
+    "build_report": "_scratch/mimi_n310/build_report.json",
+    "output_video": "app/assets/classroom_videos/N310_Final.mp4"
+  },
+  "video_spec": {
+    "resolution": [1920, 1080],
+    "fps": 30,
+    "tts_voice": "zh-TW-HsiaoChenNeural",
+    "tts_rate": "-5%",
+    "action_lead_seconds": 0.3,
+    "post_narration_hold_seconds": 1.2,
+    "font": "C:/Windows/Fonts/msjh.ttc",
+    "video_bitrate": "1800k",
+    "video_maxrate": "2200k"
+  },
+  "layers": {
+    "layer1_bg": "tools/mimi_classroom/mimi_assets/classroom_bg_pure.png",
+    "layer2_blackboard_roi": {
+      "x_min": 580,
+      "y_min": 120,
+      "x_max": 1820,
+      "y_max": 780
+    },
+    "layer2_contract": {
+      "bottom_banner_min_gap_px": 25,
+      "place_value_labels": ["個位", ".", "十分位"],
+      "decimal_guide": "orange_vertical_dashed"
+    },
+    "layer3_mimi": {
+      "anchor_center": [340, 620],
+      "scale_from_2048": 0.35,
+      "basecolor_fill": true,
+      "seamless_clone": "cv2.NORMAL_CLONE",
+      "collar_guard_source_y": 510,
+      "collar_guard_ramp_px": 20,
+      "mouth_patch_center_2048": [1008, 930],
+      "mouth_patch_size_2048": 256,
+      "mouth_frames_order_by_openness": [
+        "mouth_01.png",
+        "mouth_02.png",
+        "mouth_06.png",
+        "mouth_04.png",
+        "mouth_03.png",
+        "mouth_05.png"
+      ],
+      "rms_gate": {
+        "frame_ms": 33.3333,
+        "open_threshold": 0.012,
+        "hysteresis_frames": 4,
+        "lead_in_frames": 9
+      }
+    }
+  },
+  "arithmetic_assertions": {
+    "fixed_point_scale": 10,
+    "checks": [
+      "36 + 28 == 64",
+      "50 - 14 == 36",
+      "6 + 8 == 14 and 14 - 10 == 4 and 1 + 3 + 2 == 6",
+      "0 < 4 -> borrow: 10 - 4 == 6 and (5 - 1) - 1 == 3"
+    ],
+    "on_failure": "abort_before_any_drawing"
+  },
+  "demonstration_problems": [
+    {
+      "type": "one_decimal_carry_addition",
+      "equation": "3.6 + 2.8 = 6.4",
+      "fixed_point": "36 + 28 = 64"
+    },
+    {
+      "type": "integer_minus_one_decimal_trap",
+      "equation": "5 - 1.4 = 3.6",
+      "rewrite": "5 = 5.0",
+      "fixed_point": "50 - 14 = 36"
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "label": "開場破題",
+      "target_seconds": 12,
+      "mimi_pose": "mimi_pose_ask.png",
+      "narration": "各位小朋友好，我是米米老師！今天買文具，鉛筆三點六元，橡皮擦二點八元，一共要付多少錢？小數加減怎麼排才不會算錯呢？",
+      "blackboard_render": {
+        "action": "show_problem_intro",
+        "title": "S01 · 開場破題",
+        "equation": "3.6 + 2.8 = ?",
+        "context": "買文具：鉛筆 3.6 元 ＋ 橡皮擦 2.8 元",
+        "hint": "小數加減怎麼排才不會算錯？",
+        "banner": "生活情境：錢的每一位都要對齊，答案才不會出錯！",
+        "highlight_color": "#FFD966"
+      }
+    },
+    {
+      "scene_id": "S02",
+      "label": "題型一列直式",
+      "target_seconds": 14,
+      "mimi_pose": "mimi_pose_one.png",
+      "narration": "第一招，小數點排一排！寫直式的時候，個位對個位，十分位對十分位，把小數點用一條橘色虛線垂直對齊。來，把三點六和二點八排排站！",
+      "blackboard_render": {
+        "action": "decimal_alignment_vertical",
+        "title": "S02 · 第一招：小數點排一排",
+        "place_value_labels": ["個位", ".", "十分位"],
+        "decimal_guide": true,
+        "rows": ["3.6", "+ 2.8", "———", "?.?"],
+        "banner": "小數點排一排：個位對個位，十分位對十分位",
+        "highlight_color": "#6BCB77"
+      }
+    },
+    {
+      "scene_id": "S03",
+      "label": "十分位進位計算",
+      "target_seconds": 16,
+      "mimi_pose": "mimi_arm_raised.png",
+      "narration": "先算十分位，六加八等於十四，寫四進一，進位的小一寫在個位上面。再算個位，一加三加二等於六。所以三點六加二點八等於六點四！",
+      "blackboard_render": {
+        "action": "carry_addition_complete",
+        "title": "S03 · 十分位進位",
+        "place_value_labels": ["個位", ".", "十分位"],
+        "decimal_guide": true,
+        "carry_digit": "1",
+        "rows": ["3.6", "+ 2.8", "———", "6.4"],
+        "step_notes": ["十分位 6 + 8 = 14 → 寫 4 進 1", "個位 1 + 3 + 2 = 6"],
+        "banner": "滿十進一：十分位滿 10，就向個位進 1",
+        "highlight_color": "#FFA500"
+      }
+    },
+    {
+      "scene_id": "S04",
+      "label": "魔王陷阱題登場",
+      "target_seconds": 15,
+      "mimi_pose": "mimi_think.png",
+      "narration": "魔王陷阱題來了！五減一點四。很多人直接把五對齊到十分位的四下面，那就大錯特錯！還記得嗎？整數五的小數點，藏在數字的右後方喔！",
+      "blackboard_render": {
+        "action": "wrong_alignment_warning",
+        "title": "S04 · 魔王陷阱題",
+        "place_value_labels": ["個位", ".", "十分位"],
+        "decimal_guide": true,
+        "wrong_rows": ["    5   ✗", "- 1.4"],
+        "warning": "✗ 錯！把整數 5 對齊到十分位",
+        "reveal": "整數 5 的小數點藏在右後方：5 = 5.0",
+        "banner": "陷阱：沒有寫小數點，不代表沒有小數點！",
+        "highlight_color": "#FF6B6B"
+      }
+    },
+    {
+      "scene_id": "S05",
+      "label": "補 .0 借位計算",
+      "target_seconds": 18,
+      "mimi_pose": "mimi_pose_two.png",
+      "narration": "第二招，整數先補點零！把五改寫成五點零，零加框提醒自己。十分位的零不夠減四，向個位借一當十，十減四等於六；個位剩四，四減一等於三。答案是三點六！",
+      "blackboard_render": {
+        "action": "append_zero_and_borrow",
+        "title": "S05 · 第二招：整數先補 .0",
+        "place_value_labels": ["個位", ".", "十分位"],
+        "decimal_guide": true,
+        "rewrite": "5 → 5.0",
+        "zero_box": ".0",
+        "borrow_digits": {"tenths": "10", "ones": "4"},
+        "rows": ["5.0", "- 1.4", "———", "3.6"],
+        "step_notes": ["十分位 0 不夠減 4 → 借 1 當 10，10 - 4 = 6", "個位 4 - 1 = 3"],
+        "banner": "整數先補 .0，不夠減就借一當十",
+        "highlight_color": "#4D96FF"
+      }
+    },
+    {
+      "scene_id": "S06",
+      "label": "總結與口訣",
+      "target_seconds": 12,
+      "mimi_pose_sequence": [
+        {"pose": "mimi_pose_hips.png", "weight": 0.5},
+        {"pose": "mimi_thumbs_up.png", "weight": 0.5}
+      ],
+      "narration": "最後複習三口訣：一、小數點對齊；二、整數先補點零；三、滿十進一，借一當十。小數加減難不倒你，我們下次見，拜拜！",
+      "narration_split_ratio": [0.45, 0.55],
+      "blackboard_render": {
+        "action": "show_summary_card",
+        "title": "S06 · 三句口訣",
+        "rules": [
+          "1. 小數點對齊",
+          "2. 整數先補 .0",
+          "3. 滿十進一／借一當十"
+        ],
+        "banner": "記住三口訣，小數加減不慌張！",
+        "highlight_color": "#FFD966"
+      }
+    }
+  ]
+}
