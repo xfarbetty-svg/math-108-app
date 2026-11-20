@@ -167,6 +167,7 @@ function openConceptLab(code) {
     const movieUrl = UNIT_CONCEPT_MOVIES[code];
     if (movieUrl) {
       btnMovie.href = movieUrl;
+      btnMovie.title = UNIT_CONCEPT_MOVIE_TITLES[code] || "概念小教室微電影";
       btnMovie.style.display = "inline-flex";
     } else {
       btnMovie.style.display = "none";
@@ -203,7 +204,12 @@ const UNIT_CONCEPT_MOVIES = {
   "N-2-2": "assets/video/g2_n22_concept_final.mp4",
   "N-3-4": "assets/classroom_videos/N34_Final.mp4",
   "N-3-5": "assets/classroom_videos/N34_Final.mp4",
-  "N-3-9": "assets/video/g3_n39_concept_final.mp4"
+  "N-3-9": "assets/video/g3_n39_concept_final.mp4",
+  "N-3-10": "assets/classroom_videos/N310_Final.mp4"
+};
+
+const UNIT_CONCEPT_MOVIE_TITLES = {
+  "N-3-10": "概念小教室：一位小數加減與對齊"
 };
 
 const CONCEPT_COMPONENTS = {
@@ -343,6 +349,7 @@ function renderQuestion() {
     const movieUrl = UNIT_CONCEPT_MOVIES[curCode];
     if (movieUrl) {
       btnMovie.href = movieUrl;
+      btnMovie.title = UNIT_CONCEPT_MOVIE_TITLES[curCode] || "概念小教室微電影";
       btnMovie.style.display = "inline-flex";
     } else {
       btnMovie.style.display = "none";
