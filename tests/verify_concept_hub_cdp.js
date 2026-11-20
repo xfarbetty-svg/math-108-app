@@ -140,9 +140,24 @@ async function main() {
       return res;
     })()`;
 
-    const r = await ws.send('Runtime.evaluate', { expression: testScript, awaitPromise: true, returnByValue: true });
-    const results = r.result.value || [];
+    let r;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        r = await ws.send('Runtime.evaluate', { expression: testScript, awaitPromise: true, returnByValue: true });
+        if (r.exceptionDetails) {
+          const detail = JSON.stringify(r.exceptionDetails.exception || r.exceptionDetails);
+          if (detail.includes('Execution context was destroyed') && attempt < 3) { await sleep(600); continue; }
+          throw new Error('驗證腳本拋錯: ' + detail);
+        }
+        break;
+      } catch (e) {
+        if (String(e.message).includes('Execution context was destroyed') && attempt < 3) { await sleep(600); continue; }
+        throw e;
+      }
+    }
+    const results = Array.isArray(r.result && r.result.value) ? r.result.value : [];
     console.log("=== 概念探索小教室導航 CDP 實機驗證結果 ===");
+    if (!results.length) { console.error('FAIL harness :: 驗證腳本未回傳任何結果'); process.exit(1); }
     let allOk = true;
     for (const line of results) {
       console.log(line);
