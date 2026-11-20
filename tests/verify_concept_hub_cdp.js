@@ -104,6 +104,11 @@ async function main() {
     const testScript = `(async () => {
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       const res = [];
+      // 等待年級導航渲染完成（release 全量跑時載入較慢）
+      for (let t = 0; t < 50; t++) {
+        if (document.querySelectorAll('#gradeNav .grade-btn').length >= 2) break;
+        await sleep(100);
+      }
       // 切換至二年級
       document.querySelectorAll('#gradeNav .grade-btn')[1].click();
       await sleep(100);
