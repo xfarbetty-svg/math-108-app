@@ -220,8 +220,27 @@ async function main() {
       return results;
     })()`;
 
-    const res = await ws.send('Runtime.evaluate', { expression: body, awaitPromise: true, returnByValue: true });
-    if (res.exceptionDetails) throw new Error('驗證腳本拋錯: ' + JSON.stringify(res.exceptionDetails.exception || res.exceptionDetails));
+    let res;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        res = await ws.send('Runtime.evaluate', { expression: body, awaitPromise: true, returnByValue: true });
+        if (res.exceptionDetails) {
+          const detail = JSON.stringify(res.exceptionDetails.exception || res.exceptionDetails);
+          if (detail.includes('Execution context was destroyed') && attempt < 3) {
+            await sleep(600);
+            continue;
+          }
+          throw new Error('驗證腳本拋錯: ' + detail);
+        }
+        break;
+      } catch (err) {
+        if (String(err.message).includes('Execution context was destroyed') && attempt < 3) {
+          await sleep(600);
+          continue;
+        }
+        throw err;
+      }
+    }
     const results = res.result.value || [];
     for (const line of results) console.log(line);
     console.log('CONSOLE_NOISE_COUNT=' + consoleNoise.length);

@@ -179,19 +179,23 @@ async function runCdpDynamicTest() {
         });
 
         await sendCdp('Runtime.enable');
-        await sleep(500);
 
-        // 測試 1: 驗證 AudioManager 是否存在
-        const r1 = await sendCdp('Runtime.evaluate', { expression: 'typeof window.AudioManager !== "undefined"' });
-        assert(r1.result && r1.result.value === true, '頁面中 window.AudioManager 成功初始化');
+        // 測試 1: 輪詢等待 AudioManager 初始化（取代固定 sleep，避免載入競態）
+        let mgrReady = false;
+        for (let i = 0; i < 50; i++) {
+          const probe = await sendCdp('Runtime.evaluate', { expression: 'typeof window.AudioManager !== "undefined" && typeof window.AudioManager.isPlaying === "function"' });
+          if (probe.result && probe.result.value === true) { mgrReady = true; break; }
+          await sleep(100);
+        }
+        assert(mgrReady, '頁面中 window.AudioManager 成功初始化');
 
         // 測試 2: 派發 postMessage TTS_SPEAK
         await sendCdp('Runtime.evaluate', { expression: 'window.postMessage({ type: "TTS_SPEAK", text: "測試第一句" }, "*")' });
-        await sleep(400);
+        await sleep(50);
 
-        // 測試 3: 立即派發第二句（測試互斥中斷）
+        // 測試 3: 立即派發第二句（測試互斥中斷），再輪詢等待兩次 TTS 請求
         await sendCdp('Runtime.evaluate', { expression: 'window.postMessage({ type: "TTS_SPEAK", text: "測試第二句中斷" }, "*")' });
-        await sleep(400);
+        for (let i = 0; i < 40 && ttsRequestCount < 2; i++) await sleep(100);
 
         // 測試 4: 派發 TTS_STOP
         await sendCdp('Runtime.evaluate', { expression: 'window.postMessage({ type: "TTS_STOP" }, "*")' });
