@@ -201,6 +201,8 @@ async function openUnit(code, initialQIndex = 0) {
 const UNIT_CONCEPT_MOVIES = {
   "N-2-1": "assets/video/g2_n21_concept_final.mp4",
   "N-2-2": "assets/video/g2_n22_concept_final.mp4",
+  "N-3-4": "assets/classroom_videos/N34_Final.mp4",
+  "N-3-5": "assets/classroom_videos/N34_Final.mp4",
   "N-3-9": "assets/video/g3_n39_concept_final.mp4"
 };
 
