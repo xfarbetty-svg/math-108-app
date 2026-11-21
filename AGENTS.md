@@ -96,6 +96,25 @@
 
 ---
 
+## 🎬 G3 米米動態母片清單（`036_local_painter` 動態素材來源）
+
+全部 6 支於 `036_local_painter/theater/assets_hosts/g3_mimi/ready/`（每支 `mp4` + `webm`，41 幧/16fps/512×512，閉環 MAE=0.000，首尾合成純白）：
+
+| tag | 姿勢/動作 | 交付 |
+|---|---|---|
+| `loop_apose` | A-pose 站姿（閉環） | 已完成 |
+| `loop_ask` | 投誠問候 | 已完成 |
+| `loop_hips` | 叉腰總結 | 已完成 |
+| `loop_arm_raised` | 舉起右手 | 已完成（任務 A） |
+| `loop_clap` | 歡呼鼓掌 | 已完成（任務 B） |
+| `loop_thumbs_up` | 豎大拇指 | 已完成（任務 C） |
+
+顯示建議：以 `loop_<tag>.mp4`（純白底 H.264）作顯示底圖為安全選項；`webm` 為透明底圖，新增驗收腳本為 `036_local_painter\_scratch\20261121_001_verify_loops.py`（要求 WebM `alpha_mode=1`）。
+
+> ⚠ 驗收注意：FFmpeg 9.0（gyan static build）無法編出帶 alpha 的 VP9（已實測 VP8 亦無，`ffprobe -show_streams` 顯示 `alpha_mode=None`）；若要硬達成 `alpha_mode=1`，需更換可產出 alpha VP9 的 ffmpeg，或改用 `mp4` 底圖方案。
+
+---
+
 ## 🏭 單元工廠化與批次交付標準規約
 
 > 完整規範文件：[`docs/UNIT_FACTORY_STANDARD.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/docs/UNIT_FACTORY_STANDARD.md)
