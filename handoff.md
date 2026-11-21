@@ -4,54 +4,54 @@
 
 ---
 
+## N313 黑板圖卡排版修正（2026-11-21 收工，A-SERVER 遠端 AMD3950 執行）
+
+- **已完成**：6 張 1240×660 黑板圖卡 `N313_S01..S06.png` 全部重新生成於 AMD3950 `_scratch/mimi_n313/blackboard/`，Bounding Box 安全區＋防重疊檢查 `ALL_PASS`（Exit 0）。
+- **新增腳本**：`_scratch/mimi_n313/20261120_019_build_n313_blackboard_cards.py`（遠端原本無 N313 畫圖腳本，僅有讀卡片的 `n313_composite.py`）。讀 `docs/mimi_classroom/N313_script.json`，每幕元件逐一登記 bbox：X∈[60,1180]、Y∈[110,509]，黃框頂部 Y≥510 不觸碰；任一越界或相交面積>2px² 即 raise 不產出。
+- **各幕修復重點**：S01 三角板文字右移＋剪刀上移；S02 正例説明移至 (430,145)→bbox(235,122,624,149)，與兩條邊無重疊，反例文字/曲線置右上；S03 角 A/B 明確分欄（標籤水平間距 316px）、紅邊端點 y∈[252,386]、無穿黃框；S04 角 A/B 上移中央 y∈[303,396]、標籤分开；S05 三形中心 x=240/600/940、鈍角不再出界；S06 三句口訣行距均勻（第1/2/3句 y=164/224/295 起），無重疊。
+- **同步副本**：6 張新圖已 scp 覆蓋 A-SERVER `C:\Users\xfarb\AppData\Local\Temp\opencode\N313_blackboard\`（size 15167/29676/26543/21685/20049/38561 與遠端一致）。
+- **清理**：遠端暫存搜尋腳本 `find_n313_drawer*.py` 已刪除。
+- **未做**：未執行 `n313_composite.py`、未渲染 MP4（依使用者指示待目視圖卡確認後再合成）。
+
+---
+
 ## ⏯️ 目前做到哪
-- **N-3-10 米米概念小教室成片 — v2 立體兔嘴重出，本地完成，尚未部署**（本次主線）：
-  - v2 升級：`tools/mimi_classroom/20261120_003_n310_mouth_v2_build.py`；原廠 3D 兔嘴兩張已歸位 `036/.../g3_mimi/raw/mimi_mouth_{half,open}_ref.png`，以 `ready/mimi_apose_closed.png` 的眼/鼻地標仿射對齊後裁出 `ready/mouth_frames_v2/{mouth_closed,mouth_half,mouth_open}.png`（取代舊扁平人嘴 `mouth_frames/`，036 AGENTS.md 已記為預設）。
-  - v2 對嘴：三階段依語音包絡平滑融合、`cv2.NORMAL_CLONE`、`y>=510` 領口保護；米米垂直座標 620→685（下移 65px）並加柔和腳底投影，雙腳落地講桌。
-  - v2 驗收圖：`_scratch/mimi_n310/mouth_v2_check.png`（closed/half/open＋講桌站姿）。
-  - **殘影修正（最新）**：`002` 已改為正統管線——貼嘴前以 inpaint 清掉各姿勢圖舊微笑黑線（Clean Plate），三階段貼片改 4px 外緣羽化、內部 100% 實心，單階段硬切換、禁跨幀半透明混色、`mouth` 禁用 `seamlessClone`；領口 `y>=510` 與落地腳影不變。驗收圖 `_scratch/mimi_n310/no_ghost_check.png`（連續 3 幀說話特寫）。重建 `17.41MB / 108.000s / Exit 0`。
-  - 腳本：`docs/mimi_classroom/N310_script.json`（6 幕／10 姿勢庫中 7 姿勢；S06 拆 A/B 段）。
-  - 成片：`app/assets/classroom_videos/N310_Final.mp4`（1920×1080／30fps／108.000s／3240 幀／18.12 MB／H.264+AAC）。
-  - 圖卡：`_scratch/mimi_n310/blackboard_montage.png`（6 幕黑板拼圖，已目視驗收無穿模／無字遮擋）。
-  - 管線：`tools/mimi_classroom/20261120_002_n310_build.py`；定點整數斷言 `36+28==64`、`50-14==36` 與進退位中間值全過。
-  - 語音：zh-TW-HsiaoChenNeural／-5%／動作提前 0.3s／口白後停 1.2s；去背採全圖連通泛洪（腳不與邊緣連通自然保留），底色修補 + `cv2.seamlessClone(NORMAL_CLONE)`、領口 source y<510 不進 mask、mouth_frames RMS gate 對嘴。
-  - **嚴禁動作已遵守**：未執行 `git push`、未執行 `tools/release.py`、未呼叫視覺模型／ComfyUI。
-- **N34 米米概念小教室 — 已全數完成並正式上線**（上一次主線）：
-  - 成片：`app/assets/classroom_videos/N34_Final.mp4`（1920×1080/30fps/101.633s/H.264+AAC/約 19.5 MB）。
-  - 掛載：`app/shell.js` 的 `UNIT_CONCEPT_MOVIES` 新增 `N-3-4`／`N-3-5` → 上述影片（原假設「已掛載」實為缺漏，已補）。
-  - 部署：`python tools/release.py` Build `20261120_171001` 全綠（S1 20 gates／S2 push／S3 wrangler／S4 版號吻合），正式網址 https://math-108.pages.dev。
-  - 线上驗真：`shell.js` 精確映射 N34/N35 = True、影片 HEAD = HTTP 200，微電影按鈕可見。
-- **S1 守門員時序強化（必要副作用）**：`verify_audio_singleton.js`（輪詢等 AudioManager／TTS）、`verify_app_shell.js`（`Execution context was destroyed` 重試）、`verify_concept_hub_cdp.js`（重試＋等年級導航＋防空結果假綠）；檢驗標準未變。
-- **純文件入庫**：`a420f8b` 收納 3 個未提交檔（108課綱分析 md、N34 掛載方案、RETRO_S39 覆盤）。
+- **N313 概念小教室前置 — 資料＋音訊＋圖卡皆就緒**（本輪完成圖卡排版修正）：
+  - `data/units/G3/S-3-1.json` ids 已修復為 `G3-S-3-1-Q01~Q10`；`node tools/verify_n313.js` Exit 0。
+  - `_scratch/mimi_n313/` 產物：`docs/mimi_classroom/N313_script.json`（6 幕）、`timeline.json`（mouth 硬切換 `<0.24` 閉嘴／`[0.24,0.68)` 微張／`≥0.68` 大張；S01 15.12s…S06 4.91s）、`audio/S01..S06.wav`（曉臻 -5%）、`blackboard/N313_S01..S06.png`（本輪重繪，見上節）、`n313_composite.py`（尚未執行）。
+- **N-3-10 米米概念小教室 — v2 成片本地完成、尚未部署**：`tools/mimi_classroom/20261120_002_n310_build.py` 重建 17.41MB/108s Exit 0；成片 `app/assets/classroom_videos/N310_Final.mp4`（18.12MB）；殘影已修（inpaint Clean Plate＋4px 羽化實心貼片、硬切換、禁 seamlessClone）；驗收圖 `no_ghost_check.png`；圖卡 `blackboard_montage.png` 已目視無遮擋。
+- **N34 米米概念小教室 — 已上線**：`N34_Final.mp4`（19.5MB）掛載 `app/shell.js` 的 N-3-4／N-3-5；`tools/release.py` Build `20261120_171001` 全綠，https://math-108.pages.dev 驗證 HEAD 200。
+- **S1 守門員時序強化**：`verify_audio_singleton.js`／`verify_app_shell.js`／`verify_concept_hub_cdp.js` 加重試，標準未降。
 
 ---
 
 ## 🚦 目前狀態與客觀事實
-- 🟢 **全站已上線且 worktree clean**；`main...origin/main` 同步，最後 commit `55ec16b`（release Build 20261120_171001）。
-- 🟢 G3-N-3-9 黏土定格劇院與 N34 概念小教室影片並存正常。
-- ⚠️ `tools/release.py:160` commit message 寫死「G3 N-3-9…」，實際本次含 N34 掛載；語意落差已知、未改（選配）。
-- ⚠️ 環境副作用未還原：系統 Python 裝 mediapipe 0.10.21，numpy 2.4.6→1.26.4、protobuf→4.25.9、pyyaml；本流程已不依賴 mediapipe。
+- 🟢 N313 六張圖卡 bbox 檢查全綠、已同步 A-SERVER 暫存；main 分支。
+- ⚠️ 遠端 worktree 有 2 個**非本次**的未追蹤檔：`tools/20261121_001_online_patrol_n310.js`、`reports/20261121_002_online_patrol_n310_report.md`（先前 session 遺留，本次未 add／未動，留原 owner 處理）。
+- ⚠️ `tools/release.py:160` commit message 寫死「G3 N-3-9…」，語意落差已知、未改（選配）。
+- ⚠️ 環境副作用：系統 Python 曾裝 mediapipe 0.10.21、numpy 2.4.6→1.26.4 等；本流程已不依賴。
 - 📝 L3 筆記：無 Obsidian MCP，未更新。
 
 ---
 
 ## ➡️ 下一步接續目標 (Next Steps)
-0. 待使用者目視驗收 `_scratch/mimi_n310/blackboard_montage.png` 與 `N310_Final.mp4` 後，再另行決定是否掛載 `app/shell.js` 的 `UNIT_CONCEPT_MOVIES`（N-3-10）並走發布門禁；**本輪不做**。
-1. 手機實機開 https://math-108.pages.dev → G3 N-3-4／N-3-5 概念小教室，點「微電影」確認播放。
-2. 選配：修正 `tools/release.py:160` 寫死的 commit message，語意反映目前主線。
-3. 無其他待辦；新任務可直接開工。
+1. **先目視驗收** A-SERVER `C:\Users\xfarb\AppData\Local\Temp\opencode\N313_blackboard\N313_S01..S06.png`（或遠端 `_scratch/mimi_n313/blackboard/`）；確認排版無誤後才執行 `_scratch/mimi_n313/n313_composite.py` 合成 N313_Final.mp4（本輪不做）。
+2. 待目視驗收 N310 `blackboard_montage.png` 與 `N310_Final.mp4` 後，再決定是否掛載 `app/shell.js` 的 N-3-10 並走發布門禁。
+3. 選配：修正 `tools/release.py:160` 寫死訊息；清理上述 2 個未追蹤檔。
 
 ---
 
 ## ⚠️ 規則提醒與避坑指南
-- **CDP 時序是頑疾**：S0 改 `sw.js` CACHE_NAME 會觸發 `skipWaiting()`＋`clients.claim()`，造成 `Execution context was destroyed`；測試端已加重試，勿反向下修檢驗標準。
-- **只重繪 Layer 2**：S05 直式修正只動黑板圖卡＋重新合成，勿重跑 edge-tts／ComfyUI。
+- **純 CPU 前置護欄**：N313 僅 2D 圖卡／文字／JSON／音訊，未啟動 ComfyUI／GPU／MP4；AMD3950 另執行 Wan 2.2 動態母片，勿干擾。
+- **只重繪 Layer 2**：修正只動黑板圖卡，勿重跑 edge-tts／ComfyUI。
+- **CDP 時序是頑疾**：改 `sw.js` CACHE_NAME 觸發 `skipWaiting()`／`clients.claim()` 會造成 `Execution context was destroyed`；測試端已加重試，勿下修標準。
 - **去背鐵律**：白鍵泛洪去背＋底部實心雙腳；禁呼叫視覺模型重畫兔子。
-- **單檔上限 25 MiB**：壓片鎖 `-b:v 1800k -maxrate 2200k`（實測約 19.5 MB）。
+- **單檔上限 25 MiB**：壓片鎖 `-b:v 1800k -maxrate 2200k`。
 
 ---
 
 ## 🕐 最後更新
-- **時間**：2026-11-20 17:14
-- **更新者**：OpenCode @ DESKTOP-6ELKIRH
-- **Git 狀態**：✅ 已推（`221f8b1`，main 與 origin/main 同步）
+- **最後更新**：2026-11-21（N313 圖卡收工）
+- **更新者**：OpenCode @ A_SERVER
+- **Git 狀態**：待推（handoff 更新待 commit + push）
+- **最新收工**：2026-11-21 A-SERVER 遠端修正 N313 六張黑板圖卡排版，bbox ALL_PASS，圖卡已同步本機暫存
