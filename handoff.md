@@ -4,6 +4,16 @@
 
 ---
 
+## [完成] N-3-5 黑板垂直放大＋同位值對齊＋彌彌兔站姿 — 已 Push 上線（2026-11-22）
+
+- **提交**：`272db84`（垂直放大／S03 `28` 改寫百位+十位／S04 五層對齊／黃框 296..358／站姿上移 25px／shell.js 掛載 N35）＋ `6fa505a`（影片壓至 21.5 MiB 以通過 Pages 25 MiB 限制）。本地 `main` 與 `origin/main` 已對齊。
+- **通道二 Push**：`git bundle` → `scp a-server` → A Server `gh` 憑證 `git push origin main`（`d8d3d19..6fa505a`），暫存 clone 與 bundle 已於 A Server 刪除（無 028-1 副本殘留）。
+- **上線**：`npx wrangler pages deploy . --project-name=math-108 --branch=main --commit-dirty=true` Exit 0；線上影片 `https://math-108.pages.dev/app/assets/classroom_videos/N35_Final.mp4` 回 `HTTP 200` + `Content-Type: video/mp4`；線上 `shell.js` 已見 `N-3-5 → N35_Final.mp4`。
+- **驗收**：資料契約／390×844 CDP／131 條目／app-shell 四閘門全綠；`20261122_003_verify_v2_ygrid.py` 9/9 PASS（28 在 31 正下方、個位留空、減法橫線不壓字、最終 3 懸空 68px、黃框 296..358 不跨線）；影片 1920×1080/30fps/3220f/107.333s/AV gap 0.0000s。
+- **新增軍規**：`AGENTS.md` 軍規八「Pillow `anchor="ls"` 基線對齊＋長除法同位值垂直對齊鐵律」。
+- <!-- DEGRADED: 通道三 `http://127.0.0.1:4000/v1` 六圖視覺審查因 Key Pool 全模型 HTTP 429（8 次重試皆失敗）無法取得回報，改以本地像素級自檢 9/9 PASS 替代；若後續 Key Pool 恢復，建議補跑 `20261122_002_channel3_review.py`。 -->
+- **下一步**：無（本案結案）。若通道三恢復，補做視覺覆核即可。
+
 ## [完成] N-3-13 米米概念小教室 — 正式完成與上線（2026-11-21 收尾）
 
 - **已上線**：`app/shell.js` 的 `UNIT_CONCEPT_MOVIES` 已註冊 `N-3-13` 與 `S-3-1` → `assets/classroom_videos/N313_Final.mp4`，`UNIT_CONCEPT_MOVIE_TITLES` 補「概念小教室：角的認識」，與 N-3-4／N-3-10 掛載方式一致。
