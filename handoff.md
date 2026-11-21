@@ -77,3 +77,4 @@
 - **依指示未做**：`shell.js` 前端掛載、三閘門檢查、跨機部署；**未 git push**。
 - **Git**：本機 commit 僅含 `N35_Final.mp4` + `N35_script.json` + 本 handoff（`_scratch/` 被 gitignore）。
 - **下一步**：待用戶確認影片滿意 → 掛載 `app/shell.js`（N-3-5）→ `tools/release.py` → Cloudflare Pages 部署並 HTTP 200 驗真。
+## 2026-11-22 三合一升級 已 commit ed7b730（223 檔）；三套門禁+CDP 截圖全綠 Exit 0；Dark 選項低對比已修正複拍。尚未 bundle/push/wrangler/curl；A Server user=xfarb 僅負責 push（反向 SSH 金鑰被拒，219 檔已按裁決本機改）。下次開新框 /startup 後接續上線。
