@@ -53,6 +53,5 @@
 ## 🕐 最後更新
 - **最後更新**：2026-11-21（N313 圖卡收工）
 - **更新者**：OpenCode @ A_SERVER
-- **Git 狀態**：✅ 已推（GitHub `8a9009b`，由 A-SERVER 本機 gh credential push；AMD3950 的 git manager 在 SSH 下無法互動）
-- ⚠️ **AMD3950 分岔提醒**：AMD3950 本地 `main`（c2068ac）另有 **3 筆先前未推 commits**（382eaa0／7e14a69／5385099：N313_script.json、S-3-1.json ids 修復、動態母片清單）＋本次 handoff commit，與 GitHub main 分岔。本次**未執行 reset/rebase**（避免丟失未推工作）；下次開工先 `git fetch` 並 rebase／merge 對齊，切勿強制覆蓋。
-- **最新收工**：2026-11-21 A-SERVER 遠端修正 N313 六張黑板圖卡排版，bbox ALL_PASS，圖卡已同步本機暫存；handoff 已更新並推送 GitHub
+- **Git 狀態**：待推（handoff 更新待 commit + push）
+- **最新收工**：2026-11-21 A-SERVER 遠端修正 N313 六張黑板圖卡排版，bbox ALL_PASS，圖卡已同步本機暫存
