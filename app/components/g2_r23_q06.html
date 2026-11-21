@@ -27,7 +27,7 @@
         .app-container {
             width: 100%;
             max-width: 420px;
-            background: white;
+            background: var(--bg-card);
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             padding: 20px;
@@ -45,7 +45,7 @@
         }
 
         .visual-area {
-            background: #fff;
+            background: var(--bg-card);
             border: 2px dashed #ccc;
             border-radius: 12px;
             margin-bottom: 15px;
@@ -105,7 +105,7 @@
             padding: 12px 8px;
             border: 2px solid #ddd;
             border-radius: 10px;
-            background: white;
+            background: var(--bg-card);
             cursor: pointer;
             font-size: 0.95rem;
             transition: all 0.2s;
@@ -139,6 +139,7 @@
             transition: transform 0.8s;
         }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -273,5 +274,20 @@
     initApples();
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

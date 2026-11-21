@@ -9,14 +9,14 @@
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",sans-serif; padding:6px 8px 8px; max-width:100vw; overflow-x:hidden; }
 .wrap { max-width:480px; margin:0 auto; display:flex; flex-direction:column; gap:4px; }
-.card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
+.card { background:var(--bg-card); border:1px solid var(--line); border-radius:14px; padding:5px 8px; box-shadow:0 6px 18px rgba(120,90,40,.08); }
 .stem { font-size:13.5px; font-weight:800; line-height:1.35; }
 .stem small { display:block; font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-bottom:2px; }
 .scene-svg { display:block; height:125px; width:auto; margin:0 auto; max-width:100%; }
 .t-caption { font-size:12px; font-weight:800; fill:var(--ink); text-anchor:middle; }
 .t-num { font-size:11px; font-weight:800; fill:var(--ink-soft); text-anchor:middle; }
 .opts { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
-.opt-btn { border:2px solid var(--line); background:#fff; border-radius:10px; padding:5px 4px; font-size:13px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
+.opt-btn { border:2px solid var(--line); background:var(--bg-card); border-radius:10px; padding:5px 4px; font-size:13px; font-weight:800; color:var(--ink); text-align:center; transition:all .15s; }
 .opt-btn.sel { border-color:var(--mint-deep); background:#eafaf4; }
 .footer-action { text-align:center; }
 .check-btn { border-radius:999px; padding:5px 22px; font-size:14px; font-weight:800; background:var(--mint-deep); color:#fff; box-shadow:0 4px 10px rgba(49,138,112,.3); }
@@ -38,6 +38,7 @@ html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,B
 .vq.show .v-eq { animation:pop .3s .15s both; }
 .vq.show .v-notes { animation:fade .4s .8s both; }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="wrap">
@@ -155,6 +156,21 @@ html, body { background:var(--bg); color:var(--ink); font-family:-apple-system,B
     return { ok: false, picked: picked };
   };
   window.__q = { id: 'G2-N-2-11-Q03', answer: ANSWER };
+})();
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
 })();
 </script>
 </body>

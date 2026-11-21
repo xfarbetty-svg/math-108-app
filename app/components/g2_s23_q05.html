@@ -88,7 +88,7 @@
         }
 
         .opt-btn {
-            background: white;
+            background: var(--bg-card);
             border: 2px solid #ddd;
             padding: 10px 5px;
             border-radius: 8px;
@@ -158,6 +158,7 @@
         }
         .correct-anim { animation: bounce 0.5s ease infinite; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -287,5 +288,20 @@
 window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

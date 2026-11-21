@@ -23,7 +23,7 @@ html, body {
 }
 .wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
 .card {
-  background: #fff;
+  background: var(--bg-card);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 8px 10px;
@@ -51,7 +51,7 @@ html, body {
 .stepper { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .stepper button {
   width: 26px; height: 26px; border-radius: 50%;
-  border: 2px solid #1d6f9e; background: #fff; color: #1d6f9e;
+  border: 2px solid #1d6f9e; background: var(--bg-card); color: #1d6f9e;
   font-size: 15px; font-weight: 900; cursor: pointer; transition: all 0.15s;
 }
 .stepper button:active { transform: scale(0.92); }
@@ -65,7 +65,7 @@ html, body {
 .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .opt-btn {
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 7px 5px;
   font-size: 12px;
@@ -102,6 +102,7 @@ html, body {
 .result-banner.success { display: block; background: #dcfce7; color: #166534; }
 .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="wrap">
@@ -196,6 +197,21 @@ html, body {
   window.__q = { id: 'G2-N-2-5-Q03', answer: ANSWER };
 
   render();
+})();
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
 })();
 </script>
 </body>

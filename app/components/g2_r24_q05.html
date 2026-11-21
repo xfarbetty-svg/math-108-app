@@ -27,7 +27,7 @@
         .app-container {
             width: 100%;
             max-width: 420px;
-            background-color: white;
+            background-color: var(--bg-card);
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             padding: 20px;
@@ -66,7 +66,7 @@
             font-size: 1.1rem;
             border: 2px solid #ddd;
             border-radius: 10px;
-            background: white;
+            background: var(--bg-card);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -116,6 +116,7 @@
             opacity: 0.3;
         }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -139,7 +140,7 @@
             <text id="text15" x="270" y="115" text-anchor="middle" fill="white" font-weight="bold">15</text>
 
             <!-- Relationship Indicator -->
-            <path id="gapIndicator" d="M 210 80 L 210 140" stroke="#333" stroke-width="2" stroke-dasharray="4" opacity="0" />
+            <path id="gapIndicator" d="M 210 80 L 210 140" stroke="var(--svg-stroke)" stroke-width="2" stroke-dasharray="4" opacity="0" />
             <rect id="highlightBox" x="210" y="30" width="120" height="100" class="highlight-gap" />
             
             <!-- Labels -->
@@ -198,5 +199,20 @@
     }
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

@@ -154,7 +154,7 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             z-index: 10;
-            background: white;
+            background: var(--bg-card);
             padding: 20px 30px;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
@@ -191,6 +191,7 @@
         .pencil:hover { transform: translateY(-2px); }
         .magnifier { pointer-events: none; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -347,5 +348,20 @@
 window.check = typeof checkAnswer !== "undefined" ? checkAnswer : () => {};
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

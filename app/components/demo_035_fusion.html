@@ -32,7 +32,7 @@ html, body {
   gap: 6px;
 }
 .card {
-  background: #fff;
+  background: var(--bg-card);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 6px 10px;
@@ -93,7 +93,7 @@ html, body {
 }
 .opt-btn {
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 6px 4px;
   font-size: 13px;
@@ -144,6 +144,7 @@ html, body {
 #hlG { opacity: 0; transition: opacity .35s; }
 .zoomed #hlG { opacity: 1; }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="wrap">
@@ -249,6 +250,21 @@ html, body {
     on = !on;
     stage.classList.toggle('zoomed', on);
     status.innerHTML = on ? '動態高亮：黃色 <b>9 大格＝45 分</b>，紅色 <b>再加 2 小格＝47 分</b>！' : '觀察教室時鐘：時針在 3 和 4 之間，分針指在 47 分';
+  });
+})();
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
   });
 })();
 </script>

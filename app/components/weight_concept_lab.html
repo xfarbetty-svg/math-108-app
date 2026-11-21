@@ -69,7 +69,7 @@
             position: absolute; top: 10px; right: 12px;
             width: 105px; height: 105px;
             border-radius: 50%; border: 3px solid var(--wood-brown);
-            background: #ffffff; overflow: hidden; display: none;
+            background: var(--bg-card); overflow: hidden; display: none;
             box-shadow: 0 4px 12px rgba(0,0,0,0.18);
             z-index: 10;
         }
@@ -81,7 +81,7 @@
             padding: 0 6px; border-top: 1px solid rgba(139, 90, 43, 0.15);
         }
         .item-btn {
-            background: white; border: 1px solid #d1c7bd; border-radius: 8px;
+            background: var(--bg-card); border: 1px solid #d1c7bd; border-radius: 8px;
             padding: 3px 6px; font-size: 11px; cursor: pointer; text-align: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
@@ -107,6 +107,7 @@
         }
     </style>
     <script src="../js/audio_manager.js"></script>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -316,6 +317,21 @@
 
     // Init
     switchAct(1);
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

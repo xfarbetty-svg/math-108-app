@@ -23,7 +23,7 @@ html, body {
 }
 .wrap { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
 .card {
-  background: #fff;
+  background: var(--bg-card);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 6px 10px;
@@ -134,7 +134,7 @@ html, body {
 }
 .opt-btn {
   border: 2px solid var(--line);
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 6px 4px;
   font-size: 13px;
@@ -156,6 +156,7 @@ html, body {
   cursor: pointer;
 }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="wrap">
@@ -222,6 +223,21 @@ function clickSpot(type, x, y, msg) {
   
   info.innerHTML = '<b>發現了！</b>' + msg;
 }
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

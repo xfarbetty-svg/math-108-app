@@ -109,7 +109,7 @@
             gap: 4px;
         }
         .option-btn {
-            background: #fff;
+            background: var(--bg-card);
             border: 1.5px solid #ebd9c8;
             color: var(--text-dark);
             padding: 4px 4px;
@@ -152,6 +152,7 @@
             display: none;
         }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div id="app">
@@ -628,7 +629,7 @@
         g.innerHTML = `
             <g transform="translate(60, 100)">
                 <!-- 底邊重疊 -->
-                <line x1="0" y1="0" x2="110" y2="0" stroke="#333" stroke-width="3"/>
+                <line x1="0" y1="0" x2="110" y2="0" stroke="var(--svg-stroke)" stroke-width="3"/>
                 <circle cx="0" cy="0" r="4" fill="#333"/>
                 <text x="35" y="15" font-size="9" fill="#64748b">底邊疊合、頂點對齊</text>
 
@@ -692,6 +693,21 @@
 
     window.addEventListener('load', init);
     window.addEventListener('resize', notifyParentHeight);
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

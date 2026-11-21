@@ -17,7 +17,7 @@
         .container {
             width: 100%;
             max-width: 480px; /* Max width for mobile-first */
-            background: #ffffff;
+            background: var(--bg-card);
             border-radius: 12px; /* Smaller border radius */
             padding: 10px 12px; /* Reduced padding */
             box-shadow: 0 4px 16px rgba(0,0,0,0.05);
@@ -72,7 +72,7 @@
         .fly-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
         .reset-btn {
             min-height: 36px; /* Smaller min-height */
-            background: #ffffff;
+            background: var(--bg-card);
             color: #334155;
             font-size: 13px; /* Smaller font */
             font-weight: 700;
@@ -85,7 +85,7 @@
         .opt-group { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 6px; } /* Reduced gap and margin */
         .opt-btn {
             min-height: 36px; /* Smaller min-height */
-            background: #ffffff;
+            background: var(--bg-card);
             border: 1.5px solid #cbd5e1;
             border-radius: 8px;
             font-size: 13px; /* Smaller font */
@@ -119,6 +119,7 @@
         .result-banner.success { display: block; background: #dcfce7; color: #166534; }
         .result-banner.fail { display: block; background: #fee2e2; color: #991b1b; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -363,5 +364,20 @@
     build();
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

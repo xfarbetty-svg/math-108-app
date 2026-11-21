@@ -55,7 +55,7 @@
             font-size: 1.1rem;
             line-height: 1.5;
             color: var(--text-color);
-            background: white;
+            background: var(--bg-card);
             margin: 10px;
             border-radius: 15px;
             box-shadow: 0 4px 0 rgba(0,0,0,0.05);
@@ -79,14 +79,14 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             padding: 15px;
-            background: white;
+            background: var(--bg-card);
             border-radius: 20px 20px 0 0;
         }
 
         .option-btn {
             padding: 12px 8px;
             border: 2px solid var(--accent-color);
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             cursor: pointer;
             font-size: 1rem;
@@ -143,6 +143,7 @@
         }
         .correct-anim { animation: bounce 0.5s ease infinite; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -275,5 +276,20 @@
     }
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

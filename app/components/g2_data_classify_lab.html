@@ -85,7 +85,7 @@
 
         /* 繪本風格標題 */
         .title-box {
-            background: white;
+            background: var(--bg-card);
             border: 2px solid var(--ink);
             border-radius: 20px;
             padding: 5px 15px;
@@ -126,7 +126,7 @@
             align-items: center;
             justify-content: flex-end;
             padding-bottom: 5px;
-            background: white;
+            background: var(--bg-card);
             position: relative;
         }
         .box-label { font-size: 12px; font-weight: bold; margin-top: 5px; }
@@ -154,7 +154,7 @@
             align-items: center;
             width: 100%;
             margin: 8px 0;
-            background: white;
+            background: var(--bg-card);
             padding: 10px;
             border-radius: var(--radius);
             border: 2px solid var(--ink);
@@ -211,7 +211,7 @@
 
         /* Act 4: 測驗 */
         .quiz-card {
-            background: white;
+            background: var(--bg-card);
             border: 2px solid var(--ink);
             border-radius: var(--radius);
             padding: 15px;
@@ -228,7 +228,7 @@
             padding: 8px;
             border: 2px solid var(--ink);
             border-radius: 8px;
-            background: white;
+            background: var(--bg-card);
             cursor: pointer;
             font-weight: bold;
         }
@@ -241,7 +241,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            background: #fff;
+            background: var(--bg-card);
             border-top: 2px solid var(--ink);
         }
         .main-btn {
@@ -264,6 +264,7 @@
         }
         @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -646,5 +647,20 @@
     };
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

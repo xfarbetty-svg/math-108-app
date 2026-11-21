@@ -102,7 +102,7 @@
             padding: 2px; border-radius: 4px;
         }
         .grid-cell {
-            width: 32px; height: 32px; background: #fff;
+            width: 32px; height: 32px; background: var(--bg-card);
             display: flex; align-items: center; justify-content: center;
             font-size: 11px; font-weight: bold; color: #555;
             transition: all 0.2s;
@@ -129,6 +129,7 @@
         }
     </style>
     <script src="../js/audio_manager.js"></script>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -355,6 +356,21 @@
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initGrid();
     }
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

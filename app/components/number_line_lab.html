@@ -105,7 +105,7 @@
             gap: 4px;
         }
         .step-btn {
-            background: #fff;
+            background: var(--bg-card);
             border: 1.5px solid var(--sky);
             color: #0284c7;
             padding: 3px 8px;
@@ -207,6 +207,7 @@
             to { stroke-dashoffset: 0; }
         }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div id="app">
@@ -784,6 +785,21 @@
 
     window.addEventListener('load', init);
     window.addEventListener('resize', notifyParentHeight);
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

@@ -57,7 +57,7 @@
 
   /* ── 題目橫幅 ── */
   .q-banner{
-    margin:12px 2px 0; background:#fff; border:3px dashed var(--wood-2);
+    margin:12px 2px 0; background:var(--bg-card); border:3px dashed var(--wood-2);
     border-radius:14px; padding:10px 12px; position:relative;
     font-size:clamp(15px,4vw,19px); font-weight:700; line-height:1.5;
   }
@@ -137,7 +137,7 @@
   /* 順序數字氣泡 */
   .bubble{
     position:absolute; top:0; left:50%; transform:translateX(-50%) scale(0);
-    background:#fff; border:2px solid var(--red); color:var(--red);
+    background:var(--bg-card); border:2px solid var(--red); color:var(--red);
     font-weight:900; font-size:12px; min-width:20px; height:20px; line-height:16px;
     border-radius:10px; padding:0 3px; text-align:center; z-index:4;
     transition:transform .25s cubic-bezier(.34,1.8,.64,1);
@@ -201,6 +201,7 @@
   }
   footer{ text-align:center; margin-top:14px; font-size:11px; color:#b9a58a; }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div id="app">
@@ -599,6 +600,21 @@ document.getElementById("btnOk").addEventListener("click", check);
 document.getElementById("btnRe").addEventListener("click", resetLevel);
 
 render();
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

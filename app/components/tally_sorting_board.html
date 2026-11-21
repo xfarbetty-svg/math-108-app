@@ -38,7 +38,7 @@
   .tab.active{ background:linear-gradient(180deg,#ffdf6b,#ffc233); }
 
   .q-banner{
-    margin:2px 0 0; background:#fff; border:2.5px dashed var(--wood-2);
+    margin:2px 0 0; background:var(--bg-card); border:2.5px dashed var(--wood-2);
     border-radius:10px; padding:1px 8px; position:relative;
     font-size:10.5px; font-weight:700; line-height:1.28;
   }
@@ -103,7 +103,7 @@
   .chip small,.act small{ font-size:9px; font-weight:600; }
 
   .note{
-    margin-top:2px; background:#fff; border:2px dashed var(--wood-2); border-radius:9px;
+    margin-top:2px; background:var(--bg-card); border:2px dashed var(--wood-2); border-radius:9px;
     padding:1px 8px; font-size:10.5px; font-weight:700; line-height:1.25;
     display:flex; align-items:center; gap:6px;
   }
@@ -114,7 +114,7 @@
 
   .opt-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:2px; }
   .opt-btn{
-    min-height:40px; border:2px solid #c8a06a; border-radius:9px; background:#fff; color:var(--ink);
+    min-height:40px; border:2px solid #c8a06a; border-radius:9px; background:var(--bg-card); color:var(--ink);
     font-family:inherit; font-weight:700; font-size:11.5px; line-height:1.2; padding:1px 7px; cursor:pointer;
     box-shadow:0 2px 0 #a5814e; display:flex; align-items:center; justify-content:center;
   }
@@ -150,7 +150,7 @@
   /* ── Q3 動物票選卡 ── */
   .animal-row{ display:flex; gap:5px; padding:6px; }
   .animal-card{
-    flex:1 1 0; min-height:92px; border:2px solid #c8a06a; border-radius:10px; background:#fff; cursor:pointer;
+    flex:1 1 0; min-height:92px; border:2px solid #c8a06a; border-radius:10px; background:var(--bg-card); cursor:pointer;
     font-family:inherit; color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:1px; padding:3px 1px; box-shadow:0 2px 0 #a5814e; transition:transform .12s;
   }
@@ -163,7 +163,7 @@
   /* ── Q4 分類籃 ── */
   .shelf{ display:flex; gap:4px; padding:4px 5px 2px; }
   .shelf-item{
-    flex:1 1 0; min-height:54px; border:2px solid #c8a06a; border-radius:9px; background:#fff; cursor:pointer;
+    flex:1 1 0; min-height:54px; border:2px solid #c8a06a; border-radius:9px; background:var(--bg-card); cursor:pointer;
     font-family:inherit; color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center;
     padding:2px 0 1px; box-shadow:0 2px 0 #a5814e; transition:transform .45s, opacity .45s;
   }
@@ -190,6 +190,7 @@
     .animal-card b{ font-size:12.5px; }
   }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div id="app">
@@ -670,6 +671,21 @@ buildSky();
 buildChart();
 buildAnimals();
 buildShelf();
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

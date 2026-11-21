@@ -17,7 +17,7 @@
         .container {
             width: 100%;
             max-width: 820px;
-            background: #ffffff;
+            background: var(--bg-card);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.05);
@@ -52,7 +52,7 @@
         .expand-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
         .reset-btn {
             min-height: 44px;
-            background: #ffffff;
+            background: var(--bg-card);
             color: #334155;
             font-size: 1rem;
             font-weight: 700;
@@ -64,7 +64,7 @@
         .opt-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 12px; }
         .opt-btn {
             min-height: 44px;
-            background: #ffffff;
+            background: var(--bg-card);
             border: 1.5px solid #cbd5e1;
             border-radius: 8px;
             font-size: 1.02rem;
@@ -111,6 +111,7 @@
             .result-banner { margin-top: 6px; padding: 6px 8px; font-size: 13px; }
         }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -245,5 +246,20 @@
     build();
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

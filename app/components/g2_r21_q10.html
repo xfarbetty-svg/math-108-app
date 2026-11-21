@@ -47,7 +47,7 @@
         .canvas-area {
             width: 100%;
             height: 120px;
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 12px;
             border: 2px dashed #ccc;
             margin-bottom: 15px;
@@ -64,7 +64,7 @@
             padding: 10px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            background: white;
+            background: var(--bg-card);
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.2s;
@@ -120,6 +120,7 @@
         /* SVG Styling */
         .pen-label { font-size: 12px; fill: #666; font-weight: bold; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -228,5 +229,20 @@
     };
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

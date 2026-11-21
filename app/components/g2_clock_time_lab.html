@@ -94,7 +94,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   white-space: nowrap;
 }
 .act-btn.active {
-  background: #ffffff;
+  background: var(--bg-card);
   color: var(--mint-deep);
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
@@ -181,7 +181,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   height: 26px;
   margin-top: -8px;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--bg-card);
   border: 3px solid var(--mint-deep);
   box-shadow: 0 2px 5px rgba(0,0,0,0.15);
   cursor: grab;
@@ -195,7 +195,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--bg-card);
   border: 3px solid var(--mint-deep);
 }
 .slider-labels { display: flex; justify-content: space-between; font-size: 10.5px; font-weight: 700; color: var(--ink-soft); }
@@ -273,6 +273,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .status-dot.done { background: var(--mint); }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="lab-wrap">
@@ -834,6 +835,21 @@ window.G2_LAB_SELFTEST = {
   reset: resetLab,
   state: verifyState
 };
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

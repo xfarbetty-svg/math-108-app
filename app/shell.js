@@ -35,6 +35,116 @@ function getLastPosition() {
   }
 }
 
+/* ---------- 學習進度帳本 math108_progress（localStorage 持久化） ---------- */
+const PROGRESS_KEY = "math108_progress";
+function loadProgress() {
+  try {
+    const p = JSON.parse(localStorage.getItem(PROGRESS_KEY));
+    if (p && typeof p === "object" && p.units && typeof p.units === "object") return p;
+  } catch (e) {}
+  return { units: {}, last_active_unit: null };
+}
+function saveProgress(p) {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (e) {}
+}
+function unitTotal(code) {
+  const g = state.curriculum && state.curriculum.grades.find((x) => x.grade === state.grade);
+  const u = g && g.units.find((x) => x.code === code);
+  return u ? (u.question_count || 0) : 0;
+}
+function markActiveUnit(code) {
+  const p = loadProgress();
+  p.last_active_unit = code;
+  if (!p.units[code]) {
+    p.units[code] = { done: 0, total: unitTotal(code), passed: false, checked: [] };
+  } else {
+    p.units[code].total = unitTotal(code) || p.units[code].total;
+  }
+  saveProgress(p);
+}
+function markQuestionChecked() {
+  const u = state.unit;
+  const code = u && (u.code || u.unit_code || u.unit_id);
+  const q = u && u.questions && u.questions[state.qIndex];
+  if (!code || !q) return;
+  const p = loadProgress();
+  const rec = p.units[code] || { done: 0, total: unitTotal(code), passed: false, checked: [] };
+  if (!Array.isArray(rec.checked)) rec.checked = [];
+  const key = String(q.id != null ? q.id : state.qIndex);
+  if (rec.checked.indexOf(key) === -1) rec.checked.push(key);
+  rec.total = (u.question_count || u.questions.length || rec.total);
+  rec.done = rec.checked.length;
+  if (rec.done >= rec.total) rec.passed = true;
+  p.units[code] = rec;
+  p.last_active_unit = code;
+  saveProgress(p);
+}
+function markUnitSubmitted() {
+  const u = state.unit;
+  const code = u && (u.code || u.unit_code || u.unit_id);
+  if (!code) return;
+  const p = loadProgress();
+  const rec = p.units[code] || { done: 0, total: unitTotal(code), passed: false, checked: [] };
+  rec.total = (u.question_count || u.questions.length || rec.total);
+  if ((rec.checked || []).length >= rec.total) rec.passed = true;
+  p.units[code] = rec;
+  p.last_active_unit = code;
+  saveProgress(p);
+}
+function gradeReadyCodes(g) {
+  return (g && g.units ? g.units : []).filter((u) => u.status === "ready").map((u) => u.code);
+}
+function resolveContinueTarget(p) {
+  const grades = state.curriculum ? state.curriculum.grades : [];
+  const allReady = grades.reduce((acc, g) => acc.concat(gradeReadyCodes(g)), []);
+  if (!allReady.length) return null;
+  const last = p && p.last_active_unit;
+  if (last && allReady.indexOf(last) !== -1) {
+    const rec = p.units[last];
+    if (!(rec && rec.passed)) return last;
+    // 同年级下一个未完成单元 → 再跨年级往下找
+    const gi = grades.findIndex((g) => gradeReadyCodes(g).indexOf(last) !== -1);
+    const same = gi >= 0 ? gradeReadyCodes(grades[gi]) : [];
+    const idx = same.indexOf(last);
+    for (let i = idx + 1; i < same.length; i++) {
+      const rec2 = p.units[same[i]];
+      if (!(rec2 && rec2.passed)) return same[i];
+    }
+    for (let g = gi + 1; g < grades.length; g++) {
+      for (const code of gradeReadyCodes(grades[g])) {
+        const rec3 = p.units[code];
+        if (!(rec3 && rec3.passed)) return code;
+      }
+    }
+    return last; // 全數完成 → 回最後單元複習
+  }
+  // 全新訪客：先認 N-1-1，其次 N-3-1
+  if (allReady.indexOf("N-1-1") !== -1) return "N-1-1";
+  if (allReady.indexOf("N-3-1") !== -1) return "N-3-1";
+  return allReady[0];
+}
+function renderContinueBanner() {
+  const p = loadProgress();
+  const code = resolveContinueTarget(p);
+  if (!code) return "";
+  const g = state.curriculum.grades.find((x) => gradeReadyCodes(x).indexOf(code) !== -1);
+  const meta = g && g.units.find((u) => u.code === code);
+  const rec = p.units[code];
+  const isFresh = !p.last_active_unit;
+  const doneUnits = gradeReadyCodes(g).filter((c) => p.units[c] && p.units[c].passed).length;
+  const totalUnits = gradeReadyCodes(g).length;
+  const title = isFresh
+    ? `▶ 從第一單元開始挑戰：N-1-1 / N-3-1`
+    : `▶ 繼續上次進度：${code} ${meta ? meta.title : ""}（已完成 ${doneUnits}/${totalUnits} 單元）`;
+  const sub = isFresh
+    ? "點一下直接進入，往後可從進度徽章接續"
+    : (rec && rec.done > 0 ? `本單元已作答 ${rec.done}/${rec.total} 題` : "尚未作答，點一下立即開始");
+  return `<button class="continue-banner" id="btnContinue" data-code="${code}">
+    <span class="cb-icon">▶</span>
+    <span class="cb-text">${title}<span class="cb-sub">${sub}</span></span>
+  </button>`;
+}
+
 /* ---------- 視圖切換 ---------- */
 function showView(name) {
   views.forEach((v) => { $(v).style.display = (v === name) ? "block" : "none"; });
@@ -79,42 +189,23 @@ function renderGrade() {
     if (g.grade === 3 && (u.code === "N-3-13" || u.code === "S-3-1")) {
       codeLabel = `${u.code} · 同義整合`;
     }
+    const p = loadProgress();
+    const rec = ready ? p.units[u.code] : null;
+    let badge = `<span class="badge-ready">開始挑戰 ▶</span>`;
+    if (rec && rec.passed) {
+      badge = `<span class="badge-progress done">✅ 已完成</span>`;
+    } else if (rec && rec.done > 0) {
+      badge = `<span class="badge-progress doing">🔥 進行中 (${rec.done}/${rec.total})</span>`;
+    }
     return `
       <button class="unit-card ${ready ? "ready" : "locked"}" ${ready ? "" : "disabled"} data-code="${u.code}">
         <span class="code">${codeLabel}</span>
         <h3>${u.title}</h3>
         <p class="desc">${u.full_text}</p>
         <span class="hint">${ready ? (u.question_count + " 題真題 · 具象教具互動 · 已驗真") : UPCOMING_HINT}</span>
-        ${ready ? `<span class="badge-ready">開始挑戰 ▶</span><span class="start-arrow">→</span>` : `<span class="badge-upcoming">即將開放</span>`}
+        ${ready ? `${badge}<span class="start-arrow">→</span>` : `<span class="badge-upcoming">即將開放</span>`}
       </button>`;
   }).join("");
-
-  const conceptUnits = g.units.filter((u) => !!CONCEPT_COMPONENTS[u.code]);
-  let conceptBannerHtml = "";
-  if (conceptUnits.length > 0) {
-    conceptBannerHtml = `
-      <div class="concept-hub-card">
-        <div class="concept-hub-header">
-          <div class="concept-hub-title-group">
-            <span class="hub-icon">🎨</span>
-            <div>
-              <div class="hub-title">概念探索小教室 · 實體教具全開放</div>
-              <div class="hub-desc">免做題先體驗 · 四階光影互動 · 曉臻自然女聲語音</div>
-            </div>
-          </div>
-          <span class="hub-badge">${conceptUnits.length} 套全部解鎖</span>
-        </div>
-        <div class="concept-chips-grid">
-          ${conceptUnits.map((u) => `
-            <button class="btn-concept-chip" data-code="${u.code}">
-              <span class="chip-dot">🌱</span>
-              <span class="chip-code">${u.code}</span>
-              <span class="chip-title">${u.title}</span>
-            </button>
-          `).join("")}
-        </div>
-      </div>`;
-  }
 
   view.innerHTML = `
     <div class="grade-hero">
@@ -123,17 +214,28 @@ function renderGrade() {
         <h2>${g.name} · 共 ${g.units.length} 大條目</h2>
         <p>已開放 ${readyCount}/${g.units.length} · 真題全部來自實體段考試卷，人類三端盲審通過才開放</p>
       </div>
-      ${conceptBannerHtml}
     </div>
+    ${renderContinueBanner()}
     <div class="unit-list">${cards}</div>`;
 
   view.querySelectorAll(".unit-card.ready").forEach((card) => {
     card.addEventListener("click", () => openUnit(card.dataset.code));
   });
-
-  view.querySelectorAll(".btn-concept-chip").forEach((btn) => {
-    btn.addEventListener("click", () => openConceptLab(btn.dataset.code));
-  });
+  const btnContinue = $("btnContinue");
+  if (btnContinue) {
+    btnContinue.addEventListener("click", () => {
+      const code = btnContinue.dataset.code;
+      if (!code) return;
+      const g2 = state.curriculum.grades.find((x) => gradeReadyCodes(x).indexOf(code) !== -1);
+      if (!g2 || g2.grade !== state.grade) {
+        state.grade = g2 ? g2.grade : state.grade;
+        renderNav();
+      }
+      const pos = getLastPosition();
+      const q = pos && pos.unitCode === code ? (pos.qIndex || 0) : 0;
+      openUnit(code, q);
+    });
+  }
 }
 
 /* ---------- 概念探索小教室獨立直達通道 ---------- */
@@ -195,6 +297,7 @@ async function openUnit(code, initialQIndex = 0) {
   state.qIndex = (initialQIndex >= 0 && initialQIndex <= maxIdx) ? initialQIndex : 0;
   state.visited.clear();
   saveLastPosition(state.grade, code, state.qIndex);
+  markActiveUnit(code);
   renderStage();
 }
 
@@ -684,10 +787,12 @@ async function init() {
   }
 
   renderNav();
-  if (targetUnit) {
-    openUnit(targetUnit, targetQ);
-  } else {
-    renderGrade();
+  // 改為永遠回年級頁：讓「繼續上次進度」橫幅可見，不再自動跳進舊單元
+  renderGrade();
+  // 還原上次所在年級（若記錄有效）
+  if (targetUnit && lastPos && lastPos.grade) {
+    // 年級已由上方 lastPos 還原；targetUnit 留給橫幅點擊時接續
+    void targetQ;
   }
 
   $("btnBack").addEventListener("click", () => {
@@ -712,9 +817,35 @@ async function init() {
       renderQuestion();
     }
   });
-  $("btnCheckMain").addEventListener("click", triggerCheckAnswer);
+  $("btnCheckMain").addEventListener("click", () => { triggerCheckAnswer(); markQuestionChecked(); });
   $("btnSpeak").addEventListener("click", speakCurrentProblem);
-  $("btnFinish").addEventListener("click", () => { stopSpeech(); renderResult(); });
+  $("btnFinish").addEventListener("click", () => { stopSpeech(); markUnitSubmitted(); renderResult(); });
+
+  /* ---------- Light / Dark 雙模式：外殼開關＋iframe 同步廣播 ---------- */
+  function applyTheme(theme) {
+    const t = (theme === "dark") ? "dark" : "light";
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem("math108_theme", t); } catch (e) {}
+    const btn = $("btnThemeToggle");
+    if (btn) {
+      btn.textContent = (t === "dark") ? "☀️" : "🌙";
+      btn.title = (t === "dark") ? "切換 Light 模式" : "切換 Dark 模式";
+    }
+    document.querySelectorAll("iframe").forEach((frame) => {
+      try {
+        if (frame.contentWindow) frame.contentWindow.postMessage({ type: "THEME_CHANGE", theme: t }, "*");
+      } catch (e) {}
+    });
+  }
+  let savedTheme = "light";
+  try { savedTheme = localStorage.getItem("math108_theme") || "light"; } catch (e) {}
+  applyTheme(savedTheme);
+  const btnTheme = $("btnThemeToggle");
+  if (btnTheme) {
+    btnTheme.addEventListener("click", () => {
+      applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+    });
+  }
 
   const btnUpdate = $("btnAppUpdate");
   if (btnUpdate) {

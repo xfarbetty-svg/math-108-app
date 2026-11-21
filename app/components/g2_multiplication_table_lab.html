@@ -58,7 +58,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: 999px; color: var(--ink-soft); text-align: center;
   transition: all 0.2s; white-space: nowrap;
 }
-.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.act-btn.active { background: var(--bg-card); color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
 /* ===== 卡片通用造型 ===== */
 .act-panel { display: flex; flex-direction: column; gap: 10px; }
@@ -99,7 +99,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .stepper b { font-size: 13px; min-width: 18px; text-align: center; }
 .stepper small { font-size: 10.5px; font-weight: 800; color: var(--ink-soft); }
 .step-btn {
-  width: 26px; height: 26px; border-radius: 999px; background: #ffffff;
+  width: 26px; height: 26px; border-radius: 999px; background: var(--bg-card);
   border: 1px solid var(--line); font-size: 14px; font-weight: 800; color: var(--mint-deep);
   display: inline-flex; align-items: center; justify-content: center;
 }
@@ -132,7 +132,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: 10px; display: flex; align-items: center; justify-content: center;
   font-weight: 800; font-size: 14px;
 }
-.flip-front { background: #ffffff; border: 2px solid var(--line); color: var(--ink); }
+.flip-front { background: var(--bg-card); border: 2px solid var(--line); color: var(--ink); }
 .flip-back { background: #e7f5f0; border: 2px solid var(--mint); color: var(--mint-deep); transform: rotateY(180deg); flex-direction: column; gap: 1px; }
 .flip-back small { font-size: 9.5px; font-weight: 700; color: var(--ink-soft); }
 .flip-card.hot .flip-front { border-color: var(--coral); background: #fff4ef; color: var(--coral-deep); }
@@ -167,6 +167,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
 .status-dot.done { background: var(--mint); }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="lab-wrap">
@@ -786,6 +787,21 @@ window.G2_LAB_SELFTEST = {
   getCurrentAct: function () { return currentAct; },
   getArray: function () { return { rows: state1.rows, cols: state1.cols }; }
 };
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,109 @@
+/* ============================================================
+ * theme-tokens.css — 028-1 全域兩層色票（Light / Dark）
+ * 只管顏色，不改任何尺寸與間距（軍規五 One-Screen 不變）。
+ * Light 為預設；Dark 禁用純黑 #000000，採護眼黑板深藍灰。
+ * 使用方式：<html data-theme="light|dark">，由 shell.js / 教具 iframe 設定。
+ * ============================================================ */
+
+:root,
+html[data-theme="light"] {
+  --bg-main: #fff9f0;
+  --bg-card: #ffffff;
+  --bg-elevated: #f6f1e7;
+  --text-primary: #3d3a34;
+  --text-secondary: #8a857b;
+  --border-color: #f0e7da;
+  --accent-primary: #f4694b;
+  --svg-stroke: #3d3a34;
+
+  /* 既有別名：Light 保留元件原色，不覆蓋教具自己的 :root */
+  --accent-soft: #ff8a65;
+  --accent-mint: #7bc9b2;
+  --accent-sky: #7db8e8;
+  --accent-lemon: #ffd166;
+  --accent-lilac: #b39ddb;
+  --shadow-color: rgba(120, 90, 40, 0.08);
+  --topbar-bg: rgba(255, 249, 240, 0.92);
+  --banner-bg: linear-gradient(135deg, #fff3ec 0%, #ffffff 100%);
+  --banner-border: #ffcc80;
+  --banner-text: #b45309;
+  --badge-done-bg: #dcfce7;
+  --badge-done-text: #166534;
+  --badge-progress-bg: #ffedd5;
+  --badge-progress-text: #c2410c;
+}
+
+html[data-theme="dark"] {
+  --bg-main: #121826;
+  --bg-card: #1E293B;
+  --bg-elevated: #273549;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --border-color: #334155;
+  --accent-primary: #38BDF8;
+  --svg-stroke: #E2E8F0;
+
+  /* 舊變數別名對應：讓 219 個既有教具無需逐條改色即自動適配 */
+  --bg: #121826;
+  --card: #1E293B;
+  --ink: #F1F5F9;
+  --ink-soft: #94A3B8;
+  --line: #334155;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --coral: #38BDF8;
+  --coral-deep: #7DD3FC;
+  --mint: #34D399;
+  --mint-deep: #10B981;
+  --sky: #38BDF8;
+  --sky-deep: #7DD3FC;
+  --lemon: #FBBF24;
+  --lemon-deep: #F59E0B;
+  --lilac: #C4B5FD;
+  --accent-soft: #38BDF8;
+  --accent-mint: #34D399;
+  --accent-sky: #38BDF8;
+  --accent-lemon: #FBBF24;
+  --accent-lilac: #C4B5FD;
+  --shadow-color: rgba(0, 0, 0, 0.35);
+  --topbar-bg: rgba(18, 24, 38, 0.92);
+  --banner-bg: linear-gradient(135deg, #273549 0%, #1E293B 100%);
+  --banner-border: #38BDF8;
+  --banner-text: #7DD3FC;
+  --badge-done-bg: #064e3b;
+  --badge-done-text: #6EE7B7;
+  --badge-progress-bg: #7c2d12;
+  --badge-progress-text: #FDBA74;
+}
+
+/* 深底上的全域文字與表面基底（元件仍有自身樣式時以 inherit 為主） */
+html[data-theme="dark"] body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+html[data-theme="dark"] .unit-card.ready {
+  background: var(--bg-card);
+}
+html[data-theme="dark"] .stage-frame,
+html[data-theme="dark"] .result-card,
+html[data-theme="dark"] .hero-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+/* 深色模式：選項按鈕以 --card 為底，文字需改用前景色，避免黑字黑底 */
+html[data-theme="dark"] .opt-btn,
+html[data-theme="dark"] .option-btn,
+html[data-theme="dark"] .choice-btn {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+html[data-theme="dark"] .opt-btn.selected,
+html[data-theme="dark"] .option-btn.selected,
+html[data-theme="dark"] .choice-btn.selected {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* var() 寫在 SVG presentation attribute 時，補一層 CSS 保證生效 */
+[stroke="var(--svg-stroke)"] { stroke: var(--svg-stroke); }
+[fill="var(--svg-stroke)"] { fill: var(--svg-stroke); }

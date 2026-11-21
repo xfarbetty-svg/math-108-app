@@ -57,7 +57,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: 999px; color: var(--ink-soft); text-align: center;
   transition: all 0.2s; white-space: nowrap;
 }
-.act-btn.active { background: #ffffff; color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+.act-btn.active { background: var(--bg-card); color: var(--mint-deep); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
 .act-panel { display: flex; flex-direction: column; gap: 10px; }
 .act-panel.hidden { display: none; }
@@ -117,6 +117,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .status-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--lemon); flex: 0 0 auto; }
 .status-dot.done { background: var(--mint); }
 </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div class="lab-wrap">
@@ -651,6 +652,21 @@ window.G2_LAB_SELFTEST = {
   reset: resetLab,
   state: verifyState
 };
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

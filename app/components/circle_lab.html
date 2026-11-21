@@ -115,7 +115,7 @@
             gap: 5px;
         }
         .option-btn {
-            background: #fff;
+            background: var(--bg-card);
             border: 1.5px solid #ebd9c8;
             color: var(--text-dark);
             padding: 6px 4px;
@@ -154,6 +154,7 @@
         .feedback.correct { background: #e8f7f1; color: #2e7d32; border: 1px solid var(--mint); }
         .feedback.wrong { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <div id="app">
@@ -761,6 +762,21 @@
     }
 
     window.addEventListener('DOMContentLoaded', init);
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

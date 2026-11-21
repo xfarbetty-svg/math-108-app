@@ -69,7 +69,7 @@
             padding: 12px 8px;
             border: 2px solid #ddd;
             border-radius: 10px;
-            background: white;
+            background: var(--bg-card);
             cursor: pointer;
             font-size: 0.95rem;
             transition: all 0.2s;
@@ -123,6 +123,7 @@
         .scale-beam { stroke: var(--wood); stroke-width: 4; stroke-linecap: round; }
         .ball { stroke: rgba(0,0,0,0.1); stroke-width: 1; }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -221,5 +222,20 @@
     };
 </script>
 
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
+</script>
 </body>
 </html>

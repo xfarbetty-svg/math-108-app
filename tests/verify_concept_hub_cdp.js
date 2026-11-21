@@ -109,39 +109,43 @@ async function main() {
         if (document.querySelectorAll('#gradeNav .grade-btn').length >= 2) break;
         await sleep(100);
       }
-      // 切換至二年級
-      document.querySelectorAll('#gradeNav .grade-btn')[1].click();
-      await sleep(100);
-
-      const hub = document.querySelector('.concept-hub-card');
-      res.push(hub ? 'PASS 概念探索卡片存在' : 'FAIL 概念探索卡片不存在');
-
-      const chips = document.querySelectorAll('.btn-concept-chip');
-      res.push(chips.length === 24 ? 'PASS G2 擁有 24 顆概念膠囊按鈕' : 'FAIL 膠囊數: ' + chips.length);
-
-      // 點擊 N-2-1
-      chips[0].click();
-      await sleep(600);
-      const stage = document.getElementById('stageView');
-      const frame = document.getElementById('conceptFrame');
-      res.push(stage.style.display === 'block' ? 'PASS 點擊後開啟舞台' : 'FAIL 舞台未開啟');
-      res.push(frame.src.includes('g2_place_value_1000_lab.html') ? 'PASS iframe 載入 N-2-1 小教室' : 'FAIL frame.src: ' + frame.src);
-
-      // 點擊返回
-      document.getElementById('btnBack').click();
-      await sleep(100);
-      res.push(document.getElementById('gradeView').style.display === 'block' ? 'PASS 返回年級列表正常' : 'FAIL 未返回');
-
-      // 點擊 S-2-3 (直尺)
-      const rulerChip = [...document.querySelectorAll('.btn-concept-chip')].find(c => c.dataset.code === 'S-2-3');
-      if (rulerChip) {
-        rulerChip.click();
-        await sleep(600);
-        res.push(frame.src.includes('g2_ruler_drawing_lab.html') ? 'PASS iframe 載入 S-2-3 直尺小教室' : 'FAIL ruler frame: ' + frame.src);
-      } else {
-        res.push('FAIL 找不到 S-2-3 直尺按鈕');
+      // 1. 舊 24 顆概念膠囊快捷區塊已移除
+      res.push(!document.querySelector('.concept-hub-card') ? 'PASS 舊概念探索快捷區塊已移除' : 'FAIL 舊概念探索快捷區塊仍存在');
+      res.push(document.querySelectorAll('.btn-concept-chip').length === 0 ? 'PASS 24 顆概念膠囊已移除' : 'FAIL 概念膠囊仍存在');
+      // 2. 新增「繼續上次進度」橫幅
+      const banner = document.querySelector('.continue-banner');
+      res.push(!!banner ? 'PASS 繼續上次進度橫幅存在' : 'FAIL 橫幅不存在');
+      res.push(!!banner && banner.textContent.includes('從第一單元開始挑戰') ? 'PASS 全新訪客顯示首單元引導' : 'FAIL 橫幅文案: ' + (banner ? banner.textContent : 'null'));
+      // 3. 點橫幅直接進單元
+      if (banner) {
+        banner.click();
+        await sleep(800);
+        res.push(document.getElementById('stageView').style.display === 'block' ? 'PASS 橫幅點擊直接進入單元' : 'FAIL 橫幅未進入單元');
+        res.push((document.getElementById('stageFrame').getAttribute('src') || '').includes('component') ? 'PASS 教具 iframe 已掛載' : 'FAIL 教具 iframe src');
+        document.getElementById('btnBack').click();
+        await sleep(150);
       }
-
+      // 4. 概念小教室改由「單元 Card → 概念探索 tab」進入
+      document.querySelectorAll('#gradeNav .grade-btn')[2].click();
+      await sleep(150);
+      const card = document.querySelector('#gradeView .unit-card.ready[data-code="N-3-5"]');
+      res.push(!!card ? 'PASS G3 N-3-5 卡片存在' : 'FAIL G3 N-3-5 卡片不存在');
+      if (card) {
+        card.click();
+        await sleep(800);
+        const tab = document.getElementById('btnModeConcept');
+        res.push(!!tab && tab.style.display !== 'none' ? 'PASS 單元內概念探索 tab 存在' : 'FAIL 概念 tab 不存在');
+        tab.click();
+        await sleep(350);
+        const frame = document.getElementById('conceptFrame');
+        res.push((frame.getAttribute('src') || '').includes('division_vertical_concept_lab.html') ? 'PASS 概念小教室由單元內進入' : 'FAIL frame.src: ' + frame.getAttribute('src'));
+      }
+      // 5. Theme 切換與持久化
+      const before = document.documentElement.dataset.theme;
+      document.getElementById('btnThemeToggle').click();
+      await sleep(80);
+      res.push(document.documentElement.dataset.theme !== before ? 'PASS Theme 切換生效' : 'FAIL Theme 未切換');
+      res.push(!!localStorage.getItem('math108_theme') ? 'PASS Theme 寫入 localStorage' : 'FAIL Theme 未持久化');
       return res;
     })()`;
 

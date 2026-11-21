@@ -63,7 +63,7 @@
         .num-right { bottom: 8px; right: 24px; }
         .formula-display {
             margin-top: 12px; font-size: 18px; font-family: monospace; font-weight: bold;
-            background: #fff; padding: 6px 16px; border: 2px dashed var(--wood); border-radius: 6px;
+            background: var(--bg-card); padding: 6px 16px; border: 2px dashed var(--wood); border-radius: 6px;
         }
 
         /* Act 2: 天平移項 */
@@ -77,7 +77,7 @@
 
         /* Act 3: 驗算偵探 */
         .notebook {
-            width: 90%; background: #fff; border: 1px solid #ddd; border-left: 4px solid #ef5350;
+            width: 90%; background: var(--bg-card); border: 1px solid #ddd; border-left: 4px solid #ef5350;
             box-shadow: 2px 2px 0 rgba(0,0,0,0.08); padding: 8px 12px; position: relative; font-size: 12px; line-height: 1.5;
         }
         .error-mark { color: red; font-weight: bold; font-size: 13px; border: 2px solid red; padding: 3px 6px; display: none; margin-top: 6px; border-radius: 4px; }
@@ -98,6 +98,7 @@
         }
     </style>
     <script src="../js/audio_manager.js"></script>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
@@ -256,6 +257,21 @@
     }
 
     switchAct(1);
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>

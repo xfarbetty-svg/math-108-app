@@ -17,7 +17,7 @@
         .container {
             width: 100%;
             max-width: 820px;
-            background: #ffffff;
+            background: var(--bg-card);
             border-radius: 16px;
             padding: 16px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.05);
@@ -135,6 +135,7 @@
             .btn { min-height: 38px; padding: 6px 18px; font-size: 13.5px; }
         }
     </style>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 <!-- 共用漸層定義 -->
@@ -268,6 +269,21 @@
     document.getElementById('addTen').onclick = function () { count10++; update(); };
     document.getElementById('addOne').onclick = function () { count1++; update(); };
     update();
+</script>
+<script>
+/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+(function () {
+  try {
+    var t = localStorage.getItem('math108_theme') || 'light';
+    document.documentElement.dataset.theme = t;
+  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  window.addEventListener('message', function (e) {
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>
