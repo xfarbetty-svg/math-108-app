@@ -56,3 +56,14 @@
 - **最後更新**：2026-11-21（N313 最終成片收工）
 - **更新者**：OpenCode @ A_SERVER（SSH 操作 AMD3950）
 - **Git 狀態**：[完成] 已 commit／push（含 `N313_Final.mp4`、`shell.js` 掛載、`AGENTS.md`、本檔），Cloudflare Pages `math-108` 部署上線。
+
+---
+
+## 【待用戶確認】N-3-5 米米概念小教室《315 ÷ 4》— 2026-11-21 AMD3950 本地驗收完成
+- **已產出**：`docs/mimi_classroom/N35_script.json` + `app/assets/classroom_videos/N35_Final.mp4`（25.37 MB／3220 幀／107.333s／1920×1080 30fps／H.264+AAC／影音誤差 **0.0000s**）。**未覆蓋 N34_Final.mp4**。
+- **驗收報告**：`_scratch/mimi_n35/20261121_006_N35_ACCEPTANCE.md`（交付 5 欄 + ffprobe 實測 + S01～S06 共 7 張抽幀目視）；`composite/n35_render_report.json`、`inspect_frames/n35_verify_probe.json`、`final_montage.png`。全流程 exit 0。
+- **內容**：6 幕（比大小→抓兩位→乘與減→比與落→口訣→快問快答）；S01 於 8.5774s／frame 257 由 `loop_apose` 切 `loop_ask`；每次換姿 0.25s 以雙腳底部為軸心 96%→100% Q 彈；自適應背景鍵除＋每支剔除 7 張黑底幀＋Clean Plate（`[850,920,1190,1040]/2048` inpaint、4px 羽化、暗色篩選保護淺綠翻領）＋`mouth_frames_v2` 三態硬切對嘴。**全程只讀 ready/*.webm，從未讀 mp4 預覽，未呼叫視覺模型／ComfyUI**。
+- **已知事項**：25.37 MB 略超 `release.py` 既有 25 MiB 門檻（本次 b:v=1900k / maxrate=2400k）；若後續上架觸發門檻，下調 1800k 重合成即可。edge-tts 本機僅回 `SentenceBoundary`，S01 切換點取整句起點，語義等價。
+- **依指示未做**：`shell.js` 前端掛載、三閘門檢查、跨機部署；**未 git push**。
+- **Git**：本機 commit 僅含 `N35_Final.mp4` + `N35_script.json` + 本 handoff（`_scratch/` 被 gitignore）。
+- **下一步**：待用戶確認影片滿意 → 掛載 `app/shell.js`（N-3-5）→ `tools/release.py` → Cloudflare Pages 部署並 HTTP 200 驗真。

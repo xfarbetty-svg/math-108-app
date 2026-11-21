@@ -1,0 +1,149 @@
+{
+  "project_id": "N35",
+  "grade": "G3",
+  "curriculum_code": "N-3-5",
+  "title": "進階：最高位不夠除的直式操作（315 ÷ 4）",
+  "asset_policy": {
+    "mimi_ssot_root": "../036_local_painter/theater/assets_hosts/g3_mimi/ready",
+    "forbid_other_asset_roots": true,
+    "forbid_mp4_preview": true,
+    "mouth_sequence_dir": "ready/mouth_frames_v2",
+    "visual_model_called": false,
+    "comfyui_redraw_called": false
+  },
+  "paths": {
+    "temp_work_dir": "_scratch/mimi_n35",
+    "blackboard_dir": "_scratch/mimi_n35/blackboard",
+    "timeline": "_scratch/mimi_n35/timeline.json",
+    "output_video": "app/assets/classroom_videos/N35_Final.mp4"
+  },
+  "video_spec": {
+    "resolution": [1920, 1080],
+    "fps": 30,
+    "tts_voice": "zh-TW-HsiaoChenNeural",
+    "tts_rate": "-5%"
+  },
+  "layers": {
+    "layer1_bg": "tools/mimi_classroom/mimi_assets/classroom_bg_pure.png",
+    "layer2_blackboard_roi": { "x_min": 580, "y_min": 120, "x_max": 1820, "y_max": 780 },
+    "layer3_mimi": {
+      "anchor_center": [340, 620],
+      "scale": 0.72,
+      "render_size": 717,
+      "scale_note": "N34 定義沿用；2048×0.35=717 已驗收視覺，雙腳貼地",
+      "solid_feet_alpha": true,
+      "mouth_patch_center_2048": [1021, 985],
+      "mouth_patch_size_2048": [400, 168],
+      "clean_plate_roi_2048": [850, 920, 1190, 1040]
+    }
+  },
+  "transition": {
+    "type": "foot_pivot_qbounce",
+    "duration_seconds": 0.25,
+    "scale_start": 0.96,
+    "scale_end": 1.0,
+    "pivot": "feet_bottom_center"
+  },
+  "mouth_rule": {
+    "closed_max": 0.24,
+    "half_max": 0.68,
+    "hard_switch": true,
+    "no_cross_frame_blend": true,
+    "seamless_clone_on_mouth": false
+  },
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "label": "比大小：百位夠不夠減？",
+      "mimi_pose": "loop_apose.webm",
+      "animation": ["loop_apose.webm"],
+      "pose_switch": {
+        "to": "loop_ask.webm",
+        "at_word_contains": "315",
+        "qbounce": true
+      },
+      "narration": "小朋友，上次我們算過 415 除以 4，百位的 4 夠減 4，所以從百位開始寫。但如果題目變成 315 除以 4，百位只有 3，3 比 4 小、不夠減 4 怎麼辦呢？",
+      "blackboard_render": {
+        "title": "S01 · 比大小：百位夠不夠減？",
+        "left": "415 ÷ 4（百位 4 夠減 4，綠圈打勾）",
+        "right": "315 ÷ 4（百位 3 紅圈標示 3 < 4 不夠減）",
+        "banner": "百位比除數小，不夠減！"
+      }
+    },
+    {
+      "scene_id": "S02",
+      "label": "抓兩位：改看前兩位 31，商對齊十位",
+      "mimi_pose": "loop_arm_raised.webm",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "秘訣很簡單！百位不夠減，我們就退一位，用黃色框框把前兩位 31 一起抓起來算！因為抓到十位，等一下算出的商，要對齊寫在十位 1 的上面，百位留空不寫字喔！",
+      "blackboard_render": {
+        "title": "S02 · 抓兩位：前兩位 31，商對齊十位",
+        "highlight": "黃框框住 31；橘虛線框標註商寫在十位；3 上方留空",
+        "banner": "百位不夠減，抓前兩位 31 一起算！"
+      }
+    },
+    {
+      "scene_id": "S03",
+      "label": "乘與減（第一輪）：4 乘多少最接近 31？",
+      "mimi_pose": "loop_clap.webm",
+      "animation": ["loop_clap.webm"],
+      "narration": "接著背 4 的乘法！4 乘以 7 等於 28，4 乘以 8 等於 32，32 超過 31 不能減，所以我們選 7！十位寫 7，4 乘 7 等於 28，寫在 31 下面做減法，31 減 28 剩下 3！",
+      "blackboard_render": {
+        "title": "S03 · 乘與減：4 乘多少最接近 31？",
+        "quotient_tens": 7,
+        "product": 28,
+        "remainder": 3,
+        "trial": ["4 × 7 = 28 ✅", "4 × 8 = 32 ❌ 超過 31"],
+        "banner": "4 × 7 = 28，31 - 28 = 3"
+      }
+    },
+    {
+      "scene_id": "S04",
+      "label": "比與落（第二輪）：剩下 3 放下來變 35",
+      "mimi_pose": "loop_arm_raised.webm",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "減完先比大小，剩下的 3 比除數 4 小，過關！接著把個位的 5 垂直放下來，跟 3 合體變成 35。再背一次乘法，4 乘以 8 等於 32，最接近 35！個位寫 8，35 減 32 最後餘 3！",
+      "blackboard_render": {
+        "title": "S04 · 比與落：剩下的 3 放下來變 35",
+        "quotient": "78",
+        "dividend": "315",
+        "layers": ["28", "35", "32"],
+        "final_remainder": 3,
+        "check": "4 × 78 + 3 = 315",
+        "banner": "商 78 餘 3（驗算：4 × 78 + 3 = 315）"
+      }
+    },
+    {
+      "scene_id": "S05",
+      "label": "口訣總結：長除法五步節奏",
+      "mimi_pose": "loop_hips.webm",
+      "animation": ["loop_hips.webm"],
+      "narration": "記住這個順口溜：先比大小，百位不夠就抓兩位；接著商、乘、減、比、落，一步一步往下減，長除法就再也不會寫錯位置囉！",
+      "blackboard_render": {
+        "title": "S05 · 口訣總結：長除法五步節奏",
+        "steps": [
+          "1.比大小（不夠抓兩位）",
+          "2.找乘法（不超過）",
+          "3.寫直式做減法",
+          "4.比餘數小於除數",
+          "5.放下一位繼續算"
+        ],
+        "banner": "比大小 → 抓兩位 → 商、乘、減、比、落！"
+      }
+    },
+    {
+      "scene_id": "S06",
+      "label": "片尾快問快答與練習引導",
+      "mimi_pose": "loop_thumbs_up.webm",
+      "animation": ["loop_thumbs_up.webm"],
+      "narration": "換你考考自己！如果是 254 除以 3，百位的 2 不夠減 3，第一步要先抓哪兩個數字呢？沒錯，就是前兩位 25！快點開下面的練習題大顯身手吧！",
+      "blackboard_render": {
+        "title": "S06 · 快問快答：254 ÷ 3",
+        "problem": "254 ÷ 3",
+        "hint": "2 < 3，先算 25！",
+        "badge": "準備挑戰練習題！",
+        "banner": "254 ÷ 3 → 先抓前兩位 25！"
+      }
+    }
+  ]
+}
