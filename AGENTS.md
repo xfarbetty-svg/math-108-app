@@ -133,3 +133,12 @@
 - 🚨 [Session 32 覆盤報告: 題目清洗與派工流程全面體檢 (真題閹割反思)](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/retros/RETRO_S32_EXAM_TRUNCATION.md)
 - 🚨 [Session 35 覆盤報告: 做了什麼就說什麼，嚴禁虛假賦能](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/retros/RETRO_S35_HONESTY_NO_FAKE_POWER.md)
 - 🛡️ [Session 36 覆盤報告: 拒絕全局推倒重做與動態派工防偽法典](file:///d:/ANTIGRAVITY/028-1_國小數學APP/reports/retros/RETRO_S36_SURGICAL_FIX_MANIPULATIVE.md)
+
+---
+
+## 🎞️ N313 動態母片合成實測修正（2026-11-21 附加章節）
+
+- 上節「webm 為透明底圖」之假設經實測**不成立**：`ready/loop_*.webm` 以現行 ffmpeg 解出為 `yuv420p`、**alpha 全 255**，`alpha_mode=1` 僅為容器標籤；且每支 41 幀中**第 33–39 幀被烘成黑底**。
+- 合成 N313 成片時，角色層必須：①只讀 SSOT `ready/` 的 `.webm`（禁 `.mp4` 預覽）；②逐幀自適應偵測背景色（白／黑）做連通泛洪鍵除＋2px 軟邊；③剔除黑底異常幀；④透明比例 < 0.30 即 raise 防假成功。
+- `mouth_frames_v2` 源自 2048 立繪、與 webm 非同一光源，需羽化遮罩＋局部膚色增益，禁 seamlessClone。
+- 已驗證產物：`app/assets/classroom_videos/N313_Final.mp4`（57.933 s／12.73 MiB／影音誤差 0.000 s）。詳細斷點見 `handoff.md`。
