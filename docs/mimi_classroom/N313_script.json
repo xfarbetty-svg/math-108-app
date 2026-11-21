@@ -1,0 +1,105 @@
+{
+  "project_id": "N313",
+  "grade": "G3",
+  "curriculum_code": "N-3-13",
+  "title": "角與角度（同S-3-1）",
+  "asset_policy": {
+    "mimi_ssot_root": "../036_local_painter/theater/assets_hosts/g3_mimi/ready",
+    "forbid_other_asset_roots": true,
+    "read_transparent_png_directly": true,
+    "mouth_sequence_dir": "ready/mouth_frames_v2",
+    "visual_model_called": false,
+    "comfyui_redraw_called": false
+  },
+  "paths": {
+    "temp_work_dir": "_scratch/mimi_n313",
+    "blackboard_dir": "_scratch/mimi_n313/blackboard",
+    "timeline": "_scratch/mimi_n313/timeline.json",
+    "output_video": "app/assets/classroom_videos/N313_Final.mp4"
+  },
+  "video_spec": {
+    "resolution": [1920, 1080],
+    "fps": 30,
+    "tts_voice": "zh-TW-HsiaoChenNeural",
+    "tts_rate": "-5%"
+  },
+  "layers": {
+    "layer1_bg": "tools/mimi_classroom/mimi_assets/classroom_bg_pure.png",
+    "layer2_blackboard_roi": { "x_min": 580, "y_min": 120, "x_max": 1820, "y_max": 780 },
+    "layer3_mimi": {
+      "anchor_center": [340, 685],
+      "scale_from_2048": 0.35,
+      "mouth_patch_center_2048": [1021, 985],
+      "mouth_patch_size_2048": [400, 168]
+    }
+  },
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "label": "開場破題",
+      "mimi_pose": "mimi_apose_standard.png",
+      "animation": ["loop_apose.webm"],
+      "narration": "各位小朋友好！今天我們來認識角。剪刀、時鐘、三角板的邊，都在討論角的開度。角是由 1 個頂點和 2 條直直的邊組成的圖形。",
+      "blackboard_render": {
+        "title": "S01 · 開場破題：生活物件的角",
+        "content": "生活物件的角：剪刀、時鐘、三角板"
+      }
+    },
+    {
+      "scene_id": "S02",
+      "label": "認識角的構造",
+      "mimi_pose": "mimi_arm_raised.png",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "角的構造：必須有 1 個頂點，加上 2 條直直的邊（射線）。彎曲的線不是角的邊；兩條沒有交叉的線段也不構成角。",
+      "blackboard_render": {
+        "title": "S02 · 認識角的構造：1 個頂點 + 2 條直直的邊",
+        "content": "1 個頂點 + 2 條直直的邊（對比彎曲邊、未相交線段）"
+      }
+    },
+    {
+      "scene_id": "S03",
+      "label": "經典迷思提問",
+      "mimi_pose": "mimi_pose_ask.png",
+      "animation": ["loop_ask.webm"],
+      "emotion": "curious",
+      "narration": "有趣的問題來了：角 A 的兩條邊很短，張得很大；角 B 的邊很長，卻張得很小。哪一個角比較大？",
+      "blackboard_render": {
+        "title": "S03 · 經典迷思提問",
+        "content": "角 A（邊短張得多）vs 角 B（邊長但張得少）：哪個角比較大？"
+      }
+    },
+    {
+      "scene_id": "S04",
+      "label": "疊合比大小演示",
+      "mimi_pose": "mimi_arm_raised.png",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "用三角板的直角比大小：頂點對頂點、一條邊對齊另一條邊。張得更開的角就是較大的角。角的大小只看張開程度，與邊長無關。",
+      "blackboard_render": {
+        "title": "S04 · 疊合比大小：頂點對頂點、一條邊對齊",
+        "content": "角 A（張得更開）vs 角 B（邊長更長）：邊短張大角，邊長張小角"
+      }
+    },
+    {
+      "scene_id": "S05",
+      "label": "認識直角與三角板",
+      "mimi_pose": ["mimi_clap.png", "mimi_pose_hips.png"],
+      "animation": ["loop_clap.webm", "loop_hips.webm"],
+      "narration": "拿出三角板，直角就像正方形的角落。小於直角叫銳角，大於直角叫鈍角。",
+      "blackboard_render": {
+        "title": "S05 · 認識直角與三角板",
+        "content": "直角記號 ┐（90°），銳角（< 90°）、鈍角（> 90°）"
+      }
+    },
+    {
+      "scene_id": "S06",
+      "label": "口訣總結與道別",
+      "mimi_pose": "mimi_thumbs_up.png",
+      "animation": ["loop_thumbs_up.webm"],
+      "narration": "三句口訣記牢了：① 角的大小看張開程度，與邊長無關；② 拿三角板比大小：頂點對頂點、一條邊對齊另一條邊；③ 直角標準，銳角小於它、鈍角大於它。我們下次見囉，拜拜！",
+      "blackboard_render": {
+        "title": "S06 · 三句口訣總結",
+        "content": "① 角的大小看張開程度，與邊長無關 ② 頂點對頂點、邊對邊疊合 ③ 直角標準：銳角 < 它 < 鈍角"
+      }
+    }
+  ]
+}
