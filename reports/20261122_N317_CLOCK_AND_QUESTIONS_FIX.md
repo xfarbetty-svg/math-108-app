@@ -50,4 +50,10 @@ G3 `N-3-17`「時間（『日』、『時』、『分』、『秒』）」：現
 **雙模式目視（Hy4 Flash 親自）**：`_scratch/fix_n317/20261122_n317_light_q06.png` 米白底，深灰時針逼近 10、鼠尾草綠分針指 10、暖橘秒針指 5，1–12 數字與 60 刻度清晰；`..._dark_q06.png` 深藍底，米白／亮青／亮橘三針高對比，無黑針黑底、無重疊破版。
 
 ## 5. 結論
-四道門禁真實 Exit 0，無 [FAKE-GREEN]、無 [UNVERIFIED]；舊「死針」與「5 題帳實不符」兩大根因已移除，10 題全數可連動授課。部署與線上探針結果如以下實際執行紀錄。
+四道門禁真實 Exit 0，無 [FAKE-GREEN]、無 [UNVERIFIED]；舊「死針」與「5 題帳實不符」兩大根因已移除，10 題全數可連動授課。
+
+### 實際部署紀錄（補登）
+- `git commit` → Exit 0，`26b44c4`，6 檔案變更（585 insertions / 262 deletions）；`_scratch/`、`reports/20261122_N315_ACCEPTANCE.md`、`reports/20261122_N316_ACCEPTANCE.md` 均隔離未納入。
+- `git push origin main` → Exit 0（`c6e769a..26b44c4`）；pre-push hook 觸發 Cloudflare Pages 實體部署成功，預覽 `https://4d010711.math-108.pages.dev`。
+- `curl.exe -I https://math-108.pages.dev/app/components/time_concept_lab.html` → Exit 0（`HTTP/1.1 200 OK`，CF-RAY `a5e5b03389fe5c10-TPE`）。
+- `curl.exe -s https://math-108.pages.dev/data/units/G3/N-3-17.json` → Exit 0，線上回傳 `"question_count": 10` 與 `G3-N-3-17-Q10`，確認新版題庫已上線。
