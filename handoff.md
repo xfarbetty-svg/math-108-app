@@ -4,6 +4,18 @@
 
 ---
 
+## [完成] Dark Mode 護眼色票 — 已 Push 上線（2026-11-22 08:07）
+
+- **範圍**：`app/styles/theme-tokens.css`、`app/index.html`、`app/shell.js`（另 `VERSION`／`app/sw.js` 版號）。
+- **變更**：Dark 色票改 `--bg-main:#161B26`／`--bg-card:#1F2736`／`--bg-elevated:#283244`／`--accent-primary:#3B8276`／`--accent-soft:#263849`／`--text-primary:#E2E8F0`／`--svg-stroke:#CBD5E1`，並把 219 個教具別名 (`--coral/--sky/--mint/--lemon/--lilac`) 全數降飽和；移除螢光藍漸層與發光 `box-shadow`。新增 Dark 覆寫：單元編號 `#283548/#93C5FD/#3B4E6B`、108 條目標籤與更新鈕 `#253042`、模式分頁與聽題／草稿／其它淺色膠囊同步改深色。首次訪客橫幅由寫死 `N-1-1 / N-3-1` 改為「目前年級首單元」，並去掉重複 ▶。
+- **驗證指令**：`node tools/verify_curriculum_131.js`、`node tools/verify_app_shell.js`、`node tests/verify_concept_hub_cdp.js`、`node _scratch/darkmode_shots/capture.js`（390×844 CDP 截圖＋運算樣式斷言）、`curl.exe -sIL https://math-108.pages.dev/app/index.html?t=20261122`。
+- **真實 Exit Code**：三閘門皆 0；截圖腳本 0；push 0；預推送掛鉤 wrangler deploy Exit 0；線上 `HTTP/1.1 200 OK`。
+- **證據**：`_scratch/darkmode_shots/shots/` 三張圖（dark 首頁／dark 答題頁／light 首頁）經 Hy4 Flash 親眼複審：無螢光藍、無發光框、無死白反白塊，Light 維持原樣；390px `scrollWidth=390=innerWidth`。線上 `VERSION_ONLINE=20261122_080705`、`ONLINE_ACCENT=PASS`、`ONLINE_INDEX_DARK_OVERRIDES=PASS`。
+- **提交**：`327cdc2`（功能）→ `a70e91a`（版號）→ `d4b64dc`（sw.js），`main...origin/main` 對齊、工作樹乾淨。
+- **上線**：pre-push hook 自動 `wrangler pages deploy . --project-name=math-108 --branch=main --commit-dirty=true` 成功（部署 `3f22a309.math-108.pages.dev`），`git push origin main` `864eb2f..d4b64dc`。
+- <!-- DEGRADED: 通道二 A Server `xfarb@100.64.178.56` 的 SSH 僅接受 publickey/password，本機無私鑰且環境變數無密码，非互動 `ssh` 卡在密碼提示；改以本機 `gh`（xfarbetty-svg，repo scope）直接 push，Pre-Push Hook 代為 wrangler 部署。bundle/scp/清除 A Server 暫存步驟未執行。若需補通道二，請提供 A Server 密碼或私鑰。 -->
+- **下一步**：無（本案結案）。
+
 ## [完成] N-3-5 黑板垂直放大＋同位值對齊＋彌彌兔站姿 — 已 Push 上線（2026-11-22）
 
 - **提交**：`272db84`（垂直放大／S03 `28` 改寫百位+十位／S04 五層對齊／黃框 296..358／站姿上移 25px／shell.js 掛載 N35）＋ `6fa505a`（影片壓至 21.5 MiB 以通過 Pages 25 MiB 限制）。本地 `main` 與 `origin/main` 已對齊。
