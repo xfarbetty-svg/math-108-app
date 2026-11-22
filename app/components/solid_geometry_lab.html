@@ -8,12 +8,12 @@
 <style>
   :root {
     --paper:#fdfbf7; --ink:#3d3a34; --line:#4b4a46; --muted:#8a857b;
-    --wood:#d2b48c; --fill-a:#f6e4c9; --fill-b:#dcebf5; --fill-c:#ece0f4;
+    --wood:#d2b48c; --added:#b07d3f; --fill-a:#f6e4c9; --fill-b:#dcebf5; --fill-c:#ece0f4;
     --accent:#f4694b; --grid:#b9c4cf;
   }
   html[data-theme="dark"] {
     --paper:var(--bg-main); --ink:var(--text-primary); --line:var(--svg-stroke);
-    --muted:var(--text-secondary); --wood:#334155; --fill-a:#3b3529; --fill-b:#243b50; --fill-c:#3b3348;
+    --muted:var(--text-secondary); --wood:#334155; --added:#8fb6d4; --fill-a:#3b3529; --fill-b:#243b50; --fill-c:#3b3348;
     --accent:var(--accent-primary); --grid:#475569;
   }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -30,8 +30,13 @@
   .scene .cap { font-size:12px; fill:var(--ink); font-weight:700; }
   .scene .lbl { font-size:12px; fill:var(--ink); font-weight:700; }
   .scene .dim { font-size:11px; fill:var(--muted); }
+  .scene .cnt { font-size:12px; fill:var(--accent); font-weight:700; }
   .scene .hit { cursor:pointer; }
-  .scene .hit.on { stroke:var(--accent); }
+  .scene .wood { stroke:var(--line); stroke-width:6; stroke-linecap:round; transition:stroke .12s; }
+  .scene .added .wood { stroke:var(--added); }
+  .scene .hit.on .wood { stroke:var(--accent); }
+  .scene .tap { stroke:transparent; stroke-width:18; stroke-linecap:round; pointer-events:stroke; }
+  .scene .joint { fill:var(--line); pointer-events:none; }
   .footer { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
             padding:0 16px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
   .footer .hint { font-size:10px; color:var(--muted); max-width:270px; }
@@ -78,24 +83,51 @@ svg text { max-width: 100%; }
   const stick = (x1, y1, x2, y2) => '<line class="hit" data-kind="stick" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>';
 
   // 題組一：木棍排出圖案（3 / 5 / 7 根）
+  // 每根都是「有端點圓點的獨立木棍」；共用邊只畫一次，新增的 2 根用暖色標示。
   function sticksScene() {
-    let s = txt(195, 24, '題目：下面是用木棍排出來的圖案', 'cap');
-    s += stick(28, 70, 92, 70) + stick(28, 70, 60, 126) + stick(92, 70, 60, 126);
-    s += txt(60, 150, '圖①', 'lbl');
-    // 圖②：梯形 5 根（上、下、兩腰、中間一根）
-    s += stick(146, 70, 222, 70) + stick(134, 126, 234, 126) +
-         stick(146, 70, 134, 126) + stick(222, 70, 234, 126) + stick(176, 70, 184, 126);
-    s += txt(184, 150, '圖②', 'lbl');
-    // 圖③：兩個相連梯形 7 根
-    s += stick(252, 70, 310, 70) + stick(310, 70, 368, 70) +
-         stick(244, 126, 310, 126) + stick(310, 126, 376, 126) +
-         stick(252, 70, 244, 126) + stick(310, 70, 310, 126) + stick(368, 70, 376, 126);
-    s += txt(310, 150, '圖③', 'lbl');
-    s += txt(195, 186, '後面還有「……」', 'dim');
-    s += txt(195, 224, '(1) 圖③比圖②多用幾根木棍？', 'lbl');
-    s += txt(195, 256, '(2) 圖⑤需要用幾根木棍？', 'lbl');
-    s += txt(195, 300, '點選木棍可以逐根標記', 'dim');
-    s += txt(195, 326, '兩小題請一起看同一組圖案', 'dim');
+    // segs: [x1,y1,x2,y2,是否為新增]
+    function figure(segs) {
+      let out = '';
+      const pts = {};
+      segs.forEach(function (s) {
+        const extra = s[4] ? ' added' : '';
+        out += '<g class="hit' + extra + '" data-kind="stick">' +
+          '<line class="wood" x1="' + s[0] + '" y1="' + s[1] + '" x2="' + s[2] + '" y2="' + s[3] + '"/>' +
+          '<line class="tap" x1="' + s[0] + '" y1="' + s[1] + '" x2="' + s[2] + '" y2="' + s[3] + '"/>' +
+          '</g>';
+        pts[s[0] + ',' + s[1]] = 1;
+        pts[s[2] + ',' + s[3]] = 1;
+      });
+      Object.keys(pts).forEach(function (k) {
+        const p = k.split(',');
+        out += '<circle class="joint" cx="' + p[0] + '" cy="' + p[1] + '" r="4"/>';
+      });
+      return out;
+    }
+    const YT = 62, YB = 109;
+    let s = '';
+    s += txt(14, 24, '數數看：下面是用木棍排成的圖案', 'cap', 'start');
+    s += '<text id="stickCount" x="372" y="24" class="cnt" text-anchor="end">已點 0 根</text>';
+
+    // 圖①：1 個倒三角形，3 根
+    s += figure([[16, YT, 70, YT], [70, YT, 43, YB], [43, YB, 16, YT]]);
+    s += txt(43, 138, '圖①', 'lbl');
+
+    // 圖②：右側共享一邊接出 1 個正三角形，共 5 根（新增 2 根為暖色）
+    s += figure([[122, YT, 176, YT], [176, YT, 149, YB], [149, YB, 122, YT],
+                 [149, YB, 203, YB, 1], [203, YB, 176, YT, 1]]);
+    s += txt(162, 138, '圖②', 'lbl');
+
+    // 圖③：再接出 1 個倒三角形，共 7 根
+    s += figure([[232, YT, 286, YT], [286, YT, 259, YB], [259, YB, 232, YT],
+                 [259, YB, 313, YB, 1], [313, YB, 286, YT, 1],
+                 [286, YT, 340, YT, 1], [340, YT, 313, YB, 1]]);
+    s += txt(286, 138, '圖③', 'lbl');
+
+    s += txt(195, 176, '(1) 圖③比圖②多用幾根木棍？', 'lbl');
+    s += txt(195, 204, '(2) 圖⑤需要用幾根木棍？', 'lbl');
+    s += txt(195, 244, '每往右多接一個三角形（組成梯形），會多用幾根木棍呢？', 'dim');
+    s += txt(195, 268, '點擊木棍數一數！', 'dim');
     return wrap(s);
   }
 
@@ -157,7 +189,7 @@ svg text { max-width: 100%; }
   }
 
   const HINTS = [
-    '點選木棍數一數，看看圖形怎麼長大。',
+    '點擊木棍數一數，看看每次多幾根。',
     '數數甲線有幾個轉折點，A 點在虛線左端。',
     '點選各類積木，對照千、百、十、一的位置。',
     '點選各類積木，對照千、百、十、一的位置。'
@@ -174,7 +206,10 @@ svg text { max-width: 100%; }
     const on = !t.classList.contains('on');
     t.classList.toggle('on', on);
     marked += on ? 1 : -1;
-    document.getElementById('count').textContent = '已標記 ' + marked + ' 處';
+    const label = qNum === 1 ? '已點 ' + marked + ' 根' : '已標記 ' + marked + ' 處';
+    document.getElementById('count').textContent = label;
+    const badge = document.getElementById('stickCount');
+    if (badge) badge.textContent = label;
   });
 })();
 </script>
