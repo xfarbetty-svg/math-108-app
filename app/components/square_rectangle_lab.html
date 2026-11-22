@@ -12,13 +12,26 @@
             --accent: #d32f2f;
             --ruler-alpha: rgba(255, 255, 255, 0.5);
         }
+        html[data-theme="dark"] {
+            --bg-paper:#1F2736; --wood-dark:#334155; --wood-light:#3B8276; --accent:#E07A6A; --ruler-alpha:rgba(31,39,54,.6);
+        }
+        html[data-theme="dark"] #app-container { background:var(--bg-paper); border-color:var(--border-color); }
+        html[data-theme="dark"] .shape { border-color:var(--svg-stroke); }
+        html[data-theme="dark"] #act-1-view .square, html[data-theme="dark"] #act-2-view .square { background:#2A3B4A; }
+        html[data-theme="dark"] #act-1-view .rect, html[data-theme="dark"] #act-2-view .rect { background:#233A4C; }
+        html[data-theme="dark"] .label, html[data-theme="dark"] .hint-text { color:var(--text-primary); }
+        html[data-theme="dark"] .grid-cell { background:var(--bg-card); color:var(--text-primary); }
+        html[data-theme="dark"] .fold-paper { background:var(--bg-elevated); border-color:var(--accent-primary); }
+        html[data-theme="dark"] .btn-action { background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-color); }
+        .q-badge { position:absolute; top:4px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:400; }
+        .q-focus { position:absolute; top:40px; right:8px; max-width:150px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:400; pointer-events:none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
             background-color: #d7ccc8;
             display: flex; justify-content: center; align-items: flex-start;
-            height: 100vh; overflow: hidden;
+            min-height: 100dvh; overflow: hidden;
             user-select: none;
         }
         #app-container {
@@ -134,6 +147,8 @@
 <body>
 
 <div id="app-container">
+    <div id="q-badge" class="q-badge"></div>
+    <div id="q-focus" class="q-focus"></div>
     <nav>
         <button class="tab active" id="tab-act1" onclick="switchAct(1)">1. 邊長</button>
         <button class="tab" id="tab-act2" onclick="switchAct(2)">2. 直角</button>
@@ -349,9 +364,36 @@
         isFilling = false;
     }
 
+    // ?q=1..10 题号视觉模式
+    const qNum = (() => {
+        const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
+        return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
+    })();
+    const Q_SCENES = {
+        1: { act:1, hint:'正方形四邊等長，長方形對邊等長！', focus:'Q01 四邊等長＋直角' },
+        2: { act:1, hint:'長方形的上下對邊、左右對邊各自等長。', focus:'Q02 對邊相等' },
+        3: { act:1, hint:'正方形周長 = 邊長 × 4 = 8 × 4 = 32 公分。', focus:'Q03 8×4=32' },
+        4: { act:4, hint:'長方形周長 = (長 + 寬) × 2 = (10+6)×2 = 32 公分。', focus:'Q04 (10+6)×2' },
+        5: { act:2, hint:hints[1], focus:'Q05 三角板直角' },
+        6: { act:1, hint:'四個直角但只有對邊等長 → 長方形。', focus:'Q06 只有對邊等長' },
+        7: { act:1, hint:'邊長 12 公尺的正方形，周長 = 12 × 4 = 48 公尺。', focus:'Q07 12×4=48' },
+        8: { act:4, hint:'(14 + 8) × 2 = 44 公分。', focus:'Q08 (14+8)×2' },
+        9: { act:1, hint:'周長 36 ÷ 4 = 邊長 9 公分。', focus:'Q09 36÷4=9' },
+        10:{ act:1, hint:'兩個邊長 6 的正方形貼合：(12+6)×2=36 公分。', focus:'Q10 貼合後 36' }
+    };
+    function applyQuestionMode() {
+        const s = Q_SCENES[qNum] || Q_SCENES[1];
+        document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
+        switchAct(s.act);
+        document.getElementById('hint').innerText = s.hint;
+        const f = document.getElementById('q-focus');
+        f.textContent = s.focus;
+        f.style.display = 'block';
+        speak(s.hint);
+    }
     window.addEventListener('DOMContentLoaded', () => {
         initGrid();
-        switchAct(1);
+        applyQuestionMode();
     });
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         initGrid();

@@ -1,4 +1,13 @@
 # 專案交接日誌 (Handoff Log)
+## 🔄 2026-11-22 G3 全 24 單元體檢 ＋ 第一批補題上線（OpenCode CLI）
+- 掃描 24 檔：盤點明細在 `_scratch/g3_audit_batch1/g3_audit_all.md`；N-3-1 元件命名修正 5 處。
+- 第一批 N-3-16 / S-3-2 / S-3-4 各補 Q06–Q10，30 題皆具 trap / fallback_height 420 / ?q=1..10。
+- 三教俱升級 q-mode、Light/Dark 色票、移除 100vh、weight 指針改合法 `rotate(deg)` + `transform-box: view-box`。
+- 全綠門禁（Exit 0）：verify_n316 / verify_s32 / verify_s34 / verify_n316_cdp / verify_batch1_dualmode_cdp（30 張截圖）/ verify_curriculum_131 / verify_app_shell / verify_g3_remaining_concepts。
+- 驗收報告：`reports/20261122_G3_AUDIT_AND_BATCH1.md`。
+- 第二棒：R-3-1 / R-3-2 / D-3-1 仍 5 題；N-3-1 選項與答案不一致、N-3-3 Q09 僅 3 選項；詳見報告異常表。
+- <!-- DEGRADED: 拼圖目視由輔助模型描述，非主模型直接像素目視；色彩/高度/題號已由 CDP 客觀斷言全綠。 -->
+
 
 > 任何 Agent、任何電腦接手前**必讀**；收工前**必改寫**。本檔只放當前最新進度與下一步，一頁內讀完。
 

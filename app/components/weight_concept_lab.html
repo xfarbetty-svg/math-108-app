@@ -13,13 +13,23 @@
             --accent-red: #C04848;
             --gold: #f59e0b;
         }
+        html[data-theme="dark"] {
+            --bg-cream:#161B26; --forest-green:#2F6B5F; --wood-brown:#4A5A6A; --paper-tan:#334155; --accent-red:#E07A6A;
+        }
+        html[data-theme="dark"] #app { background:radial-gradient(circle at center, var(--bg-card) 0%, var(--bg-elevated) 100%); border-color:var(--border-color); }
+        html[data-theme="dark"] .hint-box { background:var(--bg-card); border-left-color:var(--accent-primary); color:var(--text-primary); }
+        html[data-theme="dark"] .scale-svg text { fill:var(--text-primary); }
+        html[data-theme="dark"] .needle { stroke:var(--accent-primary); }
+        html[data-theme="dark"] .item-btn { background:var(--bg-card); border-color:var(--border-color); color:var(--text-primary); }
+        html[data-theme="dark"] .nav-bar { background:var(--bg-elevated); }
+        html[data-theme="dark"] .nav-item { color:var(--text-primary); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { 
             margin: 0; padding: 0; 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
             background: var(--bg-cream);
             display: flex; justify-content: center; align-items: flex-start;
-            height: 100vh; overflow: hidden;
+            min-height: 100dvh; overflow: hidden;
         }
         #app {
             width: 390px; height: 420px;
@@ -58,8 +68,11 @@
         }
         .needle { 
             stroke: var(--accent-red); stroke-width: 3; stroke-linecap: round;
-            transform-origin: 110px 125px; transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            transform-box: view-box; transform-origin: 110px 135px;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2);
         }
+        .q-badge { position:absolute; top:9px; right:44px; background:var(--accent-red); color:#fff; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:20; }
+        .q-focus { position:absolute; top:4px; left:8px; max-width:150px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:20; pointer-events:none; }
         .tray-fruit {
             font-size: 20px; transition: transform 0.2s;
         }
@@ -114,6 +127,7 @@
 <div id="app">
     <div class="header">
         <span id="act-title">Act 1: 秤面大解剖</span>
+        <span id="q-badge" class="q-badge"></span>
         <span class="tts-btn" onclick="speakHint()">🔊</span>
     </div>
 
@@ -123,6 +137,7 @@
     </div>
 
     <div class="stage">
+        <div id="q-focus" class="q-focus"></div>
         <!-- Scale SVG -->
         <svg class="scale-svg" viewBox="0 0 220 220">
             <!-- Tray -->
@@ -145,7 +160,7 @@
             <text x="64" y="139" font-size="8" font-weight="bold" fill="#6d4c41" text-anchor="middle">2.5</text>
 
             <!-- Needle -->
-            <line id="needle" class="needle" x1="110" y1="135" x2="110" y2="87" transform="rotate(0, 110, 135)" />
+            <line id="needle" class="needle" x1="110" y1="135" x2="110" y2="87" />
             <circle cx="110" cy="135" r="5" fill="#c04848" />
         </svg>
 
@@ -226,7 +241,7 @@
     function updateNeedle(val) {
         const net = Math.max(0, val + offset);
         const deg = (net / 3000) * 360;
-        document.getElementById('needle').style.transform = `rotate(${deg}deg, 110, 135)`;
+        document.getElementById('needle').style.transform = `rotate(${deg}deg)`;
         
         let kg = Math.floor(net / 1000);
         let g = net % 1000;
@@ -315,8 +330,37 @@
         }
     }
 
-    // Init
-    switchAct(1);
+    // ?q=1..10 题号视觉模式（每个题号对应一个可检视的秤面情境）
+    const qNum = (() => {
+        const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
+        return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
+    })();
+    const Q_SCENES = {
+        1: { act:1, weight:0,    icon:'', hint:hints[0], focus:'Q01 1kg = 1000g' },
+        2: { act:2, weight:150,  icon:'🍎', hint:'蘋果 150g：10 個 10g 相加。', focus:'Q02 150g' },
+        3: { act:4, weight:2450, icon:'🍞', hint:'2 公斤 450 公克 = 2450 公克。', focus:'Q03 2000+450' },
+        4: { act:2, weight:2000, icon:'💧', hint:'2000 毫升的水重 2000 公克，也就是 2 公斤。', focus:'Q04 2000ml→2kg' },
+        5: { act:3, weight:0,    icon:'', hint:hints[2], focus:'Q05 歸零陷阱' },
+        6: { act:1, weight:1000, icon:'🍞', hint:'指針指在 1kg，等於 1000 公克。', focus:'Q06 1kg→1000g' },
+        7: { act:1, weight:3000, icon:'🍉', hint:'指針走 3 大格 = 3kg = 3000g。', focus:'Q07 3kg→3000g' },
+        8: { act:1, weight:3050, icon:'🍬', hint:'3 公斤 50 公克 = 3000 + 50 = 3050 公克（百位補 0）。', focus:'Q08 3050g' },
+        9: { act:4, weight:1130, icon:'🍬', hint:'650g + 480g = 1130g，滿千要進位。', focus:'Q09 650+480' },
+        10:{ act:1, weight:2250, icon:'🧺', hint:'含籃 2400g − 空籃 150g = 水果淨重 2250g。', focus:'Q10 2400−150' }
+    };
+    function applyQuestionMode() {
+        const s = Q_SCENES[qNum] || Q_SCENES[1];
+        document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
+        switchAct(s.act);
+        currentWeight = s.weight;
+        document.getElementById('tray-icon').textContent = s.icon;
+        updateNeedle(currentWeight);
+        document.getElementById('hint-text').innerText = s.hint;
+        const f = document.getElementById('q-focus');
+        f.textContent = s.focus;
+        f.style.display = 'block';
+        speakHint();
+    }
+    applyQuestionMode();
 </script>
 <script>
 /* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */

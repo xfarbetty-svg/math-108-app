@@ -2,7 +2,7 @@
   "code": "S-3-2",
   "title": "正方形和長方形",
   "grade": 3,
-  "question_count": 5,
+  "question_count": 10,
   "verified_source": "高雄市獅湖國小 114-1 期中 / 台北市忠孝國小 113-2 期末段考試卷",
   "questions": [
     {
@@ -18,13 +18,15 @@
       ],
       "answer_index": 1,
       "answer_raw": "4 條邊都一樣長，且 4 個角都是直角",
-      "component_path": "components/square_rectangle_lab.html",
+      "component_path": "components/square_rectangle_lab.html?q=1",
       "explanation": {
         "concept": "正方形嚴格幾何定義",
         "steps": [
           "正方形必須同時滿足：① 4 條邊全部等長；② 4 個角全部都是 90 度直角。"
-        ]
-      }
+        ],
+        "trap": "只滿足四邊等長仍可能是菱形，必須同時檢查四個角是不是直角。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-S-3-2-Q02",
@@ -39,13 +41,15 @@
       ],
       "answer_index": 2,
       "answer_raw": "相對的兩條邊（對邊）一樣長",
-      "component_path": "components/square_rectangle_lab.html",
+      "component_path": "components/square_rectangle_lab.html?q=2",
       "explanation": {
         "concept": "長方形對邊相等性質",
         "steps": [
           "長方形有兩組對邊（長對長、寬對寬），對邊互相平行且長度相等。"
-        ]
-      }
+        ],
+        "trap": "把「對邊相等」誤以為「相鄰邊相等」；正方形是四邊相等，長方形是兩組對邊各自相等。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-S-3-2-Q03",
@@ -60,14 +64,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "32 公分",
-      "component_path": "components/square_rectangle_lab.html",
+      "component_path": "components/square_rectangle_lab.html?q=3",
       "explanation": {
         "concept": "正方形周長公式",
         "steps": [
           "正方形有 4 條等長的邊。",
           "周長 = 邊長 × 4 = 8 × 4 = 32 公分。"
-        ]
-      }
+        ],
+        "trap": "把邊長 8 拿去算面積 8×4=32 平方公分；題目求的是周長，單位應為公分。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-S-3-2-Q04",
@@ -82,14 +88,16 @@
       ],
       "answer_index": 1,
       "answer_raw": "32 公分",
-      "component_path": "components/square_rectangle_lab.html",
+      "component_path": "components/square_rectangle_lab.html?q=4",
       "explanation": {
         "concept": "長方形周長公式",
         "steps": [
           "長方形周長 = (長 + 寬) × 2。",
           "(10 + 6) × 2 = 16 × 2 = 32 公分。"
-        ]
-      }
+        ],
+        "trap": "只算長加寬 10+6=16 就回答；長方形有兩組對邊，必須再乘 2。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-S-3-2-Q05",
@@ -104,12 +112,136 @@
       ],
       "answer_index": 2,
       "answer_raw": "方方正正的直角",
-      "component_path": "components/square_rectangle_lab.html",
+      "component_path": "components/square_rectangle_lab.html?q=5",
       "explanation": {
         "concept": "直角檢驗法",
         "steps": [
           "三角板最大的角是標準 90 度直角，貼齊比對若完全重合即為直角。"
-        ]
+        ],
+        "trap": "拿鈍角或銳角去比對，看起來「差不多」就誤判為直角；必須用三角板的直角完全貼合。"
+      },
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-S-3-2-Q06",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "特徵辨識：長方形與正方形",
+      "stem": "一個四邊形有四個直角，但只有對邊相等、四條邊不全等都長。它應該是什麼圖形？",
+      "choices": [
+        "正方形",
+        "長方形",
+        "菱形",
+        "三角形"
+      ],
+      "answer_index": 1,
+      "answer_raw": "長方形",
+      "component_path": "components/square_rectangle_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "正方形與長方形特徵比較",
+        "steps": [
+          "四個角都是直角，可能是長方形或正方形。",
+          "題目說只有對邊相等、四邊不全等長，所以是長方形。"
+        ],
+        "trap": "看到「四個直角」就選正方形；正方形還必須四條邊全部等長。"
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q07",
+      "exam_source": "台北市忠孝國小 113-2 期末",
+      "title": "正方形周長：邊長 × 4",
+      "stem": "一個正方形花圃的邊長是 12 公尺，四周围籬笆的總長是多少公尺？",
+      "choices": [
+        "24 公尺",
+        "36 公尺",
+        "48 公尺",
+        "144 公尺"
+      ],
+      "answer_index": 2,
+      "answer_raw": "48 公尺",
+      "component_path": "components/square_rectangle_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "正方形周長公式",
+        "steps": [
+          "正方形四條邊一樣長。",
+          "周長 = 邊長 × 4 = 12 × 4 = 48 公尺。"
+        ],
+        "trap": "算成 12 × 12 = 144，那是面積的演算法；題目求籬笆總長，要乘 4。"
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q08",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "長方形周長：(長 + 寬) × 2",
+      "stem": "一個長方形的長是 14 公分、寬是 8 公分，它的周長是多少公分？",
+      "choices": [
+        "22 公分",
+        "28 公分",
+        "44 公分",
+        "112 公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "44 公分",
+      "component_path": "components/square_rectangle_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "長方形周長公式",
+        "steps": [
+          "先算一組長加寬：14 + 8 = 22 公分。",
+          "長方形有兩組對邊，周長 = 22 × 2 = 44 公分。"
+        ],
+        "trap": "只算 14 + 8 = 22 就回答，漏掉還有一組一樣長的對邊。"
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q09",
+      "exam_source": "台北市忠孝國小 113-2 期末",
+      "title": "已知周長反推正方形邊長",
+      "stem": "一個正方形的周長是 36 公分，它的邊長是多少公分？",
+      "choices": [
+        "6 公分",
+        "9 公分",
+        "12 公分",
+        "18 公分"
+      ],
+      "answer_index": 1,
+      "answer_raw": "9 公分",
+      "component_path": "components/square_rectangle_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "由周長逆推邊長",
+        "steps": [
+          "正方形周長 = 邊長 × 4。",
+          "邊長 = 36 ÷ 4 = 9 公分。",
+          "驗算：9 × 4 = 36 公分。"
+        ],
+        "trap": "算成 36 ÷ 2 = 18 公分；正方形有四條等長邊，不是兩條。"
+      }
+    },
+    {
+      "id": "G3-S-3-2-Q10",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "拼合圖形周長變化",
+      "stem": "兩個邊長 6 公分的正方形，沿著一條邊貼合成一個長方形。這個長方形的周長是多少公分？",
+      "choices": [
+        "12 公分",
+        "24 公分",
+        "36 公分",
+        "48 公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "36 公分",
+      "component_path": "components/square_rectangle_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "圖形拼合與周長變化",
+        "steps": [
+          "拼合後長方形長 12 公分、寬 6 公分。",
+          "周長 = (12 + 6) × 2 = 36 公分。",
+          "也可想成原本 24 + 24 = 48，扣掉貼合處重複的兩條 6 公分：48 − 12 = 36。"
+        ],
+        "trap": "直接把兩個正方形周長相加成 48 公分；貼合在裡面的兩條邊不算外圍周長。"
       }
     }
   ]

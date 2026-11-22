@@ -167,7 +167,7 @@
       ],
       "answer_index": 0,
       "answer_raw": "最大是 8720，最小是 2078",
-      "component": "ten-thousand-lab",
+      "component": "ten_thousand_lab",
       "component_path": "components/ten_thousand_lab.html?q=6",
       "fallback_height": 420,
       "explanation": {
@@ -195,7 +195,7 @@
       ],
       "answer_index": 0,
       "answer_raw": "9473 元",
-      "component": "ten-thousand-lab",
+      "component": "ten_thousand_lab",
       "component_path": "components/ten_thousand_lab.html?q=7",
       "fallback_height": 410,
       "explanation": {
@@ -224,7 +224,7 @@
       ],
       "answer_index": 0,
       "answer_raw": "9899",
-      "component": "ten-thousand-lab",
+      "component": "ten_thousand_lab",
       "component_path": "components/ten_thousand_lab.html?q=8",
       "fallback_height": 400,
       "explanation": {
@@ -252,7 +252,7 @@
       ],
       "answer_index": 0,
       "answer_raw": "甲是 2000，乙是 2010",
-      "component": "ten-thousand-lab",
+      "component": "ten_thousand_lab",
       "component_path": "components/ten_thousand_lab.html?q=9",
       "fallback_height": 420,
       "explanation": {
@@ -281,7 +281,7 @@
       ],
       "answer_index": 0,
       "answer_raw": "4018",
-      "component": "ten-thousand-lab",
+      "component": "ten_thousand_lab",
       "component_path": "components/ten_thousand_lab.html?q=10",
       "fallback_height": 430,
       "explanation": {

@@ -2,7 +2,7 @@
   "code": "N-3-16",
   "title": "重量（「公斤」、「公克」）",
   "grade": 3,
-  "question_count": 5,
+  "question_count": 10,
   "verified_source": "高雄市陽明國小/獅湖國小 113-2 期末實體段考試卷",
   "questions": [
     {
@@ -18,14 +18,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "1000 公克",
-      "component_path": "components/weight_concept_lab.html",
+      "component_path": "components/weight_concept_lab.html?q=1",
       "explanation": {
         "concept": "重量公制單位換算",
         "steps": [
           "國際重量單位中，1 公斤 (kg) 等於 1000 公克 (g)。",
           "磅秤繞完一整圈正好是 1000g，也就是 1kg。"
-        ]
-      }
+        ],
+        "trap": "看到 1 就答 1 公克；kg 與 g 相差 1000 倍，必須先做單位換算。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-N-3-16-Q02",
@@ -40,14 +42,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "10 公克",
-      "component_path": "components/weight_concept_lab.html",
+      "component_path": "components/weight_concept_lab.html?q=2",
       "explanation": {
         "concept": "刻度細分算理",
         "steps": [
           "1 大格為 100 公克，分成 10 個等分小格。",
           "100 ÷ 10 = 10，所以每 1 小格代表 10 公克。"
-        ]
-      }
+        ],
+        "trap": "把「10 個苹果，每個 100g」誤算成 100÷10=10 公斤；題目問的是公克。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-N-3-16-Q03",
@@ -62,14 +66,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "2450 公克",
-      "component_path": "components/weight_concept_lab.html",
+      "component_path": "components/weight_concept_lab.html?q=3",
       "explanation": {
         "concept": "複合單位聚合法則",
         "steps": [
           "2 公斤 = 2000 公克。",
           "2000 公克 + 450 公克 = 2450 公克。"
-        ]
-      }
+        ],
+        "trap": "把 2 公斤 450 公克寫成 245 公克，漏掉公斤換算的兩個 0。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-N-3-16-Q04",
@@ -84,14 +90,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "2 公斤",
-      "component_path": "components/weight_concept_lab.html",
+      "component_path": "components/weight_concept_lab.html?q=4",
       "explanation": {
         "concept": "生活重量量感",
         "steps": [
           "1 顆櫻桃約 10g，1 本書約 300g。",
           "家庭號鮮奶約 2000ml，重約 2000g = 2公斤。"
-        ]
-      }
+        ],
+        "trap": "水的重量不能只看容量數字就當成公斤；需先由 1ml=1g 換算，再化為公斤。"
+      },
+      "fallback_height": 420
     },
     {
       "id": "G3-N-3-16-Q05",
@@ -106,13 +114,137 @@
       ],
       "answer_index": 1,
       "answer_raw": "先旋轉校準鈕歸零再秤",
-      "component_path": "components/weight_concept_lab.html",
+      "component_path": "components/weight_concept_lab.html?q=5",
       "explanation": {
         "concept": "工具操作安全與精確性",
         "steps": [
           "磅秤量測前必須確保空盤指在 0 刻度（歸零）。",
           "未歸零會導致量測值包含初始誤差。"
-        ]
+        ],
+        "trap": "歸零前先放物品，會把籃子或容器的重量也算進去；.empty 時才可按歸零。"
+      },
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-N-3-16-Q06",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "指針秤讀數：1 公斤刻度",
+      "stem": "圓形指針秤的每一大格表示 1 公斤，指針正好指在數字「1」的位置。這個物品重多少公克？",
+      "choices": [
+        "1 公克",
+        "100 公克",
+        "1000 公克",
+        "10000 公克"
+      ],
+      "answer_index": 2,
+      "answer_raw": "1000 公克",
+      "component_path": "components/weight_concept_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "指針秤面刻度與公斤、公克換算",
+        "steps": [
+          "秤面上的數字 1 代表 1 公斤。",
+          "1 公斤 = 1000 公克，所以指針指在 1 就是 1000 公克。"
+        ],
+        "trap": "數字 1 是公斤刻度，不是 1 公克；也不要把每一小格 100g 再誤乘 10 變成 10000g。"
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q07",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "指針秤讀數：3 公斤刻度",
+      "stem": "從 0 開始，每一大格表示 1 公斤。若指針順時針走了 3 大格，物品重量是多少公克？",
+      "choices": [
+        "3 公克",
+        "30 公克",
+        "300 公克",
+        "3000 公克"
+      ],
+      "answer_index": 3,
+      "answer_raw": "3000 公克",
+      "component_path": "components/weight_concept_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "多格刻度累加與公斤換公克",
+        "steps": [
+          "走 3 大格表示 3 公斤。",
+          "3 公斤 = 3 × 1000 = 3000 公克。"
+        ],
+        "trap": "把「3 大格」直接當成 3 公克或 300 公克；大格單位是公斤，不是公克。"
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q08",
+      "exam_source": "台北市忠孝國小 113-2 期末",
+      "title": "複名數換算：百位補 0",
+      "stem": "3 公斤 50 公克等於多少公克？",
+      "choices": [
+        "305 公克",
+        "350 公克",
+        "3050 公克",
+        "30050 公克"
+      ],
+      "answer_index": 2,
+      "answer_raw": "3050 公克",
+      "component_path": "components/weight_concept_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "複名數化為單一名數",
+        "steps": [
+          "先把 3 公斤換成 3000 公克。",
+          "再加上 50 公克：3000 + 50 = 3050 公克。",
+          "十位、個位是 50，百位沒有數字要補 0。"
+        ],
+        "trap": "直接把 3 和 50 併成 350 公克，漏掉公斤換算後百位的 0。"
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q09",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "title": "公克加法滿千進位",
+      "stem": "一包白糖重 650 公克，一包麵粉重 480 公克，兩包合起來重多少公克？",
+      "choices": [
+        "1030 公克",
+        "1130 公克",
+        "1230 公克",
+        "2130 公克"
+      ],
+      "answer_index": 1,
+      "answer_raw": "1130 公克",
+      "component_path": "components/weight_concept_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "重量加法與滿千進位",
+        "steps": [
+          "650 + 480 = 1130。",
+          "十位 5+8=13，進 1 到百位；百位 6+4+1=11，再進 1 到千位。",
+          "題目問公克，所以寫成 1130 公克。"
+        ],
+        "trap": "算成 1030 公克，把十位的進位誤當成只進到百位，漏掉百位滿十再進千位。"
+      }
+    },
+    {
+      "id": "G3-N-3-16-Q10",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "title": "連籃稱重扣除空籃",
+      "stem": "媽媽把水果放進籃子一起秤，秤面顯示 2 公斤 400 公克。已知空籃重 150 公克，水果淨重多少公克？",
+      "choices": [
+        "2250 公克",
+        "2350 公克",
+        "2400 公克",
+        "2550 公克"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2250 公克",
+      "component_path": "components/weight_concept_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "容器重量與淨重",
+        "steps": [
+          "2 公斤 400 公克 = 2400 公克（含籃總重）。",
+          "水果淨重 = 總重 − 空籃重 = 2400 − 150 = 2250 公克。"
+        ],
+        "trap": "直接把 2400 公克當成水果重量，忘了題目要扣掉空籃；也不能把 150 加上去。"
       }
     }
   ]

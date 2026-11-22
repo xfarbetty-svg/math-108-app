@@ -115,7 +115,7 @@ async function main() {
     const compPath = path.resolve(__dirname, '..', 'app', 'components', 'weight_concept_lab.html');
     if (!fs.existsSync(compPath)) fail('weight_concept_lab.html 不存在');
     const unit = JSON.parse(fs.readFileSync('data/units/G3/N-3-16.json', 'utf8'));
-    if (unit.questions.length !== 5) fail('N-3-16 題數不是 5');
+    if (unit.questions.length !== 10) fail('N-3-16 題數不是 10');
 
     await send('Page.navigate', { url: pathToFileURL(compPath).href + '?q=1' });
     await sleep(1200); // N315 實測：250ms 會取到空 DOM，必須等 1200ms
@@ -205,6 +205,15 @@ async function main() {
       fail('Act4 1350g 採買任務未達成：' + JSON.stringify(act4));
     }
     console.log(`PASS: Act4 1000＋100×3＋10×5 → ${act4.val}，任務提示正確`);
+
+    // 6. q=10 視覺模式與合法 SVG rotate
+    await send('Page.navigate', { url: pathToFileURL(compPath).href + '?q=10' });
+    await sleep(900);
+    const q10 = await evalJs('(() => ({ badge: document.getElementById("q-badge").textContent, focus: document.getElementById("q-focus").textContent, needle: document.getElementById("needle").style.transform, height: document.getElementById("app").offsetHeight }))()');
+    if (!q10 || q10.badge !== 'Q10' || !q10.focus.includes('2400')) fail('?q=10 視覺模式未生效：' + JSON.stringify(q10));
+    if (!/^rotate\(-?[0-9.]+deg\)$/.test(q10.needle)) fail('SVG 指針 transform 非法：' + q10.needle);
+    if (q10.height > 420) fail('?q=10 高度超標：' + q10.height);
+    console.log('PASS: ?q=10 視覺模式、合法 rotate(' + q10.needle + ')、高度 ' + q10.height + 'px');
 
     console.log('\n🌟 SUCCESS: G3-N-3-16 (重量「公斤、公克」) CDP 實機驗收全綠通過！(Exit 0)');
     process.exit(0);
