@@ -3,150 +3,165 @@
   "title": "乘法與除法的關係",
   "grade": 3,
   "question_count": 10,
-  "verified_source": "高雄市獅湖國小 114-1 期中 / 陽明國小 113-2 期末段考試卷",
+  "verified_source": "臺北市內湖國小 111-1期中／111-2期末／112-2期末／113-1期末／113-2期末／114-1期末／114-2期末、高雄市永安國小 114-1期末段考試卷（docs/G3_REAL_EXAM_MASTER_POOL.md）",
   "questions": [
     {
       "id": "G3-R-3-1-Q01",
-      "exam_source": "高雄市獅湖國小 114-1 期中",
-      "title": "乘除互逆算式家族",
-      "stem": "已知 7 × 8 = 56，下列哪一個除法算式是完全正確的？",
+      "exam_source": "臺北市內湖國小 111-1 期中",
+      "section": "一、填入＞、＜或＝",
+      "question_num": 6,
+      "title": "同值算式比較：200×3 與三個 200 相加",
+      "stem": "200×3 □ 200+200+200，□ 裡應該填入哪一個符號？",
       "choices": [
-        "56 ÷ 7 = 8",
-        "56 ÷ 8 = 9",
-        "7 ÷ 8 = 56",
-        "56 × 7 = 8"
+        "＝（600＝600）",
+        "＞（600＞600）",
+        "＜（600＜600）",
+        "無法比較"
       ],
       "answer_index": 0,
-      "answer_raw": "56 ÷ 7 = 8",
-      "component_path": "components/multiplication_division_lab.html?q=1",
+      "answer_raw": "＝（600＝600）",
       "explanation": {
-        "concept": "乘除互逆基礎家族",
+        "concept": "乘法是連加的快捷算法（內湖 111-1期中 一(6)）",
         "steps": [
-          "由 7 × 8 = 56，可導出兩個除法算式：56 ÷ 7 = 8 以及 56 ÷ 8 = 7。"
+          "200×3 表示 3 個 200 相加，也就是 200＋200＋200。",
+          "兩邊都等於 600，所以填入 ＝。"
         ],
-        "trap": "只背 7×8=56 就隨便調換，可能寫成 56÷8=9；互換後要驗算「積÷其中一個因數＝另一個因數」。"
+        "trap": "看到乘號就以為比較大是錯的；先用連加意義或實際計算對照兩邊。"
       },
       "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=1",
       "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q02",
-      "exam_source": "高雄市陽明國小 113-2 期末",
-      "title": "未知數移項求解：被乘數未知",
-      "stem": "算式 ❓ × 6 = 54，請問 ❓ 代表的數字是多少？",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "一、選擇題",
+      "question_num": 4,
+      "title": "括號未知數：( )÷8＝32 的算法",
+      "stem": "（　）÷8＝32，（　）裡的數要怎麼算才對？",
       "choices": [
-        "7",
-        "8",
-        "9",
-        "48"
+        "32÷8",
+        "32－8",
+        "8×32",
+        "32＋8"
       ],
       "answer_index": 2,
-      "answer_raw": "9",
-      "component_path": "components/multiplication_division_lab.html?q=2",
+      "answer_raw": "8×32",
       "explanation": {
-        "concept": "乘法移項轉除法",
+        "concept": "被除數＝商 × 除數（內湖 111-2期末 一(4)）",
         "steps": [
-          "❓ × 6 = 54，移項倒推可得 ❓ = 54 ÷ 6 = 9。"
+          "被除數未知時，用「商 × 除數」倒推：32×8＝256。",
+          "代回檢查：256÷8＝32，正確。"
         ],
-        "trap": "把 ❓×6=54 誤做成 54×6 的人很多；求未知因數要用除法 54÷6，不是乘法。"
+        "trap": "32÷8 算出的是商不是被除數；要求被除數要用乘法。"
       },
       "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=2",
       "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q03",
-      "exam_source": "台北市忠孝國小 114-1 期中",
-      "title": "未知數移項求解：除數未知",
-      "stem": "算式 48 ÷ ❓ = 8，請問 ❓ 代表的數字是多少？",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 6,
+      "title": "85×4＝A 與 B÷4＝85 的大小比較",
+      "stem": "85×4＝A，B÷4＝85，請比較 A 和 B 的大小，A（　）B。",
       "choices": [
-        "6",
-        "7",
-        "40",
-        "384"
+        "A＝B",
+        "A＞B",
+        "A＜B",
+        "無法比較"
       ],
       "answer_index": 0,
-      "answer_raw": "6",
-      "component_path": "components/multiplication_division_lab.html?q=3",
+      "answer_raw": "A＝B",
       "explanation": {
-        "concept": "被除數與商的關係",
+        "concept": "乘除互逆的同值比較（內湖 111-2期末 二(6)）",
         "steps": [
-          "48 ÷ ❓ = 8，表示 8 × ❓ = 48，因此 ❓ = 48 ÷ 8 = 6。"
+          "A＝85×4＝340。",
+          "B÷4＝85 表示 B＝85×4＝340，因此 A＝B。"
         ],
-        "trap": "48÷❓=8 不是直接拿 48÷8 就結束，而是要找「8 乘以幾會等於 48」的未知因數。"
+        "trap": "B÷4＝85 要倒推成 85×4，不是拿 85÷4。"
       },
       "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=3",
       "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q04",
-      "exam_source": "高雄市獅湖國小 114-1 期中",
-      "title": "有餘數除法的驗算規則",
-      "stem": "驗算有餘數的除法時，下列哪一個公式是正確的？",
+      "exam_source": "臺北市內湖國小 114-1 期末",
+      "section": "一、選擇題",
+      "question_num": 5,
+      "title": "21÷●、50÷50、16÷■ 符號推理",
+      "stem": "「21÷●＝21」、「50÷50＝▲」、「16÷■＝1」，請問下列敘述何者正確？",
       "choices": [
-        "商 × 除數 － 餘數 ＝ 被除數",
-        "商 × 除數 ＋ 餘數 ＝ 被除數",
-        "除數 ＋ 商 × 餘數 ＝ 被除數",
-        "被除數 ＋ 餘數 ＝ 商 × 除數"
+        "●和▲不一樣大",
+        "■是偶數",
+        "▲比■還要大",
+        "●和▲合起來是奇數"
       ],
       "answer_index": 1,
-      "answer_raw": "商 × 除數 ＋ 餘數 ＝ 被除數",
-      "component_path": "components/multiplication_division_lab.html?q=4",
+      "answer_raw": "■是偶數",
       "explanation": {
-        "concept": "除法驗算唯一真理",
+        "concept": "同數相除等於 1（內湖 114-1期末 一(5)）",
         "steps": [
-          "被除數平分後剩下餘數，因此：商 × 除數 + 餘數 = 被除數，且餘數必須小於除數。"
+          "21÷●＝21 → ●＝1；50÷50＝▲ → ▲＝1；16÷■＝1 → ■＝16。",
+          "16 是偶數，所以「■是偶數」正確。"
         ],
-        "trap": "有餘數的驗算要用「＋餘數」；寫成「－餘數」會把平分後剩下的部分扣掉。"
+        "trap": "21÷●＝21 代表 ●＝1，不是 21；別把被除數直接當成符號的值。"
       },
       "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=4",
       "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q05",
-      "exam_source": "台北市忠孝國小 114-1 期中",
-      "title": "除錯小偵探：餘數漏洞",
-      "stem": "小明算 75 ÷ 8 = 8 餘 11，他的答案哪裡錯了？",
+      "exam_source": "臺北市內湖國小 113-1 期末",
+      "section": "四、填填看",
+      "question_num": 4,
+      "title": "被除數與除數相同的算式判斷",
+      "stem": "下面哪些算式的被除數和除數是相同的數？A. 8÷☆＝8　B. 10÷☆＝10　C. 11÷☆＝1　D. 9÷☆＝1",
       "choices": [
-        "算式完全正確",
-        "餘數 11 大於除數 8，代表還可以再除",
-        "乘法算錯",
-        "應該要除以 7"
+        "A、B",
+        "C、D",
+        "A、C",
+        "B、D"
       ],
       "answer_index": 1,
-      "answer_raw": "餘數 11 大於除數 8，代表還可以再除",
-      "component_path": "components/multiplication_division_lab.html?q=5",
+      "answer_raw": "C、D",
       "explanation": {
-        "concept": "餘數嚴格小於除數公理",
+        "concept": "被除數等於除數時商為 1（內湖 113-1期末 四(4)）",
         "steps": [
-          "除數是 8，餘數必須小於 8。餘數 11 裡面還有 1 個 8，商應該修正為 9，餘數為 3。"
+          "C：11÷11＝1，D：9÷9＝1，兩者的被除數與除數相同。",
+          "A：☆＝1，8≠1；B：☆＝1，10≠1，所以 A、B 不符合。"
         ],
-        "trap": "餘數必須嚴格小於除數；11 裡面還藏著一個 8，商要改 9、餘數改 3。"
+        "trap": "8÷☆＝8 看起來像相同，其實 ☆＝1，被除數 8 和除數 1 不同。"
       },
       "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=5",
       "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q06",
-      "exam_source": "高雄市獅湖國小 114-1 期中",
-      "section": "二、選擇題",
+      "exam_source": "臺北市內湖國小 113-2 期末",
+      "section": "二、填填看",
       "question_num": 4,
-      "title": "用乘法驗算除法",
-      "stem": "用乘法驗算 63 ÷ 7 ＝ 9 是否正確，應該用下面哪一個算式？",
+      "title": "三格流程圖逆推：□ →÷5→ 100 →×6→ □",
+      "stem": "［　］→÷5→100→×6→［　］，請填出兩個方框的數。",
       "choices": [
-        "9 × 7 ＝ 63",
-        "63 × 7 ＝ 9",
-        "9 ÷ 7 ＝ 63",
-        "63 ＋ 7 ＝ 70"
+        "左 500，右 600",
+        "左 500，右 60",
+        "左 20，右 600",
+        "左 600，右 500"
       ],
       "answer_index": 0,
-      "answer_raw": "9 × 7 ＝ 63",
+      "answer_raw": "左 500，右 600",
       "explanation": {
-        "concept": "乘除互逆驗算",
+        "concept": "由後往前倒推流程圖（內湖 113-2期末 二(4)）",
         "steps": [
-          "除法算式「被除數 ÷ 除數 ＝ 商」可以用「商 × 除數 ＝ 被除數」反查。",
-          "本題商是 9、除數是 7，所以算 9 × 7 ＝ 63，正好等於被除數，驗算正確。"
+          "左格 ÷5 得到 100，所以左格＝100×5＝500。",
+          "右格是 100×6＝600。"
         ],
-        "trap": "把被除數拿去乘除數（63 × 7）是常見錯法；驗算要用「商 × 除數」。"
+        "trap": "倒推時 ÷5 的前一格要用 ×5，不是再除一次。"
       },
       "component": "multiplication_division_lab",
       "component_path": "components/multiplication_division_lab.html?q=6",
@@ -154,27 +169,26 @@
     },
     {
       "id": "G3-R-3-1-Q07",
-      "exam_source": "高雄市陽明國小 113-2 期末",
-      "section": "三、填填看",
-      "question_num": 2,
-      "title": "已知積與一因數求未知數",
-      "stem": "算式 □ × 6 ＝ 48，□ 裡應該填入什麼數字？",
+      "exam_source": "臺北市內湖國小 112-2 期末",
+      "section": "二、填一填",
+      "question_num": "6-(1)",
+      "title": "數字流程圖：40 →×8→ 320 →÷4→ ( )",
+      "stem": "① 40 →×8→ 320 →÷4→（　），（　）裡要填什麼數？",
       "choices": [
-        "6",
-        "7",
-        "8",
-        "48"
+        "40",
+        "60",
+        "80",
+        "120"
       ],
       "answer_index": 2,
-      "answer_raw": "8",
+      "answer_raw": "80",
       "explanation": {
-        "concept": "未知因數＝積 ÷ 已知因數",
+        "concept": "流程圖逐步運算（內湖 112-2期末 二(6)-(1)）",
         "steps": [
-          "□ 和 6 都是因數，48 是積。",
-          "未知因數 ＝ 48 ÷ 6 ＝ 8。",
-          "代回檢查：8 × 6 ＝ 48，正確。"
+          "先算 40×8＝320（題目已給）。",
+          "再算 320÷4＝80。"
         ],
-        "trap": "看到 48 就填 48 的人忘了：問的是其中一個因數，要用除法倒推。"
+        "trap": "看到開頭的 40 就填 40 的人忘了最後還要 ÷4。"
       },
       "component": "multiplication_division_lab",
       "component_path": "components/multiplication_division_lab.html?q=7",
@@ -182,27 +196,26 @@
     },
     {
       "id": "G3-R-3-1-Q08",
-      "exam_source": "台北市忠孝國小 114-1 期中",
-      "section": "三、填填看",
-      "question_num": 5,
-      "title": "已知商與除數求被除數",
-      "stem": "算式 □ ÷ 7 ＝ 8，□ 裡應該填入什麼數字？",
+      "exam_source": "臺北市內湖國小 114-2 期末",
+      "section": "六、應用題",
+      "question_num": 1,
+      "title": "乘除互逆應用：玩偶與 525 元積木",
+      "stem": "玩具店裡，一個玩偶的價錢的 7 倍，剛好和 525 元的積木一樣，一個玩偶要多少錢？",
       "choices": [
-        "15",
-        "48",
-        "56",
-        "63"
+        "65 元",
+        "70 元",
+        "75 元",
+        "80 元"
       ],
       "answer_index": 2,
-      "answer_raw": "56",
+      "answer_raw": "75 元",
       "explanation": {
-        "concept": "被除數＝商 × 除數",
+        "concept": "已知倍數與總量求一份量（內湖 114-2期末 六(1)）",
         "steps": [
-          "□ 是被除數，7 是除數，8 是商。",
-          "被除數 ＝ 8 × 7 ＝ 56。",
-          "代回檢查：56 ÷ 7 ＝ 8，正確。"
+          "玩偶價錢的 7 倍是 525 元，所以一份量＝525÷7＝75 元。",
+          "驗算：75×7＝525，正確。"
         ],
-        "trap": "把 7 和 8 相加成 15 是最常見的錯；除法要還原成乘法，不是加法。"
+        "trap": "求一份量要用除法；525×7＝3675 是把倍數方向做反了。"
       },
       "component": "multiplication_division_lab",
       "component_path": "components/multiplication_division_lab.html?q=8",
@@ -210,27 +223,26 @@
     },
     {
       "id": "G3-R-3-1-Q09",
-      "exam_source": "高雄市獅湖國小 114-1 期中",
-      "section": "二、選擇題",
-      "question_num": 6,
-      "title": "有餘數除法驗算",
-      "stem": "57 ÷ 8 ＝ 7 餘 1，用「商 × 除數 ＋ 餘數 ＝ 被除數」驗算，哪一個算式正確？",
+      "exam_source": "高雄市永安國小 114-1 期末",
+      "section": "二、填填看",
+      "question_num": 4,
+      "title": "除數是 6 的餘數規律表",
+      "stem": "除數是 6 的餘數數形：被除數依序 12、13、14、15、16、17，除數都是 6，餘數依序應該是哪一組？",
       "choices": [
-        "7 × 8 ＋ 1 ＝ 57",
-        "7 × 8 − 1 ＝ 55",
-        "8 × 1 ＋ 7 ＝ 15",
-        "57 ＋ 1 ＝ 7 × 8"
+        "0、1、2、3、4、5",
+        "1、2、3、4、5、6",
+        "6、5、4、3、2、1",
+        "1、2、3、4、5、0"
       ],
       "answer_index": 0,
-      "answer_raw": "7 × 8 ＋ 1 ＝ 57",
+      "answer_raw": "0、1、2、3、4、5",
       "explanation": {
-        "concept": "有餘數除法的驗算公式",
+        "concept": "餘數嚴格小於除數（永安 114-1期末 二(4)）",
         "steps": [
-          "商 7 乘以除數 8 得到 56。",
-          "再加上餘數 1：56 ＋ 1 ＝ 57。",
-          "結果等於被除數 57，驗算通過，且 1 ＜ 8。"
+          "12÷6 餘 0，13÷6 餘 1，依此類推到 17÷6 餘 5。",
+          "餘數依序為 0、1、2、3、4、5。"
         ],
-        "trap": "餘數是「多出來要加回去」的部分，用減號會得到 55，驗算就失敗了。"
+        "trap": "餘數必須小於除數 6，不可能出現 6。"
       },
       "component": "multiplication_division_lab",
       "component_path": "components/multiplication_division_lab.html?q=9",
@@ -238,27 +250,26 @@
     },
     {
       "id": "G3-R-3-1-Q10",
-      "exam_source": "高雄市陽明國小 113-2 期末",
-      "section": "五、應用題",
-      "question_num": 4,
-      "title": "乘除混合包裝問題",
-      "stem": "一箱有 6 盒餅乾，每盒 8 片，共 48 片。把全部餅乾每 7 片裝一袋，可以裝滿幾袋？還剩幾片？",
+      "exam_source": "臺北市內湖國小 111-2 期末",
+      "section": "二、填填看",
+      "question_num": 2,
+      "title": "16×7＝112 算式家族",
+      "stem": "16×7＝112，112÷（　）＝7，（　）裡應該填入什麼數？",
       "choices": [
-        "6 袋餘 6 片",
-        "6 袋餘 5 片",
-        "7 袋餘 0 片",
-        "5 袋餘 13 片"
+        "16",
+        "7",
+        "112",
+        "8"
       ],
       "answer_index": 0,
-      "answer_raw": "6 袋餘 6 片",
+      "answer_raw": "16",
       "explanation": {
-        "concept": "先乘後除的兩步驟應用",
+        "concept": "積 ÷ 一因數 ＝ 另一因數（內湖 111-2期末 二(2)）",
         "steps": [
-          "先求總數：6 × 8 ＝ 48 片。",
-          "再分裝：48 ÷ 7 ＝ 6 餘 6，因為 7 × 6 ＝ 42，48 − 42 ＝ 6。",
-          "餘數 6 小於除數 7，答案合理。"
+          "16 和 7 是因數，112 是積。",
+          "112÷16＝7，所以空格填 16。"
         ],
-        "trap": "「5 袋餘 13 片」看起來也能分，但餘數 13 比 7 大，還能再裝一袋，所以不對。"
+        "trap": "問的是除數不是商；112÷7＝16 是同一家族的另一格。"
       },
       "component": "multiplication_division_lab",
       "component_path": "components/multiplication_division_lab.html?q=10",

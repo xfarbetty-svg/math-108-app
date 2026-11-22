@@ -32,7 +32,19 @@
         html[data-theme="light"] .voice-btn { background: var(--bg-elevated); }
         html[data-theme="dark"] #app-container { color: var(--text-primary); }
         .q-badge { position:absolute; top:3px; right:8px; background:var(--led-orange); color:#111; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:500; }
-        .q-focus { position:absolute; top:28px; right:8px; max-width:190px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; }
+        .q-focus {
+
+        .q-scene { position:absolute; left:0; right:0; top:0; bottom:0; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:34px 8px 6px; z-index:450; overflow:hidden; }
+        .q-scene svg { display:block; width:100%; height:100%; }
+        .q-scene .t { font-size:12px; fill:var(--text-primary); font-weight:700; }
+        .q-scene .s { font-size:11px; fill:var(--text-secondary); }
+        .q-scene .b { fill:var(--bg-elevated); stroke:var(--accent-primary); stroke-width:1.5; }
+        .q-scene .qt-title { font-size:12px; font-weight:700; color:var(--text-primary); text-align:center; margin:4px 0 6px; }
+        .q-scene table.qt { width:100%; border-collapse:collapse; font-size:11px; color:var(--text-primary); }
+        .q-scene .qt th, .q-scene .qt td { border:1px solid var(--border-color); padding:5px 3px; text-align:center; }
+        .q-scene .qt th { background:var(--bg-elevated); font-weight:700; }
+        .q-scene .qt td { cursor:pointer; }
+        .q-scene .qt td.q-hi { background:var(--accent-primary); color:var(--bg-main); font-weight:700; } position:absolute; top:28px; right:8px; max-width:190px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
@@ -122,6 +134,7 @@
 <div id="app-container">
     <div id="q-badge" class="q-badge"></div>
     <div id="q-focus" class="q-focus"></div>
+    <div id="q-scene" class="q-scene"></div>
     <!-- 跑馬燈 -->
     <div class="marquee-container">
         <div class="marquee-text" id="marquee">🚄 歡迎來到二維表格實驗室！點選上方標籤開始探索！</div>
@@ -308,24 +321,39 @@
         const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
         return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
     })();
+const TB = (title, headers, rows) => '<div class="qt-title">' + title + '</div><table class="qt"><thead><tr>' +
+  headers.map((h) => '<th>' + h + '</th>').join('') + '</tr></thead><tbody>' +
+  rows.map((r) => '<tr>' + r.map((c) => '<td>' + c + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
+const D31 = {"1":"<div class=\"qt-title\">80 紅飲料店價目表（完整）</div><table class=\"qt\"><thead><tr><th>飲料</th><th>蜂蜜紅茶</th><th>冬瓜青茶</th><th>芒果冰沙</th><th>芋頭鮮奶</th></tr></thead><tbody><tr><td>價錢</td><td>45 元</td><td>40 元</td><td>70 元</td><td>65 元</td></tr></tbody></table>","2":"<div class=\"qt-title\">高鐵票價表（部分·完整呈現）</div><table class=\"qt\"><thead><tr><th>起＼訖</th><th>台北</th><th>台中</th><th>高雄</th></tr></thead><tbody><tr><td>台北</td><td>—</td><td>700</td><td>1,490</td></tr><tr><td>台中</td><td>700</td><td>—</td><td>790</td></tr><tr><td>高雄</td><td>1,490</td><td>790</td><td>—</td></tr></tbody></table>","3":"<div class=\"qt-title\">集集線全票票價表（題組完整）</div><table class=\"qt\"><thead><tr><th>起站</th><th>訖站</th><th>票價</th></tr></thead><tbody><tr><td>二水</td><td>水里</td><td>40 元</td></tr><tr><td>濁水</td><td>集集</td><td>15 元</td></tr><tr><td>源泉</td><td>車埕</td><td>40 元</td></tr></tbody></table>","4":"<div class=\"qt-title\">班車時刻表（完整）</div><table class=\"qt\"><thead><tr><th>車次</th><th>出發</th><th>抵達</th></tr></thead><tbody><tr><td>甲車</td><td>09:00</td><td>10:05</td></tr><tr><td>乙車</td><td>09:30</td><td>10:40</td></tr></tbody></table>","5":"<div class=\"qt-title\">北迴線自強號票價表（題組完整）</div><table class=\"qt\"><thead><tr><th>起站</th><th>訖站</th><th>票價</th></tr></thead><tbody><tr><td>宜蘭</td><td>和平</td><td>133 元</td></tr><tr><td>南澳</td><td>新城</td><td>100 元</td></tr><tr><td>羅東</td><td>和平</td><td>113 元</td></tr></tbody></table>","6":"<div class=\"qt-title\">三年九班功課表（完整）</div><table class=\"qt\"><thead><tr><th>星期</th><th>第3節</th><th>第4節</th><th>第5節</th><th>第7節</th></tr></thead><tbody><tr><td>星期一</td><td>國語</td><td>數學</td><td>社會</td><td>美勞 15:10</td></tr><tr><td>星期三</td><td>社會</td><td>體育</td><td>自然</td><td>空白</td></tr><tr><td>星期四</td><td>數學</td><td>自然</td><td>英語</td><td>空白</td></tr><tr><td>星期五</td><td>自然</td><td>數學</td><td>社會</td><td>體育</td></tr></tbody></table>","7":"<div class=\"qt-title\">班級借書統計表（完整）</div><table class=\"qt\"><thead><tr><th>班級</th><th>甲班</th><th>乙班</th><th>丙班</th><th>丁班</th><th>合計</th></tr></thead><tbody><tr><td>本數</td><td>28</td><td>31</td><td>25</td><td>？</td><td>120</td></tr></tbody></table>","8":"<div class=\"qt-title\">《粽太郎》演出場次表（題組完整）</div><table class=\"qt\"><thead><tr><th>場次</th><th>第1場</th><th>第2場</th><th>第3場</th></tr></thead><tbody><tr><td>開始時間</td><td>11:00</td><td>13:00</td><td>14:00</td></tr></tbody></table>","9":"<div class=\"qt-title\">社團人數二維表（完整）</div><table class=\"qt\"><thead><tr><th>社團</th><th>男生</th><th>女生</th><th>合計</th></tr></thead><tbody><tr><td>足球</td><td>9</td><td>？</td><td>15</td></tr><tr><td>舞蹈</td><td>6</td><td>8</td><td>14</td></tr></tbody></table>","10":"<div class=\"qt-title\">高雄→臺南時刻表（完整）</div><table class=\"qt\"><thead><tr><th>車次</th><th>出發</th><th>抵達</th><th>全票</th></tr></thead><tbody><tr><td>1104</td><td>08:09</td><td>08:44</td><td>$106</td></tr><tr><td>3152</td><td>08:25</td><td>09:23</td><td>$68</td></tr><tr><td>3158</td><td>08:53</td><td>09:58</td><td>$68</td></tr><tr><td>1160</td><td>09:09</td><td>09:44</td><td>$106</td></tr><tr><td>3162</td><td>09:21</td><td>10:19</td><td>$68</td></tr><tr><td>3168</td><td>09:52</td><td>10:59</td><td>$68</td></tr><tr><td>1118</td><td>10:06</td><td>10:44</td><td>$106</td></tr></tbody></table>"};
+
     const Q_SCENES = {
-        1:  { act:1, focus:'Q01 一維 vs 二維表格' },
-        2:  { act:2, focus:'Q02 台北→台中 700 元' },
-        3:  { act:3, focus:'Q03 10:05 − 09:00' },
-        4:  { act:3, focus:'Q04 10:30 前抵達' },
-        5:  { act:2, focus:'Q05 對角線標「—」' },
-        6:  { act:1, focus:'Q06 12＋9＋？＋7＝35' },
-        7:  { act:1, focus:'Q07 28＋31＋25＋？＝120' },
-        8:  { act:2, focus:'Q08 800 − (300＋450)' },
-        9:  { act:2, focus:'Q09 15 − 9 ＝ 6 人' },
-        10: { act:3, focus:'Q10 103 次 09:40→10:25' }
+        1: { act:1, focus:'Q01 80 紅價目表', scene: D31[1] },
+        2: { act:2, focus:'Q02 二維交叉讀取', scene: D31[2] },
+        3: { act:1, focus:'Q03 集集線票價題組', scene: D31[3] },
+        4: { act:3, focus:'Q04 時刻比對', scene: D31[4] },
+        5: { act:1, focus:'Q05 北迴線票價題組', scene: D31[5] },
+        6: { act:2, focus:'Q06 功課表交叉查询', scene: D31[6] },
+        7: { act:1, focus:'Q07 借書總計', scene: D31[7] },
+        8: { act:3, focus:'Q08 粽太郎場次題組', scene: D31[8] },
+        9: { act:2, focus:'Q09 社團二維表', scene: D31[9] },
+        10: { act:3, focus:'Q10 高雄→臺南時刻表', scene: D31[10] },
     };
     function applyQuestionMode() {
         const s = Q_SCENES[qNum] || Q_SCENES[1];
         document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
         document.getElementById('q-focus').textContent = s.focus;
+        document.getElementById('q-scene').innerHTML = s.scene;
         switchAct(s.act);
         document.getElementById('marquee').textContent = '🚄 ' + s.focus;
+        const qs = document.getElementById('q-scene');
+        qs.addEventListener('click', function (e) {
+            const td = e.target.closest('td');
+            if (!td) return;
+            qs.querySelectorAll('td').forEach((x) => x.classList.remove('q-hi'));
+            const tr = td.parentElement, ci = Array.prototype.indexOf.call(tr.children, td);
+            tr.querySelectorAll('td').forEach((x) => x.classList.add('q-hi'));
+            tr.parentElement.querySelectorAll('tr').forEach((r) => { const c = r.children[ci]; if (c) c.classList.add('q-hi'); });
+        });
         speak(s.focus);
     }
     window.addEventListener('DOMContentLoaded', applyQuestionMode);
@@ -335,7 +363,7 @@
 /* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
 (function () {
   try {
-    var t = localStorage.getItem('math108_theme') || 'light';
+    var t = new URLSearchParams(location.search).get('theme') || localStorage.getItem('math108_theme') || 'light';
     document.documentElement.dataset.theme = t;
   } catch (e) { document.documentElement.dataset.theme = 'light'; }
   window.addEventListener('message', function (e) {

@@ -33,9 +33,9 @@
   .scene .hit { cursor:pointer; }
   .scene .hit.on { stroke:var(--accent); }
   .footer { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
-            padding:0 10px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
+            padding:0 16px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
   .footer .hint { font-size:10px; color:var(--muted); max-width:270px; }
-  .footer .count { font-size:10px; color:var(--accent); font-weight:700; }
+  .footer .count { font-size:10px; color:var(--muted); font-weight:700; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -94,7 +94,7 @@
 
   // 圓規題：折線甲 + A 點虛線 + 圓規
   function compassScene() {
-    let s = txt(195, 24, '題目：以 A 點為起點，在下面虛線上畫出和甲線一樣長的直線', 'cap');
+    let s = txt(195, 24, '以 A 點為起點，在虛線上畫出和甲線一樣長的線', 'cap');
     const pts = [[56, 96], [108, 72], [162, 116], [216, 80], [268, 124]];
     for (let i = 0; i < pts.length - 1; i++) {
       s += '<line class="hit" data-kind="seg" x1="' + pts[i][0] + '" y1="' + pts[i][1] + '" x2="' + pts[i + 1][0] + '" y2="' + pts[i + 1][1] + '" stroke="var(--line)" stroke-width="4"/>';
@@ -104,10 +104,10 @@
     s += '<line x1="56" y1="238" x2="332" y2="238" stroke="var(--grid)" stroke-width="2" stroke-dasharray="7 6"/>';
     s += '<circle cx="56" cy="238" r="5" fill="var(--ink)"/>';
     s += txt(56, 262, 'A', 'lbl');
-    s += '<circle cx="332" cy="122" r="6" fill="none" stroke="var(--line)" stroke-width="3"/>';
-    s += '<line x1="330" y1="128" x2="314" y2="196" stroke="var(--line)" stroke-width="4"/>';
-    s += '<line x1="336" y1="128" x2="352" y2="196" stroke="var(--line)" stroke-width="4"/>';
-    s += txt(333, 216, '圓規', 'dim');
+    s += '<circle cx="296" cy="122" r="6" fill="none" stroke="var(--line)" stroke-width="3"/>';
+    s += '<line x1="294" y1="128" x2="278" y2="196" stroke="var(--line)" stroke-width="4"/>';
+    s += '<line x1="300" y1="128" x2="316" y2="196" stroke="var(--line)" stroke-width="4"/>';
+    s += txt(297, 216, '圓規', 'dim');
     s += txt(195, 300, '甲線有幾個轉折點？先數一數', 'dim');
     s += txt(195, 326, '虛線左端是 A 點', 'dim');
     return wrap(s);
