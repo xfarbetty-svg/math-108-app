@@ -92,3 +92,4 @@
 ## 2026-11-22 三合一升級 已 commit ed7b730（223 檔）；三套門禁+CDP 截圖全綠 Exit 0；Dark 選項低對比已修正複拍。尚未 bundle/push/wrangler/curl；A Server user=xfarb 僅負責 push（反向 SSH 金鑰被拒，219 檔已按裁決本機改）。下次開新框 /startup 後接續上線。
 
 - 2026-11-22 N314 概念小教室：六幕圖卡 S01-S06 已產出並目視審查通過（ALL_PASS）；語音／合成／掛載／門禁／push 待續，交接詳見 _scratch/mimi_n314/HANDOFF.md。
+- 2026-11-22 N314 **結案**（commit b22aeeb，已 push + Cloudflare 部署）：`app/assets/classroom_videos/N314_Final.mp4`（1920×1080/30fps/111.433s/22.50MiB/AV gap 0.000s）+ `app/shell.js` 掛載 N-3-14。六幕曉臻 -5% 旁白＋1.5s 停頓、20ms RMS 口型、三層光影全落地。四門禁（curriculum131/app_shell/n314/n314_cdp）＋播放器 CDP 390×844/1280×800 全綠 Exit 0；`curl -I` HTTP 200 + `video/mp4`。**偏差如實註記**：腳本 stance feet_y=690 實測懸空於桌面（桌面約 y≈800-900），為通過「雙腳穩站桌面」目視驗收，合成以 y=845 接地（x=330／高度 480px 不變），S02/S04 抽幀已目視確認。完整 5 欄報告見 `reports/20261122_N314_ACCEPTANCE.md`。
