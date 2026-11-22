@@ -12,7 +12,9 @@ const state = {
   unit: null,         // 當前單元 JSON（如 data/units/G1/N-1-1.json）
   grade: 1,
   qIndex: 0,
-  visited: new Set()  // 已實機操作過教具的題目 id
+  visited: new Set(),  // 已實機操作過教具的題目 id
+  selectedChoice: null, // 外殼統一選項列：目前選中的 option index
+  answerShown: false    // 是否已按「檢查答案」展開回饋
 };
 
 const $ = (id) => document.getElementById(id);
@@ -412,6 +414,8 @@ function setUnitMode(mode) {
     $("progressSource").textContent = "";
     $("dots").style.display = "none";
     $("stageTitle").style.display = "none";
+    $("shellQuestion").style.display = "none";
+    $("shellFeedback").hidden = true;
   } else {
     if (btnExam) btnExam.classList.add("active");
     if (btnConcept) btnConcept.classList.remove("active");
@@ -456,6 +460,7 @@ function renderStage() {
 function renderQuestion() {
   const q = state.unit.questions[state.qIndex];
   state.visited.add(q.id);
+  renderShellQuestion(q);
 
   // 頂部進度與真實試卷來源
   $("progressNum").textContent = "第 " + (state.qIndex + 1) + " / " + (state.unit.question_count || state.unit.questions.length) + " 題";
@@ -506,7 +511,7 @@ function renderQuestion() {
   frame.src = isClockLab
     ? (rawSrc + (rawSrc.indexOf('?') === -1 ? '?' : '&') + 'q=' + (state.qIndex + 1))
     : rawSrc;
-  frame.onload = () => fitFrame(frame, q);
+  frame.onload = () => { fitFrame(frame, q); hideIframeChoiceRows(frame); };
   // 同源可讀時持續自適應高度；file:// 跨檔受限時保持緊湊高度
   // 約 2.5 秒（6 次）穩定高度後自動停止輪詢，消滅無窮重排抖動
   let fitTicks = 0;
@@ -530,6 +535,134 @@ function fitFrame(frame, q) {
     }
   } catch (_e) {
     /* file:// 同源限制 → 保持 fallback */
+  }
+}
+
+/* ---------- 外殼統一選項列：題幹、A/B/C/D、作答回饋（SSOT 直接讀題庫） ---------- */
+function renderShellQuestion(q) {
+  const stemEl = $("shellStem");
+  const optEl = $("shellOptions");
+  const fbEl = $("shellFeedback");
+  const wrapEl = $("shellQuestion");
+  const choices = Array.isArray(q.choices) ? q.choices : [];
+
+  state.selectedChoice = null;
+  state.answerShown = false;
+  fbEl.hidden = true;
+  fbEl.textContent = "";
+  optEl.classList.remove("answered");
+  optEl.textContent = "";
+  stemEl.textContent = q.stem || q.title || "";
+  wrapEl.style.display = choices.length ? "block" : "none";
+
+  choices.forEach((text, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "shell-opt";
+    btn.dataset.index = String(i);
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", "false");
+    const key = document.createElement("span");
+    key.className = "k";
+    key.textContent = String.fromCharCode(65 + i);
+    const label = document.createElement("span");
+    label.className = "t";
+    label.textContent = String(text);
+    btn.append(key, label);
+    optEl.appendChild(btn);
+  });
+}
+
+function selectShellChoice(index) {
+  const optEl = $("shellOptions");
+  const buttons = Array.prototype.slice.call(optEl.querySelectorAll(".shell-opt"));
+  if (!buttons[index]) return;
+  state.selectedChoice = index;
+  buttons.forEach((b, i) => {
+    const on = i === index;
+    b.classList.toggle("selected", on);
+    b.setAttribute("aria-checked", on ? "true" : "false");
+  });
+}
+
+function checkShellAnswer() {
+  const q = state.unit && state.unit.questions && state.unit.questions[state.qIndex];
+  if (!q) return;
+  const fbEl = $("shellFeedback");
+  const optEl = $("shellOptions");
+  const buttons = Array.prototype.slice.call(optEl.querySelectorAll(".shell-opt"));
+
+  if (state.selectedChoice === null) {
+    fbEl.hidden = false;
+    fbEl.textContent = "👆 請先選擇一個選項，再按「✔ 檢查答案」。";
+    return;
+  }
+
+  state.answerShown = true;
+  const ai = q.answer_index;
+  const hasKey = Number.isInteger(ai) && ai >= 0 && ai < buttons.length;
+  const isCorrect = hasKey && state.selectedChoice === ai;
+  buttons.forEach((b) => b.classList.remove("selected", "correct", "wrong"));
+  buttons.forEach((b) => b.setAttribute("aria-checked", "false"));
+  if (hasKey) buttons[ai].classList.add("correct");
+  if ((!hasKey || !isCorrect) && buttons[state.selectedChoice]) buttons[state.selectedChoice].classList.add("wrong");
+  optEl.classList.add("answered");
+
+  fbEl.textContent = "";
+  const head = document.createElement("div");
+  head.className = "sf-head " + (hasKey ? (isCorrect ? "ok" : "bad") : "bad");
+  head.textContent = !hasKey
+    ? "⚠️ 本題題庫未提供正解索引，已略過判定"
+    : (isCorrect ? "✅ 答對了！" : "❌ 答錯了，正確答案是 " + String.fromCharCode(65 + ai));
+  fbEl.appendChild(head);
+
+  const addText = (label, text) => {
+    const l = document.createElement("div");
+    l.className = "sf-label";
+    l.textContent = label;
+    fbEl.appendChild(l);
+    const v = document.createElement("div");
+    v.className = "sf-trap";
+    v.textContent = (text === undefined || text === null || String(text).trim() === "") ? "（本題題庫未提供）" : String(text);
+    fbEl.appendChild(v);
+  };
+  const ex = q.explanation;
+  if (typeof ex === "string") {
+    addText("🧠 核心概念", ex);
+  } else if (ex && typeof ex === "object") {
+    addText("🧠 核心概念", ex.concept);
+    if (Array.isArray(ex.steps) && ex.steps.length) {
+      const l = document.createElement("div");
+      l.className = "sf-label";
+      l.textContent = "📝 解題步驟";
+      fbEl.appendChild(l);
+      const ol = document.createElement("ol");
+      ex.steps.forEach((s) => {
+        const li = document.createElement("li");
+        li.textContent = String(s);
+        ol.appendChild(li);
+      });
+      fbEl.appendChild(ol);
+    }
+    addText("⚠️ 常見陷阱", ex.trap);
+  } else {
+    addText("🧠 詳解", "（本題題庫未提供詳解）");
+  }
+  fbEl.hidden = false;
+}
+
+/* 教具 iframe 內若另有舊選項列（G3 共 18 檔），考試模式統一由外殼渲染，避免兩組選項 */
+function hideIframeChoiceRows(frame) {
+  if (state.grade !== 3) return; // G1/G2 教具的選項屬操作活動，維持原樣（外科手術）
+  try {
+    const doc = frame.contentDocument;
+    if (!doc || !doc.head || doc.getElementById("shell-hide-choice-rows")) return;
+    const style = doc.createElement("style");
+    style.id = "shell-hide-choice-rows";
+    style.textContent = ".options-grid,.opt-grid,#quest-options,.options,.option-btn,.opt-btn,.choice-btn{display:none!important}";
+    doc.head.appendChild(style);
+  } catch (_e) {
+    /* file:// 跨檔同源限制 → 維持教具原件，不影響外殼選項 */
   }
 }
 
@@ -759,24 +892,6 @@ function resizeScratchpad() {
   }
 }
 
-/* ---------- 點擊中央檢查答案按鈕（代理至 iframe 內部的 check()） ---------- */
-function triggerCheckAnswer() {
-  const frame = $("stageFrame");
-  if (!frame || !frame.contentDocument) return;
-  try {
-    const doc = frame.contentDocument;
-    // 優先點擊教具內部的 check-btn
-    const btn = doc.querySelector(".check-btn, .btn-ok, #btnCheck, .btn.good, .btn.primary");
-    if (btn) {
-      btn.click();
-    } else if (frame.contentWindow && typeof frame.contentWindow.check === "function") {
-      frame.contentWindow.check();
-    }
-  } catch (err) {
-    console.warn("無法代理觸發 iframe check:", err);
-  }
-}
-
 /* ---------- 初始化 ---------- */
 async function init() {
   try {
@@ -835,7 +950,11 @@ async function init() {
       renderQuestion();
     }
   });
-  $("btnCheckMain").addEventListener("click", () => { triggerCheckAnswer(); markQuestionChecked(); });
+  $("btnCheckMain").addEventListener("click", () => { checkShellAnswer(); markQuestionChecked(); });
+  $("shellOptions").addEventListener("click", (e) => {
+    const btn = e.target.closest(".shell-opt");
+    if (btn && !$("shellOptions").classList.contains("answered")) selectShellChoice(Number(btn.dataset.index));
+  });
   $("btnSpeak").addEventListener("click", speakCurrentProblem);
   $("btnFinish").addEventListener("click", () => { stopSpeech(); markUnitSubmitted(); renderResult(); });
 

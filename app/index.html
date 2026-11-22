@@ -246,6 +246,54 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
 }
 .stage-nav button:disabled { opacity: 0.35; cursor: default; }
 
+/* ===== 外殼統一渲染的題幹＋A/B/C/D 選項（🎯 真題測驗） ===== */
+.shell-question { margin-top: 8px; }
+.sq-stem {
+  font-size: 12.5px; line-height: 1.55; color: var(--ink);
+  background: var(--bg-elevated); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 10px;
+  white-space: normal; overflow-wrap: anywhere; word-break: break-word;
+}
+.shell-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 7px; }
+.shell-opt {
+  display: flex; align-items: flex-start; gap: 6px;
+  min-height: 44px; padding: 7px 8px; text-align: left;
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 10px;
+  color: var(--ink); font-size: 12px; line-height: 1.4;
+  overflow-wrap: anywhere; word-break: break-word;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+}
+.shell-opt:active { transform: scale(0.98); }
+.shell-opt .k {
+  flex: none; min-width: 20px; height: 20px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg-elevated); border: 1px solid var(--line);
+  font-size: 11px; font-weight: 800; color: var(--ink-soft);
+}
+.shell-opt .t { min-width: 0; flex: 1; }
+.shell-opt.selected { border-color: var(--coral-deep); background: var(--banner-bg); }
+.shell-opt.selected .k { background: var(--coral-deep); color: #fff; border-color: transparent; }
+.shell-options.answered .shell-opt { pointer-events: none; }
+.shell-opt.correct { border-color: #2fa36b; background: rgba(47, 163, 107, 0.12); }
+.shell-opt.wrong { border-color: #e0533b; background: rgba(224, 83, 59, 0.12); }
+.shell-feedback {
+  margin-top: 8px; padding: 9px 11px; border-radius: 10px;
+  border: 1.5px solid var(--line); background: var(--bg-elevated);
+  font-size: 12px; line-height: 1.6; color: var(--ink);
+}
+.shell-feedback[hidden] { display: none; }
+.shell-feedback .sf-head { font-weight: 800; margin-bottom: 4px; }
+.shell-feedback .sf-head.ok { color: #24805a; }
+.shell-feedback .sf-head.bad { color: #c04330; }
+.shell-feedback .sf-label { font-weight: 800; color: var(--coral-deep); margin-top: 5px; }
+.shell-feedback ol { margin: 2px 0 0 18px; padding: 0; }
+.shell-feedback li { margin: 1px 0; }
+.shell-feedback .sf-trap { color: var(--ink-soft); }
+html[data-theme="dark"] .shell-opt.correct { border-color: #4ade80; background: rgba(74, 222, 128, 0.12); }
+html[data-theme="dark"] .shell-opt.wrong { border-color: #f87171; background: rgba(248, 113, 113, 0.12); }
+html[data-theme="dark"] .shell-feedback .sf-head.ok { color: #86d9b8; }
+html[data-theme="dark"] .shell-feedback .sf-head.bad { color: #fca5a5; }
+
 /* 🔊 朗讀按鈕 & 📝 頂部草稿按鈕 */
 .btn-speak {
   background: #fff0f3; border: 1.5px solid #ffccd5; color: #d6336c;
@@ -408,6 +456,14 @@ html[data-theme="dark"] .btn-draft:hover { background: #283548; }
   #stageView .stage-nav { min-height: 40px; margin-top: 6px; gap: 6px; }
   #stageView .stage-nav button { font-size: 12.5px; }
   #stageView .btn-check-main { font-size: 14px; min-height: 42px !important; }
+  .sq-stem { font-size: 12px; padding: 6px 8px; }
+  .shell-options { gap: 6px; }
+  .shell-opt { font-size: 11.5px; min-height: 42px; padding: 6px 7px; }
+}
+@media (max-width: 360px) {
+  .shell-options { gap: 5px; }
+  .shell-opt { font-size: 11px; padding: 5px 6px; }
+  .shell-opt .k { min-width: 18px; height: 18px; font-size: 10px; }
 }
 @media (min-width: 700px) {
   .unit-list { grid-template-columns: 1fr 1fr; }
@@ -463,6 +519,11 @@ html[data-theme="dark"] .btn-draft:hover { background: #283548; }
       <div class="dots" id="dots"></div>
       <div class="stage-title" id="stageTitle"></div>
       <div class="stage-frame"><iframe id="stageFrame" title="具象考題教具"></iframe></div>
+      <div class="shell-question" id="shellQuestion" style="display:none;">
+        <div class="sq-stem" id="shellStem"></div>
+        <div class="shell-options" id="shellOptions" role="radiogroup" aria-label="選擇題的四個選項"></div>
+      </div>
+      <div class="shell-feedback" id="shellFeedback" hidden></div>
       <div class="stage-nav">
         <button class="btn-prev" id="btnPrev">← 上一題</button>
         <button class="btn-check-main" id="btnCheckMain">✔ 檢查答案</button>
@@ -496,6 +557,6 @@ html[data-theme="dark"] .btn-draft:hover { background: #283548; }
 </main>
 
 <script src="js/audio_manager.js"></script>
-<script src="shell.js?v=20261122_080705"></script>
+<script src="shell.js?v=20261122_005_SHELL_CHOICES"></script>
 </body>
 </html>

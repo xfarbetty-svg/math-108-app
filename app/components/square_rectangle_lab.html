@@ -39,16 +39,6 @@
   .ctrl button{font-size:10px;font-weight:700;color:var(--accent);background:var(--bg-elevated);
                border:1px solid var(--accent);border-radius:9px;padding:1px 9px;line-height:1.2;cursor:pointer;}
   .ctrl .tip{font-size:9px;color:var(--muted);}
-  .options{height:56px;flex:none;display:flex;flex-direction:column;justify-content:center;
-           padding:1px 8px;background:var(--bg-elevated);border-top:1px solid var(--border-color);gap:1px;}
-  .opt{display:flex;align-items:center;gap:5px;min-width:0;height:13px;font-size:9.5px;line-height:13px;color:var(--ink);
-       border-radius:3px;padding:0 4px;cursor:pointer;white-space:nowrap;overflow:hidden;}
-  .opt:nth-child(odd){background:color-mix(in srgb,var(--bg-main) 55%,transparent);}
-  .opt .k{flex:none;width:13px;height:13px;border-radius:3px;border:1px solid var(--line);
-          display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
-  .opt .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .opt.sel .k{background:var(--accent);border-color:var(--accent);color:#fff;}
-  .opt.sel .t{color:var(--accent);font-weight:700;}
 </style>
 </head>
 <body>
@@ -56,7 +46,6 @@
   <div class="topbar"><span class="name">S-3-2 正方形和長方形</span><span class="qtag" id="qtag">Q01</span></div>
   <div class="scene" id="scene"></div>
   <div class="ctrl" id="ctrl"><button id="detectBtn" type="button"></button></div>
-  <div class="options" id="options" aria-label="四個選項"></div>
 </div>
 
 <script>
@@ -253,37 +242,12 @@
     return wrap(g);
   }
 
-  /* ---------- 四選項（與題庫 SSOT 文字一致） ---------- */
-  const CHOICES = {
-    1:['對，四邊等長的圖形一定是正方形','對，但這句話只適用於長方形','不對，四邊等長還可能是菱形，必須再檢查有沒有直角','不對，因為四邊等長的圖形不是四邊形'],
-    2:['(1) ㄅ、ㄈ　(2) ㄆ、ㄈ　(3) ㄈ　(4) ㄅ','(1) ㄅ、ㄈ　(2) ㄆ、ㄈ　(3) ㄆ　(4) ㄅ','(1) ㄅ、ㄈ　(2) ㄆ、ㄈ　(3) ㄈ　(4) ㄇ','(1) ㄆ、ㄈ　(2) ㄅ、ㄈ　(3) ㄈ　(4) ㄅ'],
-    3:['每邊 2 格，周長 8 公分','每邊 4 格，周長 16 公分','每邊 4 格，周長 8 公分','每邊 8 格，周長 16 公分'],
-    4:['8 格，周長 16 公分','15 格，周長 16 公分','15 格，周長 8 公分','5 格，周長 15 公分'],
-    5:['20 公分','40 公分','80 公分','160 公分'],
-    6:['三角形','正方形','長方形','圓形'],
-    7:['邊長為 2 公分的正方形','邊長為 4 公分的正方形','邊長分別是 2 公分和 4 公分的長方形','排不出正方形或長方形'],
-    8:['4 公分','8 公分','16 公分','32 公分'],
-    9:['正方形和長方形都有四條邊。','正方形和長方形都有四個直角。','長方形的每條邊都一樣長。','長方形有兩對一樣的邊長。'],
-    10:['(1) 正方形：ㄇ、ㄉ　(2) 長方形：ㄅ、ㄊ','(1) 正方形：ㄆ、ㄉ　(2) 長方形：ㄅ、ㄊ','(1) 正方形：ㄇ、ㄉ　(2) 長方形：ㄆ、ㄊ','(1) 正方形：ㄆ、ㄈ　(2) 長方形：ㄅ、ㄉ']
-  };
-  const LABEL=['A','B','C','D'];
-
-  /* ---------- 渲染 ---------- */
+  /* ---------- 渲染（選項列由主外殼統一渲染，教具不再自建） ---------- */
   const scene=document.getElementById('scene');
   scene.innerHTML=(SCENES[qNum]||SCENES[1])();
   const svg=scene.querySelector('svg');
   document.getElementById('qtag').textContent='Q'+String(qNum).padStart(2,'0');
 
-  const optionsEl=document.getElementById('options');
-  (CHOICES[qNum]||CHOICES[1]).forEach(function(c,i){
-    const row=document.createElement('div');
-    row.className='opt'; row.setAttribute('role','button'); row.setAttribute('tabindex','0');
-    row.innerHTML='<span class="k">'+LABEL[i]+'</span><span class="t">'+esc(c)+'</span>';
-    const toggle=()=>row.classList.toggle('sel');
-    row.addEventListener('click',toggle);
-    row.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
-    optionsEl.appendChild(row);
-  });
 
   /* ---------- 互動：三角板檢測按鈕（僅 Q01/Q02/Q10） ---------- */
   const ctrl=document.getElementById('ctrl');
