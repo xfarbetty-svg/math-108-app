@@ -21,7 +21,7 @@ data.questions.forEach((q, i) => {
   if (typeof q.answer_index !== 'number' || q.answer_index < 0 || q.answer_index > 3) errors.push(tag + ' answer_index 越界');
   if (!q.answer_raw || q.choices[q.answer_index] !== q.answer_raw) errors.push(tag + ' answer_raw 與 choices[answer_index] 不一致');
   if (ANSWERS[i] !== q.answer_index) errors.push(tag + ' 正解索引應為 ' + ANSWERS[i] + '，實際 ' + q.answer_index);
-  if (q.fallback_height !== 420) errors.push(tag + ' fallback_height 應為 420');
+  if (q.fallback_height !== 260) errors.push(tag + ' fallback_height 應為 260（一屏緊湊）');
   if (!q.source_paper || !q.source_paper.trim()) errors.push(tag + ' 缺真實 source_paper');
   if (!q.exam_source || !q.exam_source.trim()) errors.push(tag + ' 缺 exam_source');
   if (!q.explanation || !q.explanation.concept || !Array.isArray(q.explanation.steps) || !q.explanation.steps.length || !q.explanation.trap) errors.push(tag + ' 詳解缺 concept/steps/trap');

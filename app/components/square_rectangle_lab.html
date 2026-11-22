@@ -3,76 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>S-3-2 正方形與長方形實驗室（真題題幹圖）</title>
+<title>S-3-2 正方形和長方形（幾何精準教具）</title>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
 <style>
   :root {
-    --paper: #fdfbf7; --ink: #3d3a34; --line: #4b4a46; --muted: #8a857b;
-    --fill-a: #fff3d6; --fill-b: #e2f0fb; --fill-c: #f3e3f7; --grid: #b9c4cf;
-    --accent: #f4694b; --tool: rgba(255,255,255,.82);
+    --paper:#fdfbf7; --ink:#3d3a34; --line:#4b4a46; --muted:#8a857b;
+    --fill-a:#fff3d6; --fill-b:#e2f0fb; --fill-c:#f3e3f7; --grid:#b9c4cf;
+    --accent:#f4694b; --right:#2fa36b; --nright:#e08a1e;
   }
   html[data-theme="dark"] {
-    --paper: var(--bg-main); --ink: var(--text-primary); --line: var(--svg-stroke);
-    --muted: var(--text-secondary); --fill-a: #33404f; --fill-b: #243b50; --fill-c: #3b3348;
-    --grid: #475569; --accent: var(--accent-primary); --tool: rgba(31,39,54,.85);
+    --paper:var(--bg-main); --ink:var(--text-primary); --line:var(--svg-stroke);
+    --muted:var(--text-secondary); --fill-a:#33404f; --fill-b:#243b50; --fill-c:#3b3348;
+    --grid:#475569; --accent:var(--accent-primary); --right:#4ade80; --nright:#fbbf24;
   }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin:0; padding:0; width:100%; max-width:390px; height:420px; overflow:hidden; }
-  body { font-family:"PingFang TC","Microsoft JhengHei",sans-serif; background:var(--paper); color:var(--ink); }
-  #app { width:100%; max-width:390px; height:420px; background:var(--paper); display:flex; flex-direction:column; overflow:hidden; }
-  .topbar { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
-            padding:0 12px; background:var(--bg-elevated); border-bottom:1px solid var(--border-color); }
-  .topbar .name { font-size:12px; font-weight:700; color:var(--ink); }
-  .topbar .qtag { font-size:11px; font-weight:700; color:var(--accent); border:1px solid var(--accent);
-                  border-radius:9px; padding:1px 7px; }
-  .scene { position:relative; flex:1; width:100%; max-width:390px; height:352px; overflow:hidden; }
-  .scene svg { display:block; width:100%; max-width:390px; height:340px; }
-  .scene .cap { font-size:12px; fill:var(--ink); font-weight:700; }
-  .scene .lbl { font-size:12px; fill:var(--ink); font-weight:700; }
-  .scene .dim { font-size:11px; fill:var(--muted); }
-  .scene .shape { cursor:pointer; }
-  .scene .shape.marked { stroke:var(--accent); stroke-width:4; }
-  .scene .tick { opacity:0; stroke:var(--accent); stroke-width:2.5; }
-  .scene .shape.marked .tick { opacity:1; }
-  /* 可拖曳量具：直尺刻度 + 直角探针（真實 pointer 事件） */
-  #tool { position:absolute; right:8px; bottom:12px; width:176px; height:44px; touch-action:none;
-          cursor:grab; user-select:none; z-index:20; }
-  #tool:active { cursor:grabbing; }
-  #tool .bar { position:absolute; left:14px; bottom:0; width:162px; height:20px;
-               background:var(--tool); border:2px solid var(--line); border-radius:2px;
-               background-image:repeating-linear-gradient(90deg,transparent 0 39px,var(--line) 39px 41px); }
-  #tool .arm { position:absolute; left:14px; bottom:0; width:18px; height:44px;
-               background:var(--tool); border:2px solid var(--line); border-radius:2px; }
-  #tool .cap { position:absolute; left:36px; bottom:-1px; font-size:8px; color:var(--muted); }
-  .footer { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
-            padding:0 10px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
-  .footer .hint { font-size:10px; color:var(--muted); max-width:300px; }
-  .footer .info { font-size:10px; color:var(--accent); font-weight:700; }
-
-/* G3 窄屏_one-screen 收斂 */
-#q-badge, #q-focus, .q-badge, .q-focus, .qtag, #qtag {
-  max-width: calc(100% - 16px) !important; right: 8px !important; box-sizing: border-box !important;
-  white-space: normal !important; overflow-wrap: anywhere !important;
-}
-svg text { max-width: 100%; }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;width:100%;max-width:390px;height:260px;overflow:hidden;}
+  body{font-family:"PingFang TC","Microsoft JhengHei",sans-serif;background:var(--paper);color:var(--ink);}
+  #app{width:100%;max-width:390px;height:260px;background:var(--paper);display:flex;flex-direction:column;overflow:hidden;}
+  .topbar{height:22px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 9px;
+          background:var(--bg-elevated);border-bottom:1px solid var(--border-color);}
+  .topbar .name{font-size:10px;font-weight:700;color:var(--ink);}
+  .topbar .qtag{font-size:10px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:0 6px;}
+  .scene{position:relative;flex:1;width:100%;max-width:390px;overflow:hidden;}
+  .scene svg{display:block;width:100%;height:100%;}
+  .scene .cap{font-size:11px;fill:var(--ink);font-weight:700;}
+  .scene .lbl{font-size:11px;fill:var(--ink);font-weight:700;}
+  .scene .dim{font-size:10px;fill:var(--muted);}
+  .scene .figure,.scene .straw,.scene .gcell{cursor:pointer;}
+  .scene .mark{opacity:0;transition:opacity .18s;}
+  .scene svg.detect-on .mark,.scene .figure.marked .mark{opacity:1;}
+  .scene .straw.picked rect{stroke:var(--accent);stroke-width:3.5;fill:var(--fill-a);}
+  .scene .assembled{opacity:0;transition:opacity .2s;}
+  .scene svg.ready .assembled{opacity:1;}
+  .ctrl{height:19px;flex:none;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--paper);}
+  .ctrl button{font-size:10px;font-weight:700;color:var(--accent);background:var(--bg-elevated);
+               border:1px solid var(--accent);border-radius:9px;padding:1px 9px;line-height:1.2;cursor:pointer;}
+  .ctrl .tip{font-size:9px;color:var(--muted);}
+  .options{height:56px;flex:none;display:flex;flex-direction:column;justify-content:center;
+           padding:1px 8px;background:var(--bg-elevated);border-top:1px solid var(--border-color);gap:1px;}
+  .opt{display:flex;align-items:center;gap:5px;min-width:0;height:13px;font-size:9.5px;line-height:13px;color:var(--ink);
+       border-radius:3px;padding:0 4px;cursor:pointer;white-space:nowrap;overflow:hidden;}
+  .opt:nth-child(odd){background:color-mix(in srgb,var(--bg-main) 55%,transparent);}
+  .opt .k{flex:none;width:13px;height:13px;border-radius:3px;border:1px solid var(--line);
+          display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+  .opt .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .opt.sel .k{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .opt.sel .t{color:var(--accent);font-weight:700;}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="topbar"><span class="name">S-3-2 正方形和長方形</span><span class="qtag" id="qtag">Q01</span></div>
-  <div class="scene" id="scene">
-    <div id="tool" title="可拖曳的直尺與直角量具">
-      <div class="arm"></div><div class="bar"></div><div class="cap">0　1　2　3　4 cm</div>
-    </div>
-  </div>
-  <div class="footer"><span class="hint" id="hint"></span><span class="info" id="info">拖曳量具・點選圖形</span></div>
+  <div class="scene" id="scene"></div>
+  <div class="ctrl" id="ctrl"><button id="detectBtn" type="button"></button></div>
+  <div class="options" id="options" aria-label="四個選項"></div>
 </div>
 
 <script>
 (function () {
   'use strict';
   const params = new URLSearchParams(location.search);
-  const qNum = (() => { const n = parseInt(params.get('q'), 10); return n >= 1 && n <= 10 ? n : 1; })();
+  const qNum = (function(){ const n = parseInt(params.get('q'),10); return n>=1 && n<=10 ? n : 1; })();
   const theme = params.get('theme');
   if (theme === 'dark' || theme === 'light') {
     document.documentElement.dataset.theme = theme;
@@ -88,177 +79,250 @@ svg text { max-width: 100%; }
     }
   });
 
-  function poly(points, fill, cls) {
-    return '<polygon class="shape ' + (cls || '') + '" points="' + points + '" fill="' + (fill || 'none') +
+  /* ---------- SVG 基本元件 ---------- */
+  function wrap(inner){ return '<svg viewBox="0 0 390 164" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>'; }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function text(x,y,str,cls,anchor){
+    return '<text x="'+x+'" y="'+y+'" class="'+(cls||'lbl')+'" text-anchor="'+(anchor||'middle')+'">'+esc(str)+'</text>';
+  }
+  function poly(points,fill,cls){
+    return '<polygon class="shape '+(cls||'')+'" points="'+points+'" fill="'+(fill||'none')+
            '" stroke="var(--line)" stroke-width="2.5" stroke-linejoin="round"/>';
   }
-  function rect(x, y, w, h, fill, cls, rx) {
-    return '<rect class="shape ' + (cls || '') + '" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
-           '" rx="' + (rx || 0) + '" fill="' + (fill || 'none') + '" stroke="var(--line)" stroke-width="2.5"/>';
+  function rect(x,y,w,h,fill,cls,rx){
+    return '<rect class="shape '+(cls||'')+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(rx||0)+
+           '" fill="'+(fill||'none')+'" stroke="var(--line)" stroke-width="2.5"/>';
   }
-  function text(x, y, str, cls, anchor) {
-    return '<text x="' + x + '" y="' + y + '" class="' + (cls || 'lbl') + '" text-anchor="' + (anchor || 'middle') + '">' + str + '</text>';
+  /* 等邊刻度：線段中點的垂直短線 */
+  function tick(x1,y1,x2,y2,color){
+    const mx=(x1+x2)/2, my=(y1+y2)/2, dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy)||1;
+    const nx=-dy/L*5, ny=dx/L*5;
+    return '<line class="mark" x1="'+(mx-nx)+'" y1="'+(my-ny)+'" x2="'+(mx+nx)+'" y2="'+(my+ny)+
+           '" stroke="'+(color||'var(--accent)')+'" stroke-width="2"/>';
   }
-  function ticks(x, y, w, h) {
-    return '<line class="tick" x1="' + (x + w / 2 - 6) + '" y1="' + (y - 3) + '" x2="' + (x + w / 2 + 6) + '" y2="' + (y - 3) + '"/>' +
-           '<line class="tick" x1="' + (x + w / 2 - 6) + '" y1="' + (y + h + 3) + '" x2="' + (x + w / 2 + 6) + '" y2="' + (y + h + 3) + '"/>';
+  /* 四邊等長刻度（給定多邊形頂點） */
+  function ticksOf(pts,color){
+    let s=''; for(let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length]; s+=tick(a[0],a[1],b[0],b[1],color); }
+    return s;
   }
-  const wrap = (inner) => '<svg viewBox="0 0 390 340" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+  /* 直角記號 ┐（sx,sy 為內縮方向） */
+  function corner(x,y,sx,sy,color){
+    const k=11;
+    return '<path class="mark" d="M '+(x+sx*k)+' '+y+' L '+(x+sx*k)+' '+(y+sy*k)+' L '+x+' '+(y+sy*k)+
+           '" fill="none" stroke="'+(color||'var(--right)')+'" stroke-width="2.4" stroke-linecap="round"/>';
+  }
+  function rectCorners(x,y,w,h,color){
+    return corner(x,y,1,1,color)+corner(x+w,y,-1,1,color)+corner(x,y+h,1,-1,color)+corner(x+w,y+h,-1,-1,color);
+  }
+  /* 非直角橘色弧線：頂點 cx,cy，內角 a1～a2（角度） */
+  function angleArc(cx,cy,r,a1,a2,color){
+    const rad=Math.PI/180;
+    const x1=cx+r*Math.cos(a1*rad), y1=cy+r*Math.sin(a1*rad);
+    const x2=cx+r*Math.cos(a2*rad), y2=cy+r*Math.sin(a2*rad);
+    let span=a2-a1; while(span<0) span+=360; while(span>360) span-=360;
+    const large=span>180?1:0;
+    return '<path class="mark" d="M '+x1.toFixed(1)+' '+y1.toFixed(1)+' A '+r+' '+r+' 0 '+large+' 1 '+
+           x2.toFixed(1)+' '+y2.toFixed(1)+'" fill="none" stroke="'+(color||'var(--nright)')+'" stroke-width="2.2"/>';
+  }
+  function diamond(cx,cy,hx,hy){
+    return [[cx,cy-hy],[cx+hx,cy],[cx,cy+hy],[cx-hx,cy]];
+  }
+  const ptsStr = p => p.map(q=>q[0]+','+q[1]).join(' ');
 
-  const scenes = {
-    1: () => wrap([
-      text(195, 26, '題目：只要 4 個邊都一樣長，就一定是正方形嗎？', 'cap'),
-      poly('100,86 174,170 100,254 26,170', 'var(--fill-a)', 'mark'),
-      poly('244,110 340,110 340,230 244,230', 'var(--fill-b)', 'mark'),
-      text(100, 284, '圖形甲', 'lbl'), text(292, 284, '圖形乙', 'lbl'),
-      text(195, 312, '點選圖形，再用直尺與直角量具比一比', 'dim')
-    ].join('')),
-    2: () => wrap([
-      text(195, 24, '先找出只有 4 個邊的圖形，再用三角板和直尺量一量', 'cap'),
-      poly('26,74 102,68 108,132 32,138', 'var(--fill-b)', 'mark'), text(67, 158, 'ㄅ', 'lbl'),
-      poly('195,64 240,100 195,136 150,100', 'var(--fill-c)', 'mark'), text(195, 158, 'ㄆ', 'lbl'),
-      poly('292,72 362,72 376,136 278,136', 'var(--fill-b)', 'mark'), text(327, 158, 'ㄇ', 'lbl'),
-      rect(100, 196, 60, 60, 'var(--fill-c)', 'mark'), text(130, 280, 'ㄈ', 'lbl'),
-      poly('254,196 294,196 314,226 294,256 254,256 234,226', 'var(--fill-b)', 'mark'), text(274, 280, 'ㄉ', 'lbl'),
-      text(195, 312, '(1) 有直角 (2) 每邊等長 (3) 正方形 (4) 長方形 — 整組一起看', 'dim')
-    ].join('')),
-    3: () => gridScene('在 1cm 方格紙上畫一個邊長 4 公分的正方形'),
-    4: () => gridScene('在 1cm 方格紙上畫一個長 5 公分、寬 3 公分的長方形'),
-    5: () => wrap([
-      text(195, 26, '題目：正方形海報紙四邊總共長 160 公分', 'cap'),
-      rect(115, 88, 160, 160, 'var(--fill-a)', 'mark'),
-      '<rect x="100" y="72" width="190" height="190" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>',
-      text(195, 62, '四邊總長 160 公分', 'lbl'),
-      text(195, 282, '正方形', 'dim'),
-      text(195, 312, '想清楚：四邊總長要平均分給幾條邊？', 'dim')
-    ].join('')),
-    6: () => wrap([
-      text(195, 26, '題目：邊長 3、5、3、5 公分，且有 4 個直角', 'cap'),
-      rect(95, 96, 200, 130, 'var(--fill-b)', 'mark'),
-      text(195, 88, '5 公分', 'lbl'), text(195, 246, '5 公分', 'lbl'),
-      text(78, 166, '3 公分', 'lbl'), text(312, 166, '3 公分', 'lbl'),
-      '<path d="M95 110 h14 v-14 M295 110 h-14 v-14 M95 212 h14 v14 M295 212 h-14 v14" fill="none" stroke="var(--accent)" stroke-width="2"/>',
-      text(195, 292, '量量看四個角與四條邊', 'dim'),
-      text(195, 316, '選出符合的圖形名稱', 'dim')
-    ].join('')),
-    7: () => wrap([
-      text(195, 26, '題目：從 3 根 2cm 與 2 根 4cm 吸管中任選 4 根', 'cap'),
-      rect(38, 104, 96, 16, 'var(--fill-a)', '', 8), text(86, 96, '2cm', 'lbl'),
-      rect(38, 150, 96, 16, 'var(--fill-a)', '', 8), text(86, 142, '2cm', 'lbl'),
-      rect(38, 196, 96, 16, 'var(--fill-a)', '', 8), text(86, 188, '2cm', 'lbl'),
-      rect(222, 124, 140, 16, 'var(--fill-b)', '', 8), text(292, 116, '4cm', 'lbl'),
-      rect(222, 184, 140, 16, 'var(--fill-b)', '', 8), text(292, 176, '4cm', 'lbl'),
-      text(195, 280, '左邊 3 根短吸管，右邊 2 根長吸管', 'dim'),
-      text(195, 312, '數數看有幾根長吸管、幾根短吸管', 'dim')
-    ].join('')),
-    8: () => wrap([
-      text(195, 26, '題目：如下圖，正方形的每邊長是多少公分？', 'cap'),
-      rect(110, 66, 170, 170, 'none', 'mark'),
-      '<circle cx="195" cy="151" r="85" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2.5"/>',
-      '<line x1="110" y1="151" x2="280" y2="151" stroke="var(--accent)" stroke-width="2.5"/>',
-      '<circle cx="195" cy="151" r="3" fill="var(--ink)"/>',
-      text(195, 143, '4 公分', 'lbl'),
-      text(195, 264, '水平直徑貫穿圓心', 'dim'),
-      text(195, 312, '比對內切圓直徑與正方形邊長', 'dim')
-    ].join('')),
-    9: () => wrap([
-      text(195, 26, '題目：比較正方形與長方形的邊和角', 'cap'),
-      rect(48, 96, 118, 118, 'var(--fill-a)', 'mark'),
-      rect(224, 96, 148, 118, 'var(--fill-b)', 'mark'),
-      text(107, 240, '圖形甲', 'lbl'), text(298, 240, '圖形乙', 'lbl'),
-      text(195, 284, '四個選項都在講邊與角的性質', 'dim'),
-      text(195, 312, '找出與圖形特徵不相符的那一句', 'dim')
-    ].join('')),
-    10: () => wrap([
-      text(195, 24, '題目：用尺和三角板量一量，ㄅ～ㄊ 哪些是正方形、哪些是長方形？', 'cap'),
-      rect(24, 64, 84, 52, 'var(--fill-b)', 'mark'), text(66, 140, 'ㄅ', 'lbl'),
-      rect(156, 64, 78, 52, 'var(--fill-c)', 'mark', 14), text(195, 140, 'ㄆ', 'lbl'),
-      poly('306,56 342,90 306,124 270,90', 'var(--fill-a)', 'mark'), text(306, 148, 'ㄇ', 'lbl'),
-      poly('26,182 104,182 124,238 46,238', 'var(--fill-c)', 'mark'), text(75, 262, 'ㄈ', 'lbl'),
-      rect(158, 182, 58, 58, 'var(--fill-a)', 'mark'), text(187, 262, 'ㄉ', 'lbl'),
-      '<g transform="rotate(-18 310 210)"><rect class="shape mark" x="272" y="184" width="76" height="48" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2.5"/></g>',
-      text(310, 262, 'ㄊ', 'lbl'),
-      text(195, 300, '(1) 正方形有哪些？　(2) 長方形有哪些？', 'dim'),
-      text(195, 322, '圓角、旋轉、平行四邊形都要仔細量', 'dim')
-    ].join(''))
+  /* ---------- 各科圖形（viewBox 390×164） ---------- */
+  const SCENES = {
+    1: function(){ // 左：真正方形；右：等邊菱形。邊長皆 60。
+      const left=[[70,50],[130,50],[130,110],[70,110]];
+      const right=diamond(270,80,52,30); // sqrt(52²+30²)=60.05 ≈ 60
+      return wrap([
+        text(195,15,'題目：四個邊都一樣長，就一定是正方形嗎？','cap'),
+        poly(ptsStr(left),'var(--fill-a)'),
+        poly(ptsStr(right),'var(--fill-b)'),
+        rectCorners(70,50,60,60),
+        ticksOf(left), ticksOf(right,'var(--nright)'),
+        angleArc(270,50,13,30,150), angleArc(270,110,13,210,330),
+        angleArc(322,80,13,150,210), angleArc(218,80,13,330,390),
+        text(100,143,'圖形甲','lbl'), text(270,143,'圖形乙','lbl'),
+        text(195,159,'兩個圖形四邊都一樣長','dim')
+      ].join(''));
+    },
+    2: function(){ // ㄅ～ㄉ 五圖形（由 JS 包 g.figure）
+      const fig=(inner,label,x,y)=>'<g class="figure" data-fig="'+label+'">'+inner+'</g>';
+      return wrap([
+        text(195,14,'先找出四邊形，再用三角板量直角、用尺量等邊','cap'),
+        fig(rect(22,28,74,40,'var(--fill-b)')+rectCorners(22,28,74,40)+ticksOf([[22,28],[96,28],[96,68],[22,68]]),'ㄅ'),
+        text(59,82,'ㄅ','lbl'),
+        fig((function(){ const p=diamond(195,48,40,25); return poly(ptsStr(p),'var(--fill-c)')+ticksOf(p,'var(--nright)')+
+              angleArc(195,23,10,30,150)+angleArc(195,73,10,210,330)+angleArc(235,48,10,150,210)+angleArc(155,48,10,330,390);})(),'ㄆ'),
+        text(195,82,'ㄆ','lbl'),
+        fig((function(){ const p=[[272,32],[344,32],[360,68],[288,68]]; return poly(ptsStr(p),'var(--fill-a)')+
+              angleArc(272,32,10,150,270)+angleArc(288,68,10,270,360)+angleArc(344,32,10,0,55)+angleArc(360,68,10,135,225);})(),'ㄇ'),
+        text(316,82,'ㄇ','lbl'),
+        fig(rect(58,96,48,48,'var(--fill-c)')+rectCorners(58,96,48,48)+ticksOf([[58,96],[106,96],[106,144],[58,144]])),
+        text(82,158,'ㄈ','lbl'),
+        fig((function(){ const p=[]; for(let i=0;i<6;i++){const a=-Math.PI/2+i*Math.PI/3; p.push([Math.round(270+30*Math.cos(a)),Math.round(122+30*Math.sin(a))]);}
+              return poly(ptsStr(p),'var(--fill-b)')+ticksOf(p,'var(--nright)');})(),'ㄉ'),
+        text(270,158,'ㄉ','lbl')
+      ].join(''));
+    },
+    3: function(){ return gridScene('在方格紙上畫邊長 4 公分的正方形'); },
+    4: function(){ return gridScene('在方格紙上畫長 5 公分、寬 3 公分的長方形'); },
+    5: function(){
+      return wrap([
+        text(195,15,'題目：正方形海報四邊總共長 160 公分','cap'),
+        rect(135,28,120,120,'var(--fill-a)'),
+        rectCorners(135,28,120,120), ticksOf([[135,28],[255,28],[255,148],[135,148]]),
+        text(195,22,'四邊總長 160 公分','dim'),
+        text(195,96,'邊長？','lbl'),
+        text(195,159,'四邊等長，總長要平均分給四條邊','dim')
+      ].join(''));
+    },
+    6: function(){
+      return wrap([
+        text(195,15,'題目：邊長 3、5、3、5 公分，且有四個直角','cap'),
+        rect(100,42,190,72,'var(--fill-b)'), rectCorners(100,42,190,72),
+        text(195,36,'5 公分','lbl'), text(195,129,'5 公分','lbl'),
+        text(88,82,'3','lbl'), text(302,82,'3','lbl'),
+        text(195,150,'兩組對邊各自等長','dim')
+      ].join(''));
+    },
+    7: function(){
+      const straw=(x,y,w,len,label)=>'<g class="straw" data-len="'+len+'"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="10" rx="5" fill="'+
+        (len===2?'var(--fill-a)':'var(--fill-b)')+'"/><text x="'+(x+w/2)+'" y="'+(y-4)+'" class="dim">'+label+'</text></g>';
+      return wrap([
+        text(195,14,'題目：選四根吸管，拼出一個長方形框','cap'),
+        straw(18,34,64,2,'2cm'), straw(18,62,64,2,'2cm'), straw(18,90,64,2,'2cm'),
+        straw(250,46,118,4,'4cm'), straw(250,86,118,4,'4cm'),
+        '<g class="assembled"><rect x="145" y="112" width="100" height="48" fill="none" stroke="var(--right)" stroke-width="3"/>'+
+        rectCorners(145,112,100,48,'var(--right)')+ticksOf([[145,112],[245,112],[245,160],[145,160]],'var(--nright)')+'</g>',
+        text(300,150,'點選吸管','dim'), text(90,150,'選 2 短＋2 長','dim')
+      ].join(''));
+    },
+    8: function(){
+      return wrap([
+        text(195,15,'題目：正方形每邊長多少公分？','cap'),
+        rect(125,24,140,140,'none'),
+        '<circle cx="195" cy="94" r="70" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2.5"/>',
+        '<line x1="125" y1="94" x2="265" y2="94" stroke="var(--accent)" stroke-width="2.5"/>',
+        '<circle cx="195" cy="94" r="3" fill="var(--ink)"/>',
+        text(195,88,'直徑 4 公分','lbl'),
+        text(195,160,'內切圓直徑貫穿圓心','dim')
+      ].join(''));
+    },
+    9: function(){
+      return wrap([
+        text(195,15,'題目：比較正方形與長方形的邊和角','cap'),
+        rect(34,30,100,100,'var(--fill-a)'), rectCorners(34,30,100,100), ticksOf([[34,30],[134,30],[134,130],[34,130]]),
+        text(84,25,'邊長','lbl'),
+        rect(216,42,140,76,'var(--fill-b)'), rectCorners(216,42,140,76),
+        text(286,36,'長','lbl'), text(350,86,'寬','dim'),
+        text(84,150,'圖形甲','lbl'), text(286,150,'圖形乙','lbl')
+      ].join(''));
+    },
+    10: function(){ // ㄅ～ㄊ 六圖形
+      const fig=(inner,label)=>'<g class="figure" data-fig="'+label+'">'+inner+'</g>';
+      return wrap([
+        text(195,14,'題目：ㄅ～ㄊ 哪些是正方形？哪些是長方形？','cap'),
+        fig(rect(20,28,70,28,'var(--fill-b)')+rectCorners(20,28,70,28)), text(55,82,'ㄅ','lbl'),
+        fig((function(){ const p=[[140,28],[200,28],[200,60],[140,60]];
+              return '<rect x="140" y="28" width="60" height="32" rx="11" fill="var(--fill-c)" stroke="var(--line)" stroke-width="2.5"/>'+
+                angleArc(151,39,10,180,270)+angleArc(189,39,10,270,360)+angleArc(151,49,10,90,180)+angleArc(189,49,10,0,90);})(),'ㄆ'),
+        text(170,82,'ㄆ','lbl'),
+        fig((function(){ const p=diamond(300,44,18,18); return poly(ptsStr(p),'var(--fill-a)')+ticksOf(p)+
+              corner(300,26,1,1)+corner(318,44,-1,1)+corner(300,62,1,-1)+corner(282,44,-1,-1);})(),'ㄇ'),
+        text(300,82,'ㄇ','lbl'),
+        fig((function(){ const p=[[22,96],[88,96],[104,130],[38,130]]; return poly(ptsStr(p),'var(--fill-c)')+
+              angleArc(22,96,10,270,360)+angleArc(38,130,10,90,180)+angleArc(88,96,10,0,60)+angleArc(104,130,10,120,200);})(),'ㄈ'),
+        text(63,152,'ㄈ','lbl'),
+        fig(rect(142,94,40,40,'var(--fill-a)')+rectCorners(142,94,40,40)+ticksOf([[142,94],[182,94],[182,134],[142,134]])),
+        text(162,152,'ㄉ','lbl'),
+        fig('<g transform="rotate(-18 300 114)"><rect x="268" y="98" width="64" height="32" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2.5"/>'+
+            rectCorners(268,98,64,32)+'</g>'), text(300,152,'ㄊ','lbl')
+      ].join(''));
+    }
   };
 
-  function gridScene(caption) {
-    const x0 = 90, y0 = 78, cell = 30, cols = 7, rows = 7;
-    let g = '<text x="195" y="24" class="cap" text-anchor="middle">' + caption + '</text>';
-    g += '<text x="' + (x0 + 15) + '" y="' + (y0 - 10) + '" class="dim">1cm</text>';
-    g += '<text x="' + (x0 - 24) + '" y="' + (y0 + 20) + '" class="dim">1cm</text>';
-    for (let r = 0; r <= rows; r++) g += '<line x1="' + x0 + '" y1="' + (y0 + r * cell) + '" x2="' + (x0 + cols * cell) + '" y2="' + (y0 + r * cell) + '" stroke="var(--grid)" stroke-width="1"/>';
-    for (let c = 0; c <= cols; c++) g += '<line x1="' + (x0 + c * cell) + '" y1="' + y0 + '" x2="' + (x0 + c * cell) + '" y2="' + (y0 + rows * cell) + '" stroke="var(--grid)" stroke-width="1"/>';
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-      g += '<rect class="gcell" data-r="' + r + '" data-c="' + c + '" x="' + (x0 + c * cell + 1) + '" y="' + (y0 + r * cell + 1) +
-           '" width="' + (cell - 2) + '" height="' + (cell - 2) + '" fill="transparent" stroke="none" style="cursor:crosshair"/>';
-    }
-    g += '<text x="195" y="306" class="dim">點選格子試著畫出題目要求的圖形</text>';
-    g += '<text id="counter" x="195" y="328" class="lbl">已選：0 格</text>';
+  function gridScene(caption){
+    const x0=139,y0=28,cell=18,n=6;
+    let g=text(195,15,caption,'cap');
+    for(let r=0;r<=n;r++) g+='<line x1="'+x0+'" y1="'+(y0+r*cell)+'" x2="'+(x0+n*cell)+'" y2="'+(y0+r*cell)+'" stroke="var(--grid)" stroke-width="1"/>';
+    for(let c=0;c<=n;c++) g+='<line x1="'+(x0+c*cell)+'" y1="'+y0+'" x2="'+(x0+c*cell)+'" y2="'+(y0+n*cell)+'" stroke="var(--grid)" stroke-width="1"/>';
+    for(let r=0;r<n;r++) for(let c=0;c<n;c++)
+      g+='<rect class="gcell" data-r="'+r+'" data-c="'+c+'" x="'+(x0+c*cell+1)+'" y="'+(y0+r*cell+1)+'" width="'+(cell-2)+'" height="'+(cell-2)+'" fill="transparent" stroke="none"/>';
+    g+=text(195,158,'點選格子試著畫出題目要求的圖形','dim');
     return wrap(g);
   }
 
-  const HINTS = [
-    '用眼睛和量具比比看：四邊等長就夠了嗎？',
-    '用直角尺量量看，再選出符合的選項。',
-    '每格邊長 1 公分，點選格子試著畫畫看。',
-    '每格邊長 1 公分，點選格子試著畫畫看。',
-    '四邊總長已知，想想正方形有幾條等長的邊。',
-    '量量看四個角和四條邊，這是什麼圖形？',
-    '數數看有幾根長吸管、幾根短吸管。',
-    '直徑已經標在圖上，比對正方形的邊。',
-    '比較兩個圖形的邊和角，找出錯誤的敘述。',
-    '小心圓角與平行四邊形，量量看再選。'
-  ];
+  /* ---------- 四選項（與題庫 SSOT 文字一致） ---------- */
+  const CHOICES = {
+    1:['對，四邊等長的圖形一定是正方形','對，但這句話只適用於長方形','不對，四邊等長還可能是菱形，必須再檢查有沒有直角','不對，因為四邊等長的圖形不是四邊形'],
+    2:['(1) ㄅ、ㄈ　(2) ㄆ、ㄈ　(3) ㄈ　(4) ㄅ','(1) ㄅ、ㄈ　(2) ㄆ、ㄈ　(3) ㄆ　(4) ㄅ','(1) ㄅ、ㄈ　(2) ㄆ、ㄈ　(3) ㄈ　(4) ㄇ','(1) ㄆ、ㄈ　(2) ㄅ、ㄈ　(3) ㄈ　(4) ㄅ'],
+    3:['每邊 2 格，周長 8 公分','每邊 4 格，周長 16 公分','每邊 4 格，周長 8 公分','每邊 8 格，周長 16 公分'],
+    4:['8 格，周長 16 公分','15 格，周長 16 公分','15 格，周長 8 公分','5 格，周長 15 公分'],
+    5:['20 公分','40 公分','80 公分','160 公分'],
+    6:['三角形','正方形','長方形','圓形'],
+    7:['邊長為 2 公分的正方形','邊長為 4 公分的正方形','邊長分別是 2 公分和 4 公分的長方形','排不出正方形或長方形'],
+    8:['4 公分','8 公分','16 公分','32 公分'],
+    9:['正方形和長方形都有四條邊。','正方形和長方形都有四個直角。','長方形的每條邊都一樣長。','長方形有兩對一樣的邊長。'],
+    10:['(1) 正方形：ㄇ、ㄉ　(2) 長方形：ㄅ、ㄊ','(1) 正方形：ㄆ、ㄉ　(2) 長方形：ㄅ、ㄊ','(1) 正方形：ㄇ、ㄉ　(2) 長方形：ㄆ、ㄊ','(1) 正方形：ㄆ、ㄈ　(2) 長方形：ㄅ、ㄉ']
+  };
+  const LABEL=['A','B','C','D'];
 
-  const scene = document.getElementById('scene');
-  scene.insertAdjacentHTML('afterbegin', (scenes[qNum] || scenes[1])());
-  // 底部 44px 為可拖曳量具保留區：移除會被量具遮住的冗餘說明（提示已於頁尾重複呈現）
-  const counter0 = document.getElementById('counter');
-  if (counter0) counter0.setAttribute('y', '292');
-  scene.querySelectorAll('text').forEach(function (t) {
-    const y = parseFloat(t.getAttribute('y'));
-    if (y >= 296 && t.id !== 'counter') t.remove();
+  /* ---------- 渲染 ---------- */
+  const scene=document.getElementById('scene');
+  scene.innerHTML=(SCENES[qNum]||SCENES[1])();
+  const svg=scene.querySelector('svg');
+  document.getElementById('qtag').textContent='Q'+String(qNum).padStart(2,'0');
+
+  const optionsEl=document.getElementById('options');
+  (CHOICES[qNum]||CHOICES[1]).forEach(function(c,i){
+    const row=document.createElement('div');
+    row.className='opt'; row.setAttribute('role','button'); row.setAttribute('tabindex','0');
+    row.innerHTML='<span class="k">'+LABEL[i]+'</span><span class="t">'+esc(c)+'</span>';
+    const toggle=()=>row.classList.toggle('sel');
+    row.addEventListener('click',toggle);
+    row.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+    optionsEl.appendChild(row);
   });
-  document.getElementById('qtag').textContent = 'Q' + String(qNum).padStart(2, '0');
-  document.getElementById('hint').textContent = HINTS[qNum - 1];
 
-  // 點選圖形：標記（只有提示記號，沒有答案文字）
-  scene.addEventListener('click', function (e) {
-    const shape = e.target.closest('.shape');
-    if (shape) shape.classList.toggle('marked');
-    const cell = e.target.closest('.gcell');
-    if (cell) {
-      const on = cell.getAttribute('fill') === 'transparent';
-      cell.setAttribute('fill', on ? 'var(--accent)' : 'transparent');
-      cell.setAttribute('opacity', on ? '0.45' : '1');
-      const n = scene.querySelectorAll('.gcell[fill="var(--accent)"]').length;
-      const c = document.getElementById('counter');
-      if (c) c.textContent = '已選：' + n + ' 格';
+  /* ---------- 互動：三角板檢測按鈕（僅 Q01/Q02/Q10） ---------- */
+  const ctrl=document.getElementById('ctrl');
+  const detectBtn=document.getElementById('detectBtn');
+  const DETECT={1:'📐 用三角板比四個角',2:'📐 顯示三角板直角檢測／等邊刻度',10:'📐 顯示三角板直角檢測／等邊刻度'};
+  if(DETECT[qNum]){
+    detectBtn.textContent=DETECT[qNum];
+    detectBtn.addEventListener('click',function(){
+      if(qNum===1){ svg.classList.toggle('detect-on'); }
+      else {
+        const figs=scene.querySelectorAll('.figure');
+        const on=scene.querySelectorAll('.figure.marked').length < figs.length;
+        figs.forEach(function(f){ f.classList.toggle('marked',on); });
+      }
+    });
+  } else { ctrl.style.display='none'; }
+
+  /* ---------- 互動：點選圖形／吸管／格子 ---------- */
+  scene.addEventListener('click',function(e){
+    const fig=e.target.closest('.figure');
+    if(fig && qNum!==1){ fig.classList.toggle('marked'); return; }
+    if(qNum===1){
+      const g=e.target.closest('g'); if(g) return;
+    }
+    const straw=e.target.closest('.straw');
+    if(straw){
+      straw.classList.toggle('picked');
+      const short=scene.querySelectorAll('.straw[data-len="2"].picked').length;
+      const long=scene.querySelectorAll('.straw[data-len="4"].picked').length;
+      svg.classList.toggle('ready',short===2&&long===2);
+      return;
+    }
+    const cell=e.target.closest('.gcell');
+    if(cell){
+      const on=cell.getAttribute('fill')==='transparent';
+      cell.setAttribute('fill',on?'var(--accent)':'transparent');
+      cell.setAttribute('opacity',on?'0.45':'1');
     }
   });
-
-  // 真實 pointer 事件拖曳量具
-  const tool = document.getElementById('tool');
-  let dragging = false, ox = 0, oy = 0;
-  tool.addEventListener('pointerdown', function (e) {
-    dragging = true;
-    const r = tool.getBoundingClientRect(), s = scene.getBoundingClientRect();
-    ox = e.clientX - r.left; oy = e.clientY - r.top;
-    tool.setPointerCapture(e.pointerId);
-  });
-  tool.addEventListener('pointermove', function (e) {
-    if (!dragging) return;
-    const s = scene.getBoundingClientRect();
-    const x = Math.max(0, Math.min(s.width - tool.offsetWidth, e.clientX - s.left - ox));
-    const y = Math.max(0, Math.min(s.height - tool.offsetHeight, e.clientY - s.top - oy));
-    tool.style.left = x + 'px'; tool.style.top = y + 'px';
-    tool.style.right = 'auto'; tool.style.bottom = 'auto';
-  });
-  const stop = () => { dragging = false; };
-  tool.addEventListener('pointerup', stop);
-  tool.addEventListener('pointercancel', stop);
 })();
 </script>
 </body>
