@@ -1,0 +1,109 @@
+{
+  "project_id": "N316",
+  "grade": "G3",
+  "curriculum_code": "N-3-16",
+  "title": "重量：「公斤」、「公克」",
+  "asset_policy": {
+    "mimi_ssot_root": "../036_local_painter/theater/assets_hosts/g3_mimi/ready",
+    "forbid_other_asset_roots": true,
+    "mouth_sequence_dir": "ready/mouth_frames_v2",
+    "visual_model_called": false,
+    "comfyui_redraw_called": false
+  },
+  "paths": {
+    "temp_work_dir": "_scratch/mimi_n316",
+    "blackboard_dir": "_scratch/mimi_n316/blackboard",
+    "timeline": "_scratch/mimi_n316/timeline.json",
+    "output_video": "app/assets/classroom_videos/N316_Final.mp4"
+  },
+  "video_spec": {
+    "resolution": [1920, 1080],
+    "fps": 30,
+    "tts_voice": "zh-TW-HsiaoChenNeural",
+    "tts_rate": "-5%",
+    "pause_after_scene_seconds": 1.5
+  },
+  "layers": {
+    "layer1_bg": "tools/mimi_classroom/mimi_assets/classroom_bg_pure.png",
+    "layer2_blackboard_roi": { "x_min": 580, "y_min": 120, "x_max": 1820, "y_max": 780 },
+    "layer3_mimi": {
+      "stance": { "feet_x": 305, "feet_y": 845, "render_height": 680, "scale_relative_to_n313": 0.948, "spec_feet_x": 320, "clearance_note": "spec x=320 實測 loop_ask 右手距黑板框僅 40.5px；改 305 後最窄淨空 50.5px" },
+      "scale_from_2048": 0.33203125,
+      "mouth_patch_center_2048": [1021, 985],
+      "mouth_patch_size_2048": [400, 168]
+    },
+    "lighting": {
+      "contact_shadow": { "color_rgba": [35, 20, 10, 0.42], "blur_px": 14, "aspect": [1, 0.25], "width": 298 },
+      "warm_ambient": { "tint_ratio": 0.04, "tint_rgb": [255, 232, 176], "highlight_reduction": 0.02 },
+      "alpha_feather_px": 1.5
+    }
+  },
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "label": "開場破題：大西瓜 vs 小迴紋針",
+      "mimi_pose": "mimi_apose_standard.png",
+      "animation": ["loop_apose.webm"],
+      "narration": "各位小朋友好！今天我們來學重量。重量就是東西有多重。你看，這顆大西瓜有三公斤，旁邊這枚小迴紋針只有一公克。比較重，我們用「公斤」；比較輕，就用「公克」。",
+      "blackboard_render": {
+        "title": "S01 · 比一比：誰比較重？",
+        "banner": "比較重用「公斤（kg）」，比較輕用「公克（g）」"
+      }
+    },
+    {
+      "scene_id": "S02",
+      "label": "1 公斤＝1000 公克（天平）",
+      "mimi_pose": "mimi_arm_raised.png",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "一公斤到底有多少呢？看這座天平，左邊放一個一公斤的砝碼，右邊放十個一百公克的砝碼，兩邊剛好一樣重！所以一公斤等於一千公克，記作一 kg 等於一千 g。",
+      "blackboard_render": {
+        "title": "S02 · 認識 1 公斤與 1000 公克",
+        "banner": "1 公斤（kg） ＝ 1000 公克（g）"
+      }
+    },
+    {
+      "scene_id": "S03",
+      "label": "看磅秤：每小格代表多少",
+      "mimi_pose": "mimi_pose_ask.png",
+      "animation": ["loop_ask.webm"],
+      "narration": "讀磅秤的時候，要先看清楚一小格代表多少。左邊這座一公斤的秤，零到五百公克分成十小格，每小格是五十公克，紅針指在六百五十公克。右邊這座三公斤的秤，零到一公斤分成十小格，每小格是一百公克，紅針指在一公斤四百公克。",
+      "blackboard_render": {
+        "title": "S03 · 讀磅秤：先算 1 小格",
+        "banner": "左秤每格 50 g → 650 g；右秤每格 100 g → 1400 g"
+      }
+    },
+    {
+      "scene_id": "S04",
+      "label": "複名數換算與補零陷阱",
+      "mimi_pose": "mimi_arm_raised.png",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "換算的時候要小心補零。二公斤四百五十公克，就是二千加四百五十，等於二千四百五十公克。四公斤八十公克，是四千加八十，等於四千零八十公克；百位記得補零，不要寫成四百八十公克喔。",
+      "blackboard_render": {
+        "title": "S04 · 複名數換算：補零陷阱",
+        "banner": "4 公斤 80 公克 ＝ 4080 公克（百位補 0）"
+      }
+    },
+    {
+      "scene_id": "S05",
+      "label": "容器扣重（淨重）應用題",
+      "mimi_pose": "mimi_pose_hips.png",
+      "animation": ["loop_hips.webm"],
+      "narration": "連籃子一起秤，要記得扣掉籃子的重量。空籃子重三百五十公克，連籃裝蘋果一共是二公斤一百五十公克。先把二公斤一百五十公克換成二千一百五十公克，再減去三百五十公克，等於一千八百公克，也就是一公斤八百公克。",
+      "blackboard_render": {
+        "title": "S05 · 連籃稱重要扣空籃",
+        "banner": "2150 公克 － 350 公克 ＝ 1800 公克 ＝ 1 公斤 800 公克"
+      }
+    },
+    {
+      "scene_id": "S06",
+      "label": "重量解題三步口訣總結",
+      "mimi_pose": "mimi_thumbs_up.png",
+      "animation": ["loop_thumbs_up.webm"],
+      "narration": "最後記住三步口訣：第一步記進率，一公斤等於一千公克；第二步看秤面，先算一小格代表五十公克還是一百公克；第三步算淨重，未滿百公克要補零，連籃稱重要記得扣空籃。我們下次見，拜拜！",
+      "blackboard_render": {
+        "title": "S06 · 重量解題三步口訣",
+        "banner": "記進率、看秤面、算淨重"
+      }
+    }
+  ]
+}
