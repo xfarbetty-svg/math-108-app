@@ -37,10 +37,27 @@
   .scene .hit.on .wood { stroke:var(--accent); }
   .scene .tap { stroke:transparent; stroke-width:18; stroke-linecap:round; pointer-events:stroke; }
   .scene .joint { fill:var(--line); pointer-events:none; }
+  /* q=2 圓規複製教具專用 */
+  .progress { font-size:10px; font-weight:700; color:var(--accent); white-space:nowrap; }
+  .compass { transition:transform .28s ease; pointer-events:none; }
+  .scene .c-leg, .scene .c-handle { stroke:var(--line); stroke-width:3.5; stroke-linecap:round; }
+  .scene .c-pivot { fill:var(--paper); stroke:var(--line); stroke-width:2; }
+  .scene .c-cap { fill:var(--line); }
+  .scene .c-foot { fill:var(--accent); }
+  .scene .seg.sel .seg-line { stroke:var(--accent); stroke-width:6; }
+  .scene .copy-seg { stroke-linecap:round; stroke-width:6; }
+  .scene .copy-tick { fill:none; stroke-width:2.5; }
+  #measureTag { font-size:11px; fill:var(--accent); font-weight:700; pointer-events:none; }
   .footer { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
             padding:0 16px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
   .footer .hint { font-size:10px; color:var(--muted); max-width:270px; }
   .footer .count { font-size:10px; color:var(--muted); font-weight:700; white-space:nowrap; }
+  .q2 .footer { padding:0 10px; gap:8px; }
+  .act { font-family:inherit; font-size:11px; font-weight:700; padding:5px 10px; border-radius:8px;
+         border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer;
+         -webkit-appearance:none; appearance:none; white-space:nowrap; }
+  .act:disabled { opacity:.4; cursor:default; }
+  .act.reset { background:transparent; color:var(--ink); border-color:var(--border-color); }
 
 /* G3 窄屏_one-screen 收斂 */
 #q-focus, .q-focus, .qtag, #qtag {
@@ -57,6 +74,7 @@ svg text { max-width: 100%; }
   <div class="footer"><span class="hint" id="hint"></span><span class="count" id="count">已標記 0 處</span></div>
 </div>
 
+<script src="../js/audio_manager.js"></script>
 <script>
 (function () {
   'use strict';
@@ -131,24 +149,59 @@ svg text { max-width: 100%; }
     return wrap(s);
   }
 
-  // 圓規題：折線甲 + A 點虛線 + 圓規
+  // 圓規題：折線甲 + A 點虛線 + 可操作圓規（真實量距／張合／逐段截取）
+  const Q2_PTS = [[56, 110], [108, 86], [162, 130], [216, 94], [268, 138]];
+  const Q2_COLORS = ['#f4694b', '#3b82f6', '#16a34a', '#a855f7'];
+  const Q2_X0 = 56, Q2_X1 = 336, Q2_Y = 240, Q2_LEG = 72;
+
+  // 以垂直平分線定位圓規：兩腳（局部 ±half, Q2_LEG）旋轉 φ 後精準落在線段兩端。
+  function compassPose(a, b) {
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    const len = Math.sqrt(dx * dx + dy * dy);
+    const phi = Math.atan2(dy, dx);
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    return {
+      len: len, half: len / 2, rot: phi * 180 / Math.PI,
+      qx: mx + Q2_LEG * Math.sin(phi), qy: my - Q2_LEG * Math.cos(phi)
+    };
+  }
+
+  function compassMarkup() {
+    return '<g id="compass" class="compass" data-state="idle" data-half="28" data-rot="0" ' +
+      'transform="translate(300,168) rotate(0)">' +
+      '<line class="c-handle" x1="0" y1="0" x2="0" y2="-14"/>' +
+      '<circle class="c-cap" cx="0" cy="-15" r="3"/>' +
+      '<circle class="c-pivot" cx="0" cy="0" r="4.5"/>' +
+      '<line class="c-leg" x1="0" y1="0" x2="-28" y2="' + Q2_LEG + '"/>' +
+      '<line class="c-leg" x1="0" y1="0" x2="28" y2="' + Q2_LEG + '"/>' +
+      '<circle class="c-foot" cx="-28" cy="' + Q2_LEG + '" r="3.5"/>' +
+      '<circle class="c-foot" cx="28" cy="' + Q2_LEG + '" r="3.5"/>' +
+      '</g>';
+  }
+
   function compassScene() {
-    let s = txt(195, 24, '以 A 點為起點，在虛線上畫出和甲線一樣長的線', 'cap');
-    const pts = [[56, 96], [108, 72], [162, 116], [216, 80], [268, 124]];
-    for (let i = 0; i < pts.length - 1; i++) {
-      s += '<line class="hit" data-kind="seg" x1="' + pts[i][0] + '" y1="' + pts[i][1] + '" x2="' + pts[i + 1][0] + '" y2="' + pts[i + 1][1] + '" stroke="var(--line)" stroke-width="4"/>';
+    let s = txt(195, 20, '以 A 點為起點，在虛線上畫出和甲線一樣長的直線', 'cap');
+    s += '<g id="segs">';
+    for (let i = 0; i < Q2_PTS.length - 1; i++) {
+      const a = Q2_PTS[i], b = Q2_PTS[i + 1];
+      s += '<g class="hit seg" data-kind="seg" data-idx="' + i + '">' +
+        '<line class="seg-line" x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] +
+        '" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/>' +
+        '<line class="tap" x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"/>' +
+        '</g>';
     }
-    pts.forEach((p) => { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4" fill="var(--ink)"/>'; });
-    s += txt(38, 84, '甲', 'lbl');
-    s += '<line x1="56" y1="238" x2="332" y2="238" stroke="var(--grid)" stroke-width="2" stroke-dasharray="7 6"/>';
-    s += '<circle cx="56" cy="238" r="5" fill="var(--ink)"/>';
-    s += txt(56, 262, 'A', 'lbl');
-    s += '<circle cx="296" cy="122" r="6" fill="none" stroke="var(--line)" stroke-width="3"/>';
-    s += '<line x1="294" y1="128" x2="278" y2="196" stroke="var(--line)" stroke-width="4"/>';
-    s += '<line x1="300" y1="128" x2="316" y2="196" stroke="var(--line)" stroke-width="4"/>';
-    s += txt(297, 216, '圓規', 'dim');
-    s += txt(195, 300, '甲線有幾個轉折點？先數一數', 'dim');
-    s += txt(195, 326, '虛線左端是 A 點', 'dim');
+    s += '</g>';
+    Q2_PTS.forEach((p) => { s += '<circle class="joint" cx="' + p[0] + '" cy="' + p[1] + '" r="4"/>'; });
+    s += '<text id="measureTag" x="0" y="0" text-anchor="middle" style="display:none">✓ 已量取</text>';
+    s += txt(34, 88, '甲', 'lbl');
+    s += '<line x1="' + Q2_X0 + '" y1="' + Q2_Y + '" x2="' + Q2_X1 + '" y2="' + Q2_Y +
+         '" stroke="var(--grid)" stroke-width="2" stroke-dasharray="7 6"/>';
+    s += '<circle cx="' + Q2_X0 + '" cy="' + Q2_Y + '" r="5" fill="var(--ink)"/>';
+    s += txt(Q2_X0, 264, 'A', 'lbl');
+    s += '<g id="drawLayer"></g>';
+    s += compassMarkup();
+    s += txt(195, 292, '① 點折線甲的一段量距　② 按下方按鈕逐段截取', 'dim');
+    s += '<text id="q2hint" x="195" y="316" class="dim" text-anchor="middle">圓規量的是長度，形狀可以從折線變成直線</text>';
     return wrap(s);
   }
 
@@ -199,8 +252,99 @@ svg text { max-width: 100%; }
   document.getElementById('qtag').textContent = 'Q' + String(qNum).padStart(2, '0');
   document.getElementById('hint').textContent = HINTS[qNum - 1];
 
+  if (qNum === 2) {
+    document.getElementById('app').classList.add('q2');
+    document.querySelector('.topbar').insertAdjacentHTML('beforeend',
+      '<span id="q2progress" class="progress">已複製 0 / 4 段</span>');
+    document.querySelector('.footer').innerHTML =
+      '<button id="btnPlace" class="act" disabled>📍 移到 A 點虛線截取此段</button>' +
+      '<button id="btnReset" class="act reset">↺ 重置</button>';
+
+    const segEls = Array.prototype.slice.call(scene.querySelectorAll('.seg'));
+    const segs = [];
+    for (let i = 0; i < Q2_PTS.length - 1; i++) segs.push(compassPose(Q2_PTS[i], Q2_PTS[i + 1]));
+    const drawLayer = scene.querySelector('#drawLayer');
+    const compass = scene.querySelector('#compass');
+    const measureTag = scene.querySelector('#measureTag');
+    const q2hint = scene.querySelector('#q2hint');
+    const btnPlace = document.getElementById('btnPlace');
+    const btnReset = document.getElementById('btnReset');
+    const progress = document.getElementById('q2progress');
+    let selected = -1, cursor = Q2_X0, copied = 0;
+
+    function setCompass(pose, state) {
+      compass.setAttribute('transform', 'translate(' + pose.qx.toFixed(1) + ',' + pose.qy.toFixed(1) +
+        ') rotate(' + pose.rot.toFixed(1) + ')');
+      const legs = compass.querySelectorAll('.c-leg');
+      const feet = compass.querySelectorAll('.c-foot');
+      const h = pose.half.toFixed(1);
+      legs[0].setAttribute('x2', -h); legs[1].setAttribute('x2', h);
+      feet[0].setAttribute('cx', -h); feet[1].setAttribute('cx', h);
+      compass.setAttribute('data-half', h);
+      compass.setAttribute('data-rot', pose.rot.toFixed(1));
+      compass.setAttribute('data-state', state);
+    }
+    function clearSelection() {
+      segEls.forEach(function (g) { g.classList.remove('sel'); });
+      measureTag.style.display = 'none';
+      selected = -1;
+      btnPlace.disabled = true;
+    }
+    function reset() {
+      drawLayer.innerHTML = '';
+      cursor = Q2_X0; copied = 0;
+      progress.textContent = '已複製 0 / 4 段';
+      clearSelection();
+      setCompass({ qx: 300, qy: 168, half: 28, rot: 0 }, 'idle');
+      q2hint.textContent = '圓規量的是長度，形狀可以從折線變成直線';
+    }
+
+    segEls.forEach(function (g, idx) {
+      g.addEventListener('click', function () {
+        selected = idx;
+        segEls.forEach(function (o) { o.classList.remove('sel'); });
+        g.classList.add('sel');
+        setCompass(segs[idx], 'measuring');
+        measureTag.setAttribute('x', (Q2_PTS[idx][0] + Q2_PTS[idx + 1][0]) / 2);
+        measureTag.setAttribute('y', (Q2_PTS[idx][1] + Q2_PTS[idx + 1][1]) / 2 - 16);
+        measureTag.style.display = '';
+        btnPlace.disabled = false;
+        q2hint.textContent = '圓規已張開對齊第 ' + (idx + 1) + ' 段，按按鈕移到虛線截取。';
+      });
+    });
+
+    btnPlace.addEventListener('click', function () {
+      if (selected < 0) return;
+      const pose = segs[selected];
+      const len = pose.len;
+      if (cursor + len > Q2_X1) {
+        q2hint.textContent = '虛線空間不足，請按「↺ 重置」重新量取。';
+        return;
+      }
+      const x1 = cursor, x2 = cursor + len;
+      const color = Q2_COLORS[copied % Q2_COLORS.length];
+      drawLayer.insertAdjacentHTML('beforeend',
+        '<line class="copy-seg" data-copy="' + (copied + 1) + '" x1="' + x1.toFixed(1) + '" y1="' + Q2_Y +
+        '" x2="' + x2.toFixed(1) + '" y2="' + Q2_Y + '" stroke="' + color + '"/>' +
+        '<path class="copy-tick" d="M ' + (x2 - 8).toFixed(1) + ' ' + Q2_Y + ' A 8 8 0 0 1 ' +
+        (x2 + 8).toFixed(1) + ' ' + Q2_Y + '" stroke="' + color + '"/>' +
+        '<circle cx="' + x2.toFixed(1) + '" cy="' + Q2_Y + '" r="3.5" fill="' + color + '"/>');
+      cursor = x2; copied += 1;
+      progress.textContent = '已複製 ' + copied + ' / 4 段';
+      setCompass({ qx: (x1 + x2) / 2, qy: Q2_Y - Q2_LEG, half: len / 2, rot: 0 }, 'placed');
+      clearSelection();
+      q2hint.textContent = copied === 4
+        ? '已複製 4 段！想想看：折線拉直後和甲線有什麼關係？'
+        : '已截取到第 ' + copied + ' 段，換一段再量量看。';
+    });
+
+    btnReset.addEventListener('click', reset);
+    reset();
+  }
+
   let marked = 0;
   scene.addEventListener('click', function (e) {
+    if (qNum === 2) return; // q=2 由圓規專屬事件處理，不套用標記計數
     const t = e.target.closest('.hit');
     if (!t) return;
     const on = !t.classList.contains('on');

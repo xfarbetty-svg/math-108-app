@@ -25,7 +25,7 @@ function findChrome() {
 function startServer() {
   return new Promise((resolve) => {
     const server = http.createServer((req, res) => {
-      let fp = path.join(process.cwd(), req.url.replace(/^\//, ''));
+      let fp = path.join(process.cwd(), req.url.split('?')[0].replace(/^\//, ''));
       try {
         const stat = fs.statSync(fp);
         if (stat.isDirectory()) fp = path.join(fp, 'index.html');
@@ -178,6 +178,45 @@ async function main() {
       if (overflow) throw new Error(`${lab.file} 手機 390px 橫向溢出！`);
       console.log(`PASS 390px 視口零橫向溢出`);
 
+      // S-3-2 / S-3-4 已改版為「單題＋專屬按鈕／圓規」介面（無 switchAct/tab-act），
+      // 改驗真實 API，避開 stale 的 switchAct 斷言。
+      if (lab.file === 'square_rectangle_lab.html' || lab.file === 'solid_geometry_lab.html') {
+        if (lab.file === 'solid_geometry_lab.html') {
+          await send('Page.navigate', { url: `http://127.0.0.1:${httpPort}/app/components/solid_geometry_lab.html?q=2` });
+          await new Promise((r) => setTimeout(r, 800));
+          const q2 = await evaluate(`(() => {
+            const seg = document.querySelectorAll('.seg');
+            if (!seg.length) return { seg: 0 };
+            seg[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            return {
+              seg: seg.length,
+              state: document.getElementById('compass').dataset.state,
+              enabled: !document.getElementById('btnPlace').disabled,
+              qtag: document.getElementById('qtag').textContent,
+              h: document.getElementById('app').offsetHeight
+            };
+          })()`);
+          if (q2.seg !== 4 || q2.state !== 'measuring' || !q2.enabled || q2.qtag !== 'Q02' || q2.h > 420)
+            throw new Error('solid_geometry_lab: Q2 圓規量距 API 異常 ' + JSON.stringify(q2));
+          console.log('PASS S-3-4 Q2 圓規量距與按鈕啟用驗證通過');
+        } else {
+          const before = await evaluate(`(() => ({
+            btn: !!document.getElementById('detectBtn'),
+            h: document.getElementById('app').offsetHeight,
+            qtag: document.getElementById('qtag').textContent,
+            on: document.getElementById('scene').querySelector('svg').classList.contains('detect-on')
+          }))()`);
+          if (!before.btn || before.qtag !== 'Q01' || before.h > 420) throw new Error('square_rectangle_lab: Q01 渲染或高度異常 ' + JSON.stringify(before));
+          await evaluate(`document.getElementById('detectBtn').click()`);
+          const after = await evaluate(`document.getElementById('scene').querySelector('svg').classList.contains('detect-on')`);
+          if (before.on === after) throw new Error('square_rectangle_lab: 三角板檢測按鈕未切換 detect-on');
+          console.log('PASS S-3-2 Q01 三角板檢測按鈕切換驗證通過');
+        }
+        if (consoleErrors.length > 0) throw new Error(`${lab.file} Console 錯誤: ` + consoleErrors.join('; '));
+        console.log(`PASS ${lab.file} 0 console errors`);
+        continue;
+      }
+
       for (let act = 1; act <= 4; act++) {
         await evaluate(`switchAct(${act})`);
         await new Promise((r) => setTimeout(r, 100));
@@ -208,24 +247,6 @@ async function main() {
         const bubbleCount = await evaluate(`document.querySelectorAll('#diff-bubbles-container .diff-bubble').length`);
         if (bubbleCount === 0) throw new Error('pattern_reasoning_lab: 揭示規律差值氣泡未生成！');
         console.log('PASS R-3-2 Act 3 找規律數列卡片非空白與差值氣泡驗證通過');
-      }
-
-      if (lab.file === 'square_rectangle_lab.html') {
-        await evaluate(`switchAct(1); markSides('sq');`);
-        const markCount = await evaluate(`document.querySelectorAll('#sq-marks .tick-mark').length`);
-        if (markCount !== 4) throw new Error('square_rectangle_lab: 正方形四邊等長標記未生成！');
-        console.log('PASS S-3-2 Act 1 四邊等長標記驗證通過');
-
-        await evaluate(`switchAct(3); animateFold();`);
-        const isFolded = await evaluate(`document.getElementById('paper').classList.contains('folded')`);
-        if (!isFolded) throw new Error('square_rectangle_lab: 3D 摺紙對摺動畫失敗！');
-        console.log('PASS S-3-2 Act 3 3D 摺紙對摺重合驗證通過');
-
-        await evaluate(`switchAct(4); fillGrid();`);
-        await new Promise((r) => setTimeout(r, 300));
-        const gridUpdated = await evaluate(`document.getElementById('grid-info').innerText.includes('鋪設') || document.getElementById('grid-info').innerText.includes('鋪滿')`);
-        if (!gridUpdated) throw new Error('square_rectangle_lab: 面積方格鋪設計數未更新！');
-        console.log('PASS S-3-2 Act 4 面積方格鋪設驗證通過');
       }
 
       if (consoleErrors.length > 0) throw new Error(`${lab.file} Console 錯誤: ` + consoleErrors.join('; '));

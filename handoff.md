@@ -1,41 +1,46 @@
-# 專案交接日誌 (Handoff Log)
+## 2026-11-22 App Shell 統一 A/B/C/D 選項（最新交接）
+- 外殼已統一渲染題幹＋4 選項＋作答回饋（concept/steps/trap）；S-3-2 教具內重複選項列已移除並維持 260px；G3 教具舊選項列由 iframe 注入 CSS 隱藏。
+- 新閘門 `tools/verify_shell_choices_cdp.js`：20/20 組合（360/390 × Light/Dark × 5 單元）Exit 0，截圖在 `_scratch/shell_choices_shots/`。
+- 十道腳本全數 Exit 0；`verify_s34.js` 首輪因殘留 `q-badge` CSS Exit 1，已單點清除後重跑 Exit 0。
+- 驗收報告：`reports/20261122_005_APP_SHELL_CHOICES_RENDER.md`。`AGENTS.md`、`handoff.md`、N315/N316 reports、`_scratch/` 為既有未提交工作，未 stage。
+- 本框已 45+ 步，請開新框接續。
 
-> 任何 Agent、任何電腦接手前**必讀**；收工前**必改寫**。本檔只放當前最新進度與下一步，一頁內讀完。
+# 交接（2026-11-22 第三批收官）
 
----
+## 已完成
+- commit `91c08b1`：R-3-1/R-3-2/D-3-1 共 26 題真題替換＋三教具不劇透場景＋S-3-4 q=2 裁切修復＋驗收報告。
+- 六道法定閘門全綠（Exit 0），證據見 `reports/20261122_R31_R32_D31_REAL_EXAM_FIX.md`。
 
-## ⏯️ 目前做到哪
-- **【斷點｜G3 真題普查未完成】**（2026-11-22）：22 份 `EXAM REAL/G3` 卷已全數唯讀擷取為文字＋頁面圖（64 頁，EXIT=0）；7 批逐題抽取完成 5 批（A1/A2/A3/A4/A6，共 484 題，皆覆核計數吻合），A5／A7 兩批未寫檔。基準雙檔與統計總表尚未產出。完整斷點見 [`reports/20261122_001_G3_REAL_EXAM_CENSUS_HANDOFF.md`](reports/20261122_001_G3_REAL_EXAM_CENSUS_HANDOFF.md)。**開新框先接這條**：確認 A5/A7 抽取檔 → 跑 `python _scratch/real_exam_pool/assemble_pool.py` → 貼 S-3-2／S-3-4 前 10 題預覽 → 暫停待選題。做好前禁改 `data/units/G3/*.json`。
-- **G3 第二棒全線收官並上線（2026-11-22）**：N-3-1（Q01 補至 4 選項／Q02、Q05 `answer_raw` 對齊正解／fallback 統一 420）、N-3-3（Q09 補至 4 選項）修復完成。
-- R-3-1／R-3-2／D-3-1 各補 Q06–Q10（共 15 題），前 5 題補 `trap`／`fallback_height:420`／`?q=1..5`，後 5 題 `?q=6..10`；三教具新增 q-badge/q-focus 十段模式、Light/Dark 色票，D-3-1 移除 `100vh`。
-- 新增 `tools/verify_r31.js`、`verify_r32.js`、`verify_d31.js`、`verify_g3_contract_240.js`；功能 commit `a2efb4c` 已 push，pre-push hook 部署 `8c503201.math-108.pages.dev`。
+## 待覆核（下框第一件事）
+- D-3-1 `?q=10` 重截 PNG 大小未變，舊 act 表格疑似仍從 q-scene 下方透出／右側裁切；需用真 CDP（非 Chrome CLI 快取）重截並目視。詳見報告 DEGRADED 標註。
 
-## 🚦 目前狀態
-- 🟢 8 道指令 Exit 0：三單元靜態驗證、240 題契約、CDP 雙模式 60 張截圖、curriculum131、app_shell、全 G3 體檢（240/240、shorts=[]、答案／選項異常 0）。
-- 🟢 線上：https://math-108.pages.dev （Cloudflare Pages 自動部署成功）。
-- ⚠️ 工作樹尚有 2 個既有未追蹤報告：`reports/20261122_N315_ACCEPTANCE.md`、`reports/20261122_N316_ACCEPTANCE.md`（非本次產出，勿動）。
-- ⚠️ 全 G3 體檢剩 78 筆 WARN（68 fallback_height、10 詳解欄位），皆在範圍外既有單元，第二棒未擴大改寫。
-- 📝 L3／031 記憶中樞已停用，無需更新。
+## 未提交（使用者工作，勿動）
+- `M AGENTS.md`、`?? reports/20261122_N315_ACCEPTANCE.md`、`?? reports/20261122_N316_ACCEPTANCE.md`、`_scratch/` 全部。
 
-## ➡️ 下一步
-1. 若要把上述 78 筆 WARN 清零，另開第三棒並先取得授權（這是全局正規化，違反軍規三外科手術原則）。
-2. 若要清理 N315／N316 untracked 報告，另案先問使用者。
-3. 目前無功能待辦；新單元比照 `reports/20261122_G3_AUDIT_AND_BATCH2_COMPLETE.md` 的「修復→補題→教具→靜態→CDP→報告→push」管線。
+## 環境
+- 本框已 45+ 步，請開新框繼續。
 
-## ⚠️ 注意事項與避坑
-- **`answer_raw` 必須等於 `choices[answer_index]`**：全 G3 契約掃描會擋；只改字串不改正解索引（軍規二）。
-- **教具 q-mode 慣例**：`#q-badge` 必為 `Q01..Q10`、`#q-focus` 不可空白、主容器≤420px、`theme-tokens.css`＋`THEME_CHANGE` 橋接缺一不可。
-- **CDP 雙模式**：`Page.navigate` 後須 `postMessage(THEME_CHANGE)` 再量測；Light/Dark 底色相同即視為雙模式失效。
-- **SSOT 母片**：角色只讀 `D:\ANTIGRAVITY\036_local_painter\theater\assets_hosts\g3_mimi\ready\` 的 `loop_*.webm`＋`mouth_frames_v2/`；禁讀 mp4 預覽、禁 Antigravity。
-- <!-- DEGRADED: 通道二 A Server SSH 無私鑰／密碼，歷次皆改本機 gh + pre-push hook 部署；bundle/scp 步驟未執行。 -->
+## 2026-11-22 G3 窄屏寬度零裁切修復（交接）
+- 體檢：tools/verify_g3_viewport_width.js，224 path × 2 視口；pre 80 異常 → post 0 溢出 Exit 0。
+- 修復 11 支元件：6 支響應式寬度、2 支 .q-focus CSS nesting 還原、5 支高度收斂；新增 tools/_cdp_util.js、verify_d31_q10_cdp.js、verify_g3_viewport_width.js。
+- D-3-1 ?q=10 四張雙模式截圖目視確認舊表格殘影消失，CDP Exit 0。
+- 驗收報告：reports/20261122_G3_VIEWPORT_WIDTH_FIX.md
 
-## 🕐 最後更新
-- 2026-11-22 17:55 · Hy4 Flash @ DESKTOP-6ELKIRH（G3 真題普查斷點寫入）
-- Git：功能 `a2efb4c` ✅ 已推；收工同步（AGENTS.md／handoff.md／普查斷點報告）待推。
+## 2026-11-22 S-3-2 四大災難根治（交接）
+- commit `cc71420` 已 push 上線（Cloudflare Pages 部署成功）；4 檔：教具 HTML、S-3-2.json、verify_s32.js、reports/20261122_004_S32_ONESCREEN_FIX.md。
+- 假 L 尺移除；Q01 左正方形/右等邊菱形＋三角板切換；Q02/Q10 點擊＋檢測鍵；Q05–Q09 乾淨幾何；Q07 吸管拼框；補 4 選項列；高度 420→260。
+- 四道門禁 Exit 0；CDP 20 張雙視口雙模式截圖 FAILURES=0；互動實測 FAILURES=0；證據在 `_scratch/s32_shots/`（已隔離）。
+- 關鍵發現：外殼 index.html/shell.js 從未渲染 4 選項，原「選項被擠出螢幕」真因是選項 DOM 不存在；本次於教具內補四列緊湊選項列（未自建提交按鈕、未嵌答案）。
+- 工作區 `M AGENTS.md`、`M handoff.md`、`?? N315/N316 報告` 仍為使用者原有工作，勿動。
+- 本框已 45+ 步，請開新框繼續。
 
-## 20261122 S-3-2 / S-3-4 真題替換批次（本輪收尾）
-- 已完成 S-3-2 全 10 題段考真題替換、S-3-4 清為 4 題真題（含 N-3-1 積木跨域 2 題）。
-- 兩教具已重修：S-3-2 一題一圖且不劇透；S-3-4 移除超綱分頁與浮動題號徽章。
-- 五道門禁 exit 0；CDP 28/28 雙模式截圖量測 exit 0。驗收報告：reports/20261122_S32_S34_REAL_EXAM_FIX.md。
-- 下次接續：S-3-4 題組 Q02 為作圖題轉方法辨識，如需更貼近原卷可再覆核；111-1期末 三(2) 試算答案仍標【待覆核】。
-- 既有未提交 AGENTS.md 記事與 N315/N316 報告非本輪改寫，未納入本 commit。
+
+
+## 2026-11-23 S-3-4 Q01 木棍圖重畫 + G3 題庫開發備註清洗（交接）
+- commit `a6fa716` 已 push origin main；pre-push hook 自動部署 Cloudflare Pages 成功（https://828aa95d.math-108.pages.dev）。
+- 教具：`app/components/solid_geometry_lab.html?q=1` 重畫為帶端點圓點的獨立木棍（圖①3／圖②5／圖③7 根），新增 2 根用暖色區分；每根可點擊變色、右上角 `#stickCount` 即時計數；白話操作說明已補上，移除「後面還有……／兩小題一起看／原卷」等內部備註。
+- 題庫清洗：`S-3-4`、`S-3-2`、`D-3-1`、`N-3-16`、`N-3-17` 共 67 處欄位（題幹／concept／steps／trap／title），移除學年期標籤、括號工程說明、複合選項結尾、嚴禁拆題、共用同一組、原卷／基準檔等用語；出處保留於 `exam_source`／`source_paper`。自行業餘掃描 234 題的非中繼欄位為 0 命中。
+- 驗收四道全 Exit 0：`verify_s34.js`、`verify_shell_choices_cdp.js`（20/20 組合）、`verify_g3_contract_240.js`、`verify_g3_viewport_width.js --phase post`（448 次量測 0 溢出）。
+- 截圖目視：`_scratch/s34_q1_shots/S-3-4_q1_390x844_{light,dark}.png` 已確認木棍可逐根辨識、無與題幹重疊。
+- 隔離未提交：`M AGENTS.md`、`M handoff.md`（本段交接追加）、`?? reports/20261122_N315_ACCEPTANCE.md`、`?? reports/20261122_N316_ACCEPTANCE.md`、`_scratch/` 全數未 stage。
+- 步數已達 45+，請開新框繼續。
