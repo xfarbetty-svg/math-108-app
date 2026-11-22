@@ -125,17 +125,20 @@ function resolveContinueTarget(p) {
 }
 function renderContinueBanner() {
   const p = loadProgress();
-  const code = resolveContinueTarget(p);
+  const isFresh = !p.last_active_unit;
+  // 首次訪客：入口改為「目前所選年級的第一個開放單元」，不再寫死 N-1-1 / N-3-1
+  const currentGrade = state.curriculum.grades.find((x) => x.grade === state.grade);
+  const firstOfGrade = currentGrade ? gradeReadyCodes(currentGrade)[0] : null;
+  const code = (isFresh && firstOfGrade) ? firstOfGrade : resolveContinueTarget(p);
   if (!code) return "";
   const g = state.curriculum.grades.find((x) => gradeReadyCodes(x).indexOf(code) !== -1);
   const meta = g && g.units.find((u) => u.code === code);
   const rec = p.units[code];
-  const isFresh = !p.last_active_unit;
   const doneUnits = gradeReadyCodes(g).filter((c) => p.units[c] && p.units[c].passed).length;
   const totalUnits = gradeReadyCodes(g).length;
   const title = isFresh
-    ? `▶ 從第一單元開始挑戰：N-1-1 / N-3-1`
-    : `▶ 繼續上次進度：${code} ${meta ? meta.title : ""}（已完成 ${doneUnits}/${totalUnits} 單元）`;
+    ? `從第一單元開始挑戰：${code} ${meta ? meta.title : ""}`
+    : `繼續上次進度：${code} ${meta ? meta.title : ""}（已完成 ${doneUnits}/${totalUnits} 單元）`;
   const sub = isFresh
     ? "點一下直接進入，往後可從進度徽章接續"
     : (rec && rec.done > 0 ? `本單元已作答 ${rec.done}/${rec.total} 題` : "尚未作答，點一下立即開始");

@@ -63,6 +63,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .topbar-inner { max-width: 960px; margin: 0 auto; padding: 10px 16px 12px; }
 .brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
 .brand h1 { font-size: 17px; font-weight: 800; letter-spacing: 0.5px; }
+.brand .sub { color: var(--ink-soft); }
 .btn-update {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 4px 10px; border-radius: 999px;
@@ -335,6 +336,55 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
+/* ===== Dark Mode 護眼覆寫：徹底消除螢光藍發光框與純白反白標籤 ===== */
+html[data-theme="dark"] body { background: var(--bg-main); }
+html[data-theme="dark"] .grade-btn.active,
+html[data-theme="dark"] .badge-ready,
+html[data-theme="dark"] .btn-check-main,
+html[data-theme="dark"] .btn-next,
+html[data-theme="dark"] .btn-update,
+html[data-theme="dark"] .continue-banner,
+html[data-theme="dark"] .unit-mode-btn.active { box-shadow: none; }
+html[data-theme="dark"] .grade-btn.active,
+html[data-theme="dark"] .badge-ready,
+html[data-theme="dark"] .btn-check-main,
+html[data-theme="dark"] .btn-next { color: #F8FAFC; }
+html[data-theme="dark"] .unit-card.ready { border-color: #3B4E6B; }
+
+/* 單元編號標籤（N-3-1 等）：深色微透底＋柔和霧藍字，嚴禁白底 */
+html[data-theme="dark"] .unit-card .code {
+  color: #93C5FD; background: #283548; border: 1px solid #3B4E6B;
+}
+html[data-theme="dark"] .unit-card.locked .code {
+  color: #94A3B8; background: #253042; border-color: #394861;
+}
+
+/* 頂部「108 課綱官方條目」標籤 */
+html[data-theme="dark"] .hero-card .stage-tag,
+html[data-theme="dark"] .brand .sub {
+  color: #CBD5E1; background: #253042; border: 1px solid #394861;
+}
+html[data-theme="dark"] .brand .sub { padding: 2px 8px; border-radius: 999px; }
+
+/* 頂部「🔄 更新」按鈕 */
+html[data-theme="dark"] .btn-update {
+  color: #E2E8F0; background: #253042; border: 1px solid #3B4A63;
+}
+
+/* 其餘寫死淺色的膠囊／分頁按鈕一併降為深色系 */
+html[data-theme="dark"] .badge-upcoming,
+html[data-theme="dark"] .badge-plan,
+html[data-theme="dark"] .unit-mode-tabs {
+  color: #94A3B8; background: #253042; border-color: #394861;
+}
+html[data-theme="dark"] .unit-mode-btn.active { color: #E2E8F0; background: #283548; }
+html[data-theme="dark"] .btn-speak,
+html[data-theme="dark"] .btn-draft,
+html[data-theme="dark"] .btn-finish-mini {
+  color: #CBD5E1; background: #253042; border-color: #3B4A63;
+}
+html[data-theme="dark"] .btn-draft:hover { background: #283548; }
+
 /* 手機 390px：header 乾淨分層，答題時隱藏年級列，拒絕右側擠壓 */
 @media (max-width: 699px) {
   .topbar-inner { padding: 6px 12px 8px; }
@@ -376,7 +426,7 @@ main { max-width: 960px; margin: 0 auto; padding: 20px 16px 0; }
         <h1>🎨 小數學冒險</h1>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <span class="sub" style="font-size:11px;color:var(--ink-soft)">108 課綱官方 131 條目 · 純離線真題</span>
+        <span class="sub" style="font-size:11px">108 課綱官方 131 條目 · 純離線真題</span>
         <button id="btnAppUpdate" class="btn-update" title="檢查與更新最新版本">🔄 更新</button>
         <button id="btnThemeToggle" class="btn-theme" title="切換 Light / Dark 模式" aria-label="切換深色模式">🌙</button>
       </div>

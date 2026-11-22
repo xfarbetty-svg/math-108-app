@@ -34,45 +34,46 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
-  --bg-main: #121826;
-  --bg-card: #1E293B;
-  --bg-elevated: #273549;
-  --text-primary: #F1F5F9;
+  /* 護眼霧霾藍／鼠尾草綠色票：移除高飽和螢光藍與發光效果的源頭 */
+  --bg-main: #161B26;
+  --bg-card: #1F2736;
+  --bg-elevated: #283244;
+  --text-primary: #E2E8F0;
   --text-secondary: #94A3B8;
   --border-color: #334155;
-  --accent-primary: #38BDF8;
-  --svg-stroke: #E2E8F0;
+  --accent-primary: #3B8276;
+  --svg-stroke: #CBD5E1;
 
-  /* 舊變數別名對應：讓 219 個既有教具無需逐條改色即自動適配 */
-  --bg: #121826;
-  --card: #1E293B;
-  --ink: #F1F5F9;
+  /* 舊變數別名對應：讓 219 個既有教具無需逐條改色即自動適配（全部降飽和） */
+  --bg: #161B26;
+  --card: #1F2736;
+  --ink: #E2E8F0;
   --ink-soft: #94A3B8;
   --line: #334155;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  --coral: #38BDF8;
-  --coral-deep: #7DD3FC;
-  --mint: #34D399;
-  --mint-deep: #10B981;
-  --sky: #38BDF8;
-  --sky-deep: #7DD3FC;
-  --lemon: #FBBF24;
-  --lemon-deep: #F59E0B;
-  --lilac: #C4B5FD;
-  --accent-soft: #38BDF8;
-  --accent-mint: #34D399;
-  --accent-sky: #38BDF8;
-  --accent-lemon: #FBBF24;
-  --accent-lilac: #C4B5FD;
+  --coral: #3B8276;
+  --coral-deep: #4A9E8F;
+  --mint: #4A9E8F;
+  --mint-deep: #3B8276;
+  --sky: #5B8AA8;
+  --sky-deep: #7BA7C0;
+  --lemon: #C9A227;
+  --lemon-deep: #A9821E;
+  --lilac: #9C8BB5;
+  --accent-soft: #263849;
+  --accent-mint: #4A9E8F;
+  --accent-sky: #5B8AA8;
+  --accent-lemon: #C9A227;
+  --accent-lilac: #9C8BB5;
   --shadow-color: rgba(0, 0, 0, 0.35);
-  --topbar-bg: rgba(18, 24, 38, 0.92);
-  --banner-bg: linear-gradient(135deg, #273549 0%, #1E293B 100%);
-  --banner-border: #38BDF8;
-  --banner-text: #7DD3FC;
-  --badge-done-bg: #064e3b;
-  --badge-done-text: #6EE7B7;
-  --badge-progress-bg: #7c2d12;
-  --badge-progress-text: #FDBA74;
+  --topbar-bg: rgba(22, 27, 38, 0.92);
+  --banner-bg: linear-gradient(135deg, #263849 0%, #1F2736 100%);
+  --banner-border: #3B4E6B;
+  --banner-text: #E2E8F0;
+  --badge-done-bg: #1E3A32;
+  --badge-done-text: #86D9B8;
+  --badge-progress-bg: #3A2E20;
+  --badge-progress-text: #D9B382;
 }
 
 /* 深底上的全域文字與表面基底（元件仍有自身樣式時以 inherit 為主） */
