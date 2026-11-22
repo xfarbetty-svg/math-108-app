@@ -27,13 +27,13 @@
     "layer1_bg": "tools/mimi_classroom/mimi_assets/classroom_bg_pure.png",
     "layer2_blackboard_roi": { "x_min": 580, "y_min": 120, "x_max": 1820, "y_max": 780 },
     "layer3_mimi": {
-      "stance": { "feet_x": 330, "feet_y": 690, "render_height": 480, "scale_relative_to_n313": 0.67 },
-      "scale_from_2048": 0.234375,
+      "stance": { "feet_x": 305, "feet_y": 845, "render_height": 680, "scale_relative_to_n313": 0.948, "spec_feet_x": 320, "clearance_note": "spec x=320 實測 loop_ask 右手距黑板框僅 40.5px；改 305 後最窄淨空 50.5px" },
+      "scale_from_2048": 0.33203125,
       "mouth_patch_center_2048": [1021, 985],
       "mouth_patch_size_2048": [400, 168]
     },
     "lighting": {
-      "contact_shadow": { "color_rgba": [35, 20, 10, 0.42], "blur_px": 14, "aspect": [1, 0.25], "width": 210 },
+      "contact_shadow": { "color_rgba": [35, 20, 10, 0.42], "blur_px": 14, "aspect": [1, 0.25], "width": 298 },
       "warm_ambient": { "tint_ratio": 0.04, "tint_rgb": [255, 232, 176], "highlight_reduction": 0.02 },
       "alpha_feather_px": 1.5
     }
