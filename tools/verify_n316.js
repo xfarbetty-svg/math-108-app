@@ -12,7 +12,8 @@ if (data.code !== 'N-3-16') errors.push('code 應為 N-3-16，實際 ' + data.co
 if (data.grade !== 3) errors.push('grade 應為 3');
 if (data.question_count !== 10) errors.push('question_count 應為 10，實際 ' + data.question_count);
 if (!Array.isArray(data.questions) || data.questions.length !== 10) errors.push('題數應為 10，實際 ' + (data.questions || []).length);
-const ANSWERS = [2,2,2,2,1,2,3,2,1,0];
+// 2026-11-22 第二批真題替換：10 題全數來自 docs/G3_REAL_EXAM_MASTER_POOL.md（內湖 111-2 期末／112-2 期中／114-2 期中）
+const ANSWERS = [0,2,2,2,1,1,3,2,1,1];
 data.questions.forEach((q, i) => {
   const tag = 'Q' + String(i + 1).padStart(2, '0');
   if (q.id !== 'G3-N-3-16-' + tag) errors.push(tag + ' id 錯誤：' + q.id);
@@ -22,6 +23,7 @@ data.questions.forEach((q, i) => {
   if (!q.answer_raw || q.choices[q.answer_index] !== q.answer_raw) errors.push(tag + ' answer_raw 與 choices[answer_index] 不一致');
   if (ANSWERS[i] !== q.answer_index) errors.push(tag + ' 正解索引應為 ' + ANSWERS[i] + '，實際 ' + q.answer_index);
   if (q.fallback_height !== 420) errors.push(tag + ' fallback_height 應為 420');
+  if (!q.exam_source || !q.exam_source.includes('臺北市內湖國小')) errors.push(tag + ' exam_source 應為真實內湖段考卷，實際 ' + q.exam_source);
   if (!q.explanation || !q.explanation.concept || !Array.isArray(q.explanation.steps) || !q.explanation.steps.length || !q.explanation.trap) errors.push(tag + ' 詳解缺 concept/steps/trap');
   const expectedPath = 'components/weight_concept_lab.html?q=' + (i + 1);
   if (q.component_path !== expectedPath) errors.push(tag + ' component_path 應為 ' + expectedPath + '，實際 ' + q.component_path);

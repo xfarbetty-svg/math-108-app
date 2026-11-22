@@ -210,7 +210,7 @@ async function main() {
     await send('Page.navigate', { url: pathToFileURL(compPath).href + '?q=10' });
     await sleep(900);
     const q10 = await evalJs('(() => ({ badge: document.getElementById("q-badge").textContent, focus: document.getElementById("q-focus").textContent, needle: document.getElementById("needle").style.transform, height: document.getElementById("app").offsetHeight }))()');
-    if (!q10 || q10.badge !== 'Q10' || !q10.focus.includes('2400')) fail('?q=10 視覺模式未生效：' + JSON.stringify(q10));
+    if (!q10 || q10.badge !== 'Q10' || !q10.focus.includes('2980')) fail('?q=10 視覺模式未生效：' + JSON.stringify(q10));
     if (!/^rotate\(-?[0-9.]+deg\)$/.test(q10.needle)) fail('SVG 指針 transform 非法：' + q10.needle);
     if (q10.height > 420) fail('?q=10 高度超標：' + q10.height);
     console.log('PASS: ?q=10 視覺模式、合法 rotate(' + q10.needle + ')、高度 ' + q10.height + 'px');

@@ -48,11 +48,12 @@ data.questions.forEach((q, idx) => {
   }
 });
 
-// 3. 數學真值校驗（SSOT 答案索引 1/0/1/2/1/2/1/2/3/0）
-const ANSWERS = [1, 0, 1, 2, 1, 2, 1, 2, 3, 0];
+// 3. 數學真值校驗（Q01/Q04/Q07 保留原 3 題；其餘 7 題為 111-2期中／112-2期末 段考真題）
+const ANSWERS = [1, 1, 2, 2, 1, 1, 1, 1, 1, 0];
 const RAW = [
-  '60秒 (1分鐘)', '下午 3 時 40 分', '45 分鐘', '54 小時', '下午 1:00',
-  '9 時 50 分 25 秒', '200 秒', '3 日', '下午 3 時 25 分', '1 小時 45 分'
+  '60秒 (1分鐘)', '② ╳ 錯誤', '③ ＝', '54 小時', '② 378 秒',
+  '(1)17 時 28 分　(2)下午 2 點 25 分　(3)0 分 1 秒', '200 秒',
+  '② 上午 11 時 45 分', '② 上午 7 時 35 分', '(1)7 小時 30 分　(2)5 盤'
 ];
 ANSWERS.forEach((ans, i) => {
   const q = data.questions[i];
@@ -65,16 +66,26 @@ ANSWERS.forEach((ans, i) => {
   }
 });
 
-// 4. 誘答迷思契約：Q07/Q09/Q10 必須含「100 進位／借 1 當 100」選項
+// 4. 誘答迷思契約：保留題 Q07 必須含「100 進位」選項；其餘真題迷思写在各題 trap
 const MISCONCEPTION = {
-  6: '100',   // Q07 320 秒（3 分當 300 秒）
-  8: '100',   // Q09 下午 2 時 85 分
-  9: '100'    // Q10 1 小時 85 分（借 1 時當 100 分）
+  6: '100'    // Q07 320 秒（3 分當 300 秒，誤用 100 進位）
 };
 Object.keys(MISCONCEPTION).forEach((k) => {
   const q = data.questions[Number(k)];
   if (q && !q.choices.some((c) => c.includes(MISCONCEPTION[k]))) {
     errors.push(`Q${String(Number(k) + 1).padStart(2, '0')} 缺少「誤用 100 進位」迷思誘答選項`);
+  }
+});
+
+// 4b. 真題來源契約：Q01/Q04/Q07 保留原 3 題，其餘 7 題須為真實內湖段考卷（禁假出處）
+[0, 3, 6].forEach((i) => {
+  if (!data.questions[i] || !data.questions[i].exam_source.includes('陽明')) {
+    errors.push(`Q${String(i + 1).padStart(2, '0')} 應為保留原真題（陽明 113-2 期中）`);
+  }
+});
+[1, 2, 4, 5, 7, 8, 9].forEach((i) => {
+  if (!data.questions[i] || !data.questions[i].exam_source.includes('臺北市內湖國小')) {
+    errors.push(`Q${String(i + 1).padStart(2, '0')} 應為內湖真實段考題，實際 ${data.questions[i] ? data.questions[i].exam_source : '缺題'}`);
   }
 });
 

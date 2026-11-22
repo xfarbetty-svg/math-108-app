@@ -162,6 +162,7 @@
             <!-- Needle -->
             <line id="needle" class="needle" x1="110" y1="135" x2="110" y2="87" />
             <circle cx="110" cy="135" r="5" fill="#c04848" />
+            <g id="question-marker"></g>
         </svg>
 
         <!-- Magnifier for Act 1 -->
@@ -336,16 +337,16 @@
         return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
     })();
     const Q_SCENES = {
-        1: { act:1, weight:0,    icon:'', hint:hints[0], focus:'Q01 1kg = 1000g' },
-        2: { act:2, weight:150,  icon:'🍎', hint:'蘋果 150g：10 個 10g 相加。', focus:'Q02 150g' },
-        3: { act:4, weight:2450, icon:'🍞', hint:'2 公斤 450 公克 = 2450 公克。', focus:'Q03 2000+450' },
-        4: { act:2, weight:2000, icon:'💧', hint:'2000 毫升的水重 2000 公克，也就是 2 公斤。', focus:'Q04 2000ml→2kg' },
-        5: { act:3, weight:0,    icon:'', hint:hints[2], focus:'Q05 歸零陷阱' },
-        6: { act:1, weight:1000, icon:'🍞', hint:'指針指在 1kg，等於 1000 公克。', focus:'Q06 1kg→1000g' },
-        7: { act:1, weight:3000, icon:'🍉', hint:'指針走 3 大格 = 3kg = 3000g。', focus:'Q07 3kg→3000g' },
-        8: { act:1, weight:3050, icon:'🍬', hint:'3 公斤 50 公克 = 3000 + 50 = 3050 公克（百位補 0）。', focus:'Q08 3050g' },
-        9: { act:4, weight:1130, icon:'🍬', hint:'650g + 480g = 1130g，滿千要進位。', focus:'Q09 650+480' },
-        10:{ act:1, weight:2250, icon:'🧺', hint:'含籃 2400g − 空籃 150g = 水果淨重 2250g。', focus:'Q10 2400−150' }
+         1: { act:1, weight:0,    marker:null, icon:'',    hint:'想一想：下面哪一個是稱重量的工具？秤面每一小格 10g，先觀察刻度與單位。', focus:'Q01 秤重工具' },
+         2: { act:2, weight:0,    marker:null, icon:'🦒', hint:'在（　）填「公斤」或「公克」：長頸鹿 1300( )、鳳梨 1.8( )、羽毛球 5( )。', focus:'Q02 公斤或公克' },
+         3: { act:1, weight:1989, marker:1989, icon:'🫘', hint:'紅豆 1989 公克，綠豆 1 公斤 989 公克，哪一袋比較重？先化成同一單位。', focus:'Q03 1989g vs 1kg989g' },
+         4: { act:4, weight:50,   marker:50,   icon:'🍚', hint:'9 公斤 50 公克＝（　）公克；想想 1 公斤等於多少公克。', focus:'Q04 9kg50g→?g' },
+         5: { act:1, weight:978,  marker:978,  icon:'🌾', hint:'7978 公克＝（　）公斤（　）公克；每滿 1000 公克換 1 公斤。', focus:'Q05 7978g→?kg?g' },
+         6: { act:2, weight:550,  marker:550,  icon:'🥛', hint:'秤面讀數約在 500g 與 1kg 之間，奶粉罐重 110 公克，奶粉淨重多少？', focus:'Q06 讀數與扣罐重' },
+         7: { act:1, weight:0,    marker:null, icon:'',    hint:'2 公斤 500 公克放上最大秤量 3kg 的圓形秤，指針會停在哪一段？（原卷為空白秤面畫指針）', focus:'Q07 2kg500g 指針' },
+         8: { act:2, weight:0,    marker:null, icon:'🏐', hint:'一顆排球 270 公克，10 顆連球車共重 5 公斤 500 公克，球車重多少？', focus:'Q08 排球扣重' },
+         9: { act:1, weight:0,    marker:null, icon:'🥩', hint:'1kg380g＋2kg556g＝？；42kg500g－39kg＝？ 兩題都要算。', focus:'Q09 買肉＋書包' },
+        10: { act:4, weight:2980, marker:3000, icon:'🛍️', hint:'購物袋限重 3 公斤：豆干 450g、海帶 400g、排骨 1kg100g、苦瓜 1kg30g、西瓜 2kg580g，怎樣放最多樣？', focus:'Q10 2980g / 3000g 限重' }
     };
     function applyQuestionMode() {
         const s = Q_SCENES[qNum] || Q_SCENES[1];
@@ -354,6 +355,19 @@
         currentWeight = s.weight;
         document.getElementById('tray-icon').textContent = s.icon;
         updateNeedle(currentWeight);
+        const markerG = document.getElementById('question-marker');
+        if (markerG) {
+          markerG.innerHTML = '';
+          if (s.marker != null) {
+            const deg = (s.marker / 3000) * 360;
+            const ml = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            ml.setAttribute('x1', '110'); ml.setAttribute('y1', '74');
+            ml.setAttribute('x2', '110'); ml.setAttribute('y2', '84');
+            ml.setAttribute('stroke', '#f59e0b'); ml.setAttribute('stroke-width', '3');
+            ml.setAttribute('transform', `rotate(${deg}, 110, 135)`);
+            markerG.appendChild(ml);
+          }
+        }
         document.getElementById('hint-text').innerText = s.hint;
         const f = document.getElementById('q-focus');
         f.textContent = s.focus;

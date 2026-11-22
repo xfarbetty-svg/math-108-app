@@ -224,16 +224,16 @@ async function main() {
 
     // 6. ?q=1..10 逐題巡檢：題目橫幅、對應時刻、時針聯動角度
     const EXPECT = [
-      { q: 1,  time: '10:00:00', hDeg: 300 },   // 10:00 → 10*30 + 0 = 300°
-      { q: 2,  time: '15:40:00', hDeg: 110 },   // 15:40 → (3*30)+40*0.5 = 110°
-      { q: 3,  time: '10:25:00', hDeg: 312.5 },
+      { q: 1,  time: '10:00:00', hDeg: 300 },
+      { q: 2,  time: '10:00:00', hDeg: 300 },
+      { q: 3,  time: '03:15:00', hDeg: 97.5 },
       { q: 4,  time: '09:00:00', hDeg: 270 },
-      { q: 5,  time: '11:40:00', hDeg: 350 },
-      { q: 6,  time: '09:50:25', hDeg: 295 },   // 9*30 + 50*0.5 = 295°
+      { q: 5,  time: '00:06:18', hDeg: 3 },
+      { q: 6,  time: '17:28:00', hDeg: 164 },
       { q: 7,  time: '00:03:20', hDeg: 1.5 },
-      { q: 8,  time: '00:00:00', hDeg: 0 },
-      { q: 9,  time: '14:45:00', hDeg: 82.5 },   // 14:45 → (2*30)+45*0.5 = 82.5°
-      { q: 10, time: '08:20:00', hDeg: 250 }
+      { q: 8,  time: '09:20:00', hDeg: 280 },
+      { q: 9,  time: '07:50:00', hDeg: 235 },
+      { q: 10, time: '13:30:00', hDeg: 45 }
     ];
     for (const exp of EXPECT) {
       await send('Page.navigate', { url: compUrl + '?q=' + exp.q });
@@ -260,29 +260,29 @@ async function main() {
     }
     console.log('PASS: ?q=1..10 十題逐題時刻、時針聯動角度、題目橫幅與單屏版面全綠');
 
-    // 6b. Q06 真實按鈕：撥到 9:50:25；Q09/Q10 演出進位與借位
+    // 6b. Q06 真實按鈕：24 時制對照；Q09 倒推；Q10 經過時間
     await send('Page.navigate', { url: compUrl + '?q=6' });
     await sleep(320);
     const q6 = await evalJs(`(() => {
       document.getElementById('q-action').click();
       return { d: document.getElementById('digital-display').innerText, r: document.getElementById('q-result').innerText };
     })()`);
-    if (q6.d !== '09:50:25') fail('Q06 撥到 9:50:25 失敗：' + JSON.stringify(q6));
+    if (q6.d !== '17:28:00') fail('Q06 對照 24 時制失敗：' + JSON.stringify(q6));
     await send('Page.navigate', { url: compUrl + '?q=9' });
     await sleep(320);
     const q9 = await evalJs(`(() => {
       document.getElementById('q-action').click();
       return document.getElementById('digital-display').innerText;
     })()`);
-    if (q9 !== '15:25:00') fail('Q09 14:45+40 分應為 15:25，實際 ' + q9);
+    if (q9 !== '07:35:00') fail('Q09 7:50 倒推 15 分應為 07:35，實際 ' + q9);
     await send('Page.navigate', { url: compUrl + '?q=10' });
     await sleep(320);
     const q10 = await evalJs(`(() => {
       document.getElementById('q-action').click();
       return document.getElementById('digital-display').innerText;
     })()`);
-    if (q10 !== '10:05:00') fail('Q10 8:20+1:45 應為 10:05，實際 ' + q10);
-    console.log('PASS: Q06 撥時刻／Q09 滿60進位／Q10 借1時當60分 真實按鈕事件全綠');
+    if (q10 !== '21:00:00') fail('Q10 13:30+7:30 應為 21:00，實際 ' + q10);
+    console.log('PASS: Q06 24時制／Q09 倒推／Q10 經過時間 真實按鈕事件全綠');
 
     // 7. Dark 模式 theme-token 高對比計算樣式檢查
     await send('Page.navigate', { url: compUrl + '?q=6' });

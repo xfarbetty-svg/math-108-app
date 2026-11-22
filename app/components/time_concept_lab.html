@@ -123,7 +123,7 @@
     <div class="title" id="act-title">Q01 · 秒的感受與60進位</div>
     <div class="mute-btn" onclick="speakHint()">🔊</div>
 </div>
-<div class="q-banner" id="q-banner">Q01 秒針走一圈＝60 秒＝1 分</div>
+<div class="q-banner" id="q-banner">Q01 秒針走一圈＝？秒＝？分</div>
 
 <div class="stage" id="main-stage">
     <div id="clock-container">
@@ -145,7 +145,7 @@
             <button id="auto-btn" onclick="toggleAuto()">▶️ 連續60秒</button>
             <button onclick="resetTime()">重置</button>
         </div>
-        <div class="sub-desc">秒針走 60 小格＝60 秒＝1 分，分針跟著前進 1 格。</div>
+        <div class="sub-desc">撥動秒針，觀察秒、分、時三針如何連動。</div>
     </div>
 
     <div id="act2" class="ui-panel">
@@ -154,7 +154,7 @@
             <button onclick="addTime(15)">+15 分</button>
             <button onclick="addTime(60)">+1 時</button>
         </div>
-        <div class="sub-desc">分針走一圈 60 分，時針同步走一大格 30°；滿 60 分要進 1 時。</div>
+        <div class="sub-desc">觀察分針與時針的連動關係，試著相加看看。</div>
     </div>
 
     <div id="act3" class="ui-panel">
@@ -164,13 +164,13 @@
             <button onclick="setTime(14,0)">14:00</button>
             <button onclick="setTime(20,30)">20:30</button>
         </div>
-        <div class="sub-desc">下午＝24 小時制減 12；1 日＝24 時。</div>
+        <div class="sub-desc">撥動時刻，對照 12 小時制與 24 小時制。</div>
     </div>
 
     <div id="act4" class="ui-panel">
-        <div class="movie-info">🎬 上午 10:45 開演 · 片長 90 分鐘</div>
+        <div class="movie-info">🎬 時間軸演示：起始時刻 ＋ 經過時間</div>
         <button onclick="playMovie()" id="movie-btn">🎞️ 模擬散場</button>
-        <div class="sub-desc" id="movie-result">10:45 ＋ 90 分 ＝ 中午 12:15</div>
+        <div class="sub-desc" id="movie-result">按下按鈕，觀察指針與時間軸的變化。</div>
     </div>
 
     <button id="q-action" onclick="runQAction()">演出本題</button>
@@ -196,16 +196,16 @@
 
     // ---- 題目場景：?q=1..10 對應 G3-N-3-17 十道題（唯一真理源由 N-3-17.json 提供）----
     const QUESTION_SCENES = {
-        1:  { act: 1, h: 10, m: 0,  s: 0,  short: '秒與分 60 進位',      banner: 'Q01 秒針走一圈＝60 秒＝1 分',            action: '演出 60 秒進 1 分',       tip: '秒針走滿 60 小格，分針前進 1 格。', fn: 'tick60' },
-        2:  { act: 3, h: 15, m: 40, s: 0,  short: '24 小時制',           banner: 'Q02 15:40 是下午 3 時 40 分',          action: '對照 12／24 小時制',      tip: '15 − 12 ＝ 3，所以是下午 3:40。', fn: 'demo24' },
-        3:  { act: 4, h: 10, m: 25, s: 0,  short: '經過時間（減）',      banner: 'Q03 10:25 → 11:10 經過多久？',        action: '演出 10:25→11:10',       tip: '借 1 時當 60 分：70 − 25 ＝ 45 分。', fn: 'demoElapsed45' },
-        4:  { act: 2, h: 9,  m: 0,  s: 0,  short: '日與時換算',          banner: 'Q04 2 日 6 時＝？小時',              action: '演出 1 日＝24 時',        tip: '2 × 24 ＝ 48，再加 6 ＝ 54 時。', fn: 'demoDays' },
-        5:  { act: 4, h: 11, m: 40, s: 0,  short: '跨午時間加法',        banner: 'Q05 11:40＋80 分＝？',              action: '演出 80 分鐘',            tip: '80 分＝1 時 20 分，跨中午是下午 1:00。', fn: 'demoAdd80' },
-        6:  { act: 1, h: 9,  m: 50, s: 25, short: '鐘面讀時刻（含秒）',  banner: 'Q06 讀出時、分、秒針的時刻',        action: '撥到 9:50:25',            tip: '時針在 9 與 10 之間，仍是 9 時；分針指 10＝50 分。', fn: 'demoSet' },
-        7:  { act: 1, h: 0,  m: 3,  s: 20, short: '分與秒換算',          banner: 'Q07 3 分 20 秒＝？秒',              action: '演出 1 分＝60 秒',        tip: '3 × 60 ＋ 20 ＝ 200 秒（不是 320 秒）。', fn: 'demoSec' },
-        8:  { act: 3, h: 0,  m: 0,  s: 0,  short: '時與日反向換算',      banner: 'Q08 72 小時＝？日',                action: '演出 1 日＝24 時',        tip: '72 ÷ 24 ＝ 3 日，不是「7 日 2 時」。', fn: 'demoDays72' },
-        9:  { act: 2, h: 14, m: 45, s: 0,  short: '時間加法（進位）',    banner: 'Q09 下午 2:45 再過 40 分？',       action: '演出＋40 分',             tip: '45＋40＝85 分＝1 時 25 分 → 下午 3:25。', fn: 'demoAdd40' },
-        10: { act: 4, h: 8,  m: 20, s: 0,  short: '經過時間（借位）',    banner: 'Q10 8:20 → 10:05 經過多久？',      action: '演出借 1 時當 60 分',    tip: '10:05 借 1 時變 9:65；65 − 20 ＝ 45，共 1 時 45 分。', fn: 'demoBorrow' }
+         1:  { act: 1, h: 10, m: 0,  s: 0,  short: '秒與分 60 進位',   banner: 'Q01 秒針走一圈＝？秒＝？分',            action: '演出 60 秒進 1 分',   tip: '秒針走滿 60 小格，分針前進 1 格。', fn: 'tick60' },
+         2:  { act: 1, h: 10, m: 0,  s: 0,  short: '秒針一圈概念',     banner: 'Q02 秒針轉 1 圈是 60 分鐘嗎？（對／錯）', action: '演出秒針走一圈',      tip: '1 小格是 1 秒；一圈是 60 秒。', fn: 'demoLap' },
+         3:  { act: 2, h: 3,  m: 15, s: 0,  short: '時分化分鐘比較',   banner: 'Q03 3 小時 15 分 ＝（　）分鐘？',        action: '演出 3 時 15 分',     tip: '1 小時＝60 分，先乘再加。', fn: 'demoH315' },
+         4:  { act: 2, h: 9,  m: 0,  s: 0,  short: '日與時換算',       banner: 'Q04 2 日 6 時＝？小時',                action: '演出 1 日＝24 時',    tip: '1 日＝24 時，先算整日再補零時。', fn: 'demoDays' },
+         5:  { act: 1, h: 0,  m: 6,  s: 18, short: '分秒換算',         banner: 'Q05 6 分鐘 18 秒 ＝（　）秒？',          action: '演出 6 分 18 秒',     tip: '1 分＝60 秒，先乘後加。', fn: 'demoM618' },
+         6:  { act: 3, h: 17, m: 28, s: 0,  short: '24/12 時制轉換',   banner: 'Q06 下午5:28、14:25、AM07:59:59 各是幾時幾分？', action: '對照 12／24 小時制', tip: '下午加 12、24 制減 12；注意 60 進位。', fn: 'demo24combo' },
+         7:  { act: 1, h: 0,  m: 3,  s: 20, short: '分與秒換算',       banner: 'Q07 3 分 20 秒＝？秒',                action: '演出 1 分＝60 秒',    tip: '3 × 60 ＋ 20，注意不是 100 進位。', fn: 'demoSec' },
+         8:  { act: 4, h: 9,  m: 20, s: 0,  short: '時刻推算',         banner: 'Q08 9:20 出發，開 2 時 25 分，幾時到花蓮？', action: '演出 2 時 25 分',   tip: '起始時刻加上經過時間。', fn: 'demoHualien' },
+         9:  { act: 3, h: 7,  m: 50, s: 0,  short: '時刻倒推',         banner: 'Q09 7:50AM 集合，走路 15 分，最慢幾時出門？', action: '倒推 15 分鐘',      tip: '最晚出門要從集合時刻往前減。', fn: 'demoSchool' },
+         10: { act: 4, h: 13, m: 30, s: 0,  short: '經過時間與盤數',   banner: 'Q10 13:30 到 21:00，每 90 分烤一盤，共幾盤？', action: '演出烤餅乾時間軸', tip: '先算經過時間，再化成分鐘除以每盤時間。', fn: 'demoCookies' }
     };
     const qRaw = parseInt(new URLSearchParams(location.search).get('q'), 10);
     const questionNo = (qRaw >= 1 && qRaw <= 10) ? qRaw : 1;
@@ -303,15 +303,15 @@
                 for (let i = 0; i < 60; i++) tickSec();
                 out.innerText = '60 小格走完 → ' + document.getElementById('digital-display').innerText + '（分針進 1 格）';
                 break;
-            case 'demo24': setTime(15, 40, 0); out.innerText = sc.tip; break;
-            case 'demoElapsed45': setTime(10, 25, 0); addTime(45); out.innerText = '10:25 + 45 分 → ' + document.getElementById('digital-display').innerText; break;
+            case 'demoLap': setTime(10, 0, 0); for (let i = 0; i < 60; i++) tickSec(); out.innerText = document.getElementById('digital-display').innerText + '（秒針走完一圈）'; break;
+            case 'demoH315': setTime(3, 15, 0); out.innerText = '3 時 15 分 → ' + (3 * 60 + 15) + ' 分鐘'; break;
             case 'demoDays': out.innerText = sc.tip; break;
-            case 'demoAdd80': setTime(11, 40, 0); addTime(80); out.innerText = '11:40 + 80 分 → ' + document.getElementById('digital-display').innerText + '（下午 1:00）'; break;
-            case 'demoSet': setTime(9, 50, 25); out.innerText = '9 時 50 分 25 秒（時針未到 10）'; break;
+            case 'demoM618': setTime(0, 6, 18); out.innerText = '6 分 18 秒 → ' + (6 * 60 + 18) + ' 秒'; break;
+            case 'demo24combo': setTime(17, 28, 0); out.innerText = '17:28 ／ 下午 2:25 ／ 07:59:59→08:00:00'; break;
             case 'demoSec': setTime(0, 3, 20); out.innerText = '3 × 60 + 20 = 200 秒'; break;
-            case 'demoDays72': out.innerText = '24 × 3 = 72 時 → 3 日'; break;
-            case 'demoAdd40': setTime(14, 45, 0); addTime(40); out.innerText = '14:45 + 40 分 → ' + document.getElementById('digital-display').innerText + '（下午 3:25）'; break;
-            case 'demoBorrow': setTime(8, 20, 0); addTime(105); out.innerText = '8:20 + 1 時 45 分 → ' + document.getElementById('digital-display').innerText + '（借 1 時當 60 分）'; break;
+            case 'demoHualien': setTime(9, 20, 0); addTime(145); out.innerText = '9:20 + 2 時 25 分 → ' + document.getElementById('digital-display').innerText; break;
+            case 'demoSchool': setTime(7, 35, 0); out.innerText = '7:50 − 15 分 → ' + document.getElementById('digital-display').innerText; break;
+            case 'demoCookies': setTime(13, 30, 0); addTime(450); out.innerText = '13:30 + 7 時 30 分 → ' + document.getElementById('digital-display').innerText; break;
             default: out.innerText = sc.tip;
         }
     }
@@ -373,7 +373,7 @@
         title.innerText = 'Q' + String(questionNo).padStart(2, '0') + ' · ' + sc.short;
         document.getElementById('q-banner').innerText = sc.banner;
         document.getElementById('q-action').innerText = sc.action;
-        document.getElementById('q-result').innerText = sc.tip;
+        document.getElementById('q-result').innerText = '';
     })();
 </script>
 <script>
