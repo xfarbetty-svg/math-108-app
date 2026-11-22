@@ -90,3 +90,5 @@
 - **Git**：本機 commit 僅含 `N35_Final.mp4` + `N35_script.json` + 本 handoff（`_scratch/` 被 gitignore）。
 - **下一步**：待用戶確認影片滿意 → 掛載 `app/shell.js`（N-3-5）→ `tools/release.py` → Cloudflare Pages 部署並 HTTP 200 驗真。
 ## 2026-11-22 三合一升級 已 commit ed7b730（223 檔）；三套門禁+CDP 截圖全綠 Exit 0；Dark 選項低對比已修正複拍。尚未 bundle/push/wrangler/curl；A Server user=xfarb 僅負責 push（反向 SSH 金鑰被拒，219 檔已按裁決本機改）。下次開新框 /startup 後接續上線。
+
+- 2026-11-22 N314 概念小教室：六幕圖卡 S01-S06 已產出並目視審查通過（ALL_PASS）；語音／合成／掛載／門禁／push 待續，交接詳見 _scratch/mimi_n314/HANDOFF.md。

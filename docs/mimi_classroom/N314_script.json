@@ -1,0 +1,109 @@
+{
+  "project_id": "N314",
+  "grade": "G3",
+  "curriculum_code": "N-3-14",
+  "title": "面積：平方公分",
+  "asset_policy": {
+    "mimi_ssot_root": "../036_local_painter/theater/assets_hosts/g3_mimi/ready",
+    "forbid_other_asset_roots": true,
+    "mouth_sequence_dir": "ready/mouth_frames_v2",
+    "visual_model_called": false,
+    "comfyui_redraw_called": false
+  },
+  "paths": {
+    "temp_work_dir": "_scratch/mimi_n314",
+    "blackboard_dir": "_scratch/mimi_n314/blackboard",
+    "timeline": "_scratch/mimi_n314/timeline.json",
+    "output_video": "app/assets/classroom_videos/N314_Final.mp4"
+  },
+  "video_spec": {
+    "resolution": [1920, 1080],
+    "fps": 30,
+    "tts_voice": "zh-TW-HsiaoChenNeural",
+    "tts_rate": "-5%",
+    "pause_after_scene_seconds": 1.5
+  },
+  "layers": {
+    "layer1_bg": "tools/mimi_classroom/mimi_assets/classroom_bg_pure.png",
+    "layer2_blackboard_roi": { "x_min": 580, "y_min": 120, "x_max": 1820, "y_max": 780 },
+    "layer3_mimi": {
+      "stance": { "feet_x": 330, "feet_y": 690, "render_height": 480, "scale_relative_to_n313": 0.67 },
+      "scale_from_2048": 0.234375,
+      "mouth_patch_center_2048": [1021, 985],
+      "mouth_patch_size_2048": [400, 168]
+    },
+    "lighting": {
+      "contact_shadow": { "color_rgba": [35, 20, 10, 0.42], "blur_px": 14, "aspect": [1, 0.25], "width": 210 },
+      "warm_ambient": { "tint_ratio": 0.04, "tint_rgb": [255, 232, 176], "highlight_reduction": 0.02 },
+      "alpha_feather_px": 1.5
+    }
+  },
+  "scenes": [
+    {
+      "scene_id": "S01",
+      "label": "開場破題：兩張色紙比不出來",
+      "mimi_pose": "mimi_apose_standard.png",
+      "animation": ["loop_apose.webm"],
+      "narration": "各位小朋友好！今天我們來學面積。這裡有兩張色紙：藍色是四乘三，橘色是六乘二。光把它們直接疊在一起，根本比不出來誰大。我們需要一個統一的面積單位。",
+      "blackboard_render": {
+        "title": "S01 · 比一比：兩張色紙誰大？",
+        "banner": "直接疊在一起也比不出來"
+      }
+    },
+    {
+      "scene_id": "S02",
+      "label": "認識 1 平方公分",
+      "mimi_pose": "mimi_arm_raised.png",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "先認識最小的單位：邊長一公分的正方形，它的面積就是一平方公分，也可以記作一 cm²。就像這樣，一格就是一平方公分。",
+      "blackboard_render": {
+        "title": "S02 · 面積的標準單位：1 平方公分",
+        "banner": "邊長 1 公分的正方形 = 1 平方公分 (1 cm²)"
+      }
+    },
+    {
+      "scene_id": "S03",
+      "label": "鋪方格數一數：12 = 12",
+      "mimi_pose": "mimi_pose_ask.png",
+      "animation": ["loop_ask.webm"],
+      "narration": "接著把色紙鋪在方格紙上數一數。藍色色紙剛好鋪滿十二格，所以是十二平方公分；橘色色紙也鋪滿十二格，也是十二平方公分。哇，兩張色紙一樣大！",
+      "blackboard_render": {
+        "title": "S03 · 鋪滿方格，數一數",
+        "banner": "藍色 = 12 平方公分，橘色 = 12 平方公分（一樣大！）"
+      }
+    },
+    {
+      "scene_id": "S04",
+      "label": "三角形：整格 + 半格",
+      "mimi_pose": "mimi_arm_raised.png",
+      "animation": ["loop_arm_raised.webm"],
+      "narration": "遇到三角形怎麼辦？看這個底四格、高三格的直角三角形，裡面有四個整格和四個半格。兩個半格可以拼成一個整格，所以四個半格等於兩個整格。四加二，等於六平方公分。",
+      "blackboard_render": {
+        "title": "S04 · 三角形面積：整格 + 半格",
+        "banner": "4 + 2 = 6 平方公分"
+      }
+    },
+    {
+      "scene_id": "S05",
+      "label": "周長 ≠ 面積",
+      "mimi_pose": "mimi_pose_hips.png",
+      "animation": ["loop_hips.webm"],
+      "narration": "要分清楚喔！周長是外圈一圈的長度，這張四乘三的長方形周長是十四公分；面積是裡面鋪了幾格，是十二平方公分。周長和面積，完全不同。",
+      "blackboard_render": {
+        "title": "S05 · 外圈周長 vs 內部面積",
+        "banner": "周長 ≠ 面積"
+      }
+    },
+    {
+      "scene_id": "S06",
+      "label": "三步口訣總結",
+      "mimi_pose": "mimi_thumbs_up.png",
+      "animation": ["loop_thumbs_up.webm"],
+      "narration": "最後記住三步口訣：第一步看單位，一公分正方形就是一平方公分；第二步先數整，先數整格再拼半格；第三步分清楚，外圈是周長，內部是面積。我們下次見，拜拜！",
+      "blackboard_render": {
+        "title": "S06 · 面積解題三步口訣",
+        "banner": "看單位、先數整、分清楚"
+      }
+    }
+  ]
+}
