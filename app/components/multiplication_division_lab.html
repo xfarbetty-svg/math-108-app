@@ -11,12 +11,26 @@
             --paper: #FDFBF7;
             --accent: #8B4513;
         }
+        html[data-theme="dark"] {
+            --brass: #C9A227; --wood: #334155; --paper: #1F2736; --accent: #86D9B8;
+        }
+        html[data-theme="dark"] body { background: var(--bg-main); color: var(--text-primary); }
+        html[data-theme="dark"] .view p,
+        html[data-theme="dark"] #act2-desc,
+        html[data-theme="dark"] .formula-display { color: var(--text-primary); }
+        html[data-theme="dark"] .formula-display { border-color: var(--border-color); background: var(--bg-elevated); }
+        html[data-theme="dark"] .notebook { background: var(--bg-card); border-color: var(--border-color); color: var(--text-primary); }
+        html[data-theme="dark"] .tab { background: var(--bg-elevated); color: var(--text-primary); }
+        html[data-theme="dark"] .tab.active { background: var(--paper); color: var(--accent); }
+        html[data-theme="dark"] .btn { background: var(--accent-primary); }
+        .q-badge { position: absolute; top: 3px; right: 8px; background: var(--brass); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 7px; border-radius: 10px; z-index: 500; }
+        .q-focus { position: absolute; top: 28px; right: 8px; max-width: 170px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 2px 7px; font-size: 9px; font-weight: bold; color: var(--text-primary); z-index: 500; pointer-events: none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
             width: 390px; height: 420px;
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            background: #2c2c2c;
+            background: #d7ccc8;
             overflow: hidden;
             display: flex; flex-direction: column;
         }
@@ -100,7 +114,7 @@
     <script src="../js/audio_manager.js"></script>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
-<body>
+<body id="app">
 
 <div class="tabs">
     <button class="tab active" id="tab-act1" onclick="switchAct(1)">1. 互逆家族</button>
@@ -110,6 +124,8 @@
 </div>
 
 <div class="viewport">
+    <div id="q-badge" class="q-badge"></div>
+    <div id="q-focus" class="q-focus"></div>
     <!-- Act 1 -->
     <div id="act-1-view" class="view active">
         <div class="title">點擊卡片：旋轉探索 4 個等價算式！</div>
@@ -256,7 +272,41 @@
         document.getElementById('magic-ans').innerText = "";
     }
 
-    switchAct(1);
+    // ?q=1..10 題號視覺模式（與題庫 component_path 對齊）
+    const qNum = (() => {
+        const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
+        return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
+    })();
+    const Q_SCENES = {
+        1:  { act:1, focus:'Q01 56÷7＝8', hint:'乘法與除法互為逆運算，倒過來看就是除法。' },
+        2:  { act:2, focus:'Q02 □×6＝54', hint:'把乘以 6 移到右邊，變成 54÷6。' },
+        3:  { act:2, focus:'Q03 48÷□＝8', hint:'除數未知時，想成 8×□＝48。' },
+        4:  { act:3, focus:'Q04 商×除數＋餘數', hint:'有餘數的除法要記得把餘數加回去。' },
+        5:  { act:3, focus:'Q05 餘數必須＜除數', hint:'餘數等於或大於除數時，商還能再增加。' },
+        6:  { act:1, focus:'Q06 用乘法驗算 63÷7', hint:'驗算除法用「商×除數＝被除數」。' },
+        7:  { act:4, focus:'Q07 □×6＝48', hint:'已知積與一個因數，用除法找另一個因數。' },
+        8:  { act:4, focus:'Q08 □÷7＝8', hint:'已知商與除數，用乘法找被除數。' },
+        9:  { act:3, focus:'Q09 7×8＋1＝57', hint:'商×除數＋餘數＝被除數，檢查是否等於 57。' },
+        10: { act:4, focus:'Q10 48÷7＝6餘6', hint:'先算 6×8＝48，再每 7 片裝一袋。' }
+    };
+    function applyQuestionMode() {
+        const s = Q_SCENES[qNum] || Q_SCENES[1];
+        document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
+        switchAct(s.act);
+        document.getElementById('q-focus').textContent = s.focus;
+        if (s.act === 2) document.getElementById('act2-desc').textContent = s.hint;
+        if (s.act === 4) {
+            const MAGIC = { 7:'□ × 6 = 48', 8:'□ ÷ 7 = 8', 10:'48 ÷ 7 = ?' };
+            if (MAGIC[qNum]) {
+                document.getElementById('magic-q').textContent = MAGIC[qNum];
+                document.getElementById('magic-ans').textContent = '';
+                currentMagic = 0;
+            }
+        }
+        speak(s.hint);
+    }
+    window.addEventListener('DOMContentLoaded', applyQuestionMode);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') applyQuestionMode();
 </script>
 <script>
 /* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */

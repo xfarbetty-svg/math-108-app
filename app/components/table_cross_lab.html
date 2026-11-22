@@ -12,14 +12,35 @@
             --led-red: #ff3333;
             --highlight: rgba(255, 255, 0, 0.25);
         }
+        html[data-theme="light"] {
+            --station-bg: #FFF9F0; --led-orange: #C2410C; --led-green: #166534;
+            --led-red: #B91C1C; --highlight: rgba(244, 105, 75, 0.22);
+        }
+        html[data-theme="dark"] {
+            --station-bg: #161B26; --led-orange: #FF9900; --led-green: #86D9B8;
+            --led-red: #E07A6A; --highlight: rgba(59, 130, 118, 0.35);
+        }
+        html[data-theme="light"] #app-container { border-color: var(--border-color); color: var(--text-primary); }
+        html[data-theme="light"] .marquee-container { background: var(--bg-elevated); border-bottom-color: var(--border-color); }
+        html[data-theme="light"] nav { background: var(--bg-elevated); }
+        html[data-theme="light"] .tab { color: var(--text-secondary); border-right-color: var(--border-color); }
+        html[data-theme="light"] .tab.active { background: var(--bg-card); color: var(--accent-primary); }
+        html[data-theme="light"] th { background: var(--bg-elevated); color: var(--accent-primary); }
+        html[data-theme="light"] td { border-color: var(--border-color); color: var(--text-primary); }
+        html[data-theme="light"] #price-info { background: var(--bg-card); border-color: var(--border-color); color: var(--text-primary); }
+        html[data-theme="light"] .btn-action { background: var(--accent-primary); color: #fff; }
+        html[data-theme="light"] .voice-btn { background: var(--bg-elevated); }
+        html[data-theme="dark"] #app-container { color: var(--text-primary); }
+        .q-badge { position:absolute; top:3px; right:8px; background:var(--led-orange); color:#111; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:500; }
+        .q-focus { position:absolute; top:28px; right:8px; max-width:190px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            background: #111827;
+            background: var(--bg-main);
             margin: 0; padding: 0;
             display: flex; justify-content: center; align-items: flex-start;
-            height: 100vh; overflow: hidden;
+            min-height: 100dvh; overflow: hidden;
         }
 
         #app-container {
@@ -99,6 +120,8 @@
 <body>
 
 <div id="app-container">
+    <div id="q-badge" class="q-badge"></div>
+    <div id="q-focus" class="q-focus"></div>
     <!-- 跑馬燈 -->
     <div class="marquee-container">
         <div class="marquee-text" id="marquee">🚄 歡迎來到二維表格實驗室！點選上方標籤開始探索！</div>
@@ -280,7 +303,33 @@
         }
     }
 
-    switchAct(1);
+    // ?q=1..10 題號視覺模式（與題庫 component_path 對齊）
+    const qNum = (() => {
+        const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
+        return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
+    })();
+    const Q_SCENES = {
+        1:  { act:1, focus:'Q01 一維 vs 二維表格' },
+        2:  { act:2, focus:'Q02 台北→台中 700 元' },
+        3:  { act:3, focus:'Q03 10:05 − 09:00' },
+        4:  { act:3, focus:'Q04 10:30 前抵達' },
+        5:  { act:2, focus:'Q05 對角線標「—」' },
+        6:  { act:1, focus:'Q06 12＋9＋？＋7＝35' },
+        7:  { act:1, focus:'Q07 28＋31＋25＋？＝120' },
+        8:  { act:2, focus:'Q08 800 − (300＋450)' },
+        9:  { act:2, focus:'Q09 15 − 9 ＝ 6 人' },
+        10: { act:3, focus:'Q10 103 次 09:40→10:25' }
+    };
+    function applyQuestionMode() {
+        const s = Q_SCENES[qNum] || Q_SCENES[1];
+        document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
+        document.getElementById('q-focus').textContent = s.focus;
+        switchAct(s.act);
+        document.getElementById('marquee').textContent = '🚄 ' + s.focus;
+        speak(s.focus);
+    }
+    window.addEventListener('DOMContentLoaded', applyQuestionMode);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') applyQuestionMode();
 </script>
 <script>
 /* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */

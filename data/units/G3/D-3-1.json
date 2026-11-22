@@ -2,7 +2,7 @@
   "code": "D-3-1",
   "title": "一維表格與二維表格",
   "grade": 3,
-  "question_count": 5,
+  "question_count": 10,
   "verified_source": "台北市忠孝國小 114-1 期末 / 高雄市陽明國小 113-2 期中段考試卷",
   "questions": [
     {
@@ -18,13 +18,16 @@
       ],
       "answer_index": 1,
       "answer_raw": "二維表格",
-      "component_path": "components/table_cross_lab.html",
+      "component_path": "components/table_cross_lab.html?q=1",
       "explanation": {
         "concept": "二維表格結構定義",
         "steps": [
           "同時具有橫列（列標題）與直欄（欄標題）兩個維度交叉對照的表格，稱為二維表格。"
-        ]
-      }
+        ],
+        "trap": "只有單一方向標題的是一維；要同時有橫列與直欄標題才叫二維表格。"
+      },
+      "component": "table_cross_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-D-3-1-Q02",
@@ -39,13 +42,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "台北到台中的票價是 700 元",
-      "component_path": "components/table_cross_lab.html",
+      "component_path": "components/table_cross_lab.html?q=2",
       "explanation": {
         "concept": "二維交叉讀取意義",
         "steps": [
           "橫向台北向右延伸，縱向台中向下延伸，交叉點的數值即代表該起訖點之票價（700元）。"
-        ]
-      }
+        ],
+        "trap": "交叉處的數字是「票價」不是公里數；讀表前先看標題與單位。"
+      },
+      "component": "table_cross_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-D-3-1-Q03",
@@ -60,13 +66,16 @@
       ],
       "answer_index": 1,
       "answer_raw": "1 小時 5 分鐘",
-      "component_path": "components/table_cross_lab.html",
+      "component_path": "components/table_cross_lab.html?q=3",
       "explanation": {
         "concept": "行車時間計算",
         "steps": [
           "到達時間 10:05 減去出發時間 09:00 = 1 小時 5 分鐘。"
-        ]
-      }
+        ],
+        "trap": "時間相減要分段：10:05−09:00 是 1 小時 5 分，不是 55 分。"
+      },
+      "component": "table_cross_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-D-3-1-Q04",
@@ -81,13 +90,16 @@
       ],
       "answer_index": 0,
       "answer_raw": "甲車",
-      "component_path": "components/table_cross_lab.html",
+      "component_path": "components/table_cross_lab.html?q=4",
       "explanation": {
         "concept": "時刻條件比較",
         "steps": [
           "10:05 早於 10:30，符合要求；10:40 晚於 10:30 會遲到。"
-        ]
-      }
+        ],
+        "trap": "10:30 是期限，10:40 已超時；不能只看「有到達」就選那一班。"
+      },
+      "component": "table_cross_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-D-3-1-Q05",
@@ -102,13 +114,156 @@
       ],
       "answer_index": 1,
       "answer_raw": "因為起點與終點相同不需要搭車",
-      "component_path": "components/table_cross_lab.html",
+      "component_path": "components/table_cross_lab.html?q=5",
       "explanation": {
         "concept": "二維對稱表格對角線物理意涵",
         "steps": [
           "起點站與終點站相同代表原地不動，無須乘車，因此無對應之票價。"
-        ]
-      }
+        ],
+        "trap": "同站起訖不用搭車才標「—」，不是沒座位也不是免費。"
+      },
+      "component": "table_cross_lab",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-D-3-1-Q06",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "section": "三、表格題",
+      "question_num": 2,
+      "title": "一維統計表總計反推",
+      "stem": "三年甲班社團投票統計：足球 12 人、舞蹈 9 人、棋藝（　）人、美術 7 人。全班 35 人，每人只選一項，棋藝有幾人？",
+      "choices": [
+        "6 人",
+        "7 人",
+        "8 人",
+        "9 人"
+      ],
+      "answer_index": 1,
+      "answer_raw": "7 人",
+      "explanation": {
+        "concept": "一維表格的總計反推",
+        "steps": [
+          "已知三項合計：12 ＋ 9 ＋ 7 ＝ 28 人。",
+          "全班 35 人，所以棋藝 ＝ 35 − 28 ＝ 7 人。",
+          "檢查：12 ＋ 9 ＋ 7 ＋ 7 ＝ 35，正確。"
+        ],
+        "trap": "別把 35 直接減某一項；要先把已知的三個數字全部加起來再相減。"
+      },
+      "component": "table_cross_lab",
+      "component_path": "components/table_cross_lab.html?q=6",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-D-3-1-Q07",
+      "exam_source": "高雄市陽明國小 113-2 期中",
+      "section": "三、表格題",
+      "question_num": 5,
+      "title": "班級借書總計反推",
+      "stem": "四個班級借書統計：甲班 28 本、乙班 31 本、丙班 25 本、丁班（　）本，合計 120 本。丁班借了幾本？",
+      "choices": [
+        "34 本",
+        "35 本",
+        "36 本",
+        "37 本"
+      ],
+      "answer_index": 2,
+      "answer_raw": "36 本",
+      "explanation": {
+        "concept": "一維表格缺漏值計算",
+        "steps": [
+          "前三班合計：28 ＋ 31 ＋ 25 ＝ 84 本。",
+          "丁班 ＝ 120 − 84 ＝ 36 本。",
+          "驗算：84 ＋ 36 ＝ 120。"
+        ],
+        "trap": "28＋31＝59 後別漏加丙班 25；少加一班會得到 61 本這種超出選項的數。"
+      },
+      "component": "table_cross_lab",
+      "component_path": "components/table_cross_lab.html?q=7",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-D-3-1-Q08",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "section": "二、選擇題",
+      "question_num": 6,
+      "title": "二維票價交叉表比較",
+      "stem": "票價表寫著：台北→新竹 300 元、新竹→台中 450 元、台北→台中 800 元。直接買台北到台中，比分兩段買貴多少元？",
+      "choices": [
+        "40 元",
+        "50 元",
+        "60 元",
+        "100 元"
+      ],
+      "answer_index": 1,
+      "answer_raw": "50 元",
+      "explanation": {
+        "concept": "二維交叉表的數值比較",
+        "steps": [
+          "分段買：台北→新竹 300 元，再加上新竹→台中 450 元，共 750 元。",
+          "直接買台北→台中要 800 元。",
+          "800 − 750 ＝ 50 元，直接買貴 50 元。"
+        ],
+        "trap": "先確認列（起點）與欄（終點）再讀值；把 300 和 800 相減會得到錯誤的 500 元。"
+      },
+      "component": "table_cross_lab",
+      "component_path": "components/table_cross_lab.html?q=8",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-D-3-1-Q09",
+      "exam_source": "高雄市陽明國小 113-2 期中",
+      "section": "三、表格題",
+      "question_num": 3,
+      "title": "二維表格缺漏格推算",
+      "stem": "社團人數二維表：足球男生 9 人、女生（　）人、合計 15 人；舞蹈男生 6 人、女生 8 人、合計 14 人。足球女生有幾人？",
+      "choices": [
+        "6 人",
+        "5 人",
+        "7 人",
+        "8 人"
+      ],
+      "answer_index": 0,
+      "answer_raw": "6 人",
+      "explanation": {
+        "concept": "二維表格的橫向加總關係",
+        "steps": [
+          "足球那一列：男生 9 ＋ 女生 ＝ 合計 15。",
+          "女生 ＝ 15 − 9 ＝ 6 人。",
+          "舞蹈列 6 ＋ 8 ＝ 14 可作為表格讀法驗證。"
+        ],
+        "trap": "不要拿舞蹈的女生 8 直接填進去；每一列的合計只管自己那一列。"
+      },
+      "component": "table_cross_lab",
+      "component_path": "components/table_cross_lab.html?q=9",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-D-3-1-Q10",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "section": "二、選擇題",
+      "question_num": 8,
+      "title": "時刻表交叉篩選",
+      "stem": "時刻表：101 次 09:00 開、10:05 到新竹；103 次 09:40 開、10:25 到新竹；502 次 09:15 開、10:40 到新竹。要在 10:30 前抵達且盡量晚出發，應搭哪一班？",
+      "choices": [
+        "101 次",
+        "502 次",
+        "103 次",
+        "無法判斷"
+      ],
+      "answer_index": 2,
+      "answer_raw": "103 次",
+      "explanation": {
+        "concept": "二維時刻表的條件篩選",
+        "steps": [
+          "先篩 10:30 前抵達：101 次（10:05）與 103 次（10:25）符合，502 次（10:40）不符。",
+          "再比較出發時間：103 次 09:40 比 101 次 09:00 晚。",
+          "所以選 103 次。"
+        ],
+        "trap": "502 次雖然 09:15 出發比 101 晚，但 10:40 才到已經遲到，第一步就會被淘汰。"
+      },
+      "component": "table_cross_lab",
+      "component_path": "components/table_cross_lab.html?q=10",
+      "fallback_height": 420
     }
   ]
 }

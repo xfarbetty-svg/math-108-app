@@ -2,7 +2,7 @@
   "code": "R-3-1",
   "title": "乘法與除法的關係",
   "grade": 3,
-  "question_count": 5,
+  "question_count": 10,
   "verified_source": "高雄市獅湖國小 114-1 期中 / 陽明國小 113-2 期末段考試卷",
   "questions": [
     {
@@ -18,13 +18,16 @@
       ],
       "answer_index": 0,
       "answer_raw": "56 ÷ 7 = 8",
-      "component_path": "components/multiplication_division_lab.html",
+      "component_path": "components/multiplication_division_lab.html?q=1",
       "explanation": {
         "concept": "乘除互逆基礎家族",
         "steps": [
           "由 7 × 8 = 56，可導出兩個除法算式：56 ÷ 7 = 8 以及 56 ÷ 8 = 7。"
-        ]
-      }
+        ],
+        "trap": "只背 7×8=56 就隨便調換，可能寫成 56÷8=9；互換後要驗算「積÷其中一個因數＝另一個因數」。"
+      },
+      "component": "multiplication_division_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q02",
@@ -39,13 +42,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "9",
-      "component_path": "components/multiplication_division_lab.html",
+      "component_path": "components/multiplication_division_lab.html?q=2",
       "explanation": {
         "concept": "乘法移項轉除法",
         "steps": [
           "❓ × 6 = 54，移項倒推可得 ❓ = 54 ÷ 6 = 9。"
-        ]
-      }
+        ],
+        "trap": "把 ❓×6=54 誤做成 54×6 的人很多；求未知因數要用除法 54÷6，不是乘法。"
+      },
+      "component": "multiplication_division_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q03",
@@ -60,13 +66,16 @@
       ],
       "answer_index": 0,
       "answer_raw": "6",
-      "component_path": "components/multiplication_division_lab.html",
+      "component_path": "components/multiplication_division_lab.html?q=3",
       "explanation": {
         "concept": "被除數與商的關係",
         "steps": [
           "48 ÷ ❓ = 8，表示 8 × ❓ = 48，因此 ❓ = 48 ÷ 8 = 6。"
-        ]
-      }
+        ],
+        "trap": "48÷❓=8 不是直接拿 48÷8 就結束，而是要找「8 乘以幾會等於 48」的未知因數。"
+      },
+      "component": "multiplication_division_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q04",
@@ -81,13 +90,16 @@
       ],
       "answer_index": 1,
       "answer_raw": "商 × 除數 ＋ 餘數 ＝ 被除數",
-      "component_path": "components/multiplication_division_lab.html",
+      "component_path": "components/multiplication_division_lab.html?q=4",
       "explanation": {
         "concept": "除法驗算唯一真理",
         "steps": [
           "被除數平分後剩下餘數，因此：商 × 除數 + 餘數 = 被除數，且餘數必須小於除數。"
-        ]
-      }
+        ],
+        "trap": "有餘數的驗算要用「＋餘數」；寫成「－餘數」會把平分後剩下的部分扣掉。"
+      },
+      "component": "multiplication_division_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-1-Q05",
@@ -102,13 +114,155 @@
       ],
       "answer_index": 1,
       "answer_raw": "餘數 11 大於除數 8，代表還可以再除",
-      "component_path": "components/multiplication_division_lab.html",
+      "component_path": "components/multiplication_division_lab.html?q=5",
       "explanation": {
         "concept": "餘數嚴格小於除數公理",
         "steps": [
           "除數是 8，餘數必須小於 8。餘數 11 裡面還有 1 個 8，商應該修正為 9，餘數為 3。"
-        ]
-      }
+        ],
+        "trap": "餘數必須嚴格小於除數；11 裡面還藏著一個 8，商要改 9、餘數改 3。"
+      },
+      "component": "multiplication_division_lab",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-1-Q06",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "section": "二、選擇題",
+      "question_num": 4,
+      "title": "用乘法驗算除法",
+      "stem": "用乘法驗算 63 ÷ 7 ＝ 9 是否正確，應該用下面哪一個算式？",
+      "choices": [
+        "9 × 7 ＝ 63",
+        "63 × 7 ＝ 9",
+        "9 ÷ 7 ＝ 63",
+        "63 ＋ 7 ＝ 70"
+      ],
+      "answer_index": 0,
+      "answer_raw": "9 × 7 ＝ 63",
+      "explanation": {
+        "concept": "乘除互逆驗算",
+        "steps": [
+          "除法算式「被除數 ÷ 除數 ＝ 商」可以用「商 × 除數 ＝ 被除數」反查。",
+          "本題商是 9、除數是 7，所以算 9 × 7 ＝ 63，正好等於被除數，驗算正確。"
+        ],
+        "trap": "把被除數拿去乘除數（63 × 7）是常見錯法；驗算要用「商 × 除數」。"
+      },
+      "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=6",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-1-Q07",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "section": "三、填填看",
+      "question_num": 2,
+      "title": "已知積與一因數求未知數",
+      "stem": "算式 □ × 6 ＝ 48，□ 裡應該填入什麼數字？",
+      "choices": [
+        "6",
+        "7",
+        "8",
+        "48"
+      ],
+      "answer_index": 2,
+      "answer_raw": "8",
+      "explanation": {
+        "concept": "未知因數＝積 ÷ 已知因數",
+        "steps": [
+          "□ 和 6 都是因數，48 是積。",
+          "未知因數 ＝ 48 ÷ 6 ＝ 8。",
+          "代回檢查：8 × 6 ＝ 48，正確。"
+        ],
+        "trap": "看到 48 就填 48 的人忘了：問的是其中一個因數，要用除法倒推。"
+      },
+      "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=7",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-1-Q08",
+      "exam_source": "台北市忠孝國小 114-1 期中",
+      "section": "三、填填看",
+      "question_num": 5,
+      "title": "已知商與除數求被除數",
+      "stem": "算式 □ ÷ 7 ＝ 8，□ 裡應該填入什麼數字？",
+      "choices": [
+        "15",
+        "48",
+        "56",
+        "63"
+      ],
+      "answer_index": 2,
+      "answer_raw": "56",
+      "explanation": {
+        "concept": "被除數＝商 × 除數",
+        "steps": [
+          "□ 是被除數，7 是除數，8 是商。",
+          "被除數 ＝ 8 × 7 ＝ 56。",
+          "代回檢查：56 ÷ 7 ＝ 8，正確。"
+        ],
+        "trap": "把 7 和 8 相加成 15 是最常見的錯；除法要還原成乘法，不是加法。"
+      },
+      "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=8",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-1-Q09",
+      "exam_source": "高雄市獅湖國小 114-1 期中",
+      "section": "二、選擇題",
+      "question_num": 6,
+      "title": "有餘數除法驗算",
+      "stem": "57 ÷ 8 ＝ 7 餘 1，用「商 × 除數 ＋ 餘數 ＝ 被除數」驗算，哪一個算式正確？",
+      "choices": [
+        "7 × 8 ＋ 1 ＝ 57",
+        "7 × 8 − 1 ＝ 55",
+        "8 × 1 ＋ 7 ＝ 15",
+        "57 ＋ 1 ＝ 7 × 8"
+      ],
+      "answer_index": 0,
+      "answer_raw": "7 × 8 ＋ 1 ＝ 57",
+      "explanation": {
+        "concept": "有餘數除法的驗算公式",
+        "steps": [
+          "商 7 乘以除數 8 得到 56。",
+          "再加上餘數 1：56 ＋ 1 ＝ 57。",
+          "結果等於被除數 57，驗算通過，且 1 ＜ 8。"
+        ],
+        "trap": "餘數是「多出來要加回去」的部分，用減號會得到 55，驗算就失敗了。"
+      },
+      "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=9",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-1-Q10",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "section": "五、應用題",
+      "question_num": 4,
+      "title": "乘除混合包裝問題",
+      "stem": "一箱有 6 盒餅乾，每盒 8 片，共 48 片。把全部餅乾每 7 片裝一袋，可以裝滿幾袋？還剩幾片？",
+      "choices": [
+        "6 袋餘 6 片",
+        "6 袋餘 5 片",
+        "7 袋餘 0 片",
+        "5 袋餘 13 片"
+      ],
+      "answer_index": 0,
+      "answer_raw": "6 袋餘 6 片",
+      "explanation": {
+        "concept": "先乘後除的兩步驟應用",
+        "steps": [
+          "先求總數：6 × 8 ＝ 48 片。",
+          "再分裝：48 ÷ 7 ＝ 6 餘 6，因為 7 × 6 ＝ 42，48 − 42 ＝ 6。",
+          "餘數 6 小於除數 7，答案合理。"
+        ],
+        "trap": "「5 袋餘 13 片」看起來也能分，但餘數 13 比 7 大，還能再裝一袋，所以不對。"
+      },
+      "component": "multiplication_division_lab",
+      "component_path": "components/multiplication_division_lab.html?q=10",
+      "fallback_height": 420
     }
   ]
 }

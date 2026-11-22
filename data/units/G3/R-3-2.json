@@ -2,7 +2,7 @@
   "code": "R-3-2",
   "title": "數量模式與推理（I）",
   "grade": 3,
-  "question_count": 5,
+  "question_count": 10,
   "verified_source": "台北市忠孝國小 114-1 期末 / 高雄市陽明國小 113-2 期末段考試卷",
   "questions": [
     {
@@ -18,14 +18,17 @@
       ],
       "answer_index": 2,
       "answer_raw": "15",
-      "component_path": "components/pattern_reasoning_lab.html",
+      "component_path": "components/pattern_reasoning_lab.html?q=1",
       "explanation": {
         "concept": "等差數列規律",
         "steps": [
           "7 - 3 = 4，11 - 7 = 4，每次跳躍增加 4。",
           "11 + 4 = 15，驗證 15 + 4 = 19 正確。"
-        ]
-      }
+        ],
+        "trap": "只看 3→7 差 4 就猜 13 不夠，要再驗證 11＋4＝15、15＋4＝19 都成立。"
+      },
+      "component": "pattern_reasoning_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-2-Q02",
@@ -40,13 +43,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "3 根",
-      "component_path": "components/pattern_reasoning_lab.html",
+      "component_path": "components/pattern_reasoning_lab.html?q=2",
       "explanation": {
         "concept": "幾何圖形拼排通則",
         "steps": [
           "第 1 個正方形需要 4 根，之後每多 1 個因為共用 1 條邊，只需多 3 根火柴。"
-        ]
-      }
+        ],
+        "trap": "第一個正方形 4 根，之後因為共邊只多 3 根；每題都乘 4 會多算。"
+      },
+      "component": "pattern_reasoning_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-2-Q03",
@@ -61,13 +67,16 @@
       ],
       "answer_index": 2,
       "answer_raw": "32",
-      "component_path": "components/pattern_reasoning_lab.html",
+      "component_path": "components/pattern_reasoning_lab.html?q=3",
       "explanation": {
         "concept": "等比翻倍規律",
         "steps": [
           "每個數字都是前一個數字的 2 倍：2×2=4, 4×2=8, 8×2=16, 16×2=32。"
-        ]
-      }
+        ],
+        "trap": "這不是每次加 4，而是每次翻倍：2→4→8→16 之後是 32。"
+      },
+      "component": "pattern_reasoning_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-2-Q04",
@@ -82,14 +91,17 @@
       ],
       "answer_index": 0,
       "answer_raw": "🔴 紅球",
-      "component_path": "components/pattern_reasoning_lab.html",
+      "component_path": "components/pattern_reasoning_lab.html?q=4",
       "explanation": {
         "concept": "週期除法求餘數",
         "steps": [
           "週期為 3 個一組 (🔴 🟦 🟦)。",
           "10 ÷ 3 = 3 組 ... 餘 1，餘 1 表示是每組第 1 個圖案，即 🔴。"
-        ]
-      }
+        ],
+        "trap": "週期 3 個一組，10÷3 餘 1 才是組內第 1 個；餘 0 要視為每組最後一個。"
+      },
+      "component": "pattern_reasoning_lab",
+      "fallback_height": 420
     },
     {
       "id": "G3-R-3-2-Q05",
@@ -104,13 +116,156 @@
       ],
       "answer_index": 1,
       "answer_raw": "16 根",
-      "component_path": "components/pattern_reasoning_lab.html",
+      "component_path": "components/pattern_reasoning_lab.html?q=5",
       "explanation": {
         "concept": "代入通則計算",
         "steps": [
           "4 + 3 × (5 - 1) = 4 + 3 × 4 = 4 + 12 = 16 根火柴。"
-        ]
-      }
+        ],
+        "trap": "套公式別漏括號：4＋3×(5−1)＝16，不是 4＋3×5＝19。"
+      },
+      "component": "pattern_reasoning_lab",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-2-Q06",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "section": "二、選擇題",
+      "question_num": 3,
+      "title": "顏色週期規律",
+      "stem": "彩旗按照「紅、黃、藍、綠」的順序一直重複排列，第 27 面是什麼顏色？",
+      "choices": [
+        "紅色",
+        "黃色",
+        "藍色",
+        "綠色"
+      ],
+      "answer_index": 2,
+      "answer_raw": "藍色",
+      "explanation": {
+        "concept": "週期規律與除法餘數",
+        "steps": [
+          "每 4 面一個週期：紅(1)、黃(2)、藍(3)、綠(4)。",
+          "27 ÷ 4 ＝ 6 組 … 餘 3。",
+          "餘 3 代表是每組的第 3 面，也就是藍色。"
+        ],
+        "trap": "餘 0 才是一組的最後一面（綠）；把餘 3 當成第 3 組或第 1 面都會選錯。"
+      },
+      "component": "pattern_reasoning_lab",
+      "component_path": "components/pattern_reasoning_lab.html?q=6",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-2-Q07",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "section": "三、填填看",
+      "question_num": 1,
+      "title": "等差數列遞增填空",
+      "stem": "按照規律填填看：2、5、8、11、（　）、17，空格裡應該填多少？",
+      "choices": [
+        "14",
+        "13",
+        "12",
+        "15"
+      ],
+      "answer_index": 0,
+      "answer_raw": "14",
+      "explanation": {
+        "concept": "等差數列（每次加固定數）",
+        "steps": [
+          "5−2＝3、8−5＝3、11−8＝3，每次都加 3。",
+          "11 ＋ 3 ＝ 14。",
+          "檢查：14 ＋ 3 ＝ 17，和題目最後一項一致。"
+        ],
+        "trap": "只看 11 到 17 差 6 就以為空格是 14 以外的數，要先確認每一段差都一樣。"
+      },
+      "component": "pattern_reasoning_lab",
+      "component_path": "components/pattern_reasoning_lab.html?q=7",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-2-Q08",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "section": "三、填填看",
+      "question_num": 4,
+      "title": "等差數列遞減填空",
+      "stem": "按照規律填填看：50、44、38、（　）、26，空格裡應該填多少？",
+      "choices": [
+        "30",
+        "32",
+        "34",
+        "36"
+      ],
+      "answer_index": 1,
+      "answer_raw": "32",
+      "explanation": {
+        "concept": "等差數列（每次減固定數）",
+        "steps": [
+          "50−44＝6、44−38＝6，每次都減 6。",
+          "38 − 6 ＝ 32。",
+          "檢查：32 − 6 ＝ 26，正好對上最後一項。"
+        ],
+        "trap": "遞減數列要用減的；有人用 38−8＝30，是誤把差值算成 8。"
+      },
+      "component": "pattern_reasoning_lab",
+      "component_path": "components/pattern_reasoning_lab.html?q=8",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-2-Q09",
+      "exam_source": "高雄市陽明國小 113-2 期末",
+      "section": "二、選擇題",
+      "question_num": 7,
+      "title": "火柴棒方格排列推理",
+      "stem": "連著拼正方形：1 個要 4 根火柴，2 個要 7 根，3 個要 10 根。照這樣拼 6 個，共要幾根火柴？",
+      "choices": [
+        "16 根",
+        "18 根",
+        "19 根",
+        "24 根"
+      ],
+      "answer_index": 2,
+      "answer_raw": "19 根",
+      "explanation": {
+        "concept": "圖形排列的線性遞增規律",
+        "steps": [
+          "每多拼 1 個正方形，因為共用一條邊，只多 3 根火柴。",
+          "通則：4 ＋ 3 × (個數 − 1)。",
+          "6 個：4 ＋ 3 × 5 ＝ 4 ＋ 15 ＝ 19 根。"
+        ],
+        "trap": "直接 6 × 4 ＝ 24 忘了共用的邊；5 個是 16 根，再加 3 才是 19 根。"
+      },
+      "component": "pattern_reasoning_lab",
+      "component_path": "components/pattern_reasoning_lab.html?q=9",
+      "fallback_height": 420
+    },
+    {
+      "id": "G3-R-3-2-Q10",
+      "exam_source": "台北市忠孝國小 114-1 期末",
+      "section": "五、應用題",
+      "question_num": 2,
+      "title": "方格樓梯累加推理",
+      "stem": "用方格排樓梯：第 1 層 1 格、第 2 層 2 格、第 3 層 3 格……排到第 5 層，一共用了幾格？",
+      "choices": [
+        "15 格",
+        "12 格",
+        "10 格",
+        "25 格"
+      ],
+      "answer_index": 0,
+      "answer_raw": "15 格",
+      "explanation": {
+        "concept": "逐層累加的數量模式",
+        "steps": [
+          "把每一層的格數加起來：1 ＋ 2 ＝ 3。",
+          "3 ＋ 3 ＝ 6，6 ＋ 4 ＝ 10，10 ＋ 5 ＝ 15。",
+          "所以 5 層總共 15 格。"
+        ],
+        "trap": "第 5 層只有 5 格，但題目問「一共」；5 × 5 ＝ 25 是把每層都當成 5 格了。"
+      },
+      "component": "pattern_reasoning_lab",
+      "component_path": "components/pattern_reasoning_lab.html?q=10",
+      "fallback_height": 420
     }
   ]
 }

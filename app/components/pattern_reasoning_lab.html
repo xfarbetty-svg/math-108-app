@@ -12,6 +12,24 @@
             --sky-blue: #e8f5e9;
             --frog-color: #4caf50;
         }
+        html[data-theme="dark"] {
+            --forest-green:#334155; --leaf-green:#3B8276; --wood-brown:#94A3B8;
+            --sky-blue:#161B26; --frog-color:#4A9E8F;
+        }
+        html[data-theme="dark"] body { background: var(--bg-main); color: var(--text-primary); }
+        html[data-theme="dark"] .title { color: var(--text-primary); }
+        html[data-theme="dark"] #frog-path-stage,
+        html[data-theme="dark"] #match-stage,
+        html[data-theme="dark"] .seq-wrap,
+        html[data-theme="dark"] .challenge-card { border-color: var(--border-color); }
+        html[data-theme="dark"] .controls { background: var(--bg-elevated); }
+        html[data-theme="dark"] .controls div:last-child { color: var(--text-primary) !important; }
+        html[data-theme="dark"] .num-card { background: var(--bg-elevated); border-color: var(--accent-primary); color: var(--text-primary); }
+        html[data-theme="dark"] .num-card.unknown { background: var(--bg-card); color: var(--accent-lemon); }
+        html[data-theme="dark"] .formula-box,
+        html[data-theme="dark"] .opt-btn { background: var(--bg-card); border-color: var(--border-color); color: var(--text-primary); }
+        .q-badge { position:absolute; top:44px; right:8px; background:var(--leaf-green); color:#fff; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:500; }
+        .q-focus { position:absolute; top:68px; right:8px; max-width:180px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
@@ -21,6 +39,7 @@
             overflow: hidden;
             display: flex; flex-direction: column;
             user-select: none;
+            position: relative;
         }
 
         /* 導航標籤 */
@@ -153,7 +172,10 @@
     </style>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
-<body>
+<body id="app">
+
+    <div id="q-badge" class="q-badge"></div>
+    <div id="q-focus" class="q-focus"></div>
 
     <div class="nav-tabs">
         <div id="tab-act1" class="tab active" onclick="switchAct(1)">🐸 跳跳蛙</div>
@@ -479,12 +501,38 @@
             initAct3();
             initAct4();
             switchAct(1);
+            applyQuestionMode();
         });
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             initAct1();
             renderMatches();
             initAct3();
             initAct4();
+        }
+        // ?q=1..10 題號視覺模式（與題庫 component_path 對齊）
+        const qNum = (() => {
+            const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
+            return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
+        })();
+        const Q_SCENES = {
+            1:  { act:1, focus:'Q01 等差＋4', hint:'青蛙每次跳 4 格，3、7、11、15、19。' },
+            2:  { act:2, focus:'Q02 每多一個多3根', hint:'第一個正方形 4 根，之後共邊只多 3 根。' },
+            3:  { act:3, focus:'Q03 翻倍 2→4→8→16', hint:'每個數字都是前一個的 2 倍，下一個是 32。' },
+            4:  { act:3, focus:'Q04 週期3個 餘1', hint:'10÷3 餘 1，每組第 1 個是紅球。' },
+            5:  { act:2, focus:'Q05 5個＝16根', hint:'套公式 4＋3×(5−1)＝16 根。' },
+            6:  { act:3, focus:'Q06 27÷4餘3→藍色', hint:'紅黃藍綠四色一組，第 27 面是藍色。' },
+            7:  { act:1, focus:'Q07 空格填14', hint:'每次加 3，11 後面是 14，再加 3 是 17。' },
+            8:  { act:1, focus:'Q08 空格填32', hint:'每次減 6，38 後面是 32，再減 6 是 26。' },
+            9:  { act:2, focus:'Q09 6個＝19根', hint:'4＋3×5＝19 根火柴棒。' },
+            10: { act:4, focus:'Q10 1+2+3+4+5=15', hint:'五層樓梯逐層相加，一共 15 格。' }
+        };
+        function applyQuestionMode() {
+            const s = Q_SCENES[qNum] || Q_SCENES[1];
+            document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
+            document.getElementById('q-focus').textContent = s.focus;
+            switchAct(s.act);
+            if (s.act === 1) document.getElementById('frog-title').textContent = s.focus;
+            speak(s.hint);
         }
     </script>
     <script src="../js/audio_manager.js"></script>
