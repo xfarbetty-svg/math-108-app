@@ -316,6 +316,7 @@ const UNIT_CONCEPT_MOVIES = {
   "N-3-14": "assets/classroom_videos/N314_Final.mp4",
   "N-3-15": "assets/classroom_videos/N315_Final.mp4",
   "N-3-16": "assets/classroom_videos/N316_Final.mp4",
+  "N-3-17": "assets/classroom_videos/N317_Final.mp4",
   "S-3-1": "assets/classroom_videos/N313_Final.mp4"
 };
 
@@ -325,6 +326,7 @@ const UNIT_CONCEPT_MOVIE_TITLES = {
   "N-3-14": "概念小教室：面積（平方公分）",
   "N-3-15": "概念小教室：容量（公升、毫升）",
   "N-3-16": "概念小教室：重量（公斤、公克）",
+  "N-3-17": "概念小教室：時間（日、時、分、秒）",
   "S-3-1": "概念小教室：角的認識"
 };
 
