@@ -122,7 +122,7 @@ async function main() {
       const fileUrl = `${pathToFileURL(compPath).href}?q=${qn}`;
 
       await send('Page.navigate', { url: fileUrl });
-      await sleep(250);
+      await sleep(1200);
 
       const metrics = await send('Runtime.evaluate', {
         expression: `(() => {

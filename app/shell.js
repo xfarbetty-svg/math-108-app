@@ -314,6 +314,7 @@ const UNIT_CONCEPT_MOVIES = {
   "N-3-10": "assets/classroom_videos/N310_Final.mp4",
   "N-3-13": "assets/classroom_videos/N313_Final.mp4",
   "N-3-14": "assets/classroom_videos/N314_Final.mp4",
+  "N-3-15": "assets/classroom_videos/N315_Final.mp4",
   "S-3-1": "assets/classroom_videos/N313_Final.mp4"
 };
 
@@ -321,6 +322,7 @@ const UNIT_CONCEPT_MOVIE_TITLES = {
   "N-3-10": "概念小教室：一位小數加減與對齊",
   "N-3-13": "概念小教室：角的認識",
   "N-3-14": "概念小教室：面積（平方公分）",
+  "N-3-15": "概念小教室：容量（公升、毫升）",
   "S-3-1": "概念小教室：角的認識"
 };
 
