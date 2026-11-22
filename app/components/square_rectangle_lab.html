@@ -1,417 +1,257 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S-3-2 正方形與長方形實驗室</title>
-    <style>
-        :root {
-            --bg-paper: #f5f2e9;
-            --wood-dark: #5d4037;
-            --wood-light: #8d6e63;
-            --accent: #d32f2f;
-            --ruler-alpha: rgba(255, 255, 255, 0.5);
-        }
-        html[data-theme="dark"] {
-            --bg-paper:#1F2736; --wood-dark:#334155; --wood-light:#3B8276; --accent:#E07A6A; --ruler-alpha:rgba(31,39,54,.6);
-        }
-        html[data-theme="dark"] #app-container { background:var(--bg-paper); border-color:var(--border-color); }
-        html[data-theme="dark"] .shape { border-color:var(--svg-stroke); }
-        html[data-theme="dark"] #act-1-view .square, html[data-theme="dark"] #act-2-view .square { background:#2A3B4A; }
-        html[data-theme="dark"] #act-1-view .rect, html[data-theme="dark"] #act-2-view .rect { background:#233A4C; }
-        html[data-theme="dark"] .label, html[data-theme="dark"] .hint-text { color:var(--text-primary); }
-        html[data-theme="dark"] .grid-cell { background:var(--bg-card); color:var(--text-primary); }
-        html[data-theme="dark"] .fold-paper { background:var(--bg-elevated); border-color:var(--accent-primary); }
-        html[data-theme="dark"] .btn-action { background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-color); }
-        .q-badge { position:absolute; top:4px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:400; }
-        .q-focus { position:absolute; top:40px; right:8px; max-width:150px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:400; pointer-events:none; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            margin: 0; padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
-            background-color: #d7ccc8;
-            display: flex; justify-content: center; align-items: flex-start;
-            min-height: 100dvh; overflow: hidden;
-            user-select: none;
-        }
-        #app-container {
-            width: 390px; height: 420px;
-            background: var(--bg-paper);
-            border: 6px solid var(--wood-dark);
-            position: relative; overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        /* Tabs Navigation */
-        nav {
-            display: flex; background: var(--wood-dark); height: 38px;
-        }
-        .tab {
-            flex: 1; color: #fff; font-size: 13px; border: none;
-            background: none; cursor: pointer; opacity: 0.75;
-            transition: 0.2s; border-bottom: 3px solid transparent;
-        }
-        .tab.active { opacity: 1; border-bottom: 3px solid #ffeb3b; font-weight: bold; }
-
-        /* View Management */
-        .view { 
-            display: none; width: 100%; height: 345px; 
-            position: relative; padding: 10px;
-        }
-        .view.active { display: block; }
-
-        /* Common Elements */
-        .shape { position: absolute; border: 2.5px solid #333; transition: 0.2s; cursor: pointer; }
-        .shape:active { transform: scale(0.98); }
-        .label { position: absolute; font-size: 13px; font-weight: bold; color: var(--wood-dark); pointer-events: none; }
-        .btn-action {
-            position: absolute; bottom: 12px; right: 14px;
-            padding: 8px 16px; background: var(--wood-light);
-            color: white; border: none; border-radius: 18px; cursor: pointer;
-            font-size: 13px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .btn-action:active { transform: translateY(1px); }
-
-        /* Act 1: Observation */
-        #act-1-view .square { width: 84px; height: 84px; left: 45px; top: 75px; background: #fffde7; border-radius: 2px; }
-        #act-1-view .rect { width: 126px; height: 84px; left: 195px; top: 75px; background: #e3f2fd; border-radius: 2px; }
-        .tick-mark {
-            position: absolute; background: var(--accent); border-radius: 1px;
-        }
-        .tm-v { width: 3px; height: 12px; transform: translateX(-50%); }
-        .tm-h { height: 3px; width: 12px; transform: translateY(-50%); }
-
-        /* Act 2: Triangle Ruler */
-        #ruler {
-            position: absolute; width: 90px; height: 90px; left: 140px; top: 180px;
-            cursor: move; z-index: 100; touch-action: none;
-            filter: drop-shadow(2px 3px 5px rgba(0,0,0,0.3));
-        }
-
-        /* Act 3: Folding */
-        #paper-container {
-            perspective: 800px; margin: 30px auto 0 auto; width: 160px; height: 120px;
-        }
-        .fold-paper {
-            width: 160px; height: 120px; background: #e1f5fe;
-            position: relative; border: 2px solid #0288d1; border-radius: 4px;
-            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: top center;
-        }
-        .fold-paper.folded {
-            transform: rotateX(-180deg);
-        }
-        .fold-paper::after {
-            content: '摺痕'; position: absolute; top: 0; left: 0; right: 0;
-            border-top: 2px dashed #e91e63; font-size: 10px; color: #e91e63; text-align: right;
-            padding-right: 4px; display: none;
-        }
-        .fold-paper.folded::after { display: block; }
-
-        /* Act 4: Grid */
-        #grid-container {
-            display: grid; grid-template-columns: repeat(5, 32px);
-            grid-template-rows: repeat(3, 32px);
-            gap: 2px; background: #b0bec5; width: 168px; margin: 25px auto 10px auto;
-            padding: 2px; border-radius: 4px;
-        }
-        .grid-cell {
-            width: 32px; height: 32px; background: var(--bg-card);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: bold; color: #555;
-            transition: all 0.2s;
-        }
-        .grid-cell.filled {
-            background: #ffb74d; color: #d84315; animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Audio Control */
-        #audio-ctrl {
-            position: absolute; bottom: 8px; left: 10px;
-            background: rgba(255,255,255,0.9); border-radius: 50%;
-            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 18px; z-index: 200; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .hint-text {
-            position: absolute; top: 44px; width: 100%; text-align: center;
-            font-size: 13px; color: #3e2723; font-weight: bold;
-        }
-    </style>
-    <script src="../js/audio_manager.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>S-3-2 正方形與長方形實驗室（真題題幹圖）</title>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+  :root {
+    --paper: #fdfbf7; --ink: #3d3a34; --line: #4b4a46; --muted: #8a857b;
+    --fill-a: #fff3d6; --fill-b: #e2f0fb; --fill-c: #f3e3f7; --grid: #b9c4cf;
+    --accent: #f4694b; --tool: rgba(255,255,255,.82);
+  }
+  html[data-theme="dark"] {
+    --paper: var(--bg-main); --ink: var(--text-primary); --line: var(--svg-stroke);
+    --muted: var(--text-secondary); --fill-a: #33404f; --fill-b: #243b50; --fill-c: #3b3348;
+    --grid: #475569; --accent: var(--accent-primary); --tool: rgba(31,39,54,.85);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin:0; padding:0; width:390px; height:420px; overflow:hidden; }
+  body { font-family:"PingFang TC","Microsoft JhengHei",sans-serif; background:var(--paper); color:var(--ink); }
+  #app { width:390px; height:420px; background:var(--paper); display:flex; flex-direction:column; overflow:hidden; }
+  .topbar { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
+            padding:0 12px; background:var(--bg-elevated); border-bottom:1px solid var(--border-color); }
+  .topbar .name { font-size:12px; font-weight:700; color:var(--ink); }
+  .topbar .qtag { font-size:11px; font-weight:700; color:var(--accent); border:1px solid var(--accent);
+                  border-radius:9px; padding:1px 7px; }
+  .scene { position:relative; flex:1; width:390px; height:352px; overflow:hidden; }
+  .scene svg { display:block; width:390px; height:340px; }
+  .scene .cap { font-size:12px; fill:var(--ink); font-weight:700; }
+  .scene .lbl { font-size:12px; fill:var(--ink); font-weight:700; }
+  .scene .dim { font-size:11px; fill:var(--muted); }
+  .scene .shape { cursor:pointer; }
+  .scene .shape.marked { stroke:var(--accent); stroke-width:4; }
+  .scene .tick { opacity:0; stroke:var(--accent); stroke-width:2.5; }
+  .scene .shape.marked .tick { opacity:1; }
+  /* 可拖曳量具：直尺刻度 + 直角探针（真實 pointer 事件） */
+  #tool { position:absolute; right:8px; bottom:12px; width:176px; height:44px; touch-action:none;
+          cursor:grab; user-select:none; z-index:20; }
+  #tool:active { cursor:grabbing; }
+  #tool .bar { position:absolute; left:14px; bottom:0; width:162px; height:20px;
+               background:var(--tool); border:2px solid var(--line); border-radius:2px;
+               background-image:repeating-linear-gradient(90deg,transparent 0 39px,var(--line) 39px 41px); }
+  #tool .arm { position:absolute; left:14px; bottom:0; width:18px; height:44px;
+               background:var(--tool); border:2px solid var(--line); border-radius:2px; }
+  #tool .cap { position:absolute; left:36px; bottom:-1px; font-size:8px; color:var(--muted); }
+  .footer { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
+            padding:0 10px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
+  .footer .hint { font-size:10px; color:var(--muted); max-width:300px; }
+  .footer .info { font-size:10px; color:var(--accent); font-weight:700; }
+</style>
 </head>
 <body>
-
-<div id="app-container">
-    <div id="q-badge" class="q-badge"></div>
-    <div id="q-focus" class="q-focus"></div>
-    <nav>
-        <button class="tab active" id="tab-act1" onclick="switchAct(1)">1. 邊長</button>
-        <button class="tab" id="tab-act2" onclick="switchAct(2)">2. 直角</button>
-        <button class="tab" id="tab-act3" onclick="switchAct(3)">3. 對邊</button>
-        <button class="tab" id="tab-act4" onclick="switchAct(4)">4. 面積</button>
-    </nav>
-
-    <div id="audio-ctrl" onclick="toggleMute()">🔊</div>
-    <div class="hint-text" id="hint">點擊圖形，看看邊長的秘密！</div>
-
-    <!-- Act 1 -->
-    <div id="act-1-view" class="view active">
-        <div class="shape square" onclick="markSides('sq')">
-            <div id="sq-marks"></div>
-        </div>
-        <div class="shape rect" onclick="markSides('rt')">
-            <div id="rt-marks"></div>
-        </div>
-        <div class="label" style="left: 65px; top: 170px;">正方形 (四邊等長)</div>
-        <div class="label" style="left: 205px; top: 170px;">長方形 (對邊等長)</div>
+<div id="app">
+  <div class="topbar"><span class="name">S-3-2 正方形和長方形</span><span class="qtag" id="qtag">Q01</span></div>
+  <div class="scene" id="scene">
+    <div id="tool" title="可拖曳的直尺與直角量具">
+      <div class="arm"></div><div class="bar"></div><div class="cap">0　1　2　3　4 cm</div>
     </div>
-
-    <!-- Act 2 -->
-    <div id="act-2-view" class="view">
-        <div class="shape square" style="left:40px; top:80px; width:84px; height:84px; background:#fffde7;"></div>
-        <div class="shape rect" style="left:180px; top:80px; width:126px; height:84px; background:#e3f2fd;"></div>
-        <svg id="ruler" viewBox="0 0 100 100">
-            <path d="M 0 100 L 100 100 L 0 0 Z" fill="var(--ruler-alpha)" stroke="var(--wood-dark)" stroke-width="2.5"/>
-            <rect x="2" y="86" width="12" height="12" fill="none" stroke="#d32f2f" stroke-width="2" />
-        </svg>
-        <div class="label" style="bottom: 50px; width:100%; text-align:center;">拖曳三角板的直角，貼齊比對 4 個角</div>
-    </div>
-
-    <!-- Act 3 -->
-    <div id="act-3-view" class="view">
-        <div id="paper-container">
-            <div id="paper" class="fold-paper">
-                <div style="position:absolute; top:-22px; width:100%; text-align:center; font-size:12px; font-weight:bold; color:#0288d1;">上邊 (長度相同)</div>
-                <div style="position:absolute; bottom:-22px; width:100%; text-align:center; font-size:12px; font-weight:bold; color:#0288d1;">下邊 (完全重合)</div>
-            </div>
-        </div>
-        <button class="btn-action" id="fold-btn" onclick="animateFold()">開始對摺</button>
-    </div>
-
-    <!-- Act 4 -->
-    <div id="act-4-view" class="view">
-        <div id="grid-container"></div>
-        <div class="label" id="grid-info" style="bottom: 55px; width:100%; text-align:center;">長 5cm，寬 3cm 的長方形</div>
-        <button class="btn-action" onclick="fillGrid()">鋪設方格</button>
-    </div>
+  </div>
+  <div class="footer"><span class="hint" id="hint"></span><span class="info" id="info">拖曳量具・點選圖形</span></div>
 </div>
 
 <script>
-    let isMuted = false;
-    const hints = [
-        "正方形四邊一樣長，長方形對邊一樣長！",
-        "使用三角板的直角，檢查四個角是不是都是直角。",
-        "對摺後上下邊緣完全重合，代表對邊一樣長！",
-        "數一數，長方形一共可以鋪設多少個 1平方公分？"
-    ];
-
-    function speak(text) {
-        if (typeof isMuted !== 'undefined' && isMuted) return;
-        if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'TTS_SPEAK', text: text }, '*');
-        } else if (window.AudioManager) {
-            window.AudioManager.play(text);
-        }
-    }
-
-    function toggleMute() {
-        isMuted = !isMuted;
-        document.getElementById('audio-ctrl').innerText = isMuted ? "🔇" : "🔊";
-    }
-
-    function switchAct(actNum) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        const targetView = document.getElementById("act-" + actNum + "-view");
-        if (targetView) targetView.classList.add('active');
-        const targetTab = document.getElementById("tab-act" + actNum);
-        if (targetTab) targetTab.classList.add('active');
-        document.getElementById('hint').innerText = hints[actNum - 1];
-        speak(hints[actNum - 1]);
-    }
-
-    // Act 1: 邊長標記
-    let sqMarked = false;
-    let rtMarked = false;
-
-    function markSides(type) {
-        if (type === 'sq') {
-            sqMarked = !sqMarked;
-            const container = document.getElementById('sq-marks');
-            container.innerHTML = '';
-            if (sqMarked) {
-                // 四邊各一個標記
-                container.innerHTML = `
-                    <div class="tick-mark tm-h" style="top: -2px; left: 36px;"></div>
-                    <div class="tick-mark tm-h" style="bottom: -2px; left: 36px;"></div>
-                    <div class="tick-mark tm-v" style="left: -2px; top: 36px;"></div>
-                    <div class="tick-mark tm-v" style="right: -2px; top: 36px;"></div>
-                `;
-                speak('正方形：四條邊都有相同記號，代表四邊等長！');
-            }
-        } else if (type === 'rt') {
-            rtMarked = !rtMarked;
-            const container = document.getElementById('rt-marks');
-            container.innerHTML = '';
-            if (rtMarked) {
-                // 上下雙標記，左右單標記
-                container.innerHTML = `
-                    <div class="tick-mark tm-h" style="top: -4px; left: 56px;"></div>
-                    <div class="tick-mark tm-h" style="top: 0px; left: 56px;"></div>
-                    <div class="tick-mark tm-h" style="bottom: -4px; left: 56px;"></div>
-                    <div class="tick-mark tm-h" style="bottom: 0px; left: 56px;"></div>
-                    <div class="tick-mark tm-v" style="left: -2px; top: 36px;"></div>
-                    <div class="tick-mark tm-v" style="right: -2px; top: 36px;"></div>
-                `;
-                speak('長方形：上下對邊兩條線、左右對邊一條線，對邊等長！');
-            }
-        }
-    }
-
-    // Act 2: 三角板拖曳
-    const ruler = document.getElementById('ruler');
-    if (ruler) {
-        let isDragging = false;
-        let offset = { x: 0, y: 0 };
-        const getCoord = (e) => {
-            const touch = e.touches ? e.touches[0] : e;
-            return { x: touch.clientX, y: touch.clientY };
-        };
-        const startDrag = (e) => {
-            isDragging = true;
-            const coord = getCoord(e);
-            const rect = ruler.getBoundingClientRect();
-            offset.x = coord.x - rect.left;
-            offset.y = coord.y - rect.top;
-        };
-        ruler.addEventListener('mousedown', startDrag);
-        ruler.addEventListener('touchstart', startDrag, { passive: false });
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const coord = getCoord(e);
-            const parentRect = document.getElementById('app-container').getBoundingClientRect();
-            let newX = coord.x - parentRect.left - offset.x;
-            let newY = coord.y - parentRect.top - offset.y;
-            ruler.style.left = newX + 'px';
-            ruler.style.top = newY + 'px';
-        });
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const coord = getCoord(e);
-            const parentRect = document.getElementById('app-container').getBoundingClientRect();
-            let newX = coord.x - parentRect.left - offset.x;
-            let newY = coord.y - parentRect.top - offset.y;
-            ruler.style.left = newX + 'px';
-            ruler.style.top = newY + 'px';
-        }, { passive: false });
-        window.addEventListener('mouseup', () => isDragging = false);
-        window.addEventListener('touchend', () => isDragging = false);
-    }
-
-    // Act 3: 摺紙檢驗
-    let isFolded = false;
-    function animateFold() {
-        const paper = document.getElementById('paper');
-        const btn = document.getElementById('fold-btn');
-        isFolded = !isFolded;
-        if (isFolded) {
-            paper.classList.add('folded');
-            btn.innerText = '展開紙張';
-            speak('對摺後上下邊完全重合，證明對邊一樣長！');
-        } else {
-            paper.classList.remove('folded');
-            btn.innerText = '開始對摺';
-            speak('展開紙張，觀察摺痕');
-        }
-    }
-
-    // Act 4: 面積方格鋪設
-    let isFilling = false;
-    function initGrid() {
-        const grid = document.getElementById('grid-container');
-        grid.innerHTML = '';
-        for (let i = 1; i <= 15; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.id = 'cell-' + i;
-            cell.innerText = i;
-            grid.appendChild(cell);
-        }
-    }
-
-    async function fillGrid() {
-        if (isFilling) return;
-        isFilling = true;
-        initGrid();
-        const info = document.getElementById('grid-info');
-        info.innerText = '正在逐格鋪設 1cm² 方格...';
-
-        for (let i = 1; i <= 15; i++) {
-            const cell = document.getElementById('cell-' + i);
-            if (cell) cell.classList.add('filled');
-            info.innerText = `已鋪設 ${i} 塊方格 (5 × 3 ＝ 15)`;
-            await new Promise(r => setTimeout(r, 60));
-        }
-
-        info.innerHTML = `<b>鋪滿 15 塊方格！長 5 × 寬 3 ＝ 面積 15 平方公分</b>`;
-        speak('每排 5 個，有 3 排，一共有 15 個 1 平方公分！');
-        isFilling = false;
-    }
-
-    // ?q=1..10 题号视觉模式
-    const qNum = (() => {
-        const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
-        return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
-    })();
-    const Q_SCENES = {
-        1: { act:1, hint:'正方形四邊等長，長方形對邊等長！', focus:'Q01 四邊等長＋直角' },
-        2: { act:1, hint:'長方形的上下對邊、左右對邊各自等長。', focus:'Q02 對邊相等' },
-        3: { act:1, hint:'正方形周長 = 邊長 × 4 = 8 × 4 = 32 公分。', focus:'Q03 8×4=32' },
-        4: { act:4, hint:'長方形周長 = (長 + 寬) × 2 = (10+6)×2 = 32 公分。', focus:'Q04 (10+6)×2' },
-        5: { act:2, hint:hints[1], focus:'Q05 三角板直角' },
-        6: { act:1, hint:'四個直角但只有對邊等長 → 長方形。', focus:'Q06 只有對邊等長' },
-        7: { act:1, hint:'邊長 12 公尺的正方形，周長 = 12 × 4 = 48 公尺。', focus:'Q07 12×4=48' },
-        8: { act:4, hint:'(14 + 8) × 2 = 44 公分。', focus:'Q08 (14+8)×2' },
-        9: { act:1, hint:'周長 36 ÷ 4 = 邊長 9 公分。', focus:'Q09 36÷4=9' },
-        10:{ act:1, hint:'兩個邊長 6 的正方形貼合：(12+6)×2=36 公分。', focus:'Q10 貼合後 36' }
-    };
-    function applyQuestionMode() {
-        const s = Q_SCENES[qNum] || Q_SCENES[1];
-        document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
-        switchAct(s.act);
-        document.getElementById('hint').innerText = s.hint;
-        const f = document.getElementById('q-focus');
-        f.textContent = s.focus;
-        f.style.display = 'block';
-        speak(s.hint);
-    }
-    window.addEventListener('DOMContentLoaded', () => {
-        initGrid();
-        applyQuestionMode();
-    });
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        initGrid();
-    }
-</script>
-<script>
-/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
 (function () {
-  try {
-    var t = localStorage.getItem('math108_theme') || 'light';
-    document.documentElement.dataset.theme = t;
-  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const qNum = (() => { const n = parseInt(params.get('q'), 10); return n >= 1 && n <= 10 ? n : 1; })();
+  const theme = params.get('theme');
+  if (theme === 'dark' || theme === 'light') {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('math108_theme', theme); } catch (e) {}
+  } else {
+    try { document.documentElement.dataset.theme = localStorage.getItem('math108_theme') || 'light'; }
+    catch (e) { document.documentElement.dataset.theme = 'light'; }
+  }
   window.addEventListener('message', function (e) {
     if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
       document.documentElement.dataset.theme = e.data.theme;
       try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
     }
   });
+
+  function poly(points, fill, cls) {
+    return '<polygon class="shape ' + (cls || '') + '" points="' + points + '" fill="' + (fill || 'none') +
+           '" stroke="var(--line)" stroke-width="2.5" stroke-linejoin="round"/>';
+  }
+  function rect(x, y, w, h, fill, cls, rx) {
+    return '<rect class="shape ' + (cls || '') + '" x="' + x + '" y="' + y + '" width="' + w + '" height="' + h +
+           '" rx="' + (rx || 0) + '" fill="' + (fill || 'none') + '" stroke="var(--line)" stroke-width="2.5"/>';
+  }
+  function text(x, y, str, cls, anchor) {
+    return '<text x="' + x + '" y="' + y + '" class="' + (cls || 'lbl') + '" text-anchor="' + (anchor || 'middle') + '">' + str + '</text>';
+  }
+  function ticks(x, y, w, h) {
+    return '<line class="tick" x1="' + (x + w / 2 - 6) + '" y1="' + (y - 3) + '" x2="' + (x + w / 2 + 6) + '" y2="' + (y - 3) + '"/>' +
+           '<line class="tick" x1="' + (x + w / 2 - 6) + '" y1="' + (y + h + 3) + '" x2="' + (x + w / 2 + 6) + '" y2="' + (y + h + 3) + '"/>';
+  }
+  const wrap = (inner) => '<svg viewBox="0 0 390 340" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+
+  const scenes = {
+    1: () => wrap([
+      text(195, 26, '題目：只要 4 個邊都一樣長，就一定是正方形嗎？', 'cap'),
+      poly('100,86 174,170 100,254 26,170', 'var(--fill-a)', 'mark'),
+      poly('244,110 340,110 340,230 244,230', 'var(--fill-b)', 'mark'),
+      text(100, 284, '圖形甲', 'lbl'), text(292, 284, '圖形乙', 'lbl'),
+      text(195, 312, '點選圖形，再用直尺與直角量具比一比', 'dim')
+    ].join('')),
+    2: () => wrap([
+      text(195, 24, '先找出只有 4 個邊的圖形，再用三角板和直尺量一量', 'cap'),
+      poly('26,74 102,68 108,132 32,138', 'var(--fill-b)', 'mark'), text(67, 158, 'ㄅ', 'lbl'),
+      poly('195,64 240,100 195,136 150,100', 'var(--fill-c)', 'mark'), text(195, 158, 'ㄆ', 'lbl'),
+      poly('292,72 362,72 376,136 278,136', 'var(--fill-b)', 'mark'), text(327, 158, 'ㄇ', 'lbl'),
+      rect(100, 196, 60, 60, 'var(--fill-c)', 'mark'), text(130, 280, 'ㄈ', 'lbl'),
+      poly('254,196 294,196 314,226 294,256 254,256 234,226', 'var(--fill-b)', 'mark'), text(274, 280, 'ㄉ', 'lbl'),
+      text(195, 312, '(1) 有直角 (2) 每邊等長 (3) 正方形 (4) 長方形 — 整組一起看', 'dim')
+    ].join('')),
+    3: () => gridScene('在 1cm 方格紙上畫一個邊長 4 公分的正方形'),
+    4: () => gridScene('在 1cm 方格紙上畫一個長 5 公分、寬 3 公分的長方形'),
+    5: () => wrap([
+      text(195, 26, '題目：正方形海報紙四邊總共長 160 公分', 'cap'),
+      rect(115, 88, 160, 160, 'var(--fill-a)', 'mark'),
+      '<rect x="100" y="72" width="190" height="190" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="6 5"/>',
+      text(195, 62, '四邊總長 160 公分', 'lbl'),
+      text(195, 282, '正方形', 'dim'),
+      text(195, 312, '想清楚：四邊總長要平均分給幾條邊？', 'dim')
+    ].join('')),
+    6: () => wrap([
+      text(195, 26, '題目：邊長 3、5、3、5 公分，且有 4 個直角', 'cap'),
+      rect(95, 96, 200, 130, 'var(--fill-b)', 'mark'),
+      text(195, 88, '5 公分', 'lbl'), text(195, 246, '5 公分', 'lbl'),
+      text(78, 166, '3 公分', 'lbl'), text(312, 166, '3 公分', 'lbl'),
+      '<path d="M95 110 h14 v-14 M295 110 h-14 v-14 M95 212 h14 v14 M295 212 h-14 v14" fill="none" stroke="var(--accent)" stroke-width="2"/>',
+      text(195, 292, '量量看四個角與四條邊', 'dim'),
+      text(195, 316, '選出符合的圖形名稱', 'dim')
+    ].join('')),
+    7: () => wrap([
+      text(195, 26, '題目：從 3 根 2cm 與 2 根 4cm 吸管中任選 4 根', 'cap'),
+      rect(38, 104, 96, 16, 'var(--fill-a)', '', 8), text(86, 96, '2cm', 'lbl'),
+      rect(38, 150, 96, 16, 'var(--fill-a)', '', 8), text(86, 142, '2cm', 'lbl'),
+      rect(38, 196, 96, 16, 'var(--fill-a)', '', 8), text(86, 188, '2cm', 'lbl'),
+      rect(222, 124, 140, 16, 'var(--fill-b)', '', 8), text(292, 116, '4cm', 'lbl'),
+      rect(222, 184, 140, 16, 'var(--fill-b)', '', 8), text(292, 176, '4cm', 'lbl'),
+      text(195, 280, '左邊 3 根短吸管，右邊 2 根長吸管', 'dim'),
+      text(195, 312, '數數看有幾根長吸管、幾根短吸管', 'dim')
+    ].join('')),
+    8: () => wrap([
+      text(195, 26, '題目：如下圖，正方形的每邊長是多少公分？', 'cap'),
+      rect(110, 66, 170, 170, 'none', 'mark'),
+      '<circle cx="195" cy="151" r="85" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2.5"/>',
+      '<line x1="110" y1="151" x2="280" y2="151" stroke="var(--accent)" stroke-width="2.5"/>',
+      '<circle cx="195" cy="151" r="3" fill="var(--ink)"/>',
+      text(195, 143, '4 公分', 'lbl'),
+      text(195, 264, '水平直徑貫穿圓心', 'dim'),
+      text(195, 312, '比對內切圓直徑與正方形邊長', 'dim')
+    ].join('')),
+    9: () => wrap([
+      text(195, 26, '題目：比較正方形與長方形的邊和角', 'cap'),
+      rect(48, 96, 118, 118, 'var(--fill-a)', 'mark'),
+      rect(224, 96, 148, 118, 'var(--fill-b)', 'mark'),
+      text(107, 240, '圖形甲', 'lbl'), text(298, 240, '圖形乙', 'lbl'),
+      text(195, 284, '四個選項都在講邊與角的性質', 'dim'),
+      text(195, 312, '找出與圖形特徵不相符的那一句', 'dim')
+    ].join('')),
+    10: () => wrap([
+      text(195, 24, '題目：用尺和三角板量一量，ㄅ～ㄊ 哪些是正方形、哪些是長方形？', 'cap'),
+      rect(24, 64, 84, 52, 'var(--fill-b)', 'mark'), text(66, 140, 'ㄅ', 'lbl'),
+      rect(156, 64, 78, 52, 'var(--fill-c)', 'mark', 14), text(195, 140, 'ㄆ', 'lbl'),
+      poly('306,56 342,90 306,124 270,90', 'var(--fill-a)', 'mark'), text(306, 148, 'ㄇ', 'lbl'),
+      poly('26,182 104,182 124,238 46,238', 'var(--fill-c)', 'mark'), text(75, 262, 'ㄈ', 'lbl'),
+      rect(158, 182, 58, 58, 'var(--fill-a)', 'mark'), text(187, 262, 'ㄉ', 'lbl'),
+      '<g transform="rotate(-18 310 210)"><rect class="shape mark" x="272" y="184" width="76" height="48" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2.5"/></g>',
+      text(310, 262, 'ㄊ', 'lbl'),
+      text(195, 300, '(1) 正方形有哪些？　(2) 長方形有哪些？', 'dim'),
+      text(195, 322, '圓角、旋轉、平行四邊形都要仔細量', 'dim')
+    ].join(''))
+  };
+
+  function gridScene(caption) {
+    const x0 = 90, y0 = 78, cell = 30, cols = 7, rows = 7;
+    let g = '<text x="195" y="24" class="cap" text-anchor="middle">' + caption + '</text>';
+    g += '<text x="' + (x0 + 15) + '" y="' + (y0 - 10) + '" class="dim">1cm</text>';
+    g += '<text x="' + (x0 - 24) + '" y="' + (y0 + 20) + '" class="dim">1cm</text>';
+    for (let r = 0; r <= rows; r++) g += '<line x1="' + x0 + '" y1="' + (y0 + r * cell) + '" x2="' + (x0 + cols * cell) + '" y2="' + (y0 + r * cell) + '" stroke="var(--grid)" stroke-width="1"/>';
+    for (let c = 0; c <= cols; c++) g += '<line x1="' + (x0 + c * cell) + '" y1="' + y0 + '" x2="' + (x0 + c * cell) + '" y2="' + (y0 + rows * cell) + '" stroke="var(--grid)" stroke-width="1"/>';
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      g += '<rect class="gcell" data-r="' + r + '" data-c="' + c + '" x="' + (x0 + c * cell + 1) + '" y="' + (y0 + r * cell + 1) +
+           '" width="' + (cell - 2) + '" height="' + (cell - 2) + '" fill="transparent" stroke="none" style="cursor:crosshair"/>';
+    }
+    g += '<text x="195" y="306" class="dim">點選格子試著畫出題目要求的圖形</text>';
+    g += '<text id="counter" x="195" y="328" class="lbl">已選：0 格</text>';
+    return wrap(g);
+  }
+
+  const HINTS = [
+    '用眼睛和量具比比看：四邊等長就夠了嗎？',
+    '用直角尺量量看，再選出符合的選項。',
+    '每格邊長 1 公分，點選格子試著畫畫看。',
+    '每格邊長 1 公分，點選格子試著畫畫看。',
+    '四邊總長已知，想想正方形有幾條等長的邊。',
+    '量量看四個角和四條邊，這是什麼圖形？',
+    '數數看有幾根長吸管、幾根短吸管。',
+    '直徑已經標在圖上，比對正方形的邊。',
+    '比較兩個圖形的邊和角，找出錯誤的敘述。',
+    '小心圓角與平行四邊形，量量看再選。'
+  ];
+
+  const scene = document.getElementById('scene');
+  scene.insertAdjacentHTML('afterbegin', (scenes[qNum] || scenes[1])());
+  // 底部 44px 為可拖曳量具保留區：移除會被量具遮住的冗餘說明（提示已於頁尾重複呈現）
+  const counter0 = document.getElementById('counter');
+  if (counter0) counter0.setAttribute('y', '292');
+  scene.querySelectorAll('text').forEach(function (t) {
+    const y = parseFloat(t.getAttribute('y'));
+    if (y >= 296 && t.id !== 'counter') t.remove();
+  });
+  document.getElementById('qtag').textContent = 'Q' + String(qNum).padStart(2, '0');
+  document.getElementById('hint').textContent = HINTS[qNum - 1];
+
+  // 點選圖形：標記（只有提示記號，沒有答案文字）
+  scene.addEventListener('click', function (e) {
+    const shape = e.target.closest('.shape');
+    if (shape) shape.classList.toggle('marked');
+    const cell = e.target.closest('.gcell');
+    if (cell) {
+      const on = cell.getAttribute('fill') === 'transparent';
+      cell.setAttribute('fill', on ? 'var(--accent)' : 'transparent');
+      cell.setAttribute('opacity', on ? '0.45' : '1');
+      const n = scene.querySelectorAll('.gcell[fill="var(--accent)"]').length;
+      const c = document.getElementById('counter');
+      if (c) c.textContent = '已選：' + n + ' 格';
+    }
+  });
+
+  // 真實 pointer 事件拖曳量具
+  const tool = document.getElementById('tool');
+  let dragging = false, ox = 0, oy = 0;
+  tool.addEventListener('pointerdown', function (e) {
+    dragging = true;
+    const r = tool.getBoundingClientRect(), s = scene.getBoundingClientRect();
+    ox = e.clientX - r.left; oy = e.clientY - r.top;
+    tool.setPointerCapture(e.pointerId);
+  });
+  tool.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    const s = scene.getBoundingClientRect();
+    const x = Math.max(0, Math.min(s.width - tool.offsetWidth, e.clientX - s.left - ox));
+    const y = Math.max(0, Math.min(s.height - tool.offsetHeight, e.clientY - s.top - oy));
+    tool.style.left = x + 'px'; tool.style.top = y + 'px';
+    tool.style.right = 'auto'; tool.style.bottom = 'auto';
+  });
+  const stop = () => { dragging = false; };
+  tool.addEventListener('pointerup', stop);
+  tool.addEventListener('pointercancel', stop);
 })();
 </script>
 </body>

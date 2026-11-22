@@ -1,350 +1,173 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=390, height=420, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G3-S-3-4 幾何形體實驗室</title>
-    <style>
-        :root {
-            --paper-bg: #fdfbf7;
-            --box-color: #d2b48c;
-            --box-border: #8b7355;
-            --accent: #e67e22;
-            --text: #5d4037;
-        }
-        html[data-theme="dark"] {
-            --paper-bg:#161B26; --box-color:#334155; --box-border:#64748B; --accent:#4A9E8F; --text:#E2E8F0;
-        }
-        html[data-theme="dark"] body { background:var(--bg-main); color:var(--text-primary); }
-        html[data-theme="dark"] nav { background:var(--bg-elevated); border-bottom-color:var(--border-color); }
-        html[data-theme="dark"] .tab { border-right-color:var(--border-color); }
-        html[data-theme="dark"] .tab.active { background:var(--bg-card); color:var(--accent); }
-        html[data-theme="dark"] .face { background:rgba(51,65,85,.9); border-color:var(--border-color); }
-        html[data-theme="dark"] .hl-face { background:rgba(74,158,143,.8) !important; color:#F8FAFC; border-color:var(--accent-primary); }
-        html[data-theme="dark"] .info-panel { color:var(--accent-primary); }
-        html[data-theme="dark"] .footer { background:var(--bg-elevated); color:var(--text-primary); }
-        html[data-theme="dark"] .shape-desc { color:var(--text-secondary); }
-        html[data-theme="dark"] button { background:var(--bg-card); color:var(--text-primary); border-color:var(--border-color); }
-        .q-badge { position:absolute; top:3px; right:8px; background:var(--accent); color:#fff; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:500; }
-        .q-focus { position:absolute; top:40px; right:8px; max-width:160px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            margin: 0; padding: 0; width: 390px; height: 420px;
-            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            background: var(--paper-bg); color: var(--text);
-            overflow: hidden; display: flex; flex-direction: column;
-        }
-        /* 導航標籤 */
-        nav {
-            display: flex; background: #e0d5bc; height: 36px;
-            border-bottom: 2px solid var(--box-border);
-        }
-        .tab {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: bold; cursor: pointer; border-right: 1px solid #ccc;
-        }
-        .tab.active { background: var(--paper-bg); color: var(--accent); border-bottom: 2px solid var(--accent); }
-
-        /* 內容區 */
-        .view-container { flex: 1; position: relative; overflow: hidden; }
-        .view { display: none; width: 100%; height: 100%; padding: 8px; flex-direction: column; align-items: center; }
-        .view.active { display: flex; }
-
-        /* 3D 舞台 */
-        .stage {
-            width: 140px; height: 140px; perspective: 600px;
-            margin: 10px auto; position: relative;
-        }
-        .cube {
-            width: 75px; height: 75px; position: absolute; top: 32px; left: 32px;
-            transform-style: preserve-3d; transition: transform 0.5s;
-            transform: rotateX(-20deg) rotateY(30deg);
-        }
-        .face {
-            position: absolute; width: 75px; height: 75px;
-            background: rgba(210, 180, 140, 0.85);
-            border: 2px solid var(--box-border);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: bold; backface-visibility: visible;
-        }
-        /* 立體位置 */
-        .f-front  { transform: translateZ(37.5px); }
-        .f-back   { transform: rotateY(180deg) translateZ(37.5px); }
-        .f-right  { transform: rotateY(90deg) translateZ(37.5px); }
-        .f-left   { transform: rotateY(-90deg) translateZ(37.5px); }
-        .f-top    { transform: rotateX(90deg) translateZ(37.5px); }
-        .f-bottom { transform: rotateX(-90deg) translateZ(37.5px); }
-
-        /* 高亮樣式 */
-        .hl-face { background: rgba(230, 126, 34, 0.75) !important; color: white; border: 2px solid #d35400; }
-        .hl-edge { box-shadow: 0 0 8px #e74c3c; border: 3px solid #e74c3c !important; }
-
-        /* 控制鈕 */
-        .controls { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
-        button {
-            padding: 5px 11px; border: 1px solid var(--box-border);
-            background: var(--bg-card); border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;
-        }
-        button:active { background: #eee; }
-        .info-panel { font-size: 13px; margin-top: 4px; font-weight: bold; color: #d35400; text-align: center; }
-
-        /* Act 2 & 3 展開圖 */
-        .net-container {
-            position: relative; width: 160px; height: 160px;
-            transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(20deg);
-            margin-top: 10px;
-        }
-        .net-face {
-            position: absolute; width: 38px; height: 38px;
-            background: var(--box-color); border: 1px solid var(--box-border);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;
-        }
-        /* 十字展開圖佈局 */
-        .n-center { top: 60px; left: 60px; }
-        .n-up     { top: 22px; left: 60px; transform-origin: bottom; }
-        .n-down   { top: 98px; left: 60px; transform-origin: top; }
-        .n-left   { top: 60px; left: 22px; transform-origin: right; }
-        .n-right  { top: 60px; left: 98px; transform-origin: left; }
-        .n-far    { top: 136px; left: 60px; transform-origin: top; }
-
-        /* 語音與底部 */
-        .footer {
-            height: 28px; background: #8b7355; color: white;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 12px; font-size: 11px;
-        }
-        #voice-toggle { cursor: pointer; font-size: 14px; }
-
-        /* Act 4 專用 */
-        .shape-desc { font-size: 11px; text-align: center; margin-top: 4px; line-height: 1.4; color: #6d4c41; }
-    </style>
-    <script src="../js/audio_manager.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>G3-S-3-4 幾何形體之操作（真題題幹圖）</title>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+  :root {
+    --paper:#fdfbf7; --ink:#3d3a34; --line:#4b4a46; --muted:#8a857b;
+    --wood:#d2b48c; --fill-a:#f6e4c9; --fill-b:#dcebf5; --fill-c:#ece0f4;
+    --accent:#f4694b; --grid:#b9c4cf;
+  }
+  html[data-theme="dark"] {
+    --paper:var(--bg-main); --ink:var(--text-primary); --line:var(--svg-stroke);
+    --muted:var(--text-secondary); --wood:#334155; --fill-a:#3b3529; --fill-b:#243b50; --fill-c:#3b3348;
+    --accent:var(--accent-primary); --grid:#475569;
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { margin:0; padding:0; width:390px; height:420px; overflow:hidden; }
+  body { font-family:"PingFang TC","Microsoft JhengHei",sans-serif; background:var(--paper); color:var(--ink); }
+  #app { width:390px; height:420px; background:var(--paper); display:flex; flex-direction:column; overflow:hidden; }
+  .topbar { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
+            padding:0 12px; background:var(--bg-elevated); border-bottom:1px solid var(--border-color); }
+  .topbar .name { font-size:12px; font-weight:700; color:var(--ink); }
+  .topbar .qtag { font-size:11px; font-weight:700; color:var(--accent); border:1px solid var(--accent);
+                  border-radius:9px; padding:1px 7px; }
+  .scene { position:relative; flex:1; width:390px; height:352px; overflow:hidden; }
+  .scene svg { display:block; width:390px; height:340px; }
+  .scene .cap { font-size:12px; fill:var(--ink); font-weight:700; }
+  .scene .lbl { font-size:12px; fill:var(--ink); font-weight:700; }
+  .scene .dim { font-size:11px; fill:var(--muted); }
+  .scene .hit { cursor:pointer; }
+  .scene .hit.on { stroke:var(--accent); }
+  .footer { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
+            padding:0 10px; background:var(--bg-elevated); border-top:1px solid var(--border-color); }
+  .footer .hint { font-size:10px; color:var(--muted); max-width:270px; }
+  .footer .count { font-size:10px; color:var(--accent); font-weight:700; }
+</style>
 </head>
 <body>
-  <div id="q-badge" class="q-badge"></div>
-  <div id="q-focus" class="q-focus"></div>
-
-<nav>
-    <div class="tab active" id="tab-act1" onclick="switchAct(1)">構成要素</div>
-    <div class="tab" id="tab-act2" onclick="switchAct(2)">摺疊實驗</div>
-    <div class="tab" id="tab-act3" onclick="switchAct(3)">對面挑戰</div>
-    <div class="tab" id="tab-act4" onclick="switchAct(4)">角柱角錐</div>
-</nav>
-
-<div class="view-container">
-    <!-- Act 1: Anatomy -->
-    <div class="view active" id="act-1-view">
-        <div class="stage">
-            <div class="cube" id="cube1">
-                <div class="face f-front">前</div><div class="face f-back">後</div>
-                <div class="face f-right">右</div><div class="face f-left">左</div>
-                <div class="face f-top">上</div><div class="face f-bottom">下</div>
-            </div>
-        </div>
-        <div class="info-panel" id="act1-info">點擊按鈕探索正方體：6個面、12條邊、8個頂點</div>
-        <div class="controls">
-            <button onclick="highlight('face')">👀 面 (6個)</button>
-            <button onclick="highlight('edge')">📏 邊 (12條)</button>
-            <button onclick="highlight('vertex')">📍 頂點 (8個)</button>
-        </div>
-    </div>
-
-    <!-- Act 2: Folding -->
-    <div class="view" id="act-2-view">
-        <div class="net-container" id="net2">
-            <div class="net-face n-center">底</div>
-            <div class="net-face n-up" id="f2-up">上</div>
-            <div class="net-face n-down" id="f2-down">下</div>
-            <div class="net-face n-left" id="f2-left">左</div>
-            <div class="net-face n-right" id="f2-right">右</div>
-            <div class="net-face n-far" id="f2-far">頂</div>
-        </div>
-        <div class="controls" style="margin-top:14px">
-            <input type="range" id="fold-slider" min="0" max="90" value="0" style="width:140px" oninput="foldNet(this.value)">
-            <button onclick="autoFold()">▶️ 自動閉合</button>
-        </div>
-        <div class="info-panel" id="act2-info">滑動滑桿：觀察平面展開圖閉合成立體盒子！</div>
-    </div>
-
-    <!-- Act 3: Opposite Faces -->
-    <div class="view" id="act-3-view">
-        <div class="net-container" id="net3">
-            <div class="net-face n-center" style="background:#ff7675; color:white">A</div>
-            <div class="net-face n-up" id="f3-up" style="background:#74b9ff">B</div>
-            <div class="net-face n-down" id="f3-down" style="background:#74b9ff">B'</div>
-            <div class="net-face n-left" id="f3-left" style="background:#55efc4">C</div>
-            <div class="net-face n-right" id="f3-right" style="background:#55efc4">C'</div>
-            <div class="net-face n-far" id="f3-far" style="background:#ff7675; color:white">A'</div>
-        </div>
-        <div class="info-panel" id="act3-msg">找對面規律：中間隔一個面的必定是對面！</div>
-        <div class="controls" style="margin-top:14px">
-            <button onclick="foldOpposite()">🔄 閉合驗證 A 與 A'</button>
-            <button onclick="resetAct3()">展開還原</button>
-        </div>
-    </div>
-
-    <!-- Act 4: Prisms & Pyramids -->
-    <div class="view" id="act-4-view">
-        <div id="shape-display" style="font-size: 36px; margin-top: 14px;">⛺</div>
-        <div class="info-panel" id="act4-title">三角柱</div>
-        <div class="shape-desc" id="act4-desc">面：5 (上下底面2 + 側面3) · 邊：9 · 頂點：6</div>
-        <div class="controls" style="margin-top:10px">
-            <button onclick="showShape('tri-prism')">三角柱 (帳篷)</button>
-            <button onclick="showShape('quad-prism')">四角柱 (積木)</button>
-            <button onclick="showShape('tri-pyramid')">三角錐 (金字塔)</button>
-        </div>
-    </div>
-</div>
-
-<div class="footer">
-    <span>G3-S-3-4 幾何形體操作</span>
-    <span id="voice-toggle" onclick="toggleMute()">🔊</span>
+<div id="app">
+  <div class="topbar"><span class="name">S-3-4 幾何形體之操作</span><span class="qtag" id="qtag">Q01</span></div>
+  <div class="scene" id="scene"></div>
+  <div class="footer"><span class="hint" id="hint"></span><span class="count" id="count">已標記 0 處</span></div>
 </div>
 
 <script>
-    let isMuted = false;
-
-    function speak(text) {
-        if (typeof isMuted !== 'undefined' && isMuted) return;
-        if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'TTS_SPEAK', text: text }, '*');
-        } else if (window.AudioManager) {
-            window.AudioManager.play(text);
-        }
-    }
-
-    function toggleMute() {
-        isMuted = !isMuted;
-        document.getElementById('voice-toggle').innerText = isMuted ? '🔇' : '🔊';
-    }
-
-    function switchAct(actNum) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(`tab-act${actNum}`).classList.add('active');
-        document.getElementById(`act-${actNum}-view`).classList.add('active');
-        
-        const hints = [
-            "正方體有 6 個大小相同的正方形面、12 條等長的邊、8 個頂點！",
-            "滑動滑桿，觀察平面十字展開圖如何閉合成一個正方體！",
-            "對面規律：中間隔著一個面，摺起來後正好會成為相互平行的對面！",
-            "角柱有上下兩個平行的底面；角錐只有一個底面，頂端聚集成一個頂點！"
-        ];
-        speak(hints[actNum - 1]);
-    }
-
-    function highlight(type) {
-        const faces = document.querySelectorAll('#cube1 .face');
-        faces.forEach(f => {
-            f.classList.remove('hl-face', 'hl-edge');
-        });
-        if (type === 'face') {
-            faces.forEach(f => f.classList.add('hl-face'));
-            document.getElementById('act1-info').innerText = "✨ 共有 6 個完全相同的正方形面！";
-        } else if (type === 'edge') {
-            faces.forEach(f => f.classList.add('hl-edge'));
-            document.getElementById('act1-info').innerText = "📏 共有 12 條等長的邊！";
-        } else if (type === 'vertex') {
-            document.getElementById('act1-info').innerText = "📍 共有 8 個頂點（三個面相交之處）！";
-        }
-    }
-
-    function foldNet(deg) {
-        document.getElementById('f2-up').style.transform = `rotateX(${deg}deg)`;
-        document.getElementById('f2-down').style.transform = `rotateX(-${deg}deg)`;
-        document.getElementById('f2-left').style.transform = `rotateY(-${deg}deg)`;
-        document.getElementById('f2-right').style.transform = `rotateY(${deg}deg)`;
-        document.getElementById('f2-far').style.transform = `translateY(${deg > 45 ? -deg*0.3 : 0}px) rotateX(-${deg*2}deg)`;
-    }
-
-    function autoFold() {
-        let v = 0;
-        const timer = setInterval(() => {
-            v += 5;
-            document.getElementById('fold-slider').value = v;
-            foldNet(v);
-            if (v >= 90) clearInterval(timer);
-        }, 30);
-    }
-
-    function foldOpposite() {
-        document.getElementById('f3-up').style.transform = 'rotateX(90deg)';
-        document.getElementById('f3-down').style.transform = 'rotateX(-90deg)';
-        document.getElementById('f3-left').style.transform = 'rotateY(-90deg)';
-        document.getElementById('f3-right').style.transform = 'rotateY(90deg)';
-        document.getElementById('f3-far').style.transform = 'translateY(-27px) rotateX(-180deg)';
-        document.getElementById('act3-msg').innerText = "🎉 閉合驗證：A 與 A' 完全位在對面！";
-    }
-
-    function resetAct3() {
-        ['f3-up', 'f3-down', 'f3-left', 'f3-right', 'f3-far'].forEach(id => {
-            document.getElementById(id).style.transform = 'none';
-        });
-        document.getElementById('act3-msg').innerText = "找對面規律：中間隔一個面的必定是對面！";
-    }
-
-    function showShape(type) {
-        if (type === 'tri-prism') {
-            document.getElementById('shape-display').innerText = '⛺';
-            document.getElementById('act4-title').innerText = '三角柱 (Triangular Prism)';
-            document.getElementById('act4-desc').innerText = '面：5 (底面2三角形 + 側面3長方形) · 邊：9 · 頂點：6';
-        } else if (type === 'quad-prism') {
-            document.getElementById('shape-display').innerText = '🧱';
-            document.getElementById('act4-title').innerText = '四角柱 (長方體 / 正方體)';
-            document.getElementById('act4-desc').innerText = '面：6 · 邊：12 · 頂點：8';
-        } else if (type === 'tri-pyramid') {
-            document.getElementById('shape-display').innerText = '🔺';
-            document.getElementById('act4-title').innerText = '三角錐 (Triangular Pyramid)';
-            document.getElementById('act4-desc').innerText = '面：4 (全是三角形) · 邊：6 · 頂點：4';
-        }
-    }
-
-    // ?q=1..10 题号视觉模式
-    const qNum = (() => {
-        const n = parseInt(new URLSearchParams(location.search).get('q'), 10);
-        return Number.isInteger(n) && n >= 1 && n <= 10 ? n : 1;
-    })();
-    const Q_SCENES = {
-        1: { act:1, focus:'6 面 / 12 邊 / 8 頂點' },
-        2: { act:4, focus:'對面全等且平行', emoji:'🧱', title:'長方體（對面活動）', desc:'相對兩面形狀相同、面積相等。' },
-        3: { act:2, focus:'一排 5 格無法閉合' },
-        4: { act:4, focus:'三角錐只有 1 底面', emoji:'🔺', title:'三角錐 (Triangular Pyramid)', desc:'面：4 · 邊：6 · 頂點：4' },
-        5: { act:3, focus:'相隔一面 → 對面' },
-        6: { act:1, focus:'6 面 / 12 邊 / 8 頂點' },
-        7: { act:3, focus:'A ↔ F 是相對面' },
-        8: { act:4, focus:'前視圖：4 格橫排', emoji:'⬜⬜⬜⬜', title:'前視圖（4 個並排）', desc:'左右並排 4 個、只有一層 → 4 格橫排。' },
-        9: { act:4, focus:'3+2+1 = 6 個', emoji:'🔲🔲🔲', title:'三層堆疊', desc:'底層 3 + 次層 2 + 頂層 1 = 6 個積木。' },
-        10:{ act:4, focus:'1+2+1+3 = 7 個', emoji:'2×2 俯視', title:'俯視圖 × 高度', desc:'四格高度 1、2、1、3 加總 = 7 個積木。' }
-    };
-    function applyQuestionMode() {
-        const s = Q_SCENES[qNum] || Q_SCENES[1];
-        document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
-        switchAct(s.act);
-        const f = document.getElementById('q-focus');
-        f.textContent = s.focus;
-        f.style.display = 'block';
-        if (s.emoji) {
-            document.getElementById('shape-display').innerText = s.emoji;
-            document.getElementById('act4-title').innerText = s.title;
-            document.getElementById('act4-desc').innerText = s.desc;
-        }
-    }
-    applyQuestionMode();
-</script>
-<script>
-/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
 (function () {
-  try {
-    var t = localStorage.getItem('math108_theme') || 'light';
-    document.documentElement.dataset.theme = t;
-  } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const qNum = (() => { const n = parseInt(params.get('q'), 10); return n >= 1 && n <= 4 ? n : 1; })();
+  const theme = params.get('theme');
+  if (theme === 'dark' || theme === 'light') {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('math108_theme', theme); } catch (e) {}
+  } else {
+    try { document.documentElement.dataset.theme = localStorage.getItem('math108_theme') || 'light'; }
+    catch (e) { document.documentElement.dataset.theme = 'light'; }
+  }
   window.addEventListener('message', function (e) {
     if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
       document.documentElement.dataset.theme = e.data.theme;
       try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
     }
+  });
+
+  const wrap = (inner) => '<svg viewBox="0 0 390 340" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+  const txt = (x, y, s, cls, anchor) => '<text x="' + x + '" y="' + y + '" class="' + (cls || 'lbl') + '" text-anchor="' + (anchor || 'middle') + '">' + s + '</text>';
+  const line = (x1, y1, x2, y2, w) => '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="var(--line)" stroke-width="' + (w || 5) + '" stroke-linecap="round"/>';
+  const stick = (x1, y1, x2, y2) => '<line class="hit" data-kind="stick" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>';
+
+  // 題組一：木棍排出圖案（3 / 5 / 7 根）
+  function sticksScene() {
+    let s = txt(195, 24, '題目：下面是用木棍排出來的圖案', 'cap');
+    s += stick(28, 70, 92, 70) + stick(28, 70, 60, 126) + stick(92, 70, 60, 126);
+    s += txt(60, 150, '圖①', 'lbl');
+    // 圖②：梯形 5 根（上、下、兩腰、中間一根）
+    s += stick(146, 70, 222, 70) + stick(134, 126, 234, 126) +
+         stick(146, 70, 134, 126) + stick(222, 70, 234, 126) + stick(176, 70, 184, 126);
+    s += txt(184, 150, '圖②', 'lbl');
+    // 圖③：兩個相連梯形 7 根
+    s += stick(252, 70, 310, 70) + stick(310, 70, 368, 70) +
+         stick(244, 126, 310, 126) + stick(310, 126, 376, 126) +
+         stick(252, 70, 244, 126) + stick(310, 70, 310, 126) + stick(368, 70, 376, 126);
+    s += txt(310, 150, '圖③', 'lbl');
+    s += txt(195, 186, '後面還有「……」', 'dim');
+    s += txt(195, 224, '(1) 圖③比圖②多用幾根木棍？', 'lbl');
+    s += txt(195, 256, '(2) 圖⑤需要用幾根木棍？', 'lbl');
+    s += txt(195, 300, '點選木棍可以逐根標記', 'dim');
+    s += txt(195, 326, '兩小題請一起看同一組圖案', 'dim');
+    return wrap(s);
+  }
+
+  // 圓規題：折線甲 + A 點虛線 + 圓規
+  function compassScene() {
+    let s = txt(195, 24, '題目：以 A 點為起點，在下面虛線上畫出和甲線一樣長的直線', 'cap');
+    const pts = [[56, 96], [108, 72], [162, 116], [216, 80], [268, 124]];
+    for (let i = 0; i < pts.length - 1; i++) {
+      s += '<line class="hit" data-kind="seg" x1="' + pts[i][0] + '" y1="' + pts[i][1] + '" x2="' + pts[i + 1][0] + '" y2="' + pts[i + 1][1] + '" stroke="var(--line)" stroke-width="4"/>';
+    }
+    pts.forEach((p) => { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="4" fill="var(--ink)"/>'; });
+    s += txt(38, 84, '甲', 'lbl');
+    s += '<line x1="56" y1="238" x2="332" y2="238" stroke="var(--grid)" stroke-width="2" stroke-dasharray="7 6"/>';
+    s += '<circle cx="56" cy="238" r="5" fill="var(--ink)"/>';
+    s += txt(56, 262, 'A', 'lbl');
+    s += '<circle cx="332" cy="122" r="6" fill="none" stroke="var(--line)" stroke-width="3"/>';
+    s += '<line x1="330" y1="128" x2="314" y2="196" stroke="var(--line)" stroke-width="4"/>';
+    s += '<line x1="336" y1="128" x2="352" y2="196" stroke="var(--line)" stroke-width="4"/>';
+    s += txt(333, 216, '圓規', 'dim');
+    s += txt(195, 300, '甲線有幾個轉折點？先數一數', 'dim');
+    s += txt(195, 326, '虛線左端是 A 點', 'dim');
+    return wrap(s);
+  }
+
+  // base-ten 積木圖形
+  const cube = (x, y) =>
+    '<rect x="' + (x + 7) + '" y="' + (y - 7) + '" width="38" height="38" fill="var(--fill-a)" stroke="var(--line)" stroke-width="2"/>' +
+    '<rect x="' + x + '" y="' + y + '" width="38" height="38" fill="var(--fill-a)" stroke="var(--line)" stroke-width="2"/>';
+  const flat = (x, y) => '<rect x="' + x + '" y="' + y + '" width="38" height="38" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2"/>';
+  const rod = (x, y) => '<rect x="' + x + '" y="' + y + '" width="66" height="9" fill="var(--fill-c)" stroke="var(--line)" stroke-width="2"/>';
+  const unit = (x, y) => '<rect x="' + x + '" y="' + y + '" width="11" height="11" fill="var(--fill-a)" stroke="var(--line)" stroke-width="1.5"/>';
+
+  function blocksScene(which) {
+    let s = '';
+    if (which === 3) {
+      s += txt(195, 22, '題目：數數看，下圖的積木合起來是多少？', 'cap');
+      s += cube(30, 56) + txt(49, 112, '千', 'dim');
+      for (let i = 0; i < 5; i++) s += flat(96 + i * 46, 56);
+      s += txt(195, 112, '百', 'dim');
+      for (let i = 0; i < 4; i++) s += rod(50, 140 + i * 20);
+      s += txt(195, 236, '十', 'dim');
+      [[40, 250], [120, 250], [200, 250]].forEach((g) => { for (let k = 0; k < 5; k++) s += unit(g[0] + k * 12, g[1]); });
+      for (let k = 0; k < 1; k++) s += unit(280 + k * 12, 250);
+      s += txt(195, 284, '一：分成 5、5、5、1 四群', 'dim');
+      s += txt(195, 314, '點選各類積木，對照千、百、十、一的位置', 'dim');
+    } else {
+      s += txt(195, 22, '題目：數數看，合起來的數字是多少？', 'cap');
+      [34, 100, 166, 232].forEach((x) => { s += cube(x, 42); });
+      s += txt(195, 100, '千', 'dim');
+      [28, 94, 160, 226, 292].forEach((x) => { s += flat(x, 112); });
+      s += txt(195, 168, '百', 'dim');
+      [40, 130, 220, 310].forEach((x) => { s += rod(x, 182); s += rod(x, 198); });
+      s += txt(195, 226, '十', 'dim');
+      [80, 92, 104].forEach((x) => { s += unit(x, 244); });
+      s += txt(195, 284, '一', 'dim');
+      s += txt(195, 314, '長條代表十，平面代表百，立方代表千', 'dim');
+    }
+    return wrap(s);
+  }
+
+  const HINTS = [
+    '點選木棍數一數，看看圖形怎麼長大。',
+    '數數甲線有幾個轉折點，A 點在虛線左端。',
+    '點選各類積木，對照千、百、十、一的位置。',
+    '點選各類積木，對照千、百、十、一的位置。'
+  ];
+  const scene = document.getElementById('scene');
+  scene.innerHTML = qNum === 1 ? sticksScene() : qNum === 2 ? compassScene() : blocksScene(qNum);
+  document.getElementById('qtag').textContent = 'Q' + String(qNum).padStart(2, '0');
+  document.getElementById('hint').textContent = HINTS[qNum - 1];
+
+  let marked = 0;
+  scene.addEventListener('click', function (e) {
+    const t = e.target.closest('.hit');
+    if (!t) return;
+    const on = !t.classList.contains('on');
+    t.classList.toggle('on', on);
+    marked += on ? 1 : -1;
+    document.getElementById('count').textContent = '已標記 ' + marked + ' 處';
   });
 })();
 </script>

@@ -453,7 +453,7 @@
           "full_text": "正方形和長方形：以邊與角的特徵來定義正方形和長方形。",
           "status": "ready",
           "question_count": 10,
-          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "verified_source": "臺北市內湖國小 111-1期末/111-2期末/112-1期末/112-2期末/113-1期末/114-1期末 段考真題（唯一題源：docs/G3_REAL_EXAM_MASTER_POOL.md S-3-2 段落）",
           "component_path": "components/square_rectangle_lab.html",
           "concept_path": "components/square_rectangle_lab.html"
         },
@@ -470,8 +470,8 @@
           "title": "幾何形體之操作",
           "full_text": "幾何形體之操作：以操作活動為主。平面圖形的分割與重組。初步體驗展開圖如何黏合成立體形體。知道不同之展開圖可能黏合成同一形狀之立體形體。",
           "status": "ready",
-          "question_count": 10,
-          "verified_source": "四幕式概念探索實驗室與全量真題庫",
+          "question_count": 4,
+          "verified_source": "臺北市內湖國小 112-2期中／113-2期末／112-1期中／114-1期中 段考真題（唯一題源：docs/G3_REAL_EXAM_MASTER_POOL.md S-3-4 與 N-3-1 段落；4 題彈性真題規範）",
           "component_path": "components/solid_geometry_lab.html",
           "concept_path": "components/solid_geometry_lab.html"
         },
