@@ -498,7 +498,12 @@ function renderQuestion() {
   clearInterval(heightTimer);
   const isNarrow = window.innerWidth < 700;
   frame.style.height = (q.fallback_height || (isNarrow ? 440 : 480)) + "px"; // 緊湊 fallback 防跳動與虛空空白
-  frame.src = q.component_path || q.component;
+  // N-3-17 時鐘教具需知道目前題號，才能撥到對應時刻／演出對應經過時間（其餘 130 單元不受影響）
+  const rawSrc = q.component_path || q.component || '';
+  const isClockLab = rawSrc.indexOf('time_concept_lab.html') !== -1;
+  frame.src = isClockLab
+    ? (rawSrc + (rawSrc.indexOf('?') === -1 ? '?' : '&') + 'q=' + (state.qIndex + 1))
+    : rawSrc;
   frame.onload = () => fitFrame(frame, q);
   // 同源可讀時持續自適應高度；file:// 跨檔受限時保持緊湊高度
   // 約 2.5 秒（6 次）穩定高度後自動停止輪詢，消滅無窮重排抖動

@@ -1,8 +1,9 @@
 /**
- * tools/verify_n317_cdp.js — G3-N-3-17 時間（日、時、分、秒）教具 CDP 實機驗證（390px 手機視口）
- * 教具：app/components/time_concept_lab.html（四幕式：秒感／齒輪／24小時／經過時間）
- * 驗證：單屏 ≤420px、零橫向溢出、四幕切換、60 秒進 1 分、時分進位、14:00/20:30 設定、
- *       電影 10:45 + 90 分 = 12:15。全部呼叫教具真實函式與真實按鈕事件。
+ * tools/verify_n317_cdp.js — G3-N-3-17 時間（日、時、分、秒）教具 CDP 實機驗證（390×844 手機視口）
+ * 教具：app/components/time_concept_lab.html（四幕式＋?q=1..10 題目連動）
+ * 驗證：單屏 ≤420px、零橫向溢出、1–12 數字、60 刻度、4 幕切換、60 秒進 1 分、
+ *       10 題逐題時刻連動、Dark 模式 theme-token 高對比、Light/Dark 截圖輸出。
+ * 所有檢查呼叫教具真實函式與真實按鈕事件；任一失敗 Exit 1。
  */
 'use strict';
 const { spawn } = require('node:child_process');
@@ -81,6 +82,8 @@ async function main() {
   const port = argsPort;
   const userDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdp-math-n317-'));
   const chromePath = findChrome();
+  const shotDir = path.resolve(__dirname, '..', '_scratch', 'fix_n317');
+  fs.mkdirSync(shotDir, { recursive: true });
 
   const chromeArgs = [
     `--remote-debugging-port=${port}`,
@@ -116,18 +119,19 @@ async function main() {
     const compPath = path.resolve(__dirname, '..', 'app', 'components', 'time_concept_lab.html');
     if (!fs.existsSync(compPath)) fail('time_concept_lab.html 不存在');
     const unit = JSON.parse(fs.readFileSync('data/units/G3/N-3-17.json', 'utf8'));
-    if (unit.questions.length !== 5) fail('N-3-17 題數不是 5');
+    if (unit.questions.length !== 10 || unit.question_count !== 10) fail('N-3-17 題數不是完整 10 題');
 
-    await send('Page.navigate', { url: pathToFileURL(compPath).href + '?q=1' });
-    await sleep(1200);
-
+    const compUrl = pathToFileURL(compPath).href;
     const evalJs = async (expression) => {
       const r = await send('Runtime.evaluate', { expression, returnByValue: true });
       if (r.exceptionDetails) fail('Runtime.evaluate 拋錯: ' + JSON.stringify(r.exceptionDetails));
       return r.result.value;
     };
 
-    // 1. 骨架與單屏尺寸
+    await send('Page.navigate', { url: compUrl + '?q=1' });
+    await sleep(1000);
+
+    // 1. 骨架與單屏尺寸（含 1–12 數字）
     const base = await evalJs(`(() => {
       const de = document.documentElement;
       return {
@@ -135,10 +139,12 @@ async function main() {
         overflowX: de.scrollWidth > de.clientWidth + 2,
         tabs: document.querySelectorAll('.nav-item').length,
         ticks: document.getElementById('ticks').children.length,
+        nums: document.getElementById('numbers').children.length,
         hour: !!document.getElementById('hand-hour'),
         min: !!document.getElementById('hand-min'),
         sec: !!document.getElementById('hand-sec'),
-        display: document.getElementById('digital-display').innerText
+        display: document.getElementById('digital-display').innerText,
+        banner: document.getElementById('q-banner').innerText
       };
     })()`);
     if (!base || base.height === 0) fail('教具未載入（body 高度 0）');
@@ -146,11 +152,13 @@ async function main() {
     if (base.overflowX) fail('390px 視口出現橫向溢出');
     if (base.tabs !== 4) fail(`分頁數應為 4，實際 ${base.tabs}`);
     if (base.ticks !== 60) fail(`鐘面刻度數應為 60，實際 ${base.ticks}`);
+    if (base.nums !== 12) fail(`鐘面 1–12 數字數應為 12，實際 ${base.nums}`);
     if (!base.hour || !base.min || !base.sec) fail('缺少時／分／秒指針');
-    if (base.display !== '10:00:00') fail('初始數位時刻應為 10:00:00，實際 ' + base.display);
-    console.log(`PASS: 骨架 OK（body ${base.height}px、4 幕、60 刻度、零溢出、10:00:00）`);
+    if (base.display !== '10:00:00') fail('?q=1 初始數位時刻應為 10:00:00，實際 ' + base.display);
+    if (!base.banner.startsWith('Q01')) fail('?q=1 題目橫幅未連動：' + base.banner);
+    console.log(`PASS: 骨架 OK（body ${base.height}px、4 幕、60 刻度、12 數字、零溢出、Q01/10:00:00）`);
 
-    // 2. Act1 秒針：real tickSec() ×60 → 60 秒進 1 分；自動按鈕可啟動／停止
+    // 2. Act1 秒針：真 tickSec() ×60 → 60 秒進 1 分；自動按鈕可啟動／停止
     const act1 = await evalJs(`(() => {
       tickSec();
       const one = document.getElementById('digital-display').innerText;
@@ -161,11 +169,11 @@ async function main() {
       const running = btn.innerText;
       btn.click();
       const stopped = btn.innerText;
-      return { one, sixty, running, stopped, title: document.getElementById('act-title').innerText };
+      return { one, sixty, running, stopped };
     })()`);
     if (act1.one !== '10:00:01') fail('Act1 走 1 秒失敗：' + JSON.stringify(act1));
     if (act1.sixty !== '10:01:00') fail('Act1 滿 60 秒未進 1 分：' + JSON.stringify(act1));
-    if (!act1.running.includes('暫停') || !act1.stopped.includes('連續走60秒')) {
+    if (!act1.running.includes('暫停') || !act1.stopped.includes('60秒')) {
       fail('Act1 連續走 60 秒按鈕無法啟動／停止：' + JSON.stringify(act1));
     }
     console.log(`PASS: Act1 秒針 1 小格→1 秒；60 秒進位 ${act1.sixty}；連續鍵狀態正常`);
@@ -178,7 +186,7 @@ async function main() {
       const plus15 = document.getElementById('digital-display').innerText;
       addTime(60);
       const plus60 = document.getElementById('digital-display').innerText;
-      return { initial, plus15, plus60, title: document.getElementById('act-title').innerText };
+      return { initial, plus15, plus60 };
     })()`);
     if (act2.initial !== '09:00:00' || act2.plus15 !== '09:15:00' || act2.plus60 !== '10:15:00') {
       fail('Act2 時分進位計算異常：' + JSON.stringify(act2));
@@ -194,7 +202,7 @@ async function main() {
       const cursor = document.getElementById('time-cursor').style.left;
       btns[2].click();
       const pm830 = document.getElementById('digital-display').innerText;
-      return { pm2, cursor, pm830, title: document.getElementById('act-title').innerText };
+      return { pm2, cursor, pm830 };
     })()`);
     if (act3.pm2 !== '14:00:00' || act3.pm830 !== '20:30:00') {
       fail('Act3 24 小時制按鈕設定異常：' + JSON.stringify(act3));
@@ -214,7 +222,107 @@ async function main() {
     }
     console.log(`PASS: Act4 電影 10:45 + 90 分 → ${act4.display}（${act4.result}）`);
 
-    console.log('\n🌟 SUCCESS: G3-N-3-17 (時間「日、時、分、秒」) CDP 實機驗收全綠通過！(Exit 0)');
+    // 6. ?q=1..10 逐題巡檢：題目橫幅、對應時刻、時針聯動角度
+    const EXPECT = [
+      { q: 1,  time: '10:00:00', hDeg: 300 },   // 10:00 → 10*30 + 0 = 300°
+      { q: 2,  time: '15:40:00', hDeg: 110 },   // 15:40 → (3*30)+40*0.5 = 110°
+      { q: 3,  time: '10:25:00', hDeg: 312.5 },
+      { q: 4,  time: '09:00:00', hDeg: 270 },
+      { q: 5,  time: '11:40:00', hDeg: 350 },
+      { q: 6,  time: '09:50:25', hDeg: 295 },   // 9*30 + 50*0.5 = 295°
+      { q: 7,  time: '00:03:20', hDeg: 1.5 },
+      { q: 8,  time: '00:00:00', hDeg: 0 },
+      { q: 9,  time: '14:45:00', hDeg: 82.5 },   // 14:45 → (2*30)+45*0.5 = 82.5°
+      { q: 10, time: '08:20:00', hDeg: 250 }
+    ];
+    for (const exp of EXPECT) {
+      await send('Page.navigate', { url: compUrl + '?q=' + exp.q });
+      await sleep(320);
+      const got = await evalJs(`(() => {
+        const d = document.getElementById('digital-display').innerText;
+        const b = document.getElementById('q-banner').innerText;
+        const a = document.getElementById('q-action').innerText;
+        const hourTransform = document.getElementById('hand-hour').style.transform;
+        const nums = document.getElementById('numbers').children.length;
+        const ticks = document.getElementById('ticks').children.length;
+        const hgt = document.body.offsetHeight;
+        const de = document.documentElement;
+        return { d, b, a, hourTransform, nums, ticks, hgt, overflowX: de.scrollWidth > de.clientWidth + 2 };
+      })()`);
+      if (got.d !== exp.time) fail(`?q=${exp.q} 時刻應為 ${exp.time}，實際 ${got.d}`);
+      if (!got.b.startsWith('Q' + String(exp.q).padStart(2, '0'))) fail(`?q=${exp.q} 橫幅未連動：${got.b}`);
+      if (got.nums !== 12 || got.ticks !== 60) fail(`?q=${exp.q} 刻度/數字數異常：${JSON.stringify(got)}`);
+      if (got.hgt > 420 || got.overflowX) fail(`?q=${exp.q} 版面超標/溢出：${JSON.stringify(got)}`);
+      const m = got.hourTransform.match(/rotate\(([-\d.]+)deg/);
+      if (!m || Math.abs(Number(m[1]) - exp.hDeg) > 0.6) {
+        fail(`?q=${exp.q} 時針角度應 ${exp.hDeg}°，實際 ${got.hourTransform}`);
+      }
+    }
+    console.log('PASS: ?q=1..10 十題逐題時刻、時針聯動角度、題目橫幅與單屏版面全綠');
+
+    // 6b. Q06 真實按鈕：撥到 9:50:25；Q09/Q10 演出進位與借位
+    await send('Page.navigate', { url: compUrl + '?q=6' });
+    await sleep(320);
+    const q6 = await evalJs(`(() => {
+      document.getElementById('q-action').click();
+      return { d: document.getElementById('digital-display').innerText, r: document.getElementById('q-result').innerText };
+    })()`);
+    if (q6.d !== '09:50:25') fail('Q06 撥到 9:50:25 失敗：' + JSON.stringify(q6));
+    await send('Page.navigate', { url: compUrl + '?q=9' });
+    await sleep(320);
+    const q9 = await evalJs(`(() => {
+      document.getElementById('q-action').click();
+      return document.getElementById('digital-display').innerText;
+    })()`);
+    if (q9 !== '15:25:00') fail('Q09 14:45+40 分應為 15:25，實際 ' + q9);
+    await send('Page.navigate', { url: compUrl + '?q=10' });
+    await sleep(320);
+    const q10 = await evalJs(`(() => {
+      document.getElementById('q-action').click();
+      return document.getElementById('digital-display').innerText;
+    })()`);
+    if (q10 !== '10:05:00') fail('Q10 8:20+1:45 應為 10:05，實際 ' + q10);
+    console.log('PASS: Q06 撥時刻／Q09 滿60進位／Q10 借1時當60分 真實按鈕事件全綠');
+
+    // 7. Dark 模式 theme-token 高對比計算樣式檢查
+    await send('Page.navigate', { url: compUrl + '?q=6' });
+    await sleep(320);
+    const dark = await evalJs(`(() => {
+      document.documentElement.dataset.theme = 'dark';
+      const cs = (sel) => getComputedStyle(document.querySelector(sel));
+      return {
+        theme: document.documentElement.dataset.theme,
+        bodyBg: cs('body').backgroundColor,
+        face: cs('.clock-face').fill,
+        num: cs('.cnum').fill,
+        tickMajor: cs('.tick.major').stroke,
+        hour: cs('#hand-hour').stroke,
+        min: cs('#hand-min').stroke,
+        sec: cs('#hand-sec').stroke
+      };
+    })()`);
+    const EXPECT_DARK = {
+      bodyBg: 'rgb(22, 27, 38)', face: 'rgb(31, 39, 54)', num: 'rgb(226, 232, 240)',
+      tickMajor: 'rgb(203, 213, 225)', hour: 'rgb(242, 232, 213)',
+      min: 'rgb(111, 211, 199)', sec: 'rgb(255, 154, 107)'
+    };
+    Object.keys(EXPECT_DARK).forEach((k) => {
+      if (dark[k] !== EXPECT_DARK[k]) fail(`Dark ${k} 應為 ${EXPECT_DARK[k]}，實際 ${dark[k]}`);
+    });
+    console.log(`PASS: Dark 模式 theme tokens 高對比（指針 ${dark.hour}/${dark.min}/${dark.sec}）`);
+
+    // 8. Light / Dark 390×844 截圖（Q06 鐘面，供 Hy4 Flash 目視複審）
+    await evalJs(`(() => { document.documentElement.dataset.theme = 'light'; document.getElementById('q-action').click(); return true; })()`);
+    await sleep(400);
+    const lightPng = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+    fs.writeFileSync(path.join(shotDir, '20261122_n317_light_q06.png'), Buffer.from(lightPng.data, 'base64'));
+    await evalJs(`(() => { document.documentElement.dataset.theme = 'dark'; return true; })()`);
+    await sleep(400);
+    const darkPng = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+    fs.writeFileSync(path.join(shotDir, '20261122_n317_dark_q06.png'), Buffer.from(darkPng.data, 'base64'));
+    console.log('PASS: 390×844 Light/Dark 截圖已輸出至 _scratch/fix_n317/');
+
+    console.log('\n🌟 SUCCESS: G3-N-3-17 (時間「日、時、分、秒」) 完整 10 題 CDP 實機驗收全綠通過！(Exit 0)');
     process.exit(0);
   } catch (err) {
     fail('CDP 執行異常: ' + err.message);

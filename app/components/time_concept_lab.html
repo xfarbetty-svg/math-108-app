@@ -3,195 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>G3-N-3-17 時間四幕式實驗室</title>
+    <title>G3-N-3-17 時間四幕式實驗室（10 題連動）</title>
+    <link rel="stylesheet" href="../styles/theme-tokens.css">
     <style>
+        /* 所有顏色走 theme-tokens.css 語意變數；Light 為預設，Dark 由 html[data-theme] 覆寫。
+           嚴禁 inline 晝夜背景覆寫（舊版 updateClock 寫 body.style.background 會蓋掉深色底）。 */
         :root {
-            --bg-night: #0f172a;
-            --bg-day: #38bdf8;
-            --accent-yellow: #fde047;
-            --accent-orange: #fb923c;
-            --text-light: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.12);
+            --clock-face: #ffffff;
+            --clock-rim: #e7dcc9;
+            --clock-num: #3d3a34;
+            --tick-major: #3d3a34;
+            --tick-minor: #8a857b;
+            --hand-hour: #4b5563;   /* 深灰 */
+            --hand-min: #5fa88f;    /* 鼠尾草綠 */
+            --hand-sec: #e2693b;    /* 暖橘紅 */
+            --panel-bg: rgba(61, 58, 52, 0.06);
+            --panel-border: #f0e7da;
+            --ui-text: #3d3a34;
+            --ui-sub: #8a857b;
+            --header-bg: rgba(61, 58, 52, 0.06);
+            --nav-bg: rgba(61, 58, 52, 0.06);
+            --nav-active: #b45309;
+        }
+        html[data-theme="dark"] {
+            --clock-face: #1F2736;
+            --clock-rim: #334155;
+            --clock-num: #E2E8F0;
+            --tick-major: #CBD5E1;
+            --tick-minor: #94A3B8;
+            --hand-hour: #F2E8D5;   /* 米白 */
+            --hand-min: #6FD3C7;    /* 亮青 */
+            --hand-sec: #FF9A6B;    /* 暖橘紅（深底加亮） */
+            --panel-bg: rgba(40, 50, 68, 0.92);
+            --panel-border: #334155;
+            --ui-text: #E2E8F0;
+            --ui-sub: #94A3B8;
+            --header-bg: rgba(31, 39, 54, 0.92);
+            --nav-bg: rgba(22, 27, 38, 0.96);
+            --nav-active: #86D9B8;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            margin: 0; padding: 0;
-            width: 390px; height: 420px;
-            background: var(--bg-night);
-            color: var(--text-light);
+            margin: 0 auto; padding: 0;
+            width: 100%; max-width: 390px; height: 420px;
+            background: var(--bg-main, #fff9f0);
+            color: var(--ui-text);
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: background 0.8s ease;
+            display: flex; flex-direction: column;
         }
-        /* Header */
         .header {
-            height: 38px; padding: 4px 12px;
+            height: 32px; padding: 2px 10px; flex: 0 0 32px;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.35);
+            background: var(--header-bg);
         }
-        .title { font-size: 13px; font-weight: bold; color: var(--accent-yellow); }
-        .mute-btn { cursor: pointer; font-size: 18px; }
-
-        /* Main Display Area */
+        .title { font-size: 11px; font-weight: bold; color: var(--nav-active); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mute-btn { cursor: pointer; font-size: 16px; }
+        .q-banner {
+            flex: 0 0 18px; height: 18px; line-height: 18px; text-align: center;
+            font-size: 10px; font-weight: bold; color: var(--ui-text);
+            background: var(--panel-bg); border-bottom: 1px solid var(--panel-border);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px;
+        }
         .stage {
-            flex: 1; position: relative;
+            flex: 1; position: relative; min-height: 0;
             display: flex; flex-direction: column; align-items: center;
-            padding: 6px 10px;
+            padding: 2px 8px; gap: 2px;
         }
-
-        /* Clock SVG */
-        #clock-container {
-            width: 155px; height: 155px; position: relative;
-            filter: drop-shadow(0 0 10px rgba(0,0,0,0.4));
-        }
-        .hand { stroke-linecap: round; transform-origin: 100px 100px; transition: transform 0.25s cubic-bezier(0.4, 1.8, 0.55, 0.44); }
-        #hand-sec { stroke: #ef4444; stroke-width: 2; }
-        #hand-min { stroke: #ffffff; stroke-width: 3.5; }
-        #hand-hour { stroke: var(--accent-yellow); stroke-width: 5.5; }
-
-        /* Act Specific UI */
-        .ui-panel {
-            width: 100%; margin-top: 6px;
-            display: none; flex-direction: column; align-items: center;
-            gap: 6px;
-        }
-        .ui-panel.active { display: flex; }
-        
-        .btn-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-        button {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.25);
-            color: white; padding: 5px 11px; border-radius: 16px;
-            font-size: 11px; cursor: pointer; transition: 0.2s; font-weight: bold;
-        }
-        button:active { transform: scale(0.92); background: var(--accent-orange); }
-        
-        /* Timeline Act 3 */
-        .timeline-container {
-            width: 330px; height: 32px; position: relative;
-            background: rgba(255,255,255,0.12); border-radius: 6px; margin-top: 4px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .timeline-mark {
-            position: absolute; top: 0; height: 100%; width: 1px; background: rgba(255,255,255,0.3);
-        }
-        #time-cursor {
-            position: absolute; top: -3px; width: 3px; height: 38px;
-            background: var(--accent-yellow); transition: left 0.3s;
-            box-shadow: 0 0 6px var(--accent-yellow);
-        }
-        .timeline-label { position: absolute; bottom: 2px; font-size: 8px; transform: translateX(-50%); color: #cbd5e1; }
-
-        /* Movie Act 4 */
-        .movie-info { 
-            font-size: 12px; text-align: center; background: rgba(0,0,0,0.45); 
-            padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(251, 146, 60, 0.4);
-            line-height: 1.4;
-        }
-
-        /* Navigation */
-        .nav {
-            height: 48px; display: flex; background: rgba(0,0,0,0.65);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .nav-item {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            font-size: 10px; opacity: 0.65; cursor: pointer; gap: 2px;
-        }
-        .nav-item.active { opacity: 1; color: var(--accent-yellow); border-top: 2px solid var(--accent-yellow); font-weight: bold; }
-
-        /* Digital Display */
+        #clock-container { width: 140px; height: 140px; position: relative; }
+        #clock-container svg { width: 140px; height: 140px; display: block; }
+        .clock-face { fill: var(--clock-face); stroke: var(--clock-rim); stroke-width: 2.5; }
+        .tick { stroke: var(--tick-minor); stroke-width: 1; }
+        .tick.major { stroke: var(--tick-major); stroke-width: 2; }
+        .cnum { fill: var(--clock-num); font-size: 13px; font-weight: bold; }
+        .hand { stroke-linecap: round; transform-box: view-box; transform-origin: 100px 100px; transition: transform 0.25s cubic-bezier(0.4, 1.8, 0.55, 0.44); }
+        #hand-sec { stroke: var(--hand-sec); stroke-width: 2; }
+        #hand-min { stroke: var(--hand-min); stroke-width: 3.5; }
+        #hand-hour { stroke: var(--hand-hour); stroke-width: 5.5; }
+        .center-dot { fill: var(--hand-sec); }
         .digital-time {
-            font-family: monospace; font-size: 20px; margin: 3px 0;
-            color: var(--accent-yellow); text-shadow: 0 0 5px var(--accent-orange);
-            font-weight: bold;
+            font-family: monospace; font-size: 18px; line-height: 22px; margin: 0;
+            color: var(--ui-text); font-weight: bold; letter-spacing: 1px;
         }
-        .sub-desc {
-            font-size: 11px; color: #94a3b8; text-align: center;
+        .ui-panel { width: 100%; display: none; flex-direction: column; align-items: center; gap: 3px; }
+        .ui-panel.active { display: flex; }
+        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+        button {
+            background: var(--panel-bg); border: 1px solid var(--panel-border);
+            color: var(--ui-text); padding: 3px 9px; border-radius: 14px;
+            font-size: 10px; cursor: pointer; font-weight: bold;
         }
+        button:active { transform: scale(0.94); }
+        #q-action { background: var(--panel-bg); border-color: var(--nav-active); color: var(--nav-active); }
+        #q-result { font-size: 10px; color: var(--ui-sub); text-align: center; line-height: 13px; min-height: 13px; }
+        .sub-desc { font-size: 10px; color: var(--ui-sub); text-align: center; line-height: 13px; }
+        .timeline-container {
+            width: 300px; height: 26px; position: relative;
+            background: var(--panel-bg); border-radius: 6px; border: 1px solid var(--panel-border);
+        }
+        .timeline-mark { position: absolute; top: 0; height: 100%; width: 1px; background: var(--tick-minor); }
+        #time-cursor { position: absolute; top: -2px; width: 3px; height: 30px; background: var(--nav-active); transition: left 0.3s; }
+        .timeline-label { position: absolute; bottom: 1px; font-size: 8px; transform: translateX(-50%); color: var(--ui-sub); }
+        .movie-info {
+            font-size: 10px; text-align: center; background: var(--panel-bg);
+            padding: 3px 8px; border-radius: 6px; border: 1px solid var(--panel-border); line-height: 1.35;
+        }
+        .nav { height: 38px; flex: 0 0 38px; display: flex; background: var(--nav-bg); border-top: 1px solid var(--panel-border); }
+        .nav-item {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 9px; color: var(--ui-sub); cursor: pointer; gap: 1px;
+        }
+        .nav-item.active { color: var(--nav-active); border-top: 2px solid var(--nav-active); font-weight: bold; }
     </style>
     <script src="../js/audio_manager.js"></script>
-<link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
 <body>
 
 <div class="header">
-    <div class="title" id="act-title">Act 1: 秒的感受與60進位</div>
+    <div class="title" id="act-title">Q01 · 秒的感受與60進位</div>
     <div class="mute-btn" onclick="speakHint()">🔊</div>
 </div>
+<div class="q-banner" id="q-banner">Q01 秒針走一圈＝60 秒＝1 分</div>
 
 <div class="stage" id="main-stage">
     <div id="clock-container">
-        <svg viewBox="0 0 200 200" width="155" height="155">
-            <circle cx="100" cy="100" r="95" fill="rgba(30,41,59,0.85)" stroke="#64748b" stroke-width="2.5"/>
-            <!-- Ticks -->
+        <svg viewBox="0 0 200 200" role="img" aria-label="時鐘鐘面">
+            <circle class="clock-face" cx="100" cy="100" r="95" />
             <g id="ticks"></g>
-            <!-- Numbers -->
-            <text x="100" y="28" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">12</text>
-            <text x="175" y="104" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">3</text>
-            <text x="100" y="180" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">6</text>
-            <text x="25" y="104" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">9</text>
-            <!-- Hands -->
+            <g id="numbers"></g>
             <line id="hand-hour" x1="100" y1="100" x2="100" y2="58" class="hand" />
             <line id="hand-min" x1="100" y1="100" x2="100" y2="34" class="hand" />
             <line id="hand-sec" x1="100" y1="100" x2="100" y2="24" class="hand" />
-            <circle cx="100" cy="100" r="4.5" fill="#fde047" />
+            <circle class="center-dot" cx="100" cy="100" r="4.5" />
         </svg>
     </div>
-
     <div class="digital-time" id="digital-display">10:00:00</div>
 
-    <!-- Act 1: Seconds -->
     <div id="act1" class="ui-panel active">
         <div class="btn-group">
-            <button onclick="tickSec()">💓 滴答走1秒</button>
-            <button id="auto-btn" onclick="toggleAuto()">▶️ 連續走60秒</button>
-            <button onclick="resetTime()">🔄 重置</button>
+            <button onclick="tickSec()">滴答1秒</button>
+            <button id="auto-btn" onclick="toggleAuto()">▶️ 連續60秒</button>
+            <button onclick="resetTime()">重置</button>
         </div>
-        <div class="sub-desc" id="act1-desc">觀察：秒針每走滿 60 秒，分針就「啪」前進 1 小格（1分鐘）！</div>
+        <div class="sub-desc">秒針走 60 小格＝60 秒＝1 分，分針跟著前進 1 格。</div>
     </div>
 
-    <!-- Act 2: Gear Linkage -->
     <div id="act2" class="ui-panel">
         <div class="btn-group">
-            <button onclick="addTime(5)">+5 分鐘</button>
-            <button onclick="addTime(15)">+15 分鐘</button>
-            <button onclick="addTime(60)">+1 小時 (60分)</button>
+            <button onclick="addTime(5)">+5 分</button>
+            <button onclick="addTime(15)">+15 分</button>
+            <button onclick="addTime(60)">+1 時</button>
         </div>
-        <div class="sub-desc" id="act2-desc">分針走一圈（60分），時針走一大格（30度）。背景隨晝夜平滑變換！</div>
+        <div class="sub-desc">分針走一圈 60 分，時針同步走一大格 30°；滿 60 分要進 1 時。</div>
     </div>
 
-    <!-- Act 3: 24H Timeline -->
     <div id="act3" class="ui-panel">
-        <div class="timeline-container" id="timeline">
-            <div id="time-cursor"></div>
+        <div class="timeline-container" id="timeline"><div id="time-cursor"></div></div>
+        <div class="btn-group">
+            <button onclick="setTime(10,0)">10:00</button>
+            <button onclick="setTime(14,0)">14:00</button>
+            <button onclick="setTime(20,30)">20:30</button>
         </div>
-        <div class="btn-group" style="margin-top:6px">
-            <button onclick="setTime(10,0)">10:00 (上午10時)</button>
-            <button onclick="setTime(14,0)">14:00 (下午2時)</button>
-            <button onclick="setTime(20,30)">20:30 (晚上8時半)</button>
-        </div>
-        <div class="sub-desc">跨過中午 12:00，24 小時制直接加上 12（下午 2 時 = 14:00）。</div>
+        <div class="sub-desc">下午＝24 小時制減 12；1 日＝24 時。</div>
     </div>
 
-    <!-- Act 4: Movie -->
     <div id="act4" class="ui-panel">
-        <div class="movie-info" id="movie-info">
-            🎬 <b>神奇貓咪大冒險</b><br>
-            上午 10:45 開演 · 片長 90 分鐘 (1時30分)
-        </div>
-        <button onclick="playMovie()" id="movie-btn" style="background: var(--accent-orange);">🎞️ 模擬放映結束時間</button>
-        <div class="sub-desc" id="movie-result">點擊演繹：10:45 + 1小時30分 = 下午 12:15 散場！</div>
+        <div class="movie-info">🎬 上午 10:45 開演 · 片長 90 分鐘</div>
+        <button onclick="playMovie()" id="movie-btn">🎞️ 模擬散場</button>
+        <div class="sub-desc" id="movie-result">10:45 ＋ 90 分 ＝ 中午 12:15</div>
     </div>
+
+    <button id="q-action" onclick="runQAction()">演出本題</button>
+    <div id="q-result"></div>
 </div>
 
 <div class="nav">
-    <div class="nav-item active" id="tab-act1" onclick="switchAct(1)"><span>⏱️</span><span>Act 1 秒感</span></div>
-    <div class="nav-item" id="tab-act2" onclick="switchAct(2)"><span>⚙️</span><span>Act 2 齒輪</span></div>
-    <div class="nav-item" id="tab-act3" onclick="switchAct(3)"><span>📏</span><span>Act 3 24小時</span></div>
-    <div class="nav-item" id="tab-act4" onclick="switchAct(4)"><span>🎬</span><span>Act 4 經過時間</span></div>
+    <div class="nav-item active" id="tab-act1" onclick="switchAct(1)"><span>⏱️</span><span>秒感</span></div>
+    <div class="nav-item" id="tab-act2" onclick="switchAct(2)"><span>⚙️</span><span>進位</span></div>
+    <div class="nav-item" id="tab-act3" onclick="switchAct(3)"><span>📏</span><span>24時</span></div>
+    <div class="nav-item" id="tab-act4" onclick="switchAct(4)"><span>🎬</span><span>經過</span></div>
 </div>
 
 <div id="act-1-view" style="display:block;"></div>
@@ -204,62 +194,38 @@
     let autoTimer = null;
     let currentAct = 1;
 
-    // Initialize Clock Ticks
-    const ticksG = document.getElementById('ticks');
-    for(let i=0; i<60; i++) {
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        const angle = i * 6;
-        const r1 = (i % 5 === 0) ? 80 : 88;
-        line.setAttribute('x1', 100 + r1 * Math.sin(angle * Math.PI/180));
-        line.setAttribute('y1', 100 - r1 * Math.cos(angle * Math.PI/180));
-        line.setAttribute('x2', 100 + 92 * Math.sin(angle * Math.PI/180));
-        line.setAttribute('y2', 100 - 92 * Math.cos(angle * Math.PI/180));
-        line.setAttribute('stroke', i % 5 === 0 ? '#fde047' : '#64748b');
-        line.setAttribute('stroke-width', i % 5 === 0 ? '2' : '1');
-        ticksG.appendChild(line);
-    }
+    // ---- 題目場景：?q=1..10 對應 G3-N-3-17 十道題（唯一真理源由 N-3-17.json 提供）----
+    const QUESTION_SCENES = {
+        1:  { act: 1, h: 10, m: 0,  s: 0,  short: '秒與分 60 進位',      banner: 'Q01 秒針走一圈＝60 秒＝1 分',            action: '演出 60 秒進 1 分',       tip: '秒針走滿 60 小格，分針前進 1 格。', fn: 'tick60' },
+        2:  { act: 3, h: 15, m: 40, s: 0,  short: '24 小時制',           banner: 'Q02 15:40 是下午 3 時 40 分',          action: '對照 12／24 小時制',      tip: '15 − 12 ＝ 3，所以是下午 3:40。', fn: 'demo24' },
+        3:  { act: 4, h: 10, m: 25, s: 0,  short: '經過時間（減）',      banner: 'Q03 10:25 → 11:10 經過多久？',        action: '演出 10:25→11:10',       tip: '借 1 時當 60 分：70 − 25 ＝ 45 分。', fn: 'demoElapsed45' },
+        4:  { act: 2, h: 9,  m: 0,  s: 0,  short: '日與時換算',          banner: 'Q04 2 日 6 時＝？小時',              action: '演出 1 日＝24 時',        tip: '2 × 24 ＝ 48，再加 6 ＝ 54 時。', fn: 'demoDays' },
+        5:  { act: 4, h: 11, m: 40, s: 0,  short: '跨午時間加法',        banner: 'Q05 11:40＋80 分＝？',              action: '演出 80 分鐘',            tip: '80 分＝1 時 20 分，跨中午是下午 1:00。', fn: 'demoAdd80' },
+        6:  { act: 1, h: 9,  m: 50, s: 25, short: '鐘面讀時刻（含秒）',  banner: 'Q06 讀出時、分、秒針的時刻',        action: '撥到 9:50:25',            tip: '時針在 9 與 10 之間，仍是 9 時；分針指 10＝50 分。', fn: 'demoSet' },
+        7:  { act: 1, h: 0,  m: 3,  s: 20, short: '分與秒換算',          banner: 'Q07 3 分 20 秒＝？秒',              action: '演出 1 分＝60 秒',        tip: '3 × 60 ＋ 20 ＝ 200 秒（不是 320 秒）。', fn: 'demoSec' },
+        8:  { act: 3, h: 0,  m: 0,  s: 0,  short: '時與日反向換算',      banner: 'Q08 72 小時＝？日',                action: '演出 1 日＝24 時',        tip: '72 ÷ 24 ＝ 3 日，不是「7 日 2 時」。', fn: 'demoDays72' },
+        9:  { act: 2, h: 14, m: 45, s: 0,  short: '時間加法（進位）',    banner: 'Q09 下午 2:45 再過 40 分？',       action: '演出＋40 分',             tip: '45＋40＝85 分＝1 時 25 分 → 下午 3:25。', fn: 'demoAdd40' },
+        10: { act: 4, h: 8,  m: 20, s: 0,  short: '經過時間（借位）',    banner: 'Q10 8:20 → 10:05 經過多久？',      action: '演出借 1 時當 60 分',    tip: '10:05 借 1 時變 9:65；65 − 20 ＝ 45，共 1 時 45 分。', fn: 'demoBorrow' }
+    };
+    const qRaw = parseInt(new URLSearchParams(location.search).get('q'), 10);
+    const questionNo = (qRaw >= 1 && qRaw <= 10) ? qRaw : 1;
 
-    // Initialize Timeline
-    const timeline = document.getElementById('timeline');
-    for(let i=0; i<=24; i+=3) {
-        const mark = document.createElement('div');
-        mark.className = 'timeline-mark';
-        mark.style.left = (i / 24 * 100) + '%';
-        const label = document.createElement('div');
-        label.className = 'timeline-label';
-        label.innerText = i + 'h';
-        label.style.left = (i / 24 * 100) + '%';
-        timeline.appendChild(mark);
-        timeline.appendChild(label);
-    }
-
+    // 時針隨分鐘平滑推進、分針隨秒平滑推進（Peano 正確聯動）
     function updateClock() {
         const sDeg = s * 6;
         const mDeg = m * 6 + s * 0.1;
         const hDeg = (h % 12) * 30 + m * 0.5;
-
-        document.getElementById('hand-sec').style.transform = `rotate(${sDeg}deg, 100, 100)`;
-        document.getElementById('hand-min').style.transform = `rotate(${mDeg}deg, 100, 100)`;
-        document.getElementById('hand-hour').style.transform = `rotate(${hDeg}deg, 100, 100)`;
-        
-        const displayH = h.toString().padStart(2, '0');
-        const displayM = m.toString().padStart(2, '0');
-        const displayS = s.toString().padStart(2, '0');
+        // CSS transform 只接受單一角度；舊版寫 rotate(deg,100,100) 是 SVG 屬性語法，
+        // Chrome 會判為無效值讓三針完全不動。改用 view-box + transform-origin 100,100 軸心。
+        document.getElementById('hand-sec').style.transform = `rotate(${sDeg}deg)`;
+        document.getElementById('hand-min').style.transform = `rotate(${mDeg}deg)`;
+        document.getElementById('hand-hour').style.transform = `rotate(${hDeg}deg)`;
+        const displayH = String(h).padStart(2, '0');
+        const displayM = String(m).padStart(2, '0');
+        const displayS = String(s).padStart(2, '0');
         document.getElementById('digital-display').innerText = `${displayH}:${displayM}:${displayS}`;
-
-        // Act 3 Timeline Cursor
-        const totalMinutes = h * 60 + m;
-        document.getElementById('time-cursor').style.left = (totalMinutes / 1440 * 100) + '%';
-
-        // Background Color (Day/Night)
-        const hourFloat = h + m/60;
-        if(hourFloat >= 6 && hourFloat < 16) {
-            document.body.style.background = "linear-gradient(to bottom, #0284c7, #38bdf8)";
-        } else if(hourFloat >= 16 && hourFloat < 19) {
-            document.body.style.background = "linear-gradient(to bottom, #c2410c, #ea580c)";
-        } else {
-            document.body.style.background = "linear-gradient(to bottom, #090d16, #0f172a)";
-        }
+        document.getElementById('time-cursor').style.left = ((h * 60 + m) / 1440 * 100) + '%';
+        // 不再寫 body.style.background：晝夜語意由 theme-tokens 色票負責，Dark 不被覆寫
     }
 
     function tickSec() {
@@ -268,84 +234,86 @@
         if (m >= 60) { m = 0; h = (h + 1) % 24; }
         updateClock();
     }
-
     function toggleAuto() {
         if (autoTimer) {
-            clearInterval(autoTimer);
-            autoTimer = null;
-            document.getElementById('auto-btn').innerText = "▶️ 連續走60秒";
+            clearInterval(autoTimer); autoTimer = null;
+            document.getElementById('auto-btn').innerText = '▶️ 連續60秒';
         } else {
-            document.getElementById('auto-btn').innerText = "⏸️ 暫停";
+            document.getElementById('auto-btn').innerText = '⏸️ 暫停';
             let count = 0;
             autoTimer = setInterval(() => {
-                tickSec();
-                count++;
+                tickSec(); count++;
                 if (count >= 60) {
-                    clearInterval(autoTimer);
-                    autoTimer = null;
-                    document.getElementById('auto-btn').innerText = "▶️ 連續走60秒";
-                    speakHint("剛好滿60秒！分針精確前進了1小格！");
+                    clearInterval(autoTimer); autoTimer = null;
+                    document.getElementById('auto-btn').innerText = '▶️ 連續60秒';
+                    speakHint('剛好滿 60 秒，分針精確前進 1 小格！');
                 }
             }, 80);
         }
     }
-
     function addTime(mins) {
         m += mins;
         while (m >= 60) { m -= 60; h = (h + 1) % 24; }
-        s = 0;
-        updateClock();
+        s = 0; updateClock();
     }
-
-    function setTime(nh, nm) {
-        h = nh; m = nm; s = 0;
-        updateClock();
-    }
-
+    function setTime(nh, nm, ns) { h = nh; m = nm; s = ns || 0; updateClock(); }
     function resetTime() {
         if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
-        h = 10; m = 0; s = 0;
-        updateClock();
+        h = 10; m = 0; s = 0; updateClock();
     }
-
     function playMovie() {
-        setTime(10, 45);
-        document.getElementById('movie-result').innerText = "開始播放：10:45 ... 時間流逝中 ...";
+        setTime(10, 45, 0);
+        document.getElementById('movie-result').innerText = '開始播放：10:45 … 時間流逝中 …';
         let step = 0;
         const timer = setInterval(() => {
-            addTime(15);
-            step++;
-            if (step >= 6) { // 6 * 15 = 90 mins
+            addTime(15); step++;
+            if (step >= 6) {
                 clearInterval(timer);
-                document.getElementById('movie-result').innerText = "🎉 散場時間：中午 12:15！(10:45 + 90分)";
-                speakHint("電影放映結束！散場時間是中午12時15分！");
+                document.getElementById('movie-result').innerText = '🎉 散場時間：中午 12:15（10:45＋90 分）';
+                speakHint('散場時間是中午 12 時 15 分！');
             }
         }, 300);
     }
-
     function switchAct(act) {
         if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
         currentAct = act;
-        document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('active', i === act-1));
-        document.querySelectorAll('.ui-panel').forEach((el, i) => el.classList.toggle('active', i === act-1));
+        document.querySelectorAll('.nav-item').forEach((el, i) => el.classList.toggle('active', i === act - 1));
+        document.querySelectorAll('.ui-panel').forEach((el, i) => el.classList.toggle('active', i === act - 1));
         for (let i = 1; i <= 4; i++) {
             const v = document.getElementById(`act-${i}-view`);
             if (v) v.style.display = (i === act) ? 'block' : 'none';
         }
-        
-        const titles = [
-            "Act 1: 秒的感受與60進位",
-            "Act 2: 齒輪強連動與晝夜",
-            "Act 3: 12/24 小時制對照數線",
-            "Act 4: 生活時刻與經過時間"
-        ];
-        document.getElementById('act-title').innerText = titles[act-1];
-
+        const titles = ['Act 1: 秒的感受與60進位', 'Act 2: 齒輪強連動與晝夜', 'Act 3: 12/24 小時制對照數線', 'Act 4: 生活時刻與經過時間'];
+        const title = document.getElementById('act-title');
+        title.dataset.q = '';
+        title.innerText = titles[act - 1];
         if (act === 1) resetTime();
-        if (act === 2) setTime(9, 0);
-        if (act === 3) setTime(14, 0);
-        if (act === 4) setTime(10, 45);
+        if (act === 2) setTime(9, 0, 0);
+        if (act === 3) setTime(14, 0, 0);
+        if (act === 4) setTime(10, 45, 0);
         speakHint();
+    }
+
+    // 本題互動：真實按鈕事件，呼叫上面同一批 setTime / addTime / tickSec
+    function runQAction() {
+        const sc = QUESTION_SCENES[questionNo];
+        const out = document.getElementById('q-result');
+        switch (sc.fn) {
+            case 'tick60':
+                for (let i = 0; i < 60; i++) tickSec();
+                out.innerText = '60 小格走完 → ' + document.getElementById('digital-display').innerText + '（分針進 1 格）';
+                break;
+            case 'demo24': setTime(15, 40, 0); out.innerText = sc.tip; break;
+            case 'demoElapsed45': setTime(10, 25, 0); addTime(45); out.innerText = '10:25 + 45 分 → ' + document.getElementById('digital-display').innerText; break;
+            case 'demoDays': out.innerText = sc.tip; break;
+            case 'demoAdd80': setTime(11, 40, 0); addTime(80); out.innerText = '11:40 + 80 分 → ' + document.getElementById('digital-display').innerText + '（下午 1:00）'; break;
+            case 'demoSet': setTime(9, 50, 25); out.innerText = '9 時 50 分 25 秒（時針未到 10）'; break;
+            case 'demoSec': setTime(0, 3, 20); out.innerText = '3 × 60 + 20 = 200 秒'; break;
+            case 'demoDays72': out.innerText = '24 × 3 = 72 時 → 3 日'; break;
+            case 'demoAdd40': setTime(14, 45, 0); addTime(40); out.innerText = '14:45 + 40 分 → ' + document.getElementById('digital-display').innerText + '（下午 3:25）'; break;
+            case 'demoBorrow': setTime(8, 20, 0); addTime(105); out.innerText = '8:20 + 1 時 45 分 → ' + document.getElementById('digital-display').innerText + '（借 1 時當 60 分）'; break;
+            default: out.innerText = sc.tip;
+        }
     }
 
     function speakHint(customText) {
@@ -358,11 +326,58 @@
         }
     }
 
-    // Init
-    updateClock();
+    // ---- Init：刻度／1–12 數字／題目場景 ----
+    const ticksG = document.getElementById('ticks');
+    for (let i = 0; i < 60; i++) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const angle = i * 6;
+        const major = (i % 5 === 0);
+        const r1 = major ? 79 : 86;
+        line.setAttribute('x1', 100 + r1 * Math.sin(angle * Math.PI / 180));
+        line.setAttribute('y1', 100 - r1 * Math.cos(angle * Math.PI / 180));
+        line.setAttribute('x2', 100 + 93 * Math.sin(angle * Math.PI / 180));
+        line.setAttribute('y2', 100 - 93 * Math.cos(angle * Math.PI / 180));
+        line.setAttribute('class', major ? 'tick major' : 'tick');
+        ticksG.appendChild(line);
+    }
+    const numsG = document.getElementById('numbers');
+    for (let n = 1; n <= 12; n++) {
+        const angle = n * 30;
+        const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', 100 + 67 * Math.sin(angle * Math.PI / 180));
+        t.setAttribute('y', 100 - 67 * Math.cos(angle * Math.PI / 180) + 4.5);
+        t.setAttribute('text-anchor', 'middle');
+        t.setAttribute('class', 'cnum');
+        t.textContent = String(n);
+        numsG.appendChild(t);
+    }
+    const timeline = document.getElementById('timeline');
+    for (let i = 0; i <= 24; i += 3) {
+        const mark = document.createElement('div');
+        mark.className = 'timeline-mark';
+        mark.style.left = (i / 24 * 100) + '%';
+        const label = document.createElement('div');
+        label.className = 'timeline-label';
+        label.innerText = i + 'h';
+        label.style.left = (i / 24 * 100) + '%';
+        timeline.appendChild(mark);
+        timeline.appendChild(label);
+    }
+
+    (function applyQuestion() {
+        const sc = QUESTION_SCENES[questionNo];
+        switchAct(sc.act);
+        setTime(sc.h, sc.m, sc.s);
+        const title = document.getElementById('act-title');
+        title.dataset.q = '1';
+        title.innerText = 'Q' + String(questionNo).padStart(2, '0') + ' · ' + sc.short;
+        document.getElementById('q-banner').innerText = sc.banner;
+        document.getElementById('q-action').innerText = sc.action;
+        document.getElementById('q-result').innerText = sc.tip;
+    })();
 </script>
 <script>
-/* theme bridge: 同步外殼 Light/Dark，无私自提交按鈕 */
+/* theme bridge：同步外殼 Light/Dark，无私自提交按鈕 */
 (function () {
   try {
     var t = localStorage.getItem('math108_theme') || 'light';
