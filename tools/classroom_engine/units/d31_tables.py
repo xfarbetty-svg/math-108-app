@@ -395,8 +395,9 @@ window.UNIT_PLUGIN = (function () {
     // 迷你 3×3 表 + 十字高光
     const mini = el("g", { transform: "translate(0, 6)" }, t2);
     const miniX = [-110, 0, 110], miniY = [-70, 0, 70];
-    ["", "台中", "台南"].forEach((h, i) => {
-      if (i > 0) textEl(h, { x: miniX[i - 1], y: -104, "text-anchor": "middle",
+    const miniVals = [["—", "700", "900"], ["700", "—", "400"], ["900", "400", "—"]];
+    ["台北", "台中", "台南"].forEach((h, i) => {
+      textEl(h, { x: miniX[i], y: -104, "text-anchor": "middle",
         "font-size": 21, "font-weight": 900, fill: "#5B21B6" }, mini);
     });
     ["台北", "台中", "台南"].forEach((h, r) => {
@@ -405,7 +406,7 @@ window.UNIT_PLUGIN = (function () {
       miniX.forEach((cx, c) => {
         el("rect", { x: cx - 52, y: miniY[r] - 32, width: 104, height: 64, rx: 8,
           fill: "#FFFFFF", stroke: "#DDD6FE", "stroke-width": 2.5 }, mini);
-        textEl(["—", "700", "900"][r][c] || "—",
+        textEl(miniVals[r][c],
           { x: cx, y: miniY[r] + 9, "text-anchor": "middle",
             "font-size": 25, "font-weight": 900, fill: "#1E293B" }, mini);
       });

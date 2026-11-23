@@ -57,3 +57,9 @@
 
 ### 紀律
 - `_scratch/` 已 gitignore，維持隔離；嚴禁碰 `017\` 或「子由」。
+
+### 2026-11-23 最終補記（本框已完成並 push）
+- `R32_Final.mp4`（102.73s / 9.08 MiB）、`D31_Final.mp4`（96.73s / 8.40 MiB）皆渲染完成 exit 0、AV diff ≤0.008s。
+- D-3-1 第 3 幕迷你表格曾顯示 `0`（陣列索引錯誤），已改為二維 `miniVals[r][c]` 並補回「台北」欄頭，重渲染後抽幀確認修復。
+- 14 支影片全數 -14 LUFS（R32 -14.03 / D31 -14.03）；盘點表 `reports/20261123_G3_VIDEO_INVENTORY.md`（24/24 盤點、16 單元掛載，如實揭露）。
+- 五道門禁（curriculum131 / app_shell / tts_polyphone / r32 / d31）全數 exit 0。
