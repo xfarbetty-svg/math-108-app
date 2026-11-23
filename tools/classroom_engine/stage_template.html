@@ -21,6 +21,9 @@
   }
   .ink { stroke: #1E293B; stroke-linecap: round; stroke-linejoin: round; }
   .txt-ink { fill: #1E293B; font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; }
+  /* Toggled on the element currently framed by the amber focus glow.
+     Non-destructive marker only: never touches stroke/filter/opacity. */
+  .is-highlighted { --focus-active: 1; }
 </style>
 </head>
 <body>
@@ -104,14 +107,14 @@
       <feGaussianBlur stdDeviation="2.4" />
     </filter>
   </defs>
-  <g id="focus-glow-fx" opacity="0">
-    <rect id="focus-glow-halo" x="-160" y="-104" width="320" height="208" rx="32"
-          fill="#FDE68A" fill-opacity="0.06" stroke="#F59E0B" stroke-width="17"
-          opacity="0.30" filter="url(#focusGlowBlur)" />
-    <rect id="focus-glow-halo2" x="-160" y="-104" width="320" height="208" rx="32"
-          fill="none" stroke="#FBBF24" stroke-width="6"
-          opacity="0.55" filter="url(#focusGlowSoft)" />
-    <circle id="focus-glow-dot" cx="0" cy="-104" r="7" fill="#D97706" stroke="#FFFDF8" stroke-width="2.5" />
+  <g id="focus-glow-fx" opacity="0" pointer-events="none">
+    <rect id="focus-glow-aura" x="0" y="0" width="100" height="100" rx="28"
+          fill="#FDE68A" fill-opacity="0.08" stroke="#F59E0B" stroke-width="14"
+          opacity="0.45" filter="url(#focusGlowBlur)" />
+    <rect id="focus-glow-box" x="0" y="0" width="100" height="100" rx="28"
+          fill="none" stroke="#F59E0B" stroke-width="5"
+          opacity="0.85" filter="url(#focusGlowSoft)" />
+    <circle id="focus-glow-dot" cx="0" cy="0" r="7" fill="#D97706" stroke="#FFFDF8" stroke-width="2.5" />
   </g>
 
   <!-- 7. Mimi Head Emotion Bubble (?, 💡, !) -->
@@ -194,6 +197,9 @@
   const mimiBreathe = document.getElementById("mimi-breathe");
   const mimiNod = document.getElementById("mimi-nod");
   const focusGlow = document.getElementById("focus-glow-fx");
+  const focusAura = document.getElementById("focus-glow-aura");
+  const focusBox = document.getElementById("focus-glow-box");
+  const focusDot = document.getElementById("focus-glow-dot");
   const bubbleGroup = document.getElementById("mimi-bubble");
   const bubbleIcons = {
     question: document.getElementById("bubble-icon-question"),
@@ -207,6 +213,26 @@
   const chapterDot = document.getElementById("chapter-dot");
 
   const CHAPTER_COLORS = ["#E15B48", "#2563EB", "#D97706", "#059669"];
+
+  // Focus glow state (kept across frames so it can glide between targets)
+  const glowState = { key: null, rect: null, from: null, t0: 0 };
+  let highlightedEl = null;
+
+  // Resolve which DOM selector the amber glow should frame right now.
+  // cue.focusSequence wins over cue.focusTarget; `until` is cue progress (0..1).
+  function pickFocusTarget(cue, cueProgress) {
+    if (!cue) return null;
+    const seq = cue.focusSequence;
+    if (Array.isArray(seq) && seq.length) {
+      for (let i = 0; i < seq.length; i++) {
+        const step = seq[i];
+        const until = (step.until === undefined || step.until === null) ? 1 : Number(step.until);
+        if (cueProgress < until) return step.target;
+      }
+      return seq[seq.length - 1].target;
+    }
+    return cue.focusTarget || null;
+  }
 
   // Compute smooth camera state at time t
   function getCameraAt(t) {
@@ -278,17 +304,70 @@
       `translate(0, ${nodY.toFixed(2)}) rotate(${nodRot.toFixed(2)}, 0, -320)`
     );
 
-    // 3. Soft Amber Focus Glow on the matching right-canvas element
-    const target = (cue && cue.pointerTarget && t >= cue.start - 0.15) ? cue.pointerTarget : null;
-    if (target) {
-      const enterP = easeInOutCubic((t - (cue.start - 0.15)) / 0.45);
-      const pulse = 1 + 0.022 * Math.sin(t * 4.2);
-      focusGlow.setAttribute("opacity", (enterP * 0.95).toFixed(3));
-      focusGlow.setAttribute(
-        "transform",
-        `translate(${target[0]}, ${target[1]}) scale(${(enterP * pulse).toFixed(3)})`
-      );
-    } else {
+    // 3. Soft Amber Focus Glow — dynamically aligned to the live DOM/SVG rect
+    const focusSel = (cue && t >= cue.start - 0.15) ? pickFocusTarget(cue, cueProgress) : null;
+    let focusEl = null;
+    let focusVisible = false;
+    if (focusSel) {
+      try { focusEl = document.querySelector(focusSel); } catch (e) { focusEl = null; }
+    }
+    if (focusEl && focusEl.getBoundingClientRect) {
+      const r = focusEl.getBoundingClientRect();
+      if (r.width > 0.5 && r.height > 0.5) {
+        const breath = 12 + 3 * Math.sin(t * 2.6);
+        const want = {
+          x: r.left - breath,
+          y: r.top - breath,
+          w: r.width + breath * 2,
+          h: r.height + breath * 2
+        };
+        const key = focusSel + "@" + (cue ? cue.id : "");
+        if (glowState.key !== key) {
+          glowState.from = glowState.rect ? { ...glowState.rect } : { ...want };
+          glowState.key = key;
+          glowState.t0 = t;
+        }
+        const k = glowState.rect
+          ? ((t - glowState.t0) < -0.001 ? 1 : easeInOutCubic(clamp01((t - glowState.t0) / 0.32)))
+          : 1;
+        const from = glowState.from || want;
+        const cur = {
+          x: lerp(from.x, want.x, k),
+          y: lerp(from.y, want.y, k),
+          w: lerp(from.w, want.w, k),
+          h: lerp(from.h, want.h, k)
+        };
+        glowState.rect = cur;
+
+        const enterP = easeInOutCubic((t - (cue.start - 0.15)) / 0.45);
+
+        focusGlow.setAttribute("opacity", (enterP * 0.95).toFixed(3));
+        focusGlow.setAttribute("transform", "translate(0, 0)");
+        [focusAura, focusBox].forEach((node) => {
+          node.setAttribute("x", cur.x.toFixed(1));
+          node.setAttribute("y", cur.y.toFixed(1));
+          node.setAttribute("width", Math.max(1, cur.w).toFixed(1));
+          node.setAttribute("height", Math.max(1, cur.h).toFixed(1));
+          node.setAttribute("rx", "28");
+        });
+        focusDot.setAttribute("cx", (cur.x + cur.w / 2).toFixed(1));
+        focusDot.setAttribute("cy", (cur.y - 8).toFixed(1));
+
+        if (highlightedEl !== focusEl) {
+          if (highlightedEl) highlightedEl.classList.remove("is-highlighted");
+          focusEl.classList.add("is-highlighted");
+          highlightedEl = focusEl;
+        }
+        focusVisible = true;
+      }
+    }
+    if (!focusVisible) {
+      if (highlightedEl) {
+        highlightedEl.classList.remove("is-highlighted");
+        highlightedEl = null;
+      }
+      glowState.key = null;
+      glowState.rect = null;
       focusGlow.setAttribute("opacity", "0");
     }
 
