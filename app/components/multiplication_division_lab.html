@@ -30,10 +30,15 @@
         .q-scene .t { font-size: 12px; fill: var(--text-primary); font-weight: 700; }
         .q-scene .s { font-size: 11px; fill: var(--text-secondary); }
         .q-scene .b { fill: var(--bg-elevated); stroke: var(--accent-primary); stroke-width: 1.5; }
+        /* ?q= 題號模式：舊模板分頁不得出現在畫面；教具置中 */
+        body.q-mode .tabs { display: none !important; }
+        .q-scene .iv-card { cursor: pointer; }
+        .q-scene .iv-card-bg { fill: var(--accent-primary); opacity: 0.14; stroke: var(--accent-primary); stroke-width: 1.5; }
+        .q-scene .iv-out { font-size: 12px; fill: var(--accent-primary); font-weight: 700; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0;
-            width:100%; max-width:390px; height: 420px;
+            width:100%; max-width:390px; height: 420px; margin: 0 auto;
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
             background: #d7ccc8;
             overflow: hidden;
@@ -310,19 +315,59 @@ const R31 = {"1":"<svg viewBox=\"0 0 360 340\" preserveAspectRatio=\"xMidYMid me
         9: { act:3, focus:'Q09 餘數規律', hint:'餘數一定要比除數小，列出前三列看看。', scene: R31[9] },
         10: { act:4, focus:'Q10 算式家族', hint:'利用「因數×因數＝積」的關係找空格。', scene: R31[10] },
     };
+    // 每題的「互逆算式卡」點擊步驟：第一格是操作提示（不劇透），其後才逐步推導
+    const IV = {
+        1: ['👆 點卡片：把乘法拆開看看', '200 × 3 ＝ 200 + 200 + 200', '兩邊都是 600，可以比大小了'],
+        2: ['👆 點卡片：用「商 × 除數」倒推', '32 × 8 ＝ 256', '被除數就是 256'],
+        3: ['👆 點卡片：先把除法改成乘法', '85 × 4 ＝ 340，所以 A ＝ 340', 'B ÷ 4 ＝ 85 → B ＝ 340，A 和 B 一樣大'],
+        4: ['👆 點卡片：逐個算出符號', '●＝1，▲＝1，■＝16', '檢查：■ 是偶數'],
+        5: ['👆 點卡片：商是 1 代表被除數＝除數', 'C：11÷11＝1；D：9÷9＝1', '被除數和除數相同的是 C、D'],
+        6: ['👆 點卡片：從 100 往兩邊倒推', '左邊：100 × 5 ＝ 500', '右邊：100 × 6 ＝ 600'],
+        7: ['👆 點卡片：順著流程算', '40 × 8 ＝ 320', '320 ÷ 4 ＝ 80'],
+        8: ['👆 點卡片：求一份量用除法', '525 ÷ 7 ＝ 75', '玩偶 75 元，驗算 75 × 7 ＝ 525'],
+        9: ['👆 點卡片：看被除數除以 6 的餘數', '12÷6 餘 0，13÷6 餘 1', '餘數依序是 0、1、2、3、4、5'],
+        10: ['👆 點卡片：因數 × 因數 ＝ 積', '16 × 7 ＝ 112', '112 ÷ 16 ＝ 7，空格填 16']
+    };
     function applyQuestionMode() {
         const s = Q_SCENES[qNum] || Q_SCENES[1];
+        const HAS_Q = new URLSearchParams(location.search).has('q');
+        if (HAS_Q) document.body.classList.add('q-mode');
         document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
-        switchAct(s.act);
         document.getElementById('q-focus').textContent = s.focus;
-        document.getElementById('q-scene').innerHTML = s.scene;
-        if (s.act === 2) document.getElementById('act2-desc').textContent = s.hint;
-        if (s.act === 4) {
-            const MAGIC = { 7:'□ × 6 = 48', 8:'□ ÷ 7 = 8', 10:'48 ÷ 7 = ?' };
-            if (MAGIC[qNum]) {
-                document.getElementById('magic-q').textContent = MAGIC[qNum];
-                document.getElementById('magic-ans').textContent = '';
-                currentMagic = 0;
+        const box = document.getElementById('q-scene');
+        if (HAS_Q) {
+            const oldTabs = document.querySelector('.tabs');
+            if (oldTabs) oldTabs.innerHTML = '';
+            const steps = IV[qNum] || IV[1];
+            let idx = 0;
+            const extra = '<g class="iv-card" data-iv="next" role="button" tabindex="0">' +
+                '<rect class="b iv-card-bg" x="16" y="248" width="328" height="32" rx="8"/>' +
+                '<text class="t" x="180" y="269" text-anchor="middle">👆 點卡片：切換算式寫法</text></g>' +
+                '<text id="iv-out" class="iv-out" x="180" y="308" text-anchor="middle">' + steps[0] + '</text>';
+            box.innerHTML = s.scene.replace('</svg>', extra + '</svg>');
+            const out = box.querySelector('#iv-out');
+            const advance = () => {
+                idx = (idx + 1) % steps.length;
+                box.dataset.ivStep = String(idx);
+                out.textContent = steps[idx];
+            };
+            box.dataset.ivStep = '0';
+            const card = box.querySelector('.iv-card');
+            card.addEventListener('click', advance);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); advance(); }
+            });
+        } else {
+            box.innerHTML = s.scene;
+            switchAct(s.act);
+            if (s.act === 2) document.getElementById('act2-desc').textContent = s.hint;
+            if (s.act === 4) {
+                const MAGIC = { 7:'□ × 6 = 48', 8:'□ ÷ 7 = 8', 10:'48 ÷ 7 = ?' };
+                if (MAGIC[qNum]) {
+                    document.getElementById('magic-q').textContent = MAGIC[qNum];
+                    document.getElementById('magic-ans').textContent = '';
+                    currentMagic = 0;
+                }
             }
         }
         speak(s.hint);

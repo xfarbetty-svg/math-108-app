@@ -30,9 +30,19 @@
         html[data-theme="dark"] .opt-btn { background: var(--bg-card); border-color: var(--border-color); color: var(--text-primary); }
         .q-badge { position:absolute; top:44px; right:8px; background:var(--leaf-green); color:#fff; font-size:10px; font-weight:bold; padding:2px 7px; border-radius:10px; z-index:500; }
         .q-focus { position:absolute; top:68px; right:8px; max-width:180px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; position:absolute; top:68px; right:8px; max-width:180px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; padding:2px 7px; font-size:9px; font-weight:bold; color:var(--text-primary); z-index:500; pointer-events:none; }
+        /* ?q= 題號模式：補齊原本缺落的 q-scene 樣式，舊分頁不得出現 */
+        .q-scene { position:absolute; left:0; right:0; top:0; bottom:0; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; padding:20px 8px 6px; z-index:450; overflow:hidden; }
+        .q-scene svg { display:block; width:100%; height:100%; }
+        .q-scene .t { font-size:12px; fill:var(--text-primary); font-weight:700; }
+        .q-scene .s { font-size:11px; fill:var(--text-secondary); }
+        .q-scene .b { fill:var(--bg-elevated); stroke:var(--accent-primary); stroke-width:1.5; }
+        .q-scene .iv-card { cursor:pointer; }
+        .q-scene .iv-card-bg { fill:var(--accent-primary); opacity:0.14; stroke:var(--accent-primary); stroke-width:1.5; }
+        .q-scene .iv-out { font-size:12px; fill:var(--accent-primary); font-weight:700; }
+        body.q-mode .nav-tabs, body.q-mode .controls { display:none !important; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            margin: 0; padding: 0;
+            margin: 0 auto; padding: 0;
             width:100%; max-width:390px; height: 420px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
             background: var(--sky-blue);
@@ -546,13 +556,53 @@ const R32 = {"1":"<svg viewBox=\"0 0 360 340\" preserveAspectRatio=\"xMidYMid me
             9: { act:2, focus:'Q09 長桌併桌', hint:'比一比 1 張和 2 張，找出每多一張增加幾人。', scene: R32[9] },
             10: { act:2, focus:'Q10 竹籤正方形', hint:'相鄰正方形共用一條邊，別重複算。', scene: R32[10] },
         };
+        // 每題的「揭示下一項」點擊步驟：首格 فقط 提示操作，不劇透答案
+        const IV = {
+            1: ['👆 點卡片：揭示下一項', '相鄰兩格都少 10', '第三格 7195，第四格 7185'],
+            2: ['👆 點卡片：揭示下一項', '分母都是 11，分子每次加 1', '第三個 8/11，第四個 9/11'],
+            3: ['👆 點卡片：揭示下一項', '因數 5 變 50 是 10 倍，積也變 10 倍', '50×8＝400，500×8＝4000'],
+            4: ['👆 點卡片：揭示下一項', '除數不變，被除數變大幾倍商就變大幾倍', '38÷2＝19，380÷2＝190，3800÷2＝1900'],
+            5: ['👆 點卡片：揭示下一項', '兩兩一數剩 1 顆 → 總數是奇數', '15、17、19 是奇數，16 不可能'],
+            6: ['👆 點卡片：揭示下一項', '偶數 7 個，奇數 5 個', '7 分－5 分＝2 分'],
+            7: ['👆 點卡片：揭示下一項', '上緣 5 段，下緣 5 段', '相鄰接縫 4 段，合計 14 段'],
+            8: ['👆 點卡片：揭示下一項', '1 張 5 人，2 張 8 人，每多 1 張多 3 人', '4 張：5＋3×3＝14 人'],
+            9: ['👆 點卡片：揭示下一項', '1 張 10 人，2 張 16 人，每多 1 張多 6 人', '3 張：10＋6×2＝22 人'],
+            10: ['👆 點卡片：揭示下一項', '1 個 4 根，2 個 7 根，每多 1 個多 3 根', '4 個：4＋3×3＝13 根']
+        };
         function applyQuestionMode() {
             const s = Q_SCENES[qNum] || Q_SCENES[1];
+            const HAS_Q = new URLSearchParams(location.search).has('q');
+            if (HAS_Q) document.body.classList.add('q-mode');
             document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
             document.getElementById('q-focus').textContent = s.focus;
-            document.getElementById('q-scene').innerHTML = s.scene;
-            switchAct(s.act);
-            if (s.act === 1) document.getElementById('frog-title').textContent = s.focus;
+            const box = document.getElementById('q-scene');
+            if (HAS_Q) {
+                const nav = document.querySelector('.nav-tabs'); if (nav) nav.innerHTML = '';
+                const ctr = document.querySelector('.controls'); if (ctr) ctr.innerHTML = '';
+                const steps = IV[qNum] || IV[1];
+                let idx = 0;
+                const extra = '<g class="iv-card" data-iv="next" role="button" tabindex="0">' +
+                    '<rect class="b iv-card-bg" x="16" y="248" width="328" height="32" rx="8"/>' +
+                    '<text class="t" x="180" y="269" text-anchor="middle">👆 點卡片：揭示下一項</text></g>' +
+                    '<text id="iv-out" class="iv-out" x="180" y="308" text-anchor="middle">' + steps[0] + '</text>';
+                box.innerHTML = s.scene.replace('</svg>', extra + '</svg>');
+                const out = box.querySelector('#iv-out');
+                const advance = () => {
+                    idx = (idx + 1) % steps.length;
+                    box.dataset.ivStep = String(idx);
+                    out.textContent = steps[idx];
+                };
+                box.dataset.ivStep = '0';
+                const card = box.querySelector('.iv-card');
+                card.addEventListener('click', advance);
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); advance(); }
+                });
+            } else {
+                box.innerHTML = s.scene;
+                switchAct(s.act);
+                if (s.act === 1) document.getElementById('frog-title').textContent = s.focus;
+            }
             speak(s.hint);
         }
     </script>

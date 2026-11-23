@@ -44,6 +44,11 @@
         .q-scene .qt th { background:var(--bg-elevated); font-weight:700; }
         .q-scene .qt td { cursor:pointer; }
         .q-scene .qt td.q-hi { background:var(--accent-primary); color:var(--bg-main); font-weight:700; }
+        .q-scene .qt td.q-sel { outline:2px solid var(--led-orange); outline-offset:-2px; }
+        /* ?q= 題號模式：舊 nav 與跑馬燈不得出現在畫面 */
+        body.q-mode .marquee-container, body.q-mode nav { display:none !important; }
+        .q-scene .iv-hint { font-size:11px; color:var(--accent-primary); text-align:center; margin-top:8px; font-weight:700; }
+        .q-scene .iv-out { font-size:12px; color:var(--text-primary); text-align:center; margin-top:4px; font-weight:700; min-height:1.4em; }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
@@ -346,20 +351,38 @@ const D31 = {"1":"<div class=\"qt-title\">80 紅飲料店價目表（完整）</
     };
     function applyQuestionMode() {
         const s = Q_SCENES[qNum] || Q_SCENES[1];
+        const HAS_Q = new URLSearchParams(location.search).has('q');
+        if (HAS_Q) document.body.classList.add('q-mode');
         document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
         document.getElementById('q-focus').textContent = s.focus;
-        document.getElementById('q-scene').innerHTML = s.scene;
-        switchAct(s.act);
-        document.getElementById('marquee').textContent = '🚄 ' + s.focus;
         const qs = document.getElementById('q-scene');
-        qs.addEventListener('click', function (e) {
-            const td = e.target.closest('td');
-            if (!td) return;
-            qs.querySelectorAll('td').forEach((x) => x.classList.remove('q-hi'));
-            const tr = td.parentElement, ci = Array.prototype.indexOf.call(tr.children, td);
-            tr.querySelectorAll('td').forEach((x) => x.classList.add('q-hi'));
-            tr.parentElement.querySelectorAll('tr').forEach((r) => { const c = r.children[ci]; if (c) c.classList.add('q-hi'); });
-        });
+        if (HAS_Q) {
+            const mq = document.querySelector('.marquee-container'); if (mq) mq.innerHTML = '';
+            const nv = document.querySelector('nav'); if (nv) nv.innerHTML = '';
+            qs.innerHTML = s.scene +
+                '<div class="iv-hint">👆 點表格任一格：高亮該列與該欄，比對交叉處數值</div>' +
+                '<div id="iv-out" class="iv-out">還沒選格子，點一格試試看</div>';
+            const out = document.getElementById('iv-out');
+            qs.dataset.ivStep = 'none';
+            qs.onclick = function (e) {
+                const td = e.target.closest('td');
+                if (!td) return;
+                qs.querySelectorAll('td').forEach((x) => x.classList.remove('q-hi', 'q-sel'));
+                const tr = td.parentElement, ci = Array.prototype.indexOf.call(tr.children, td);
+                tr.querySelectorAll('td').forEach((x) => x.classList.add('q-hi'));
+                tr.parentElement.querySelectorAll('tr').forEach((r) => { const c = r.children[ci]; if (c) c.classList.add('q-hi'); });
+                td.classList.add('q-sel');
+                const rowHead = tr.querySelector('th');
+                const colHead = tr.parentElement.parentElement.querySelectorAll('thead th')[ci];
+                out.textContent = '已選：' + (rowHead ? rowHead.textContent : '第 ' + tr.rowIndex + ' 列') +
+                    ' × ' + (colHead ? colHead.textContent : '第 ' + (ci + 1) + ' 欄') + ' ＝ ' + td.textContent.trim();
+                qs.dataset.ivStep = ci + ',' + tr.rowIndex;
+            };
+        } else {
+            qs.innerHTML = s.scene;
+            switchAct(s.act);
+            document.getElementById('marquee').textContent = '🚄 ' + s.focus;
+        }
         speak(s.focus);
     }
     window.addEventListener('DOMContentLoaded', applyQuestionMode);
