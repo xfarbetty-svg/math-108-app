@@ -24,7 +24,16 @@
    */
   const POLYPHONE_FIXES = [
     { from: "奇數", to: "基數" }, // 奇數 jī-shù（odd）→ 避免誤讀為「騎數」qí-shù
-    { from: "奇偶", to: "基偶" }  // 奇偶 jī-ǒu（odd-even）→ 避免誤讀為「騎偶」
+    { from: "奇偶", to: "基偶" }, // 奇偶 jī-ǒu（odd-even）→ 避免誤讀為「騎偶」
+    { from: "量折線", to: "良折線" }, // 測量動詞 liáng → 避免誤讀為四聲「亮」
+    { from: "量取", to: "良取" },
+    { from: "量出", to: "良出" },
+    { from: "量一量", to: "良一良" },
+    { from: "測量", to: "測良" },
+    { from: "度量", to: "度良" },
+    { from: "量角器", to: "良角器" },
+    { from: "量長度", to: "良長度" },
+    { from: "量量看", to: "良良看" }
   ];
 
   function fixPolyphonePronunciation(text) {

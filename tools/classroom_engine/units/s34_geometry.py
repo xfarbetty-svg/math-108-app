@@ -26,7 +26,7 @@ CUES = [
         "scene": 0,
         "chapter_label": "1/4 情境導入",
         "camera": {"x": 0, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 180, "y": 880, "pose": "wave", "flip": False},
+        "mimi": {"x": 280, "y": 880, "pose": "wave", "flip": False},
         "subtitle": "哈囉大家！我是米米兔，今天帶大家一起探索「幾何形體」的神奇世界喔！",
         "focusTarget": None,
         "bubble": None,
@@ -37,7 +37,7 @@ CUES = [
         "scene": 0,
         "chapter_label": "1/4 情境導入",
         "camera": {"x": 0, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 220, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 380, "y": 880, "pose": "point", "flip": False},
         "subtitle": "你看！生活中有正方體積木、長方體禮物盒、皮球、圓柱罐頭，還有圓錐派對帽！",
         "focusSequence": [
             {"target": "#z0-cube", "until": 0.22},
@@ -53,7 +53,7 @@ CUES = [
         "scene": 0,
         "chapter_label": "1/4 情境導入",
         "camera": {"x": 0, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 220, "y": 880, "pose": "wave", "flip": False},
+        "mimi": {"x": 320, "y": 880, "pose": "wave", "flip": False},
         "subtitle": "它們有的可以平平堆疊，有的能順暢滾動，到底藏著什麼特徵呢？讓我們一起拆解！",
         "focusTarget": "#z0-cube",
         "bubble": "idea",
@@ -66,7 +66,7 @@ CUES = [
         "scene": 1,
         "chapter_label": "2/4 核心概念拆解",
         "camera": {"x": 1920, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 200, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 320, "y": 880, "pose": "point", "flip": False},
         "subtitle": "我們先來看正方體！正方體有 8 個頂點、12 條邊，還有 6 個一模一樣大的正方形面喔！",
         "focusTarget": "#z1-cube",
         "bubble": None,
@@ -77,7 +77,7 @@ CUES = [
         "scene": 1,
         "chapter_label": "2/4 核心概念拆解",
         "camera": {"x": 1920, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 220, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 480, "y": 880, "pose": "point", "flip": False},
         "subtitle": "再看長方體！長方體也是 8 個頂點、12 條邊和 6 個面，相對的面大小形狀完全相同！",
         "focusTarget": "#z1-box",
         "bubble": None,
@@ -88,7 +88,7 @@ CUES = [
         "scene": 1,
         "chapter_label": "2/4 核心概念拆解",
         "camera": {"x": 1920, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 220, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 580, "y": 880, "pose": "point", "flip": False},
         "subtitle": "滾動好朋友：球體只有 1 個曲面；圓柱有 2 個平平的圓底面；圓錐有 1 個尖尖頂點與 1 個底面！",
         "focusSequence": [
             {"target": "#z1-ball", "until": 0.33},
@@ -105,11 +105,11 @@ CUES = [
         "scene": 2,
         "chapter_label": "3/4 易錯陷阱與真題操作",
         "camera": {"x": 3840, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 180, "y": 880, "pose": "think", "flip": False},
-        "subtitle": "小心段考陷阱一！用木棍排圖案，圖①有 3 根，圖②有 5 根，每多一個梯形就多 2 根！",
+        "mimi": {"x": 300, "y": 880, "pose": "think", "flip": False},
+        "subtitle": "小心段考陷阱一！用木棍排圖案，圖①有 3 根，圖②有 5 根，每多一個三角形就多 2 根！",
         "focusTarget": "#z2-sticks",
         "bubble": "alert",
-        "badge": {"type": "correct", "text": "每多一個加 2 根！", "x": 620, "y": 250},
+        "badge": {"type": "correct", "text": "每多一個三角形加 2 根！", "x": 640, "y": 250},
         "sfx": "correct",
         "state": "trap_sticks",
     },
@@ -117,11 +117,11 @@ CUES = [
         "scene": 2,
         "chapter_label": "3/4 易錯陷阱與真題操作",
         "camera": {"x": 3840, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 200, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 880, "y": 880, "pose": "point", "flip": False, "scale": 0.88},
         "subtitle": "小心陷阱二！用圓規量折線，圓規量的是長度不是形狀，逐段量取搬到直線上，總長度完全一樣！",
         "focusTarget": "#z2-compass-line",
         "bubble": "idea",
-        "badge": {"type": "correct", "text": "折線搬移總長度不變！", "x": 1360, "y": 220},
+        "badge": {"type": "correct", "text": "折線搬移總長度不變！", "x": 1380, "y": 220},
         "sfx": "correct",
         "state": "trap_compass",
     },
@@ -129,11 +129,11 @@ CUES = [
         "scene": 2,
         "chapter_label": "3/4 易錯陷阱與真題操作",
         "camera": {"x": 3840, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 200, "y": 880, "pose": "think", "flip": False},
+        "mimi": {"x": 880, "y": 880, "pose": "think", "flip": False, "scale": 0.88},
         "subtitle": "特別注意：圓錐側面是光滑平順的「曲面」，千萬不要數成直線邊喔！",
         "focusTarget": "#z2-cone-trap",
         "bubble": "alert",
-        "badge": {"type": "trap", "text": "曲面不是直線邊！", "x": 1360, "y": 570},
+        "badge": {"type": "trap", "text": "曲面不是直線邊！", "x": 1380, "y": 570},
         "sfx": "trap",
         "state": "trap_cone_surface",
     },
@@ -143,7 +143,7 @@ CUES = [
         "scene": 3,
         "chapter_label": "4/4 總結口訣與真題挑戰",
         "camera": {"x": 5760, "y": 0, "zoom": 0.95},
-        "mimi": {"x": 180, "y": 880, "pose": "cheer", "flip": False},
+        "mimi": {"x": 280, "y": 880, "pose": "cheer", "flip": False},
         "subtitle": "最後複習四大口訣：正方長方都是 6 面 12 邊 8 頂點；圓柱 2 個平底面，圓錐 1 個頂點！",
         "focusSequence": [
             {"target": "#z3-card-0", "until": 0.25},
@@ -159,7 +159,7 @@ CUES = [
         "scene": 3,
         "chapter_label": "4/4 總結口訣與真題挑戰",
         "camera": {"x": 5760, "y": 0, "zoom": 0.95},
-        "mimi": {"x": 220, "y": 880, "pose": "cheer", "flip": False},
+        "mimi": {"x": 380, "y": 880, "pose": "cheer", "flip": False, "scale": 1.05},
         "subtitle": "掌握形體特徵與操作規律，你就是幾何小達人！現在就來挑戰段考真題測驗吧！",
         "focusTarget": "#z3-cta",
         "bubble": "idea",
@@ -184,32 +184,111 @@ window.UNIT_PLUGIN = (function () {
     return node;
   }
 
-  function drawCube(parent, x, y, size, colTop, colFront, colRight) {
+  // Standard textbook isometric cube: hexagon outer silhouette, top diamond pointing UP, 8 exact vertices
+  function drawCube(parent, x, y, size, colTop, colLeft, colRight, showVertices, showHidden) {
     const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
-    const s = size;
-    const dx = s * 0.866;
-    const dy = s * 0.5;
-    // Top face
-    const topD = `M 0,${-s} L ${dx},${-dy - s*0.5} L 0,0 L ${-dx},${-dy - s*0.5} Z`;
-    el("path", { d: topD, fill: colTop, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round" }, g);
-    // Left/Front face
-    const leftD = `M ${-dx},${-dy - s*0.5} L 0,0 L 0,${s} L ${-dx},${s - dy*0.5} Z`;
-    el("path", { d: leftD, fill: colFront, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round" }, g);
+    const W = size * 0.90;
+    const dy = size * 0.45;
+    const H_edge = size * 1.10;
+    const H = size * 0.80;
+
+    const p0 = [0, -H];                       // Top apex (pointing UP)
+    const p1 = [W, -H + dy];                  // Top-right
+    const p2 = [0, -H + 2 * dy];              // Top-center/front
+    const p3 = [-W, -H + dy];                 // Top-left
+    const p4 = [0, -H + 2 * dy + H_edge];     // Bottom-center
+    const p5 = [W, -H + dy + H_edge];         // Bottom-right
+    const p6 = [-W, -H + dy + H_edge];        // Bottom-left
+    const p7 = [0, -H + H_edge];              // Back-bottom hidden vertex
+
+    // Hidden back edges (drawn underneath)
+    if (showHidden) {
+      el("line", { x1: p7[0], y1: p7[1], x2: p0[0], y2: p0[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
+      el("line", { x1: p7[0], y1: p7[1], x2: p6[0], y2: p6[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
+      el("line", { x1: p7[0], y1: p7[1], x2: p5[0], y2: p5[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
+    }
+
+    // Top face (diamond pointing UP)
+    el("polygon", {
+      points: `${p0[0]},${p0[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p3[0]},${p3[1]}`,
+      fill: colTop, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+    }, g);
+
+    // Left face
+    el("polygon", {
+      points: `${p3[0]},${p3[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p6[0]},${p6[1]}`,
+      fill: colLeft, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+    }, g);
+
     // Right face
-    const rightD = `M 0,0 L ${dx},${-dy - s*0.5} L ${dx},${s - dy*0.5} L 0,${s} Z`;
-    el("path", { d: rightD, fill: colRight, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round" }, g);
+    el("polygon", {
+      points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p5[0]},${p5[1]}`,
+      fill: colRight, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+    }, g);
+
+    // 8 Vertex dots (if requested)
+    if (showVertices) {
+      const allPts = [p0, p1, p2, p3, p4, p5, p6, p7];
+      allPts.forEach(([vx, vy]) => {
+        el("circle", { cx: vx, cy: vy, r: 8, fill: "#EF4444", stroke: "#FFFFFF", "stroke-width": 2.5 }, g);
+      });
+    }
+    return g;
+  }
+
+  // Standard textbook isometric rectangular cuboid (長方體)
+  function drawBox(parent, x, y, sizeW, sizeH, colTop, colLeft, colRight, showVertices, showHidden) {
+    const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
+    const W = sizeW * 0.95;
+    const dy = sizeW * 0.38;
+    const H_edge = sizeH * 1.05;
+    const H = sizeH * 0.70;
+
+    const p0 = [0, -H];
+    const p1 = [W, -H + dy];
+    const p2 = [0, -H + 2 * dy];
+    const p3 = [-W, -H + dy];
+    const p4 = [0, -H + 2 * dy + H_edge];
+    const p5 = [W, -H + dy + H_edge];
+    const p6 = [-W, -H + dy + H_edge];
+    const p7 = [0, -H + H_edge];
+
+    if (showHidden) {
+      el("line", { x1: p7[0], y1: p7[1], x2: p0[0], y2: p0[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
+      el("line", { x1: p7[0], y1: p7[1], x2: p6[0], y2: p6[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
+      el("line", { x1: p7[0], y1: p7[1], x2: p5[0], y2: p5[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
+    }
+
+    el("polygon", {
+      points: `${p0[0]},${p0[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p3[0]},${p3[1]}`,
+      fill: colTop, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+    }, g);
+
+    el("polygon", {
+      points: `${p3[0]},${p3[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p6[0]},${p6[1]}`,
+      fill: colLeft, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+    }, g);
+
+    el("polygon", {
+      points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p5[0]},${p5[1]}`,
+      fill: colRight, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+    }, g);
+
+    if (showVertices) {
+      const allPts = [p0, p1, p2, p3, p4, p5, p6, p7];
+      allPts.forEach(([vx, vy]) => {
+        el("circle", { cx: vx, cy: vy, r: 8, fill: "#EF4444", stroke: "#FFFFFF", "stroke-width": 2.5 }, g);
+      });
+    }
     return g;
   }
 
   function drawCylinder(parent, x, y, r, h, colBody, colTop) {
     const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
     const ry = r * 0.32;
-    // Body
     const bodyD = `M ${-r},${-h/2} L ${-r},${h/2} A ${r} ${ry} 0 0 0 ${r} ${h/2} L ${r},${-h/2} Z`;
     el("path", { d: bodyD, fill: colBody, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round" }, g);
-    // Bottom dashed arc (hidden inside)
     el("path", { d: `M ${-r},${h/2} A ${r} ${ry} 0 0 1 ${r} ${h/2}`, fill: "none", stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "5,5" }, g);
-    // Top face
     el("ellipse", { cx: 0, cy: -h/2, rx: r, ry: ry, fill: colTop, stroke: "#1E293B", "stroke-width": 3.5 }, g);
     return g;
   }
@@ -217,12 +296,9 @@ window.UNIT_PLUGIN = (function () {
   function drawCone(parent, x, y, r, h, colBody, colBottom) {
     const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
     const ry = r * 0.32;
-    // Body triangle/curved base
     const bodyD = `M 0,${-h/2} L ${-r},${h/2} A ${r} ${ry} 0 0 0 ${r} ${h/2} Z`;
     el("path", { d: bodyD, fill: colBody, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round" }, g);
-    // Hidden back arc
     el("path", { d: `M ${-r},${h/2} A ${r} ${ry} 0 0 1 ${r} ${h/2}`, fill: "none", stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "5,5" }, g);
-    // Apex dot
     el("circle", { cx: 0, cy: -h/2, r: 7, fill: "#EF4444", stroke: "#1E293B", "stroke-width": 2.5 }, g);
     return g;
   }
@@ -230,10 +306,8 @@ window.UNIT_PLUGIN = (function () {
   function drawSphere(parent, x, y, r, colBody) {
     const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
     el("circle", { cx: 0, cy: 0, r: r, fill: colBody, stroke: "#1E293B", "stroke-width": 3.5 }, g);
-    // 3D contour lines
     el("ellipse", { cx: 0, cy: 0, rx: r * 0.95, ry: r * 0.28, fill: "none", stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
     el("path", { d: `M ${-r*0.95},0 A ${r*0.95} ${r*0.28} 0 0 0 ${r*0.95} 0`, fill: "none", stroke: "#1E293B", "stroke-width": 2.5 }, g);
-    // Soft glossy highlight
     el("circle", { cx: -r * 0.35, cy: -r * 0.35, r: r * 0.25, fill: "#FFFFFF", opacity: 0.5 }, g);
     return g;
   }
@@ -249,8 +323,8 @@ window.UNIT_PLUGIN = (function () {
     el("line", { x1: 620, y1: 180, x2: 1300, y2: 180, stroke: "#E15B48", "stroke-width": 6, "stroke-linecap": "round" }, z0);
 
     const items0 = [
-      { id: "z0-cube", title: "正方體（積木）", x: 620, y: 520, fn: (g) => drawCube(g, 0, 10, 75, "#FDE68A", "#F59E0B", "#D97706") },
-      { id: "z0-box", title: "長方體（禮物盒）", x: 900, y: 520, fn: (g) => drawCube(g, 0, 10, 85, "#BFDBFE", "#3B82F6", "#1D4ED8") },
+      { id: "z0-cube", title: "正方體（積木）", x: 620, y: 520, fn: (g) => drawCube(g, 0, 10, 75, "#FDE68A", "#F59E0B", "#D97706", false, false) },
+      { id: "z0-box", title: "長方體（禮物盒）", x: 900, y: 520, fn: (g) => drawBox(g, 0, 10, 85, 75, "#BFDBFE", "#3B82F6", "#1D4ED8", false, false) },
       { id: "z0-ball", title: "球體（皮球）", x: 1180, y: 520, fn: (g) => drawSphere(g, 0, 10, 75, "#FED7AA") },
       { id: "z0-cylinder", title: "圓柱（罐頭）", x: 1450, y: 520, fn: (g) => drawCylinder(g, 0, 10, 65, 130, "#A7F3D0", "#34D399") },
       { id: "z0-cone", title: "圓錐（派對帽）", x: 1720, y: 520, fn: (g) => drawCone(g, 0, 10, 65, 140, "#DDD6FE", "#A78BFA") },
@@ -272,46 +346,43 @@ window.UNIT_PLUGIN = (function () {
     }, z1);
     el("line", { x1: 620, y1: 180, x2: 1300, y2: 180, stroke: "#2563EB", "stroke-width": 6, "stroke-linecap": "round" }, z1);
 
-    // Card A: 正方體特徵
-    const cCube = el("g", { id: "z1-cube", transform: "translate(680, 520)" }, z1);
+    // Card A: 正方體特徵 (8頂點, 12邊, 6面)
+    const cCube = el("g", { id: "z1-cube", transform: "translate(660, 520)" }, z1);
     el("rect", { x: -210, y: -230, width: 420, height: 470, rx: 28, fill: "#FFFDF8", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cCube);
     textEl("正方體", { x: 0, y: -165, "text-anchor": "middle", "font-size": 34, "font-weight": 900, fill: "#E15B48" }, cCube);
-    drawCube(cCube, 0, -20, 95, "#FEF08A", "#FBBF24", "#F59E0B");
-    // Vertex dots (8 points)
-    const vPts = [[0, -115], [82, -67], [0, -20], [-82, -67], [-82, 75], [0, 122], [82, 75]];
-    vPts.forEach(([vx, vy]) => {
-      el("circle", { cx: vx, cy: vy, r: 8, fill: "#EF4444", stroke: "#FFFFFF", "stroke-width": 2 }, cCube);
-    });
-    // Labels pill
+    drawCube(cCube, 0, -20, 95, "#FEF08A", "#FBBF24", "#F59E0B", true, true);
     const p1 = el("g", { transform: "translate(0, 150)" }, cCube);
     el("rect", { x: -185, y: -24, width: 370, height: 48, rx: 24, fill: "#FEF2F2", stroke: "#EF4444", "stroke-width": 2.5 }, p1);
     textEl("8 個頂點 ｜ 12 條邊 ｜ 6 個正方形面", { x: 0, y: 8, "text-anchor": "middle", "font-size": 19, "font-weight": 800, fill: "#991B1B" }, p1);
 
-    // Card B: 長方體特徵
-    const cBox = el("g", { id: "z1-box", transform: "translate(1160, 520)" }, z1);
+    // Card B: 長方體特徵 (8頂點, 12邊, 6面)
+    const cBox = el("g", { id: "z1-box", transform: "translate(1140, 520)" }, z1);
     el("rect", { x: -210, y: -230, width: 420, height: 470, rx: 28, fill: "#FFFDF8", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cBox);
     textEl("長方體", { x: 0, y: -165, "text-anchor": "middle", "font-size": 34, "font-weight": 900, fill: "#2563EB" }, cBox);
-    drawCube(cBox, 0, -20, 105, "#DBEAFE", "#60A5FA", "#2563EB");
+    drawBox(cBox, 0, -20, 105, 85, "#DBEAFE", "#60A5FA", "#2563EB", true, true);
     const p2 = el("g", { transform: "translate(0, 150)" }, cBox);
     el("rect", { x: -185, y: -24, width: 370, height: 48, rx: 24, fill: "#EFF6FF", stroke: "#3B82F6", "stroke-width": 2.5 }, p2);
     textEl("8 頂點 ｜ 12 條邊 ｜ 相對面大小相同", { x: 0, y: 8, "text-anchor": "middle", "font-size": 19, "font-weight": 800, fill: "#1E40AF" }, p2);
 
-    // Card C: 滾動形體群 (球體、圓柱、圓錐)
-    const cRoll = el("g", { id: "z1-rolling", transform: "translate(1640, 520)" }, z1);
+    // Card C: 滾動形體群 (球體、圓柱、圓錐) — 文字三欄垂直對齊，零重疊
+    const cRoll = el("g", { id: "z1-rolling", transform: "translate(1620, 520)" }, z1);
     el("rect", { x: -220, y: -230, width: 440, height: 470, rx: 28, fill: "#FFFDF8", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cRoll);
     textEl("滾動形體家族", { x: 0, y: -165, "text-anchor": "middle", "font-size": 32, "font-weight": 900, fill: "#059669" }, cRoll);
 
-    const bBall = el("g", { id: "z1-ball", transform: "translate(-120, -30)" }, cRoll);
-    drawSphere(bBall, 0, 0, 55, "#FED7AA");
-    textEl("球體：1曲面", { x: 0, y: 80, "text-anchor": "middle", "font-size": 18, "font-weight": 800, fill: "#1E293B" }, bBall);
+    const bBall = el("g", { id: "z1-ball", transform: "translate(-130, -35)" }, cRoll);
+    drawSphere(bBall, 0, 0, 52, "#FED7AA");
+    textEl("球體", { x: 0, y: 72, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#1E293B" }, bBall);
+    textEl("1 個曲面", { x: 0, y: 100, "text-anchor": "middle", "font-size": 17, "font-weight": 800, fill: "#059669" }, bBall);
 
-    const bCyl = el("g", { id: "z1-cylinder", transform: "translate(0, -30)" }, cRoll);
-    drawCylinder(bCyl, 0, 0, 48, 90, "#A7F3D0", "#34D399");
-    textEl("圓柱：2底面1曲面", { x: 0, y: 80, "text-anchor": "middle", "font-size": 18, "font-weight": 800, fill: "#1E293B" }, bCyl);
+    const bCyl = el("g", { id: "z1-cylinder", transform: "translate(0, -35)" }, cRoll);
+    drawCylinder(bCyl, 0, 0, 44, 85, "#A7F3D0", "#34D399");
+    textEl("圓柱", { x: 0, y: 72, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#1E293B" }, bCyl);
+    textEl("2底面+1曲面", { x: 0, y: 100, "text-anchor": "middle", "font-size": 17, "font-weight": 800, fill: "#059669" }, bCyl);
 
-    const bCone = el("g", { id: "z1-cone", transform: "translate(120, -30)" }, cRoll);
-    drawCone(bCone, 0, 0, 48, 100, "#DDD6FE", "#A78BFA");
-    textEl("圓錐：1頂點1底面", { x: 0, y: 80, "text-anchor": "middle", "font-size": 18, "font-weight": 800, fill: "#1E293B" }, bCone);
+    const bCone = el("g", { id: "z1-cone", transform: "translate(130, -35)" }, cRoll);
+    drawCone(bCone, 0, 0, 44, 90, "#DDD6FE", "#A78BFA");
+    textEl("圓錐", { x: 0, y: 72, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#1E293B" }, bCone);
+    textEl("1頂點+1底面", { x: 0, y: 100, "text-anchor": "middle", "font-size": 17, "font-weight": 800, fill: "#059669" }, bCone);
 
     const p3 = el("g", { transform: "translate(0, 150)" }, cRoll);
     el("rect", { x: -195, y: -24, width: 390, height: 48, rx: 24, fill: "#ECFDF5", stroke: "#10B981", "stroke-width": 2.5 }, p3);
@@ -326,31 +397,52 @@ window.UNIT_PLUGIN = (function () {
     }, z2);
     el("line", { x1: 620, y1: 180, x2: 1300, y2: 180, stroke: "#D97706", "stroke-width": 6, "stroke-linecap": "round" }, z2);
 
-    // Trap 1: 木棍圖案規律 (真題 Q01)
-    const cSticks = el("g", { id: "z2-sticks", transform: "translate(680, 520)" }, z2);
+    // Trap 1: 木棍排圖案規律 (真題 Q01) — 嚴格繪製連續相連正三角形
+    const cSticks = el("g", { id: "z2-sticks", transform: "translate(640, 520)" }, z2);
     el("rect", { x: -240, y: -230, width: 480, height: 470, rx: 28, fill: "#FFFDF8", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cSticks);
     textEl("真題一：木棍排圖案規律", { x: 0, y: -165, "text-anchor": "middle", "font-size": 28, "font-weight": 900, fill: "#B45309" }, cSticks);
 
-    // Draw sticks pattern
-    // Fig 1: Triangle 3 sticks
+    // Fig 1: 1 Triangle = 3 sticks
     const f1 = el("g", { transform: "translate(-140, -40)" }, cSticks);
-    el("polygon", { points: "0,-45 40,30 -40,30", fill: "#FEF3C7", stroke: "#D97706", "stroke-width": 6, "stroke-linejoin": "round" }, f1);
+    el("line", { x1: -35, y1: 25, x2: 35, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f1);
+    el("line", { x1: -35, y1: 25, x2: 0, y2: -35, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f1);
+    el("line", { x1: 0, y1: -35, x2: 35, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f1);
+    [[-35, 25], [35, 25], [0, -35]].forEach(([vx, vy]) => {
+      el("circle", { cx: vx, cy: vy, r: 6, fill: "#E15B48" }, f1);
+    });
     textEl("圖①: 3根", { x: 0, y: 65, "text-anchor": "middle", "font-size": 20, "font-weight": 800, fill: "#1E293B" }, f1);
 
-    // Fig 2: Trapezoid 5 sticks
+    // Fig 2: 2 Adjacent Triangles = 5 sticks
     const f2 = el("g", { transform: "translate(0, -40)" }, cSticks);
-    el("polygon", { points: "-25,-45 25,-45 50,30 -50,30", fill: "#FED7AA", stroke: "#EA580C", "stroke-width": 6, "stroke-linejoin": "round" }, f2);
+    // Base 1, Left 1, Shared middle, Top 2, Right 2
+    el("line", { x1: -45, y1: 25, x2: 15, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f2);
+    el("line", { x1: -45, y1: 25, x2: -15, y2: -35, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f2);
+    el("line", { x1: -15, y1: -35, x2: 15, y2: 25, stroke: "#EA580C", "stroke-width": 8, "stroke-linecap": "round" }, f2); // shared
+    el("line", { x1: -15, y1: -35, x2: 45, y2: -35, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f2);
+    el("line", { x1: 45, y1: -35, x2: 15, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f2);
+    [[-45, 25], [15, 25], [-15, -35], [45, -35]].forEach(([vx, vy]) => {
+      el("circle", { cx: vx, cy: vy, r: 6, fill: "#E15B48" }, f2);
+    });
     textEl("圖②: 5根", { x: 0, y: 65, "text-anchor": "middle", "font-size": 20, "font-weight": 800, fill: "#1E293B" }, f2);
 
-    // Fig 3: 7 sticks
+    // Fig 3: 3 Adjacent Triangles = 7 sticks
     const f3 = el("g", { transform: "translate(140, -40)" }, cSticks);
-    el("polygon", { points: "-50,-45 50,-45 75,30 -75,30", fill: "#FDE68A", stroke: "#CA8A04", "stroke-width": 6, "stroke-linejoin": "round" }, f3);
+    el("line", { x1: -55, y1: 25, x2: 5, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f3);
+    el("line", { x1: -55, y1: 25, x2: -25, y2: -35, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f3);
+    el("line", { x1: -25, y1: -35, x2: 5, y2: 25, stroke: "#EA580C", "stroke-width": 8, "stroke-linecap": "round" }, f3); // shared 1
+    el("line", { x1: -25, y1: -35, x2: 35, y2: -35, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f3);
+    el("line", { x1: 35, y1: -35, x2: 5, y2: 25, stroke: "#EA580C", "stroke-width": 8, "stroke-linecap": "round" }, f3);  // shared 2
+    el("line", { x1: 5, y1: 25, x2: 65, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f3);
+    el("line", { x1: 35, y1: -35, x2: 65, y2: 25, stroke: "#D97706", "stroke-width": 7, "stroke-linecap": "round" }, f3);
+    [[-55, 25], [5, 25], [65, 25], [-25, -35], [35, -35]].forEach(([vx, vy]) => {
+      el("circle", { cx: vx, cy: vy, r: 6, fill: "#E15B48" }, f3);
+    });
     textEl("圖③: 7根", { x: 0, y: 65, "text-anchor": "middle", "font-size": 20, "font-weight": 800, fill: "#1E293B" }, f3);
 
     // Rule banner
     const rb = el("g", { transform: "translate(0, 150)" }, cSticks);
     el("rect", { x: -210, y: -24, width: 420, height: 48, rx: 24, fill: "#FEF3C7", stroke: "#D97706", "stroke-width": 2.5 }, rb);
-    textEl("每多一個梯形 ＋2 根木棍！(圖⑤＝11根)", { x: 0, y: 8, "text-anchor": "middle", "font-size": 20, "font-weight": 900, fill: "#92400E" }, rb);
+    textEl("每多一個三角形 ＋2 根木棍！(圖⑤＝11根)", { x: 0, y: 8, "text-anchor": "middle", "font-size": 19, "font-weight": 900, fill: "#92400E" }, rb);
 
     // Trap 2: 圓規等距量取折線 (真題 Q02)
     const cComp = el("g", { id: "z2-compass-line", transform: "translate(1380, 430)" }, z2);
@@ -405,10 +497,10 @@ window.UNIT_PLUGIN = (function () {
     });
 
     // CTA Banner
-    const cta = el("g", { id: "z3-cta", transform: "translate(1130, 780)" }, z3);
-    el("rect", { x: -440, y: -50, width: 880, height: 100, rx: 50, fill: "#E15B48", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cta);
+    const cta = el("g", { id: "z3-cta", transform: "translate(1130, 760)" }, z3);
+    el("rect", { x: -440, y: -45, width: 880, height: 90, rx: 45, fill: "#E15B48", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cta);
     textEl("⭐ 幾何大師挑戰開始！快去挑戰 S-3-4 段考真題！ ⭐", {
-      x: 0, y: 15, "text-anchor": "middle", "font-size": 32, "font-weight": 900, fill: "#FFFFFF"
+      x: 0, y: 13, "text-anchor": "middle", "font-size": 32, "font-weight": 900, fill: "#FFFFFF"
     }, cta);
   }
 
@@ -425,7 +517,7 @@ def main() -> None:
     repo_root = Path(__file__).resolve().parents[3]
     out_mp4 = repo_root / "app" / "assets" / "classroom_videos" / "S34_Final.mp4"
 
-    print("=== Rendering G3-S-3-4 Geometry Classroom Video ===")
+    print("=== Rendering G3-S-3-4 Geometry Classroom Video (Refined) ===")
     stats = render_unit_video(
         repo_root=repo_root,
         unit_meta=UNIT_META,

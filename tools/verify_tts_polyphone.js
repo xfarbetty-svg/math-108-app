@@ -32,12 +32,17 @@ check(code.includes('fixPolyphonePronunciation(text)'), 'cleanTextForSpeech 呼�
 check(code.includes('new SpeechSynthesisUtterance(clean)'), 'Web Speech 使用清洗後 clean 字串');
 check(code.includes('encodeURIComponent(clean)'), '/api/tts 與雲端備援使用清洗後 clean 字串');
 
-// 3. 核心案例：使用者回報的 R-3-2 Q5 情境（精確輸出比對）
+// 3. 核心案例：使用者回報的 R-3-2 Q5 情境與 S-3-4「量折線」動詞情境
 const input = '柳丁兩兩一數剩 1 顆的奇偶推理，總數是奇數';
 const expected = '柳丁兩兩一數剩 1 顆的基偶推理，總數是基數';
 const got = AM.cleanTextForSpeech(input);
 check(got === expected, '奇偶/奇數 → 基偶/基數，實際: ' + JSON.stringify(got));
 check(input === '柳丁兩兩一數剩 1 顆的奇偶推理，總數是奇數', '傳入原文未被就地竄改');
+
+const inputMeasure = '用圓規量折線，量取一樣長的線段，量一量測量長度';
+const expectedMeasure = '用圓規良折線，良取一樣長的線段，良一良測良長度';
+const gotMeasure = AM.cleanTextForSpeech(inputMeasure);
+check(gotMeasure === expectedMeasure, '量折線/量取/量一量/測量 → 良折線/良取/良一良/測良，實際: ' + JSON.stringify(gotMeasure));
 
 // 4. 邊界：不誤傷日常詞（軍規：嚴禁假赋能／誤傷）
 check(AM.cleanTextForSpeech('奇怪') === '奇怪', '"奇怪" 不被誤改為 "基怪"');
@@ -45,6 +50,8 @@ check(AM.cleanTextForSpeech('神奇') === '神奇', '"神奇" 不被誤改為 "�
 check(AM.cleanTextForSpeech('好奇心') === '好奇心', '"好奇心" 保持不變');
 check(AM.cleanTextForSpeech('差數與相差') === '差數與相差', '"差數／相差" 維持原音，不被改寫');
 check(AM.cleanTextForSpeech('幾分之幾') === '幾分之幾', '"幾分之幾" 維持原音，不被改寫');
+check(AM.cleanTextForSpeech('重量與容量') === '重量與容量', '"重量／容量" 名詞四聲維持原音，不被改寫');
+check(AM.cleanTextForSpeech('數量與力量') === '數量與力量', '"數量／力量" 名詞四聲維持原音，不被改寫');
 
 // 5. 邊界：單詞、複合詞、空值
 check(AM.cleanTextForSpeech('奇數') === '基數', '單詞 奇數 → 基數');
