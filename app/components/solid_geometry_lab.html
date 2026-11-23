@@ -20,6 +20,11 @@
   html, body { margin:0; padding:0; width:100%; max-width:390px; height:420px; overflow:hidden; }
   body { font-family:"PingFang TC","Microsoft JhengHei",sans-serif; background:var(--paper); color:var(--ink); }
   #app { width:100%; max-width:390px; height:420px; background:var(--paper); display:flex; flex-direction:column; overflow:hidden; }
+  /* 平板／電腦：iframe 內教具跟著放大置中；手機 360/390 維持原尺寸零溢出 */
+  @media (min-width:521px) {
+    html, body, #app, .scene, .scene svg { max-width:680px; }
+    html, body, #app { margin-left:auto; margin-right:auto; }
+  }
   .topbar { height:34px; flex:none; display:flex; align-items:center; justify-content:space-between;
             padding:0 12px; background:var(--bg-elevated); border-bottom:1px solid var(--border-color); }
   .topbar .name { font-size:12px; font-weight:700; color:var(--ink); }
@@ -58,6 +63,38 @@
          -webkit-appearance:none; appearance:none; white-space:nowrap; }
   .act:disabled { opacity:.4; cursor:default; }
   .act.reset { background:transparent; color:var(--ink); border-color:var(--border-color); }
+  /* Q02 零學習門檻：目前該量的線段柔和脈衝引導 */
+  .scene .seg-label, .scene .guide-tip { pointer-events:none; }
+  .scene .seg-badge { fill:var(--bg-elevated); stroke:var(--border-color); stroke-width:1; }
+  .scene .seg-label text { font-size:13px; font-weight:800; fill:var(--ink); }
+  .scene .seg-label.active .seg-badge { fill:var(--accent); stroke:var(--accent); }
+  .scene .seg-label.active text { fill:#fff; }
+  .scene .guide-tip rect { fill:var(--accent); }
+  .scene .guide-tip text { font-size:11px; font-weight:800; fill:#fff; }
+  .guide-pulse { animation:softPulse 1.25s ease-in-out infinite; }
+  @keyframes softPulse {
+    0%, 100% { filter:drop-shadow(0 0 0 var(--accent)); opacity:1; }
+    50% { filter:drop-shadow(0 0 7px var(--accent)); opacity:.78; }
+  }
+  .act.guide-pulse { animation:btnPulse 1.25s ease-in-out infinite; }
+  @keyframes btnPulse {
+    0%, 100% { box-shadow:0 0 0 0 rgba(244,105,75,.15); }
+    50% { box-shadow:0 0 0 7px rgba(244,105,75,.28); }
+  }
+  /* Q3/Q4 等角投影 3D base-ten 積木 */
+  .scene .iso-top { fill:var(--fill-a); stroke:var(--line); stroke-width:1.4; stroke-linejoin:round; }
+  .scene .iso-front { fill:var(--fill-b); stroke:var(--line); stroke-width:1.4; stroke-linejoin:round; }
+  .scene .iso-side { fill:var(--fill-c); stroke:var(--line); stroke-width:1.4; stroke-linejoin:round; }
+  .scene .iso-line { fill:none; stroke:var(--line); stroke-width:.9; opacity:.65; }
+  .scene .iso-num { font-size:10px; font-weight:800; fill:var(--ink); }
+  .scene .carry-box { fill:none; stroke:var(--accent); stroke-width:1.8; stroke-dasharray:5 4; }
+  .scene .carry-hint { font-size:11px; font-weight:800; fill:var(--accent); }
+  .scene .carried .take-group { display:none; }
+  .scene .carried .new-rod { display:block; }
+  .scene .new-rod { display:none; }
+  .scene .result-note { display:none; font-size:12px; font-weight:800; fill:var(--accent); }
+  .scene .carried .result-note { display:block; }
+  .scene .carried .old-hint { display:none; }
 
 /* G3 窄屏_one-screen 收斂 */
 #q-focus, .q-focus, .qtag, #qtag {
@@ -95,7 +132,7 @@ svg text { max-width: 100%; }
     }
   });
 
-  const wrap = (inner) => '<svg viewBox="0 0 390 340" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
+  const wrap = (inner) => '<svg id="sceneSvg" viewBox="0 0 390 340" preserveAspectRatio="xMidYMid meet">' + inner + '</svg>';
   const txt = (x, y, s, cls, anchor) => '<text x="' + x + '" y="' + y + '" class="' + (cls || 'lbl') + '" text-anchor="' + (anchor || 'middle') + '">' + s + '</text>';
   const line = (x1, y1, x2, y2, w) => '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="var(--line)" stroke-width="' + (w || 5) + '" stroke-linecap="round"/>';
   const stick = (x1, y1, x2, y2) => '<line class="hit" data-kind="stick" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>';
@@ -151,6 +188,8 @@ svg text { max-width: 100%; }
 
   // 圓規題：折線甲 + A 點虛線 + 可操作圓規（真實量距／張合／逐段截取）
   const Q2_PTS = [[56, 110], [108, 86], [162, 130], [216, 94], [268, 138]];
+  const Q2_LABEL_POS = [[82, 80], [135, 92], [189, 94], [242, 100]];
+  const Q2_MARKS = ['①', '②', '③', '④'];
   const Q2_COLORS = ['#f4694b', '#3b82f6', '#16a34a', '#a855f7'];
   const Q2_X0 = 56, Q2_X1 = 336, Q2_Y = 240, Q2_LEG = 72;
 
@@ -192,6 +231,13 @@ svg text { max-width: 100%; }
     }
     s += '</g>';
     Q2_PTS.forEach((p) => { s += '<circle class="joint" cx="' + p[0] + '" cy="' + p[1] + '" r="4"/>'; });
+    for (let i = 0; i < Q2_MARKS.length; i++) {
+      const p = Q2_LABEL_POS[i];
+      s += '<g class="seg-label" data-guide="' + i + '" transform="translate(' + p[0] + ',' + p[1] + ')">' +
+        '<circle class="seg-badge" r="11"/><text class="lbl" y="4" text-anchor="middle">' + Q2_MARKS[i] + '</text></g>';
+    }
+    s += '<g id="q2GuideTip" class="guide-tip"><rect x="128" y="50" width="134" height="21" rx="10"/>' +
+      '<text id="q2GuideText" x="195" y="65" text-anchor="middle">點一下第 ① 段量長度</text></g>';
     s += '<text id="measureTag" x="0" y="0" text-anchor="middle" style="display:none">✓ 已量取</text>';
     s += txt(34, 88, '甲', 'lbl');
     s += '<line x1="' + Q2_X0 + '" y1="' + Q2_Y + '" x2="' + Q2_X1 + '" y2="' + Q2_Y +
@@ -205,38 +251,69 @@ svg text { max-width: 100%; }
     return wrap(s);
   }
 
-  // base-ten 積木圖形
-  const cube = (x, y) =>
-    '<rect x="' + (x + 7) + '" y="' + (y - 7) + '" width="38" height="38" fill="var(--fill-a)" stroke="var(--line)" stroke-width="2"/>' +
-    '<rect x="' + x + '" y="' + y + '" width="38" height="38" fill="var(--fill-a)" stroke="var(--line)" stroke-width="2"/>';
-  const flat = (x, y) => '<rect x="' + x + '" y="' + y + '" width="38" height="38" fill="var(--fill-b)" stroke="var(--line)" stroke-width="2"/>';
-  const rod = (x, y) => '<rect x="' + x + '" y="' + y + '" width="66" height="9" fill="var(--fill-c)" stroke="var(--line)" stroke-width="2"/>';
-  const unit = (x, y) => '<rect x="' + x + '" y="' + y + '" width="11" height="11" fill="var(--fill-a)" stroke="var(--line)" stroke-width="1.5"/>';
+  // base-ten 積木：等角投影（Isometric 3D）真立體——頂面／正面／側面皆 visible
+  const isoTopGrid = (x, y, w, d, cols, rows) => {
+    const ty = y - d / 2;
+    let g = '';
+    for (let i = 1; i < cols; i++) {
+      const sx = x + w * i / cols;
+      g += '<line class="iso-line" x1="' + sx.toFixed(1) + '" y1="' + y + '" x2="' + (sx + d).toFixed(1) + '" y2="' + ty + '"/>';
+    }
+    for (let i = 1; i < rows; i++) {
+      const px = x + d * i / rows, py = y + (ty - y) * i / rows;
+      g += '<line class="iso-line" x1="' + px.toFixed(1) + '" y1="' + py.toFixed(1) + '" x2="' + (px + w).toFixed(1) + '" y2="' + py.toFixed(1) + '"/>';
+    }
+    return g;
+  };
+  const isoBlock = (x, y, w, h, d, label, cols, rows) => {
+    const ty = y - d / 2;
+    return '<g class="hit" data-kind="block">' +
+      '<polygon class="iso-side" points="' + (x + w) + ',' + y + ' ' + (x + w + d) + ',' + ty + ' ' +
+        (x + w + d) + ',' + (ty + h) + ' ' + (x + w) + ',' + (y + h) + '"/>' +
+      '<polygon class="iso-front" points="' + x + ',' + y + ' ' + (x + w) + ',' + y + ' ' +
+        (x + w) + ',' + (y + h) + ' ' + x + ',' + (y + h) + '"/>' +
+      '<polygon class="iso-top" points="' + x + ',' + y + ' ' + (x + d) + ',' + ty + ' ' +
+        (x + w + d) + ',' + ty + ' ' + (x + w) + ',' + y + '"/>' +
+      (cols && rows ? isoTopGrid(x, y, w, d, cols, rows) : '') +
+      (label ? txt(x + w / 2, y + h - 2.5, label, 'iso-num') : '') +
+      '</g>';
+  };
+  const thousand = (x, y) => isoBlock(x, y, 34, 34, 16, '1000', 4, 4);
+  const hundred = (x, y) => isoBlock(x, y, 34, 8, 12, '', 4, 4);
+  const ten = (x, y) => isoBlock(x, y, 58, 10, 10, '10', 10, 1);
+  const one = (x, y) => isoBlock(x, y, 10, 10, 5, '', 0, 0);
 
   function blocksScene(which) {
     let s = '';
     if (which === 3) {
-      s += txt(195, 22, '題目：數數看，下圖的積木合起來是多少？', 'cap');
-      s += cube(30, 56) + txt(49, 112, '千', 'dim');
-      for (let i = 0; i < 5; i++) s += flat(96 + i * 46, 56);
-      s += txt(195, 112, '百', 'dim');
-      for (let i = 0; i < 4; i++) s += rod(50, 140 + i * 20);
-      s += txt(195, 236, '十', 'dim');
-      [[40, 250], [120, 250], [200, 250]].forEach((g) => { for (let k = 0; k < 5; k++) s += unit(g[0] + k * 12, g[1]); });
-      for (let k = 0; k < 1; k++) s += unit(280 + k * 12, 250);
-      s += txt(195, 284, '一：分成 5、5、5、1 四群', 'dim');
-      s += txt(195, 314, '點選各類積木，對照千、百、十、一的位置', 'dim');
+      s += txt(195, 20, '題目：1 個千、5 個百、4 個十、16 個一，合起來是多少？', 'cap');
+      s += thousand(30, 54) + txt(53, 104, '千 ×1', 'dim');
+      for (let i = 0; i < 5; i++) s += hundred(86 + i * 48, 60);
+      s += txt(195, 96, '百 ×5', 'dim');
+      for (let i = 0; i < 4; i++) s += ten(44, 112 + i * 22);
+      s += txt(328, 152, '十 ×4', 'dim');
+      s += '<rect class="carry-box" x="42" y="198" width="96" height="40" rx="8"/>';
+      s += '<g class="take-group">';
+      for (let j = 0; j < 2; j++) for (let i = 0; i < 5; i++) s += one(48 + i * 18, 204 + j * 18);
+      s += '</g>';
+      for (let j = 2; j < 4; j++) for (let i = 0; i < 5; i++) s += one(48 + i * 18, 204 + j * 18);
+      s += txt(152, 218, '10 個一', 'carry-hint old-hint', 'start');
+      s += txt(152, 254, '6 個一', 'dim old-hint', 'start');
+      s += '<g class="new-rod">' + ten(222, 220) + txt(290, 240, '進位 +1 十', 'carry-hint', 'middle') + '</g>';
+      s += txt(195, 292, '16 個一 = 1 條十 + 6 個一 → 1千5百5十6一', 'result-note');
+      s += txt(195, 316, '點下方按鈕，親手把 10 個一換成 1 條十', 'dim');
     } else {
-      s += txt(195, 22, '題目：數數看，合起來的數字是多少？', 'cap');
-      [34, 100, 166, 232].forEach((x) => { s += cube(x, 42); });
-      s += txt(195, 100, '千', 'dim');
-      [28, 94, 160, 226, 292].forEach((x) => { s += flat(x, 112); });
-      s += txt(195, 168, '百', 'dim');
-      [40, 130, 220, 310].forEach((x) => { s += rod(x, 182); s += rod(x, 198); });
-      s += txt(195, 226, '十', 'dim');
-      [80, 92, 104].forEach((x) => { s += unit(x, 244); });
-      s += txt(195, 284, '一', 'dim');
-      s += txt(195, 314, '長條代表十，平面代表百，立方代表千', 'dim');
+      s += txt(195, 20, '題目：數數看，合起來的數字是多少？', 'cap');
+      for (let i = 0; i < 4; i++) s += thousand(24 + i * 54, 44);
+      s += txt(160, 96, '千 ×4', 'dim');
+      for (let i = 0; i < 5; i++) s += hundred(22 + i * 58, 106);
+      s += txt(160, 142, '百 ×5', 'dim');
+      for (let r = 0; r < 2; r++) for (let c = 0; c < 4; c++) s += ten(24 + c * 88, 158 + r * 24);
+      s += txt(330, 214, '十 ×8', 'dim');
+      for (let i = 0; i < 3; i++) s += one(150 + i * 26, 236);
+      s += txt(195, 268, '一 ×3', 'dim');
+      s += txt(195, 302, '長條代表十，平面代表百，立方代表千', 'dim');
+      s += txt(195, 324, '點選各類積木，對照千、百、十、一的位置', 'dim');
     }
     return wrap(s);
   }
@@ -270,7 +347,23 @@ svg text { max-width: 100%; }
     const btnPlace = document.getElementById('btnPlace');
     const btnReset = document.getElementById('btnReset');
     const progress = document.getElementById('q2progress');
+    const segLabels = Array.prototype.slice.call(scene.querySelectorAll('.seg-label'));
+    const guideTip = scene.querySelector('#q2GuideTip');
+    const guideText = scene.querySelector('#q2GuideText');
     let selected = -1, cursor = Q2_X0, copied = 0;
+
+    function clearGuide() {
+      segLabels.forEach(function (l) { l.classList.remove('active', 'guide-pulse'); });
+      guideTip.style.display = 'none';
+      btnPlace.classList.remove('guide-pulse');
+    }
+    function guideStep(idx) {
+      clearGuide();
+      if (idx >= segLabels.length) return;
+      segLabels[idx].classList.add('active', 'guide-pulse');
+      guideText.textContent = '點一下第 ' + Q2_MARKS[idx] + ' 段量長度';
+      guideTip.style.display = '';
+    }
 
     function setCompass(pose, state) {
       compass.setAttribute('transform', 'translate(' + pose.qx.toFixed(1) + ',' + pose.qy.toFixed(1) +
@@ -296,6 +389,7 @@ svg text { max-width: 100%; }
       progress.textContent = '已複製 0 / 4 段';
       clearSelection();
       setCompass({ qx: 300, qy: 168, half: 28, rot: 0 }, 'idle');
+      guideStep(0);
       q2hint.textContent = '圓規量的是長度，形狀可以從折線變成直線';
     }
 
@@ -309,6 +403,8 @@ svg text { max-width: 100%; }
         measureTag.setAttribute('y', (Q2_PTS[idx][1] + Q2_PTS[idx + 1][1]) / 2 - 16);
         measureTag.style.display = '';
         btnPlace.disabled = false;
+        clearGuide();
+        btnPlace.classList.add('guide-pulse');
         q2hint.textContent = '圓規已張開對齊第 ' + (idx + 1) + ' 段，按按鈕移到虛線截取。';
       });
     });
@@ -333,6 +429,7 @@ svg text { max-width: 100%; }
       progress.textContent = '已複製 ' + copied + ' / 4 段';
       setCompass({ qx: (x1 + x2) / 2, qy: Q2_Y - Q2_LEG, half: len / 2, rot: 0 }, 'placed');
       clearSelection();
+      guideStep(copied);
       q2hint.textContent = copied === 4
         ? '已複製 4 段！想想看：折線拉直後和甲線有什麼關係？'
         : '已截取到第 ' + copied + ' 段，換一段再量量看。';
@@ -340,6 +437,24 @@ svg text { max-width: 100%; }
 
     btnReset.addEventListener('click', reset);
     reset();
+  }
+
+  if (qNum === 3) {
+    const LABEL = '🔄 把 10 個「一」換成 1 條「十」';
+    document.querySelector('.footer').innerHTML =
+      '<button id="btnCarry" class="act">' + LABEL + '</button>' +
+      '<button id="btnCarryReset" class="act reset">↺ 重置</button>';
+    const btnCarry = document.getElementById('btnCarry');
+    document.getElementById('btnCarryReset').addEventListener('click', function () {
+      scene.querySelector('#sceneSvg').classList.remove('carried');
+      btnCarry.disabled = false;
+      btnCarry.textContent = LABEL;
+    });
+    btnCarry.addEventListener('click', function () {
+      scene.querySelector('#sceneSvg').classList.add('carried');
+      btnCarry.disabled = true;
+      btnCarry.textContent = '✓ 已進位：1 條十 + 6 個一 = 16 個一';
+    });
   }
 
   let marked = 0;
@@ -351,7 +466,8 @@ svg text { max-width: 100%; }
     t.classList.toggle('on', on);
     marked += on ? 1 : -1;
     const label = qNum === 1 ? '已點 ' + marked + ' 根' : '已標記 ' + marked + ' 處';
-    document.getElementById('count').textContent = label;
+    const countEl = document.getElementById('count');
+    if (countEl) countEl.textContent = label;
     const badge = document.getElementById('stickCount');
     if (badge) badge.textContent = label;
   });

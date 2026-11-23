@@ -157,7 +157,7 @@ def main():
     run_cmd(["git", "add", "."])
     status_proc = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True)
     if status_proc.stdout.strip():
-        commit_msg = f"release: 發布新版 (Build {build_version}) - S-3-4 Q2 圓規複製教具改為可量距／張合／逐段截取互動 (開放 59/131)"
+        commit_msg = f"release: 發布新版 (Build {build_version}) - S-3-4 寬螢幕置中＋等角3D積木＋Q03進位按鈕＋Q02步驟引導 (開放 59/131)"
         run_cmd(["git", "commit", "-m", commit_msg])
     else:
         print("   (無新增變更，跳過 commit)")
