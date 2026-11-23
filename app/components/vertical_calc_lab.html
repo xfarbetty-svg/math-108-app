@@ -155,6 +155,27 @@
 body { padding-top: 2px !important; padding-bottom: 2px !important; max-height: 420px !important; }
 </style>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
+<style id="n32-dark-contrast">
+/* N-3-2 深色模式對比度外科手術：題幹／位值標頭／直式數字／算理按鈕全面高對比亮色 */
+.place-label { fill: #b0a08a; }
+html[data-theme="dark"] {
+    --text-dark: #f1f5f9;
+    --text-soft: #e2e8f0;
+}
+html[data-theme="dark"] .question-box,
+html[data-theme="dark"] .calc-card { color: #f1f5f9; }
+html[data-theme="dark"] .place-label { fill: #e2e8f0; }
+html[data-theme="dark"] .digit,
+html[data-theme="dark"] .op { fill: #f1f5f9; }
+html[data-theme="dark"] .line { stroke: #e2e8f0; }
+html[data-theme="dark"] .grid-line { stroke: #64748b; }
+html[data-theme="dark"] .header { color: #e2e8f0; }
+html[data-theme="dark"] .carry { fill: #fca5a5; }
+html[data-theme="dark"] .opt-btn { color: #f1f5f9; border-color: #64748b; background: #1f2736; }
+html[data-theme="dark"] .opt-btn.selected { color: #f1f5f9; background: #334155; border-color: #94a3b8; }
+html[data-theme="dark"] .step-btn,
+html[data-theme="dark"] .check-btn { color: #ffffff; }
+</style>
 </head>
 <body>
 
@@ -173,10 +194,10 @@ body { padding-top: 2px !important; padding-bottom: 2px !important; max-height: 
                 <line x1="220" y1="10" x2="220" y2="170" class="grid-line" />
 
                 <!-- Labels -->
-                <text x="50" y="15" font-size="8" fill="#b0a08a">千</text>
-                <text x="95" y="15" font-size="8" fill="#b0a08a">百</text>
-                <text x="140" y="15" font-size="8" fill="#b0a08a">十</text>
-                <text x="185" y="15" font-size="8" fill="#b0a08a">個</text>
+                <text x="50" y="15" font-size="8" class="place-label">千</text>
+                <text x="95" y="15" font-size="8" class="place-label">百</text>
+                <text x="140" y="15" font-size="8" class="place-label">十</text>
+                <text x="185" y="15" font-size="8" class="place-label">個</text>
 
                 <g id="drawLayer"></g>
             </svg>
