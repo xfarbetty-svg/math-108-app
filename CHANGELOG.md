@@ -3,6 +3,7 @@
 > 本檔由 AGENTS.md 遷移建立，完整保存所有歷史 Session 交付與打勾細項。
 
 ## 🗺️ 里程碑路線圖
+- [x] 20261123_010 R-3-2 Q05～Q10 教學級重做：新增可復用 `r32_pattern_engine.js`（柳丁奇偶／豆子分類／首項＋遞增重疊拼接）與 config-driven 雙視口 CDP 門禁 `verify_r32_interactive_cdp.js`；移除「揭示下一項」劇透按鈕，Q05–Q10 補 3 步白話解析。24 組合 CDP ＋ 9 道相關 gate 全 Exit 0；報告 `reports/20261123_010_R32_INTERACTIVE_ACCEPTANCE.md`。
 - [x] 專案開工：切斷 028 歷史包袱，建立 L1 乾淨工程標準
 - [x] 一年級 108 課綱官方 9 大條目全量補齊與視覺痛點剖析
 - [x] 融合 034 專案技術（等角透視、形體堆疊、力矩平衡天平）

@@ -29,7 +29,7 @@ const UNITS = [
     keys: ['200 × 3', '知道除數和商', '85 × 4', '21÷●', '11÷☆＝1', '÷5', '320', '525', '12 ÷ 6', '16、7、112']
   },
   {
-    code: 'R-3-2', file: 'pattern_reasoning_lab.html', kind: 'card',
+    code: 'R-3-2', file: 'pattern_reasoning_lab.html', kind: 'card', interactiveFrom: 5,
     oldWords: ['跳跳蛙', '火柴棒', '找規律', '🏆 挑戰'],
     keys: ['7215', '6/11', '50×8', '380÷2', '柳丁', '22', '作品貼膠帶', '梯形桌', '長方形桌', '竹籤排正方形']
   },
@@ -92,7 +92,29 @@ async function verifyOne(s, unit, view, q) {
   }
 
   let before, after, stepBefore, stepAfter, hiCount = 0;
-  if (unit.kind === 'card') {
+  const interactive = unit.code === 'R-3-2' && unit.interactiveFrom && q >= unit.interactiveFrom;
+  if (interactive) {
+    // Q05–Q10 已改掛 PatternEngine 動態推導教具：舊 iv-card 劇透按鈕不存在，
+    // 改點擊真正的 ➕ 控制器並斷言 count / 狀態文字 / ivStep 三者連動。
+    const state = await s.eval(`(() => {
+      const b = document.getElementById('q-scene');
+      const h = b.querySelector('.iv-wrap');
+      const o = b.querySelector('#iv-status');
+      return { has: !!h && !!o, count: h ? h.dataset.count : null,
+               text: o ? o.textContent : '', step: b.dataset.ivStep };
+    })()`);
+    if (!state.has || !state.text) fail(`${tag} 動態推導容器或狀態列不存在`);
+    before = state.text; stepBefore = state.step;
+    await realClick(s, `(() => { const r = document.querySelector('#q-scene .iv-btn-plus').getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`, tag);
+    const post = await s.eval(`(() => {
+      const b = document.getElementById('q-scene');
+      return { text: b.querySelector('#iv-status').textContent, step: b.dataset.ivStep,
+               count: b.querySelector('.iv-wrap').dataset.count };
+    })()`);
+    after = post.text; stepAfter = post.step;
+    if (post.count === state.count) fail(`${tag} 點擊＋後 DOM 數量未改變（${state.count}）`);
+  } else if (unit.kind === 'card') {
     const state = await s.eval(`(() => {
       const b = document.getElementById('q-scene');
       const c = b.querySelector('.iv-card');

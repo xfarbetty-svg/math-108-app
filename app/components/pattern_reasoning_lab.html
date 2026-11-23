@@ -190,6 +190,39 @@ svg text { max-width: 100%; }
 /* G3 窄屏最後收斂 */
 .lilypad-node { right:8px !important; left:auto !important; }
 .scene svg, .q-scene svg { max-width: calc(100% - 8px) !important; height:auto !important; }
+
+/* ===== Q05–Q10 專屬動態推導教具（PatternEngine，可復用至 G4） =====
+   要點：高對比明亮色、雙模式可見、控制按鈕與上方文字 ≥12px 間距、無提交按鈕、無劇透。 */
+.q-scene.interactive { padding: 6px 10px 8px; }
+.q-scene .iv-wrap { display:flex; flex-direction:column; height:100%; min-height:0; }
+.q-scene .iv-head { display:flex; align-items:center; gap:6px; min-height:18px; }
+.q-scene .iv-badge { background:var(--accent-primary); color:#fff; font-size:10px; font-weight:800; padding:2px 7px; border-radius:9px; white-space:nowrap; }
+.q-scene .iv-title { font-size:12px; font-weight:800; color:var(--text-primary); }
+.q-scene .iv-hint { font-size:10px; line-height:1.35; color:var(--text-secondary); margin:3px 0 0; min-height:26px; }
+.q-scene .iv-svg { flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; }
+.q-scene.interactive .iv-svg svg { display:block; width:100% !important; height:100% !important; max-height:100% !important; max-width:100% !important; }
+.q-scene .iv-num { font-size:10.5px; fill:#4A2E00; font-weight:800; }
+.q-scene .iv-num-light { font-size:10.5px; fill:#FFFFFF; font-weight:800; }
+.q-scene .iv-num-onbg { font-size:11px; fill:var(--text-primary); font-weight:800; }
+.q-scene .iv-badge-num { font-size:11px; fill:#fff; font-weight:800; }
+.q-scene .iv-legend { font-size:10.5px; fill:var(--text-secondary); font-weight:600; }
+.q-scene .iv-tag-gold { font-size:10px; fill:#B07D00; font-weight:800; }
+.q-scene .iv-tag-green { font-size:11px; fill:#0F6B3C; font-weight:800; }
+.q-scene .iv-tag-red { font-size:10px; fill:#B3122B; font-weight:800; }
+.q-scene .iv-status { font-size:11px; font-weight:700; line-height:1.35; color:var(--text-primary); background:var(--bg-elevated); border:1px solid var(--border-color); border-radius:9px; padding:5px 8px; text-align:center; }
+.q-scene .iv-controls { display:flex; gap:10px; justify-content:center; align-items:center; margin-top:16px; min-height:34px; }
+.q-scene .iv-btn { min-height:32px; padding:6px 14px; border:none; border-radius:16px; background:#2E8B57; color:#fff; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); white-space:nowrap; }
+.q-scene .iv-btn-plus { background:#1E9E63; }
+.q-scene .iv-btn-minus { background:#4A86C8; }
+.q-scene .iv-btn-odd { background:#D64555; }
+.q-scene .iv-btn:disabled { opacity:.42; cursor:not-allowed; }
+.q-scene .iv-btn:active { transform:translateY(1px); }
+@keyframes ivPulse { 0%,100% { filter:brightness(1); } 50% { filter:brightness(1.4) drop-shadow(0 0 5px #FFC93C); } }
+@keyframes ivFlash { 0%,100% { opacity:.42; } 50% { opacity:1; } }
+.q-scene .iv-new > * { animation:ivPulse .9s ease-in-out 3; }
+.q-scene .iv-shared { animation:ivFlash 1.1s ease-in-out infinite; }
+html[data-theme="dark"] .iv-tag-gold { fill:#FFD166; }
+html[data-theme="dark"] .iv-tag-red { fill:#FF8EA0; }
 </style>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
 </head>
@@ -267,6 +300,8 @@ svg text { max-width: 100%; }
         <div style="font-size: 11px; color: #558b2f; font-weight: bold;">R-3-2 數量模式與推理</div>
     </div>
 
+    <!-- 可復用 SVG 規律推導引擎：Q05～Q10 專用，G4 同類題型可直接掛載 -->
+    <script src="../js/r32_pattern_engine.js"></script>
     <script>
         let currentAct = 1;
         let isMuted = false;
@@ -576,6 +611,14 @@ const R32 = {"1":"<svg viewBox=\"0 0 360 340\" preserveAspectRatio=\"xMidYMid me
             document.getElementById('q-badge').textContent = 'Q' + String(qNum).padStart(2, '0');
             document.getElementById('q-focus').textContent = s.focus;
             const box = document.getElementById('q-scene');
+            // Q05–Q10：掛載可復用動態推導引擎，徹底移除舊「點卡片：揭示下一項」劇透按鈕
+            if (HAS_Q && qNum >= 5 && window.PatternEngine) {
+                PatternEngine.mount(box, qNum, {
+                    badge: 'Q' + String(qNum).padStart(2, '0'),
+                    hint: s.hint
+                });
+                return;
+            }
             if (HAS_Q) {
                 const nav = document.querySelector('.nav-tabs'); if (nav) nav.innerHTML = '';
                 const ctr = document.querySelector('.controls'); if (ctr) ctr.innerHTML = '';
