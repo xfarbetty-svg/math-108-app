@@ -35,7 +35,7 @@ sok(unit.questions.length === 10, 'N-3-1 題庫 = 10 題真題（實際 ' + unit
 sok(unit.question_count === 10, 'N-3-1 question_count = 10');
 
 const EXPECTED = [
-  { q: 1, title: '5 個千和 3 個十', comp: '?q=1', choices: 2, source: '永安', exprs: ['blk1000', 'expandFormula'] },
+  { q: 1, title: '5 個千和 3 個十', comp: '?q=1', choices: 4, source: '永安', exprs: ['blk1000', 'expandFormula'] },
   { q: 2, title: '2356', comp: '?q=2', choices: 4, source: '永安', exprs: ['digit-tile', 'liftDigit'] },
   { q: 3, title: '跳數', comp: '?q=3', choices: 4, source: '永安', exprs: ['car', 'fillCars'] },
   { q: 4, title: '八千零六', comp: '?q=4', choices: 4, source: '永安', exprs: ['word-btn', 'placeWord'] },

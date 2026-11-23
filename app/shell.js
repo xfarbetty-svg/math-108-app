@@ -310,6 +310,9 @@ async function openUnit(code, initialQIndex = 0) {
 const UNIT_CONCEPT_MOVIES = {
   "N-2-1": "assets/video/g2_n21_concept_final.mp4",
   "N-2-2": "assets/video/g2_n22_concept_final.mp4",
+  "N-3-1": "assets/classroom_videos/N31_Final.mp4",
+  "N-3-2": "assets/classroom_videos/N32_Final.mp4",
+  "N-3-3": "assets/classroom_videos/N33_Final.mp4",
   "N-3-4": "assets/classroom_videos/N34_Final.mp4",
   "N-3-5": "assets/classroom_videos/N35_Final.mp4",
   "N-3-9": "assets/video/g3_n39_concept_final.mp4",
@@ -329,6 +332,9 @@ const UNIT_CONCEPT_MOVIES = {
 };
 
 const UNIT_CONCEPT_MOVIE_TITLES = {
+  "N-3-1": "概念小教室：一萬以內的數",
+  "N-3-2": "概念小教室：加減直式計算",
+  "N-3-3": "概念小教室：乘以一位數",
   "N-3-10": "概念小教室：一位小數加減與對齊",
   "N-3-13": "概念小教室：角的認識",
   "N-3-14": "概念小教室：面積（平方公分）",
