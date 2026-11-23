@@ -21,7 +21,7 @@
 - `_scratch/` 與 `reports/*.png` 被 gitignore，一次性腳本與截圖不會進 Git；另如需留存要改 `.gitignore`。
 
 🕐 **最後更新**
-- 2026-11-23 by Hy4 flash Free @ DESKTOP-6ELKIRH；Git：主變更 `2d59575` ✅ 已推；本檔與 007 報告 ⏳ 待推。
+- 2026-11-23 by Hy4 flash Free @ DESKTOP-6ELKIRH；Git：主變更 `2d59575` ✅ 已推；同步檔 `8437f5f` ✅ 已推（含本檔與 007 報告）。
 
 ---
 
