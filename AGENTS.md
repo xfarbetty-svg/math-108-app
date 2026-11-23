@@ -53,6 +53,7 @@
 - [x] **N-3-4 米米概念小教室影片（最終成片已上線）**：`N34_Final.mp4`（1920×1080/30fps/101.633s/約 19.5 MB）已合成並掛載 `app/shell.js` 的 `N-3-4`／`N-3-5`；`tools/release.py` Build `20261120_171001` 全綠部署至 https://math-108.pages.dev，线上映射與影片 HTTP 200 驗真。
 - [x] **N-3-17 時間概念小教室影片（最終成片已上線）**：`N317_Final.mp4`（1920×1080/30fps/4570 幀/152.333s/23.11 MiB/AV 誤差 0.000s）已合成並掛載 `app/shell.js` 的 `N-3-17`；四道門禁（curriculum131／app_shell／n317／n317_cdp）全綠，commit `1a47f44` 已 push上線。首壓 1280k → 25.48 MiB 超標如實記錄，單點降 1150k 重壓通過；線上影片 HTTP 200 / `video/mp4`。完整 5 欄報告見 `reports/20261122_N317_ACCEPTANCE.md`。
 - [x] **G3 第二棒全線收官（2026-11-22）**：修復 N-3-1／N-3-3 選項與答案破綻，R-3-1／R-3-2／D-3-1 各補 Q06–Q10（15 題），三教具升級 `?q=1..10`＋Light/Dark＋420px；G3 24 單元 240 題契約全綠，CDP 60 張雙模式截圖全綠，commit `a2efb4c` 已 push 部署。報告：`reports/20261122_G3_AUDIT_AND_BATCH2_COMPLETE.md`。
+- [x] **S-3-4 Q2 圓規複製教具改造（2026-11-23）**：`solid_geometry_lab.html?q=2` 由靜態圖改為真實量距／圓規張合對齊／逐段截取＋`已複製 N/4`＋重置；自建 CDP 四組合全綠，`release.py` 20 道閘門全綠，commit `2d59575` 已 push 部署。報告：`reports/20261123_007_S34_Q2_COMPASS_ACCEPTANCE.md`。
 
 ---
 
