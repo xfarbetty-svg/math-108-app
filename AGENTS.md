@@ -154,3 +154,15 @@
 - 合成 N313 成片時，角色層必須：①只讀 SSOT `ready/` 的 `.webm`（禁 `.mp4` 預覽）；②逐幀自適應偵測背景色（白／黑）做連通泛洪鍵除＋2px 軟邊；③剔除黑底異常幀；④透明比例 < 0.30 即 raise 防假成功。
 - `mouth_frames_v2` 源自 2048 立繪、與 webm 非同一光源，需羽化遮罩＋局部膚色增益，禁 seamlessClone。
 - 已驗證產物：`app/assets/classroom_videos/N313_Final.mp4`（57.933 s／12.73 MiB／影音誤差 0.000 s）。詳細斷點見 `handoff.md`。
+
+---
+
+## 📐 G3 經驗蒸餾強制鐵律（2026-11-23 生效，G1/G2/G4/G5/G6 自動繼承）
+
+> 完整規範：[`docs/PRODUCTION_SOP_G3_DISTILLED.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/docs/PRODUCTION_SOP_G3_DISTILLED.md)｜上傳 SOP：[`docs/YOUTUBE_UPLOAD_WORKFLOW_GUIDE.md`](file:///d:/ANTIGRAVITY/028-1_國小數學APP/docs/YOUTUBE_UPLOAD_WORKFLOW_GUIDE.md)。與舊慣例衝突時以本節為準。
+
+- **鐵律一（真題與教具）**：題庫 100% 採用台灣各縣市國小真實段考題並標明學校／學年度／出處（SSOT：`docs/G3_REAL_EXAM_MASTER_POOL.md`），嚴禁 AI 杜撰或為湊題數閹割高階題；互動教具須有「一步一步看算理」拆解＋真實事件監聽，且 **Dark/Light 雙模式高對比度皆須目視通過**。
+- **鐵律二（概念影片）**：四幕暖米色無限畫布（生活情境 → 圖像動態高光 → 陷阱 `✗`/`✓` 對比 → 三大口訣）；角色只用 `app/assets/mimi_poses/` 3D PNG＋`full_stage`，**嚴禁 SVG 自繪**；字幕黑框距底 ≥76px（`y ≤ 960`）；每片抽 4 幕影格自檢零疊字／零裁切／零前幕殘影。
+- **鐵律三（音訊與部署）**：全片 `loudnorm` 雙階段校正至 **-14.0 LUFS**；Windows 執行含 Emoji／中文腳本前必設 `PYTHONIOENCODING=utf-8`；>25 MiB 總合集只放 `_scratch/` 並列 `.wranglerignore`，禁推 Pages。
+- **鐵律四（YouTube SOP）**：`tools/build_g3_youtube_compilation.py` 串接去重 → `tools/20261123_001_upload_g3_youtube_compilation.py` 上傳；憑證 `034_anatomy_interactive_svg/token.json`（自動刷新），`youtube.upload` scope、教育類 `27`、`selfDeclaredMadeForKids`、預設 `unlisted`；上傳後 oEmbed 驗真。**G3 收官：24/24 全滿編，總合集 ID `M4N_UNwBT5Y`（https://youtu.be/M4N_UNwBT5Y）。**
+- **隔離紅線**：`client_secret*.json`／`token*.json`／`_scratch/`／`handoff.md` 永不進 Git；嚴禁碰 `017\` 或「子由」。
