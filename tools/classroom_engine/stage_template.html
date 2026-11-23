@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080, initial-scale=1.0" />
+<title>米米兔概念小教室 2D 渲染引擎</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: #F8F4EA;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", "PingFang TC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  svg#stage {
+    width: 1920px;
+    height: 1080px;
+    display: block;
+  }
+  .ink { stroke: #1E293B; stroke-linecap: round; stroke-linejoin: round; }
+  .txt-ink { fill: #1E293B; font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; }
+</style>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Warm beige subtle dot pattern for infinite canvas -->
+    <pattern id="warmGrid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="24" cy="24" r="1.8" fill="#DFD6C0" />
+    </pattern>
+
+    <!-- Soft drop shadows -->
+    <filter id="cardShadow" x="-8%" y="-8%" width="116%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#1E293B" flood-opacity="0.10" />
+    </filter>
+    <filter id="subShadow" x="-4%" y="-15%" width="108%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#1E293B" flood-opacity="0.14" />
+    </filter>
+    <filter id="bubbleShadow" x="-15%" y="-15%" width="130%" height="135%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#1E293B" flood-opacity="0.16" />
+    </filter>
+
+    <!-- Clip for Right 75% Infinite Canvas (x: 480..1920) -->
+    <clipPath id="rightCanvasClip">
+      <rect x="480" y="0" width="1440" height="1080" />
+    </clipPath>
+  </defs>
+
+  <!-- 1. Full Warm Beige Background -->
+  <rect x="0" y="0" width="1920" height="1080" fill="#F8F4EA" />
+
+  <!-- 2. Right 75% Infinite Canvas Stage -->
+  <g clip-path="url(#rightCanvasClip)">
+    <!-- Subtle warm dot-grid moving with camera -->
+    <g id="world-camera">
+      <rect x="-1200" y="-400" width="9000" height="2000" fill="url(#warmGrid)" />
+      <!-- Unit-specific infinite canvas scenes injected here -->
+      <g id="world-content"></g>
+    </g>
+  </g>
+
+  <!-- 3. Left 25% Stage Backdrop (x: 0..480) -->
+  <g id="left-stage-bg">
+    <rect x="0" y="0" width="480" height="1080" fill="#F2EBD9" />
+    <line x1="480" y1="0" x2="480" y2="1080" stroke="#D8CEB8" stroke-width="3" />
+    <!-- Unit Identity Badge (Top Left) -->
+    <g transform="translate(36, 36)">
+      <rect x="0" y="0" width="408" height="62" rx="18" fill="#FFFDF8" stroke="#1E293B" stroke-width="3" filter="url(#cardShadow)" />
+      <rect x="10" y="10" width="96" height="42" rx="12" fill="#E15B48" />
+      <text id="badge-code" x="58" y="38" text-anchor="middle" font-size="22" font-weight="900" fill="#FFFFFF">S-3-3</text>
+      <text id="badge-title" x="122" y="39" font-size="24" font-weight="800" class="txt-ink">圓｜概念小教室</text>
+    </g>
+    <!-- Soft floor shadow under Mimi -->
+    <ellipse cx="240" cy="884" rx="118" ry="20" fill="#DDD2BC" opacity="0.85" />
+  </g>
+
+  <!-- 4. Top-Right Chapter Progress Pill -->
+  <g id="chapter-pill" transform="translate(1520, 34)">
+    <rect x="0" y="0" width="364" height="52" rx="26" fill="#FFFDF8" stroke="#1E293B" stroke-width="2.5" filter="url(#cardShadow)" />
+    <circle id="chapter-dot" cx="28" cy="26" r="9" fill="#E15B48" />
+    <text id="chapter-label" x="48" y="34" font-size="22" font-weight="800" class="txt-ink">1/4 情境導入</text>
+  </g>
+
+  <!-- 5. Mimi Rabbit Vector Rig (Left 25% Stage, 100% Locked Proportions) -->
+  <!-- Anchor at feet center (240, 880) so breathing gently scales upward -->
+  <g id="mimi-root" transform="translate(240, 880)">
+    <g id="mimi-breathe">
+      <!-- === FEET === -->
+      <g id="mimi-feet">
+        <!-- Left foot -->
+        <ellipse cx="-44" cy="-14" rx="34" ry="18" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" />
+        <path d="M-56,-22 Q-52,-12 -52,-4 M-40,-24 Q-38,-12 -38,-3" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round" />
+        <!-- Right foot -->
+        <ellipse cx="44" cy="-14" rx="34" ry="18" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" />
+        <path d="M38,-24 Q38,-12 38,-3 M52,-22 Q52,-12 56,-4" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round" />
+      </g>
+
+      <!-- === LEFT ARM (Resting gently) === -->
+      <g id="mimi-arm-left" transform="translate(-78, -236)">
+        <path d="M0,0 C-36,24 -52,62 -46,84 C-40,98 -22,94 -12,78 C-4,62 6,34 14,14 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+        <!-- Pink sleeve -->
+        <path d="M8,-14 C-18,-2 -34,16 -36,34 L-8,46 C2,28 14,12 22,-4 Z" fill="#F4A9BC" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+      </g>
+
+      <!-- === TORSO (Pink Shirt + Mustard Overalls + Olive Collar) === -->
+      <g id="mimi-torso">
+        <!-- Pink knitted shirt base -->
+        <path d="M-74,-256 C-78,-216 -78,-184 -74,-154 L74,-154 C78,-184 78,-216 74,-256 C46,-270 -46,-270 -74,-256 Z" fill="#F4A9BC" stroke="#1E293B" stroke-width="3.5" />
+        <!-- Mustard overalls body & legs -->
+        <path d="M-72,-196 L72,-196 C82,-154 84,-100 76,-54 L74,-34 L16,-34 L10,-72 L-10,-72 L-16,-34 L-74,-34 L-76,-54 C-84,-100 -82,-154 -72,-196 Z" fill="#D4B465" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+        <!-- Rolled cuffs -->
+        <rect x="-78" y="-44" width="66" height="16" rx="7" fill="#C9A755" stroke="#1E293B" stroke-width="3.5" />
+        <rect x="12" y="-44" width="66" height="16" rx="7" fill="#C9A755" stroke="#1E293B" stroke-width="3.5" />
+        <!-- Two front pockets -->
+        <path d="M-58,-146 L-16,-146 L-18,-108 C-19,-96 -55,-96 -56,-108 Z" fill="#CBA854" stroke="#1E293B" stroke-width="3" />
+        <path d="M16,-146 L58,-146 L56,-108 C55,-96 19,-96 18,-108 Z" fill="#CBA854" stroke="#1E293B" stroke-width="3" />
+        <!-- Salmon-peach straps -->
+        <path d="M-54,-262 L-36,-260 L-42,-188 L-60,-188 Z" fill="#EB9A82" stroke="#1E293B" stroke-width="3" stroke-linejoin="round" />
+        <path d="M54,-262 L36,-260 L42,-188 L60,-188 Z" fill="#EB9A82" stroke="#1E293B" stroke-width="3" stroke-linejoin="round" />
+        <!-- Overall buttons -->
+        <circle cx="-50" cy="-192" r="7.5" fill="#F2B4A0" stroke="#1E293B" stroke-width="2.5" />
+        <circle cx="50" cy="-192" r="7.5" fill="#F2B4A0" stroke="#1E293B" stroke-width="2.5" />
+        <!-- Olive-green Peter Pan collar -->
+        <path d="M-6,-266 C-22,-240 -54,-236 -66,-254 C-72,-264 -56,-280 -34,-276 Z" fill="#9DA36B" stroke="#1E293B" stroke-width="3.2" stroke-linejoin="round" />
+        <path d="M6,-266 C22,-240 54,-236 66,-254 C72,-264 56,-280 34,-276 Z" fill="#9DA36B" stroke="#1E293B" stroke-width="3.2" stroke-linejoin="round" />
+        <circle cx="0" cy="-265" r="10" fill="#8D935C" stroke="#1E293B" stroke-width="3" />
+      </g>
+
+      <!-- === HEAD & EARS === -->
+      <g id="mimi-head" transform="translate(0, -352)">
+        <!-- Left Ear -->
+        <g id="mimi-ear-left" transform="translate(-44, -84)">
+          <path d="M0,12 C-26,-44 -48,-132 -28,-164 C-14,-184 12,-146 22,-78 C28,-38 24,-4 16,16 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+          <path d="M-4,-6 C-20,-48 -34,-116 -22,-142 C-14,-154 2,-124 10,-72 C14,-42 12,-14 6,4 Z" fill="#F7B6BE" />
+        </g>
+        <!-- Right Ear -->
+        <g id="mimi-ear-right" transform="translate(44, -84)">
+          <path d="M0,12 C26,-44 48,-132 28,-164 C14,-184 -12,-146 -22,-78 C-28,-38 -24,-4 -16,16 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+          <path d="M4,-6 C20,-48 34,-116 22,-142 C14,-154 -2,-124 -10,-72 C-14,-42 -12,-14 -6,4 Z" fill="#F7B6BE" />
+        </g>
+
+        <!-- Head Shape (plump cute bunny cheeks) -->
+        <path d="M-86,-16 C-90,-66 -54,-102 0,-102 C54,-102 90,-66 86,-16 C100,12 96,52 68,72 C44,88 -44,88 -68,72 C-96,52 -100,12 -86,-16 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+        <!-- Soft chin shadow -->
+        <path d="M-56,64 C-24,80 24,80 56,64" fill="none" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round" opacity="0.6" />
+
+        <!-- Rosy cheeks -->
+        <ellipse cx="-62" cy="24" rx="18" ry="11" fill="#FAD2D6" opacity="0.8" />
+        <ellipse cx="62" cy="24" rx="18" ry="11" fill="#FAD2D6" opacity="0.8" />
+
+        <!-- Eyebrows -->
+        <path d="M-52,-48 Q-38,-56 -24,-48" fill="none" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
+        <path d="M24,-48 Q38,-56 52,-48" fill="none" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
+
+        <!-- Eyes (with blink group) -->
+        <g id="mimi-eyes-open">
+          <ellipse cx="-38" cy="-14" rx="16" ry="19" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+          <circle cx="-35" cy="-13" r="11.5" fill="#2D1E2F" />
+          <circle cx="-39" cy="-18" r="4" fill="#FFFFFF" />
+          <circle cx="-31" cy="-9" r="2" fill="#FFFFFF" />
+
+          <ellipse cx="38" cy="-14" rx="16" ry="19" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
+          <circle cx="41" cy="-13" r="11.5" fill="#2D1E2F" />
+          <circle cx="37" cy="-18" r="4" fill="#FFFFFF" />
+          <circle cx="45" cy="-9" r="2" fill="#FFFFFF" />
+        </g>
+        <g id="mimi-eyes-blink" opacity="0">
+          <path d="M-54,-14 Q-38,-24 -22,-14" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round" />
+          <path d="M22,-14 Q38,-24 54,-14" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round" />
+        </g>
+
+        <!-- Pink Nose -->
+        <path d="M-12,12 Q0,6 12,12 Q14,20 0,25 Q-14,20 -12,12 Z" fill="#F496A6" stroke="#1E293B" stroke-width="2.5" stroke-linejoin="round" />
+
+        <!-- Mouth (idle smile vs talking open mouth) -->
+        <path id="mimi-mouth-closed" d="M-24,36 Q-12,48 0,34 Q12,48 24,36" fill="none" stroke="#1E293B" stroke-width="3.2" stroke-linecap="round" />
+        <g id="mimi-mouth-open" opacity="0">
+          <path d="M-22,34 Q0,38 22,34 C20,56 12,62 0,62 C-12,62 -20,56 -22,34 Z" fill="#4A1D24" stroke="#1E293B" stroke-width="3" stroke-linejoin="round" />
+          <ellipse cx="0" cy="54" rx="11" ry="6" fill="#F47280" />
+        </g>
+      </g>
+
+      <!-- === RIGHT ARM + TEACHING POINTER (Articulated!) === -->
+      <!-- Shoulder pivot at (74, -236) relative to mimi-root (240, 880) => screen (314, 644) -->
+      <g id="mimi-arm-right-group" transform="translate(74, -236)">
+        <!-- Pink sleeve -->
+        <path d="M-8,-14 C18,-2 34,16 36,34 L8,46 C-2,28 -14,12 -22,-4 Z" fill="#F4A9BC" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+        <!-- Rotating forearm + teaching pointer -->
+        <g id="mimi-pointer-pivot" transform="rotate(38)">
+          <!-- Pointer stick (visible when pointing) -->
+          <g id="mimi-pointer-stick" opacity="0">
+            <line x1="78" y1="0" x2="290" y2="0" stroke="#92400E" stroke-width="7" stroke-linecap="round" />
+            <line x1="78" y1="-2" x2="286" y2="-2" stroke="#D97706" stroke-width="2" stroke-linecap="round" />
+            <!-- Glowing coral tip -->
+            <circle cx="294" cy="0" r="9" fill="#E15B48" stroke="#1E293B" stroke-width="2.5" />
+            <circle cx="294" cy="0" r="3.5" fill="#FEF3C7" />
+          </g>
+          <!-- White bunny arm + hand -->
+          <path d="M0,-12 C28,-14 68,-12 86,-2 C94,4 90,18 76,18 C54,18 22,16 -4,14 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- 6. Pointer Target Focus Ring (Overlay on right canvas when Mimi points) -->
+  <g id="pointer-target-fx" opacity="0">
+    <line id="pointer-ray" x1="480" y1="540" x2="900" y2="400" stroke="#E15B48" stroke-width="3" stroke-dasharray="10 8" opacity="0.45" />
+    <circle id="pointer-ring-outer" cx="900" cy="400" r="34" fill="none" stroke="#E15B48" stroke-width="4" opacity="0.6" />
+    <circle id="pointer-ring-inner" cx="900" cy="400" r="10" fill="#E15B48" opacity="0.85" />
+  </g>
+
+  <!-- 7. Mimi Head Emotion Bubble (?, 💡, !) -->
+  <!-- Positioned cleanly above-right of Mimi's ears at (370, 224) -->
+  <g id="mimi-bubble" transform="translate(370, 224) scale(0)" filter="url(#bubbleShadow)">
+    <!-- Cloud/comic bubble body -->
+    <path d="M-54,-46 C-54,-74 54,-74 54,-46 C66,-46 66,24 44,28 L12,28 L-16,52 L-8,28 L-44,28 C-66,24 -66,-46 -54,-46 Z" fill="#FFFDF8" stroke="#1E293B" stroke-width="4" stroke-linejoin="round" />
+    <!-- Icon: Question ? -->
+    <g id="bubble-icon-question" opacity="0">
+      <text x="0" y="6" text-anchor="middle" font-size="62" font-weight="900" fill="#D97706" stroke="#1E293B" stroke-width="1.5">?</text>
+    </g>
+    <!-- Icon: Exclamation ! -->
+    <g id="bubble-icon-alert" opacity="0">
+      <text x="0" y="6" text-anchor="middle" font-size="64" font-weight="900" fill="#E15B48" stroke="#1E293B" stroke-width="1.5">!</text>
+    </g>
+    <!-- Icon: Lightbulb 💡 (Pure vector SVG so zero emoji font issues) -->
+    <g id="bubble-icon-idea" opacity="0" transform="translate(0, -14)">
+      <!-- Rays -->
+      <g stroke="#F59E0B" stroke-width="4" stroke-linecap="round">
+        <line x1="0" y1="-34" x2="0" y2="-43" />
+        <line x1="25" y1="-24" x2="32" y2="-30" />
+        <line x1="-25" y1="-24" x2="-32" y2="-30" />
+        <line x1="32" y1="0" x2="40" y2="0" />
+        <line x1="-32" y1="0" x2="-40" y2="0" />
+      </g>
+      <!-- Bulb glass -->
+      <path d="M-20,-4 C-20,-20 20,-20 20,-4 C20,8 12,14 10,22 L-10,22 C-12,14 -20,8 -20,-4 Z" fill="#FDE047" stroke="#1E293B" stroke-width="3.2" stroke-linejoin="round" />
+      <!-- Filament -->
+      <path d="M-5,10 L-2,0 L2,0 L5,10" fill="none" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" />
+      <!-- Base -->
+      <rect x="-9" y="22" width="18" height="7" rx="2" fill="#94A3B8" stroke="#1E293B" stroke-width="2.5" />
+      <rect x="-6" y="29" width="12" height="5" rx="2" fill="#64748B" stroke="#1E293B" stroke-width="2" />
+    </g>
+  </g>
+
+  <!-- 8. Bottom High-Contrast Subtitle Bar (y: 948..1046) -->
+  <g id="subtitle-bar" transform="translate(960, 996)" filter="url(#subShadow)">
+    <rect id="subtitle-bg" x="-780" y="-44" width="1560" height="88" rx="22" fill="#FFFFFF" stroke="#1E293B" stroke-width="4" />
+    <text id="subtitle-text" x="0" y="13" text-anchor="middle" font-size="35" font-weight="800" class="txt-ink"></text>
+  </g>
+</svg>
+
+<!-- Injected timeline + unit plugin scripts -->
+<script id="timeline-data" type="application/json">{}</script>
+<script id="unit-plugin-script"></script>
+
+<script>
+(function () {
+  "use strict";
+
+  // Easing utilities
+  function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+  function easeInOutCubic(t) {
+    t = clamp01(t);
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  function easeOutBack(t) {
+    t = clamp01(t);
+    const c1 = 1.70158, c3 = c1 + 1;
+    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  const timeline = JSON.parse(document.getElementById("timeline-data").textContent || "{}");
+  const cues = timeline.cues || [];
+  const unitMeta = timeline.unit || {};
+
+  // Update header badge
+  if (unitMeta.code) document.getElementById("badge-code").textContent = unitMeta.code;
+  if (unitMeta.short_title) document.getElementById("badge-title").textContent = unitMeta.short_title;
+
+  // Build unit-specific infinite canvas scenes
+  const worldContent = document.getElementById("world-content");
+  if (window.UNIT_PLUGIN && typeof window.UNIT_PLUGIN.buildWorld === "function") {
+    window.UNIT_PLUGIN.buildWorld(worldContent, timeline);
+  }
+
+  // DOM refs
+  const worldCamera = document.getElementById("world-camera");
+  const mimiBreathe = document.getElementById("mimi-breathe");
+  const earLeft = document.getElementById("mimi-ear-left");
+  const earRight = document.getElementById("mimi-ear-right");
+  const eyesOpen = document.getElementById("mimi-eyes-open");
+  const eyesBlink = document.getElementById("mimi-eyes-blink");
+  const mouthClosed = document.getElementById("mimi-mouth-closed");
+  const mouthOpen = document.getElementById("mimi-mouth-open");
+  const pointerPivot = document.getElementById("mimi-pointer-pivot");
+  const pointerStick = document.getElementById("mimi-pointer-stick");
+  const pointerFx = document.getElementById("pointer-target-fx");
+  const pointerRay = document.getElementById("pointer-ray");
+  const pointerRingOuter = document.getElementById("pointer-ring-outer");
+  const pointerRingInner = document.getElementById("pointer-ring-inner");
+  const bubbleGroup = document.getElementById("mimi-bubble");
+  const bubbleIcons = {
+    question: document.getElementById("bubble-icon-question"),
+    alert: document.getElementById("bubble-icon-alert"),
+    idea: document.getElementById("bubble-icon-idea")
+  };
+  const subtitleBar = document.getElementById("subtitle-bar");
+  const subtitleBg = document.getElementById("subtitle-bg");
+  const subtitleText = document.getElementById("subtitle-text");
+  const chapterLabel = document.getElementById("chapter-label");
+  const chapterDot = document.getElementById("chapter-dot");
+
+  const CHAPTER_COLORS = ["#E15B48", "#2563EB", "#D97706", "#059669"];
+
+  // Compute smooth camera state at time t
+  function getCameraAt(t) {
+    if (!cues.length) return { x: 0, y: 0, zoom: 1 };
+    const defaultCam = { x: 0, y: 0, zoom: 1 };
+    let idx = 0;
+    for (let i = 0; i < cues.length; i++) {
+      if (t >= cues[i].start - 0.55) idx = i;
+    }
+    const cur = cues[idx].camera || defaultCam;
+    const prev = idx > 0 ? (cues[idx - 1].camera || defaultCam) : cur;
+    const transDur = 0.95;
+    const transStart = cues[idx].start - 0.55;
+    const changed = (cur.x !== prev.x || cur.y !== prev.y || cur.zoom !== prev.zoom);
+    if (!changed || idx === 0) return cur;
+    const p = easeInOutCubic((t - transStart) / transDur);
+    return {
+      x: lerp(prev.x, cur.x, p),
+      y: lerp(prev.y, cur.y, p),
+      zoom: lerp(prev.zoom, cur.zoom, p)
+    };
+  }
+
+  // Find active cue and speaking state
+  function getCueState(t) {
+    if (!cues.length) return { cue: null, idx: -1, isSpeaking: false, cueProgress: 0 };
+    let activeIdx = 0;
+    let isSpeaking = false;
+    for (let i = 0; i < cues.length; i++) {
+      if (t >= cues[i].start) activeIdx = i;
+      if (t >= cues[i].start && t <= cues[i].end) {
+        isSpeaking = true;
+        activeIdx = i;
+        break;
+      }
+    }
+    const cue = cues[activeIdx];
+    const cueProgress = clamp01((t - cue.start) / Math.max(0.01, cue.end - cue.start));
+    return { cue, idx: activeIdx, isSpeaking, cueProgress };
+  }
+
+  // Deterministic render function called by headless Playwright for every frame
+  window.renderAtTime = function (t) {
+    const { cue, idx, isSpeaking, cueProgress } = getCueState(t);
+
+    // 1. Camera Pan & Zoom on Right 75% Stage (center of right stage = (1200, 520))
+    const cam = getCameraAt(t);
+    // In world coordinates, Zone k starts at x = k * 1440, mapped to screen x = 480
+    // When zoom != 1, zoom around right-stage center (1200, 500)
+    const cx = 1200, cy = 500;
+    const tx = 480 - cam.x;
+    const ty = -cam.y;
+    worldCamera.setAttribute(
+      "transform",
+      `translate(${cx}, ${cy}) scale(${cam.zoom.toFixed(4)}) translate(${-cx + tx}, ${-cy + ty})`
+    );
+
+    // 2. Mimi Breathing & Ear Micro-Motion
+    const breath = 1 + 0.012 * Math.sin(t * 2.6);
+    const breathX = 1 - 0.005 * Math.sin(t * 2.6);
+    mimiBreathe.setAttribute("transform", `scale(${breathX.toFixed(4)}, ${breath.toFixed(4)})`);
+    const earSway = Math.sin(t * 1.9) * 2.2;
+    earLeft.setAttribute("transform", `translate(-44, -84) rotate(${(-earSway).toFixed(2)})`);
+    earRight.setAttribute("transform", `translate(44, -84) rotate(${earSway.toFixed(2)})`);
+
+    // 3. Natural Blinking (every ~3.8s for 0.14s)
+    const blinkCycle = t % 3.8;
+    const isBlinking = (blinkCycle > 3.62 && blinkCycle < 3.76);
+    eyesOpen.setAttribute("opacity", isBlinking ? "0" : "1");
+    eyesBlink.setAttribute("opacity", isBlinking ? "1" : "0");
+
+    // 4. Mouth Animation Synced to Speaking
+    if (isSpeaking) {
+      const talkOpen = Math.sin(t * 22) > -0.15;
+      mouthOpen.setAttribute("opacity", talkOpen ? "1" : "0");
+      mouthClosed.setAttribute("opacity", talkOpen ? "0" : "1");
+    } else {
+      mouthOpen.setAttribute("opacity", "0");
+      mouthClosed.setAttribute("opacity", "1");
+    }
+
+    // 5. Mimi Articulated Teaching Pointer
+    const target = (cue && cue.pointerTarget && t >= cue.start - 0.15) ? cue.pointerTarget : null;
+    if (target) {
+      // Shoulder screen coords: (314, 644)
+      const sx = 314, sy = 644;
+      const dx = target[0] - sx;
+      const dy = target[1] - sy;
+      const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+      const enterP = easeInOutCubic((t - (cue.start - 0.15)) / 0.45);
+      const idleAngle = 38;
+      const curAngle = lerp(idleAngle, targetAngle, enterP);
+      // Slight gentle pointing bob
+      const bob = Math.sin(t * 4.5) * 1.2 * enterP;
+      pointerPivot.setAttribute("transform", `rotate(${(curAngle + bob).toFixed(2)})`);
+      pointerStick.setAttribute("opacity", enterP.toFixed(3));
+
+      // Compute tip screen position (294px along pointer)
+      const rad = (curAngle + bob) * Math.PI / 180;
+      const tipX = sx + Math.cos(rad) * 294;
+      const tipY = sy + Math.sin(rad) * 294;
+
+      pointerFx.setAttribute("opacity", (enterP * 0.95).toFixed(3));
+      pointerRay.setAttribute("x1", tipX.toFixed(1));
+      pointerRay.setAttribute("y1", tipY.toFixed(1));
+      pointerRay.setAttribute("x2", target[0]);
+      pointerRay.setAttribute("y2", target[1]);
+      const pulseR = 26 + 8 * Math.sin(t * 6.0);
+      pointerRingOuter.setAttribute("cx", target[0]);
+      pointerRingOuter.setAttribute("cy", target[1]);
+      pointerRingOuter.setAttribute("r", pulseR.toFixed(1));
+      pointerRingInner.setAttribute("cx", target[0]);
+      pointerRingInner.setAttribute("cy", target[1]);
+    } else {
+      // Gentle wave on intro cue 0, otherwise resting
+      const wave = (cue && cue.id === 0 && isSpeaking) ? (-26 + Math.sin(t * 8) * 12) : 38;
+      pointerPivot.setAttribute("transform", `rotate(${wave.toFixed(2)})`);
+      pointerStick.setAttribute("opacity", "0");
+      pointerFx.setAttribute("opacity", "0");
+    }
+
+    // 6. Head Emotion Bubble (?, 💡, !)
+    const bubbleType = (cue && cue.bubble && t >= cue.start) ? cue.bubble : null;
+    if (bubbleType && bubbleIcons[bubbleType]) {
+      const bElapsed = t - cue.start;
+      const bScale = easeOutBack(Math.min(1, bElapsed / 0.38));
+      const bFloat = Math.sin(t * 4.2) * 5;
+      bubbleGroup.setAttribute("transform", `translate(370, ${(224 + bFloat).toFixed(1)}) scale(${bScale.toFixed(3)})`);
+      Object.keys(bubbleIcons).forEach((k) => {
+        bubbleIcons[k].setAttribute("opacity", k === bubbleType ? "1" : "0");
+      });
+    } else {
+      bubbleGroup.setAttribute("transform", "translate(370, 224) scale(0)");
+    }
+
+    // 7. Chapter Pill
+    if (cue && cue.chapter_label) {
+      chapterLabel.textContent = cue.chapter_label;
+      chapterDot.setAttribute("fill", CHAPTER_COLORS[(cue.scene || 0) % CHAPTER_COLORS.length]);
+    }
+
+    // 8. Bottom Subtitle Bar
+    if (cue && cue.subtitle && t >= cue.start - 0.05 && t <= cue.end + 0.25) {
+      subtitleBar.setAttribute("opacity", "1");
+      subtitleText.textContent = cue.subtitle;
+      // Dynamically adjust card width to fit text cleanly with padding
+      const charCount = cue.subtitle.length;
+      const w = Math.max(760, Math.min(1760, charCount * 38 + 110));
+      subtitleBg.setAttribute("x", (-w / 2).toFixed(0));
+      subtitleBg.setAttribute("width", w.toFixed(0));
+    } else {
+      subtitleBar.setAttribute("opacity", "0");
+    }
+
+    // 9. Unit-Specific World Animation
+    if (window.UNIT_PLUGIN && typeof window.UNIT_PLUGIN.updateWorld === "function") {
+      window.UNIT_PLUGIN.updateWorld(t, cue, cueProgress, timeline);
+    }
+  };
+
+  // Render initial frame 0
+  window.renderAtTime(0);
+})();
+</script>
+</body>
+</html>
