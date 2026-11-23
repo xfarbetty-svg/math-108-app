@@ -83,132 +83,35 @@
     <text id="chapter-label" x="48" y="34" font-size="22" font-weight="800" class="txt-ink">1/4 情境導入</text>
   </g>
 
-  <!-- 5. Mimi Rabbit Vector Rig (Left 25% Stage, 100% Locked Proportions) -->
-  <!-- Anchor at feet center (240, 880) so breathing gently scales upward -->
+  <!-- 5. Mimi Original HD Illustration (Left 25% Stage) -->
+  <!-- Anchor at feet center (240, 880); natural breathing + speaking nod -->
   <g id="mimi-root" transform="translate(240, 880)">
     <g id="mimi-breathe">
-      <!-- === FEET === -->
-      <g id="mimi-feet">
-        <!-- Left foot -->
-        <ellipse cx="-44" cy="-14" rx="34" ry="18" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" />
-        <path d="M-56,-22 Q-52,-12 -52,-4 M-40,-24 Q-38,-12 -38,-3" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round" />
-        <!-- Right foot -->
-        <ellipse cx="44" cy="-14" rx="34" ry="18" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" />
-        <path d="M38,-24 Q38,-12 38,-3 M52,-22 Q52,-12 56,-4" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-linecap="round" />
-      </g>
-
-      <!-- === LEFT ARM (Resting gently) === -->
-      <g id="mimi-arm-left" transform="translate(-78, -236)">
-        <path d="M0,0 C-36,24 -52,62 -46,84 C-40,98 -22,94 -12,78 C-4,62 6,34 14,14 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-        <!-- Pink sleeve -->
-        <path d="M8,-14 C-18,-2 -34,16 -36,34 L-8,46 C2,28 14,12 22,-4 Z" fill="#F4A9BC" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-      </g>
-
-      <!-- === TORSO (Pink Shirt + Mustard Overalls + Olive Collar) === -->
-      <g id="mimi-torso">
-        <!-- Pink knitted shirt base -->
-        <path d="M-74,-256 C-78,-216 -78,-184 -74,-154 L74,-154 C78,-184 78,-216 74,-256 C46,-270 -46,-270 -74,-256 Z" fill="#F4A9BC" stroke="#1E293B" stroke-width="3.5" />
-        <!-- Mustard overalls body & legs -->
-        <path d="M-72,-196 L72,-196 C82,-154 84,-100 76,-54 L74,-34 L16,-34 L10,-72 L-10,-72 L-16,-34 L-74,-34 L-76,-54 C-84,-100 -82,-154 -72,-196 Z" fill="#D4B465" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-        <!-- Rolled cuffs -->
-        <rect x="-78" y="-44" width="66" height="16" rx="7" fill="#C9A755" stroke="#1E293B" stroke-width="3.5" />
-        <rect x="12" y="-44" width="66" height="16" rx="7" fill="#C9A755" stroke="#1E293B" stroke-width="3.5" />
-        <!-- Two front pockets -->
-        <path d="M-58,-146 L-16,-146 L-18,-108 C-19,-96 -55,-96 -56,-108 Z" fill="#CBA854" stroke="#1E293B" stroke-width="3" />
-        <path d="M16,-146 L58,-146 L56,-108 C55,-96 19,-96 18,-108 Z" fill="#CBA854" stroke="#1E293B" stroke-width="3" />
-        <!-- Salmon-peach straps -->
-        <path d="M-54,-262 L-36,-260 L-42,-188 L-60,-188 Z" fill="#EB9A82" stroke="#1E293B" stroke-width="3" stroke-linejoin="round" />
-        <path d="M54,-262 L36,-260 L42,-188 L60,-188 Z" fill="#EB9A82" stroke="#1E293B" stroke-width="3" stroke-linejoin="round" />
-        <!-- Overall buttons -->
-        <circle cx="-50" cy="-192" r="7.5" fill="#F2B4A0" stroke="#1E293B" stroke-width="2.5" />
-        <circle cx="50" cy="-192" r="7.5" fill="#F2B4A0" stroke="#1E293B" stroke-width="2.5" />
-        <!-- Olive-green Peter Pan collar -->
-        <path d="M-6,-266 C-22,-240 -54,-236 -66,-254 C-72,-264 -56,-280 -34,-276 Z" fill="#9DA36B" stroke="#1E293B" stroke-width="3.2" stroke-linejoin="round" />
-        <path d="M6,-266 C22,-240 54,-236 66,-254 C72,-264 56,-280 34,-276 Z" fill="#9DA36B" stroke="#1E293B" stroke-width="3.2" stroke-linejoin="round" />
-        <circle cx="0" cy="-265" r="10" fill="#8D935C" stroke="#1E293B" stroke-width="3" />
-      </g>
-
-      <!-- === HEAD & EARS === -->
-      <g id="mimi-head" transform="translate(0, -352)">
-        <!-- Left Ear -->
-        <g id="mimi-ear-left" transform="translate(-44, -84)">
-          <path d="M0,12 C-26,-44 -48,-132 -28,-164 C-14,-184 12,-146 22,-78 C28,-38 24,-4 16,16 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-          <path d="M-4,-6 C-20,-48 -34,-116 -22,-142 C-14,-154 2,-124 10,-72 C14,-42 12,-14 6,4 Z" fill="#F7B6BE" />
-        </g>
-        <!-- Right Ear -->
-        <g id="mimi-ear-right" transform="translate(44, -84)">
-          <path d="M0,12 C26,-44 48,-132 28,-164 C14,-184 -12,-146 -22,-78 C-28,-38 -24,-4 -16,16 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-          <path d="M4,-6 C20,-48 34,-116 22,-142 C14,-154 -2,-124 -10,-72 C-14,-42 -12,-14 -6,4 Z" fill="#F7B6BE" />
-        </g>
-
-        <!-- Head Shape (plump cute bunny cheeks) -->
-        <path d="M-86,-16 C-90,-66 -54,-102 0,-102 C54,-102 90,-66 86,-16 C100,12 96,52 68,72 C44,88 -44,88 -68,72 C-96,52 -100,12 -86,-16 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-        <!-- Soft chin shadow -->
-        <path d="M-56,64 C-24,80 24,80 56,64" fill="none" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round" opacity="0.6" />
-
-        <!-- Rosy cheeks -->
-        <ellipse cx="-62" cy="24" rx="18" ry="11" fill="#FAD2D6" opacity="0.8" />
-        <ellipse cx="62" cy="24" rx="18" ry="11" fill="#FAD2D6" opacity="0.8" />
-
-        <!-- Eyebrows -->
-        <path d="M-52,-48 Q-38,-56 -24,-48" fill="none" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
-        <path d="M24,-48 Q38,-56 52,-48" fill="none" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
-
-        <!-- Eyes (with blink group) -->
-        <g id="mimi-eyes-open">
-          <ellipse cx="-38" cy="-14" rx="16" ry="19" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
-          <circle cx="-35" cy="-13" r="11.5" fill="#2D1E2F" />
-          <circle cx="-39" cy="-18" r="4" fill="#FFFFFF" />
-          <circle cx="-31" cy="-9" r="2" fill="#FFFFFF" />
-
-          <ellipse cx="38" cy="-14" rx="16" ry="19" fill="#FFFFFF" stroke="#1E293B" stroke-width="3" />
-          <circle cx="41" cy="-13" r="11.5" fill="#2D1E2F" />
-          <circle cx="37" cy="-18" r="4" fill="#FFFFFF" />
-          <circle cx="45" cy="-9" r="2" fill="#FFFFFF" />
-        </g>
-        <g id="mimi-eyes-blink" opacity="0">
-          <path d="M-54,-14 Q-38,-24 -22,-14" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round" />
-          <path d="M22,-14 Q38,-24 54,-14" fill="none" stroke="#1E293B" stroke-width="4" stroke-linecap="round" />
-        </g>
-
-        <!-- Pink Nose -->
-        <path d="M-12,12 Q0,6 12,12 Q14,20 0,25 Q-14,20 -12,12 Z" fill="#F496A6" stroke="#1E293B" stroke-width="2.5" stroke-linejoin="round" />
-
-        <!-- Mouth (idle smile vs talking open mouth) -->
-        <path id="mimi-mouth-closed" d="M-24,36 Q-12,48 0,34 Q12,48 24,36" fill="none" stroke="#1E293B" stroke-width="3.2" stroke-linecap="round" />
-        <g id="mimi-mouth-open" opacity="0">
-          <path d="M-22,34 Q0,38 22,34 C20,56 12,62 0,62 C-12,62 -20,56 -22,34 Z" fill="#4A1D24" stroke="#1E293B" stroke-width="3" stroke-linejoin="round" />
-          <ellipse cx="0" cy="54" rx="11" ry="6" fill="#F47280" />
-        </g>
-      </g>
-
-      <!-- === RIGHT ARM + TEACHING POINTER (Articulated!) === -->
-      <!-- Shoulder pivot at (74, -236) relative to mimi-root (240, 880) => screen (314, 644) -->
-      <g id="mimi-arm-right-group" transform="translate(74, -236)">
-        <!-- Pink sleeve -->
-        <path d="M-8,-14 C18,-2 34,16 36,34 L8,46 C-2,28 -14,12 -22,-4 Z" fill="#F4A9BC" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-        <!-- Rotating forearm + teaching pointer -->
-        <g id="mimi-pointer-pivot" transform="rotate(38)">
-          <!-- Pointer stick (visible when pointing) -->
-          <g id="mimi-pointer-stick" opacity="0">
-            <line x1="78" y1="0" x2="290" y2="0" stroke="#92400E" stroke-width="7" stroke-linecap="round" />
-            <line x1="78" y1="-2" x2="286" y2="-2" stroke="#D97706" stroke-width="2" stroke-linecap="round" />
-            <!-- Glowing coral tip -->
-            <circle cx="294" cy="0" r="9" fill="#E15B48" stroke="#1E293B" stroke-width="2.5" />
-            <circle cx="294" cy="0" r="3.5" fill="#FEF3C7" />
-          </g>
-          <!-- White bunny arm + hand -->
-          <path d="M0,-12 C28,-14 68,-12 86,-2 C94,4 90,18 76,18 C54,18 22,16 -4,14 Z" fill="#FFFFFF" stroke="#1E293B" stroke-width="3.5" stroke-linejoin="round" />
-        </g>
+      <g id="mimi-nod">
+        <image id="mimi-img" href="../../app/assets/characters/mimi_stand.png"
+               x="-219" y="-640" width="438" height="640"
+               preserveAspectRatio="xMidYMid meet" />
       </g>
     </g>
   </g>
 
-  <!-- 6. Pointer Target Focus Ring (Overlay on right canvas when Mimi points) -->
-  <g id="pointer-target-fx" opacity="0">
-    <line id="pointer-ray" x1="480" y1="540" x2="900" y2="400" stroke="#E15B48" stroke-width="3" stroke-dasharray="10 8" opacity="0.45" />
-    <circle id="pointer-ring-outer" cx="900" cy="400" r="34" fill="none" stroke="#E15B48" stroke-width="4" opacity="0.6" />
-    <circle id="pointer-ring-inner" cx="900" cy="400" r="10" fill="#E15B48" opacity="0.85" />
+  <!-- 6. Soft Amber Focus Glow (highlights the matching element on right 75% canvas) -->
+  <defs>
+    <filter id="focusGlowBlur" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10" />
+    </filter>
+    <filter id="focusGlowSoft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.4" />
+    </filter>
+  </defs>
+  <g id="focus-glow-fx" opacity="0">
+    <rect id="focus-glow-halo" x="-160" y="-104" width="320" height="208" rx="32"
+          fill="#FDE68A" fill-opacity="0.06" stroke="#F59E0B" stroke-width="17"
+          opacity="0.30" filter="url(#focusGlowBlur)" />
+    <rect id="focus-glow-halo2" x="-160" y="-104" width="320" height="208" rx="32"
+          fill="none" stroke="#FBBF24" stroke-width="6"
+          opacity="0.55" filter="url(#focusGlowSoft)" />
+    <circle id="focus-glow-dot" cx="0" cy="-104" r="7" fill="#D97706" stroke="#FFFDF8" stroke-width="2.5" />
   </g>
 
   <!-- 7. Mimi Head Emotion Bubble (?, 💡, !) -->
@@ -289,18 +192,8 @@
   // DOM refs
   const worldCamera = document.getElementById("world-camera");
   const mimiBreathe = document.getElementById("mimi-breathe");
-  const earLeft = document.getElementById("mimi-ear-left");
-  const earRight = document.getElementById("mimi-ear-right");
-  const eyesOpen = document.getElementById("mimi-eyes-open");
-  const eyesBlink = document.getElementById("mimi-eyes-blink");
-  const mouthClosed = document.getElementById("mimi-mouth-closed");
-  const mouthOpen = document.getElementById("mimi-mouth-open");
-  const pointerPivot = document.getElementById("mimi-pointer-pivot");
-  const pointerStick = document.getElementById("mimi-pointer-stick");
-  const pointerFx = document.getElementById("pointer-target-fx");
-  const pointerRay = document.getElementById("pointer-ray");
-  const pointerRingOuter = document.getElementById("pointer-ring-outer");
-  const pointerRingInner = document.getElementById("pointer-ring-inner");
+  const mimiNod = document.getElementById("mimi-nod");
+  const focusGlow = document.getElementById("focus-glow-fx");
   const bubbleGroup = document.getElementById("mimi-bubble");
   const bubbleIcons = {
     question: document.getElementById("bubble-icon-question"),
@@ -371,71 +264,35 @@
       `translate(${cx}, ${cy}) scale(${cam.zoom.toFixed(4)}) translate(${-cx + tx}, ${-cy + ty})`
     );
 
-    // 2. Mimi Breathing & Ear Micro-Motion
-    const breath = 1 + 0.012 * Math.sin(t * 2.6);
-    const breathX = 1 - 0.005 * Math.sin(t * 2.6);
-    mimiBreathe.setAttribute("transform", `scale(${breathX.toFixed(4)}, ${breath.toFixed(4)})`);
-    const earSway = Math.sin(t * 1.9) * 2.2;
-    earLeft.setAttribute("transform", `translate(-44, -84) rotate(${(-earSway).toFixed(2)})`);
-    earRight.setAttribute("transform", `translate(44, -84) rotate(${earSway.toFixed(2)})`);
+    // 2. Mimi Natural Breathing + Speaking Nod (static HD illustration)
+    const breathY = Math.sin(t * 2.0) * 3.2;
+    const breathX = Math.sin(t * 1.4) * 1.3;
+    mimiBreathe.setAttribute("transform", `translate(${breathX.toFixed(2)}, ${breathY.toFixed(2)})`);
 
-    // 3. Natural Blinking (every ~3.8s for 0.14s)
-    const blinkCycle = t % 3.8;
-    const isBlinking = (blinkCycle > 3.62 && blinkCycle < 3.76);
-    eyesOpen.setAttribute("opacity", isBlinking ? "0" : "1");
-    eyesBlink.setAttribute("opacity", isBlinking ? "1" : "0");
+    // Speaking: slightly stronger nod; idle: barely perceptible
+    const nodAmp = isSpeaking ? 1 : 0.18;
+    const nodY = Math.abs(Math.sin(t * 3.1)) * 3.4 * nodAmp;
+    const nodRot = Math.sin(t * 3.1 + 0.6) * 1.4 * nodAmp;
+    mimiNod.setAttribute(
+      "transform",
+      `translate(0, ${nodY.toFixed(2)}) rotate(${nodRot.toFixed(2)}, 0, -320)`
+    );
 
-    // 4. Mouth Animation Synced to Speaking
-    if (isSpeaking) {
-      const talkOpen = Math.sin(t * 22) > -0.15;
-      mouthOpen.setAttribute("opacity", talkOpen ? "1" : "0");
-      mouthClosed.setAttribute("opacity", talkOpen ? "0" : "1");
-    } else {
-      mouthOpen.setAttribute("opacity", "0");
-      mouthClosed.setAttribute("opacity", "1");
-    }
-
-    // 5. Mimi Articulated Teaching Pointer
+    // 3. Soft Amber Focus Glow on the matching right-canvas element
     const target = (cue && cue.pointerTarget && t >= cue.start - 0.15) ? cue.pointerTarget : null;
     if (target) {
-      // Shoulder screen coords: (314, 644)
-      const sx = 314, sy = 644;
-      const dx = target[0] - sx;
-      const dy = target[1] - sy;
-      const targetAngle = Math.atan2(dy, dx) * (180 / Math.PI);
       const enterP = easeInOutCubic((t - (cue.start - 0.15)) / 0.45);
-      const idleAngle = 38;
-      const curAngle = lerp(idleAngle, targetAngle, enterP);
-      // Slight gentle pointing bob
-      const bob = Math.sin(t * 4.5) * 1.2 * enterP;
-      pointerPivot.setAttribute("transform", `rotate(${(curAngle + bob).toFixed(2)})`);
-      pointerStick.setAttribute("opacity", enterP.toFixed(3));
-
-      // Compute tip screen position (294px along pointer)
-      const rad = (curAngle + bob) * Math.PI / 180;
-      const tipX = sx + Math.cos(rad) * 294;
-      const tipY = sy + Math.sin(rad) * 294;
-
-      pointerFx.setAttribute("opacity", (enterP * 0.95).toFixed(3));
-      pointerRay.setAttribute("x1", tipX.toFixed(1));
-      pointerRay.setAttribute("y1", tipY.toFixed(1));
-      pointerRay.setAttribute("x2", target[0]);
-      pointerRay.setAttribute("y2", target[1]);
-      const pulseR = 26 + 8 * Math.sin(t * 6.0);
-      pointerRingOuter.setAttribute("cx", target[0]);
-      pointerRingOuter.setAttribute("cy", target[1]);
-      pointerRingOuter.setAttribute("r", pulseR.toFixed(1));
-      pointerRingInner.setAttribute("cx", target[0]);
-      pointerRingInner.setAttribute("cy", target[1]);
+      const pulse = 1 + 0.022 * Math.sin(t * 4.2);
+      focusGlow.setAttribute("opacity", (enterP * 0.95).toFixed(3));
+      focusGlow.setAttribute(
+        "transform",
+        `translate(${target[0]}, ${target[1]}) scale(${(enterP * pulse).toFixed(3)})`
+      );
     } else {
-      // Gentle wave on intro cue 0, otherwise resting
-      const wave = (cue && cue.id === 0 && isSpeaking) ? (-26 + Math.sin(t * 8) * 12) : 38;
-      pointerPivot.setAttribute("transform", `rotate(${wave.toFixed(2)})`);
-      pointerStick.setAttribute("opacity", "0");
-      pointerFx.setAttribute("opacity", "0");
+      focusGlow.setAttribute("opacity", "0");
     }
 
-    // 6. Head Emotion Bubble (?, 💡, !)
+    // 4. Head Emotion Bubble (?, 💡, !)
     const bubbleType = (cue && cue.bubble && t >= cue.start) ? cue.bubble : null;
     if (bubbleType && bubbleIcons[bubbleType]) {
       const bElapsed = t - cue.start;
@@ -449,13 +306,13 @@
       bubbleGroup.setAttribute("transform", "translate(370, 224) scale(0)");
     }
 
-    // 7. Chapter Pill
+    // 5. Chapter Pill
     if (cue && cue.chapter_label) {
       chapterLabel.textContent = cue.chapter_label;
       chapterDot.setAttribute("fill", CHAPTER_COLORS[(cue.scene || 0) % CHAPTER_COLORS.length]);
     }
 
-    // 8. Bottom Subtitle Bar
+    // 6. Bottom Subtitle Bar
     if (cue && cue.subtitle && t >= cue.start - 0.05 && t <= cue.end + 0.25) {
       subtitleBar.setAttribute("opacity", "1");
       subtitleText.textContent = cue.subtitle;
@@ -468,7 +325,7 @@
       subtitleBar.setAttribute("opacity", "0");
     }
 
-    // 9. Unit-Specific World Animation
+    // 7. Unit-Specific World Animation
     if (window.UNIT_PLUGIN && typeof window.UNIT_PLUGIN.updateWorld === "function") {
       window.UNIT_PLUGIN.updateWorld(t, cue, cueProgress, timeline);
     }

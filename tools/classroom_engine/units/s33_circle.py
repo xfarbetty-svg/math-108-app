@@ -136,7 +136,7 @@ CUES = [
         "scene": 3,
         "chapter_label": "4/4 總結口訣",
         "camera": {"x": 4320, "y": 0, "zoom": 0.94},
-        "subtitle": "比大小前先統一成直徑或半徑，現在就去挑戰圓的真題測驗吧，加油！",
+        "subtitle": "比大小前先統一成直徑或半徑，現在就去挑戰圓的真題測驗吧！",
         "pointerTarget": None,
         "bubble": "idea",
         "state": "summary_outro",
@@ -347,7 +347,8 @@ window.UNIT_PLUGIN = (function () {
     // Mom pizza (r=6 -> d=12)
     el("circle", { cx: 260, cy: 748, r: 96, fill: "#FDE68A", stroke: "#D97706", "stroke-width": 5 }, t3);
     el("line", { x1: 260, y1: 748, x2: 356, y2: 748, stroke: "#E15B48", "stroke-width": 6 }, t3);
-    textEl("媽媽：半徑 6cm", { x: 260, y: 718, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#92400E" }, t3);
+    textEl("媽媽", { x: 260, y: 698, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#92400E" }, t3);
+    textEl("半徑 6cm", { x: 260, y: 728, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#92400E" }, t3);
     textEl("直徑＝12cm", { x: 260, y: 800, "text-anchor": "middle", "font-size": 26, "font-weight": 900, fill: "#B91C1C" }, t3);
 
     // Comparison center
