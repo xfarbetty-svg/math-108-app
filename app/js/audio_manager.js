@@ -15,10 +15,30 @@
   let isSpeaking = false;       // 當前是否正在發聲
   let activeOptions = null;     // 當前這一輪的回調組
 
+  /* ---------- 破音字（多音字）發音校正 ----------
+   * 僅作用於「即將送進 TTS 的純文字字串」（/api/tts 的 text 參數、
+   * Web Speech 的 SpeechSynthesisUtterance.text），絕不回寫 DOM 或題庫 JSON。
+   * cleanTextForSpeech 一律回傳新字串，原始傳入文字保持不變。
+   * 採「完整詞」精確匹配（先長後短），嚴禁單字替換，避免誤傷「奇怪、神奇」等日常詞。
+   * 已檢查並刻意不改：差數／相差（chā）、幾分之幾（jǐ）— 引擎讀音已正確，不改動以免誤傷。
+   */
+  const POLYPHONE_FIXES = [
+    { from: "奇數", to: "基數" }, // 奇數 jī-shù（odd）→ 避免誤讀為「騎數」qí-shù
+    { from: "奇偶", to: "基偶" }  // 奇偶 jī-ǒu（odd-even）→ 避免誤讀為「騎偶」
+  ];
+
+  function fixPolyphonePronunciation(text) {
+    let s = String(text);
+    for (const fix of POLYPHONE_FIXES) {
+      s = s.split(fix.from).join(fix.to);
+    }
+    return s;
+  }
+
   /* ---------- 文字清洗 ---------- */
   function cleanTextForSpeech(text) {
     if (!text) return "";
-    let s = String(text);
+    let s = fixPolyphonePronunciation(text);
     // 去除 Emoji 與裝飾符號
     s = s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{2190}-\u{21FF}\u{2500}-\u{25FF}]/gu, "");
     // 數學運算符號轉易讀中文
@@ -214,6 +234,7 @@
     play: play,
     stop: stop,
     isPlaying: isPlaying,
-    cleanTextForSpeech: cleanTextForSpeech
+    cleanTextForSpeech: cleanTextForSpeech,
+    fixPolyphonePronunciation: fixPolyphonePronunciation
   };
 })();
