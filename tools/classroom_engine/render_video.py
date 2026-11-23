@@ -19,6 +19,7 @@ from typing import Any
 from playwright.sync_api import sync_playwright
 
 from tools.classroom_engine.tts_pipeline import (
+    LOUDNORM_FILTER,
     build_narration_and_timeline,
     probe_duration,
 )
@@ -172,6 +173,8 @@ def render_unit_video(
         "-framerate", str(FPS),
         "-i", "pipe:0",
         "-i", str(narration_wav),
+        # 輸出階段再次以 -14 LUFS 響度標準化把關（對已正規化音軌為冪等，約 0dB）
+        "-af", LOUDNORM_FILTER,
         "-c:v", "libx264",
         "-pix_fmt", "yuv420p",
         "-crf", "21",

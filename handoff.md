@@ -31,3 +31,29 @@
 - **時間**：2026-11-23（UTC+8）
 - **更新者**：OpenCode CLI @ DESKTOP-6ELKIRH
 - **Git Push 狀態**：✅ 已執行（詳見 `git log -1`）
+
+
+---
+
+## 2026-11-23 終局任務斷點（session 超 45 步，交接下一框）
+
+### 已完成（exit 0 驗真）
+- 渲染管線永久升級：`tools/classroom_engine/tts_pipeline.py` 加 `LOUDNORM_FILTER = loudnorm=I=-14:TP=-1.5:LRA=11` + `normalize_loudness()`；`render_video.py` mux 輸出再加同一濾鏡把關。
+- 批次響度：`tools/normalize_video_loudness.py`（two-pass + 迭代 dB 修正，`-c:v copy`）。12 支既有 G3 影片全數由 -19/-27 LUFS 提升至 -13.99 ~ -14.63 LUFS，AV diff <= 0.067s，全數 < 25MiB。
+- 新插件：`tools/classroom_engine/units/r32_patterns.py`（R-3-2 四幕）、`d31_tables.py`（D-3-1 四幕），皆 full_stage、米米兔 PNG 走位、焦點高光、ID 對應完成，`py_compile` 通過。
+- `app/shell.js` 的 `UNIT_CONCEPT_MOVIES` / `UNIT_CONCEPT_MOVIE_TITLES` 已掛載 R-3-2、D-3-1。
+
+### 進行中（背景 shell：sh_2083cb462001MiDGFDWr2mDNSd）
+- `python -m tools.classroom_engine.units.r32_patterns` → `R32_Final.mp4`
+- `python -m tools.classroom_engine.units.d31_tables` → `D31_Final.mp4`
+- 日誌：`_scratch/render_r32.log` / `_scratch/render_d31.log`（開新框先讀最後 30 行確認 exit code）。
+
+### 下一框待辦（依序）
+1. 確認兩支 MP4 存在，跑 `python tools/normalize_video_loudness.py` 讓新片也到 -14 LUFS。
+2. 抽幀自檢：`_scratch/classroom_r32/keyframes/`、`_scratch/classroom_d31/keyframes/` 各 7 張，視覺確認零重疊、零裁切、字幕底 >= 76px。
+3. 產出 `reports/20261123_G3_VIDEO_INVENTORY.md`：掃 24 單元 + shell.js；如實揭露 24/24 盤點涵蓋、影片掛載數（勿虚假宣称每单元都有影片）。
+4. 門禁：`node tools/verify_curriculum_131.js`、`verify_app_shell.js`、`verify_tts_polyphone.js`、`verify_r32.js`、`verify_d31.js` 全數 exit 0。
+5. `git add -A && git commit && git push origin main`。
+
+### 紀律
+- `_scratch/` 已 gitignore，維持隔離；嚴禁碰 `017\` 或「子由」。

@@ -22,6 +22,9 @@ DEFAULT_VOICE = "zh-TW-HsiaoChenNeural"
 DEFAULT_RATE = "-3%"
 DEFAULT_PITCH = "+2Hz"
 
+# YouTube 官方標準響度 -14 LUFS（等效增益放大 50% 以上、TP=-1.5 防爆音破音）
+LOUDNORM_FILTER = "loudnorm=I=-14:TP=-1.5:LRA=11"
+
 FALLBACK_POLYPHONE_FIXES = [
     ("奇數", "基數"),
     ("奇偶", "基偶"),
@@ -99,6 +102,33 @@ def probe_duration(media_path: Path) -> float:
     if val <= 0:
         raise RuntimeError(f"Invalid duration {val} for {media_path}")
     return val
+
+
+def normalize_loudness(wav_path: Path, ffmpeg: str, work_dir: Path) -> Path:
+    """Normalize a mixed narration WAV to -14 LUFS (YouTube standard) in place.
+
+    Uses a single FFmpeg loudnorm pass (I=-14:TP=-1.5:LRA=11). Duration must be
+    preserved within 50ms so the deterministic frame renderer stays in AV sync.
+    """
+    before = probe_duration(wav_path)
+    normalized = work_dir / "narration_loudnorm.wav"
+    subprocess.run(
+        [
+            ffmpeg, "-y", "-v", "error",
+            "-i", str(wav_path),
+            "-af", LOUDNORM_FILTER,
+            "-ar", "48000", "-ac", "2", "-c:a", "pcm_s16le",
+            str(normalized),
+        ],
+        check=True,
+    )
+    after = probe_duration(normalized)
+    if abs(after - before) > 0.05:
+        raise RuntimeError(
+            f"loudnorm changed narration duration: {before:.3f}s -> {after:.3f}s"
+        )
+    os.replace(normalized, wav_path)
+    return wav_path
 
 
 async def _synth_one(text: str, out_mp3: Path, voice: str, rate: str, pitch: str) -> None:
@@ -329,8 +359,9 @@ def build_narration_and_timeline(
         ],
         check=True,
     )
-    # Mix SFX if requested
+    # Mix SFX if requested, then normalize to -14 LUFS (YouTube standard, +50% loudness)
     final_audio_wav = mix_sfx_into_narration(narration_wav, timeline_cues, work_dir, ffmpeg)
+    final_audio_wav = normalize_loudness(final_audio_wav, ffmpeg, work_dir)
     actual_total = probe_duration(final_audio_wav)
 
     timeline = {

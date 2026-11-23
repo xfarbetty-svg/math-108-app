@@ -323,7 +323,9 @@ const UNIT_CONCEPT_MOVIES = {
   "S-3-2": "assets/classroom_videos/S32_Final.mp4",
   "S-3-3": "assets/classroom_videos/S33_Final.mp4",
   "S-3-4": "assets/classroom_videos/S34_Final.mp4",
-  "R-3-1": "assets/classroom_videos/R31_Final.mp4"
+  "R-3-1": "assets/classroom_videos/R31_Final.mp4",
+  "R-3-2": "assets/classroom_videos/R32_Final.mp4",
+  "D-3-1": "assets/classroom_videos/D31_Final.mp4"
 };
 
 const UNIT_CONCEPT_MOVIE_TITLES = {
@@ -337,7 +339,9 @@ const UNIT_CONCEPT_MOVIE_TITLES = {
   "S-3-2": "概念小教室：正方形和長方形",
   "S-3-3": "概念小教室：圓（圓心、半徑與直徑）",
   "S-3-4": "概念小教室：幾何形體之操作",
-  "R-3-1": "概念小教室：乘法與除法的關係"
+  "R-3-1": "概念小教室：乘法與除法的關係",
+  "R-3-2": "概念小教室：數量模式與推理（I）",
+  "D-3-1": "概念小教室：一維表格與二維表格"
 };
 
 const CONCEPT_COMPONENTS = {
