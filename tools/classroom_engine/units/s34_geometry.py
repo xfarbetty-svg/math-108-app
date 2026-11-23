@@ -66,7 +66,7 @@ CUES = [
         "scene": 1,
         "chapter_label": "2/4 核心概念拆解",
         "camera": {"x": 1920, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 320, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 240, "y": 880, "pose": "point", "flip": False},
         "subtitle": "我們先來看正方體！正方體有 8 個頂點、12 條邊，還有 6 個一模一樣大的正方形面喔！",
         "focusTarget": "#z1-cube",
         "bubble": None,
@@ -77,7 +77,7 @@ CUES = [
         "scene": 1,
         "chapter_label": "2/4 核心概念拆解",
         "camera": {"x": 1920, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 480, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 240, "y": 880, "pose": "point", "flip": False},
         "subtitle": "再看長方體！長方體也是 8 個頂點、12 條邊和 6 個面，相對的面大小形狀完全相同！",
         "focusTarget": "#z1-box",
         "bubble": None,
@@ -88,7 +88,7 @@ CUES = [
         "scene": 1,
         "chapter_label": "2/4 核心概念拆解",
         "camera": {"x": 1920, "y": 0, "zoom": 1.0},
-        "mimi": {"x": 580, "y": 880, "pose": "point", "flip": False},
+        "mimi": {"x": 240, "y": 880, "pose": "point", "flip": False},
         "subtitle": "滾動好朋友：球體只有 1 個曲面；圓柱有 2 個平平的圓底面；圓錐有 1 個尖尖頂點與 1 個底面！",
         "focusSequence": [
             {"target": "#z1-ball", "until": 0.33},
@@ -185,7 +185,7 @@ window.UNIT_PLUGIN = (function () {
   }
 
   // Standard textbook isometric cube: hexagon outer silhouette, top diamond pointing UP, 8 exact vertices
-  function drawCube(parent, x, y, size, colTop, colLeft, colRight, showVertices, showHidden) {
+  function drawCube(parent, x, y, size, colTop, colLeft, colRight, showVertices, showHidden, translucent = false) {
     const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
     const W = size * 0.90;
     const dy = size * 0.45;
@@ -208,36 +208,50 @@ window.UNIT_PLUGIN = (function () {
       el("line", { x1: p7[0], y1: p7[1], x2: p5[0], y2: p5[1], stroke: "#94A3B8", "stroke-width": 2.5, "stroke-dasharray": "6,6" }, g);
     }
 
-    // Top face (diamond pointing UP)
+    // Top face (diamond pointing UP) — 壓克力半透明，背面虛線可透出
     el("polygon", {
       points: `${p0[0]},${p0[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p3[0]},${p3[1]}`,
-      fill: colTop, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+      fill: colTop, "fill-opacity": translucent ? 0.25 : 1, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
     }, g);
 
     // Left face
     el("polygon", {
       points: `${p3[0]},${p3[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p6[0]},${p6[1]}`,
-      fill: colLeft, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+      fill: colLeft, "fill-opacity": translucent ? 0.25 : 1, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
     }, g);
 
     // Right face
     el("polygon", {
       points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p5[0]},${p5[1]}`,
-      fill: colRight, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+      fill: colRight, "fill-opacity": translucent ? 0.25 : 1, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
     }, g);
 
-    // 8 Vertex dots (if requested)
+    // 半透明模式：把 3 條背面虛線稜邊重繪於正面之上，讓第 8 個隱藏頂點清楚透出
+    if (translucent && showHidden) {
+      [[p7, p0], [p7, p6], [p7, p5]].forEach(([a, b]) => {
+        el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: "#64748B", "stroke-width": 3, "stroke-dasharray": "6,6", opacity: 0.95 }, g);
+      });
+    }
+
+    // 8 Vertex dots (if requested)；第 8 個為後方隱藏頂點，改為虛線空心標記
     if (showVertices) {
       const allPts = [p0, p1, p2, p3, p4, p5, p6, p7];
-      allPts.forEach(([vx, vy]) => {
-        el("circle", { cx: vx, cy: vy, r: 8, fill: "#EF4444", stroke: "#FFFFFF", "stroke-width": 2.5 }, g);
+      allPts.forEach(([vx, vy], vi) => {
+        const hiddenVertex = translucent && vi === 7;
+        el("circle", {
+          cx: vx, cy: vy, r: 8,
+          fill: hiddenVertex ? "#FFFFFF" : "#EF4444",
+          stroke: hiddenVertex ? "#EF4444" : "#FFFFFF",
+          "stroke-width": 2.5,
+          ...(hiddenVertex ? { "stroke-dasharray": "4,3" } : {})
+        }, g);
       });
     }
     return g;
   }
 
   // Standard textbook isometric rectangular cuboid (長方體)
-  function drawBox(parent, x, y, sizeW, sizeH, colTop, colLeft, colRight, showVertices, showHidden) {
+  function drawBox(parent, x, y, sizeW, sizeH, colTop, colLeft, colRight, showVertices, showHidden, translucent = false) {
     const g = el("g", { transform: `translate(${x}, ${y})` }, parent);
     const W = sizeW * 0.95;
     const dy = sizeW * 0.38;
@@ -261,23 +275,36 @@ window.UNIT_PLUGIN = (function () {
 
     el("polygon", {
       points: `${p0[0]},${p0[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p3[0]},${p3[1]}`,
-      fill: colTop, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+      fill: colTop, "fill-opacity": translucent ? 0.25 : 1, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
     }, g);
 
     el("polygon", {
       points: `${p3[0]},${p3[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p6[0]},${p6[1]}`,
-      fill: colLeft, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+      fill: colLeft, "fill-opacity": translucent ? 0.25 : 1, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
     }, g);
 
     el("polygon", {
       points: `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p4[0]},${p4[1]} ${p5[0]},${p5[1]}`,
-      fill: colRight, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
+      fill: colRight, "fill-opacity": translucent ? 0.25 : 1, stroke: "#1E293B", "stroke-width": 3.5, "stroke-linejoin": "round"
     }, g);
+
+    if (translucent && showHidden) {
+      [[p7, p0], [p7, p6], [p7, p5]].forEach(([a, b]) => {
+        el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: "#64748B", "stroke-width": 3, "stroke-dasharray": "6,6", opacity: 0.95 }, g);
+      });
+    }
 
     if (showVertices) {
       const allPts = [p0, p1, p2, p3, p4, p5, p6, p7];
-      allPts.forEach(([vx, vy]) => {
-        el("circle", { cx: vx, cy: vy, r: 8, fill: "#EF4444", stroke: "#FFFFFF", "stroke-width": 2.5 }, g);
+      allPts.forEach(([vx, vy], vi) => {
+        const hiddenVertex = translucent && vi === 7;
+        el("circle", {
+          cx: vx, cy: vy, r: 8,
+          fill: hiddenVertex ? "#FFFFFF" : "#EF4444",
+          stroke: hiddenVertex ? "#EF4444" : "#FFFFFF",
+          "stroke-width": 2.5,
+          ...(hiddenVertex ? { "stroke-dasharray": "4,3" } : {})
+        }, g);
       });
     }
     return g;
@@ -350,7 +377,7 @@ window.UNIT_PLUGIN = (function () {
     const cCube = el("g", { id: "z1-cube", transform: "translate(660, 520)" }, z1);
     el("rect", { x: -210, y: -230, width: 420, height: 470, rx: 28, fill: "#FFFDF8", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cCube);
     textEl("正方體", { x: 0, y: -165, "text-anchor": "middle", "font-size": 34, "font-weight": 900, fill: "#E15B48" }, cCube);
-    drawCube(cCube, 0, -20, 95, "#FEF08A", "#FBBF24", "#F59E0B", true, true);
+    drawCube(cCube, 0, -20, 95, "#FEF08A", "#FBBF24", "#F59E0B", true, true, true);
     const p1 = el("g", { transform: "translate(0, 150)" }, cCube);
     el("rect", { x: -185, y: -24, width: 370, height: 48, rx: 24, fill: "#FEF2F2", stroke: "#EF4444", "stroke-width": 2.5 }, p1);
     textEl("8 個頂點 ｜ 12 條邊 ｜ 6 個正方形面", { x: 0, y: 8, "text-anchor": "middle", "font-size": 19, "font-weight": 800, fill: "#991B1B" }, p1);
@@ -359,7 +386,7 @@ window.UNIT_PLUGIN = (function () {
     const cBox = el("g", { id: "z1-box", transform: "translate(1140, 520)" }, z1);
     el("rect", { x: -210, y: -230, width: 420, height: 470, rx: 28, fill: "#FFFDF8", stroke: "#1E293B", "stroke-width": 4, filter: "url(#cardShadow)" }, cBox);
     textEl("長方體", { x: 0, y: -165, "text-anchor": "middle", "font-size": 34, "font-weight": 900, fill: "#2563EB" }, cBox);
-    drawBox(cBox, 0, -20, 105, 85, "#DBEAFE", "#60A5FA", "#2563EB", true, true);
+    drawBox(cBox, 0, -20, 105, 85, "#DBEAFE", "#60A5FA", "#2563EB", true, true, true);
     const p2 = el("g", { transform: "translate(0, 150)" }, cBox);
     el("rect", { x: -185, y: -24, width: 370, height: 48, rx: 24, fill: "#EFF6FF", stroke: "#3B82F6", "stroke-width": 2.5 }, p2);
     textEl("8 頂點 ｜ 12 條邊 ｜ 相對面大小相同", { x: 0, y: 8, "text-anchor": "middle", "font-size": 19, "font-weight": 800, fill: "#1E40AF" }, p2);
@@ -380,7 +407,7 @@ window.UNIT_PLUGIN = (function () {
     textEl("2底面+1曲面", { x: 0, y: 100, "text-anchor": "middle", "font-size": 17, "font-weight": 800, fill: "#059669" }, bCyl);
 
     const bCone = el("g", { id: "z1-cone", transform: "translate(130, -35)" }, cRoll);
-    drawCone(bCone, 0, 0, 44, 90, "#DDD6FE", "#A78BFA");
+    drawCone(bCone, 0, -10, 44, 90, "#DDD6FE", "#A78BFA"); // 圖示上移 10px，標籤不壓底邊弧線
     textEl("圓錐", { x: 0, y: 72, "text-anchor": "middle", "font-size": 22, "font-weight": 900, fill: "#1E293B" }, bCone);
     textEl("1頂點+1底面", { x: 0, y: 100, "text-anchor": "middle", "font-size": 17, "font-weight": 800, fill: "#059669" }, bCone);
 

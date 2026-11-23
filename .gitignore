@@ -1,4 +1,5 @@
 _scratch/
+_scratch_*.txt
 *.log
 .DS_Store
 Thumbs.db

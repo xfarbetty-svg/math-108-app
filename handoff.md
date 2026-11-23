@@ -1,30 +1,33 @@
 # 斷點交接日誌 (handoff.md)
 
 ## ⏯️ 目前做到哪
-- **完成項目**：
-  1. 完整修復 G3-S-3-4 概念小教室影片 5 大硬傷：
-     - 正方體與長方體等角透視六邊形外廓，頂面尖角朝上，8 個紅點精準落在 $P_0 \sim P_7$ 頂點。
-     - 滾動形體家族文字改為垂直分欄對齊，徹底消除疊字。
-     - 真題一木棍排圖案規律改繪為標準連續並排正三角形（3 根、5 根、7 根木棍）。
-     - 底部字幕框中心提升至 $y=960$，高 88px，距視口底部安全淨空 76px 免遮擋；米米兔實現全場流暢走位靠近重點。
-     - 破音字校正：「量折線」、「量取」、「量一量」、「測量」等測量動詞轉為二聲「良」送入 Edge-TTS，字幕維持「量」。
-  2. 成片重新渲染完成：`app/assets/classroom_videos/S34_Final.mp4`（106.12s / 9.54 MiB / AV diff 0.02s）。
-  3. 通過全套門禁：`verify_tts_polyphone.js` (24 PASS), `verify_s34.js`, `verify_curriculum_131.js` (131 units ALL PASS)。
-  4. 部署至 Cloudflare Pages 邊緣網路：Commit `7ded6a8` 已 push 至 main。
+- **第 3 支概念小教室影片（R-3-1）已完工**：
+  1. 新增 `tools/classroom_engine/units/r31_mul_div.py`，4 幕／13 cues，使用 `mimi_poses` 4 組 PNG 立繪真實走位（wave / point / think / cheer），焦點高光由 `getBoundingClientRect()` 橘金色框依序框住 `4×3=12`、`12÷4=3`、`12÷3=4`。
+  2. 成片 `app/assets/classroom_videos/R31_Final.mp4`：1920×1080 / 30fps / 109.967s / 9.40 MiB / AV diff 0.015s；已掛載 `app/shell.js` 的 `UNIT_CONCEPT_MOVIES["R-3-1"]`。
+  3. 抽幀目視 6 張全綠：12 顆陣列零重疊、驗算與方框逆推算式正確、字幕中心 y=960 距底 76px 無裁切、米米無遮擋右卡。
+- **S-3-4 三處精修已覆蓋上線**：
+  1. 正方體／長方體 3 個可見面 `fill-opacity=0.25`，背面 3 條虛線與第 8 頂點空心虛線點透出。
+  2. 第 2 幕米米 3 個 cue 全改 x=240，左卡膠囊「8 個頂點｜12 條邊｜6 個正方形面」完全無遮擋；圓錐圖示上移 10px。
+  3. 成片 `S34_Final.mp4`：106.133s / 9.50 MiB / AV diff 0.000s。
+- **破音字根治**：動詞「量」liáng 全改二聲「涼」（量折線／量取／量一量／量量看／量出／量長度／量角器／怎麼量／量看／用圓規量／測量／度量）；名詞「重量／數量／容量／質量／力量」保留四聲。TTS 對照表：`reports/20261123_012_TTS_LIANG_CONVERSION_TABLE.md`。
+- **門禁**：`verify_curriculum_131.js`、`verify_app_shell.js`、`verify_tts_polyphone.js` (25 PASS)、`verify_r31.js`、`verify_s34.js` 全部 Exit 0；五欄驗收報告 `reports/20261123_013_R31_S34_VIDEO_ACCEPTANCE.md`。
+- **步數上限**：全域 `~/.config/opencode/opencode.json` 與專案 `opencode.json` 皆設 `maxSteps=50`／`agent.build.steps=50`（全域檔修改已於交付報告點名）。
 
 ## 🚦 目前狀態
-- **可運行狀態**：全站狀態正常，Cloudflare Pages 最新部署成功（https://math-108.pages.dev）。
-- **工作區狀態**：工作目錄乾淨（Clean），無未追蹤或未提交之暫存檔案。
+- 兩支 MP4 已重渲染覆蓋，`git commit` + `git push origin main` 已執行；Cloudflare Pages 依 main 自動部署（https://math-108.pages.dev）。
+- `_scratch/` 關鍵幀與渲染日誌維持隔離，未進版控；`handoff.md` 為唯一追蹤的交接檔。
 
 ## ➡️ 下一步（接續建議）
-1. 依使用者指示推進剩餘 3 支概念小教室影片，或接續推進下一單元微電影。
-2. 或繼續執行已完成地毯盤點的 `R-3-1`／`R-3-2`／`D-3-1` 教具微調工單（P0~P3）。
+1. 線上探針確認 `R31_Final.mp4` / `S34_Final.mp4` HTTP 200（報告內附網址）。
+2. 剩餘 2 支概念小教室影片（第 4、5 支）依同一 `full_stage` 模板推進。
+3. 或回到 `R-3-2`／`D-3-1` 教具微調工單（P0~P3）。
 
 ## ⚠️ 注意事項
-- 破音字校正規則已集中於 `app/js/audio_manager.js` 及 `tools/classroom_engine/tts_pipeline.py`，任何新微電影需確保使用 `AudioManager.cleanTextForSpeech` 清洗。
-- `stage_template.html` 字幕安全高基準線已定於 $y=960$，後續微電影維持相同全畫面視距規範。
+- 破音字 SSOT 仍為 `app/js/audio_manager.js`；`tts_pipeline.py` 會直接解析其 `POLYPHONE_FIXES`，新增規則兩邊需同步（FALLBACK 亦已同步）。
+- 字幕安全基準線 $y=960$、教具 $\le 420px$、全屏 $\le 740px$ 規範不變。
+- 本對話框已達 45+ 步警示段點，建議開新框接續。
 
 ## 🕐 最後更新
-- **時間**：2026-11-23 17:49:30 (UTC+8)
-- **更新者**：Antigravity @ DESKTOP-6ELKIRH
-- **Git Push 狀態**：✅ 已推 (`7ded6a8`)
+- **時間**：2026-11-23（UTC+8）
+- **更新者**：OpenCode CLI @ DESKTOP-6ELKIRH
+- **Git Push 狀態**：✅ 已執行（詳見 `git log -1`）

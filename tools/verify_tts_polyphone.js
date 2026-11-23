@@ -40,9 +40,14 @@ check(got === expected, '奇偶/奇數 → 基偶/基數，實際: ' + JSON.stri
 check(input === '柳丁兩兩一數剩 1 顆的奇偶推理，總數是奇數', '傳入原文未被就地竄改');
 
 const inputMeasure = '用圓規量折線，量取一樣長的線段，量一量測量長度';
-const expectedMeasure = '用圓規良折線，良取一樣長的線段，良一良測良長度';
+const expectedMeasure = '用圓規涼折線，涼取一樣長的線段，涼一涼測涼長度';
 const gotMeasure = AM.cleanTextForSpeech(inputMeasure);
-check(gotMeasure === expectedMeasure, '量折線/量取/量一量/測量 → 良折線/良取/良一良/測良，實際: ' + JSON.stringify(gotMeasure));
+check(gotMeasure === expectedMeasure, '量折線/量取/量一量/測量 → 涼折線/涼取/涼一涼/測涼，實際: ' + JSON.stringify(gotMeasure));
+
+const inputMeasure2 = '用圓規量、怎麼量、量量看、量出、量長度';
+const expectedMeasure2 = '用圓規涼、怎麼涼、涼涼看、涼出、涼長度';
+const gotMeasure2 = AM.cleanTextForSpeech(inputMeasure2);
+check(gotMeasure2 === expectedMeasure2, '用圓規量/怎麼量/量量看/量出/量長度 → 二聲「涼」，實際: ' + JSON.stringify(gotMeasure2));
 
 // 4. 邊界：不誤傷日常詞（軍規：嚴禁假赋能／誤傷）
 check(AM.cleanTextForSpeech('奇怪') === '奇怪', '"奇怪" 不被誤改為 "基怪"');
