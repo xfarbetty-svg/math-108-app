@@ -22,7 +22,7 @@
 - 延續舊坑：`verify_g3_remaining_concepts.js` 已修 `?q=` 当檔名問題；S-3-2／S-3-4 無 `switchAct`，驗證器勿還原舊 act 斷言；圓規 `transform` 過渡 0.28s，CDP 需等 ≥360ms。
 
 🕐 **最後更新**
-- 2026-11-23 by Hy4 flash Free @ DESKTOP-6ELKIRH；Git：待推（L2 commit/push 完成後回填）。
+- 2026-11-23 by Hy4 flash Free @ DESKTOP-6ELKIRH；Git：✅ 已推（commit `b3c8c2c`，含 008 盤點報告、AGENTS.md 里程碑與本檔）。
 
 ---
 
