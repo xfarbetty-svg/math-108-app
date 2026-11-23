@@ -49,13 +49,17 @@
     <clipPath id="rightCanvasClip">
       <rect x="480" y="0" width="1440" height="1080" />
     </clipPath>
+    <!-- Clip for Full 100% Canvas (x: 0..1920) -->
+    <clipPath id="fullCanvasClip">
+      <rect x="0" y="0" width="1920" height="1080" />
+    </clipPath>
   </defs>
 
   <!-- 1. Full Warm Beige Background -->
   <rect x="0" y="0" width="1920" height="1080" fill="#F8F4EA" />
 
-  <!-- 2. Right 75% Infinite Canvas Stage -->
-  <g clip-path="url(#rightCanvasClip)">
+  <!-- 2. Infinite Canvas Stage Container (Clipped to 75% or 100% Full Stage) -->
+  <g id="canvas-clip-group" clip-path="url(#rightCanvasClip)">
     <!-- Subtle warm dot-grid moving with camera -->
     <g id="world-camera">
       <rect x="-1200" y="-400" width="9000" height="2000" fill="url(#warmGrid)" />
@@ -64,19 +68,19 @@
     </g>
   </g>
 
-  <!-- 3. Left 25% Stage Backdrop (x: 0..480) -->
+  <!-- 3. Left 25% Stage Backdrop (x: 0..480) & Unit Identity Badge -->
   <g id="left-stage-bg">
-    <rect x="0" y="0" width="480" height="1080" fill="#F2EBD9" />
-    <line x1="480" y1="0" x2="480" y2="1080" stroke="#D8CEB8" stroke-width="3" />
+    <g id="left-stage-backdrop">
+      <rect x="0" y="0" width="480" height="1080" fill="#F2EBD9" />
+      <line x1="480" y1="0" x2="480" y2="1080" stroke="#D8CEB8" stroke-width="3" />
+    </g>
     <!-- Unit Identity Badge (Top Left) -->
-    <g transform="translate(36, 36)">
+    <g id="unit-badge-group" transform="translate(36, 36)">
       <rect x="0" y="0" width="408" height="62" rx="18" fill="#FFFDF8" stroke="#1E293B" stroke-width="3" filter="url(#cardShadow)" />
       <rect x="10" y="10" width="96" height="42" rx="12" fill="#E15B48" />
       <text id="badge-code" x="58" y="38" text-anchor="middle" font-size="22" font-weight="900" fill="#FFFFFF">S-3-3</text>
       <text id="badge-title" x="122" y="39" font-size="24" font-weight="800" class="txt-ink">圓｜概念小教室</text>
     </g>
-    <!-- Soft floor shadow under Mimi -->
-    <ellipse cx="240" cy="884" rx="118" ry="20" fill="#DDD2BC" opacity="0.85" />
   </g>
 
   <!-- 4. Top-Right Chapter Progress Pill -->
@@ -86,13 +90,19 @@
     <text id="chapter-label" x="48" y="34" font-size="22" font-weight="800" class="txt-ink">1/4 情境導入</text>
   </g>
 
-  <!-- 5. Mimi Original HD Illustration (Left 25% Stage) -->
-  <!-- Anchor at feet center (240, 880); natural breathing + speaking nod -->
+  <!-- 5. Mimi Illustration Root & Floor Shadow (Dynamic Position & Poses) -->
+  <!-- Anchor at feet center (x, y); natural breathing + speaking nod -->
   <g id="mimi-root" transform="translate(240, 880)">
+    <!-- Soft floor shadow under Mimi's feet (moves with Mimi) -->
+    <ellipse id="mimi-shadow" cx="0" cy="4" rx="118" ry="20" fill="#DDD2BC" opacity="0.85" />
     <g id="mimi-breathe">
       <g id="mimi-nod">
         <image id="mimi-img" href="../../app/assets/characters/mimi_stand.png"
                x="-219" y="-640" width="438" height="640"
+               preserveAspectRatio="xMidYMid meet" />
+      </g>
+    </g>
+  </g>
                preserveAspectRatio="xMidYMid meet" />
       </g>
     </g>
@@ -150,6 +160,13 @@
     </g>
   </g>
 
+  <!-- 7.5. Dynamic Feedback Badge (✓ Correct / ✗ Trap) -->
+  <g id="feedback-badge" opacity="0" pointer-events="none" filter="url(#cardShadow)">
+    <rect id="feedback-badge-bg" x="-130" y="-36" width="260" height="72" rx="36" fill="#10B981" stroke="#1E293B" stroke-width="3.5" />
+    <text id="feedback-badge-icon" x="-80" y="12" font-size="38" font-weight="900" fill="#FFFFFF">✓</text>
+    <text id="feedback-badge-text" x="18" y="10" text-anchor="middle" font-size="26" font-weight="800" fill="#FFFFFF"></text>
+  </g>
+
   <!-- 8. Bottom High-Contrast Subtitle Bar (y: 948..1046) -->
   <g id="subtitle-bar" transform="translate(960, 996)" filter="url(#subShadow)">
     <rect id="subtitle-bg" x="-780" y="-44" width="1560" height="88" rx="22" fill="#FFFFFF" stroke="#1E293B" stroke-width="4" />
@@ -194,6 +211,8 @@
 
   // DOM refs
   const worldCamera = document.getElementById("world-camera");
+  const mimiRoot = document.getElementById("mimi-root");
+  const mimiImg = document.getElementById("mimi-img");
   const mimiBreathe = document.getElementById("mimi-breathe");
   const mimiNod = document.getElementById("mimi-nod");
   const focusGlow = document.getElementById("focus-glow-fx");
@@ -206,6 +225,10 @@
     alert: document.getElementById("bubble-icon-alert"),
     idea: document.getElementById("bubble-icon-idea")
   };
+  const feedbackBadge = document.getElementById("feedback-badge");
+  const feedbackBadgeBg = document.getElementById("feedback-badge-bg");
+  const feedbackBadgeIcon = document.getElementById("feedback-badge-icon");
+  const feedbackBadgeText = document.getElementById("feedback-badge-text");
   const subtitleBar = document.getElementById("subtitle-bar");
   const subtitleBg = document.getElementById("subtitle-bg");
   const subtitleText = document.getElementById("subtitle-text");
@@ -214,9 +237,21 @@
 
   const CHAPTER_COLORS = ["#E15B48", "#2563EB", "#D97706", "#059669"];
 
+  // Layout mode setup
+  const isFullStage = (timeline.layout === "full_stage");
+  if (isFullStage) {
+    const clipGrp = document.getElementById("canvas-clip-group");
+    if (clipGrp) clipGrp.setAttribute("clip-path", "url(#fullCanvasClip)");
+    const leftBackdrop = document.getElementById("left-stage-backdrop");
+    if (leftBackdrop) leftBackdrop.setAttribute("opacity", "0");
+    const badgeGrp = document.getElementById("unit-badge-group");
+    if (badgeGrp) badgeGrp.setAttribute("transform", "translate(48, 34)");
+  }
+
   // Focus glow state (kept across frames so it can glide between targets)
   const glowState = { key: null, rect: null, from: null, t0: 0 };
   let highlightedEl = null;
+  let currentPose = null;
 
   // Resolve which DOM selector the amber glow should frame right now.
   // cue.focusSequence wins over cue.focusTarget; `until` is cue progress (0..1).
@@ -232,6 +267,36 @@
       return seq[seq.length - 1].target;
     }
     return cue.focusTarget || null;
+  }
+
+  // Compute Mimi position, pose and orientation in full_stage mode
+  function getMimiAt(t) {
+    if (!cues.length) return { x: 260, y: 880, pose: "wave", flip: false, scale: 1.0 };
+    let idx = 0;
+    for (let i = 0; i < cues.length; i++) {
+      if (t >= cues[i].start - 0.55) idx = i;
+    }
+    const defaultMimi = { x: 260, y: 880, pose: "wave", flip: false, scale: 1.0 };
+    const cur = cues[idx].mimi ? { ...defaultMimi, ...cues[idx].mimi } : defaultMimi;
+    const prev = (idx > 0 && cues[idx - 1].mimi) ? { ...defaultMimi, ...cues[idx - 1].mimi } : cur;
+    const transDur = 0.85;
+    const transStart = cues[idx].start - 0.55;
+    const changed = (cur.x !== prev.x || cur.y !== prev.y);
+    if (!changed || idx === 0 || t < transStart) {
+      return {
+        ...cur,
+        pose: (t >= cues[idx].start - 0.1) ? cur.pose : prev.pose,
+        flip: (t >= cues[idx].start - 0.1) ? cur.flip : prev.flip
+      };
+    }
+    const p = easeInOutCubic((t - transStart) / transDur);
+    return {
+      x: lerp(prev.x, cur.x, p),
+      y: lerp(prev.y, cur.y, p),
+      pose: (p >= 0.45) ? cur.pose : prev.pose,
+      flip: (p >= 0.45) ? cur.flip : prev.flip,
+      scale: lerp(prev.scale || 1.0, cur.scale || 1.0, p)
+    };
   }
 
   // Compute smooth camera state at time t
@@ -278,19 +343,38 @@
   window.renderAtTime = function (t) {
     const { cue, idx, isSpeaking, cueProgress } = getCueState(t);
 
-    // 1. Camera Pan & Zoom on Right 75% Stage (center of right stage = (1200, 520))
+    // 1. Camera Pan & Zoom (Full Stage center = (960, 540); Split 25% center = (1200, 500))
     const cam = getCameraAt(t);
-    // In world coordinates, Zone k starts at x = k * 1440, mapped to screen x = 480
-    // When zoom != 1, zoom around right-stage center (1200, 500)
-    const cx = 1200, cy = 500;
-    const tx = 480 - cam.x;
+    const cx = isFullStage ? 960 : 1200;
+    const cy = isFullStage ? 540 : 500;
+    const tx = (isFullStage ? 0 : 480) - cam.x;
     const ty = -cam.y;
     worldCamera.setAttribute(
       "transform",
       `translate(${cx}, ${cy}) scale(${cam.zoom.toFixed(4)}) translate(${-cx + tx}, ${-cy + ty})`
     );
 
-    // 2. Mimi Natural Breathing + Speaking Nod (static HD illustration)
+    // 2. Mimi Position, Pose & Animation
+    let mimiInfo = { x: 240, y: 880, flip: false };
+    if (isFullStage) {
+      const m = getMimiAt(t);
+      mimiInfo = m;
+      const flipScale = m.flip ? -1 : 1;
+      const s = m.scale || 1.0;
+      mimiRoot.setAttribute(
+        "transform",
+        `translate(${m.x.toFixed(2)}, ${m.y.toFixed(2)}) scale(${(flipScale * s).toFixed(3)}, ${s.toFixed(3)})`
+      );
+      if (currentPose !== m.pose) {
+        mimiImg.setAttribute("href", `../../app/assets/mimi_poses/pose_${m.pose}.png`);
+        mimiImg.setAttribute("x", "-248");
+        mimiImg.setAttribute("y", "-640");
+        mimiImg.setAttribute("width", "496");
+        mimiImg.setAttribute("height", "640");
+        currentPose = m.pose;
+      }
+    }
+
     const breathY = Math.sin(t * 2.0) * 3.2;
     const breathX = Math.sin(t * 1.4) * 1.3;
     mimiBreathe.setAttribute("transform", `translate(${breathX.toFixed(2)}, ${breathY.toFixed(2)})`);
@@ -377,12 +461,40 @@
       const bElapsed = t - cue.start;
       const bScale = easeOutBack(Math.min(1, bElapsed / 0.38));
       const bFloat = Math.sin(t * 4.2) * 5;
-      bubbleGroup.setAttribute("transform", `translate(370, ${(224 + bFloat).toFixed(1)}) scale(${bScale.toFixed(3)})`);
+      const bx = isFullStage ? (mimiInfo.x + (mimiInfo.flip ? -140 : 140)) : 370;
+      const by = isFullStage ? (mimiInfo.y - 656 + bFloat) : (224 + bFloat);
+      bubbleGroup.setAttribute("transform", `translate(${bx.toFixed(1)}, ${by.toFixed(1)}) scale(${bScale.toFixed(3)})`);
       Object.keys(bubbleIcons).forEach((k) => {
         bubbleIcons[k].setAttribute("opacity", k === bubbleType ? "1" : "0");
       });
     } else {
       bubbleGroup.setAttribute("transform", "translate(370, 224) scale(0)");
+    }
+
+    // 4.5. Dynamic Feedback Badge (✓ / ✗)
+    const badge = (cue && cue.badge && t >= cue.start && t <= (cue.end + 0.35)) ? cue.badge : null;
+    if (badge && feedbackBadge) {
+      const bElapsed = t - cue.start;
+      const bScale = easeOutBack(Math.min(1, bElapsed / 0.35));
+      const bx = badge.x || 960;
+      const by = badge.y || 320;
+      feedbackBadge.setAttribute("transform", `translate(${bx}, ${by}) scale(${bScale.toFixed(3)})`);
+      feedbackBadge.setAttribute("opacity", "1");
+      if (badge.type === "trap") {
+        feedbackBadgeBg.setAttribute("fill", "#EF4444");
+        feedbackBadgeIcon.textContent = "✗";
+      } else {
+        feedbackBadgeBg.setAttribute("fill", "#10B981");
+        feedbackBadgeIcon.textContent = "✓";
+      }
+      feedbackBadgeText.textContent = badge.text || "";
+      const bw = Math.max(200, (badge.text || "").length * 30 + 110);
+      feedbackBadgeBg.setAttribute("x", (-bw / 2).toFixed(0));
+      feedbackBadgeBg.setAttribute("width", bw.toFixed(0));
+      feedbackBadgeIcon.setAttribute("x", (-bw / 2 + 36).toFixed(0));
+      feedbackBadgeText.setAttribute("x", (16).toFixed(0));
+    } else if (feedbackBadge) {
+      feedbackBadge.setAttribute("opacity", "0");
     }
 
     // 5. Chapter Pill

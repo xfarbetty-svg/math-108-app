@@ -107,6 +107,98 @@ def _write_json_atomic(path: Path, data: Any) -> None:
         raise
 
 
+def make_sfx_library(sfx_dir: Path) -> dict[str, Path]:
+    """Synthesize clean 48kHz stereo WAV sound effects using pure standard library."""
+    import math
+    import struct
+    import wave
+
+    sfx_dir.mkdir(parents=True, exist_ok=True)
+
+    def write_tone(path: Path, freqs: list[float], duration: float, env_decay: float = 8.0, amp: int = 14000) -> None:
+        sr = 48000
+        n = int(sr * duration)
+        with wave.open(str(path), "w") as w:
+            w.setnchannels(2)
+            w.setsampwidth(2)
+            w.setframerate(sr)
+            for i in range(n):
+                t = i / sr
+                env = math.exp(-env_decay * t)
+                val = sum(math.sin(2 * math.pi * f * t) for f in freqs) / len(freqs)
+                s = max(-32767, min(32767, int(val * env * amp)))
+                w.writeframes(struct.pack("<hh", s, s))
+
+    pop_wav = sfx_dir / "sfx_pop.wav"
+    correct_wav = sfx_dir / "sfx_correct.wav"
+    trap_wav = sfx_dir / "sfx_trap.wav"
+
+    if not pop_wav.exists():
+        write_tone(pop_wav, [880.0, 1320.0], 0.22, env_decay=12.0, amp=12000)
+    if not correct_wav.exists():
+        write_tone(correct_wav, [523.25, 659.25, 783.99], 0.38, env_decay=7.0, amp=14000)
+    if not trap_wav.exists():
+        write_tone(trap_wav, [370.0, 260.0], 0.30, env_decay=9.0, amp=13000)
+
+    return {"pop": pop_wav, "correct": correct_wav, "trap": trap_wav}
+
+
+def mix_sfx_into_narration(
+    narration_wav: Path,
+    timeline_cues: list[dict[str, Any]],
+    work_dir: Path,
+    ffmpeg: str,
+) -> Path:
+    """Mix cue SFX events onto the master narration track at exact timestamps."""
+    sfx_events: list[tuple[str, int]] = []
+    for cue in timeline_cues:
+        sfx_type = cue.get("sfx")
+        if not sfx_type and cue.get("badge"):
+            sfx_type = cue["badge"].get("type")
+        if sfx_type in ("pop", "correct", "trap"):
+            delay_ms = max(0, int(cue["start"] * 1000))
+            sfx_events.append((sfx_type, delay_ms))
+
+    if not sfx_events:
+        return narration_wav
+
+    sfx_lib = make_sfx_library(work_dir / "sfx")
+    inputs = ["-i", str(narration_wav)]
+    filter_parts = []
+    stream_labels = ["[0:a]"]
+
+    for i, (stype, delay_ms) in enumerate(sfx_events, start=1):
+        inputs.extend(["-i", str(sfx_lib[stype])])
+        filter_parts.append(f"[{i}:a]adelay={delay_ms}|{delay_ms}[sfx{i}]")
+        stream_labels.append(f"[sfx{i}]")
+
+    all_streams = "".join(stream_labels)
+    filter_parts.append(f"{all_streams}amix=inputs={len(stream_labels)}:duration=first:dropout_transition=0[aout]")
+    filter_str = ";".join(filter_parts)
+
+    out_mixed = work_dir / "narration_sfx.wav"
+    cmd = [
+        ffmpeg, "-y", "-v", "error",
+        *inputs,
+        "-filter_complex", filter_str,
+        "-map", "[aout]",
+        "-c:a", "pcm_s16le",
+        str(out_mixed),
+    ]
+    subprocess.run(cmd, check=True)
+    return out_mixed
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(prefix=".tmp_", suffix=".json", dir=str(path.parent))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_name, path)
+    except Exception:
+        if os.path.exists(tmp_name):
+            os.remove(tmp_name)
+        raise
+
+
 def build_narration_and_timeline(
     repo_root: Path,
     work_dir: Path,
@@ -223,10 +315,13 @@ def build_narration_and_timeline(
         ],
         check=True,
     )
-    actual_total = probe_duration(narration_wav)
+    # Mix SFX if requested
+    final_audio_wav = mix_sfx_into_narration(narration_wav, timeline_cues, work_dir, ffmpeg)
+    actual_total = probe_duration(final_audio_wav)
 
     timeline = {
         "unit": unit_meta,
+        "layout": unit_meta.get("layout", "split_25"),
         "voice": voice,
         "polyphone_fixes_applied": [{"from": a, "to": b} for a, b in fixes],
         "total_duration": round(actual_total, 3),
@@ -234,4 +329,4 @@ def build_narration_and_timeline(
     }
     timeline_path = work_dir / "timeline.json"
     _write_json_atomic(timeline_path, timeline)
-    return narration_wav, timeline_path, timeline
+    return final_audio_wav, timeline_path, timeline
