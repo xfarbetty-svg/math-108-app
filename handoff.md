@@ -31,3 +31,12 @@
 - `cc71420` S-3-2 四災難根治（假尺移除、幾何重繪、420→260px）；外殼從未渲染選項，真因是 DOM 不存在。
 - `91c08b1` R-3-1／R-3-2／D-3-1 共 26 題真題替換；D-3-1 `?q=10` 殘影已由 CDP 重截確認消失。
 - 早期：App Shell 統一 A/B/C/D（`20261122_005_*`）、G3 窄屏 224 path 零溢出（`20261122_G3_VIEWPORT_WIDTH_FIX.md`）。
+
+---
+
+### 2026-11-23 S-3-4 雙視口升級（Build 20261123_094918 / commit c7b6535 已 push + 部署）
+- 修改：`app/index.html`（>520px `.stage-frame` max-width 680 置中）、`app/components/solid_geometry_lab.html`（等角 3D 千/百/十/一；Q03 進位按鈕＋防劇透 result-note；Q02 ①~④ 標籤＋逐步脈衝引導）、`tools/release.py`（commit message 如實更新）。
+- 新增：`tools/verify_s34_dual_viewport_cdp.js`（390×844 / 1280×800 × Light/Dark × Q01~Q04 全綠）。
+- 驗證：`verify_s34.js`、`verify_s34_q2_compass_cdp.js`（4 組合 4 段全綠）、`verify_s34_dual_viewport_cdp.js` 全綠；`release.py` S1 全數 Exit 0；S4 線上 HTTP 200 版號吻合。
+- 現況：`git status` clean；Cloudflare Pages https://math-108.pages.dev 已生效。
+- 下一步：目視複核線上 S-3-4 Q01~Q04 寬螢幕置中效果；可考慮把雙視口腳本納入 release.py S1 常駐。
