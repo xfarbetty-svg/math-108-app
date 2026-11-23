@@ -52,11 +52,12 @@
       '" stroke="' + stroke + '" stroke-width="' + sw + '" stroke-linecap="round" ' + (extra || '') + '/>';
   }
   // 紅色虛線叉叉：標示「相接重疊處被扣掉的部分」
-  function cross(x, y, r) {
+  function cross(x, y, r, sw) {
     r = r || 9;
+    sw = sw || 2.5;
     return '<g class="iv-cross">' +
-      line(x - r, y - r, x + r, y + r, COL.red, 3, 'stroke-dasharray="5,3"') +
-      line(x + r, y - r, x - r, y + r, COL.red, 3, 'stroke-dasharray="5,3"') +
+      line(x - r, y - r, x + r, y + r, COL.red, sw, 'stroke-dasharray="4,2"') +
+      line(x + r, y - r, x - r, y + r, COL.red, sw, 'stroke-dasharray="4,2"') +
       '</g>';
   }
   function svgWrap(inner, h) {
@@ -142,29 +143,40 @@
   // Q07 — 作品貼膠帶（1～5 張）：上緣＋下緣＋接縫，接縫共用少 1 段
   // ============================================================
   function tapeSVG(n, lastAdded) {
-    var y = 66, w = 56, h = 72, step = 64, ox = 32 + (5 - n) * step / 2;
-    var out = T(180, 19, '作品貼膠帶：接縫共用，每多貼 1 張只多 3 段', 't');
+    var y = 62, w = 52, h = 76, gap = 12, step = w + gap;
+    var totalW = n * w + Math.max(0, n - 1) * gap;
+    var ox = (360 - totalW) / 2;
+    var out = T(180, 20, '作品貼膠帶：接縫共用，每多貼 1 張只多 3 段', 't');
+
+    // 1. 先畫所有作品紙與其上下緣膠帶
     for (var i = 0; i < n; i++) {
       var x = ox + i * step, isNew = (lastAdded && i === n - 1);
       out += '<g class="iv-paper ' + (isNew ? 'iv-new' : '') + '">';
-      out += rect(x, y, w, h, COL.paper, COL.paperLine, 2, 'rx="2"');
-      out += T(x + w / 2, y + h / 2 + 4, '作品 ' + (i + 1), 'iv-num');
-      out += rect(x - 3, y - 5, w + 6, 10, COL.tape, COL.tapeLine, 1.5, 'rx="3" opacity="0.88"');
-      out += rect(x - 3, y + h - 5, w + 6, 10, COL.tape, COL.tapeLine, 1.5, 'rx="3" opacity="0.88"');
+      out += rect(x, y, w, h, COL.paper, COL.paperLine, 2, 'rx="3"');
+      out += T(x + w / 2, y + h / 2 + 5, '作品 ' + (i + 1), 'iv-num');
+      out += rect(x + 2, y - 5, w - 4, 10, COL.tape, COL.tapeLine, 1.5, 'rx="2" opacity="0.92"');
+      out += rect(x + 2, y + h - 5, w - 4, 10, COL.tape, COL.tapeLine, 1.5, 'rx="2" opacity="0.92"');
       out += '</g>';
-      if (i < n - 1) {
-        var sx = x + w + step / 2 - 4;
-        out += rect(sx - 4, y + 2, 8, h - 4, COL.tape, COL.tapeLine, 1.5, 'rx="3" opacity="0.88"');
-        out += cross(sx, y + h / 2, 9);
-        out += T(sx, y + h / 2 + 24, '共用', 'iv-tag-red');
-      }
     }
-    out += T(180, 210, '黃色＝膠帶　紅色叉叉＝共用接縫（少貼 1 段）', 'iv-legend');
-    return svgWrap(out, 220);
+
+    // 2. 在所有作品繪製完成後，於相接接縫處繪製醒目共用膠帶＋紅色虛線叉叉
+    for (var j = 0; j < n - 1; j++) {
+      var seamX = ox + j * step + w + gap / 2;
+      out += '<g class="iv-seam">';
+      out += rect(seamX - 6, y - 3, 12, h + 6, COL.tape, COL.tapeLine, 2, 'rx="2" opacity="0.95"');
+      out += cross(seamX, y + h / 2, 9, 2.5);
+      out += T(seamX, y + h + 18, '共用', 'iv-tag-red');
+      out += '</g>';
+    }
+
+    out += T(180, 218, '黃色＝膠帶　紅色叉叉＝共用接縫（少貼 1 段）', 'iv-legend');
+    return svgWrap(out, 230);
   }
   function tapeStatus(n) {
-    return n + ' 張：上緣 ' + n + ' ＋ 下緣 ' + n + ' ＋ 接縫 ' + Math.max(0, n - 1) +
-      ' ＝ ' + (3 * n - 1) + ' 段　（每多 1 張多 3 段）';
+    if (n === 1) return '目前 1 張：上緣 1 段 ＋ 下緣 1 段（作品獨立）';
+    var seams = n - 1;
+    return '目前 ' + n + ' 張：上緣 ' + n + ' 段 ＋ 下緣 ' + n + ' 段 ＋ 接縫 ' + seams +
+      ' 段（相鄰共用少貼 ' + seams + ' 段）';
   }
 
   // ============================================================
@@ -174,6 +186,8 @@
     var y = 72, th = 52, bw = 72, step = 72, ox = 30 + (4 - n) * step / 2;
     var seatCols = [COL.red, COL.gold, COL.greenSoft, COL.blue, '#C08BFF', '#FF8A3D'];
     var out = T(180, 19, '梯形桌併桌：相接斜邊 2 個座位被併掉，每多 1 張多 3 人', 't');
+
+    // 1. 先畫所有梯形桌與座位圓點
     for (var i = 0; i < n; i++) {
       var x = ox + i * step, isNew = (lastAdded && i === n - 1);
       out += '<g class="iv-table ' + (isNew ? 'iv-new' : '') + '">';
@@ -187,18 +201,24 @@
         out += circle(seats[k][0], seats[k][1], 6, seatCols[k], '#FFFFFF', 1.4);
       }
       out += '</g>';
-      if (i < n - 1) {
-        var ix = x + bw;
-        out += cross(ix, y + 28, 10);
-        out += T(ix, y + 52, '−2 人', 'iv-tag-red');
-      }
     }
+
+    // 2. 在所有桌子與座位繪製完成後，於相接斜邊處繪製紅色虛線叉叉與 −2人 標籤
+    for (var j = 0; j < n - 1; j++) {
+      var ix = ox + j * step + bw;
+      out += '<g class="iv-seam">';
+      out += cross(ix, y + 28, 10, 3);
+      out += T(ix, y + 52, '−2 人', 'iv-tag-red');
+      out += '</g>';
+    }
+
     out += T(180, 176, '亮藍＝桌子　彩色＝座位　紅色叉叉＝被併掉、不坐人', 'iv-legend');
     return svgWrap(out, 188);
   }
   function trapezoidStatus(n) {
-    return n + ' 張：5 ＋ 3×' + (n - 1) + ' ＝ ' + (3 * n + 2) +
-      ' 人　（✖ 扣掉 ' + (2 * (n - 1)) + ' 個斜邊座位）';
+    if (n === 1) return '目前 1 張：獨立梯形桌，共有 5 個座位';
+    var joined = n - 1;
+    return '目前 ' + n + ' 張：相接斜邊少 ' + (2 * joined) + ' 個座位（被併掉不坐人，每多 1 張多 3 人）';
   }
 
   // ============================================================
@@ -208,6 +228,8 @@
     var y = 74, w = 96, h = 58, step = 96, ox = 30 + (3 - n) * step / 2;
     var seatCols = [COL.red, COL.gold, COL.greenSoft, COL.blue, '#C08BFF', '#FF8A3D'];
     var out = T(180, 19, '長方形桌併桌：左右短邊座位被併掉，上下邊座位累加', 't');
+
+    // 1. 先畫所有長桌與座位
     for (var i = 0; i < n; i++) {
       var x = ox + i * step, isNew = (lastAdded && i === n - 1);
       out += '<g class="iv-table ' + (isNew ? 'iv-new' : '') + '">';
@@ -222,19 +244,25 @@
         out += circle(seats[k][0], seats[k][1], 6, seatCols[k % seatCols.length], '#FFFFFF', 1.4);
       }
       out += '</g>';
-      if (i < n - 1) {
-        var seam = x + w;
-        out += cross(seam + 9, y + 18, 8) + cross(seam + 9, y + 44, 8);
-        out += cross(seam - 9, y + 18, 8) + cross(seam - 9, y + 44, 8);
-        out += T(seam, y + h + 27, '−4 人', 'iv-tag-red');
-      }
     }
+
+    // 2. 相接處繪製叉叉與 −4 人
+    for (var j = 0; j < n - 1; j++) {
+      var seam = ox + j * step + w;
+      out += '<g class="iv-seam">';
+      out += cross(seam + 9, y + 18, 8, 2.5) + cross(seam + 9, y + 44, 8, 2.5);
+      out += cross(seam - 9, y + 18, 8, 2.5) + cross(seam - 9, y + 44, 8, 2.5);
+      out += T(seam, y + h + 27, '−4 人', 'iv-tag-red');
+      out += '</g>';
+    }
+
     out += T(180, 190, '亮綠＝桌子　彩色＝座位　紅色叉叉＝被併掉（每接一次少 4 個）', 'iv-legend');
     return svgWrap(out, 202);
   }
   function rectTableStatus(n) {
-    return n + ' 張：10 ＋ 6×' + (n - 1) + ' ＝ ' + (6 * n + 4) +
-      ' 人　（✖ 扣掉 ' + (4 * (n - 1)) + ' 個短邊座位）';
+    if (n === 1) return '目前 1 張：獨立長方形桌，共有 10 個座位';
+    var joined = n - 1;
+    return '目前 ' + n + ' 張：短邊相接少 ' + (4 * joined) + ' 個座位（被併掉不坐人，每多 1 張多 6 人）';
   }
 
   // ============================================================
@@ -269,8 +297,9 @@
     return svgWrap(out, 194);
   }
   function sticksStatus(n) {
-    return n + ' 個：4 ＋ 3×' + (n - 1) + ' ＝ ' + (3 * n + 1) +
-      ' 根　（共用 ' + (n - 1) + ' 根只算一次）';
+    if (n === 1) return '目前 1 個：獨立正方形，需要 4 根竹籤';
+    var shared = n - 1;
+    return '目前 ' + n + ' 個：中間共用 ' + shared + ' 根竹籤（重疊邊只算 1 次，每多 1 個多 3 根）';
   }
 
   // ============================================================

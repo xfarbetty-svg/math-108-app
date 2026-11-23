@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>R-3-2 數量模式與推理實驗室</title>
     <style>
         :root {
@@ -39,7 +39,9 @@
         .q-scene .iv-card { cursor:pointer; }
         .q-scene .iv-card-bg { fill:var(--accent-primary); opacity:0.14; stroke:var(--accent-primary); stroke-width:1.5; }
         .q-scene .iv-out { font-size:12px; fill:var(--accent-primary); font-weight:700; }
-        body.q-mode .nav-tabs, body.q-mode .controls { display:none !important; }
+        body.q-mode .nav-tabs, body.q-mode .controls, body.q-mode .view-container { display:none !important; }
+        body.q-mode { background: var(--bg-card); }
+        body.q-mode .q-scene { border: none; border-radius: 0; background: var(--bg-card); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0 auto; padding: 0;
@@ -50,6 +52,40 @@
             display: flex; flex-direction: column;
             user-select: none;
             position: relative;
+        }
+        /* 平板／電腦寬螢幕（1280×800）：教具卡片合理延展置中（最大寬度 720px，落於 680px～760px），消除雙層空黑框 */
+        @media (min-width: 521px) {
+            html, body {
+                max-width: 720px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .q-scene {
+                max-width: 720px;
+                margin: 0 auto;
+            }
+            .q-scene.interactive .iv-wrap {
+                max-width: 700px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            .q-scene.interactive .iv-status {
+                max-width: 640px;
+                margin: 0 auto;
+                width: 100%;
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+            .q-scene.interactive .iv-hint {
+                text-align: center;
+                font-size: 11px;
+            }
+            .q-scene.interactive .iv-head {
+                justify-content: center;
+            }
+            .q-scene.interactive .iv-head .iv-title {
+                font-size: 13px;
+            }
         }
 
         /* 導航標籤 */
@@ -189,7 +225,8 @@ svg text { max-width: 100%; }
 
 /* G3 窄屏最後收斂 */
 .lilypad-node { right:8px !important; left:auto !important; }
-.scene svg, .q-scene svg { max-width: calc(100% - 8px) !important; height:auto !important; }
+.scene svg { max-width: calc(100% - 8px) !important; height:auto !important; }
+.q-scene:not(.interactive) svg { max-height: 380px !important; width: auto !important; max-width: 100% !important; margin: 0 auto; }
 
 /* ===== Q05–Q10 專屬動態推導教具（PatternEngine，可復用至 G4） =====
    要點：高對比明亮色、雙模式可見、控制按鈕與上方文字 ≥12px 間距、無提交按鈕、無劇透。 */

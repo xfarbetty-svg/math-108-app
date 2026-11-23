@@ -24,7 +24,7 @@ const { createSession } = require('./_cdp_util');
 const ROOT = path.resolve(__dirname, '..');
 const COMPONENT = 'app/components/pattern_reasoning_lab.html';
 const SHOT_DIR = path.join(ROOT, '_scratch', 'r32_interactive');
-const SEQ = '010';
+const SEQ = '011';
 const VIEWS = [
   { tag: 'mobile', w: 390, h: 844 },
   { tag: 'desktop', w: 1280, h: 800 }
@@ -33,15 +33,15 @@ const THEMES = ['light', 'dark'];
 
 // G4 複用：僅需擴充此表（mode: 'stepper' 為增減控制器；'beans' 為分類標記控制器）
 const SPECS = [
-  { q: 5,  kind: 'oranges',   shape: '.iv-orange',                   mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1 },
-  { q: 6,  kind: 'beans',     shape: '.iv-bean[data-marked="1"]',    mode: 'beans',   plus: '.iv-btn-even',  minus: '.iv-btn-reset',  markAfterPlus: 7, markAfterMinus: 0 },
-  { q: 7,  kind: 'tape',      shape: '.iv-paper',                    mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1 },
-  { q: 8,  kind: 'trapezoid', shape: '.iv-table',                    mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1 },
-  { q: 9,  kind: 'recttable', shape: '.iv-table',                    mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1 },
-  { q: 10, kind: 'sticks',    shape: '.iv-square',                   mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1 }
+  { q: 5,  kind: 'oranges',   shape: '.iv-orange',                   mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1, initExpected: 15 },
+  { q: 6,  kind: 'beans',     shape: '.iv-bean[data-marked="1"]',    mode: 'beans',   plus: '.iv-btn-even',  minus: '.iv-btn-reset',  markAfterPlus: 7, markAfterMinus: 0, initExpected: 0 },
+  { q: 7,  kind: 'tape',      shape: '.iv-paper',                    mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1, initExpected: 1 },
+  { q: 8,  kind: 'trapezoid', shape: '.iv-table',                    mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1, initExpected: 1 },
+  { q: 9,  kind: 'recttable', shape: '.iv-table',                    mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1, initExpected: 1 },
+  { q: 10, kind: 'sticks',    shape: '.iv-square',                   mode: 'stepper', plus: '.iv-btn-plus',  minus: '.iv-btn-minus',  delta: 1, initExpected: 1 }
 ];
 
-const LEAK_WORDS = ['點卡片：揭示下一項', '揭示下一項', '答案：', '正確答案'];
+const LEAK_WORDS = ['點卡片：揭示下一項', '揭示下一項', '答案：', '正確答案', '＝ 14 段', '＝ 14 人', '＝ 22 人', '＝ 13 根'];
 
 function fail(msg) { console.error('FAIL: ' + msg); process.exit(1); }
 function overlap(a, b) {
@@ -138,6 +138,14 @@ async function verifyOne(s, spec, view, theme, stamp) {
   if (before.badge !== 'Q' + q) fail(`${tag} 題號標籤 ${before.badge} 不符`);
   if (before.kind !== spec.kind) fail(`${tag} kind=${before.kind}，預期 ${spec.kind}`);
   if (before.count !== before.shapes) fail(`${tag} 初始數量不一致 count=${before.count} / shapes=${before.shapes}（${spec.shape}）`);
+  if (spec.initExpected !== undefined && before.count !== spec.initExpected) {
+    fail(`${tag} 初始數量應為 ${spec.initExpected}，實際 ${before.count}`);
+  }
+
+  // 截取初始載入畫面（確認無預設劇透）
+  const shotInit = path.join(SHOT_DIR, `${stamp}_${SEQ}_Q${q}_${view.tag}_${theme}_init.png`);
+  await s.screenshot(shotInit);
+  let shotStep = '';
 
   if (spec.mode === 'stepper') {
     await realClick(s, '#q-scene ' + spec.plus, tag);
@@ -146,6 +154,10 @@ async function verifyOne(s, spec, view, theme, stamp) {
     if (afterPlus.count !== before.count + spec.delta || afterPlus.shapes !== before.shapes + spec.delta) {
       fail(`${tag} 點＋後 DOM 未遞增：count ${before.count}→${afterPlus.count} / shapes ${before.shapes}→${afterPlus.shapes}`);
     }
+    // 截取點擊增加後的推演畫面（確認結構提示與接縫/座位標示）
+    shotStep = path.join(SHOT_DIR, `${stamp}_${SEQ}_Q${q}_${view.tag}_${theme}_step.png`);
+    await s.screenshot(shotStep);
+
     await realClick(s, '#q-scene ' + spec.minus, tag);
     const afterMinus = await measure(s, spec);
     if (afterMinus.count !== before.count || afterMinus.shapes !== before.shapes) {
@@ -158,6 +170,9 @@ async function verifyOne(s, spec, view, theme, stamp) {
     if (afterPlus.count !== spec.markAfterPlus || afterPlus.shapes !== spec.markAfterPlus) {
       fail(`${tag} 標記偶數後數量應為 ${spec.markAfterPlus}，實際 count=${afterPlus.count} / shapes=${afterPlus.shapes}`);
     }
+    shotStep = path.join(SHOT_DIR, `${stamp}_${SEQ}_Q${q}_${view.tag}_${theme}_step.png`);
+    await s.screenshot(shotStep);
+
     // 單顆點擊：取消一顆，數量減 1（DOM 確實反應）
     await realClick(s, '#q-scene .iv-bean[data-num="22"]', tag);
     const afterBean = await measure(s, spec);
@@ -169,7 +184,7 @@ async function verifyOne(s, spec, view, theme, stamp) {
 
   const shot = path.join(SHOT_DIR, `${stamp}_${SEQ}_Q${q}_${view.tag}_${theme}.png`);
   await s.screenshot(shot);
-  console.log(`PASS: ${tag} 高${before.bodyH}px 無溢出 無黑填充 間距>=12px 數量 ${before.count}→${before.shapes}+ 截圖 ${path.basename(shot)}`);
+  console.log(`PASS: ${tag} 高${before.bodyH}px 寬${before.scrollW}px 無溢出 無黑填充 間距>=12px 初始=${before.count}→推演 截圖 ${path.basename(shotInit)} / ${path.basename(shotStep)}`);
 }
 
 (async () => {
