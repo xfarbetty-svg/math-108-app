@@ -527,17 +527,19 @@
           "full_text": "較大位數之乘除計算：處理乘數與除數為多位數之乘除直式計算。教師用位值的概念說明直式計算的合理性。",
           "status": "ready",
           "question_count": 10,
-          "verified_source": "EXAM REAL/G4 真卷逐題比對：獅湖 110-1 期中（2 題）、獅湖 114-1 期中（3 題）、獅湖 114-2 期中（2 題）、內湖 112-1 期中（1 題）、內湖 113-2 期中（1 題）、內湖 113-2 期末（1 題）。本站僅乘法子範圍（三位數×二位數、四位數×二位數、三位數×三位數直式與 0 陷阱），除法另立站點；Q7 原卷選項③誤植已以 8x 截圖目視確認並如實記載，詳 data/units/G4/N-4-2.json",
-          "component_path": "components/g4_mul_lab.html",
-          "concept_path": "components/g4_mul_lab.html"
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市獅湖國小（110-1/114-1/114-2 期中）、臺北市內湖國小（112-1 期中），涵蓋多位數乘法直式與部分積、四位數÷一位數、三位數÷二位數試商調商、估商與末尾0等值判斷；Q4 原卷選項③誤植已目視確認並如實記載，詳 data/units/G4/N-4-2.json",
+          "component_path": "components/mul_div_g4_lab.html",
+          "concept_path": "components/mul_div_g4_lab.html"
         },
         {
           "code": "N-4-3",
           "title": "解題（兩步驟應用問題（乘除，連除））",
           "full_text": "解題：兩步驟應用問題（乘除，連除）。乘與除、連除之應用解題。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：獅湖 113-1 期末（2 題）、獅湖 114-1 期末（1 題）、永安 114-1 期末（3 題）、南湖 111-1 期末（1 題）、南湖 111-2 期中（1 題）、南湖 112-1 期末（1 題）、南湖 113-1 期末（1 題）；填充／計算題改編為 4 選項，詳 data/units/G4/N-4-3.json",
+          "component_path": "components/two_step_expr_g4_lab.html",
+          "concept_path": "components/two_step_expr_g4_lab.html"
         },
         {
           "code": "N-4-4",
