@@ -1,6 +1,13 @@
 # 斷點交接日誌 (handoff.md)
 
 ## ⏯️ 目前做到哪
+- **G4 第二站 N-4-2（較大位數的乘法，僅乘法子範圍）完工（2026-11-24）**：不含微電影，僅觀念小教室＋10 題真題庫。
+  - 新建 `app/components/g4_mul_lab.html`：三位數×二位數／四位數×二位數／三位數×三位數直式，一步一步揭示部分積、十位／百位部分積高光與補 0（真實 onclick）、進位提示、`?q=1..10`＋`?theme=dark|light`；禁 100vh、`height:auto;min-height:0`、接 theme-tokens.css。
+  - 新建 `data/units/G4/N-4-2.json`（10 題 4 選項）：獅湖 110-1/114-1/114-2 期中＋內湖 112-1/113-2 期中、113-2 期末；逐題卷首校名／頁碼／檔名差異。Q7 原卷第三選項誤植「① 2 個」以 PyMuPDF 8x 截圖目視確認，保留數值「2 個」僅校正字形為③並加 `source_anomaly` 如實記載。
+  - `data/curriculum.json` N-4-2 → ready／10；`verify_curriculum_131.js` ready 期待值 +1；新建 `tools/verify_n42.js`、`tools/verify_n42_cdp.js`。四道閘門 Exit 0（CDP 390/1280 雙模式零溢出、教具 ≤420px、分步揭示／高光補 0／進位全綠）。
+  - 施工與驗收報告：`reports/20261124_008_N42_PLAN.md`、`reports/20261124_009_N42_ACCEPTANCE.md`；截圖／逐字頁文在 `tools/_scratch/`（隔離不入 Git）。
+  - **官方 N-4-2 為乘除合併條目，本站僅乘法子範圍；除法（估商、多位數除數）待另立站點，未假稱全覆蓋。**
+  - N-4-1 首站已 commit `1a6cd99`（8 檔），N-4-2 本輪 commit 後尚未 push，待累積數單元統一部署。
 - **G4 首站 N-4-1（一億以內的數）完工（2026-11-24）**：不含微電影，僅觀念小教室＋10 題真題庫。
   - 新建 `app/components/place_value_g4_lab.html`：八位位值表（萬級千萬～萬｜個級千～個）、活動一真實 pointerdown/move/up 拖曳磁吸、活動二點擊零位亮燈（前導／級尾省略／讀零三類）、活動三高位逐欄比對；一步一步看算理（作答前不洩漏）；`?q=1..10`；`theme-tokens.css` 雙模式；body margin:0/padding:8px/height:auto/min-height:0，禁 100vh。
   - 新建 `data/units/G4/N-4-1.json`（math-app-unit-v1，10 題 4 選項）：永安 114-1 期中 p1（Q01–Q03）、獅湖 114-1 期中 p1/p2/p3（Q04–Q07、Q09–Q10）、內湖 113-1 期中 p1（Q08）；填充題改編為 4 選項，逐題 concept/steps/trap＋頁碼出處。

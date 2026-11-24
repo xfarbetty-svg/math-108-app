@@ -525,9 +525,11 @@
           "code": "N-4-2",
           "title": "較大位數之乘除計算",
           "full_text": "較大位數之乘除計算：處理乘數與除數為多位數之乘除直式計算。教師用位值的概念說明直式計算的合理性。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：獅湖 110-1 期中（2 題）、獅湖 114-1 期中（3 題）、獅湖 114-2 期中（2 題）、內湖 112-1 期中（1 題）、內湖 113-2 期中（1 題）、內湖 113-2 期末（1 題）。本站僅乘法子範圍（三位數×二位數、四位數×二位數、三位數×三位數直式與 0 陷阱），除法另立站點；Q7 原卷選項③誤植已以 8x 截圖目視確認並如實記載，詳 data/units/G4/N-4-2.json",
+          "component_path": "components/g4_mul_lab.html",
+          "concept_path": "components/g4_mul_lab.html"
         },
         {
           "code": "N-4-3",

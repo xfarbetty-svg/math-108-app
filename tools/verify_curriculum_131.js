@@ -55,7 +55,7 @@ const EXPECTED_READY_CODES = [
   'N-3-16', 'N-3-17', 'S-3-2', 'S-3-4', 'R-3-1', 'R-3-2', 'D-3-1',
   'N-2-1', 'N-2-2', 'N-2-3', 'N-2-4', 'N-2-5', 'N-2-6', 'N-2-7', 'N-2-8', 'N-2-9', 'N-2-10', 'N-2-11', 'N-2-12', 'N-2-13', 'N-2-14',
   'S-2-1', 'S-2-2', 'S-2-3', 'S-2-4', 'S-2-5', 'R-2-1', 'R-2-2', 'R-2-3', 'R-2-4', 'D-2-1',
-  'N-4-1'
+  'N-4-1', 'N-4-2'
 ];
 const readyUnits = all.filter((u) => u.status === 'ready');
 check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>N-4-2 較大位數的乘法・直式算理實驗室</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+  :root{--g4-bg:var(--bg-main);--g4-card:var(--bg-card);--g4-line:var(--border-color);--g4-ink:var(--text-primary);--g4-sub:var(--text-secondary);--g4-a:var(--accent-primary);--g4-b:var(--accent-mint);--g4-c:var(--accent-sky);--g4-warn:#c2410c;--g4-hl:#fde68a}
+  html[data-theme="dark"]{--g4-warn:#fca5a5;--g4-hl:#7c5c1e}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+  body{font-family:'Segoe UI','Microsoft JhengHei',Tahoma,sans-serif;background:var(--g4-bg);color:var(--g4-ink);margin:0;padding:8px;height:auto;min-height:0;overflow-x:hidden}
+  .wrap{width:100%;max-width:100%;display:flex;flex-direction:column;gap:4px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10px;color:var(--g4-sub)}
+  .head b{color:var(--g4-ink);font-size:13px}
+  .src{font-size:9.5px;color:var(--g4-sub);line-height:1.25;text-align:right}
+  .stem{background:var(--g4-card);border-left:4px solid var(--g4-a);border-radius:10px;padding:4px 7px;font-size:11px;line-height:1.35;box-shadow:0 2px 8px rgba(0,0,0,.06);min-height:32px}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap}
+  .tab{border:1px solid var(--g4-line);background:var(--g4-card);color:var(--g4-sub);border-radius:14px;padding:3px 8px;font-size:10px;cursor:pointer}
+  .tab.on{background:var(--g4-a);color:#fff;border-color:var(--g4-a)}
+  .board{background:var(--g4-card);border:1px solid var(--g4-line);border-radius:12px;padding:4px 6px;min-height:146px;max-height:156px;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:1px}
+  .cap{font-size:9.5px;color:var(--g4-sub);min-height:13px;text-align:center}
+  .vrow{display:flex;gap:0;justify-content:center;align-items:center}
+  .cell{width:23px;height:23px;display:flex;align-items:center;justify-content:center;font-size:15px;font-family:'Courier New',monospace;font-weight:700;color:var(--g4-ink);position:relative;border-radius:4px}
+  .cell.lab{font-size:8px;color:var(--g4-sub);height:12px;font-weight:400}
+  .cell.op{width:20px;color:var(--g4-a)}
+  .cell.carry{height:12px;font-size:9px;color:var(--g4-warn);font-weight:700}
+  .cell.hl{background:var(--g4-hl);outline:2px solid var(--g4-a)}
+  .cell.zero{color:var(--g4-b)}
+  .prow{opacity:0;transition:opacity .18s}
+  .prow.shown{opacity:1}
+  .hline{width:100%;border-top:2px solid var(--g4-ink);margin:2px 0}
+  .pbadge{font-size:8px;color:var(--g4-b);white-space:nowrap;margin-left:2px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .opt{border:1px solid var(--g4-line);background:var(--g4-card);color:var(--g4-ink);border-radius:9px;padding:4px 6px;font-size:10.5px;cursor:pointer;text-align:left;line-height:1.2}
+  .opt.sel{border-color:var(--g4-a);background:color-mix(in srgb,var(--g4-a) 14%,transparent)}
+  .opt.right{border-color:var(--g4-b);background:color-mix(in srgb,var(--g4-b) 18%,transparent)}
+  .opt.wrong{border-color:var(--g4-warn)}
+  .steps{background:var(--g4-card);border:1px solid var(--g4-line);border-radius:10px;padding:4px 7px;min-height:30px;max-height:50px;overflow:auto;font-size:10.5px;line-height:1.3}
+  .steps b{color:var(--g4-a)}
+  .ln{opacity:0;transition:opacity .2s}
+  .ln.show{opacity:1}
+  .act{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .mini{border:1px solid var(--g4-line);background:var(--g4-card);color:var(--g4-ink);font-size:10px;border-radius:12px;padding:4px 9px;cursor:pointer}
+  .mini.pri{background:var(--g4-a);color:#fff;border-color:var(--g4-a)}
+  .msg{font-size:10px;color:var(--g4-b);min-height:13px}
+  .anom{font-size:9px;color:var(--g4-warn)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><b>N-4-2 較大位數的乘法</b><span id="qtag">第 ? 題 / 10</span></div>
+  <div class="src" id="src"></div>
+  <div class="stem" id="stem"></div>
+  <div class="tabs"><button class="tab on" id="t-act">直式分步算理</button><button class="tab" id="t-hl">高光對齊・補0</button><button class="tab" id="t-carry">進位提示</button></div>
+  <div class="board"><div class="cap" id="cap"></div><div id="v"></div></div>
+  <div class="opts" id="opts"></div>
+  <div class="steps" id="steps"></div>
+  <div class="act"><button class="mini pri" id="next">下一步 ▸</button><button class="mini" id="reset">重置教具</button><span class="msg" id="msg"></span></div>
+  <div class="anom" id="anom"></div>
+</div>
+<script>
+const P=new URLSearchParams(location.search);
+let Q=Math.max(1,Math.min(10,parseInt(P.get('q')||'1',10)||1));
+const L={
+ 1:{s:'高雄市三民區獅湖國小 110-1 期中 p1・三、寫出直式算算看',sec:'直式計算',stem:'寫出直式算算看：58×317＝？',a:58,b:317,c:['18386','13886','18368','18306'],ans:0,
+    t:['先把 58 寫在上、317 寫在下，從乘數個位 7 乘起。','58×7＝406，個位部分積末位對齊個位。','十位 1 代表 1 個十：58×1＝58，末位要對齊十位，個位補 0 → 580。','百位 3 代表 3 個百：58×3＝174，末位對齊百位，後面補兩個 0 → 17400。','406＋580＋17400＝18386。'],
+    trap:'十位部分積 58 若誤對齊個位，會少算一個十；補 0 就是提醒「這一段是幾個十」。'},
+ 2:{s:'高雄市三民區獅湖國小 114-1 期中 p2・三、算算看(2)',sec:'直式計算',stem:'算算看：513×84＝？',a:513,b:84,c:['40932','41392','43092','43029'],ans:2,
+    t:['個位 4：513×4＝2052（4×3＝12 進 1，4×1＋1＝5，4×5＝20）。','十位 8 代表 8 個十：513×8＝4104，末位對齊十位，個位補 0 → 41040。','2052＋41040＝43092。','檢查：三位數×二位數，積約 5 萬，43092 合理。'],
+    trap:'4104 直接寫在 2052 下方而不補 0，會得到 6156，差了 36936。'},
+ 3:{s:'高雄市三民區獅湖國小 114-1 期中 p2・三、算算看(3)',sec:'直式計算・被乘數有 0',stem:'算算看：3008×25＝？',a:3008,b:25,c:['7520','752000','75200','75020'],ans:2,
+    t:['個位 5：3008×5＝15040（0 乘任何數仍是 0，但進位要記）。','十位 2 代表 2 個十：3008×2＝6016，末位對齊十位補 0 → 60160。','15040＋60160＝75200。','被乘數中間的 0 仍要占位，不能跳欄。'],
+    trap:'把 3008 當 38 算會得 950；漏掉中間兩個 0 是經典錯。'},
+ 4:{s:'臺北市內湖區內湖國小 113-2 期中 p2・四、計算題(1)（檔名為南湖國小）',sec:'直式計算・乘數中間有 0',stem:'計算題：1705×206＝？',a:1705,b:206,c:['351023','351230','350230','351203'],ans:1,
+    t:['個位 6：1705×6＝10230。','十位 0：0 乘任何數是 0，但這一行仍要保留并对齊十位（補 0）。','百位 2 代表 2 個百：1705×2＝3410，末位對齊百位，後面補兩個 0 → 341000。','10230＋0＋341000＝351230。'],
+    trap:'看到乘數十位是 0 就整行跳過沒錯，但百位那行必須補兩個 0，錯一個就差 10 倍。'},
+ 5:{s:'高雄市三民區獅湖國小 114-2 期中 p1・四、算算看(1)',sec:'直式計算・兩數皆有 0',stem:'算算看：5008×605＝？',a:5008,b:605,c:['3029840','302984','3028040','30298400'],ans:0,
+    t:['個位 5：5008×5＝25040。','十位 0：該段部分積為 0，仍需保留對齊位置。','百位 6：5008×6＝30048，末位對齊百位補兩個 0 → 3004800。','25040＋0＋3004800＝3029840。'],
+    trap:'補 0 個數取決於乘數位數（百位補兩個），不是看答案有幾個 0。'},
+ 6:{s:'臺北市內湖區內湖國小 112-1 期中 p2・三、做做看 3（檔名為南湖國小）',sec:'末尾有 0',stem:'125×400＝？',a:125,b:400,c:['5000','12500','500000','50000'],ans:3,
+    t:['400 是 4 個百，先算 125×4＝500。','再把百位的兩個 0 補回去：500 後面補兩個 0 → 50000。','用直式看：百位 4 的部分積 500 末位對齊百位，後面兩個 0 就是補位。'],
+    trap:'只補一個 0 得 5000；400 有兩個 0，要補兩個。'},
+ 7:{s:'高雄市三民區獅湖國小 114-1 期中 p1・一、選擇題(6)',sec:'0 的個數陷阱',stem:'選擇題：600×50 的積共有幾個 0？',a:600,b:50,c:['4 個','3 個','2 個','1 個'],ans:0,
+    t:['先算不為 0 的部分：6×5＝30，本身已帶 1 個 0。','600 末尾 2 個 0，50 末尾 1 個 0，共 3 個。','合起來 1＋3＝4 個 0：600×50＝30000。','所以選 4 個。'],
+    trap:'只數因數末尾的 0（3 個）會漏掉 6×5＝30 自帶的那一個。',
+    anomaly:'原卷第三選項誤植為「① 2 個」（① 重複、缺 ③）；本題庫逐字保留選項數值「2 個」，僅將字形校正為③以維持四選項格式。'},
+ 8:{s:'高雄市三民區獅湖國小 114-2 期中 p1・一、選擇題(1)',sec:'末尾 0 等值判斷',stem:'選擇題：「40×500」和下面哪一個算式的答案不同？',a:40,b:500,c:['500×40','40×50','4000×5','400×50'],ans:1,
+    t:['40×500＝20000（4×5＝20，補 3 個 0）。','500×40＝20000（交換律，相同）。','4000×5＝20000；400×50＝20000（皆相同）。','40×50＝2000，少 1 個 0，與 20000 不同，故選②。'],
+    trap:'40×50 只有 2＋1＝3？4×5＝20 帶 1 個 0，加上 40、50 各 1 個共 3 個 → 2000，少一個 0。'},
+ 9:{s:'高雄市三民區獅湖國小 110-1 期中 p1・一、選擇題(3)',sec:'0 的倍數關係',stem:'選擇題：「66×600」是「66×30」的幾倍？',a:66,b:600,c:['600 倍','300 倍','20 倍','3 倍'],ans:2,
+    t:['兩式都有 66，倍數只看 600÷30。','600÷30＝20。','所以 66×600 是 66×30 的 20 倍。'],
+    trap:'直覺選 600 倍是把乘數本身當倍數，忘了要除以 30。'},
+ 10:{s:'臺北市內湖區內湖國小 113-2 期末 p3・九、應用題 3（檔名為南湖國小）',sec:'文字應用題・簡算',stem:'一盒益智桌遊 125 元，一箱有 18 盒，學校買 8 箱共要付多少元？',a:1000,b:18,c:['18000 元','2250 元','8325 元','1800 元'],ans:0,
+    t:['原式的算式：125×18×8。','用乘法結合律先算好算的：125×8＝1000。','再算 1000×18＝18000 元。','直式如下呈現重組後的 1000×18。'],
+    trap:'照順序硬算 125×18＝2250 再×8 也可以，但較慢；2250 元是只算一箱的干擾項。'}
+};
+if(P.get('theme')==='dark'||P.get('theme')==='light')document.documentElement.dataset.theme=P.get('theme');
+const d=L[Q],board=document.getElementById('v'),opts=document.getElementById('opts'),steps=document.getElementById('steps'),msg=document.getElementById('msg');
+document.getElementById('qtag').textContent='第 '+Q+' 題 / 10';
+document.getElementById('src').textContent='真題出處：'+d.s;
+document.getElementById('stem').textContent=d.stem;
+document.getElementById('anom').textContent=d.anomaly?('⚠ 原卷註記：'+d.anomaly):'';
+document.getElementById('cap').textContent=(d.a===1000?'重組後：1000 × 18（原 125×18×8）':d.a+' × '+d.b)+'　—　點「下一步」逐段揭示部分積';
+let picked=-1,stepN=0,hl=false,mode='act';
+
+function place(str,shift,n){const c=Array(n).fill('');const s=n-str.length-shift;for(let i=0;i<str.length;i++)c[s+i]=str[i];return c;}
+function carries(a,d){const ds=String(a).split('').reverse().map(Number);let c=0;const out=[];for(let i=0;i<ds.length;i++){out[i]=c;c=Math.floor((ds[i]*d+c)/10);}return out;}
+function cell(txt,cls){return '<div class="cell '+(cls||'')+'">'+txt+'</div>';}
+function row(cells,cls){return '<div class="vrow '+(cls||'')+'">'+cells.join('')+'</div>';}
+
+function render(){
+  const ds=String(d.b).split('');
+  const parts=ds.map((x,i)=>({d:+x,shift:ds.length-1-i,val:d.a*(+x)})).reverse();
+  const need=Math.max(String(d.a).length,String(d.a*d.b).length,...parts.map(p=>String(p.val).length+p.shift));
+  const n=need;
+  const labs=['千萬','百萬','十萬','萬','千','百','十','個'].slice(-n);
+  let h=row(labs.map(x=>cell(x,'lab')));
+  const c0=carries(d.a,ds[ds.length-1]);
+  const aStr=String(d.a).split('');
+  const carryCells=Array(n).fill('');
+  aStr.forEach((ch,i)=>{const pos=n-aStr.length+i;const into=c0[aStr.length-1-i];if(into>0)carryCells[pos]=String(into);});
+  h+=row(carryCells.map(x=>cell(x,'carry')));
+  h+=row([cell('','')].concat(place(String(d.a),0,n).map(x=>cell(x))));
+  h+=row([cell('×','op')].concat(ds.map((x,i)=>cell(x))));
+  h+='<div class="hline"></div>';
+  parts.forEach((p,i)=>{
+    const cs=place(String(p.val),p.shift,n);
+    for(let k=0;k<p.shift;k++)cs[n-1-k]='0';
+    const realIdx=n-1-p.shift;
+    const cells=cs.map((x,j)=>cell(x,(p.shift&&j>=realIdx?'zero ':'')+((hl&&(j===realIdx||j>realIdx))?'hl':'')));
+    cells.push('<span class="pbadge">'+(p.shift?'補'+p.shift+'個0 → '+p.val*Math.pow(10,p.shift):'個位部分積')+'</span>');
+    h+=row(cells,'prow'+(i<stepN?' shown':''));
+  });
+  h+='<div class="hline"></div>';
+  if(stepN>parts.length)h+=row(place(String(d.a*d.b),0,n).map(x=>cell(x)));
+  board.innerHTML=h;
+  const vis=board.querySelectorAll('.prow.shown').length;
+  document.getElementById('msg').textContent=stepN===0?'先選答案，再按「下一步」':(stepN<=parts.length?'已揭示 '+vis+' 段部分積'+(hl?'・高亮對齊與補 0':''):'答案 '+d.a*d.b);
+  steps.innerHTML=d.t.map((x,i)=>'<div class="ln'+((picked>=0&&i<stepN)?' show':'')+'">'+(i+1)+'. '+x+'</div>').join('')+(picked>=0?'<div class="ln show"><b>陷阱：</b>'+d.trap+'</div>':'<div>選出答案後，點「下一步」看算理拆解。</div>');
+}
+function renderOpts(){
+  opts.innerHTML=d.c.map((x,i)=>'<div class="opt'+(picked===i?(i===d.ans?' right':' wrong'):'')+'" data-i="'+i+'">'+(i+1)+'. '+x+'</div>').join('');
+  opts.onclick=e=>{const o=e.target.closest('.opt');if(!o||picked>=0)return;picked=+o.dataset.i;stepN=0;renderOpts();render();msg.textContent=picked===d.ans?'答對了！點下一步看算理':'再想想，點下一步看算理拆解';};
+}
+document.getElementById('next').onclick=()=>{
+  const nparts=String(d.b).length;
+  if(picked<0){msg.textContent='請先選一個答案';return;}
+  if(stepN<=nparts)stepN++;else stepN=nparts+1;
+  render();
+};
+document.getElementById('reset').onclick=()=>{picked=-1;stepN=0;hl=false;renderOpts();render();};
+document.getElementById('t-hl').onclick=()=>{hl=!hl;mode=hl?'hl':'act';document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.getElementById('t-hl').classList.toggle('on',hl);if(!hl)document.getElementById('t-act').classList.add('on');render();};
+document.getElementById('t-carry').onclick=()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.getElementById('t-carry').classList.add('on');msg.textContent='進位數字顯示在被乘數上方的紅色小字（依個位相乘計算）。';render();};
+document.getElementById('t-act').onclick=()=>{hl=false;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.getElementById('t-act').classList.add('on');render();};
+renderOpts();render();
+</script>
+</body>
+</html>
