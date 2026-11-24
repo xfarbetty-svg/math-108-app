@@ -91,10 +91,13 @@ function renderSteps(){
 }
 function render0(){
   $('cap').textContent='活動一：拖曳算式積木與括號卡，拼出單一併式（真實 pointerdown / move / up）';
-  const parts=d.exp.replace(/[()]/g,'').split(/[＋＋+\-−×÷]/);
-  const op=d.exp.match(/[＋+\-−×÷]/g).slice(-1)[0];
-  const pool=[card('lp','(',1),card('e1',parts[0]),card('rp',')',1),card('op',op+' '+parts[parts.length-1])];
-  const names=['左括號','第一步算式','右括號','運算＋後段'];
+  const e=d.exp, f=d.first;
+  let asm;
+  if(e.startsWith('(')){const close=e.indexOf(')');asm=['(',e.slice(1,close),e.slice(close)];}
+  else if(e.includes('(')){const i=e.indexOf('('),close=e.indexOf(')');asm=[e.slice(0,i+1),e.slice(i+1,close),e.slice(close)];}
+  else{asm=['（無括號）',f,e.replace(f,'')];}
+  const pool=[card('pre',asm[0],asm[0].includes('(')?1:0),card('e1',asm[1]),card('post',asm[2])];
+  const names=['前段','先算的算式','後段'];
   $('zone').innerHTML='<div class="pool" id="pool">'+pool.join('')+'</div><div class="slots" id="slots">'+names.map((n,i)=>'<div class="slot" data-i="'+i+'">'+n+'</div>').join('')+'</div>';
   bindDrag();
 }
@@ -110,7 +113,7 @@ function bindDrag(){
       const under=document.elementFromPoint(ev.clientX,ev.clientY);
       const slot=under&&under.closest?under.closest('.slot'):null;
       if(slot&&!slot.firstChild){
-        const want=['lp','e1','rp','op'][+slot.dataset.i];
+        const want=['pre','e1','post'][+slot.dataset.i];
         slot.appendChild(c);slot.classList.add('filled');
         slot.textContent='';slot.appendChild(c);
         if(c.dataset.k===want)c.style.borderColor='var(--n43-b)';else c.style.borderColor='var(--n43-warn)';
@@ -123,7 +126,7 @@ function bindDrag(){
 }
 function check(){
   const got=[...document.querySelectorAll('.slot')].map(s=>s.firstChild&&s.firstChild.dataset?s.firstChild.dataset.k:null);
-  const want=['lp','e1','rp','op'];
+  const want=['pre','e1','post'];
   const ok=want.every((k,i)=>got[i]===k);
   if(ok){$('msg').textContent='✓ 拼式成功：'+(d.need?'括號不可省！':'此題括號可省略');stepN=3;renderSteps();}
   else if(got.filter(Boolean).length===4)$('msg').textContent='✗ 順序不對，想想「先算的要加括號嗎？」';
