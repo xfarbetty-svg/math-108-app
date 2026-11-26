@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-13 日常時間的計算・108課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --elev:var(--bg-elevated);
+  --ink:var(--text-primary); --soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --ok:#15803d; --warn:#b91c1c;
+  --shadow:0 4px 12px var(--shadow-color); --radius:11px;
+}
+html[data-theme="dark"]{--ok:#4ade80;--warn:#fca5a5;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{margin:0;padding:8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:520px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:20px;font-size:10px;color:var(--soft)}
+.head b{font-size:11.5px;color:var(--ink);font-weight:900}
+.head-right{display:flex;align-items:center;gap:5px}
+#btn-theme{width:24px;height:24px;flex:0 0 24px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center}
+#modeTag{font-size:9.5px;font-weight:800;color:var(--a);white-space:nowrap}
+.tabs{display:flex;gap:4px;background:var(--elev);padding:3px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;color:var(--soft);white-space:nowrap}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+body.q-mode .tabs{display:none!important}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.badge{background:var(--elev);color:var(--a);font-size:9px;font-weight:900;padding:2px 6px;border-radius:999px;white-space:nowrap}
+.title{font-size:11.5px;font-weight:900;color:var(--ink);line-height:1.25}
+.desc{font-size:10px;line-height:1.35;color:var(--soft)}
+.box{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:5px 7px;display:flex;flex-direction:column;gap:4px}
+.actrow{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.actbtn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:7px;padding:3px 8px;font-size:10px;font-weight:900;transition:transform .08s}
+.actbtn.main{border-color:var(--a);color:var(--a)}
+.actbtn.sel,.actbtn.active{background:var(--a);color:#fff;border-color:var(--a)}
+.actbtn:active{transform:translateY(1px)}
+.msg{background:var(--elev);border:1px solid var(--line);border-radius:7px;padding:4px 7px;font-size:10px;line-height:1.3;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.msg.ok{border-color:var(--ok);color:var(--ok)}
+.msg.warn{border-color:var(--warn);color:var(--warn)}
+.explain{display:grid;grid-template-columns:36px 1fr;gap:2px 5px;font-size:9.5px;line-height:1.3;background:var(--elev);border-radius:7px;padding:4px 6px;border:1px dashed var(--line)}
+.explain .k{color:var(--a);font-weight:900;white-space:nowrap}
+.explain .v{color:var(--ink);min-width:0;word-break:break-word}
+.explain .trap{color:var(--warn)}
+[hidden]{display:none!important}
+
+/* SVG 時間軸與互動區 */
+.tl-svg{width:100%;height:auto;display:block;touch-action:none;user-select:none}
+.tl-label{font-size:10px;font-weight:800;fill:var(--ink)}
+.tl-sub{font-size:9px;font-weight:700;fill:var(--soft)}
+.tl-accent{font-size:10px;font-weight:900;fill:var(--a)}
+.tl-ok{font-size:10px;font-weight:900;fill:var(--ok)}
+
+/* 複名數對齊直式板 */
+.col-board{display:grid;grid-template-columns:22px 1fr 22px 1fr 22px;gap:1px 3px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:4px 6px;font-variant-numeric:tabular-nums;font-size:11.5px;font-weight:900}
+.col-h{font-size:9px;color:var(--soft);text-align:center;border-bottom:1px dashed var(--line);padding-bottom:1px}
+.col-v{text-align:right;padding:1px 4px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+.col-u{font-size:9.5px;color:var(--soft);text-align:left}
+.col-op{text-align:center;color:var(--a);font-size:12px}
+.col-line{grid-column:1/-1;height:1.5px;background:var(--ink);margin:1px 0;opacity:.75}
+.strike{text-decoration:line-through;opacity:.45;font-size:10px;margin-right:2px}
+.hi{color:var(--a);background:rgba(244,105,75,.14)}
+html[data-theme="dark"] .hi{background:rgba(59,130,118,.28)}
+.ok-cell{color:var(--ok)}
+
+/* 廠字形長除法網格 (Q01) */
+.ldiv{display:inline-grid;grid-template-columns:24px repeat(3,20px);gap:1px 2px;align-items:center;justify-items:center;background:var(--card);border:1px solid var(--line);border-radius:7px;padding:4px 8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:900;margin:0 auto}
+.ld-q{color:var(--ok)}
+.ld-div{border-right:2px solid var(--ink);border-radius:0 0 5px 0;padding-right:4px}
+.ld-top{border-top:2px solid var(--ink);width:100%;text-align:center}
+.ld-sub{border-bottom:1.5px solid var(--ink);width:100%;text-align:center}
+
+/* 左右雙欄緊湊排版 */
+.two-col{display:grid;grid-template-columns:auto 1fr;gap:6px;align-items:center}
+.two-col-right{display:flex;flex-direction:column;gap:4px;min-width:0}
+
+/* 互動輸入列 */
+.inp-row{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;font-size:10.5px;font-weight:800}
+.num-inp{width:46px;padding:2px 4px;border:1.5px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);font-size:12px;font-weight:900;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.num-inp:focus{outline:none;border-color:var(--a)}
+.chip-row{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap}
+.chip{background:var(--card);border:1.5px solid var(--line);border-radius:7px;padding:3px 7px;font-size:10.5px;font-weight:900;font-variant-numeric:tabular-nums}
+.chip.accent{border-color:var(--a);color:var(--a)}
+.chip.ok{border-color:var(--ok);color:var(--ok)}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.pick-card{background:var(--card);border:1.5px solid var(--line);border-radius:7px;padding:4px 6px;font-size:9.5px;font-weight:800;text-align:left;line-height:1.25;transition:border-color .12s}
+.pick-card.sel{border-color:var(--a);background:rgba(244,105,75,.10)}
+html[data-theme="dark"] .pick-card.sel{background:rgba(59,130,118,.22)}
+input[type=range]{width:100%;accent-color:var(--a);height:16px}
+
+@media (max-width:390px){
+  .head b{font-size:11px}
+  .tab{font-size:9.5px;padding:4px 6px}
+  .title{font-size:11px}
+  .col-v{font-size:11px}
+}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <b>N-4-13 日常時間的計算・跨日／跨時／跨分</b>
+    <div class="head-right"><span id="modeTag">🌱 概念探索</span><button id="btn-theme" type="button" aria-label="切換主題">🌙</button></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" type="button" data-act="0">活動一・跨日作息</button>
+    <button class="tab" type="button" data-act="1">活動二・跨時旅程</button>
+    <button class="tab" type="button" data-act="2">活動三・跨分直式</button>
+  </nav>
+
+  <section class="panel" id="act0"></section>
+  <section class="panel" id="act1" hidden></section>
+  <section class="panel" id="act2" hidden></section>
+  <section class="panel" id="examPanel" hidden></section>
+</div>
+
+<script>
+const P = new URLSearchParams(location.search);
+const qParam = parseInt(P.get('q') || '0', 10);
+const EXAM = qParam >= 1 && qParam <= 10;
+const Q = EXAM ? qParam : 1;
+const $ = id => document.getElementById(id);
+
+window.__N413_MODE__ = EXAM ? 'exam' : 'concept';
+window.__N413_Q__ = Q;
+
+/* 主題同步 */
+function applyTheme(t) {
+  const theme = t === 'dark' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  $('btn-theme').textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+applyTheme(P.get('theme') || localStorage.getItem('math108_theme') || 'light');
+$('btn-theme').onclick = () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('math108_theme', next);
+  applyTheme(next);
+};
+window.addEventListener('message', e => {
+  if (e && e.data && e.data.type === 'THEME_CHANGE') applyTheme(e.data.theme);
+});
+
+/* ================= 觀念探索模式（三道獨立生活情境，與真題零重複） ================= */
+let actIdx = 0;
+let c1Cursor = 585; // 露營睡眠：20:30 到 隔天06:15 = 585分 (9時45分)
+let c2Step = 0;     // 高鐵旅程：10:40 + 2時35分
+let c3Op = 'add';   // 烘焙教室：add (25分20秒+18分50秒) | sub (40分15秒-16分42秒)
+let c3Step = 0;
+
+function fmtHM(totalMin) {
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return `${h} 小時 ${m} 分鐘`;
+}
+
+function renderAct0() {
+  // 情境：小宇的星空露營日誌（晚上 8:30 入睡 → 隔天早上 6:15 起床）
+  // 總共 585 分鐘：前段 210 分 (20:30~24:00)，後段 375 分 (00:00~06:15)
+  const ratio = Math.max(0, Math.min(1, c1Cursor / 585));
+  const curMin = Math.round(c1Cursor);
+  const absMin = (20 * 60 + 30 + curMin) % 1440;
+  const ch = Math.floor(absMin / 60), cm = absMin % 60;
+  const dayTag = (20 * 60 + 30 + curMin) >= 1440 ? '隔天' : '今天';
+  const curStr = `${dayTag} ${String(ch).padStart(2, '0')}:${String(cm).padStart(2, '0')}`;
+  const xEnd = 36 + 290 * ratio;
+  const xMid = 36 + 290 * (210 / 585); // 午夜 24:00 位置
+
+  $('act0').innerHTML = `
+    <div class="card-head"><span class="badge">🌱 活動一・跨日作息時間線</span><span class="title">星空露營睡眠紀錄（午夜分段法）</span></div>
+    <p class="desc">小宇 <b>晚上 8 時 30 分</b>（20:30）入睡，<b>隔天早上 6 時 15 分</b>（06:15）起床。拖動時間軸觀察如何以「午夜 24:00」分段！</p>
+    <div class="box">
+      <svg class="tl-svg" id="c1Svg" viewBox="0 0 360 76" aria-label="跨日時間軸">
+        <rect x="36" y="28" width="290" height="10" rx="5" fill="var(--card)" stroke="var(--line)"/>
+        <rect x="36" y="28" width="${Math.max(0, Math.min(xEnd, xMid) - 36).toFixed(1)}" height="10" rx="5" fill="var(--sky)"/>
+        ${xEnd > xMid ? `<rect x="${xMid.toFixed(1)}" y="28" width="${(xEnd - xMid).toFixed(1)}" height="10" rx="5" fill="var(--mint)"/>` : ''}
+        <line x1="${xMid.toFixed(1)}" y1="18" x2="${xMid.toFixed(1)}" y2="48" stroke="var(--a)" stroke-width="2" stroke-dasharray="3 2"/>
+        <circle cx="36" cy="33" r="4.5" fill="var(--a)"/>
+        <circle cx="${xEnd.toFixed(1)}" cy="33" r="6" fill="var(--a)" stroke="var(--card)" stroke-width="2"/>
+        <text x="36" y="16" text-anchor="middle" class="tl-sub">20:30</text>
+        <text x="${xMid.toFixed(1)}" y="14" text-anchor="middle" class="tl-accent">午夜 24:00 (0:00)</text>
+        <text x="326" y="16" text-anchor="middle" class="tl-sub">隔天 06:15</text>
+        <text x="88" y="57" text-anchor="middle" class="tl-label">今天段：3 時 30 分</text>
+        <text x="235" y="57" text-anchor="middle" class="tl-label">隔天段：6 時 15 分</text>
+        <text x="180" y="71" text-anchor="middle" class="tl-ok">目前停在 ${curStr}（已過 ${fmtHM(curMin)}）</text>
+      </svg>
+      <div class="actrow">
+        <button class="actbtn ${curMin === 210 ? 'sel' : ''}" type="button" data-cur="210">停在午夜 (3時30分)</button>
+        <button class="actbtn main ${curMin === 585 ? 'sel' : ''}" type="button" data-cur="585">到起床 (9時45分)</button>
+      </div>
+    </div>
+    <div class="msg ok">💡 跨日分段：先算今天到午夜 24:00（3時30分），再加隔天凌晨（6時15分）＝ <b>9 小時 45 分鐘</b>。</div>
+  `;
+
+  const svg = $('c1Svg');
+  let dragging = false;
+  const updateFromClientX = (clientX) => {
+    const r = svg.getBoundingClientRect();
+    const vx = ((clientX - r.left) / r.width) * 360;
+    const f = Math.max(0, Math.min(1, (vx - 36) / 290));
+    c1Cursor = Math.round(f * 585);
+    renderAct0();
+  };
+  svg.addEventListener('pointerdown', e => { dragging = true; svg.setPointerCapture && svg.setPointerCapture(e.pointerId); updateFromClientX(e.clientX); });
+  svg.addEventListener('pointermove', e => { if (dragging) updateFromClientX(e.clientX); });
+  svg.addEventListener('pointerup', () => { dragging = false; });
+  $('act0').querySelectorAll('[data-cur]').forEach(b => b.onclick = () => { c1Cursor = +b.dataset.cur; renderAct0(); });
+}
+
+function renderAct1() {
+  // 情境：小晴搭高鐵看海（10 時 40 分發車 ＋ 行車 2 小時 35 分鐘）
+  const p1 = c2Step >= 1;
+  const p2 = c2Step >= 2;
+  const timeText = !p1 ? '10 時 40 分（出發）' : !p2 ? '12 時 40 分（＋2 小時）' : '13 時 15 分 ＝ 下午 1 時 15 分';
+
+  $('act1').innerHTML = `
+    <div class="card-head"><span class="badge">🌱 活動二・跨時旅程推算</span><span class="title">高鐵看海時刻表（12 時制 ↔ 24 時制）</span></div>
+    <p class="desc">小晴搭高鐵 <b>上午 10 時 40 分</b>出發，車程 <b>2 小時 35 分鐘</b>，什麼時候到達海邊車站？</p>
+    <div class="box">
+      <svg class="tl-svg" viewBox="0 0 360 66" aria-label="高鐵跨午時刻線">
+        <line x1="28" y1="36" x2="332" y2="36" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="48" cy="36" r="5" fill="var(--a)"/>
+        <text x="48" y="54" text-anchor="middle" class="tl-label">10:40 出發</text>
+        ${p1 ? `<path d="M48,32 Q128,8 208,32" fill="none" stroke="var(--sky)" stroke-width="2.5"/>
+                <text x="128" y="14" text-anchor="middle" class="tl-accent">＋2 小時</text>
+                <circle cx="208" cy="36" r="5" fill="var(--sky)"/>
+                <text x="208" y="54" text-anchor="middle" class="tl-label">12:40</text>` : ''}
+        ${p2 ? `<path d="M208,32 Q256,12 304,32" fill="none" stroke="var(--mint)" stroke-width="2.5"/>
+                <text x="256" y="14" text-anchor="middle" class="tl-ok">＋35 分（滿60進1時）</text>
+                <circle cx="304" cy="36" r="5.5" fill="var(--ok)"/>
+                <text x="304" y="54" text-anchor="middle" class="tl-ok">13:15 (下午1:15)</text>` : ''}
+      </svg>
+      <div class="chip-row">
+        <span class="chip ${p2 ? 'ok' : 'accent'}">目前時刻：${timeText}</span>
+      </div>
+      <div class="actrow">
+        <button class="actbtn main" id="c2S1" type="button">① 先加 2 小時</button>
+        <button class="actbtn" id="c2S2" type="button">② 再加 35 分鐘</button>
+        <button class="actbtn" id="c2Rst" type="button">重置</button>
+      </div>
+    </div>
+    <div class="msg ${p2 ? 'ok' : ''}">
+      ${!p1 ? '點擊「① 先加 2 小時」，先跳到中午 12 時 40 分。' : !p2 ? '12 時 40 分 ＋ 35 分 ＝ 12 時 75 分，75 分滿 60 進 1 時！' : '✅ 12 時 75 分 ＝ 13 時 15 分；減去 12 時就是「下午 1 時 15 分」。'}
+    </div>
+  `;
+  $('c2S1').onclick = () => { c2Step = 1; renderAct1(); };
+  $('c2S2').onclick = () => { c2Step = 2; renderAct1(); };
+  $('c2Rst').onclick = () => { c2Step = 0; renderAct1(); };
+}
+
+function renderAct2() {
+  // 情境：烘焙教室烤餅乾（進位加法 25分20秒 + 18分50秒 / 退位減法 40分15秒 - 16分42秒）
+  const isAdd = c3Op === 'add';
+  const step1 = c3Step >= 1;
+  const step2 = c3Step >= 2;
+  const board = isAdd ? `
+    <div class="col-board">
+      <span></span><span class="col-h">分</span><span></span><span class="col-h">秒</span><span></span>
+      <span class="col-op"></span><span class="col-v">25</span><span class="col-u">分</span><span class="col-v">20</span><span class="col-u">秒</span>
+      <span class="col-op">＋</span><span class="col-v">18</span><span class="col-u">分</span><span class="col-v">50</span><span class="col-u">秒</span>
+      <div class="col-line"></div>
+      <span class="col-op">＝</span>
+      <span class="col-v ${step2 ? 'ok-cell' : ''}">${!step1 ? '?' : !step2 ? '43' : '<span class="strike">43</span><span class="hi">44</span>'}</span><span class="col-u">分</span>
+      <span class="col-v ${step2 ? 'ok-cell' : ''}">${!step1 ? '?' : !step2 ? '70' : '<span class="strike">70</span><span class="hi">10</span>'}</span><span class="col-u">秒</span>
+    </div>` : `
+    <div class="col-board">
+      <span></span><span class="col-h">分</span><span></span><span class="col-h">秒</span><span></span>
+      <span class="col-op"></span><span class="col-v">${step1 ? '<span class="strike">40</span><span class="hi">39</span>' : '40'}</span><span class="col-u">分</span>
+      <span class="col-v">${step1 ? '<span class="strike">15</span><span class="hi">75</span>' : '15'}</span><span class="col-u">秒</span>
+      <span class="col-op">−</span><span class="col-v">16</span><span class="col-u">分</span><span class="col-v">42</span><span class="col-u">秒</span>
+      <div class="col-line"></div>
+      <span class="col-op">＝</span>
+      <span class="col-v ${step2 ? 'ok-cell' : ''}">${step2 ? '23' : '?'}</span><span class="col-u">分</span>
+      <span class="col-v ${step2 ? 'ok-cell' : ''}">${step2 ? '33' : '?'}</span><span class="col-u">秒</span>
+    </div>`;
+
+  $('act2').innerHTML = `
+    <div class="card-head"><span class="badge">🌱 活動三・跨分 60 進位直式</span><span class="title">烘焙教室計時器（滿 60 進 1 / 借 1 變 60）</span></div>
+    <p class="desc">${isAdd ? '餅乾發酵 <b>25 分 20 秒</b>、烘烤 <b>18 分 50 秒</b>，共花多久？' : '原訂烘焙 <b>40 分 15 秒</b>，提早 <b>16 分 42 秒</b>結束，實際烤了多久？'}</p>
+    <div class="box">
+      <div class="actrow">
+        <button class="actbtn ${isAdd ? 'sel' : ''}" type="button" data-op="add">進位加法（發酵＋烘烤）</button>
+        <button class="actbtn ${!isAdd ? 'sel' : ''}" type="button" data-op="sub">退位減法（提早結束）</button>
+      </div>
+      ${board}
+      <div class="actrow">
+        <button class="actbtn main" id="c3S1" type="button">${isAdd ? '① 先各欄相加' : '① 借 1 分＝60 秒'}</button>
+        <button class="actbtn" id="c3S2" type="button">${isAdd ? '② 滿 60 秒進 1 分' : '② 算出剩餘時間'}</button>
+        <button class="actbtn" id="c3Rst" type="button">重置</button>
+      </div>
+    </div>
+    <div class="msg ${step2 ? 'ok' : ''}">
+      ${isAdd
+        ? (!step1 ? '秒數與分數先各自相加，再檢查有沒有超過 60 秒。' : !step2 ? '得到 43 分 70 秒，70 秒已經滿 60 秒囉！' : '✅ 70 秒 ＝ 1 分 10 秒，進位後共 44 分 10 秒。')
+        : (!step1 ? '15 秒不夠減 42 秒！從 40 分借 1 分變 60 秒。' : !step2 ? '40 分 15 秒變成 39 分 75 秒，現在可以相減了。' : '✅ 75 − 42 ＝ 33 秒，39 − 16 ＝ 23 分 → 23 分 33 秒。')}
+    </div>
+  `;
+  $('act2').querySelectorAll('[data-op]').forEach(b => b.onclick = () => { c3Op = b.dataset.op; c3Step = 0; renderAct2(); });
+  $('c3S1').onclick = () => { c3Step = 1; renderAct2(); };
+  $('c3S2').onclick = () => { c3Step = 2; renderAct2(); };
+  $('c3Rst').onclick = () => { c3Step = 0; renderAct2(); };
+}
+
+function setAct(idx) {
+  actIdx = idx;
+  document.querySelectorAll('#tabs .tab').forEach((b, i) => b.classList.toggle('active', i === idx));
+  [0, 1, 2].forEach(i => { $('act' + i).hidden = i !== idx; });
+  if (idx === 0) renderAct0();
+  if (idx === 1) renderAct1();
+  if (idx === 2) renderAct2();
+}
+document.querySelectorAll('#tabs .tab').forEach(b => b.onclick = () => setAct(+b.dataset.act));
+
+/* ================= 真題演練模式 (?q=1..10，零劇透＋一步一步看算理) ================= */
+const EXPLAINS = {
+  1: { concept:'1 小時＝60 分鐘，總分鐘數除以 60，商是小時、餘數是分鐘。', steps:['209 ÷ 60＝3 餘 29','60×3＝180，209−180＝29','3 小時 29 分鐘'], trap:'誤用十進位把 209 拆成 2 小時 9 分' },
+  2: { concept:'「時刻」是某個時間點；「時間」是經過的長短。', steps:['上午 6 點、1 時 58 分、上午 9 點皆為時刻','「花了 55 分鐘」是經過時間量'], trap:'看到數字就誤認成時間量' },
+  3: { concept:'日與時是 24 進位，但月的天數有 28~31 日，並非 24 進位。', steps:['時分秒＝60 進位；1 天＝1440 分','24 時制 0 時＝午夜 12 時','「小時、日、月用 24 進位」錯誤'], trap:'忽略敘述中多出的「月」字' },
+  4: { concept:'日與時相加，小時滿 24 進位成 1 日。', steps:['17＋9＝26 時，5＋3＝8 日','26 時＝1 日 2 時','8＋1＝9 日 2 小時'], trap:'忘記把 26 小時進位或誤用 60 進位' },
+  5: { concept:'秒不夠減時，向「分」借 1 分＝60 秒。', steps:['7 分 13 秒借 1 分＝6 分 73 秒','73−35＝38 秒，6−2＝4 分','4 分 38 秒'], trap:'借 1 分誤當成 100 秒或倒過來減' },
+  6: { concept:'同日經過時間＝結束時刻−開始時刻（借 1 時＝60 分）。', steps:['15 時 26 分−10 時 49 分','借 1 時成 14 時 86 分','86−49＝37 分，14−10＝4 時'], trap:'直接算 49−26 或忘記 15 退成 14' },
+  7: { concept:'跨午先把下午加 12 時換成 24 時制，再相減。', steps:['下午 2:15＝14:15','借 1 時成 13:75 − 9:30','4 小時 45 分鐘'], trap:'沒換 24 時制就直接相減' },
+  8: { concept:'跨午夜可用分段法：今天到 24 時 ＋ 隔天凌晨。', steps:['23:45 到 24:00＝15 分','0:00 到 04:25＝4 時 25 分','15 分＋4 時 25 分＝4 時 40 分'], trap:'直接拿 11:45 減 4:25 算反方向' },
+  9: { concept:'求起飛時刻往回減；35 小時＝1 日 11 小時。', steps:['5/23 下午 8 時＝23 日 20 時','23 日 20 時−1 日 11 時＝22 日 9 時','5 月 22 日上午 9 時'], trap:'加減方向搞反或弄錯上下午' },
+  10:{ concept:'1/1 凌晨往回推跨年，借 1 日變 12/31 的 25 時。', steps:['1/1 01:10＝12/31 25:10','借 1 時成 24:70 − 3:30＝21:40','12/31 下午 9 時 40 分'], trap:'21:40 忘記換成 12 時制下午 9:40' }
+};
+
+const st = { step: 0, shown: false, msg: '', ok: null, pick: null, uA: '', uB: '' };
+
+function explainHTML(q) {
+  const e = EXPLAINS[q];
+  return `<div class="explain" id="stepsBox" ${st.shown ? '' : 'hidden'}>
+    <span class="k">觀念</span><span class="v">${e.concept}</span>
+    <span class="k">步驟</span><span class="v">${e.steps.join(' → ')}</span>
+    <span class="k trap">陷阱</span><span class="v trap">${e.trap}</span>
+  </div>`;
+}
+
+function renderExamStage() {
+  const s = st.step;
+  if (Q === 1) {
+    // 209 分鐘 ÷ 60 標準廠字形長除法網格
+    return `
+      <div class="two-col">
+        <div class="ldiv" aria-label="209除以60長除法直式">
+          <span></span><span></span><span></span><span class="ld-q">${s >= 1 ? '3' : '?'}</span>
+          <span class="ld-div">60</span><span class="ld-top">2</span><span class="ld-top">0</span><span class="ld-top">9</span>
+          <span></span><span class="ld-sub">${s >= 1 ? '1' : ''}</span><span class="ld-sub">${s >= 1 ? '8' : ''}</span><span class="ld-sub">${s >= 1 ? '0' : ''}</span>
+          <span></span><span></span><span class="hi">${s >= 1 ? '2' : ''}</span><span class="hi">${s >= 1 ? '9' : ''}</span>
+        </div>
+        <div class="two-col-right">
+          <div class="desc">每 <b>60 分鐘</b> 裝成 1 小時，用長除法算 <b>209 ÷ 60</b>。</div>
+          <div class="actrow">
+            <button class="actbtn main" id="qAct1" type="button">${s >= 1 ? '✓ 已試商 3（餘 29）' : '① 試商 60×3'}</button>
+            <button class="actbtn" id="qRst" type="button">重置</button>
+          </div>
+          <div class="inp-row">
+            <input class="num-inp" id="inpA" type="number" min="0" placeholder="?" value="${st.uA}"> 時
+            <input class="num-inp" id="inpB" type="number" min="0" placeholder="?" value="${st.uB}"> 分
+          </div>
+        </div>
+      </div>`;
+  }
+  if (Q === 2) {
+    const items = ['上午 6 點起床', '凌晨 1 時 58 分地震', '花了 55 分鐘拼圖', '上午 9 點趕到機場'];
+    const info = st.pick === null ? '點選上方任一句話，在時間軸上檢驗它是「時刻（點）」還是「時間（段）」！'
+      : st.pick === 2 ? '「花了 55 分鐘」代表經過的一段長度（起點到終點的距離），屬於時間量！'
+      : `「${items[st.pick]}」只標出鐘面上的某一個時間點，屬於「時刻」。`;
+    return `
+      <div class="card-grid">
+        ${items.map((t, i) => `<button class="pick-card ${st.pick === i ? 'sel' : ''}" type="button" data-pick="${i}">${t}</button>`).join('')}
+      </div>
+      <svg class="tl-svg" viewBox="0 0 360 36" aria-label="時刻與時間量對照">
+        <line x1="24" y1="20" x2="336" y2="20" stroke="var(--line)" stroke-width="2.5"/>
+        ${st.pick !== null && st.pick !== 2 ? `<circle cx="180" cy="20" r="6" fill="var(--a)"/><text x="180" y="11" text-anchor="middle" class="tl-accent">單一時間點＝時刻</text>` : ''}
+        ${st.pick === 2 ? `<rect x="90" y="15" width="180" height="10" rx="5" fill="var(--mint)"/><text x="180" y="11" text-anchor="middle" class="tl-ok">經過的一段長度＝時間（時間量）</text>` : ''}
+      </svg>
+      <div class="msg">${info}</div>`;
+  }
+  if (Q === 3) {
+    const rules = [
+      { k: '24 時制的 0 時', v: '午夜 12 時（即 12 時制的上午 12 時 / 凌晨 0 時）' },
+      { k: '時・分・秒進位', v: '1 時＝60 分、1 分＝60 秒（60 進位）' },
+      { k: '日・月進位檢查', v: '1 日＝24 時，但 1 個月有 28/29/30/31 日（非 24 進位）' },
+      { k: '1 天總分鐘數', v: '24 × 60 ＝ 1440 分鐘' }
+    ];
+    return `
+      <div class="card-grid">
+        ${rules.map((r, i) => `<button class="pick-card ${st.pick === i ? 'sel' : ''}" type="button" data-pick="${i}"><b>${r.k}</b></button>`).join('')}
+      </div>
+      <div class="msg">${st.pick !== null ? '🔎 ' + rules[st.pick].v : '點選任一項目檢驗它的進位規則是否成立！'}</div>`;
+  }
+  if (Q === 4 || Q === 5 || Q === 6) {
+    const cfg = {
+      4: { u1: '日', u2: '時', a1: 5, a2: 17, op: '＋', b1: 3, b2: 9, s1_1: 8, s1_2: 26, s2_1: 9, s2_2: 2, btn1: '① 先相加', btn2: '② 滿 24 進 1 日', cls: 'add' },
+      5: { u1: '分', u2: '秒', a1: 7, a2: 13, op: '−', b1: 2, b2: 35, s1_1: 6, s1_2: 73, s2_1: 4, s2_2: 38, btn1: '① 借 1 分＝60 秒', btn2: '② 分別相減', cls: 'sub' },
+      6: { u1: '時', u2: '分', a1: 15, a2: 26, op: '−', b1: 10, b2: 49, s1_1: 14, s1_2: 86, s2_1: 4, s2_2: 37, btn1: '① 借 1 時＝60 分', btn2: '② 分別相減', cls: 'sub' }
+    }[Q];
+    const top1 = cfg.cls === 'sub' && s >= 1 ? `<span class="strike">${cfg.a1}</span><span class="hi">${cfg.s1_1}</span>` : cfg.a1;
+    const top2 = cfg.cls === 'sub' && s >= 1 ? `<span class="strike">${cfg.a2}</span><span class="hi">${cfg.s1_2}</span>` : cfg.a2;
+    const res1 = cfg.cls === 'add' ? (s === 0 ? '?' : s === 1 ? cfg.s1_1 : `<span class="strike">${cfg.s1_1}</span><span class="hi">${cfg.s2_1}</span>`) : (s >= 2 ? cfg.s2_1 : '?');
+    const res2 = cfg.cls === 'add' ? (s === 0 ? '?' : s === 1 ? cfg.s1_2 : `<span class="strike">${cfg.s1_2}</span><span class="hi">${cfg.s2_2}</span>`) : (s >= 2 ? cfg.s2_2 : '?');
+    return `
+      <div class="col-board">
+        <span></span><span class="col-h">${cfg.u1}</span><span></span><span class="col-h">${cfg.u2}</span><span></span>
+        <span class="col-op"></span><span class="col-v">${top1}</span><span class="col-u">${cfg.u1}</span><span class="col-v">${top2}</span><span class="col-u">${cfg.u2}</span>
+        <span class="col-op">${cfg.op}</span><span class="col-v">${cfg.b1}</span><span class="col-u">${cfg.u1}</span><span class="col-v">${cfg.b2}</span><span class="col-u">${cfg.u2}</span>
+        <div class="col-line"></div>
+        <span class="col-op">＝</span><span class="col-v ${s >= 2 ? 'ok-cell' : ''}">${res1}</span><span class="col-u">${cfg.u1}</span><span class="col-v ${s >= 2 ? 'ok-cell' : ''}">${res2}</span><span class="col-u">${cfg.u2}</span>
+      </div>
+      <div class="actrow">
+        <button class="actbtn main" id="qAct1" type="button">${cfg.btn1}</button>
+        <button class="actbtn" id="qAct2" type="button">${cfg.btn2}</button>
+        <button class="actbtn" id="qRst" type="button">重置</button>
+      </div>
+      <div class="inp-row">
+        試填：<input class="num-inp" id="inpA" type="number" min="0" placeholder="?" value="${st.uA}"> ${cfg.u1}
+        <input class="num-inp" id="inpB" type="number" min="0" placeholder="?" value="${st.uB}"> ${cfg.u2}
+      </div>`;
+  }
+  if (Q === 7) {
+    // 上午 9:30 到 下午 2:15 (14:15)
+    return `
+      <svg class="tl-svg" viewBox="0 0 360 56" aria-label="跨午時間軸">
+        <line x1="28" y1="30" x2="332" y2="30" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="52" cy="30" r="4.5" fill="var(--a)"/><text x="52" y="48" text-anchor="middle" class="tl-label">上午 9:30</text>
+        <line x1="190" y1="18" x2="190" y2="42" stroke="var(--soft)" stroke-dasharray="3 2"/>
+        <text x="190" y="13" text-anchor="middle" class="tl-sub">中午 12:00</text>
+        <circle cx="308" cy="30" r="4.5" fill="var(--sky)"/>
+        <text x="308" y="48" text-anchor="middle" class="tl-accent">${s >= 1 ? '14 時 15 分' : '下午 2:15'}</text>
+        ${s >= 2 ? `<path d="M52,25 Q180,4 308,25" fill="none" stroke="var(--ok)" stroke-width="2"/><text x="180" y="25" text-anchor="middle" class="tl-ok">13:75 − 9:30 ＝ 4 時 45 分</text>` : ''}
+      </svg>
+      <div class="actrow">
+        <button class="actbtn main" id="qAct1" type="button">① 下午換 24 時制 (+12時)</button>
+        <button class="actbtn" id="qAct2" type="button">② 借 1 時相減</button>
+        <button class="actbtn" id="qRst" type="button">重置</button>
+      </div>
+      <div class="inp-row">
+        試填：<input class="num-inp" id="inpA" type="number" min="0" placeholder="?" value="${st.uA}"> 小時
+        <input class="num-inp" id="inpB" type="number" min="0" placeholder="?" value="${st.uB}"> 分鐘
+      </div>`;
+  }
+  if (Q === 8) {
+    // 下午 11:45 (23:45) 到 隔天上午 4:25 (04:25)
+    return `
+      <svg class="tl-svg" viewBox="0 0 360 56" aria-label="跨夜時間軸">
+        <line x1="28" y1="30" x2="332" y2="30" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="48" cy="30" r="4.5" fill="var(--a)"/><text x="58" y="48" text-anchor="middle" class="tl-label">23:45</text>
+        <line x1="120" y1="16" x2="120" y2="42" stroke="var(--a)" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="120" y="13" text-anchor="middle" class="tl-accent">午夜 24:00</text>
+        <circle cx="312" cy="30" r="4.5" fill="var(--sky)"/><text x="302" y="48" text-anchor="middle" class="tl-label">隔天 04:25</text>
+        ${s >= 1 ? `<rect x="48" y="26" width="72" height="8" rx="4" fill="var(--sky)"/><text x="84" y="22" text-anchor="middle" class="tl-accent">15分</text>` : ''}
+        ${s >= 2 ? `<rect x="120" y="26" width="192" height="8" rx="4" fill="var(--mint)"/><text x="216" y="22" text-anchor="middle" class="tl-ok">＋ 4時25分</text>` : ''}
+      </svg>
+      <div class="actrow">
+        <button class="actbtn main" id="qAct1" type="button">① 到午夜 24 時</button>
+        <button class="actbtn" id="qAct2" type="button">② 加隔天凌晨</button>
+        <button class="actbtn" id="qRst" type="button">重置</button>
+      </div>
+      <div class="inp-row">
+        試填：<input class="num-inp" id="inpA" type="number" min="0" placeholder="?" value="${st.uA}"> 小時
+        <input class="num-inp" id="inpB" type="number" min="0" placeholder="?" value="${st.uB}"> 分鐘
+      </div>`;
+  }
+  if (Q === 9) {
+    // 5/23 下午 8 時往前推 35 小時 (1日11時)
+    return `
+      <svg class="tl-svg" viewBox="0 0 360 54" aria-label="跨多日往前推算">
+        <line x1="28" y1="30" x2="332" y2="30" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="308" cy="30" r="4.5" fill="var(--a)"/><text x="295" y="48" text-anchor="middle" class="tl-label">5/23 20時(下午8時)</text>
+        ${s >= 1 ? `<path d="M308,25 Q235,8 162,25" fill="none" stroke="var(--sky)" stroke-width="2"/><text x="235" y="13" text-anchor="middle" class="tl-accent">退 1 日(24時)</text><circle cx="162" cy="30" r="4" fill="var(--sky)"/><text x="162" y="48" text-anchor="middle" class="tl-label">5/22 20時</text>` : ''}
+        ${s >= 2 ? `<path d="M162,25 Q106,8 50,25" fill="none" stroke="var(--mint)" stroke-width="2"/><text x="106" y="13" text-anchor="middle" class="tl-ok">再退 11 時</text><circle cx="50" cy="30" r="5" fill="var(--ok)"/><text x="58" y="48" text-anchor="middle" class="tl-ok">5/22 上午9時</text>` : ''}
+      </svg>
+      <div class="actrow">
+        <button class="actbtn main" id="qAct1" type="button">① 35時＝1日11時（退1日）</button>
+        <button class="actbtn" id="qAct2" type="button">② 再退 11 小時</button>
+        <button class="actbtn" id="qRst" type="button">重置</button>
+      </div>
+      <div class="inp-row">
+        試填：5 月 <input class="num-inp" id="inpA" type="number" min="1" max="31" placeholder="?" value="${st.uA}"> 日 24時制
+        <input class="num-inp" id="inpB" type="number" min="0" max="23" placeholder="?" value="${st.uB}"> 時
+      </div>`;
+  }
+  // Q10: 1月1日 上午1時10分 往前推 3時30分
+  return `
+    <svg class="tl-svg" viewBox="0 0 360 54" aria-label="跨年午夜往前推算">
+      <line x1="28" y1="30" x2="332" y2="30" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="220" y1="14" x2="220" y2="42" stroke="var(--a)" stroke-dasharray="3 2"/>
+      <text x="220" y="12" text-anchor="middle" class="tl-accent">跨年 00:00 (12/31 24時)</text>
+      <circle cx="305" cy="30" r="4.5" fill="var(--sky)"/><text x="296" y="48" text-anchor="middle" class="tl-label">${s >= 1 ? '12/31 25:10' : '1/1 01:10'}</text>
+      ${s >= 2 ? `<path d="M305,25 Q185,6 68,25" fill="none" stroke="var(--ok)" stroke-width="2"/><text x="165" y="23" text-anchor="middle" class="tl-ok">− 3時30分 (24:70−3:30)</text><circle cx="68" cy="30" r="5" fill="var(--ok)"/><text x="76" y="48" text-anchor="middle" class="tl-ok">21:40 (下午9:40)</text>` : ''}
+    </svg>
+    <div class="actrow">
+      <button class="actbtn main" id="qAct1" type="button">① 借 1 日＝12/31 25時10分</button>
+      <button class="actbtn" id="qAct2" type="button">② 借 1 時減 3時30分</button>
+      <button class="actbtn" id="qRst" type="button">重置</button>
+    </div>
+    <div class="inp-row">
+      試填（24時制）：<input class="num-inp" id="inpA" type="number" min="0" max="23" placeholder="?" value="${st.uA}"> 時
+      <input class="num-inp" id="inpB" type="number" min="0" max="59" placeholder="?" value="${st.uB}"> 分
+    </div>`;
+}
+
+const EXPECTED = {
+  1: [3, 29], 4: [9, 2], 5: [4, 38], 6: [4, 37], 7: [4, 45], 8: [4, 40], 9: [22, 9], 10: [21, 40]
+};
+
+function renderExam() {
+  const titles = {
+    1: '第 1 題・分鐘換算時分（60 進位除法）',
+    2: '第 2 題・「時刻」與「時間」辨析',
+    3: '第 3 題・24 時制與進位制度檢驗',
+    4: '第 4 題・日與時的進位加法直式',
+    5: '第 5 題・分與秒的退位減法直式',
+    6: '第 6 題・24 時制同日經過時間',
+    7: '第 7 題・跨午經過時間（上午→下午）',
+    8: '第 8 題・跨夜經過時間（午夜分段）',
+    9: '第 9 題・跨多日往前推算時刻',
+    10: '第 10 題・跨年午夜往前推算時刻'
+  };
+  $('examPanel').innerHTML = `
+    <div class="card-head"><span class="badge">🎯 時間互動實驗台</span><span class="title">${titles[Q]}</span></div>
+    <div class="box">${renderExamStage()}</div>
+    <div class="actrow">
+      <button class="actbtn main" id="verifyBtn" type="button">✓ 驗證算式</button>
+      <button class="actbtn" id="revealSteps" type="button">${st.shown ? '收合算理 ▲' : '一步一步看算理 🔍'}</button>
+    </div>
+    <div class="msg ${st.ok === true ? 'ok' : st.ok === false ? 'warn' : ''}" id="examMsg">${st.msg || '先在上方動手拆解或試填數值，再點「驗證算式」檢查！'}</div>
+    ${explainHTML(Q)}
+  `;
+
+  if ($('qAct1')) $('qAct1').onclick = () => { st.step = Math.max(st.step, 1); renderExam(); };
+  if ($('qAct2')) $('qAct2').onclick = () => { st.step = 2; renderExam(); };
+  if ($('qRst')) $('qRst').onclick = () => { st.step = 0; st.uA = ''; st.uB = ''; st.msg = ''; st.ok = null; renderExam(); };
+  $('examPanel').querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { st.pick = +b.dataset.pick; renderExam(); });
+  if ($('inpA')) $('inpA').oninput = e => { st.uA = e.target.value; };
+  if ($('inpB')) $('inpB').oninput = e => { st.uB = e.target.value; };
+
+  $('verifyBtn').onclick = () => {
+    if (Q === 2) {
+      if (st.pick === null) { st.ok = false; st.msg = '請先點選一張情境卡片檢驗時刻或時間量！'; }
+      else if (st.pick === 2) { st.ok = true; st.msg = '✓ 檢驗正確！這句描述的是「經過多久（時間量）」。'; }
+      else { st.ok = false; st.msg = '⚠️ 這張卡片只標示了某個時間點（時刻），再試一張看看！'; }
+    } else if (Q === 3) {
+      if (st.pick === null) { st.ok = false; st.msg = '請先點選上方任一條進位規則進行檢驗！'; }
+      else if (st.pick === 2) { st.ok = true; st.msg = '✓ 抓到破綻了！每個月天數不同，日與月不是 24 進位。'; }
+      else { st.ok = false; st.msg = '⚠️ 這條敘述本身是正確的喔，請檢驗哪一條的進位法有問題！'; }
+    } else {
+      const a = parseInt(st.uA, 10), b = parseInt(st.uB, 10);
+      const [ea, eb] = EXPECTED[Q];
+      if (Number.isNaN(a) || Number.isNaN(b)) {
+        st.ok = false; st.msg = '請先在空格填入數字，或先按上方步驟鈕觀察借位／進位！';
+      } else if (a === ea && b === eb) {
+        st.ok = true; st.msg = '✓ 算式驗算正確！請回上方外殼點選對應的答案選項。';
+      } else {
+        st.ok = false; st.msg = '⚠️ 數值還不對喔，檢查一下是否滿 60（或滿 24）忘記進位／借位！';
+      }
+    }
+    renderExam();
+  };
+
+  $('revealSteps').onclick = () => {
+    st.shown = !st.shown;
+    renderExam();
+  };
+}
+
+if (EXAM) {
+  document.body.classList.add('q-mode');
+  $('modeTag').textContent = `🎯 第 ${Q} 題`;
+  $('examPanel').hidden = false;
+  [0, 1, 2].forEach(i => { $('act' + i).hidden = true; });
+  renderExam();
+} else {
+  $('modeTag').textContent = '🌱 概念探索';
+  setAct(0);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-S-4-2",
+  "curriculum_code": "S-4-2",
+  "code": "S-4-2",
+  "grade": 4,
+  "title": "解題：旋轉角（鐘面指針與方位順／逆時針旋轉）",
+  "unit_name": "解題：旋轉角（鐘面指針與方位順／逆時針旋轉）",
+  "source_paper": "臺北市南湖國小 111-1 期中／112-1 期中／113-1 期中、高雄市獅湖國小 110-1 期中、高雄市永安國小 114-1 期中（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，SSH 唯讀抽字核對）",
+  "verified_by": "SSH＋PYTHONIOENCODING=utf-8 唯讀抽字（第一層跳過含 017／子由 之路徑，已記錄 1 檔 SKIPPED_BY_REDLINE）；70 份合法 PDF、64 頁命中；10 題逐題比對 exam_pack\\S-4-2_exam_pages.txt 原文；填充題保留原卷數字並改編 1 正解＋3 迷思誘答；教具零劇透、Light/Dark 與 390px 零溢出目視",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 5 題、獅湖 3 題、永安 2 題。鐘面指針 5 題、量角器／吸管連續旋轉 2 題、扇子與周角 2 題、方位旋轉 1 題。10 題情境零重複，且與概念三活動（時針半圈／指南針方位／方向盤來回轉）零重疊。未修改 app/shell.js、data/curriculum.json、UNIT_CONCEPT_MOVIES 或任何共用檔；未碰 017 或子由。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-S-4-2-Q01",
+      "exam_source": "臺北市南湖國小 111-1 期中（PDF p2・四、填填看 第4題；卷內署名內湖國小）",
+      "section": "四、填填看",
+      "question_num": "4",
+      "title": "時針從 12 順時針轉 90 度",
+      "stem": "時鐘的指針從數字 12 順時針方向轉了 90°，指針會指在數字（　）。",
+      "choices": ["3", "6", "9", "12"],
+      "answer_index": 0,
+      "answer_raw": "3",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=1",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "鐘面一圈是 360°，分成 12 大格，所以一大格 30°；順時針就是照 1、2、3… 的方向走。",
+        "steps": ["鐘面一圈 360°，分成 12 大格", "360÷12＝30°，一大格是 30°", "90÷30＝3 大格，從 12 順時針走 3 格到 3"],
+        "trap": "把 90° 誤當成 9 大格而選 9，或忘記順時針方向而選逆時針的 9。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q02",
+      "exam_source": "臺北市南湖國小 111-1 期中（PDF p2・四、填填看 第5題；卷內署名內湖國小）",
+      "section": "四、填填看",
+      "question_num": "5",
+      "title": "吸管在量角器上先逆後順",
+      "stem": "將吸管的一端放在量角器的中心點，對齊內圈的 0 度，先往逆時針方向轉了 108 度，再往順時針方向轉 74 度，吸管會停在內圈多少度？（　）度",
+      "choices": ["34 度", "74 度", "108 度", "182 度"],
+      "answer_index": 0,
+      "answer_raw": "34 度",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=2",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "同一條吸管先往一個方向轉，再往反方向轉，第二次是「往回走」，要用減法。",
+        "steps": ["起點對齊內圈 0 度", "逆時針轉 108 度，來到內圈 108 度", "再順時針（往回）轉 74 度：108－74＝34 度"],
+        "trap": "把兩次相加成 108＋74＝182 度，忽略第二次旋轉方向相反。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q03",
+      "exam_source": "臺北市南湖國小 113-1 期中（PDF p1・一、選擇題 第3題）",
+      "section": "一、選擇題",
+      "question_num": "3",
+      "title": "竹籤外圈 175 度回轉 65 度",
+      "stem": "將竹籤的一端固定在量角器的中心點，從外圈 0 度線開始，往順時針方向轉 175°，再往逆時針轉 65°，牙籤會停在外圈的幾度？",
+      "choices": ["70 度", "110 度", "15 度", "105 度"],
+      "answer_index": 1,
+      "answer_raw": "110 度",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=3",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "外圈刻度由順時針方向累加；逆向旋轉就是把刻度往回扣。",
+        "steps": ["從外圈 0 度線出發，順時針轉到 175 度", "逆時針 65 度是往回走", "175－65＝110 度，停在外圈 110 度"],
+        "trap": "誤用內圈刻度讀數，或把 175＋65＝240 度當成答案。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q04",
+      "exam_source": "臺北市南湖國小 113-1 期中（PDF p1・二、填填看 第5題）",
+      "section": "二、填填看",
+      "question_num": "5",
+      "title": "時針 11 到 8 的旋轉方向",
+      "stem": "鐘面上，指針從數字 11 轉到數字 8，是往（　）時針方向轉了（　）度。",
+      "choices": ["順時針，90 度", "逆時針，90 度", "順時針，270 度", "逆時針，270 度"],
+      "answer_index": 1,
+      "answer_raw": "逆時針，90 度",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=4",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "同一段起訖可以順時針走，也可以逆時針走；小學題目取較短的那一段。",
+        "steps": ["順時針 11→12→1…→8 要走 9 大格＝270 度", "逆時針 11→10→9→8 只要走 3 大格", "3×30＝90 度，所以是逆時針 90 度"],
+        "trap": "算出 90 度卻寫成順時針，或把 3 大格誤算成 3 度。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q05",
+      "exam_source": "臺北市南湖國小 112-1 期中（PDF p1・二、填填看 第10題）",
+      "section": "二、填填看",
+      "question_num": "10",
+      "title": "指針從 7 回到 7 的一圈",
+      "stem": "如圖，鐘面上的指針從數字 7 旋轉到數字 7，也就是轉了一圈回到原位，共轉了（　）度，我們稱為（　）角。",
+      "choices": ["180 度，平角", "270 度，鈍角", "360 度，周角", "90 度，直角"],
+      "answer_index": 2,
+      "answer_raw": "360 度，周角",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=5",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "起點與終點相同而且轉了一整圈，角度就是一圈 360°，叫做周角。",
+        "steps": ["起點數字和終點數字都是 7", "一圈 12 大格，每格 30 度", "12×30＝360 度，360 度的角是周角"],
+        "trap": "以為回到原點就是 0 度，或把一圈誤當成平角 180 度。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q06",
+      "exam_source": "高雄市獅湖國小 110-1 期中（PDF p1・一、選擇題 第4題）",
+      "section": "一、選擇題",
+      "question_num": "4",
+      "title": "四種時針旋轉比大小",
+      "stem": "下面哪一個時針的旋轉角度最大？",
+      "choices": ["順時針從 4 轉到 9", "順時針從 8 轉到 11", "逆時針從 3 轉到 9", "逆時針從 8 轉到 5"],
+      "answer_index": 2,
+      "answer_raw": "逆時針從 3 轉到 9",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=6",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "比較旋轉角要一律換成「幾大格 × 30°」，不能只看數字差。",
+        "steps": ["① 4→9 順時針 5 大格＝150 度", "② 8→11 順時針 3 大格＝90 度", "③ 3→9 逆時針 6 大格＝180 度", "④ 8→5 逆時針 3 大格＝90 度，最大是③"],
+        "trap": "只比較終點數字大小，或以起訖相減忽略順、逆時針路徑。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q07",
+      "exam_source": "高雄市獅湖國小 110-1 期中（PDF p1・二、填填看 第4題）",
+      "section": "二、填填看",
+      "question_num": "4",
+      "title": "時針 1 逆時針到 9",
+      "stem": "時鐘上的指針從數字 1 逆時針方向轉到數字 9，是轉了（　）度。",
+      "choices": ["60 度", "120 度", "180 度", "240 度"],
+      "answer_index": 1,
+      "answer_raw": "120 度",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=7",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "逆時針要從起點往回數，跨過 12 時仍然繼續往回數。",
+        "steps": ["從 1 往回數：12、11、10、9", "一共走 4 大格", "4×30＝120 度"],
+        "trap": "直接拿 9－1＝8 大格，或跨過 12 時停止計數。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q08",
+      "exam_source": "高雄市獅湖國小 110-1 期中（PDF p1・二、填填看 第5題）",
+      "section": "二、填填看",
+      "question_num": "5",
+      "title": "扇子先開後合",
+      "stem": "一個打開 25 度的扇子，其中右邊的邊順時針旋轉 130 度，然後又逆時針旋轉 20 度，最後扇子打開（　）度。",
+      "choices": ["115 度", "135 度", "155 度", "175 度"],
+      "answer_index": 1,
+      "answer_raw": "135 度",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=8",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "扇子的開口就是兩邊的夾角；同方向累加、反方向要扣掉。",
+        "steps": ["一開始開口 25 度", "順時針再轉開 130 度：25＋130＝155 度", "逆時針收合 20 度：155－20＝135 度"],
+        "trap": "把順、逆都相加成 175 度，或忘記原本已打開的 25 度。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q09",
+      "exam_source": "高雄市永安國小 114-1 期中（PDF p1・三、填入答案 第4題；檔名標「陽明國小」，卷頭署名永安國民小學）",
+      "section": "三、填入答案",
+      "question_num": "4",
+      "title": "面向北方轉到西方",
+      "stem": "老師此時面向北方，（　）時針旋轉（　）度，會面向西方。",
+      "choices": ["順時針，90 度", "逆時針，90 度", "順時針，180 度", "逆時針，270 度"],
+      "answer_index": 1,
+      "answer_raw": "逆時針，90 度",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=9",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "方位依順時針是北→東→南→西；北到西走逆時針只要四分之一圈。",
+        "steps": ["四個方位把一圈分成 4 等份，每份 90 度", "順時針 北→東→南→西 要走 3 份＝270 度", "逆時針 北→西 只要 1 份＝90 度"],
+        "trap": "看到「西」就選順時針 90 度，其實順時針 90 度會面向東。"
+      }
+    },
+    {
+      "id": "G4-S-4-2-Q10",
+      "exam_source": "高雄市永安國小 114-1 期中（PDF p1・一、是非題 第2題；檔名標「陽明國小」，卷頭署名永安國民小學）",
+      "section": "一、是非題",
+      "question_num": "2",
+      "title": "周角與直角的關係",
+      "stem": "試卷敘述「1 個周角和 4 個直角合起來一樣大」。請問 1 個周角等於幾個直角？",
+      "choices": ["2 個", "3 個", "4 個", "6 個"],
+      "answer_index": 2,
+      "answer_raw": "4 個",
+      "component": "rotation_angle_g4_lab",
+      "component_path": "components/rotation_angle_g4_lab.html?q=10",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "周角是一圈 360°，直角是四分之一圈 90°，用除法就能算出有幾個直角。",
+        "steps": ["1 個直角＝90 度", "1 個周角＝360 度", "360÷90＝4，所以 1 個周角等於 4 個直角"],
+        "trap": "把周角誤當成平角 180 度而選 2 個，或用 360÷60 算成 6 個。"
+      }
+    }
+  ]
+}

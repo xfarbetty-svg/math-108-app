@@ -1,0 +1,243 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-R-4-1",
+  "curriculum_code": "R-4-1",
+  "grade": 4,
+  "unit_name": "兩步驟問題併式（四則混合與逐次減項）",
+  "source_paper": "臺北市南湖國小 111-1 期末／111-2 期中／112-1 期末、高雄市獅湖國小 113-1 期末／114-1 期末、高雄市陽明國小 114-2 期中（皆為 EXAM REAL/G4 實體試卷 PDF，逐題 pdfplumber 抽字核對）",
+  "verified_by": "pdfplumber 逐題抽字比對（頁碼見各題 exam_source）＋填充／計算題保留原卷題幹並改編 1 正解＋3 迷思誘答＋算式解析引擎逐題等價自檢＋ CDP 雙模式機械化閘門＋ Light/Dark 實機截圖目視",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 6 題、獅湖 2 題、陽明 2 題。涵蓋先乘後加、括號內先加後除、先除後減、先除後加、括號先加再乘、先乘後減、括號內先減再乘、先乘後除由左而右與逐次減項。與 N-4-3、N-4-4、R-4-2 十題考點、情境、數字結構完全區隔。本階段不含微電影，未修改 app/shell.js 的 UNIT_CONCEPT_MOVIES；未碰 017 或子由。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-R-4-1-Q01",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p1・四、寫出橫式，再算算看 第(1)題）",
+      "section": "四、寫出橫式，再算算看",
+      "question_num": "(1)",
+      "title": "831＋49×7 先乘後加與逐次減項",
+      "stem": "寫出橫式，用逐次減項算算看：831＋49×7＝（　）",
+      "choices": ["1174", "6160", "887", "1164"],
+      "answer_index": 0,
+      "answer_raw": "1174",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先乘除後加減：沒有括號時，要先算後面的乘法 49×7，再與 831 相加，逐次減項寫出中間結果。",
+        "steps": [
+          "第一步：先算乘法 → 49×7＝343",
+          "第二步：再算加法 → 831＋343＝1174",
+          "併式：831＋49×7＝1174"
+        ],
+        "trap": "若由左往右先算 831＋49＝880 再乘 7，會誤得 6160，違反先乘除後加減約定。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q02",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p1・四、寫出橫式，再算算看 第(2)題）",
+      "section": "四、寫出橫式，再算算看",
+      "question_num": "(2)",
+      "title": "720÷(67＋23) 括號先算與逐次減項",
+      "stem": "寫出橫式，用逐次減項算算看：720÷(67＋23)＝（　）",
+      "choices": ["8", "33", "9", "80"],
+      "answer_index": 0,
+      "answer_raw": "8",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "括號先算：有括號時，不論括號內是加減或乘除，一律先算括號裡的 67＋23，再由 720 除以它。",
+        "steps": [
+          "第一步：先算括號內加法 → 67＋23＝90",
+          "第二步：再算除法 → 720÷90＝8",
+          "併式：720÷(67＋23)＝8"
+        ],
+        "trap": "若把 67＋23 錯進位算成 80，會誤選 720÷80＝9；或漏掉 0 誤得 80。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q03",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p3・三、做做看 第1題）",
+      "section": "三、做做看",
+      "question_num": "1",
+      "title": "375−75÷15 先除後減",
+      "stem": "算算看：375－75÷15＝（　）",
+      "choices": ["20", "370", "380", "25"],
+      "answer_index": 1,
+      "answer_raw": "370",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先乘除後加減：減法與除法同時存在時，必須先算 75÷15，再用 375 減去商。",
+        "steps": [
+          "第一步：先算除法 → 75÷15＝5",
+          "第二步：再算減法 → 375－5＝370",
+          "併式：375－75÷15＝370"
+        ],
+        "trap": "最常見迷思是由左往右先算 375－75＝300，再除以 15 誤得 20。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q04",
+      "exam_source": "高雄市獅湖國小 114-1 期末（PDF p2・五、計算題 第(2)題）",
+      "section": "五、計算題",
+      "question_num": "(2)",
+      "title": "72＋168÷24 先除後加",
+      "stem": "算算看：72＋168÷24＝（　）",
+      "choices": ["10", "79", "65", "86"],
+      "answer_index": 1,
+      "answer_raw": "79",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先乘除後加減：先算後段的除法 168÷24，再把結果與 72 相加。",
+        "steps": [
+          "第一步：先算除法 → 168÷24＝7",
+          "第二步：再算加法 → 72＋7＝79",
+          "併式：72＋168÷24＝79"
+        ],
+        "trap": "若誤先加 72＋168＝240 再除以 24，會算出 10，違反運算順序。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q05",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p1・一、選擇題 第4題）",
+      "section": "一、選擇題",
+      "question_num": "4",
+      "title": "409 班男生 14 人女生 11 人買飲料花 750 元",
+      "stem": "409 班有男生 14 人，女生 11 人，全班一起買飲料花了 750 元，請問一人要出多少錢？（把做法用一個有括號的算式記下來）",
+      "choices": ["30 元", "64 元", "25 元", "250 元"],
+      "answer_index": 0,
+      "answer_raw": "30 元",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "兩步驟問題併式：要先求全班總人數（加法），再平分總金額（除法），因此加法必須加上括號。",
+        "steps": [
+          "第一步：先算全班人數 → 14＋11＝25",
+          "第二步：再算每人出多少錢 → 750÷25＝30",
+          "併式：750÷(14＋11)＝30"
+        ],
+        "trap": "若寫成 750÷14＋11 沒加括號，會先算 750÷14；或誤用 14−11＝3 算出 250 元。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q06",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p2・二、填填看 第9題）",
+      "section": "二、填填看",
+      "question_num": "9",
+      "title": "一盒雞蛋 12 顆早晚共賣幾盒（括號先加再乘）",
+      "stem": "一盒雞蛋有 12 顆，早上賣出 3 盒，下午賣出 4 盒，一共賣出幾顆雞蛋？",
+      "choices": ["40 顆", "84 顆", "144 顆", "19 顆"],
+      "answer_index": 1,
+      "answer_raw": "84 顆",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "括號先算再乘：先把早上與下午賣出的盒數相加，再乘以每盒 12 顆，寫成 12×(3＋4)。",
+        "steps": [
+          "第一步：先算共賣出幾盒 → 3＋4＝7",
+          "第二步：再算共幾顆雞蛋 → 12×7＝84",
+          "併式：12×(3＋4)＝84"
+        ],
+        "trap": "若漏掉括號寫成 12×3＋4＝40，就只算了早上 3 盒加 4 顆散蛋，意義錯誤。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q07",
+      "exam_source": "高雄市獅湖國小 113-1 期末（PDF p3・六、應用題 第1(1)題）",
+      "section": "六、應用題",
+      "question_num": "1(1)",
+      "title": "卡片每張 35 元買 5 張加 1 張 CD 共 739 元",
+      "stem": "文具店一張卡片賣 35 元，哥哥買了 5 張卡片和 1 張 CD 共花了 739 元，1 張 CD 的售價是幾元？把做法用一個算式記下來。",
+      "choices": ["564 元", "3520 元", "704 元", "175 元"],
+      "answer_index": 0,
+      "answer_raw": "564 元",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先乘後減應用：先算出 5 張卡片的總價，再用總花費 739 元減掉卡片的錢，不需括號。",
+        "steps": [
+          "第一步：先算 5 張卡片的錢 → 35×5＝175",
+          "第二步：再從總金額扣掉 → 739－175＝564",
+          "併式：739－35×5＝564"
+        ],
+        "trap": "若錯加括號寫成 (739－35)×5＝3520，或只算 35×5＝175 就作答，都是常見錯誤。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q08",
+      "exam_source": "高雄市陽明國小 114-2 期中（PDF p1・二、選擇題 第3題）",
+      "section": "二、選擇題",
+      "question_num": "3",
+      "title": "提拉米蘇折價 50 元買 4 塊（括號內先減再乘）",
+      "stem": "一塊提拉米蘇蛋糕原價 350 元，使用折價券每塊可折 50 元，瑄瑄用折價券買了 4 塊提拉米蘇蛋糕，共要付多少元？",
+      "choices": ["1400 元", "1350 元", "1200 元", "1100 元"],
+      "answer_index": 2,
+      "answer_raw": "1200 元",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "括號內先減再乘：要先算出折價後每塊蛋糕的單價，再乘以 4 塊，減法必須加括號。",
+        "steps": [
+          "第一步：先算折價後的單價 → 350－50＝300",
+          "第二步：再算 4 塊共付幾元 → 300×4＝1200",
+          "併式：(350－50)×4＝1200"
+        ],
+        "trap": "若漏掉括號寫成 350×4－50＝1350，就只折抵到 1 塊蛋糕的 50 元。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q09",
+      "exam_source": "高雄市陽明國小 114-2 期中（PDF p2・四、算算看 第(3)題）",
+      "section": "四、算算看",
+      "question_num": "(3)",
+      "title": "194−61×3 陷阱：切勿由左而右先減",
+      "stem": "算算看：194－61×3＝（　）",
+      "choices": ["11", "399", "133", "377"],
+      "answer_index": 0,
+      "answer_raw": "11",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先乘除後加減陷阱題：194 減去 61 乘 3 時，必須先算後面的 61×3＝183，再算 194－183。",
+        "steps": [
+          "第一步：先算乘法 → 61×3＝183",
+          "第二步：再算減法 → 194－183＝11",
+          "併式：194－61×3＝11"
+        ],
+        "trap": "由左而右先算 194－61＝133 再乘 3 會誤得 399，是四則運算最常見的陷阱。"
+      }
+    },
+    {
+      "id": "G4-R-4-1-Q10",
+      "exam_source": "臺北市南湖國小 111-2 期中（PDF p3・十、應用題 第1題）",
+      "section": "十、應用題",
+      "question_num": "1",
+      "title": "星之卡比玩偶 128 元存 8 天買 7 個（先乘後除）",
+      "stem": "一個星之卡比的玩偶賣 128 元，如果瓦豆魯迪計畫存錢 8 天買 7 個玩偶，平均一天要存多少元？（把問題用一個算式記下來，再算算看）",
+      "choices": ["16 元", "112 元", "896 元", "128 元"],
+      "answer_index": 1,
+      "answer_raw": "112 元",
+      "component": "two_step_combine_g4_lab",
+      "component_path": "components/two_step_combine_g4_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同級運算由左往右：先乘出 7 個玩偶的總價，再除以 8 天求出平均每天存多少元，不需括號。",
+        "steps": [
+          "第一步：先算 7 個玩偶總價 → 128×7＝896",
+          "第二步：再平分給 8 天 → 896÷8＝112",
+          "併式：128×7÷8＝112"
+        ],
+        "trap": "若只算 128÷8＝16，只求出買 1 個玩偶每天要存的錢，忘了買 7 個；896 元則是沒除以天數的半截答案。"
+      }
+    }
+  ]
+}

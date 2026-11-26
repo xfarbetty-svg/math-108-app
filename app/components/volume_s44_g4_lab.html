@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-S-4-4 體積：切割重組與單位推理・三活動雙軌互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{--bg:var(--bg-main);--card:var(--bg-card);--elev:var(--bg-elevated);--ink:var(--text-primary);--soft:var(--text-secondary);--line:var(--border-color);--a:var(--accent-primary);--mint:var(--accent-mint);--sky:var(--accent-sky);--lemon:var(--accent-lemon);--ok:#2fa36b;--warn:#c2410c;--radius:12px}
+html[data-theme="dark"]{--ok:#4ade80;--warn:#fca5a5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{margin:0;padding:8px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+#app{width:100%;max-width:470px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:5px;max-height:415px;overflow:hidden}
+.top{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:18px;font-size:10px;color:var(--soft)}
+.top b{font-size:12px;color:var(--ink);font-weight:900}
+.tools{display:flex;align-items:center;gap:5px}
+#btn-theme{width:26px;height:26px;flex:0 0 26px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+#modeTag{font-size:9.5px;font-weight:800;color:var(--a);white-space:nowrap}
+#tabs{display:flex;gap:4px;background:var(--elev);padding:3px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:5px 8px;border-radius:999px;font-size:10.5px;font-weight:900;color:var(--soft);white-space:nowrap}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+body.quiz #tabs{display:none!important}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;max-width:100%;max-height:350px;overflow:hidden}
+.cap{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.tag{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:900;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.ttl{font-size:12.5px;font-weight:900;color:var(--ink)}
+.sub{font-size:10.5px;line-height:1.45;color:var(--soft)}
+.stage{width:100%;background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:3px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.stage svg{width:100%;max-width:420px;height:auto;max-height:112px;display:block}
+.slot{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:5px 7px;text-align:center}
+.row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.btn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 9px;font-size:10.5px;font-weight:900}
+.btn.main{border-color:var(--a);color:var(--a)}
+.btn:active{transform:translateY(1px)}
+.note{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10px;line-height:1.4;color:var(--ink);font-weight:700;text-align:left;min-height:19px}
+.note.good{border-color:var(--ok);color:var(--ok)}
+.note.bad{border-color:var(--warn);color:var(--warn)}
+.explain{display:grid;grid-template-columns:46px 1fr;gap:1px 6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;line-height:1.2;background:var(--elev);border-radius:8px;padding:4px 6px;border:1px dashed var(--line)}
+.explain .k{color:var(--a);font-weight:900;white-space:nowrap}
+.explain .v{color:var(--ink);min-width:0;word-break:break-word}
+.explain .trap{color:var(--warn)}
+[hidden]{display:none!important}
+@media (max-width:390px){.top b{font-size:11px}.tab{font-size:10px;padding:5px 6px}.ttl{font-size:11.5px}.btn{padding:4px 7px;font-size:10px}}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="top"><b>S-4-4 體積・切割重組與單位推理</b><div class="tools"><span id="modeTag">🌱 概念探索</span><button id="btn-theme" type="button" aria-label="切換主題">🌙</button></div></div>
+  <nav id="tabs">
+    <button class="tab active" type="button">活動一・果汁倒杯</button>
+    <button class="tab" type="button">活動二・紙箱裝書</button>
+    <button class="tab" type="button">活動三・橡皮泥造型</button>
+  </nav>
+  <section class="panel" id="s0"></section>
+  <section class="panel" id="s1" hidden></section>
+  <section class="panel" id="s2" hidden></section>
+  <section class="panel" id="squiz" hidden></section>
+</div>
+<script>
+/* 本教具只提供操作圖與算理；題幹、四選項、換題鈕一律由外殼呈現。 */
+var U=new URLSearchParams(location.search);
+var qn=parseInt(U.get('q')||'0',10);
+var QUIZ=qn>=1&&qn<=10;
+var NO=QUIZ?qn:1;
+var get=function(id){return document.getElementById(id);};
+
+/* 三個不同生活情境的補充活動（與 10 題真題情境零重複） */
+var LESSONS=[
+ {tag:'🌱 活動一・果汁倒杯',ttl:'果汁：換杯子，水量一樣多',sub:'同一壺果汁倒進寬杯或窄杯，水位高低不同，但果汁的量一樣。點「倒入窄杯」試試看。',
+  kind:'liquid',narrow:0,unit:'杯',label:'果汁倒杯',idea:'液體會順著容器形狀改變外表，但體積（水量）不變。',
+  steps:[ '寬杯底面積大，水位比較低','窄杯底面積小，水位比較高','兩杯都是同一壺果汁，所以體積一樣'],
+  trap:'只看水位高低就判斷體積大小，忽略杯子粗細不同。'},
+ {tag:'🌱 活動二・紙箱裝書',ttl:'紙箱：每層 4×3 個 1cm 方塊',sub:'紙箱長排 4 個、寬排 3 個、疊 2 層。點「填一層」把方塊放進去，數數一共幾個。',
+  kind:'box',layers:0,target:2,cols:4,rows:3,unit:'個',label:'紙箱裝書',idea:'長方體體積＝長 × 寬 × 高；每層個數 × 層數就是總數。',
+  steps:[ '每層 4×3＝12 個 1cm 方塊','疊 2 層就是 12×2','一共 24 個 1cm 方塊，體積 24 立方公分'],
+  trap:'把長、寬、高直接相加，而不是相乘。'},
+ {tag:'🌱 活動三・橡皮泥造型',ttl:'橡皮泥：捏成球或長條',sub:'同一團橡皮泥，先搓成圓球，再捏成長條。點「捏成長條」比較前後的體積。',
+  kind:'clay',long:0,unit:'團',label:'橡皮泥造型',idea:'同一團橡皮泥不管捏成什麼形狀，沒有增加也沒有減少，體積不變。',
+  steps:[ '一開始是一團橡皮泥','搓圓或捏長只是改變外形','還是同一團，所以體積不變'],
+  trap:'覺得長條看起來比較大，其實只是形狀不同。'}
+];
+
+/* 10 題真題的專屬操作資料（題幹與選項由外殼承載） */
+var BANK=[
+ {kind:'slice',unit:'片',n:3,target:8,label:'西瓜切片・合起來',c:'切割不改變總量；切開的所有部分合起來，還是原來那一顆。',s:['先有一顆完整的西瓜','切成好幾片，每一片都是西瓜的一部分','全部合起來等於原來一顆，體積不變'],t:'看到「切」就以為變小，忽略切片合起來還是原來的大小。'},
+ {kind:'arrange',unit:'個',n:6,layout:0,label:'鋁箔包六個・排法',c:'每個鋁箔包一樣大，數量就是單位數；排法不影響總體積。',s:['每一個鋁箔包體積相同','不論排成一排或兩排，都是 6 個','所以 num 一樣，體積就一樣大'],t:'以為排得越長體積越大，其實只看數量。'},
+ {kind:'balloon',unit:'口氣',n:0,target:3,label:'吹氣球・越吹越大',c:'吹進去的空氣越多，氣球佔的空間越大。',s:['沒吹氣時氣球很小','每吹一口氣，空氣進到氣球裡','氣球脹大，所以體積變大'],t:'以為只是形狀變圓，體積沒有變。'},
+ {kind:'squash',unit:'下',n:0,target:3,label:'捏棉花糖・空氣擠掉',c:'棉花糖裡有很多空氣，用力捏把空氣擠掉，體積就變小。',s:['原本棉花糖蓬鬆，含很多空氣','用力捏後空氣被擠出來','變得緊實，佔的空間變少'],t:'以為重量沒變所以體積也不變，忽略空氣被擠掉。'},
+ {kind:'arrange',unit:'個',n:4,layout:0,label:'四個橡皮擦・三種排法',c:'四個相同的橡皮擦，不管堆成哪種形體，總體積都是四個。',s:['每一個橡皮擦都一樣大','三種形體都用了 4 個','所以三種形體體積一樣大'],t:'比較高度就以為疊高的比較大，沒有數數量。'},
+ {kind:'unit',unit:'cm',bad:1,label:'平方公分 vs 立方公分',c:'體積用立方公分（cm³），平方公分（cm²）是面積單位。',s:['邊長 1 公分的小正方體體積是 1 立方公分','立方公分記做 cm³','cm² 是面積單位，不能用來寫體積'],t:'把面積的平方記號直接套到體積上。'},
+ {kind:'unit',unit:'cm',bad:1,label:'一立方公分・記法',c:'1 立方公分記做 1cm³，不是 1cm²。',s:['立方公分是體積單位','1 立方公分＝邊長 1 公分的小正方體','正確記法是 1cm³'],t:'把平方公分當成立方公分。'},
+ {kind:'stack',unit:'層',n:1,target:3,per:16,total:208,label:'208 個積木・每層 16 個',c:'層數＝總數 ÷ 每層個數。',s:['共有 208 個積木','每層放 16 個','208÷16＝13 層'],t:'用每層個數當成層數，或忘了用除法。'},
+ {kind:'stack',unit:'層',n:1,target:4,per:16,total:64,label:'64 個積木・正方體',c:'正方體長寬高相同；64＝4×4×4，每層 4×4＝16 個。',s:['64＝4×4×4','所以長、寬、高都是 4 個','每層 4×4＝16 個，共 4 層'],t:'開平方成 8×8，誤以為每層 8 個。'},
+ {kind:'arrange',unit:'個',n:8,layout:0,label:'八個正方體・不同組合',c:'8 個 1 立方公分的小正方體，合起來就是 8 立方公分。',s:['每個小正方體體積 1 立方公分','8×1＝8 立方公分','不管排法如何，總體積都是 8 立方公分'],t:'以為排得分散體積就變大，或誤用平方公分。'}
+];
+
+function safe(v){return String(v).replace(/[&<>]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[ch];});}
+function frame(inner){return '<svg viewBox="0 0 400 88" xmlns="http://www.w3.org/2000/svg" role="img">'+inner+'</svg>';}
+function paper(){return '<rect x="4" y="4" width="392" height="80" rx="10" fill="var(--elev)" stroke="var(--line)"/>';}
+function footer(label){return '<text x="200" y="81" text-anchor="middle" font-size="10" font-weight="900" fill="var(--a)">'+safe(label)+'</text>';}
+function cube(x,y,sz,h,fill){return '<rect x="'+x+'" y="'+y+'" width="'+sz+'" height="'+h+'" rx="2" fill="'+fill+'" stroke="var(--line)"/>';}
+
+function liquidSVG(st){
+ var s=paper(),wide=st.narrow?78:104,narrow=st.narrow?104:78;
+ function cup(cx,w,water,focus){var x=cx-w/2,y=64-50;
+  s+='<path d="M'+x+' '+y+' L'+(x+w)+' '+y+' L'+(x+w*0.82)+' 68 L'+(x+w*0.18)+' 68 Z" fill="var(--card)" stroke="'+(focus?'var(--a)':'var(--line)')+'" stroke-width="'+(focus?2.5:1.5)+'"/>';
+  s+='<rect x="'+(x+w*0.21)+'" y="'+(68-water)+'" width="'+(w*0.58)+'" height="'+water+'" rx="3" fill="var(--sky)" opacity="0.9"/>';}
+ cup(120,wide,st.narrow?34:22,!st.narrow);cup(280,narrow,st.narrow?44:30,!!st.narrow);
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'果汁倒杯')+'・'+(st.narrow?'窄杯':'寬杯')+'水位不同、水量不變'));
+}
+function boxSVG(st){
+ var s=paper(),x0=120,y0=14,cw=38,ch=17;
+ for(var r=0;r<(st.rows||3);r++)for(var c=0;c<(st.cols||4);c++){
+  var x=x0+c*cw,y=y0+r*ch,filled=(r<st.layers);
+  s+=cube(x,y,cw-3,ch-2,filled?'var(--a)':'var(--card)');
+  s+='<text x="'+(x+(cw-3)/2)+'" y="'+(y+12)+'" text-anchor="middle" font-size="8.5" font-weight="900" fill="'+(filled?'#fff':'var(--soft)')+'">'+(filled?'1':'·')+'</text>';}
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'紙箱裝書')+'・已填 '+st.layers+' 層・每層 '+((st.cols||4)*(st.rows||3))+' 個'));
+}
+function claySVG(st){
+ var s=paper();
+ if(!st.long){s+='<ellipse cx="200" cy="42" rx="30" ry="22" fill="var(--lemon)" stroke="var(--a)" stroke-width="2"/>';}
+ else{s+='<rect x="96" y="32" width="208" height="24" rx="12" fill="var(--lemon)" stroke="var(--a)" stroke-width="2"/>';}
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'橡皮泥造型')+'・'+(st.long?'長條':'圓球')+'・體積不變'));
+}
+function sliceSVG(st){
+ var s=paper(),n=st.n,per=6;
+ for(var i=0;i<n;i++){var x=28+(i%per)*58,y=16+Math.floor(i/per)*24;
+  s+='<path d="M'+x+' '+y+' q14 -12 28 0 q-14 14 -28 0 Z" fill="var(--warn)" stroke="var(--a)" stroke-width="1.5"/>';}
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'切片')+'・已切 '+n+' 片・合起來還是原來一顆'));
+}
+function arrangeSVG(st){
+ var s=paper(),n=st.n,cw=42,ch=18,x0=30,y0=14;
+ var P=[[],[],[]];
+ for(var c=0;c<8;c++)P[0].push([c,0]);
+ for(var c=0;c<4;c++)for(var r=0;r<2;r++)P[1].push([c,r]);
+ P[2]=[[0,0],[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[0,2]];
+ var pos=P[st.layout%3],names=['一排','兩排','階梯'];
+ for(var i=0;i<Math.min(n,pos.length);i++){
+  var x=x0+pos[i][0]*cw,y=y0+pos[i][1]*ch;
+  s+=cube(x,y,cw-4,ch-3,'var(--mint)');
+  s+='<text x="'+(x+(cw-4)/2)+'" y="'+(y+12)+'" text-anchor="middle" font-size="8" font-weight="900" fill="var(--ink)">'+safe(st.unit)+'</text>';}
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'排列')+'・'+names[st.layout%3]+'・共 '+n+' '+safe(st.unit)));
+}
+function balloonSVG(st){
+ var s=paper(),r=8+st.n*7;
+ s+='<circle cx="200" cy="40" r="'+r+'" fill="var(--warn)" stroke="var(--a)" stroke-width="2"/>';
+ s+='<path d="M200 '+(40+r)+' l-7 14 h14 Z" fill="var(--lemon)" stroke="var(--line)"/>';
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'吹氣球')+'・吹了 '+st.n+' 口氣'));
+}
+function squashSVG(st){
+ var s=paper(),h=30-st.n*7;
+ s+='<ellipse cx="200" cy="42" rx="64" ry="'+(h/2)+'" fill="var(--lemon)" stroke="var(--a)" stroke-width="2"/>';
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'捏棉花糖')+'・捏了 '+st.n+' 次・高度 '+h));
+}
+function unitSVG(st){
+ var s=paper(),x=166,y=18,sz=44;
+ s+=cube(x,y,sz,sz,'var(--a)');
+ s+='<text x="'+(x+sz/2)+'" y="'+(y+28)+'" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">1</text>';
+ s+='<text x="70" y="46" font-size="13" font-weight="900" fill="var(--ink)">'+(st.bad?'1cm²':'1cm³')+'</text>';
+ s+='<text x="270" y="46" font-size="11" font-weight="900" fill="'+(st.bad?'var(--warn)':'var(--ok)')+'">'+(st.bad?'面積單位 ✗':'體積單位 ✓')+'</text>';
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'單位')+'・'+(st.bad?'平方公分不是體積單位':'立方公分是體積單位')));
+}
+function stackSVG(st){
+ var s=paper(),per=st.per,cols=(per===16?4:Math.min(8,per)),cw=(per===16?20:34),ch=(per===16?7:12),x0=(per===16?160:112),layers=Math.min(st.n,4);
+ for(var r=0;r<layers;r++)for(var c=0;c<cols;c++){
+  s+=cube(x0+c*cw,58-r*ch,cw-2,ch-1,'var(--a)');}
+ var msg=(per===16?('每層 4×4＝'+per+'・示意 '+layers+' 層・共 '+st.total+' 個'):('示意 '+layers+' 層・每層 '+per+'・共 '+st.total+' 個'));
+ return frame(s+footer((QUIZ?'Q'+NO+'　':'')+(st.label||'堆疊')+'・'+msg));
+}
+/* Q08 多位數除法：廠字形長除法直式網格（展開算理後才出現） */
+function longDivSVG(){
+ var s=paper();
+ s+='<text x="44" y="40" font-size="14" font-weight="900" fill="var(--ink)">16</text>';
+ s+='<path d="M76 14 H252 M76 14 V70" stroke="var(--a)" stroke-width="2" fill="none"/>';
+ s+='<text x="150" y="11" font-size="12" font-weight="900" fill="var(--a)">13</text>';
+ s+='<text x="88" y="40" font-size="14" font-weight="900" fill="var(--ink)">208</text>';
+ s+='<text x="88" y="56" font-size="12" font-weight="900" fill="var(--soft)">16</text>';
+ s+='<line x1="84" y1="59" x2="150" y2="59" stroke="var(--line)"/>';
+ s+='<text x="104" y="71" font-size="12" font-weight="900" fill="var(--ink)">48</text>';
+ s+='<text x="262" y="40" font-size="10" font-weight="900" fill="var(--ok)">208÷16＝13</text>';
+ s+=footer('Q8 長除法直式網格・共 13 層');
+ return frame(s);
+}
+function draw(st){
+ if(st.kind==='liquid')return liquidSVG(st);
+ if(st.kind==='box')return boxSVG(st);
+ if(st.kind==='clay')return claySVG(st);
+ if(st.kind==='slice')return sliceSVG(st);
+ if(st.kind==='arrange')return arrangeSVG(st);
+ if(st.kind==='balloon')return balloonSVG(st);
+ if(st.kind==='squash')return squashSVG(st);
+ if(st.kind==='unit')return unitSVG(st);
+ return stackSVG(st);
+}
+
+var cur=0,state=null;
+function kindOf(d){return d.kind||d.k;}
+function make(d){
+ var k=kindOf(d);
+ return {kind:k,n:d.n||0,layout:0,layers:0,narrow:0,long:0,bad:d.bad||0,target:d.target||0,per:d.per||0,total:d.total||0,cols:d.cols||4,rows:d.rows||3,unit:d.unit||'個',label:d.label||d.cuptxt||'',shown:0,ok:0,qno:NO};
+}
+function buttons(d){
+ var k=kindOf(d);
+ if(k==='liquid')return '<button type="button" class="btn main" data-act="liquid">倒入窄杯</button>';
+ if(k==='box')return '<button type="button" class="btn main" data-act="layer">填一層</button>';
+ if(k==='clay')return '<button type="button" class="btn main" data-act="clay">捏成長條</button>';
+ if(k==='slice')return '<button type="button" class="btn main" data-act="slice">切一片</button>';
+ if(k==='arrange')return '<button type="button" class="btn main" data-act="arrange">換排法</button>';
+ if(k==='balloon')return '<button type="button" class="btn main" data-act="balloon">吹一口氣</button>';
+ if(k==='squash')return '<button type="button" class="btn main" data-act="squash">用力捏</button>';
+ return '<button type="button" class="btn main" data-act="unit">切換記法</button>';
+}
+function explain(d){
+ var st=state;if(!st.shown)return '';
+ var out='<div class="explain"><span class="k">概念</span><span class="v">'+safe(d.c||d.idea)+'</span>';
+ (d.s||d.steps).forEach(function(v,i){out+='<span class="k">步驟'+(i+1)+'</span><span class="v">'+safe(v)+'</span>';});
+ out+='<span class="k trap">陷阱</span><span class="v trap">'+safe(d.t||d.trap)+'</span></div>';
+ return out;
+}
+function stShown(){return !!(state&&state.shown);}
+function feedback(d){
+ if(!stShown())return '💡 先操作圖示，再按「驗證算式」或「一步一步看算理」。';
+ return state.ok?'✓ 已完成操作，算理展開如下。':'✗ 尚未完成目標，可再操作或點「一步一步看算理」。';
+}
+function render(d){
+ var head=QUIZ?('🎯 段考真題 Q'+NO):d.tag;
+ var title=QUIZ?('第 '+NO+' 題・動手操作區'):d.ttl;
+ var sub=QUIZ?'題幹與四選項由外殼呈現；操作下方圖示，驗證後才展開算理。':d.sub;
+ var html='<div class="cap"><span class="tag">'+safe(head)+'</span><span class="ttl">'+safe(title)+'</span></div>'
+  +'<div class="sub">'+safe(sub)+'</div>'
+  +'<div class="stage">'+((QUIZ&&NO===8&&stShown())?longDivSVG():draw(state))+'</div>'
+  +'<div class="slot"><div class="row">'+buttons(d)+'</div></div>'
+  +'<div class="note'+(stShown()?(state.ok?' good':' bad'):'')+'">'+safe(feedback(d))+'</div>'
+  +'<div class="row"><button type="button" class="btn main" data-check="1">驗證算式</button><button type="button" class="btn" data-r="1">一步一步看算理 🔍</button></div>'
+  +explain(d);
+ host().innerHTML=html;wire(d);grow();
+}
+function host(){return get(QUIZ?'squiz':'s'+cur);}
+function decide(d){
+ var k=state.kind;
+ if(k==='liquid')state.ok=state.narrow===1;
+ else if(k==='box')state.ok=state.layers===state.target;
+ else if(k==='clay')state.ok=state.long===1;
+ else if(k==='slice')state.ok=state.n>=8;
+ else if(k==='arrange')state.ok=state.layout===2;
+ else if(k==='balloon')state.ok=state.n>=3;
+ else if(k==='squash')state.ok=state.n>=3;
+ else if(k==='unit')state.ok=state.bad===0;
+ else state.ok=state.n>=state.target;
+ state.shown=1;render(d);
+}
+function wire(d){
+ host().querySelectorAll('button').forEach(function(b){
+  var a=b.dataset.act;
+  if(a)b.onclick=function(){
+   if(a==='liquid')state.narrow=state.narrow?0:1;
+   else if(a==='layer')state.layers=Math.min(state.target,state.layers+1);
+   else if(a==='clay')state.long=state.long?0:1;
+   else if(a==='slice')state.n=Math.min(8,state.n+1);
+   else if(a==='arrange')state.layout=(state.layout+1)%3;
+   else if(a==='balloon')state.n=Math.min(5,state.n+1);
+   else if(a==='squash')state.n=Math.min(5,state.n+1);
+   else if(a==='unit')state.bad=state.bad?0:1;
+   render(d);
+  };
+  else if(b.dataset.check)b.onclick=function(){decide(d);};
+  else if(b.dataset.r)b.onclick=function(){state.shown=1;render(d);};
+ });
+}
+function choose(i){
+ cur=i;for(var k=0;k<3;k++){get('s'+k).hidden=(k!==i);if(k!==i)get('s'+k).innerHTML='';}
+ Array.prototype.forEach.call(get('tabs').children,function(b,k){b.classList.toggle('active',k===i);});
+ state=make(LESSONS[i]);render(LESSONS[i]);
+}
+function theme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('math108_theme',t);}catch(e){}get('btn-theme').textContent=(t==='dark')?'☀️':'🌙';get('btn-theme').setAttribute('aria-label',(t==='dark')?'切換到亮色':'切換到暗色');}
+get('btn-theme').onclick=function(){var t=(document.documentElement.dataset.theme==='dark')?'light':'dark';theme(t);try{var u=new URL(location.href);u.searchParams.set('theme',t);history.replaceState(null,'',u);}catch(e){}try{window.parent.postMessage({type:'THEME_CHANGE',theme:t},'*');window.dispatchEvent(new CustomEvent('THEME_CHANGE',{detail:{theme:t}}));}catch(e){}};
+window.addEventListener('message',function(e){if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme)theme(e.data.theme);});
+var tq=U.get('theme');if(tq==='dark'||tq==='light')theme(tq);else{var saved='light';try{saved=localStorage.getItem('math108_theme')||'light';}catch(e){}theme(saved);}
+function grow(){try{var h=Math.min(415,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight));window.parent.postMessage({type:'resize',height:h},'*');}catch(e){}}
+
+window.__S44_MODE__=QUIZ?'exam':'concept';window.__S44_Q__=NO;
+if(QUIZ){document.body.classList.add('quiz');get('tabs').hidden=true;for(var k=0;k<3;k++)get('s'+k).hidden=true;get('modeTag').textContent='🎯 段考真題 Q'+NO;get('squiz').hidden=false;state=make(BANK[NO-1]);render(BANK[NO-1]);}
+else{get('squiz').hidden=true;Array.prototype.forEach.call(get('tabs').children,function(b,k){b.onclick=function(){choose(k);};});choose(0);}
+window.__S44_READY__=true;window.addEventListener('load',grow);window.addEventListener('resize',grow);
+</script>
+</body>
+</html>

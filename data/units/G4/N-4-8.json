@@ -1,0 +1,253 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-N-4-8",
+  "curriculum_code": "N-4-8",
+  "grade": 4,
+  "unit_name": "數線與分數、小數",
+  "source_paper": "臺北市南湖國小 111-2 期中／111-2 期末／112-2 期末／113-2 期末、高雄市獅湖國小 113-1 期末／113-2 期末、高雄市永安國小 114-1 期中（皆為 EXAM REAL/G4 實體試卷 PDF，pdfplumber 抽字＋ 150dpi 原頁影像逐題目視核對數線刻度與分數位置）",
+  "verified_by": "先以 pdfplumber 過濾掃描 70 份 G4 PDF 試卷，再將 9 個數線關鍵頁面轉為 150dpi PNG 逐題目視核對數線等分數、箭頭落點與分數／小數數值；每題配備 check 純算式機械驗算與 answer_index 選項比對",
+  "note": "10 題跨 3 校真卷：臺北市南湖國小 7 題、高雄市獅湖國小 2 題、高雄市永安國小 1 題。基礎 5 題（小數數線加減移動、小數放大圖讀數、分數換小數、1/4 刻度數線讀數、1/3 刻度帶分數讀數）、應用 3 題（小數換帶分數、1/5 公尺數線兩點距離、1/8 刻度假分數讀數）、陷阱 2 題（9.2 至少 5 等分迷思、2/3 與 9/12 數線標記比較）。本階段不含微電影，未修改 app/shell.js 的 UNIT_CONCEPT_MOVIES；嚴守安全隔離紅線。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-N-4-8-Q01",
+      "exam_source": "臺北市南湖國小 111-2 期中（PDF p1・一、對的畫○錯的打× 改編第3題）",
+      "section": "一、對的在( )裡畫○，錯的打×",
+      "question_num": "3",
+      "title": "小數數線左右移動",
+      "stem": "一條公分刻度尺上，從數線 3.4 的位置，先往右移動 1.9 公分，再往左移動 1.2 公分，會到達哪一個位置？",
+      "choices": ["4.3", "4.1", "5.3", "6.5"],
+      "answer_index": 1,
+      "answer_raw": "4.1",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=1",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "數線上往右移動是加上距離，往左移動是減去距離。",
+        "steps": [
+          "先從 3.4 往右移動 1.9：3.4＋1.9＝5.3",
+          "再從 5.3 往左移動 1.2：5.3－1.2＝4.1",
+          "合併算式：3.4＋1.9－1.2＝4.1，會到達 4.1"
+        ],
+        "trap": "若只算往右移的 5.3 就停下來，或把「往左」也誤當成加法（5.3＋1.2＝6.5），都會算錯。",
+        "check": "3.4+1.9-1.2"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q02",
+      "exam_source": "臺北市南湖國小 111-2 期中（PDF p2・三、填填看 第6題）",
+      "section": "三、填填看",
+      "question_num": "6",
+      "title": "小數數線部分放大圖讀數",
+      "stem": "數線部分放大圖中，2 和 3 之間平分成 10 小格，箭頭指在 2 右邊第 7 小格的位置，用小數表示是多少？",
+      "choices": ["2.6", "2.07", "2.7", "3.3"],
+      "answer_index": 2,
+      "answer_raw": "2.7",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=2",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "把 1 單位平分成 10 小格，每 1 小格代表 0.1；從 2 往右數 7 小格就是 2.7。",
+        "steps": [
+          "確認 1 小格代表的大小：1÷10＝0.1",
+          "從整數 2 開始往右數 7 小格：7 個 0.1 是 0.7",
+          "合起來：2＋0.7＝2.7"
+        ],
+        "trap": "誤以為 1 小格是 0.01 而寫成 2.07，或從 3 往左數成 3.3，都是常見錯誤。",
+        "check": "2+7*0.1"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q03",
+      "exam_source": "臺北市南湖國小 112-2 期末（PDF p1・一、選擇題 第6題）",
+      "section": "一、選擇題",
+      "question_num": "6",
+      "title": "數線表示 9.2 的最少等分數",
+      "stem": "要在數線上表示 9.2 的位置，「至少」要將 9 和 10 之間平分成幾等分？",
+      "choices": ["2 等分", "5 等分", "8 等分", "10 等分"],
+      "answer_index": 1,
+      "answer_raw": "5 等分",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=3",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "0.2＝2/10＝1/5，把 9 到 10 平分成 5 等分，第 1 個刻度就是 9.2。",
+        "steps": [
+          "把小數部分 0.2 換成分數：0.2＝2/10",
+          "約分成最簡分數：2/10＝1/5",
+          "分母最小是 5，所以「至少」平分成 5 等分即可標出 9.2"
+        ],
+        "trap": "看到一位小數就直接選 10 等分；10 等分雖然能標出 9.2，但題目問的是「至少」幾等分。",
+        "check": "1/0.2"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q04",
+      "exam_source": "臺北市南湖國小 111-2 期末（PDF p1・二、選擇題 第5題）",
+      "section": "二、選擇題",
+      "question_num": "5",
+      "title": "分數與小數 0.45 換算",
+      "stem": "下面哪一個分數換成小數是 0.45？",
+      "choices": ["4/5", "45/10", "40/50", "45/100"],
+      "answer_index": 3,
+      "answer_raw": "45/100",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=4",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "二位小數的百分位代表幾個 0.01（即 1/100），0.45 是 45 個 0.01，也就是 45/100。",
+        "steps": [
+          "0.45 有兩位小數，分母對應 100",
+          "45 個 1/100 合起來是 45/100",
+          "檢查其他選項：4/5＝0.8、45/10＝4.5、40/50＝0.8"
+        ],
+        "trap": "誤把 0.45 當成 45/10（4.5）或直接把 4 和 5 湊成 4/5（0.8）。",
+        "check": "45/100"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q05",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p2・四、填填看 (一)第(3)題）",
+      "section": "四、填填看",
+      "question_num": "(一)(3)",
+      "title": "二位小數 4.04 換成分數",
+      "stem": "把小數換成分數：4.04＝（　）",
+      "choices": ["4 4/100", "4 4/10", "4 40/100", "404/10"],
+      "answer_index": 0,
+      "answer_raw": "4 4/100",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=5",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "4.04 的整數部分是 4，小數部分 0.04 是 4 個 0.01，寫成分數是 4/100。",
+        "steps": [
+          "先拆開整數與小數：4.04＝4＋0.04",
+          "百分位數字 4 代表 4 個 0.01，即 4/100",
+          "合起來寫成帶分數：4 4/100"
+        ],
+        "trap": "忽略小數點後的 0，誤把 0.04 當成 4/10（0.4）或 40/100（0.40）。",
+        "check": "4+4/100"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q06",
+      "exam_source": "臺北市南湖國小 111-2 期末（PDF p1・三、想想看 第6題）",
+      "section": "三、想想看：填填看、圈圈看或勾勾看",
+      "question_num": "6",
+      "title": "1/4 刻度分數數線讀數",
+      "stem": "這是一條以 1/4 為刻度的分數數線，箭頭指在 2 右邊第 3 格的位置，用帶分數表示是多少？",
+      "choices": ["2 1/4", "2 3/5", "2 3/4", "3 1/4"],
+      "answer_index": 2,
+      "answer_raw": "2 3/4",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=6",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "以 1/4 為刻度表示每 1 單位平分成 4 格，從 2 往右數 3 格就是 2 3/4。",
+        "steps": [
+          "每 1 格代表 1/4，2 和 3 之間共有 4 格",
+          "從 2 往右數 3 格是 3 個 1/4，即 3/4",
+          "合起來是帶分數 2 3/4"
+        ],
+        "trap": "從 3 往左數成 3 1/4，或把 4 格誤看成 5 格寫成 2 3/5。",
+        "check": "2+3/4"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q07",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p2・五、看數線回答問題 第1~3題）",
+      "section": "五、看數線回答問題",
+      "question_num": "2-3",
+      "title": "1/5 公尺刻度數線兩點距離",
+      "stem": "一條以 1/5 公尺為刻度的數線上，A 點在 1/5 公尺，C 點在 1 2/5 公尺，從 A 點往右移動多少公尺會到達 C 點？",
+      "choices": ["1 2/5 公尺", "6/10 公尺", "2 公尺", "1 1/5 公尺"],
+      "answer_index": 3,
+      "answer_raw": "1 1/5 公尺",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=7",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "數線上兩點之間的距離，用右邊刻度減去左邊刻度，或直接數中間跨了幾個 1/5 公尺。",
+        "steps": [
+          "從 A（1/5）到 C（1 2/5＝7/5），共跨過 7－1＝6 格",
+          "每格是 1/5 公尺，6 個 1/5 公尺是 6/5 公尺",
+          "6/5＝1 1/5 公尺，算式：1 2/5－1/5＝1 1/5 公尺"
+        ],
+        "trap": "直接把 C 點刻度 1 2/5 當作距離，忘了減掉起點 A 的 1/5。",
+        "check": "1+2/5-1/5"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q08",
+      "exam_source": "高雄市獅湖國小 113-1 期末（PDF p1・一、選擇題 第2題）",
+      "section": "一、選擇題",
+      "question_num": "2",
+      "title": "假分數數線讀數",
+      "stem": "觀察數線，7 到 9 之間每 1 單位平分成 8 格，方框指在 9 右邊第 1 格的位置，方框中的假分數是多少？",
+      "choices": ["63/8", "73/8", "53/8", "37/8"],
+      "answer_index": 1,
+      "answer_raw": "73/8",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=8",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "每 1 單位有 8 個 1/8，整數 9 等於 72 個 1/8，再加 1 格就是 73/8。",
+        "steps": [
+          "先寫成帶分數：9 右邊第 1 格是 9 1/8",
+          "整數 9 換成以 8 為分母的假分數：9×8＝72 個 1/8",
+          "加上 1 格：72＋1＝73，假分數為 73/8"
+        ],
+        "trap": "誤用 8×8＝64 減 1 算成 63/8，或把分子 9 和 1 誤看成 37/8。",
+        "check": "9+1/8"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q09",
+      "exam_source": "高雄市獅湖國小 113-2 期末（PDF p2・二、填填看 第1題）",
+      "section": "二、填填看",
+      "question_num": "1",
+      "title": "數線標記比較 2/3 與 9/12",
+      "stem": "在 0 到 1 的數線上標出 2/3 和 9/12 的位置並比較大小：2/3（　）9/12",
+      "choices": ["＞", "＝", "＜", "無法比較"],
+      "answer_index": 2,
+      "answer_raw": "＜",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=9",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "將 2/3 擴分成同分母 12 的等值分數 8/12，在數線上 9/12 位於 8/12 的右邊，所以 2/3＜9/12。",
+        "steps": [
+          "把 2/3 擴分成分母 12：2/3＝(2×4)/(3×4)＝8/12",
+          "在數線上 8/12 在第 8 格，9/12 在第 9 格",
+          "數線越右邊越大，8/12＜9/12，所以 2/3＜9/12"
+        ],
+        "trap": "只看分母 3＜12 就誤以為 2/3＞9/12，未先擴分到同分母或標上數線比較。",
+        "check": "2/3-9/12"
+      }
+    },
+    {
+      "id": "G4-N-4-8-Q10",
+      "exam_source": "高雄市永安國小 114-1 期中（PDF p1・三、填入答案 第6題）",
+      "section": "三、填入答案",
+      "question_num": "6",
+      "title": "1/3 刻度帶分數數線讀數",
+      "stem": "數線上 0 到 3 之間每 1 單位平分成 3 等分，箭頭指在 2 右邊第 1 格的位置，這個帶分數是多少？",
+      "choices": ["2 1/2", "1 2/3", "2 2/3", "2 1/3"],
+      "answer_index": 3,
+      "answer_raw": "2 1/3",
+      "component": "number_line_g4_lab",
+      "component_path": "components/number_line_g4_lab.html?q=10",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "每 1 單位平分成 3 等分，每 1 格是 1/3；在 2 右邊第 1 格就是 2 1/3。",
+        "steps": [
+          "確認單位刻度：1÷3＝1/3，每 1 格代表 1/3",
+          "位置在整數 2 之後的第 1 格",
+          "合起來讀作帶分數 2 1/3"
+        ],
+        "trap": "數錯整數起點寫成 1 2/3，或只看 2 和 3 之間有 2 條分隔線就誤以為分母是 2。",
+        "check": "2+1/3"
+      }
+    }
+  ]
+}

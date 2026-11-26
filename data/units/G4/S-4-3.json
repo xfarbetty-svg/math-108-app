@@ -1,0 +1,303 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-S-4-3",
+  "curriculum_code": "S-4-3",
+  "grade": 4,
+  "unit_name": "正方形與長方形的面積與周長",
+  "source_paper": "高雄市永安國小 114-2 期末、高雄市獅湖國小 110-2／112-2／113-2 期末、臺北市南湖國小 113-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF）",
+  "verified_by": "pymupdf 150-DPI 頁面裁切圖目視核對 ＋ 4選項真題封裝 ＋ 互動 SVG 與長除法直式教具 ＋ CDP 實機門禁 ＋ 通道三 Gemini 審題",
+  "note": "10 題全數來自合法真卷，跨 3 校：永安 3 題、獅湖 5 題、南湖 2 題，與 N-4-11 零重複。涵蓋正方形周長、長方形周長、長方形面積公式、邊長倍數與周長關係、截角周長不變、等周長面積比較、已知面積反推長邊、十字型複合面積、方格面積與周長迷思、挖空複合圖形周長。本階段不含微電影，未修改 app/shell.js 之 UNIT_CONCEPT_MOVIES。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-S-4-3-Q01",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・二、填充題 第(1)題）",
+      "section": "二、填充題",
+      "question_num": "(1)",
+      "title": "正方形周長計算",
+      "stem": "有一個正方形的邊長是 6 公尺，它的周長會是多少公尺？",
+      "choices": [
+        "12 公尺",
+        "24 公尺",
+        "36 公尺",
+        "48 公尺"
+      ],
+      "answer_index": 1,
+      "answer_raw": "24 公尺",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=1",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "正方形有 4 條一樣長的邊，周長 ＝ 邊長 × 4。",
+        "steps": [
+          "先確認正方形的每條邊長都是 6 公尺。",
+          "繞外框一圈共有 4 條邊：6 × 4 ＝ 24。",
+          "所以正方形的周長是 24 公尺。"
+        ],
+        "trap": "容易誤算成面積 6 × 6 ＝ 36，或只算兩條邊 6 × 2 ＝ 12。",
+        "check": "6 * 4 === 24 ? 24 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q02",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・二、填充題 第(2)題）",
+      "section": "二、填充題",
+      "question_num": "(2)",
+      "title": "長方形周長計算",
+      "stem": "有一個長方形的長是 32 公分，寬是 18 公分，它的周長是多少公分？",
+      "choices": [
+        "50 公分",
+        "82 公分",
+        "100 公分",
+        "576 公分"
+      ],
+      "answer_index": 2,
+      "answer_raw": "100 公分",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=2",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "長方形有 2 條長和 2 條寬，周長 ＝ (長 ＋ 寬) × 2。",
+        "steps": [
+          "先算一組長加寬：32 ＋ 18 ＝ 50（公分）。",
+          "共有兩組相同的長與寬：50 × 2 ＝ 100。",
+          "所以這個長方形的周長是 100 公分。"
+        ],
+        "trap": "只算 32 ＋ 18 ＝ 50 就忘記乘以 2，或誤用面積公式 32 × 18 ＝ 576。",
+        "check": "(32 + 18) * 2 === 100 ? 100 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q03",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・一、選擇題 第5題）",
+      "section": "一、選擇題",
+      "question_num": "5",
+      "title": "長方形面積公式",
+      "stem": "長方形的面積 ＝ （　　）",
+      "choices": [
+        "(長＋寬) × 2",
+        "邊長 × 4",
+        "長 × 寬",
+        "邊長 × 邊長"
+      ],
+      "answer_index": 2,
+      "answer_raw": "長 × 寬",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=3",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "面積是指圖形表面鋪滿單位方格的大小，長方形每一排有「長」個方格，共有「寬」排，所以是 長 × 寬。",
+        "steps": [
+          "長方形周長才是 (長＋寬) × 2，用來算外框一圈的長度。",
+          "邊長 × 4 是正方形周長，邊長 × 邊長是正方形面積。",
+          "因此長方形的面積公式是「長 × 寬」。"
+        ],
+        "trap": "容易把周長公式「(長＋寬) × 2」與面積公式「長 × 寬」搞混。",
+        "check": "1"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q04",
+      "exam_source": "高雄市獅湖國小 113-2 期末（PDF p1・一、選擇題 第2題）",
+      "section": "一、選擇題",
+      "question_num": "2",
+      "title": "邊長變為 3 倍的周長變化",
+      "stem": "正方形的邊長變成原來的 3 倍，周長會變為原來的幾倍？",
+      "choices": [
+        "3 倍",
+        "6 倍",
+        "9 倍",
+        "27 倍"
+      ],
+      "answer_index": 0,
+      "answer_raw": "3 倍",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=4",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "正方形周長 ＝ 邊長 × 4，邊長放大幾倍，4 條邊同時放大幾倍，所以周長也變為原來的幾倍。",
+        "steps": [
+          "設原正方形邊長為 1 公分，原周長 ＝ 1 × 4 ＝ 4 公分。",
+          "邊長變 3 倍成為 3 公分，新周長 ＝ 3 × 4 ＝ 12 公分。",
+          "12 ÷ 4 ＝ 3，所以周長會變為原來的 3 倍（面積才是 9 倍）。"
+        ],
+        "trap": "誤以為周長和面積一樣會變成 3 × 3 ＝ 9 倍。",
+        "check": "(3 * 4) / (1 * 4) === 3 ? 3 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q05",
+      "exam_source": "高雄市獅湖國小 113-2 期末（PDF p1・一、選擇題 第3題）",
+      "section": "一、選擇題",
+      "question_num": "3",
+      "title": "正方形截角後的周長變化",
+      "stem": "在一個大正方形的一角剪去一個小正方形後，剩下的圖形周長有什麼變化？",
+      "choices": [
+        "增加",
+        "減少",
+        "不變",
+        "不一定"
+      ],
+      "answer_index": 2,
+      "answer_raw": "不變",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=5",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "從正方形角落剪去一小塊後，雖然面積變小，但新露出來的兩條內凹邊剛好等於剪掉的兩條外邊。",
+        "steps": [
+          "觀察右上角剪去小正方形後，原本的右邊與上邊各少了一段。",
+          "但剪開的地方同時多出了兩條一樣長的內凹線段。",
+          "把這兩條內凹邊往外平移補齊，外框總長度跟原本大正方形完全一樣，所以周長「不變」。"
+        ],
+        "trap": "直覺以為「剪掉一塊」周長就會跟着變短，忽略了切口會產生新的邊線。",
+        "check": "1"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q06",
+      "exam_source": "高雄市獅湖國小 113-2 期末（PDF p1・一、選擇題 第4題）",
+      "section": "一、選擇題",
+      "question_num": "4",
+      "title": "等周長紙卡面積比較",
+      "stem": "周長 44 公分的正方形紙卡和長 15 公分、寬 7 公分的長方形紙卡，哪一種紙卡的面積比較大？",
+      "choices": [
+        "正方形紙卡",
+        "長方形紙卡",
+        "一樣大",
+        "無法比較"
+      ],
+      "answer_index": 0,
+      "answer_raw": "正方形紙卡",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=6",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "周長相等的正方形與長方形，正方形的面積比較大；要先由周長反推邊長再算面積。",
+        "steps": [
+          "先算正方形邊長：44 ÷ 4 ＝ 11（公分），正方形面積 ＝ 11 × 11 ＝ 121（平方公分）。",
+          "再算長方形面積：15 × 7 ＝ 105（平方公分），其周長也是 (15＋7) × 2 ＝ 44 公分。",
+          "121 ＞ 105，所以正方形紙卡的面積比較大。"
+        ],
+        "trap": "誤以為兩者周長都是 44 公分，面積就會一樣大。",
+        "check": "(44 / 4) * (44 / 4) > 15 * 7 ? 1 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q07",
+      "exam_source": "高雄市獅湖國小 110-2 期末（PDF p2・六、應用題 第2題）",
+      "section": "六、應用題",
+      "question_num": "2",
+      "title": "已知面積與寬反推長邊",
+      "stem": "小明用鐵絲圍住面積是 304 平方公尺的長方形菜園，已知這個長方形菜園的寬邊是 16 公尺，請問菜園的長邊是多少公尺？",
+      "choices": [
+        "17 公尺",
+        "19 公尺",
+        "21 公尺",
+        "24 公尺"
+      ],
+      "answer_index": 1,
+      "answer_raw": "19 公尺",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=7",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "長方形面積 ＝ 長 × 寬，因此已知面積與寬時，長 ＝ 面積 ÷ 寬。",
+        "steps": [
+          "列出算式：長邊 ＝ 304 ÷ 16。",
+          "用長除法計算：30 ÷ 16 商 1 餘 14，帶下 4 得 144，144 ÷ 16 ＝ 9 整除。",
+          "商為 19，所以菜園的長邊是 19 公尺。"
+        ],
+        "trap": "被「用鐵絲圍住」誤導去算周長除法，忘記題目給的是「面積 304 平方公尺」。",
+        "check": "304 / 16 === 19 ? 19 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q08",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p1・一、選出正確的答案 第(6)題）",
+      "section": "一、選出正確的答案",
+      "question_num": "(6)",
+      "title": "十字型複合圖形面積",
+      "stem": "下面十字型圖形的面積是多少平方公分？（圖中各邊長皆為 10 公分，相鄰兩邊皆互相垂直）",
+      "choices": [
+        "500 平方公分",
+        "800 平方公分",
+        "1000 平方公分",
+        "1200 平方公分"
+      ],
+      "answer_index": 0,
+      "answer_raw": "500 平方公分",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=8",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "把對稱的複合圖形用輔助線分割成數個相同的正方形，再乘以塊數最快最準。",
+        "steps": [
+          "畫出 4 條輔助虛線，把十字型切成中央 1 塊與上下左右共 5 個邊長 10 公分的正方形。",
+          "每 1 個小正方形面積 ＝ 10 × 10 ＝ 100（平方公分）。",
+          "5 塊合計 ＝ 100 × 5 ＝ 500（平方公分）。"
+        ],
+        "trap": "誤把外圍 12 條邊直接算成周長 120 公分，或誤用大正方形 30 × 30 ＝ 900 未扣掉 4 個缺角。",
+        "check": "10 * 10 * 5 === 500 ? 500 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q09",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p1・二、看圖回答 (二)(4)改編4選1）",
+      "section": "二、看圖回答",
+      "question_num": "(二)(4)",
+      "title": "面積與周長的關係辨析",
+      "stem": "觀察方格紙（每格邊長 1 公分）上的圖形，下列關於面積與周長的敘述，哪一個是正確的？",
+      "choices": [
+        "面積相等的圖形，周長一定會一樣長",
+        "周長相等的圖形，面積一定會一樣大",
+        "面積相等的圖形，周長不一定會一樣長",
+        "邊長變為 2 倍，面積也會變為 2 倍"
+      ],
+      "answer_index": 2,
+      "answer_raw": "面積相等的圖形，周長不一定會一樣長",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=9",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "面積相同時，排列越細長的圖形外圍露出的邊越多，周長就越長；反之亦然。",
+        "steps": [
+          "在 1 公分方格紙上，1×4 長條（ㄅ）與 2×2 正方形（ㄆ）面積都是 4 平方公分。",
+          "數一數外框周長：ㄅ的周長 ＝ (4＋1) × 2 ＝ 10 公分，ㄆ的周長 ＝ 2 × 4 ＝ 8 公分。",
+          "因此面積相等的圖形，周長不一定會一樣長。"
+        ],
+        "trap": "容易把「面積一樣」誤以為「周長也一定一樣」。",
+        "check": "(4 + 1) * 2 !== 2 * 4 ? 1 : NaN"
+      }
+    },
+    {
+      "id": "G4-S-4-3-Q10",
+      "exam_source": "高雄市獅湖國小 112-2 期末（PDF p2・四、計算複合圖形的周長）",
+      "section": "四、計算複合圖形的周長",
+      "question_num": "1",
+      "title": "挖空複合圖形的周長",
+      "stem": "如下圖，在邊長 80 公尺的正方形廣場中央，挖空一個長 50 公尺、寬 30 公尺的長方形水池，剩下圖形的周長是多少公尺？",
+      "choices": [
+        "160 公尺",
+        "320 公尺",
+        "480 公尺",
+        "640 公尺"
+      ],
+      "answer_index": 2,
+      "answer_raw": "480 公尺",
+      "component": "rect_area_perimeter_g4_lab",
+      "component_path": "components/rect_area_perimeter_g4_lab.html?q=10",
+      "fallback_height": 415,
+      "explanation": {
+        "concept": "圖形內部挖空後，周長包含「外面一圈的邊長」加上「裡面挖空邊界的邊長」。",
+        "steps": [
+          "先算外圍正方形周長：80 × 4 ＝ 320（公尺）。",
+          "再算中間挖空長方形的內周長：(50 ＋ 30) × 2 ＝ 160（公尺）。",
+          "剩下圖形的總周長 ＝ 320 ＋ 160 ＝ 480（公尺）。"
+        ],
+        "trap": "以為挖空只會減少面積、忽略內側水池的四條邊也屬於圖形邊界，漏加 160 公尺而誤選 320 公尺。",
+        "check": "80 * 4 + (50 + 30) * 2 === 480 ? 480 : NaN"
+      }
+    }
+  ]
+}

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-R-4-2 四則計算規律（I）・108課綱互動教具（三活動＋真題雙軌）</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --elev:var(--bg-elevated);
+  --ink:var(--text-primary); --soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --ok:#2fa36b; --warn:#c2410c;
+  --shadow:0 4px 12px var(--shadow-color); --radius:12px;
+}
+html[data-theme="dark"]{--ok:#4ade80;--warn:#fca5a5;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{margin:0;padding:6px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:520px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:18px;font-size:10px;color:var(--soft)}
+.head b{font-size:11.5px;color:var(--ink);font-weight:900}
+.head-right{display:flex;align-items:center;gap:5px}
+#btn-theme{width:24px;height:24px;flex:0 0 24px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center}
+#modeTag{font-size:9.5px;font-weight:800;color:var(--a);white-space:nowrap}
+.tabs{display:flex;gap:4px;background:var(--elev);padding:2px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;color:var(--soft);white-space:nowrap}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+body.q-mode .tabs{display:none!important}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:900;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.title{font-size:12px;font-weight:900;color:var(--ink)}
+.desc{font-size:10px;line-height:1.35;color:var(--soft)}
+.stage{width:100%;background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:3px;display:flex;justify-content:center;align-items:center}
+.stage svg{width:100%;max-width:480px;height:auto;max-height:74px;display:block}
+.cond{font-size:10.5px;font-weight:800;color:var(--ink);text-align:center;min-height:14px;font-variant-numeric:tabular-nums}
+.slotbox{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:4px 6px;display:flex;flex-direction:column;gap:3px;text-align:center;max-width:100%}
+.wheel-row{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap}
+.wlabel{font-size:10px;font-weight:900;color:var(--soft);white-space:nowrap}
+.num-input{width:68px;height:26px;border:2px solid var(--a);border-radius:7px;background:var(--card);color:var(--ink);font-size:14px;font-weight:900;text-align:center;font-variant-numeric:tabular-nums;outline:none}
+.num-input:focus{box-shadow:0 0 0 2px rgba(249,115,22,.22)}
+.wbtn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:7px;padding:0 6px;min-width:28px;height:25px;font-size:11px;font-weight:900;font-variant-numeric:tabular-nums}
+.wbtn:active{background:var(--a);color:#fff;transform:translateY(1px)}
+.symbtn{border:1.5px solid var(--sky);background:var(--card);color:var(--ink);border-radius:7px;min-width:68px;height:26px;font-size:11.5px;font-weight:900}
+.symbtn.sel{background:var(--a);color:#fff;border-color:var(--a)}
+.actrow{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.actbtn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:3px 9px;font-size:10px;font-weight:900}
+.actbtn.main{border-color:var(--a);color:var(--a)}
+.actbtn:active{transform:translateY(1px)}
+.msg{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:3px 7px;font-size:10px;line-height:1.35;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.msg.ok{border-color:var(--ok);color:var(--ok)}
+.msg.warn{border-color:var(--warn);color:var(--warn)}
+.explain{display:grid;grid-template-columns:40px 1fr;gap:1px 5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:9.5px;line-height:1.32;background:var(--elev);border-radius:8px;padding:4px 6px;border:1px dashed var(--line)}
+.explain .k{color:var(--a);font-weight:900;white-space:nowrap}
+.explain .v{color:var(--ink);min-width:0;word-break:break-word}
+.explain .trap{color:var(--warn)}
+[hidden]{display:none!important}
+@media (max-width:390px){.head b{font-size:11px}.tab{font-size:9.5px;padding:4px 6px}.title{font-size:11px}.num-input{width:58px;font-size:13px}.wbtn{min-width:25px;padding:0 4px;font-size:10.5px}}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <b>R-4-2 四則計算規律（I）</b>
+    <div class="head-right"><span id="modeTag">🌱 概念探索</span><button id="btn-theme" type="button" aria-label="切換主題">🌙</button></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" type="button" data-act="0">活動一・湊整</button>
+    <button class="tab" type="button" data-act="1">活動二・連減</button>
+    <button class="tab" type="button" data-act="2">活動三・連除</button>
+  </nav>
+
+  <section class="panel" id="act0"></section>
+  <section class="panel" id="act1" hidden></section>
+  <section class="panel" id="act2" hidden></section>
+  <section class="panel" id="examPanel" hidden></section>
+</div>
+
+<script>
+/* ===== G4-R-4-2 四則計算規律（I）：三活動（完全不同生活情境）＋10 題真題雙軌 =====
+   鐵律：教具內不含題幹框、四選項按鈕與換題鈕，全交由外殼呈現。
+   初始 DOM 只有條件與操作槽位；正解算式與答案藏在算理區，
+   必須按「驗證算式」或「一步一步看算理 🔍」才展開（零劇透）。 */
+const P = new URLSearchParams(location.search);
+const qParam = parseInt(P.get('q') || '0', 10);
+const EXAM = qParam >= 1 && qParam <= 10;
+const Q = EXAM ? qParam : 1;
+const $ = id => document.getElementById(id);
+
+/* 概念三活動：水果店湊整／圖書館連減／餅乾分裝，與 10 題真題情境零重複 */
+const CONCEPT = [
+  { badge:'🌱 活動一・加法結合律（湊整數）',
+    title:'水果店：三樣水果一共幾元？',
+    desc:'蘋果 38 元、香蕉 62 元、梨子 25 元。先把能湊成整百的兩樣相加。',
+    vis:'group_left', nodes:['蘋果 38','香蕉 62','梨子 25'], groupText:'先湊 100',
+    expr:'38 ＋ 62 ＋ 25 ＝ ( 38 ＋ 62 ) ＋ 25 ＝ □',
+    kind:'calc', target:125, steps:[10,1], start:0, unit:'元',
+    concept:'加法結合律：(38＋62)＋25＝38＋(62＋25)。38＋62 先湊成 100，最好算。',
+    stepsList:['38 + 62 = 100（湊整）','100 + 25 = 125','所以一共 125 元'],
+    trap:'依序算 38＋62＋25 也可以，但少了湊整的直覺；誤算成 100＋52 是位值錯。' },
+  { badge:'🌱 活動二・連減巧算',
+    title:'圖書館：還剩下幾本書？',
+    desc:'原本 200 本，先借出 45 本，再借出 55 本。兩次借出的先合起來。',
+    vis:'group_right', nodes:['原有 200','借出 45','借出 55'], groupText:'共借 100',
+    expr:'200 － 45 － 55 ＝ 200 － ( 45 ＋ 55 ) ＝ □',
+    kind:'calc', target:100, steps:[10,1], start:0, unit:'本',
+    concept:'連減巧算：a－b－c＝a－(b＋c)。先算 45＋55＝100，再從 200 減去。',
+    stepsList:['45 + 55 = 100','200 - 100 = 100','所以剩下 100 本'],
+    trap:'寫成 200－45＋55 會變成 210，是把第二個減號看錯了。' },
+  { badge:'🌱 活動三・連除巧算',
+    title:'餅乾分裝：每組有幾片？',
+    desc:'360 片餅乾先平分給 6 班，每班再平分給 5 組。兩次平分可以合起來。',
+    vis:'group_right', nodes:['360 片','÷ 6 班','÷ 5 組'], groupText:'共分 30 組',
+    expr:'360 ÷ 6 ÷ 5 ＝ 360 ÷ ( 6 × 5 ) ＝ □',
+    kind:'calc', target:12, steps:[10,1], start:0, unit:'片',
+    concept:'連除巧算：a÷b÷c＝a÷(b×c)。先算 6×5＝30，再用 360÷30。',
+    stepsList:['6 × 5 = 30','360 ÷ 30 = 12','所以每組 12 片'],
+    trap:'寫成 360÷(6÷5) 會變成 300，是把括號內的乘號寫成除號。' }
+];
+
+/* 10 題真題：stem 與四選項由外殼呈現；這裡只放視覺模型、操作槽位與算理 */
+const DATA = [
+  { kind:'cmp', vis:'balance', left:'32－16＋14', right:'32－(16＋14)', lVal:'30', rVal:'2', target:'不一樣',
+    concept:'加了括號後，減的對象不同；先算括號會改變結果。',
+    stepsList:['32－16＋14：由左而右 → 16＋14＝30','32－(16＋14)：先算 16＋14＝30','32－30＝2；30≠2'],
+    trap:'以為減去一個括號和連續減兩個數都一樣。' },
+  { kind:'cmp', vis:'balance', left:'81＋(46－22)', right:'81＋46－22', lVal:'105', rVal:'105', target:'一樣',
+    concept:'加法結合律：加號後面的括號可以去掉，結果不變。',
+    stepsList:['81＋(46－22)＝81＋24＝105','81＋46－22＝127－22＝105','兩個算式答案一樣'],
+    trap:'看到括號就以為一定要先算才會不一樣。' },
+  { kind:'cmp', vis:'balance', left:'(72÷24)÷3', right:'72÷(24÷3)', lVal:'1', rVal:'9', target:'不一樣',
+    concept:'連除的括號位置不同，除的對象就不同。',
+    stepsList:['(72÷24)÷3＝3÷3＝1','72÷(24÷3)＝72÷8＝9','1≠9'],
+    trap:'誤用 a÷b÷c＝a÷(b÷c)，正確是 a÷(b×c)。' },
+  { kind:'cmp', vis:'balance', left:'70－(35－15)', right:'70－35－15', lVal:'50', rVal:'20', target:'不一樣',
+    concept:'連減巧算要變成 a－(b＋c)，不是 a－(b－c)。',
+    stepsList:['70－(35－15)＝70－20＝50','70－35－15＝35－15＝20','50≠20'],
+    trap:'把括號內的減號直接搬到外面。' },
+  { kind:'cmp', vis:'balance', left:'600÷30÷5', right:'600÷(30÷5)', lVal:'4', rVal:'100', target:'不一樣',
+    concept:'左式是連除巧算 a÷b÷c＝a÷(b×c)；右式括號內是除法。',
+    stepsList:['600÷30÷5＝20÷5＝4','600÷(30÷5)＝600÷6＝100','4≠100'],
+    trap:'以為括號放在哪裡都一樣。' },
+  { kind:'cmp', vis:'balance', left:'850－55＋77', right:'850－(55＋77)', lVal:'872', rVal:'718', target:'不一樣',
+    concept:'左式是減後再加；右式是一次減掉兩數的和。',
+    stepsList:['850－55＋77＝795＋77＝872','850－(55＋77)＝850－132＝718','872≠718'],
+    trap:'把 850－55＋77 誤看成 850－(55＋77)。' },
+  { kind:'cmp', vis:'balance', left:'150×45÷15', right:'150×(45÷15)', lVal:'450', rVal:'450', target:'一樣',
+    concept:'乘除混合由左而右，但先約分也一樣：45÷15＝3。',
+    stepsList:['150×45÷15＝6750÷15＝450','150×(45÷15)＝150×3＝450','兩個算式答案一樣'],
+    trap:'以為括號一定會改變答案。' },
+  { kind:'calc', vis:'pencil_flow', nodes:['10 枝 60 元','1 枝 6 元','48 元買幾枝'], groupText:'先求單價',
+    expr:'48 ÷ ( 60 ÷ 10 ) ＝ □', target:8, steps:[1], start:0, unit:'枝',
+    concept:'先算 1 枝多少元，再看 48 元能買幾枝；要合併成有括號的算式。',
+    stepsList:['60 ÷ 10 = 6（1 枝 6 元）','48 ÷ 6 = 8','合併：48 ÷ ( 60 ÷ 10 ) = 8 枝'],
+    trap:'寫成 48÷60÷10 或 48÷60×10，都是括號位置錯。' },
+  { kind:'calc', vis:'juice_flow', nodes:['原有 325mL','倒入 +450mL','喝掉 −540mL'], groupText:'由左而右',
+    expr:'325 ＋ 450 － 540 ＝ □', target:235, steps:[100,10,1], start:0, unit:'毫升',
+    concept:'加減混合由左而右，也可先把倒入的加上再扣掉喝掉的。',
+    stepsList:['325 + 450 = 775','775 - 540 = 235','所以剩下 235 毫升'],
+    trap:'先算 450－540 會得到負數，順序錯了。' },
+  { kind:'calc', vis:'swap_pair', nodes:['380','× 12','÷ 38'], groupText:'先算 380÷38',
+    expr:'380 × 12 ÷ 38 ＝ □', target:120, steps:[100,10,1], start:0, unit:'',
+    concept:'乘除可交換位置先約分：380÷38＝10，再乘 12。',
+    stepsList:['380 ÷ 38 = 10','10 × 12 = 120','所以答案是 120'],
+    trap:'照順序硬算 380×12＝4560 再 ÷38 也可以，但容易算錯。' }
+];
+
+/* ---------- 動態視覺圖（依題型繪製，隨互動即時變化，初始零劇透） ---------- */
+function esc(t){ return String(t).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function diagram(d){
+  if (d.vis === 'balance'){
+    const sym = st.sym === '一樣' ? '＝' : (st.sym === '不一樣' ? '≠' : '？');
+    const symCol = st.sym ? 'var(--accent-primary)' : 'var(--text-secondary)';
+    const lSub = st.shown ? ('結果：' + d.lVal) : '左式（待比對）';
+    const rSub = st.shown ? ('結果：' + d.rVal) : '右式（待比對）';
+    const tilt = st.sym === '不一樣' ? 'rotate(-3 210 37)' : '';
+    return '<svg viewBox="0 0 420 74" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="雙算式比較天平圖">'
+      + '<g transform="' + tilt + '">'
+      + '<rect x="10" y="10" width="166" height="54" rx="10" fill="var(--bg-card)" stroke="var(--accent-sky)" stroke-width="2"/>'
+      + '<text x="93" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="var(--text-primary)">' + esc(d.left) + '</text>'
+      + '<text x="93" y="52" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-secondary)">' + esc(lSub) + '</text>'
+      + '<rect x="244" y="10" width="166" height="54" rx="10" fill="var(--bg-card)" stroke="var(--accent-mint)" stroke-width="2"/>'
+      + '<text x="327" y="32" text-anchor="middle" font-size="13" font-weight="900" fill="var(--text-primary)">' + esc(d.right) + '</text>'
+      + '<text x="327" y="52" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-secondary)">' + esc(rSub) + '</text>'
+      + '</g>'
+      + '<circle cx="210" cy="37" r="18" fill="var(--bg-card)" stroke="' + symCol + '" stroke-width="2.5"/>'
+      + '<text id="cmpSym" x="210" y="43" text-anchor="middle" font-size="18" font-weight="900" fill="' + symCol + '">' + sym + '</text>'
+      + '</svg>';
+  }
+  if (d.vis === 'juice_flow'){
+    const ansText = (st.v > 0 || st.shown) ? (fmt(st.v) + ' mL') : '? mL';
+    const fillW = Math.min(72, Math.max(12, Math.round((st.v / 450) * 72)));
+    return '<svg viewBox="0 0 420 74" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="冷水壺果汁水量變化圖">'
+      + '<rect x="8" y="16" width="84" height="42" rx="8" fill="var(--bg-card)" stroke="var(--accent-sky)" stroke-width="1.8"/>'
+      + '<text x="50" y="35" text-anchor="middle" font-size="10.5" font-weight="900" fill="var(--text-primary)">原有 325</text>'
+      + '<text x="50" y="50" text-anchor="middle" font-size="9.5" fill="var(--text-secondary)">毫升</text>'
+      + '<path d="M96 37 L110 37" stroke="var(--svg-stroke)" stroke-width="2" marker-end="none"/>'
+      + '<rect x="112" y="16" width="84" height="42" rx="8" fill="var(--bg-card)" stroke="var(--accent-mint)" stroke-width="1.8"/>'
+      + '<text x="154" y="35" text-anchor="middle" font-size="10.5" font-weight="900" fill="var(--text-primary)">倒入 +450</text>'
+      + '<text x="154" y="50" text-anchor="middle" font-size="9.5" fill="var(--text-secondary)">先相加</text>'
+      + '<path d="M200 37 L214 37" stroke="var(--svg-stroke)" stroke-width="2"/>'
+      + '<rect x="216" y="16" width="84" height="42" rx="8" fill="var(--bg-card)" stroke="var(--accent-lemon)" stroke-width="1.8"/>'
+      + '<text x="258" y="35" text-anchor="middle" font-size="10.5" font-weight="900" fill="var(--text-primary)">喝掉 −540</text>'
+      + '<text x="258" y="50" text-anchor="middle" font-size="9.5" fill="var(--text-secondary)">再相減</text>'
+      + '<path d="M304 37 L318 37" stroke="var(--svg-stroke)" stroke-width="2"/>'
+      + '<rect x="320" y="12" width="92" height="50" rx="9" fill="var(--bg-card)" stroke="var(--accent-primary)" stroke-width="2.2"/>'
+      + '<rect x="330" y="48" width="' + fillW + '" height="7" rx="3" fill="var(--accent-sky)"/>'
+      + '<text id="ansNode" x="366" y="34" text-anchor="middle" font-size="12.5" font-weight="900" fill="var(--accent-primary)">' + esc(ansText) + '</text>'
+      + '</svg>';
+  }
+  const ansText = (st.v > 0 || st.shown) ? (fmt(st.v) + (d.unit ? ' ' + d.unit : '')) : '？';
+  const bx = [10, 114, 218];
+  let gArc = '';
+  if (d.vis === 'group_left'){
+    gArc = '<path d="M52 14 C52 4, 156 4, 156 14" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-dasharray="4 2"/>'
+         + '<text x="104" y="11" text-anchor="middle" font-size="9.5" font-weight="900" fill="var(--accent-primary)">' + esc(d.groupText) + '</text>';
+  } else if (d.vis === 'group_right'){
+    gArc = '<path d="M156 14 C156 4, 260 4, 260 14" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-dasharray="4 2"/>'
+         + '<text x="208" y="11" text-anchor="middle" font-size="9.5" font-weight="900" fill="var(--accent-primary)">' + esc(d.groupText) + '</text>';
+  } else if (d.vis === 'swap_pair'){
+    gArc = '<path d="M52 16 C52 2, 260 2, 260 16" fill="none" stroke="var(--accent-primary)" stroke-width="2" stroke-dasharray="4 2"/>'
+         + '<text x="156" y="11" text-anchor="middle" font-size="9.5" font-weight="900" fill="var(--accent-primary)">' + esc(d.groupText) + '</text>';
+  } else {
+    gArc = '<text x="156" y="12" text-anchor="middle" font-size="9.5" font-weight="900" fill="var(--accent-primary)">' + esc(d.groupText) + '</text>';
+  }
+  let s = '<svg viewBox="0 0 420 74" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="計算規律分組示意圖">' + gArc;
+  d.nodes.forEach((lab, i) => {
+    const x = bx[i];
+    const stroke = i === 0 ? 'var(--accent-sky)' : (i === 1 ? 'var(--accent-mint)' : 'var(--accent-lemon)');
+    s += '<rect x="' + x + '" y="20" width="92" height="42" rx="8" fill="var(--bg-card)" stroke="' + stroke + '" stroke-width="1.8"/>';
+    s += '<text x="' + (x + 46) + '" y="45" text-anchor="middle" font-size="11" font-weight="900" fill="var(--text-primary)">' + esc(lab) + '</text>';
+    if (i < 2) s += '<path d="M' + (x + 94) + ' 41 L' + (x + 112) + ' 41" stroke="var(--svg-stroke)" stroke-width="1.8"/>';
+  });
+  s += '<path d="M312 41 L324 41" stroke="var(--svg-stroke)" stroke-width="1.8"/>';
+  s += '<rect x="326" y="18" width="84" height="46" rx="9" fill="var(--bg-card)" stroke="var(--accent-primary)" stroke-width="2.2"/>';
+  s += '<text id="ansNode" x="368" y="46" text-anchor="middle" font-size="13" font-weight="900" fill="var(--accent-primary)">' + esc(ansText) + '</text>';
+  s += '</svg>';
+  return s;
+}
+
+/* ---------- 雙軌操作區：外殼給四選一，這裡給動手填答 ---------- */
+let st = null;
+function initState(d){
+  st = { kind:d.kind, v:(d.kind==='calc' ? d.start : 0), sym:'', shown:false, ok:false };
+}
+function wheelHTML(d){
+  if (d.kind === 'cmp'){
+    return '<div class="wheel-row"><span class="wlabel">比較結果</span>'
+      + ['一樣','不一樣'].map(s => '<button type="button" class="symbtn' + (st.sym===s?' sel':'') + '" data-sym="'+s+'">'+s+'</button>').join('')
+      + '</div>';
+  }
+  const steps = d.steps || [10, 1];
+  const negs = steps.map(n => '<button type="button" class="wbtn" data-d="-'+n+'">−'+n+'</button>').join('');
+  const poss = [...steps].reverse().map(n => '<button type="button" class="wbtn" data-d="'+n+'">+'+n+'</button>').join('');
+  return '<div class="wheel-row"><span class="wlabel">填入答案</span>'
+    + negs
+    + '<input type="number" class="num-input" id="ws" min="0" max="9999" value="' + fmt(st.v) + '" aria-label="填入答案">'
+    + poss
+    + (d.unit ? '<span class="wlabel">'+esc(d.unit)+'</span>' : '')
+    + '</div>';
+}
+function updateStage(d){
+  const host = EXAM ? $('examPanel') : $('act' + currentAct);
+  const stEl = host.querySelector('.stage');
+  if (stEl) stEl.innerHTML = diagram(d);
+}
+function refreshWheel(d){
+  if (d.kind === 'calc' && $('ws')) $('ws').value = fmt(st.v);
+  updateStage(d);
+}
+function fmt(x){ return Math.round(x * 1000) / 1000; }
+function explainHTML(d){
+  if (!st.shown) return '';
+  let s = '<div class="explain"><span class="k">概念</span><span class="v">'+esc(d.concept)+'</span>';
+  d.stepsList.forEach((t,i) => { s += '<span class="k">步驟'+(i+1)+'</span><span class="v">'+esc(t)+'</span>'; });
+  s += '<span class="k trap">陷阱</span><span class="v trap">'+esc(d.trap)+'</span></div>';
+  return s;
+}
+function verify(d){
+  if (d.kind === 'calc' && $('ws')){
+    const raw = parseFloat($('ws').value);
+    if (!Number.isNaN(raw)) st.v = Math.max(0, raw);
+  }
+  st.ok = (d.kind === 'cmp') ? (st.sym === d.target) : (Math.abs(st.v - d.target) < 1e-6);
+  st.shown = true;
+  renderPanel(d); notifyHeight();
+}
+function reveal(d){ st.shown = true; renderPanel(d); notifyHeight(); }
+function renderPanel(d){
+  const host = EXAM ? $('examPanel') : $('act' + currentAct);
+  const badge = EXAM ? ('🎯 段考真題 Q'+Q) : d.badge;
+  const title = EXAM ? ('第 '+Q+' 題・動手操作區') : d.title;
+  const desc = EXAM ? '題幹與四選項由外殼呈現；請先在下方操作比較或填入答案再驗證。' : d.desc;
+  const expr = d.expr || '';
+  const h = '<div class="card-head"><span class="badge">'+esc(badge)+'</span><span class="title">'+esc(title)+'</span></div>'
+    + '<div class="desc">'+esc(desc)+'</div>'
+    + '<div class="stage">'+diagram(d)+'</div>'
+    + (expr ? '<div class="cond">'+esc(expr)+'</div>' : '')
+    + '<div class="slotbox">'+wheelHTML(d)+'</div>'
+    + '<div class="msg'+(st.shown ? (st.ok?' ok':' warn') : '')+'" id="msg">'
+      + (st.shown ? (st.ok?'✓ 操作結果正確。':'✗ 再想一想，或點「一步一步看算理」。') : '💡 先操作填答，再按「驗證算式」。')
+    + '</div>'
+    + '<div class="actrow">'
+      + '<button type="button" class="actbtn main" id="vbtn">驗證算式</button>'
+      + '<button type="button" class="actbtn" id="rbtn">一步一步看算理 🔍</button>'
+    + '</div>' + explainHTML(d);
+  host.innerHTML = h;
+  bindWheel(d);
+  $('vbtn').onclick = () => verify(d);
+  $('rbtn').onclick = () => reveal(d);
+}
+function hostButtons(){
+  const host = EXAM ? $('examPanel') : $('act' + currentAct);
+  return Array.from(host.querySelectorAll('button'));
+}
+function bindWheel(d){
+  hostButtons().forEach(b => {
+    if (b.dataset.d !== undefined){
+      b.onclick = () => {
+        const delta = parseInt(b.dataset.d, 10);
+        st.v = Math.max(0, Math.round((st.v + delta)*1000)/1000);
+        refreshWheel(d);
+      };
+    } else if (b.dataset.sym !== undefined){
+      b.onclick = () => {
+        st.sym = b.dataset.sym;
+        hostButtons().forEach(x => x.classList.toggle('sel', x.dataset.sym === st.sym));
+        updateStage(d);
+      };
+    }
+  });
+  if ($('ws')){
+    $('ws').oninput = () => {
+      const raw = parseFloat($('ws').value);
+      st.v = Number.isNaN(raw) ? 0 : Math.max(0, raw);
+      updateStage(d);
+    };
+  }
+}
+
+/* ---------- 模式與主題 ---------- */
+let currentAct = 0;
+function setAct(i){
+  currentAct = i;
+  for (let k=0;k<3;k++) $('act'+k).hidden = (k !== i);
+  Array.from($('tabs').children).forEach((b,k) => b.classList.toggle('active', k===i));
+  st = null; initState(CONCEPT[i]); renderPanel(CONCEPT[i]); notifyHeight();
+}
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem('math108_theme', t); } catch(e){}
+  $('btn-theme').textContent = (t === 'dark') ? '☀️' : '🌙';
+  $('btn-theme').setAttribute('aria-label', (t === 'dark') ? '切換到亮色' : '切換到暗色');
+}
+$('btn-theme').onclick = () => {
+  const cur = document.documentElement.dataset.theme || 'light';
+  const next = (cur === 'dark') ? 'light' : 'dark';
+  applyTheme(next);
+  try { const u = new URL(location.href); u.searchParams.set('theme', next); history.replaceState(null, '', u); } catch(e){}
+  try { window.parent.postMessage({ type:'THEME_CHANGE', theme:next }, '*'); } catch(e){}
+  try { window.dispatchEvent(new CustomEvent('THEME_CHANGE', { detail:{ theme:next } })); } catch(e){}
+};
+window.addEventListener('message', e => {
+  if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) applyTheme(e.data.theme);
+});
+(function initTheme(){
+  const tq = P.get('theme');
+  if (tq === 'dark' || tq === 'light') applyTheme(tq);
+  else { let saved = 'light'; try { saved = localStorage.getItem('math108_theme') || 'light'; } catch(e){} applyTheme(saved); }
+})();
+function notifyHeight(){
+  try {
+    const h = Math.min(415, Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
+    window.parent.postMessage({ type:'resize', height:h }, '*');
+  } catch(e){}
+}
+
+/* ---------- 啟動 ---------- */
+window.__R42_MODE__ = EXAM ? 'exam' : 'concept';
+window.__R42_Q__ = Q;
+if (EXAM){
+  document.body.classList.add('q-mode');
+  $('tabs').hidden = true;
+  for (let k=0;k<3;k++) $('act'+k).hidden = true;
+  $('modeTag').textContent = '🎯 段考真題 Q'+Q;
+  $('examPanel').hidden = false;
+  initState(DATA[Q-1]); renderPanel(DATA[Q-1]);
+} else {
+  $('examPanel').hidden = true;
+  Array.from($('tabs').children).forEach((b,k) => b.onclick = () => setAct(k));
+  setAct(0);
+}
+window.__R42_READY__ = true;
+window.addEventListener('load', notifyHeight);
+window.addEventListener('resize', notifyHeight);
+</script>
+</body>
+</html>

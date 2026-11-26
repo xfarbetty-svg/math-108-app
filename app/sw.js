@@ -1,5 +1,5 @@
 /* Service Worker for 028-1 小數學冒險 */
-const CACHE_NAME = "math108-v20261123_094918";
+const CACHE_NAME = "math108-v20261126_081100";
 const PRECACHE = [
   "./",
   "index.html",

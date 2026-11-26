@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-8 數線與分數、小數</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#16a34a; --warn:#dc2626; --hl:#f59e0b;
+  --shadow:0 4px 14px var(--shadow-color); --radius:12px;
+}
+html[data-theme="dark"]{ --ok:#4ade80; --warn:#f87171; --hl:#fbbf24; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:6px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:5px;overflow:visible}
+.frac{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;vertical-align:middle;line-height:1;margin:0 .12em;min-width:.85em}
+.frac .n,.frac .d{font-weight:900;font-size:.9em;padding:0 .12em;line-height:1.05;white-space:nowrap}
+.frac .n{color:var(--a)} .frac .d{color:var(--sky)}
+.frac .l{display:block;width:100%;height:1.5px;background:var(--ink);border-radius:2px;margin:1.5px 0}
+html[data-theme="dark"] .frac .n{color:#8BE0C8} html[data-theme="dark"] .frac .d{color:#A8CEEA}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:20px}
+.head b{font-size:12.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.btn-theme{background:var(--elev);border:1px solid var(--line);border-radius:999px;padding:2px 7px;font-size:11px;font-weight:800;color:var(--ink)}
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:1 0 auto;padding:5px 8px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;text-align:center}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:12.5px;font-weight:800;color:var(--ink)}
+.card-desc{font-size:11px;line-height:1.35;color:var(--ink-soft)}
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:4px 6px;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;min-height:84px;position:relative}
+.stage-canvas svg{width:100%;max-width:360px;height:auto;max-height:112px;display:block;overflow:visible}
+.slider-track{position:relative;width:100%;max-width:340px;height:24px;background:var(--card);border:1px solid var(--line);border-radius:999px;margin-top:3px;display:flex;align-items:center;padding:0 10px;touch-action:none}
+.slider-knob{width:22px;height:18px;border-radius:999px;background:var(--a);color:#fff;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none;touch-action:none}
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:5px 7px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:8px;white-space:nowrap}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff}
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10.5px;line-height:1.3;color:var(--ink);font-weight:700;text-align:left;min-height:20px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+.steps-box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;display:flex;flex-direction:column;gap:1.5px;text-align:left}
+.steps-box .st{font-size:10px;line-height:1.22;color:var(--ink)}
+.steps-box .st b{color:var(--a)}
+.steps-box .fin{font-size:10px;font-weight:900;color:var(--ok)}
+.concept-footer{margin-top:1px}
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:12.5px;font-weight:900;padding:8px;border-radius:10px;text-align:center}
+.nl-status{font-size:10.5px;font-weight:900;color:var(--a);min-height:14px;margin-top:2px}
+[hidden]{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <b>N-4-8 數線與分數、小數</b>
+    <div class="head-right">
+      <span id="headTag">108 課綱活動</span>
+      <button id="btn-theme" class="btn-theme" type="button" title="切換亮暗主題">☀️</button>
+    </div>
+  </div>
+
+  <nav class="activity-nav" id="actNav">
+    <button class="act-btn active" data-act="0" type="button">🔍 活動一・雙刻度放大鏡</button>
+    <button class="act-btn" data-act="1" type="button">🏃 活動二・跑道跳格定位</button>
+    <button class="act-btn" data-act="2" type="button">⚖️ 活動三・分小數比一比</button>
+  </nav>
+
+  <!-- 活動一：烘焙量杯雙刻度（生活情境 1：烘焙食譜） -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-8 探究活動 1</span><span style="font-size:10px;color:var(--ink-soft)">烘焙量杯刻度</span></div>
+    <div class="card-title">🔍 活動一：雙刻度數線放大鏡</div>
+    <div class="card-desc">做蛋糕需要精準水量！把 0 到 1 公升平分成 10 格，點按鈕或拖曳滑塊，看看分數與小數如何對應同一點。</div>
+    <div class="stage-canvas">
+      <div id="a0svgWrap" style="width:100%;display:flex;justify-content:center"></div>
+      <div class="slider-track" id="a0track"><div class="slider-knob" id="a0knob">⇔</div></div>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="a0btns">
+        <button class="btn-action active" data-k="1" type="button">0.1 公升</button>
+        <button class="btn-action" data-k="3" type="button">0.3 公升</button>
+        <button class="btn-action" data-k="5" type="button">0.5（一半）</button>
+        <button class="btn-action" data-k="8" type="button">0.8 公升</button>
+      </div>
+      <div class="info-bubble ok" id="a0msg">✓ 0.1 公升就是 1/10 公升，兩個刻度在數線同一點！</div>
+    </div>
+  </section>
+
+  <!-- 活動二：操場接力跳格（生活情境 2：操場跑道） -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-8 探究活動 2</span><span style="font-size:10px;color:var(--ink-soft)">操場接力跑道</span></div>
+    <div class="card-title">🏃 活動二：數線跳格定位器</div>
+    <div class="card-desc">0 到 2 公里的接力跑道，切換不同等分後點「+1 格」或「-1 格」，觀察跳躍弧線與帶分數位置。</div>
+    <div class="stage-canvas" id="a1svgWrap"></div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action active" id="a1d4" type="button">4 等分（每格 1/4）</button>
+        <button class="btn-action" id="a1d5" type="button">5 等分（每格 0.2）</button>
+        <button class="btn-action" id="a1prev" type="button">⬅ -1 格</button>
+        <button class="btn-action" id="a1next" type="button">➡ +1 格</button>
+      </div>
+      <div class="info-bubble" id="a1msg">💡 目前在起點 0；試著點「➡ +1 格」往前跑！</div>
+    </div>
+  </section>
+
+  <!-- 活動三：書桌文具長度比大小（生活情境 3：文具測量） -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-8 探究活動 3</span><span style="font-size:10px;color:var(--ink-soft)">書桌文具測量</span></div>
+    <div class="card-title">⚖️ 活動三：分小數同點比一比</div>
+    <div class="card-desc">把分數和小數標在同一條 0～2 公尺數線上：越靠右邊的數越大，重疊在一起就是一樣大！</div>
+    <div class="stage-canvas" id="a2svgWrap"></div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button class="btn-action active" data-pair="0" type="button">3/4 vs 0.7</button>
+        <button class="btn-action" data-pair="1" type="button">1 1/2 vs 1.5</button>
+        <button class="btn-action" data-pair="2" type="button">2/5 vs 0.5</button>
+        <button class="btn-action" id="a2mark" type="button">📍 標記到數線</button>
+      </div>
+      <div class="info-bubble" id="a2msg">💡 選一組文具長度，點「📍 標記到數線」看誰在右邊。</div>
+    </div>
+  </section>
+
+  <!-- 真題互動教具 -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="examBadge">🎯 段考真題</span>
+      <span id="examSrc" style="font-size:9.5px;color:var(--ink-soft)"></span>
+    </div>
+    <div class="card-title" id="examTitle"></div>
+    <div class="card-desc" id="examDesc"></div>
+    <div class="stage-canvas">
+      <div id="examDiagram" style="width:100%;display:flex;justify-content:center"></div>
+      <div class="nl-status" id="nlStatus"></div>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examActions"></div>
+      <div class="info-bubble" id="examMsg"></div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+
+  <footer class="concept-footer" id="conceptFooter">
+    <button class="btn-go-quiz" id="goQuiz" type="button">🎯 進入真題測驗（10 題）</button>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const F=(n,d)=>'<span class="frac"><span class="n">'+n+'</span><span class="l"></span><span class="d">'+d+'</span></span>';
+function msg(html,cls){ const el=$('examMsg'); el.innerHTML=html; el.className='info-bubble'+(cls?' '+cls:''); }
+
+/* ===== 10 題資料驅動設定（與 data/units/G4/N-4-8.json 完全同步） ===== */
+const QS=[
+  {t:'move',c:'3.4+1.9-1.2',a:4.1,s:'南湖 111-2 期中 p1',
+   title:'小數數線左右移動',
+   h:'點「模擬移動路徑」，觀察先往右加、再往左減的落點。',
+   v:{min:3,max:6,step:5,start:3.4,mid:5.3,end:4.1,d1:'+1.9',d2:'-1.2'},
+   st:['先從 3.4 往右移動 1.9：3.4＋1.9＝5.3','再從 5.3 往左移動 1.2：5.3－1.2＝4.1','合併算式：3.4＋1.9－1.2＝4.1']},
+  {t:'read',c:'2+7*0.1',a:2.7,s:'南湖 111-2 期中 p2',
+   title:'小數數線放大圖讀數',
+   h:'點「逐格數刻度」，確認 2 和 3 之間每格是 0.1。',
+   v:{min:2,max:4,sub:10,target:2.7,startInt:2,ticks:7,unit:'0.1',ansTxt:'2.7'},
+   st:['每大格平分成 10 小格，1 小格＝0.1','從整數 2 往右數 7 小格＝0.7','合起來是 2＋0.7＝2.7']},
+  {t:'dual',c:'1/0.2',a:5,s:'南湖 112-2 期末 p1',
+   title:'數線標示 9.2 的最少等分數',
+   h:'點「切換 5 等分驗證」，看看 0.2 等於幾分之幾。',
+   v:{kind:'minpart',min:9,max:10,val:9.2},
+   st:['0.2＝2/10，代表 10 等分中的 2 格',`約分成分母最小的等值分數：${F(2,10)}＝${F(1,5)}`,'分母是 5，所以「至少」平分成 5 等分']},
+  {t:'dual',c:'45/100',a:0.45,s:'南湖 111-2 期末 p1',
+   title:'分數與小數 0.45 換算',
+   h:'點「對齊 0.45 刻度」，比對小數與百分位分數。',
+   v:{kind:'pct',min:0,max:1,val:0.45,num:45,den:100},
+   st:['0.45 是二位小數，代表 45 個 0.01',`0.01＝${F(1,100)}，45 個就是 ${F(45,100)}`,'4/5＝0.8、45/10＝4.5，只有 45/100＝0.45']},
+  {t:'dual',c:'4+4/100',a:4.04,s:'南湖 113-2 期末 p2',
+   title:'二位小數 4.04 換成分數',
+   h:'點「標出 4.04 位置」，注意小數點後的 0 是在十分位。',
+   v:{kind:'hundredth',min:4,max:4.2,val:4.04},
+   st:['4.04＝4＋0.04，整數部分是 4',`0.04 在百分位，代表 ${F(4,100)}（不是 ${F(4,10)}）`,'合起來寫成帶分數 4 4/100']},
+  {t:'read',c:'2+3/4',a:2.75,s:'南湖 111-2 期末 p1',
+   title:'1/4 刻度分數數線讀數',
+   h:'點「逐格數刻度」，看箭頭在 2 右邊第幾格。',
+   v:{min:1,max:4,sub:4,target:2.75,startInt:2,ticks:3,unit:'1/4',ansTxt:'2 3/4'},
+   st:['1 大格平分成 4 格，每格是 1/4','從 2 往右數 3 格，共 3 個 1/4','合起來是帶分數 2 3/4']},
+  {t:'dist',c:'1+2/5-1/5',a:1.2,s:'南湖 113-2 期末 p2',
+   title:'1/5 公尺數線兩點距離',
+   h:'點「數出 A 到 C 格數」，看共跨過幾個 1/5 公尺。',
+   v:{min:0,max:2,sub:5,aVal:0.2,cVal:1.4,hops:6},
+   st:['從 A（1/5）到 C（1 2/5＝7/5）共跨過 7－1＝6 格','每格 1/5 公尺，6 格是 6/5 公尺',`1 ${F(2,5)}－${F(1,5)}＝1 ${F(1,5)} 公尺`]},
+  {t:'read',c:'9+1/8',a:9.125,s:'獅湖 113-1 期末 p1',
+   title:'假分數數線讀數',
+   h:'點「逐格數刻度」，把整數 9 換算成以 8 為分母的假分數。',
+   v:{min:7,max:10,sub:8,target:9.125,startInt:9,ticks:1,unit:'1/8',ansTxt:'73/8'},
+   st:['每 1 單位有 8 格，整數 9＝72/8','方框在 9 右邊第 1 格，即 9 1/8',`72＋1＝73，假分數是 ${F(73,8)}`]},
+  {t:'dual',c:'2/3-9/12',a:-1/12,s:'獅湖 113-2 期末 p2',
+   title:'數線標記比較 2/3 與 9/12',
+   h:'點「兩點同時標上數線」，看誰的位置比較靠右邊。',
+   v:{kind:'cmp',a:[2,3],b:[9,12]},
+   st:[`將 ${F(2,3)} 擴分成分母 12：${F(2,3)}＝${F(8,12)}`,'在 12 等分線上，8/12 在第 8 格、9/12 在第 9 格','9/12 在右邊比較大，所以 2/3 ＜ 9/12']},
+  {t:'read',c:'2+1/3',a:2+1/3,s:'永安 114-1 期中 p1',
+   title:'1/3 刻度帶分數數線讀數',
+   h:'點「逐格數刻度」，數出 2 到 3 之間平分成幾格。',
+   v:{min:0,max:3,sub:3,target:2+1/3,startInt:2,ticks:1,unit:'1/3',ansTxt:'2 1/3'},
+   st:['每 1 大格平分成 3 等分，每格是 1/3','箭頭指在整數 2 右邊的第 1 格','合起來讀作帶分數 2 1/3']}
+];
+
+const DATA=QS.map((x,i)=>({q:i+1,type:x.t,check:x.c,ans:x.a,src:x.s,title:x.title,hint:x.h,viz:x.v,steps:x.st}));
+window.__N48_SELFTEST__=(function(){
+  const details=DATA.map((d,i)=>{
+    try{
+      const v=Function('"use strict";return ('+d.check+')')();
+      return {q:i+1,pass:Number.isFinite(v)&&Math.abs(v-d.ans)<2e-3,final:v,expected:d.ans,steps:d.steps.map(s=>s.replace(/<[^>]*>/g,''))};
+    }catch(e){ return {q:i+1,pass:false,error:String(e.message||e),final:null,expected:d.ans,steps:[]}; }
+  });
+  return {allPass:details.every(x=>x.pass),details};
+})();
+
+const P=new URLSearchParams(location.search);
+const qParam=parseInt(P.get('q')||'0',10);
+const FORCE_CONCEPT=P.get('mode')==='concept';
+const EXAM=(qParam>=1&&qParam<=10)&&!FORCE_CONCEPT;
+const Q=EXAM?qParam:1;
+const d=DATA[Q-1];
+window.__N48_MODE__=EXAM?'exam':'concept';
+window.__N48_Q__=Q;
+window.__N48_TYPE__=EXAM?d.type:'concept';
+
+/* ===== SVG 數線繪製共用元件 ===== */
+function svgLineBase(min,max,sub,opts={}){
+  const W=340, H=opts.H||82, x0=24, x1=316, y=opts.y||48;
+  const span=max-min, px=val=>x0+((val-min)/span)*(x1-x0);
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  s+=`<line x1="${x0-8}" y1="${y}" x2="${x1+10}" y2="${y}" stroke="var(--ink)" stroke-width="2.2"/>`;
+  s+=`<polygon points="${x1+14},${y} ${x1+6},${y-4} ${x1+6},${y+4}" fill="var(--ink)"/>`;
+  const total=Math.round(span*sub);
+  for(let i=0;i<=total;i++){
+    const v=min+i/sub, x=px(v), isMaj=(i%sub===0), isHalf=(sub>=4 && sub%2===0 && i%(sub/2)===0);
+    const th=isMaj?11:(isHalf?8:5);
+    s+=`<line x1="${x.toFixed(1)}" y1="${y-th}" x2="${x.toFixed(1)}" y2="${y+th}" stroke="var(--ink)" stroke-width="${isMaj?2:1.1}"/>`;
+    if(isMaj){
+      const lbl=opts.fmtMaj?opts.fmtMaj(Math.round(v)):Math.round(v);
+      s+=`<text x="${x.toFixed(1)}" y="${y+23}" font-size="11" font-weight="800" fill="var(--ink)" text-anchor="middle">${lbl}</text>`;
+    }
+  }
+  return {s,px,y,x0,x1,W,H};
+}
+
+/* ===== 活動一：雙刻度數線放大鏡 ===== */
+let a0k=1;
+function renderAct0(k){
+  a0k=k;
+  const b=svgLineBase(0,1,10,{H:80,y:44});
+  const val=k/10, tx=b.px(val);
+  let s=b.s;
+  s+=`<line x1="${tx.toFixed(1)}" y1="12" x2="${tx.toFixed(1)}" y2="${b.y+12}" stroke="var(--a)" stroke-width="2" stroke-dasharray="3,2"/>`;
+  s+=`<circle cx="${tx.toFixed(1)}" cy="${b.y}" r="5.5" fill="var(--a)" stroke="#fff" stroke-width="1.5"/>`;
+  s+=`<rect x="${Math.max(8,Math.min(268,tx-32)).toFixed(1)}" y="4" width="64" height="20" rx="6" fill="var(--a)"/>`;
+  s+=`<text x="${Math.max(40,Math.min(300,tx)).toFixed(1)}" y="18" font-size="10.5" font-weight="900" fill="#fff" text-anchor="middle">${val.toFixed(1)} ＝ ${k}/10</text>`;
+  s+=`</svg>`;
+  $('a0svgWrap').innerHTML=s;
+  const eq=k===5?'（約分＝1/2）':(k===8?'（約分＝4/5）':(k===2?'（約分＝1/5）':''));
+  $('a0msg').innerHTML=`✓ 小數 <b>${val.toFixed(1)}</b> 與分數 ${F(k,10)} ${eq} 落在數線同一點！`;
+  document.querySelectorAll('#a0btns .btn-action').forEach(btn=>btn.classList.toggle('active',+btn.dataset.k===k));
+  const tr=$('a0track'), kb=$('a0knob');
+  if(tr&&kb){
+    const maxDx=Math.max(10,tr.clientWidth-42);
+    kb.style.transform=`translateX(${Math.round((k/10)*maxDx)}px)`;
+  }
+}
+$('a0btns').onclick=e=>{ const b=e.target.closest('.btn-action'); if(b) renderAct0(+b.dataset.k); };
+(function(){
+  const tr=$('a0track'), kb=$('a0knob'); let drag=false;
+  const moveAt=clientX=>{
+    const r=tr.getBoundingClientRect();
+    const ratio=Math.max(0,Math.min(1,(clientX-r.left-11)/Math.max(1,r.width-22)));
+    const k=Math.max(1,Math.min(9,Math.round(ratio*10)));
+    renderAct0(k);
+  };
+  kb.addEventListener('pointerdown',e=>{ drag=true; kb.setPointerCapture(e.pointerId); moveAt(e.clientX); });
+  kb.addEventListener('pointermove',e=>{ if(drag) moveAt(e.clientX); });
+  kb.addEventListener('pointerup',()=>{ drag=false; });
+  tr.addEventListener('click',e=>{ if(e.target!==kb) moveAt(e.clientX); });
+})();
+
+/* ===== 活動二：跑道跳格定位器 ===== */
+let a1sub=4, a1pos=0;
+function renderAct1(){
+  const b=svgLineBase(0,2,a1sub,{H:82,y:48});
+  const tx=b.px(a1pos/a1sub);
+  let s=b.s;
+  for(let i=0;i<a1pos;i++){
+    const xA=b.px(i/a1sub), xB=b.px((i+1)/a1sub), xm=(xA+xB)/2;
+    s+=`<path d="M ${xA.toFixed(1)} ${b.y-4} Q ${xm.toFixed(1)} ${b.y-24} ${xB.toFixed(1)} ${b.y-4}" fill="none" stroke="var(--mint)" stroke-width="2"/>`;
+  }
+  s+=`<circle cx="${tx.toFixed(1)}" cy="${b.y}" r="5.5" fill="var(--a)" stroke="#fff" stroke-width="1.5"/>`;
+  s+=`</svg>`;
+  $('a1svgWrap').innerHTML=s;
+  const whole=Math.floor(a1pos/a1sub), rem=a1pos%a1sub;
+  const fracStr=a1pos===0?'0':(rem===0?String(whole):(whole>0?`${whole} ${F(rem,a1sub)}`:F(rem,a1sub)));
+  const decStr=(a1pos/a1sub).toFixed(a1sub===4?2:1);
+  $('a1msg').className='info-bubble'+(a1pos>0?' ok':'');
+  $('a1msg').innerHTML=a1pos===0?'💡 目前在起點 0；點「➡ +1 格」觀察跑道跳格！':`✓ 跳了 ${a1pos} 格：分數是 <b>${fracStr}</b> 公里，小數是 <b>${decStr}</b> 公里。`;
+  $('a1d4').classList.toggle('active',a1sub===4);
+  $('a1d5').classList.toggle('active',a1sub===5);
+}
+$('a1d4').onclick=()=>{ a1sub=4; a1pos=Math.min(a1pos,8); renderAct1(); };
+$('a1d5').onclick=()=>{ a1sub=5; a1pos=Math.min(a1pos,10); renderAct1(); };
+$('a1next').onclick=()=>{ if(a1pos<2*a1sub){ a1pos++; renderAct1(); } };
+$('a1prev').onclick=()=>{ if(a1pos>0){ a1pos--; renderAct1(); } };
+
+/* ===== 活動三：分小數同點比一比 ===== */
+const PAIRS=[
+  {fn:'3/4',fv:0.75,dn:'0.7',dv:0.7,cmp:'＞',txt:'3/4＝0.75，在 0.7 的右邊，所以 3/4 ＞ 0.7'},
+  {fn:'1 1/2',fv:1.5,dn:'1.5',dv:1.5,cmp:'＝',txt:'1 1/2＝1.5，兩點完全重疊，所以 1 1/2 ＝ 1.5'},
+  {fn:'2/5',fv:0.4,dn:'0.5',dv:0.5,cmp:'＜',txt:'2/5＝0.4，在 0.5 的左邊，所以 2/5 ＜ 0.5'}
+];
+let a2idx=0, a2marked=false;
+function renderAct2(){
+  const pr=PAIRS[a2idx], b=svgLineBase(0,2,10,{H:84,y:48});
+  let s=b.s;
+  if(a2marked){
+    const fx=b.px(pr.fv), dx=b.px(pr.dv);
+    s+=`<circle cx="${fx.toFixed(1)}" cy="${b.y}" r="5.5" fill="var(--a)"/>`;
+    s+=`<text x="${fx.toFixed(1)}" y="${b.y-14}" font-size="10.5" font-weight="900" fill="var(--a)" text-anchor="middle">${pr.fn}</text>`;
+    s+=`<circle cx="${dx.toFixed(1)}" cy="${b.y+1}" r="4.5" fill="var(--hl)" stroke="#fff" stroke-width="1"/>`;
+    s+=`<text x="${dx.toFixed(1)}" y="${b.y-27}" font-size="10.5" font-weight="900" fill="var(--hl)" text-anchor="middle">${pr.dn}</text>`;
+  }
+  s+=`</svg>`;
+  $('a2svgWrap').innerHTML=s;
+  document.querySelectorAll('#act-2-view .btn-action[data-pair]').forEach(btn=>btn.classList.toggle('active',+btn.dataset.pair===a2idx));
+  $('a2msg').className='info-bubble'+(a2marked?' ok':'');
+  $('a2msg').innerHTML=a2marked?('✓ '+pr.txt):`💡 點「📍 標記到數線」把 <b>${pr.fn}</b> 和 <b>${pr.dn}</b> 同時標上去。`;
+}
+document.querySelectorAll('#act-2-view .btn-action[data-pair]').forEach(btn=>btn.onclick=()=>{ a2idx=+btn.dataset.pair; a2marked=false; renderAct2(); });
+$('a2mark').onclick=()=>{ a2marked=true; renderAct2(); };
+
+/* ===== 真題四種視覺教具（階段 A 零劇透 → 階段 B 互動變化） ===== */
+const RENDER={
+  move(d){
+    const v=d.viz;
+    const draw=done=>{
+      const b=svgLineBase(v.min,v.max,v.step,{H:86,y:52});
+      let s=b.s;
+      const sx=b.px(v.start), mx=b.px(v.mid), ex=b.px(v.end);
+      s+=`<circle cx="${sx.toFixed(1)}" cy="${b.y}" r="5" fill="var(--sky)"/><text x="${sx.toFixed(1)}" y="${b.y-10}" font-size="10" font-weight="900" fill="var(--sky)" text-anchor="middle">起點 ${v.start}</text>`;
+      if(done){
+        s+=`<path class="nl-arc" d="M ${sx.toFixed(1)} ${b.y-5} Q ${((sx+mx)/2).toFixed(1)} ${b.y-36} ${mx.toFixed(1)} ${b.y-5}" fill="none" stroke="var(--ok)" stroke-width="2.2"/>`;
+        s+=`<text x="${((sx+mx)/2).toFixed(1)}" y="${b.y-25}" font-size="10" font-weight="900" fill="var(--ok)" text-anchor="middle">${v.d1}</text>`;
+        s+=`<path class="nl-arc" d="M ${mx.toFixed(1)} ${b.y-5} Q ${((mx+ex)/2).toFixed(1)} ${b.y-26} ${ex.toFixed(1)} ${b.y-5}" fill="none" stroke="var(--hl)" stroke-width="2.2" stroke-dasharray="3,2"/>`;
+        s+=`<text x="${((mx+ex)/2).toFixed(1)}" y="${b.y-18}" font-size="10" font-weight="900" fill="var(--hl)" text-anchor="middle">${v.d2}</text>`;
+        s+=`<circle class="nl-hit" cx="${ex.toFixed(1)}" cy="${b.y}" r="5.5" fill="var(--a)" stroke="#fff" stroke-width="1.5"/>`;
+      }
+      s+=`</svg>`;
+      $('examDiagram').innerHTML=s;
+      $('nlStatus').textContent=done?`✓ 起點 ${v.start} → ${v.mid} → 終點 ${v.end}`:'';
+    };
+    draw(false);
+    $('examActions').innerHTML='<button class="btn-action" id="nlGo" type="button">① 模擬移動路徑</button>';
+    $('nlGo').onclick=()=>{ draw(true); msg(`✓ 先往右到達 ${v.mid}，再往左到達 ${v.end}`,'ok'); };
+  },
+  read(d){
+    const v=d.viz;
+    const draw=done=>{
+      const b=svgLineBase(v.min,v.max,v.sub,{H:86,y:52});
+      let s=b.s;
+      const tx=b.px(v.target);
+      s+=`<line x1="${tx.toFixed(1)}" y1="16" x2="${tx.toFixed(1)}" y2="${b.y-6}" stroke="var(--a)" stroke-width="2.2"/>`;
+      s+=`<polygon points="${tx.toFixed(1)},${b.y-3} ${(tx-4).toFixed(1)},${b.y-10} ${(tx+4).toFixed(1)},${b.y-10}" fill="var(--a)"/>`;
+      s+=`<rect x="${(tx-18).toFixed(1)}" y="4" width="36" height="16" rx="4" fill="var(--card)" stroke="var(--a)" stroke-width="1.5"/>`;
+      s+=`<text x="${tx.toFixed(1)}" y="15.5" font-size="10" font-weight="900" fill="var(--a)" text-anchor="middle">${done?v.ansTxt:'?'}</text>`;
+      if(done){
+        for(let i=0;i<v.ticks;i++){
+          const xA=b.px(v.startInt+i/v.sub), xB=b.px(v.startInt+(i+1)/v.sub);
+          s+=`<path class="nl-arc" d="M ${xA.toFixed(1)} ${b.y-3} Q ${((xA+xB)/2).toFixed(1)} ${b.y-18} ${xB.toFixed(1)} ${b.y-3}" fill="none" stroke="var(--ok)" stroke-width="2"/>`;
+        }
+        s+=`<circle class="nl-hit" cx="${tx.toFixed(1)}" cy="${b.y}" r="4.5" fill="var(--ok)"/>`;
+      }
+      s+=`</svg>`;
+      $('examDiagram').innerHTML=s;
+      $('nlStatus').textContent=done?`✓ 每格 ${v.unit}，從 ${v.startInt} 往右數 ${v.ticks} 格 ＝ ${v.ansTxt}`:'';
+    };
+    draw(false);
+    $('examActions').innerHTML='<button class="btn-action" id="nlGo" type="button">① 逐格數刻度</button>';
+    $('nlGo').onclick=()=>{ draw(true); msg(`✓ 從 ${v.startInt} 往右數 ${v.ticks} 格（每格 ${v.unit}）`,'ok'); };
+  },
+  dist(d){
+    const v=d.viz;
+    const draw=done=>{
+      const b=svgLineBase(v.min,v.max,v.sub,{H:86,y:52});
+      let s=b.s;
+      const ax=b.px(v.aVal), cx=b.px(v.cVal);
+      s+=`<circle cx="${ax.toFixed(1)}" cy="${b.y}" r="5" fill="var(--sky)"/><text x="${ax.toFixed(1)}" y="${b.y-10}" font-size="10" font-weight="900" fill="var(--sky)" text-anchor="middle">A</text>`;
+      s+=`<circle cx="${cx.toFixed(1)}" cy="${b.y}" r="5" fill="var(--a)"/><text x="${cx.toFixed(1)}" y="${b.y-10}" font-size="10" font-weight="900" fill="var(--a)" text-anchor="middle">C</text>`;
+      if(done){
+        for(let i=0;i<v.hops;i++){
+          const xA=b.px(v.aVal+i/v.sub), xB=b.px(v.aVal+(i+1)/v.sub);
+          s+=`<path class="nl-arc" d="M ${xA.toFixed(1)} ${b.y-4} Q ${((xA+xB)/2).toFixed(1)} ${b.y-22} ${xB.toFixed(1)} ${b.y-4}" fill="none" stroke="var(--ok)" stroke-width="2"/>`;
+        }
+        s+=`<circle class="nl-hit" cx="${cx.toFixed(1)}" cy="${b.y}" r="4" fill="var(--ok)"/>`;
+      }
+      s+=`</svg>`;
+      $('examDiagram').innerHTML=s;
+      $('nlStatus').textContent=done?`✓ A 到 C 共跨過 ${v.hops} 個 1/5 公尺 ＝ 1 1/5 公尺`:'';
+    };
+    draw(false);
+    $('examActions').innerHTML='<button class="btn-action" id="nlGo" type="button">① 數出 A 到 C 格數</button>';
+    $('nlGo').onclick=()=>{ draw(true); msg('✓ 數線上共跨過 6 格，每格 1/5 公尺','ok'); };
+  },
+  dual(d){
+    const v=d.viz;
+    const draw=done=>{
+      let s='';
+      if(v.kind==='minpart'){
+        const b=svgLineBase(9,10,done?5:10,{H:86,y:50});
+        s=b.s;
+        const tx=b.px(9.2);
+        s+=`<line x1="${tx.toFixed(1)}" y1="16" x2="${tx.toFixed(1)}" y2="${b.y}" stroke="var(--a)" stroke-width="2"/>`;
+        s+=`<text x="${tx.toFixed(1)}" y="13" font-size="10" font-weight="900" fill="var(--a)" text-anchor="middle">9.2</text>`;
+        if(done) s+=`<circle class="nl-hit" cx="${tx.toFixed(1)}" cy="${b.y}" r="5.5" fill="var(--ok)"/>`;
+        s+=`</svg>`;
+        $('nlStatus').textContent=done?'✓ 平分成 5 等分時，第 1 格就是 9.2（9 1/5）':'';
+      }else if(v.kind==='pct'){
+        const b=svgLineBase(0,1,10,{H:86,y:48});
+        s=b.s;
+        const tx=b.px(0.45);
+        if(done){
+          s+=`<line x1="${tx.toFixed(1)}" y1="12" x2="${tx.toFixed(1)}" y2="${b.y+10}" stroke="var(--ok)" stroke-width="2.2"/>`;
+          s+=`<circle class="nl-hit" cx="${tx.toFixed(1)}" cy="${b.y}" r="5.5" fill="var(--ok)"/>`;
+          s+=`<text x="${tx.toFixed(1)}" y="10" font-size="10" font-weight="900" fill="var(--ok)" text-anchor="middle">0.45 ＝ 45/100</text>`;
+        }
+        s+=`</svg>`;
+        $('nlStatus').textContent=done?'✓ 0.45 在 0.4 和 0.5 正中間 ＝ 45/100':'';
+      }else if(v.kind==='hundredth'){
+        const b=svgLineBase(4,4.2,20,{H:86,y:50,fmtMaj:n=>n===4?'4':'4.2'});
+        // manual clean ticks 4.00..4.20
+        const W=340,H=86,x0=24,x1=316,y=50;
+        const px=val=>x0+((val-4)/0.2)*(x1-x0);
+        s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+        s+=`<line x1="${x0-6}" y1="${y}" x2="${x1+8}" y2="${y}" stroke="var(--ink)" stroke-width="2.2"/>`;
+        for(let i=0;i<=20;i++){
+          const x=px(4+i*0.01), isMaj=(i%10===0), th=isMaj?11:5;
+          s+=`<line x1="${x.toFixed(1)}" y1="${y-th}" x2="${x.toFixed(1)}" y2="${y+th}" stroke="var(--ink)" stroke-width="${isMaj?2:1.1}"/>`;
+          if(isMaj) s+=`<text x="${x.toFixed(1)}" y="${y+23}" font-size="10.5" font-weight="800" fill="var(--ink)" text-anchor="middle">${(4+i*0.01).toFixed(1)}</text>`;
+        }
+        if(done){
+          const tx=px(4.04);
+          s+=`<circle class="nl-hit" cx="${tx.toFixed(1)}" cy="${y}" r="5.5" fill="var(--ok)"/>`;
+          s+=`<text x="${tx.toFixed(1)}" y="18" font-size="10" font-weight="900" fill="var(--ok)" text-anchor="middle">4.04 ＝ 4 4/100</text>`;
+        }
+        s+=`</svg>`;
+        $('nlStatus').textContent=done?'✓ 4.04 在 4 之後第 4 小格（4/100）':'';
+      }else{
+        const b=svgLineBase(0,1,12,{H:86,y:48});
+        s=b.s;
+        const ax=b.px(2/3), bx=b.px(9/12);
+        if(done){
+          s+=`<circle class="nl-hit" cx="${ax.toFixed(1)}" cy="${b.y}" r="5" fill="var(--sky)"/>`;
+          s+=`<text x="${ax.toFixed(1)}" y="${b.y-14}" font-size="10" font-weight="900" fill="var(--sky)" text-anchor="middle">2/3 (8/12)</text>`;
+          s+=`<circle class="nl-hit" cx="${bx.toFixed(1)}" cy="${b.y}" r="5" fill="var(--a)"/>`;
+          s+=`<text x="${bx.toFixed(1)}" y="14" font-size="10" font-weight="900" fill="var(--a)" text-anchor="middle">9/12</text>`;
+        }
+        s+=`</svg>`;
+        $('nlStatus').textContent=done?'✓ 9/12（第 9 格）在 2/3（第 8 格）右邊':'';
+      }
+      $('examDiagram').innerHTML=s;
+    };
+    draw(false);
+    const btnLbl={minpart:'① 切換 5 等分驗證',pct:'① 對齊 0.45 刻度',hundredth:'① 標出 4.04 位置',cmp:'① 兩點同時標上數線'}[v.kind];
+    $('examActions').innerHTML=`<button class="btn-action" id="nlGo" type="button">${btnLbl}</button>`;
+    $('nlGo').onclick=()=>{ draw(true); msg('✓ 已在數線上完成對齊驗證！','ok'); };
+  }
+};
+
+function revealSteps(){
+  if($('stepsBox').hidden){
+    $('stepsBox').innerHTML=d.steps.map((s,i)=>'<div class="'+(i===2?'fin':'st')+'"><b>'+['①','②','③'][i]+'</b> '+s+'</div>').join('');
+    $('stepsBox').hidden=false;
+  }
+  notifyHeight();
+}
+function renderExam(){
+  $('headTag').textContent='真題數線教具';
+  $('examBadge').textContent='🎯 段考真題 第 '+Q+' 題 / 10';
+  $('examSrc').textContent=d.src;
+  $('examTitle').textContent=d.title;
+  $('examDesc').innerHTML='操作提示：先點下方按鈕觀察數線，再點「🔍 一步一步看算理」。';
+  $('stepsBox').hidden=true; $('stepsBox').innerHTML='';
+  msg('💡 '+d.hint,'');
+  RENDER[d.type](d);
+  const btn=document.createElement('button'); btn.className='btn-action'; btn.id='revealSteps'; btn.type='button';
+  btn.textContent='🔍 一步一步看算理'; btn.onclick=revealSteps; $('examActions').appendChild(btn);
+}
+
+function setAct(n){
+  for(let i=0;i<3;i++){
+    const tab=document.querySelector('.act-btn[data-act="'+i+'"]');
+    const view=$('act-'+i+'-view');
+    if(tab) tab.classList.toggle('active',i===n);
+    if(view) view.hidden=(i!==n);
+  }
+  if(n===0) renderAct0(a0k);
+  if(n===1) renderAct1();
+  if(n===2) renderAct2();
+  notifyHeight();
+}
+function goToQuiz(){
+  if(window.parent&&window.parent!==window&&window.parent.switchToExamMode) window.parent.switchToExamMode();
+  else location.href=location.pathname+'?q=1';
+}
+document.querySelectorAll('.act-btn').forEach(b=>b.onclick=()=>setAct(+b.dataset.act));
+$('goQuiz').onclick=goToQuiz;
+
+/* ===== Light / Dark 主題同步 ===== */
+function applyTheme(t){
+  const theme=(t==='dark')?'dark':'light';
+  document.documentElement.dataset.theme=theme;
+  $('btn-theme').textContent=(theme==='dark')?'🌙':'☀️';
+  try{ localStorage.setItem('math108_theme',theme); }catch(e){}
+}
+(function(){
+  const tUrl=P.get('theme');
+  let init='light';
+  if(tUrl==='dark'||tUrl==='light') init=tUrl;
+  else{ try{ init=localStorage.getItem('math108_theme')||'light'; }catch(e){} }
+  applyTheme(init);
+  $('btn-theme').onclick=()=>{
+    const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
+    applyTheme(next);
+  };
+  window.addEventListener('message',e=>{
+    if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme) applyTheme(e.data.theme);
+  });
+})();
+
+if(EXAM){
+  $('actNav').hidden=true; $('conceptFooter').hidden=true;
+  for(let i=0;i<3;i++) $('act-'+i+'-view').hidden=true;
+  $('examView').hidden=false; renderExam();
+}else{
+  $('examView').hidden=true; setAct(0);
+}
+window.__N48_READY__=true;
+function notifyHeight(){ try{ const h=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight); window.parent.postMessage({type:'resize',height:h},'*'); }catch(e){} }
+window.addEventListener('load',notifyHeight);
+window.addEventListener('resize',notifyHeight);
+</script>
+</body>
+</html>

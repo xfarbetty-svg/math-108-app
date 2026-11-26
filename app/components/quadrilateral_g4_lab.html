@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>S-4-8 四邊形性質與對角線・108 課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main, #fcfbf9);
+  --card:var(--bg-card, #ffffff);
+  --ink:var(--text-primary, #1e293b);
+  --ink-soft:var(--text-secondary, #64748b);
+  --line:var(--border-color, #e2e8f0);
+  --a:var(--accent-primary, #2563eb);
+  --mint:var(--accent-mint, #0d9488);
+  --sky:var(--accent-sky, #0284c7);
+  --elev:var(--bg-elevated, #f1f5f9);
+  --ok:#16a34a; --warn:#ea580c; --err:#dc2626;
+  --shadow:0 3px 10px rgba(0,0,0,0.06);
+  --radius:12px;
+  --quad-fill:rgba(37, 99, 235, 0.16);
+  --quad-stroke:#2563eb;
+  --quad-b-fill:rgba(234, 88, 12, 0.16);
+  --quad-b-stroke:#ea580c;
+  --quad-ok-fill:rgba(22, 163, 74, 0.18);
+  --quad-ok-stroke:#16a34a;
+}
+html[data-theme="dark"]{
+  --bg:#0f172a; --card:#1e293b; --ink:#f8fafc; --ink-soft:#94a3b8;
+  --line:#334155; --elev:#1e293b; --ok:#4ade80; --warn:#fb923c; --err:#f87171;
+  --shadow:0 3px 10px rgba(0,0,0,0.28);
+  --quad-fill:rgba(96, 165, 250, 0.22);
+  --quad-stroke:#60a5fa;
+  --quad-b-fill:rgba(251, 146, 60, 0.22);
+  --quad-b-stroke:#fb923c;
+  --quad-ok-fill:rgba(74, 222, 128, 0.22);
+  --quad-ok-stroke:#4ade80;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+[hidden]{display:none!important}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:22px}
+.head-left{display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.head b{font-size:12px;color:var(--ink);white-space:nowrap}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+#btn-theme{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:4px 9px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;transition:all .15s}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:11.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:2px;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none}
+.stage-canvas svg{width:100%;max-width:340px;height:118px;display:block;touch-action:none;user-select:none}
+
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:4px 6px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn-action{background:var(--card);border:1.2px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:3px 7px;border-radius:7px;transition:all .12s;white-space:nowrap}
+.btn-action:hover{border-color:var(--a)}
+.btn-action.primary{background:var(--a);border-color:var(--a);color:#fff}
+.btn-action.active{background:var(--a);border-color:var(--a);color:#fff}
+
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10.5px;line-height:1.32;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+.steps-box{background:var(--card);border:1.5px solid var(--ok);border-radius:8px;padding:5px 7px;font-size:10px;line-height:1.35;color:var(--ink);display:flex;flex-direction:column;gap:2px;text-align:left}
+.step-line b{color:var(--ok);margin-right:3px}
+
+/* 嚴格雙模式隔離：q-mode 下強制隱藏所有概念活動頁籤與卡片 */
+.q-mode .activity-nav,
+.q-mode #act-0-view,
+.q-mode #act-1-view,
+.q-mode #act-2-view{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <div class="head-left">
+      <b>🔷 四邊形與對角線實驗</b>
+      <span id="qtag" class="card-badge" hidden></span>
+    </div>
+    <div class="head-right">
+      <button type="button" id="btn-theme">🌙 深色</button>
+    </div>
+  </div>
+
+  <nav class="activity-nav" id="activityNav">
+    <button type="button" class="act-btn active" data-act="0">① 伸縮鐵捲門(對邊)</button>
+    <button type="button" class="act-btn" data-act="1">② 風箏骨架(對角線)</button>
+    <button type="button" class="act-btn" data-act="2">③ 七巧板對角剪裁</button>
+  </nav>
+
+  <!-- 活動一：伸縮鐵捲門（邊角平行拉動） -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head">
+      <span class="card-badge">活動一・伸縮鐵捲門</span>
+      <span class="card-title">拖曳頂點觀察平行對邊與對角</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="svg0" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="act0Para">平行四邊形</button>
+        <button type="button" class="btn-action" id="act0Rect">長方形</button>
+        <button type="button" class="btn-action" id="act0Trap">梯形</button>
+      </div>
+      <div class="info-bubble" id="act0Msg">拖曳橘色頂點 P，觀察上下與左右對邊有幾雙互相平行！</div>
+    </div>
+  </section>
+
+  <!-- 活動二：風箏骨架交叉（對角線實測） -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動二・風箏骨架交叉</span>
+      <span class="card-title">拖曳端點比較對角線等長與垂直</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="svg1" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="act1Sq">正方形</button>
+        <button type="button" class="btn-action" id="act1Rhom">菱形</button>
+        <button type="button" class="btn-action" id="act1Rect">長方形</button>
+      </div>
+      <div class="info-bubble" id="act1Msg">拖曳橫桿端點，量量看兩條對角線是否等長、是否互相垂直！</div>
+    </div>
+  </section>
+
+  <!-- 活動三：七巧板對角剪裁（對角線剪開全等實驗） -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動三・七巧板對角剪裁</span>
+      <span class="card-title">拖曳右側紙片檢驗是否全等重合</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="svg2" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="act2Para">平行四邊形</button>
+        <button type="button" class="btn-action" id="act2Rhom">菱形</button>
+        <button type="button" class="btn-action" id="act2Trap">梯形</button>
+      </div>
+      <div class="info-bubble" id="act2Msg">沿對角線剪開後，拖曳右側三角形往左旋轉疊合試試看！</div>
+    </div>
+  </section>
+
+  <!-- 真題模式（?q=1..10） -->
+  <section class="act-card" id="exam-view" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="examBadge">真題互動圖解</span>
+      <span class="card-title" id="examTitle">觀察四邊形特徵</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="examStage" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examControls"></div>
+      <div class="info-bubble" id="examMsg">先觀察上方圖形，再點選下方按鈕檢查特徵或展開算理。</div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const qNum = parseInt(params.get('q') || '0', 10);
+  const isExam = qNum >= 1 && qNum <= 10;
+  const initTheme = params.get('theme') === 'dark' ? 'dark' : 'light';
+  const appEl = document.getElementById('app');
+  const btnTheme = document.getElementById('btn-theme');
+
+  function applyTheme(t){
+    const dark = t === 'dark';
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btnTheme.textContent = dark ? '☀️ 淺色' : '🌙 深色';
+  }
+  applyTheme(initTheme);
+  btnTheme.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  window.addEventListener('message', (ev) => {
+    if (ev.data && ev.data.type === 'THEME_CHANGE') applyTheme(ev.data.theme);
+  });
+
+  window.__S48_MODE__ = isExam ? 'exam' : 'concept';
+  const STATE = window.__S48_STATE__ = {
+    act0Mode: 'para', act0TopX: 235,
+    act1Mode: 'sq', act1HalfW: 38,
+    act2Mode: 'para', act2Slide: 0
+  };
+
+  function svgEl(tag, attrs, text){
+    const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    if (text !== undefined) el.textContent = text;
+    return el;
+  }
+  function svgPt(svg, ev){
+    const r = svg.getBoundingClientRect();
+    return {
+      x: (ev.clientX - r.left) * (340 / r.width),
+      y: (ev.clientY - r.top) * (118 / r.height)
+    };
+  }
+
+  /* ================= 概念探索三活動 ================= */
+  if (!isExam){
+    const navBtns = [...document.querySelectorAll('.act-btn')];
+    const views = [0,1,2].map(i => document.getElementById('act-'+i+'-view'));
+    function showAct(idx){
+      navBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
+      views.forEach((v,i) => v.hidden = (i !== idx));
+    }
+    navBtns.forEach((b,i) => b.addEventListener('click', () => showAct(i)));
+
+    /* --- 活動一：伸縮鐵捲門（邊角平行拉動） --- */
+    const svg0 = document.getElementById('svg0');
+    const act0Msg = document.getElementById('act0Msg');
+    function renderAct0(){
+      svg0.innerHTML = '';
+      const mode = STATE.act0Mode;
+      const topRightX = STATE.act0TopX;
+      // Base: B=(105,98), C=(225,98) -> width 120
+      const B = {x:105, y:98}, C = {x:225, y:98};
+      const A = mode === 'rect' ? {x:105, y:24} : (mode === 'trap' ? {x:135, y:24} : {x:topRightX - 120, y:24});
+      const D = {x:topRightX, y:24};
+
+      // Gate rails
+      svg0.appendChild(svgEl('line', {x1:40,y1:24,x2:300,y2:24,stroke:'var(--line)','stroke-width':'1.5','stroke-dasharray':'4 3'}));
+      svg0.appendChild(svgEl('line', {x1:40,y1:98,x2:300,y2:98,stroke:'var(--line)','stroke-width':'1.5','stroke-dasharray':'4 3'}));
+
+      const isRect = Math.abs(A.x - B.x) <= 4 && Math.abs(D.x - C.x) <= 4;
+      const isPara = mode !== 'trap' && Math.abs((D.x - A.x) - (C.x - B.x)) <= 2;
+
+      svg0.appendChild(svgEl('polygon', {
+        points:`${A.x},${A.y} ${D.x},${D.y} ${C.x},${C.y} ${B.x},${B.y}`,
+        fill: isPara ? 'var(--quad-ok-fill)' : 'var(--quad-b-fill)',
+        stroke: isPara ? 'var(--quad-ok-stroke)' : 'var(--quad-b-stroke)',
+        'stroke-width':'2.5','stroke-linejoin':'round'
+      }));
+      // Parallel arrows on top/bottom
+      svg0.appendChild(svgEl('text', {x:(A.x+D.x)/2,y:17,'text-anchor':'middle',fill:'var(--ok)','font-size':'9.5','font-weight':'800'}, '上邊 ∥ 下邊'));
+      const sideLabel = isPara ? '兩雙對邊平行' : '只有上、下對邊平行';
+      svg0.appendChild(svgEl('text', {x:170,y:64,'text-anchor':'middle',fill:'var(--ink)','font-size':'10.5','font-weight':'800'}, sideLabel));
+      svg0.appendChild(svgEl('circle', {cx:D.x,cy:D.y,r:7,fill:'var(--warn)',stroke:'#fff','stroke-width':'2',style:'cursor:grab'}));
+      svg0.appendChild(svgEl('text', {x:D.x+11,y:D.y+4,fill:'var(--warn)','font-size':'10','font-weight':'800'}, 'P'));
+
+      if (mode === 'trap'){
+        act0Msg.className = 'info-bubble warn';
+        act0Msg.textContent = '梯形：只有 1 雙對邊（上下）互相平行，左右兩邊不平行！';
+      } else if (isRect){
+        act0Msg.className = 'info-bubble ok';
+        act0Msg.textContent = '長方形：兩雙對邊都互相平行，且 4 個角都是 90° 直角！';
+      } else {
+        act0Msg.className = 'info-bubble ok';
+        act0Msg.textContent = '平行四邊形：兩雙對邊都分別互相平行，且對角相等！';
+      }
+    }
+    let drag0 = false;
+    svg0.addEventListener('pointerdown', (e) => {
+      drag0 = true; svg0.setPointerCapture(e.pointerId);
+      const p = svgPt(svg0, e);
+      STATE.act0TopX = Math.max(185, Math.min(280, Math.round(p.x)));
+      renderAct0();
+    });
+    svg0.addEventListener('pointermove', (e) => {
+      if (!drag0) return;
+      const p = svgPt(svg0, e);
+      STATE.act0TopX = Math.max(185, Math.min(280, Math.round(p.x)));
+      renderAct0();
+    });
+    svg0.addEventListener('pointerup', () => { drag0 = false; });
+    document.getElementById('act0Para').addEventListener('click', () => { STATE.act0Mode='para'; STATE.act0TopX=250; renderAct0(); });
+    document.getElementById('act0Rect').addEventListener('click', () => { STATE.act0Mode='rect'; STATE.act0TopX=225; renderAct0(); });
+    document.getElementById('act0Trap').addEventListener('click', () => { STATE.act0Mode='trap'; STATE.act0TopX=205; renderAct0(); });
+    renderAct0();
+
+    /* --- 活動二：風箏骨架交叉（對角線實測） --- */
+    const svg1 = document.getElementById('svg1');
+    const act1Msg = document.getElementById('act1Msg');
+    function renderAct1(){
+      svg1.innerHTML = '';
+      const mode = STATE.act1Mode;
+      const cx = 170, cy = 59;
+      const hw = STATE.act1HalfW; // horizontal half-width
+      const hh = mode === 'rect' ? 28 : 38; // vertical half-height
+      let pts = '';
+      if (mode === 'sq' || mode === 'rhom'){
+        pts = `${cx},${cy-hh} ${cx+hw},${cy} ${cx},${cy+hh} ${cx-hw},${cy}`;
+      } else {
+        pts = `${cx-hw},${cy-hh} ${cx+hw},${cy-hh} ${cx+hw},${cy+hh} ${cx-hw},${cy+hh}`;
+      }
+      svg1.appendChild(svgEl('polygon', {
+        points: pts,
+        fill: 'var(--quad-fill)', stroke: 'var(--quad-stroke)',
+        'stroke-width': '2.3', 'stroke-linejoin': 'round'
+      }));
+      // Diagonals
+      if (mode === 'sq' || mode === 'rhom'){
+        svg1.appendChild(svgEl('line', {x1:cx,y1:cy-hh,x2:cx,y2:cy+hh,stroke:'var(--ok)','stroke-width':'2','stroke-dasharray':'4 2'}));
+        svg1.appendChild(svgEl('line', {x1:cx-hw,y1:cy,x2:cx+hw,y2:cy,stroke:'var(--warn)','stroke-width':'2','stroke-dasharray':'4 2'}));
+        svg1.appendChild(svgEl('rect', {x:cx,y:cy-8,width:8,height:8,fill:'none',stroke:'var(--ok)','stroke-width':'1.6'}));
+      } else {
+        svg1.appendChild(svgEl('line', {x1:cx-hw,y1:cy-hh,x2:cx+hw,y2:cy+hh,stroke:'var(--ok)','stroke-width':'2','stroke-dasharray':'4 2'}));
+        svg1.appendChild(svgEl('line', {x1:cx+hw,y1:cy-hh,x2:cx-hw,y2:cy+hh,stroke:'var(--warn)','stroke-width':'2','stroke-dasharray':'4 2'}));
+      }
+      const d1 = mode === 'rect' ? Math.round(Math.hypot(hw*2, hh*2)/10) : Math.round((hh*2)/10);
+      const d2 = mode === 'rect' ? d1 : Math.round((hw*2)/10);
+      const eq = Math.abs(d1 - d2) === 0;
+      const perp = (mode === 'sq' || mode === 'rhom');
+      svg1.appendChild(svgEl('circle', {cx:cx+hw,cy:cy,r:6.5,fill:'var(--warn)',stroke:'#fff','stroke-width':'2',style:'cursor:grab'}));
+      svg1.appendChild(svgEl('text', {x:290,y:48,'text-anchor':'middle',fill:'var(--ink)','font-size':'9.5','font-weight':'800'}, `對角線 ${d1} / ${d2}`));
+      svg1.appendChild(svgEl('text', {x:290,y:68,'text-anchor':'middle',fill:perp?'var(--ok)':'var(--ink-soft)','font-size':'9.5','font-weight':'800'}, perp?'互相垂直 90°':'不一定垂直'));
+
+      act1Msg.className = 'info-bubble ' + (eq || perp ? 'ok' : '');
+      act1Msg.textContent = `${mode==='sq'?'正方形':(mode==='rhom'?'菱形':'長方形')}：對角線${eq?'等長':'不等長'}、${perp?'互相垂直平分':'互相平分（不垂直）'}`;
+    }
+    let drag1 = false;
+    svg1.addEventListener('pointerdown', (e) => {
+      drag1 = true; svg1.setPointerCapture(e.pointerId);
+      const p = svgPt(svg1, e);
+      STATE.act1HalfW = Math.max(22, Math.min(72, Math.round(Math.abs(p.x - 170))));
+      renderAct1();
+    });
+    svg1.addEventListener('pointermove', (e) => {
+      if (!drag1) return;
+      const p = svgPt(svg1, e);
+      STATE.act1HalfW = Math.max(22, Math.min(72, Math.round(Math.abs(p.x - 170))));
+      renderAct1();
+    });
+    svg1.addEventListener('pointerup', () => { drag1 = false; });
+    document.getElementById('act1Sq').addEventListener('click', () => { STATE.act1Mode='sq'; STATE.act1HalfW=38; renderAct1(); });
+    document.getElementById('act1Rhom').addEventListener('click', () => { STATE.act1Mode='rhom'; STATE.act1HalfW=56; renderAct1(); });
+    document.getElementById('act1Rect').addEventListener('click', () => { STATE.act1Mode='rect'; STATE.act1HalfW=58; renderAct1(); });
+    renderAct1();
+
+    /* --- 活動三：七巧板對角剪裁（對角線剪開全等實驗） --- */
+    const svg2 = document.getElementById('svg2');
+    const act2Msg = document.getElementById('act2Msg');
+    function renderAct2(){
+      svg2.innerHTML = '';
+      const mode = STATE.act2Mode;
+      const slide = STATE.act2Slide; // 0..60
+      // Left half triangle
+      const L = mode === 'trap' ? '90,26 140,26 70,96' : (mode === 'rhom' ? '130,22 200,59 130,96' : '110,26 220,26 85,96');
+      // Right half triangle (shifts right by slide)
+      const dx = slide;
+      const R_pts = mode === 'trap'
+        ? `${140+dx},26 ${230+dx},96 ${70+dx},96`
+        : (mode === 'rhom' ? `${200+dx},59 ${130+dx},96 ${60+dx},59` : `${220+dx},26 ${195+dx},96 ${85+dx},96`);
+
+      svg2.appendChild(svgEl('polygon', {points:L, fill:'var(--quad-fill)', stroke:'var(--quad-stroke)', 'stroke-width':'2.2', 'stroke-linejoin':'round'}));
+      svg2.appendChild(svgEl('polygon', {points:R_pts, fill:'var(--quad-b-fill)', stroke:'var(--quad-b-stroke)', 'stroke-width':'2.2', 'stroke-linejoin':'round', opacity:'0.88'}));
+      svg2.appendChild(svgEl('circle', {cx:195+dx,cy:64,r:6.5,fill:'var(--warn)',stroke:'#fff','stroke-width':'2',style:'cursor:grab'}));
+
+      const canMatch = mode !== 'trap';
+      svg2.appendChild(svgEl('text', {x:284,y:62,'text-anchor':'middle',fill:canMatch?'var(--ok)':'var(--warn)','font-size':'10','font-weight':'800'}, canMatch?'全等三角形':'大小不同！'));
+      act2Msg.className = 'info-bubble ' + (canMatch ? 'ok' : 'warn');
+      act2Msg.textContent = mode === 'trap'
+        ? '梯形上下底不等長：剪開後的兩個三角形大小不同，無法全等！'
+        : (mode === 'rhom' ? '菱形沿對角線剪開：得到兩個全等的等腰三角形！' : '平行四邊形沿對角線剪開：旋轉後完全重疊，是全等三角形！');
+    }
+    let drag2 = false;
+    svg2.addEventListener('pointerdown', (e) => {
+      drag2 = true; svg2.setPointerCapture(e.pointerId);
+      const p = svgPt(svg2, e);
+      STATE.act2Slide = Math.max(0, Math.min(55, Math.round(p.x - 170)));
+      renderAct2();
+    });
+    svg2.addEventListener('pointermove', (e) => {
+      if (!drag2) return;
+      const p = svgPt(svg2, e);
+      STATE.act2Slide = Math.max(0, Math.min(55, Math.round(p.x - 170)));
+      renderAct2();
+    });
+    svg2.addEventListener('pointerup', () => { drag2 = false; });
+    document.getElementById('act2Para').addEventListener('click', () => { STATE.act2Mode='para'; STATE.act2Slide=24; renderAct2(); });
+    document.getElementById('act2Rhom').addEventListener('click', () => { STATE.act2Mode='rhom'; STATE.act2Slide=24; renderAct2(); });
+    document.getElementById('act2Trap').addEventListener('click', () => { STATE.act2Mode='trap'; STATE.act2Slide=24; renderAct2(); });
+    renderAct2();
+  }
+
+  /* ================= 真題模式（?q=1..10 零劇透互動圖解） ================= */
+  if (isExam){
+    appEl.classList.add('q-mode');
+    document.getElementById('exam-view').hidden = false;
+    const qtag = document.getElementById('qtag');
+    qtag.hidden = false; qtag.textContent = `第 ${qNum} 題・互動圖解`;
+
+    const Q_DATA = {
+      1: {
+        title:'比較四種四邊形的平行對邊', btn:'切換檢查平行線',
+        msg:'觀察上下和左右兩組對邊，哪一種圖形只有一雙對邊平行？',
+        steps:['正方形、長方形、平行四邊形各有「兩雙」互相平行的對邊。','梯形只有一雙對邊（上底與下底）互相平行。','梯形的另外兩條腰延伸後會相交，所以不是兩雙對邊平行。']
+      },
+      2: {
+        title:'四邊形定義與邊角條件檢視', btn:'標示四邊等長記號',
+        msg:'檢查菱形、長方形與正方形各自需要滿足什麼條件？',
+        steps:['長方形除了兩雙對邊等長，還必須四個角都是 90° 直角。','正方形除了四個角是直角，還必須四條邊都等長。','菱形的定義就是「四個邊都等長的四邊形」。']
+      },
+      3: {
+        title:'平行四邊形 vs 梯形邊角對照', btn:'標示平行對邊',
+        msg:'並排比較平行四邊形與梯形，看看兩者的對邊平行有什麼不同！',
+        steps:['兩種圖形都有 4 個邊與 4 個角。','平行四邊形的上下對邊平行，左右對邊也平行（共兩組）。','梯形只有一組對邊互相平行，故「梯形兩組對邊分別平行」為錯誤敘述。']
+      },
+      4: {
+        title:'四邊形 ABCD 對角線連線', btn:'畫出所有對角線',
+        msg:'試著將四邊形 ABCD 不相鄰的頂點連起來，共有幾條？',
+        steps:['四邊形共有 A、B、C、D 四個頂點。','連接對角頂點 A 與 C，畫出第 1 條對角線。','連接對角頂點 B 與 D，畫出第 2 條對角線，總共 2 條。']
+      },
+      5: {
+        title:'菱形與正方形的共同性質比對', btn:'疊合檢視邊角性質',
+        msg:'比較正方形與菱形的邊長、平行與角度，找出共同具備的性質！',
+        steps:['A（四角皆直角）：正方形有，一般菱形沒有。','B（兩雙對邊平行）、C（兩雙對邊等長）：兩者皆具備。','D（兩組對角相等）：兩者皆具備，故共同性質為 B、C、D。']
+      },
+      6: {
+        title:'沿對角線剪開全等比較', btn:'切換四邊形剪開',
+        msg:'沿對角線把四邊形剪成兩個三角形，觀察哪一種無法全等重合！',
+        steps:['菱形、平行四邊形與正方形對邊等長，剪開後兩三角形全等。','梯形的上底與下底長度不同。','沿對角線剪開後得到大小不同的兩個三角形，無法全等。']
+      },
+      7: {
+        title:'對角線剪出全等「等腰三角形」', btn:'標示三角形的兩腰',
+        msg:'除了要全等之外，還必須是「等腰」三角形，邊長要符合什麼條件？',
+        steps:['等腰三角形必須有兩條邊一樣長。','菱形四條邊都等長，相鄰兩邊自然等長。','沿對角線剪開後，剛好得到兩個全等的等腰三角形。']
+      },
+      8: {
+        title:'五種四邊形的對角線長度實測', btn:'切換比對各圖形',
+        msg:'輪流觀察五種四邊形的兩條對角線，哪兩種一定一樣長？',
+        steps:['正方形與長方形四個角皆為直角，兩條對角線長度完全相等。','一般菱形與平行四邊形斜放，一條對角線較長、一條較短。','一般梯形對角線也不等長，故一定等長的是正方形和長方形。']
+      },
+      9: {
+        title:'四邊等長壓斜變成什麼圖形？', btn:'壓斜四邊等長吸管',
+        msg:'四條邊都一樣長，如果四個角不是直角，會是什麼圖形？',
+        steps:['正方形必須同時滿足「四邊等長」與「四個角都是直角」。','若只有四邊等長但角度壓斜（非直角），就變成「菱形」。','因此四邊等長的四邊形不一定是正方形，也可能是菱形。']
+      },
+      10: {
+        title:'四邊形 ABCD 鄰邊與對邊位置', btn:'高亮度標示 BC 鄰邊與對邊',
+        msg:'觀察四邊形 ABCD 的底邊 BC，哪兩條邊和它相鄰？哪一條在對面？',
+        steps:['BC 兩端點為 B 與 C，相接的 AB 與 CD 稱為 BC 的「鄰邊」。','與 BC 在對面不相交的 AD 稱為 BC 的「對邊」。','∠A 的對角是 ∠C；相鄰頂點連線是「邊」，不是對角線。']
+      }
+    };
+
+    const qd = Q_DATA[qNum];
+    document.getElementById('examTitle').textContent = qd.title;
+    const examStage = document.getElementById('examStage');
+    const examControls = document.getElementById('examControls');
+    const examMsg = document.getElementById('examMsg');
+    const stepsBox = document.getElementById('stepsBox');
+    examMsg.textContent = qd.msg;
+
+    let toggleState = 0;
+    function renderExamSVG(){
+      examStage.innerHTML = '';
+      if (qNum === 1){
+        const shapes = [
+          {name:'平行四邊形', pts:'75,26 145,26 125,94 55,94'},
+          {name:'某四邊形', pts:'215,26 265,26 290,94 190,94'}
+        ];
+        shapes.forEach((s, idx) => {
+          examStage.appendChild(svgEl('polygon',{points:s.pts,fill:idx&&toggleState?'var(--quad-b-fill)':'var(--quad-fill)',stroke:idx&&toggleState?'var(--quad-b-stroke)':'var(--quad-stroke)','stroke-width':'2.2'}));
+        });
+        if (toggleState){
+          examStage.appendChild(svgEl('text',{x:100,y:110,'text-anchor':'middle',fill:'var(--ok)','font-size':'9.5','font-weight':'800'},'兩雙平行'));
+          examStage.appendChild(svgEl('text',{x:240,y:110,'text-anchor':'middle',fill:'var(--warn)','font-size':'9.5','font-weight':'800'},'只有上下平行'));
+        }
+      } else if (qNum === 2){
+        examStage.appendChild(svgEl('polygon',{points:'170,18 228,59 170,100 112,59',fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.5'}));
+        if (toggleState){
+          [[199,38],[199,80],[141,80],[141,38]].forEach(([x,y])=>examStage.appendChild(svgEl('circle',{cx:x,cy:y,r:4,fill:'var(--ok)'})));
+          examStage.appendChild(svgEl('text',{x:170,y:63,'text-anchor':'middle',fill:'var(--ok)','font-size':'10','font-weight':'800'},'四邊等長'));
+        }
+      } else if (qNum === 3){
+        examStage.appendChild(svgEl('polygon',{points:'65,26 140,26 120,94 45,94',fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.2'}));
+        examStage.appendChild(svgEl('polygon',{points:'210,26 265,26 295,94 185,94',fill:'var(--quad-b-fill)',stroke:'var(--quad-b-stroke)','stroke-width':'2.2'}));
+        examStage.appendChild(svgEl('text',{x:92,y:110,'text-anchor':'middle',fill:'var(--ink)','font-size':'9.5','font-weight':'800'},toggleState?'兩組對邊平行':'平行四邊形'));
+        examStage.appendChild(svgEl('text',{x:240,y:110,'text-anchor':'middle',fill:'var(--ink)','font-size':'9.5','font-weight':'800'},toggleState?'僅一組對邊平行':'梯形'));
+      } else if (qNum === 4){
+        const pts = [[105,26],[230,24],[250,94],[95,96]];
+        examStage.appendChild(svgEl('polygon',{points:pts.map(p=>p.join(',')).join(' '),fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.3'}));
+        ['A','D','C','B'].forEach((lbl,i)=>{
+          const [x,y] = pts[i];
+          examStage.appendChild(svgEl('text',{x:x+(i===1||i===2?8:-14),y:y+(i<2?-4:12),fill:'var(--ink)','font-size':'10','font-weight':'800'},lbl));
+        });
+        if (toggleState){
+          examStage.appendChild(svgEl('line',{x1:105,y1:26,x2:250,y2:94,stroke:'var(--warn)','stroke-width':'2','stroke-dasharray':'4 2'}));
+          examStage.appendChild(svgEl('line',{x1:230,y1:24,x2:95,y2:96,stroke:'var(--ok)','stroke-width':'2','stroke-dasharray':'4 2'}));
+        }
+      } else if (qNum === 5){
+        examStage.appendChild(svgEl('rect',{x:65,y:24,width:68,height:68,fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.2'}));
+        examStage.appendChild(svgEl('polygon',{points:'235,20 278,58 235,96 192,58',fill:'var(--quad-ok-fill)',stroke:'var(--quad-ok-stroke)','stroke-width':'2.2'}));
+        if (toggleState){
+          examStage.appendChild(svgEl('text',{x:99,y:108,'text-anchor':'middle',fill:'var(--ink)','font-size':'9.5','font-weight':'800'},'四角皆 90°'));
+          examStage.appendChild(svgEl('text',{x:235,y:110,'text-anchor':'middle',fill:'var(--warn)','font-size':'9.5','font-weight':'800'},'角非必 90°'));
+        }
+      } else if (qNum === 6){
+        const mode = toggleState % 2;
+        if (mode === 0){
+          examStage.appendChild(svgEl('polygon',{points:'125,24 225,24 205,96 105,96',fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.2'}));
+          examStage.appendChild(svgEl('line',{x1:225,y1:24,x2:105,y2:96,stroke:'var(--warn)','stroke-width':'2','stroke-dasharray':'4 2'}));
+          examStage.appendChild(svgEl('text',{x:165,y:112,'text-anchor':'middle',fill:'var(--ok)','font-size':'9.5','font-weight':'800'},'平行四邊形：剪開全等'));
+        } else {
+          examStage.appendChild(svgEl('polygon',{points:'140,24 200,24 245,96 95,96',fill:'var(--quad-b-fill)',stroke:'var(--quad-b-stroke)','stroke-width':'2.2'}));
+          examStage.appendChild(svgEl('line',{x1:200,y1:24,x2:95,y2:96,stroke:'var(--warn)','stroke-width':'2','stroke-dasharray':'4 2'}));
+          examStage.appendChild(svgEl('text',{x:170,y:112,'text-anchor':'middle',fill:'var(--warn)','font-size':'9.5','font-weight':'800'},'梯形：上下底不等長'));
+        }
+      } else if (qNum === 7){
+        examStage.appendChild(svgEl('polygon',{points:'170,18 228,59 170,100 112,59',fill:'var(--quad-ok-fill)',stroke:'var(--quad-ok-stroke)','stroke-width':'2.4'}));
+        examStage.appendChild(svgEl('line',{x1:112,y1:59,x2:228,y2:59,stroke:'var(--warn)','stroke-width':'2','stroke-dasharray':'4 2'}));
+        if (toggleState){
+          examStage.appendChild(svgEl('text',{x:170,y:44,'text-anchor':'middle',fill:'var(--ok)','font-size':'9.5','font-weight':'800'},'兩腰等長'));
+          examStage.appendChild(svgEl('text',{x:170,y:82,'text-anchor':'middle',fill:'var(--ok)','font-size':'9.5','font-weight':'800'},'兩腰等長'));
+        }
+      } else if (qNum === 8){
+        const mode = toggleState % 2;
+        if (mode === 0){
+          examStage.appendChild(svgEl('rect',{x:100,y:24,width:140,height:70,fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.2'}));
+          examStage.appendChild(svgEl('line',{x1:100,y1:24,x2:240,y2:94,stroke:'var(--ok)','stroke-width':'2'}));
+          examStage.appendChild(svgEl('line',{x1:240,y1:24,x2:100,y2:94,stroke:'var(--ok)','stroke-width':'2'}));
+          examStage.appendChild(svgEl('text',{x:170,y:111,'text-anchor':'middle',fill:'var(--ok)','font-size':'9.5','font-weight':'800'},'長方形：兩對角線等長'));
+        } else {
+          examStage.appendChild(svgEl('polygon',{points:'170,20 238,58 170,96 102,58',fill:'var(--quad-b-fill)',stroke:'var(--quad-b-stroke)','stroke-width':'2.2'}));
+          examStage.appendChild(svgEl('line',{x1:170,y1:20,x2:170,y2:96,stroke:'var(--warn)','stroke-width':'2'}));
+          examStage.appendChild(svgEl('line',{x1:102,y1:58,x2:238,y2:58,stroke:'var(--quad-stroke)','stroke-width':'2'}));
+          examStage.appendChild(svgEl('text',{x:170,y:111,'text-anchor':'middle',fill:'var(--warn)','font-size':'9.5','font-weight':'800'},'一般菱形：對角線一長一短'));
+        }
+      } else if (qNum === 9){
+        if (toggleState % 2 === 0){
+          examStage.appendChild(svgEl('rect',{x:135,y:24,width:70,height:70,fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.4'}));
+          examStage.appendChild(svgEl('text',{x:170,y:110,'text-anchor':'middle',fill:'var(--ink)','font-size':'9.5','font-weight':'800'},'四邊等長 ＋ 四個直角'));
+        } else {
+          examStage.appendChild(svgEl('polygon',{points:'155,24 225,24 190,94 120,94',fill:'var(--quad-b-fill)',stroke:'var(--quad-b-stroke)','stroke-width':'2.4'}));
+          examStage.appendChild(svgEl('text',{x:170,y:110,'text-anchor':'middle',fill:'var(--warn)','font-size':'9.5','font-weight':'800'},'四邊等長，但角不是直角'));
+        }
+      } else if (qNum === 10){
+        const A={x:115,y:24}, B={x:100,y:96}, C={x:230,y:96}, D={x:215,y:24};
+        examStage.appendChild(svgEl('polygon',{points:`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`,fill:'var(--quad-fill)',stroke:'var(--quad-stroke)','stroke-width':'2.2'}));
+        examStage.appendChild(svgEl('line',{x1:B.x,y1:B.y,x2:C.x,y2:C.y,stroke:'var(--warn)','stroke-width':'3.2'}));
+        if (toggleState){
+          examStage.appendChild(svgEl('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:'var(--ok)','stroke-width':'3'}));
+          examStage.appendChild(svgEl('line',{x1:C.x,y1:C.y,x2:D.x,y2:D.y,stroke:'var(--ok)','stroke-width':'3'}));
+        }
+        [['A',A.x-12,A.y+2],['B',B.x-12,B.y+6],['C',C.x+6,C.y+6],['D',D.x+6,D.y+2]].forEach(([t,x,y])=>{
+          examStage.appendChild(svgEl('text',{x,y,fill:'var(--ink)','font-size':'10','font-weight':'800'},t));
+        });
+      }
+    }
+    stepsBox.hidden = true;
+    renderExamSVG();
+
+    const btnToggle = document.createElement('button');
+    btnToggle.type = 'button'; btnToggle.className = 'btn-action primary'; btnToggle.textContent = qd.btn;
+    btnToggle.addEventListener('click', () => { toggleState++; renderExamSVG(); });
+
+    const btnReveal = document.createElement('button');
+    btnReveal.type = 'button'; btnReveal.id = 'revealSteps'; btnReveal.className = 'btn-action';
+    btnReveal.textContent = '一步一步看算理 🔍';
+    btnReveal.addEventListener('click', () => {
+      stepsBox.hidden = !stepsBox.hidden;
+      if (!stepsBox.hidden && !stepsBox.childElementCount){
+        qd.steps.forEach((s, idx) => {
+          const d = document.createElement('div');
+          d.className = 'step-line';
+          d.innerHTML = `<b>步驟 ${idx+1}：</b>` + s;
+          stepsBox.appendChild(d);
+        });
+      }
+    });
+
+    examControls.appendChild(btnToggle);
+    examControls.appendChild(btnReveal);
+  }
+})();
+</script>
+</body>
+</html>

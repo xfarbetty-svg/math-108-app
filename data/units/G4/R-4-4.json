@@ -1,0 +1,306 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-R-4-4",
+  "curriculum_code": "R-4-4",
+  "grade": 4,
+  "unit_name": "數量模式與推理（II）（月曆、方陣與圖形規律）",
+  "source_paper": "臺北市南湖國小 111-2／112-1、高雄市獅湖國小 113-1／114-1、高雄市永安國小 114-2（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）",
+  "verified_by": "2026-11-26 ASERVER-OPENCODE 本次唯讀重抽：SSH 定向掃描 70 份合法 PDF、30 頁命中、1 檔紅線跳過、0 讀取失敗；10 題逐題比對 exam_pack/R-4-4_exam_pages.txt 原文頁次。第一層跳過任何含 017/子由 之路徑與檔名；未修改 NAS 原始檔。",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 4、獅湖 3、永安 3；每題 4 選項並附 concept/steps/trap 與真實學校、學年度、頁碼出處。教具三活動（花園澆水日誌／課桌方陣／圍巾色塊）為三種不同生活情境，與真題零重複；真題初始零劇透、Light/Dark 高對比、≤415px、390px 零橫向溢出。未修改 app/shell.js 之 UNIT_CONCEPT_MOVIES。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-R-4-4-Q01",
+      "exam_source": "臺北市南湖國小 111-2 期末（PDF p1・二、選擇題 第3題）",
+      "section": "二、選擇題",
+      "question_num": "3",
+      "title": "雙十節後 15 天是星期幾",
+      "stem": "今年 10 月 10 日雙十節是星期二，請問 10 月 25 日星期幾？",
+      "choices": [
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五"
+      ],
+      "answer_index": 1,
+      "answer_raw": "星期三",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "星期以 7 天為一循環；相隔天數除以 7，餘數就是往後挪幾個星期名。",
+        "steps": [
+          "25－10＝15（相隔 15 天）",
+          "15÷7＝2 餘 1",
+          "星期二往後 1 天是星期三"
+        ],
+        "trap": "把 15 直接當成星期數，或誤把餘數 1 往後算成星期四。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q02",
+      "exam_source": "高雄市獅湖國小 113-1 期末（PDF p1・一、選擇題 第4題）",
+      "section": "一、選擇題",
+      "question_num": "4",
+      "title": "表格直排的規律",
+      "stem": "觀察下面的表格（每橫排 6 個數：1～6、7～12、13～18、19～24），下列何者敘述正確？",
+      "choices": [
+        "5 與 11 在同一橫排上",
+        "由 22 向上數三個再往右數二個會得到 7",
+        "若繼續延伸表格，27 會跟 13 在同一個直排",
+        "每一直排上下相差 6"
+      ],
+      "answer_index": 3,
+      "answer_raw": "每一直排上下相差 6",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "方陣表格每橫排固定 6 格，所以同一直排往下剛好多 6。",
+        "steps": [
+          "每排 6 格：第 n 排的數是 6(n－1)＋1 到 6n",
+          "5 在第 1 排、11 在第 2 排，是同直排不是同橫排",
+          "22 向上三排是 4，再往右兩格是 6，不是 7",
+          "27 會在直排 3；13 在直排 1",
+          "每一直排上下相差 6"
+        ],
+        "trap": "只看相鄰兩數就以為上下相差 1，忽略表格寬度是 6。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q03",
+      "exam_source": "高雄市獅湖國小 113-1 期末（PDF p1・一、選擇題 第7題）",
+      "section": "一、選擇題",
+      "question_num": "7",
+      "title": "兩排數列遮蔽數相差",
+      "stem": "依據每排數字的規律（上排 2、4、6、□、10、12；下排 3、□、9、12、15、18），兩格被遮蔽的數字相減是多少？",
+      "choices": [
+        "2",
+        "4",
+        "6",
+        "8"
+      ],
+      "answer_index": 0,
+      "answer_raw": "2",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先找出每排的固定增量，再補上缺漏的數。",
+        "steps": [
+          "上排每次＋2：2、4、6、8、10、12，遮蔽數是 8",
+          "下排每次＋3：3、6、9、12、15、18，遮蔽數是 6",
+          "8－6＝2"
+        ],
+        "trap": "把兩格位置看反或用 10－3＝7，沒有先還原數列。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q04",
+      "exam_source": "高雄市獅湖國小 114-1 期末（PDF p1・一、選擇題 第3題）",
+      "section": "一、選擇題",
+      "question_num": "3",
+      "title": "兩排數列遮蔽數相加",
+      "stem": "依據上圖中每排數字的規律（上排 2、4、6、□、10、12；下排 3、□、9、12、15、18），兩格被遮蔽的數字相加應為何者？",
+      "choices": [
+        "12",
+        "14",
+        "16",
+        "18"
+      ],
+      "answer_index": 1,
+      "answer_raw": "14",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同一組數列可以問相差，也可以問相加；先把遮蔽數還原。",
+        "steps": [
+          "上排＋2，缺的是 8",
+          "下排＋3，缺的是 6",
+          "8＋6＝14"
+        ],
+        "trap": "沿用前一題的「相減」直覺，忘記題目問的是相加。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q05",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p2・三、想想看 第12(2)題）",
+      "section": "三、想想看",
+      "question_num": "12(2)",
+      "title": "2024 年 1 月第 3 個星期五",
+      "stem": "下圖為 2024 年 1 月的月曆（1 月 1 日是星期一），請觀察月曆的規律回答問題：這學期的結業式是 1 月的第 3 個星期五，請問結業式是 1 月幾日？",
+      "choices": [
+        "12 日",
+        "17 日",
+        "19 日",
+        "26 日"
+      ],
+      "answer_index": 2,
+      "answer_raw": "19 日",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同一星期幾每隔 7 天出現一次；從 1 月 5 日（第 1 個星期五）往後數。",
+        "steps": [
+          "1 月 1 日星期一，所以第 1 個星期五是 5 日",
+          "5＋7＝12（第 2 個星期五）",
+          "12＋7＝19（第 3 個星期五）"
+        ],
+        "trap": "把「第 3 個」算成 5＋3＝8，或用 1＋7×3＝22。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q06",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p2・三、想想看 第12(3)題）",
+      "section": "三、想想看",
+      "question_num": "12(3)",
+      "title": "由結業式往前回溯 8 天",
+      "stem": "下圖為 2024 年 1 月的月曆，期末考的日子比結業式（1 月 19 日星期五）早 8 天，請問期末考是 1 月幾日星期幾？",
+      "choices": [
+        "9 日星期二",
+        "10 日星期三",
+        "11 日星期四",
+        "12 日星期五"
+      ],
+      "answer_index": 2,
+      "answer_raw": "11 日星期四",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "往前回溯跨週時，先退 7 天到同一星期幾，再退剩下的天數。",
+        "steps": [
+          "19－7＝12，仍是星期五",
+          "再退 1 天：12－1＝11，星期四",
+          "所以期末考是 1 月 11 日星期四"
+        ],
+        "trap": "直接從 19 减 8 得 11 但忘了星期也要跟着退，或誤算成星期三。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q07",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・二、填充題 (6)①）",
+      "section": "二、填充題",
+      "question_num": "6(1)",
+      "title": "月曆橫向相鄰兩數",
+      "stem": "觀察 7 月月曆，找出數的規律再回答問題：橫向排列的數，每一橫排右邊的數比左邊的數大多少？",
+      "choices": [
+        "1",
+        "6",
+        "7",
+        "8"
+      ],
+      "answer_index": 0,
+      "answer_raw": "1",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "月曆橫排是連續日期，往右一天就加 1。",
+        "steps": [
+          "看 7 月月曆同一列：1、2、3、4、5、6、7",
+          "相鄰兩數相差 1",
+          "所以右邊比左邊大 1"
+        ],
+        "trap": "把直排的＋7誤用到橫排。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q08",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・二、填充題 (6)②）",
+      "section": "二、填充題",
+      "question_num": "6(2)",
+      "title": "月曆縱向相鄰兩數",
+      "stem": "觀察 7 月月曆，找出數的規律再回答問題：縱向排列的數，從上到下，下一個數和上一個數相差多少？",
+      "choices": [
+        "1",
+        "6",
+        "7",
+        "8"
+      ],
+      "answer_index": 2,
+      "answer_raw": "7",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "同一星期幾隔一週出現，所以直排往下加 7。",
+        "steps": [
+          "看 7 月月曆同一行：1、8、15、22、29",
+          "8－1＝7、15－8＝7",
+          "所以上下相差 7"
+        ],
+        "trap": "誤以為一週有 5 個上課日就加 5。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q09",
+      "exam_source": "臺北市南湖國小 111-2 期末（PDF p2・三、想想看 第9(2)題）",
+      "section": "三、想想看",
+      "question_num": "9(2)",
+      "title": "台鐵座位表中相鄰的座位",
+      "stem": "下面是臺灣鐵路火車的座位號碼的排列方式（每排左側 1、3；右側 4、2，下一排 5、7、8、6，依此類推），藝珍的座位號碼是 22 號，玄彬想坐在藝珍的旁邊，他可以選下面哪一個座位？",
+      "choices": [
+        "20 號",
+        "22 號",
+        "24 號",
+        "26 號"
+      ],
+      "answer_index": 2,
+      "answer_raw": "24 號",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "座位按每排 4 個的方陣排列；同一排相鄰座位相差 2（隔走道）或 2。",
+        "steps": [
+          "每排座椅：17、19、20、18；21、23、24、22",
+          "22 號在第 6 排右側靠窗",
+          "同排旁邊是 24 號"
+        ],
+        "trap": "以為 22＋2＝24 是下一排，其實是同排相鄰；20 號在上一排。"
+      }
+    },
+    {
+      "id": "G4-R-4-4-Q10",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・二、填充題 (6)④）",
+      "section": "二、填充題",
+      "question_num": "6(4)",
+      "title": "月曆斜向右上規律",
+      "stem": "觀察 7 月月曆，找出數的規律再回答問題：每一個數比它右上方的數大多少？",
+      "choices": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "answer_index": 1,
+      "answer_raw": "6",
+      "component": "pattern_logic_g4_lab",
+      "component_path": "components/pattern_logic_g4_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "右上方是「下一列且往右一格」：往下＋7、往右＋1，所以右上方的數比自己小 7－1＝6。",
+        "steps": [
+          "以 15 為例，右上方是 9",
+          "15－9＝6",
+          "所以每一個數比它右上方的數大 6"
+        ],
+        "trap": "只看橫向＋1或縱向＋7，沒有合併兩個方向。"
+      }
+    }
+  ],
+  "build_run": {
+    "node": "ASERVER-OPENCODE",
+    "date": "2026-11-26",
+    "exam_scan": {
+      "legal_pdfs": 70,
+      "hit_pages": 30,
+      "redline_skipped": 1,
+      "read_errors": 0
+    },
+    "lab": "pattern_logic_g4_lab.html (本次重寫)"
+  }
+}

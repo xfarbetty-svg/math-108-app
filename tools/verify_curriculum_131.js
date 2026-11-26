@@ -49,13 +49,53 @@ if (fieldOk) check(true, '131 條目全部具備 6 個必要欄位（code/title/
 // 3. status 分佈：G1 全量 11 條 ready，其餘 120 條 upcoming；question_count / verified_source 一致
 const all = data.grades.flatMap((g) => g.units);
 const EXPECTED_READY_CODES = [
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   'N-1-1', 'N-1-2', 'N-1-3', 'N-1-4', 'N-1-5', 'N-1-6', 'S-1-1', 'S-1-2', 'R-1-1', 'R-1-2', 'D-1-1',
   'N-3-1', 'N-3-2', 'N-3-3', 'N-3-4', 'N-3-5', 'N-3-6', 'N-3-7', 'N-3-8', 'N-3-9', 'N-3-10', 'N-3-11',
   'N-3-12', 'N-3-13', 'S-3-1', 'N-3-14', 'N-3-15', 'S-3-3',
   'N-3-16', 'N-3-17', 'S-3-2', 'S-3-4', 'R-3-1', 'R-3-2', 'D-3-1',
   'N-2-1', 'N-2-2', 'N-2-3', 'N-2-4', 'N-2-5', 'N-2-6', 'N-2-7', 'N-2-8', 'N-2-9', 'N-2-10', 'N-2-11', 'N-2-12', 'N-2-13', 'N-2-14',
   'S-2-1', 'S-2-2', 'S-2-3', 'S-2-4', 'S-2-5', 'R-2-1', 'R-2-2', 'R-2-3', 'R-2-4', 'D-2-1',
-  'N-4-1', 'N-4-2', 'N-4-3'
+  'N-4-1', 'N-4-2', 'N-4-3', 'N-4-4', 'N-4-5', 'N-4-10',
+  'N-4-9',
+  'S-4-5',
+  'R-4-2',
+  'N-4-12',
+  'R-4-4',
+  'N-4-11',
+  'S-4-6',
+  'D-4-1',
+  'N-4-13',
+  'N-4-6',
+  'S-4-2',
+  'S-4-7',
+  'N-4-7',
+  'S-4-8',
+  'N-4-8',
+  'S-4-3',
+  'S-4-1',
+  'R-4-3',
+  'S-4-4',
+  'R-4-1'
 ];
 const readyUnits = all.filter((u) => u.status === 'ready');
 check(readyUnits.length === EXPECTED_READY_CODES.length, `ready 條目共 ${EXPECTED_READY_CODES.length} 個（實際 ${readyUnits.length}）`);

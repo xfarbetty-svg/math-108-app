@@ -361,6 +361,25 @@ const UNIT_CONCEPT_MOVIE_TITLES = {
 };
 
 const CONCEPT_COMPONENTS = {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   "N-2-1": "components/g2_place_value_1000_lab.html",
   "N-2-2": "components/g2_vertical_addition_subtraction_lab.html",
   "N-2-3": "components/g2_addition_subtraction_word_lab.html",
@@ -404,11 +423,36 @@ const CONCEPT_COMPONENTS = {
   "S-3-3": "components/circle_concept_lab.html",
   "N-3-16": "components/weight_concept_lab.html",
   "N-3-17": "components/time_concept_lab.html",
+  "N-4-3": "components/two_step_expr_g4_lab.html?mode=concept",
+  "N-4-4": "components/two_step_adv_g4_lab.html?mode=concept",
+  "N-4-5": "components/fraction_mixed_g4_lab.html?mode=concept",
+  "N-4-6": "components/equiv_fraction_g4_lab.html?mode=concept",
   "S-3-2": "components/square_rectangle_lab.html",
   "S-3-4": "components/solid_geometry_lab.html",
   "R-3-1": "components/multiplication_division_lab.html",
   "R-3-2": "components/pattern_reasoning_lab.html",
-  "D-3-1": "components/table_cross_lab.html"
+  "D-3-1": "components/table_cross_lab.html",
+  "N-4-2": "components/mul_div_g4_lab.html",
+  "N-4-10": "components/protractor_angle_g4_lab.html?mode=concept",
+  "N-4-9": "components/length_km_g4_lab.html?mode=concept",
+  "S-4-5": "components/perp_parallel_g4_lab.html?mode=concept",
+  "R-4-2": "components/calc_laws_g4_lab.html?mode=concept",
+  "N-4-12": "components/volume_cubes_g4_lab.html?mode=concept",
+  "R-4-4": "components/pattern_logic_g4_lab.html?mode=concept",
+  "N-4-11": "components/area_perimeter_g4_lab.html?mode=concept",
+  "S-4-6": "components/congruent_shapes_g4_lab.html?mode=concept",
+  "D-4-1": "components/charts_g4_lab.html?mode=concept",
+  "N-4-13": "components/time_calc_g4_lab.html?mode=concept",
+  "S-4-2": "components/rotation_angle_g4_lab.html?mode=concept",
+  "S-4-7": "components/triangle_class_g4_lab.html?mode=concept",
+  "N-4-7": "components/decimal_hundredth_g4_lab.html?mode=concept",
+  "S-4-8": "components/quadrilateral_g4_lab.html?mode=concept",
+  "N-4-8": "components/number_line_g4_lab.html?mode=concept",
+  "S-4-3": "components/rect_area_perimeter_g4_lab.html?mode=concept",
+  "S-4-1": "components/angle_degree_g4_lab.html?mode=concept",
+  "R-4-3": "components/formula_g4_lab.html?mode=concept",
+  "S-4-4": "components/volume_s44_g4_lab.html?mode=concept",
+  "R-4-1": "components/two_step_combine_g4_lab.html?mode=concept"
 };
 
 let currentUnitMode = "exam"; // "concept" | "exam"
@@ -428,7 +472,7 @@ function setUnitMode(mode) {
     if (examWrap) examWrap.style.display = "none";
     stopSpeech();
     const btnSpeak = $("btnSpeak");
-    if (btnSpeak) btnSpeak.style.display = "none";
+    if (btnSpeak) btnSpeak.style.display = "";
     const frame = $("conceptFrame");
     const code = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
     if (frame && code && CONCEPT_COMPONENTS[code]) {
@@ -471,8 +515,9 @@ function renderStage() {
     tabs.style.display = "flex";
     btnConcept.onclick = () => setUnitMode("concept");
     btnExam.onclick = () => setUnitMode("exam");
-    // 預設進入真題測驗（也可切換至概念）
-    setUnitMode("exam");
+    // N-4-2、N-4-10 預設進入「🌱 概念探索」，其餘單元維持既有預設
+    const DEFAULT_CONCEPT_CODES = new Set(["N-4-2", "N-4-10", "N-4-9", "S-4-5", "N-4-5", "R-4-2", "N-4-12", "R-4-4", "N-4-11", "S-4-6", "D-4-1", "N-4-13", "N-4-6", "S-4-2", "S-4-7", "N-4-7", "S-4-8", "N-4-8", "S-4-3", "S-4-1", "R-4-3", "S-4-4", "R-4-1"]);
+    setUnitMode(DEFAULT_CONCEPT_CODES.has(code) ? "concept" : "exam");
   } else {
     tabs.style.display = "none";
     $("unitConceptWrap").style.display = "none";
@@ -761,16 +806,30 @@ function stopCurrentSpeech() {
 }
 
 function speakCurrentProblem() {
-  const q = state.unit ? state.unit.questions[state.qIndex] : null;
-  if (!q) return;
-
   // 正在朗讀中 → 點擊即停止（切換行為）
   if (window.AudioManager && window.AudioManager.isPlaying()) {
     stopCurrentSpeech();
     return;
   }
 
-  const rawText = (q.stem || q.title || "") + "。" + (q.subtitle || "");
+  let rawText = "";
+  if (currentUnitMode === "concept") {
+    const f = $("conceptFrame");
+    let desc = "";
+    try {
+      const card = f && f.contentDocument && f.contentDocument.querySelector(".act-card:not([hidden])");
+      if (card) {
+        const t = card.querySelector(".card-title");
+        const d = card.querySelector(".card-desc");
+        desc = [t && t.textContent, d && d.textContent].filter(Boolean).join("。");
+      }
+    } catch (_) {}
+    rawText = desc || (state.unit ? (state.unit.title + "，概念探索活動。") : "概念探索活動。");
+  } else {
+    const q = state.unit ? state.unit.questions[state.qIndex] : null;
+    if (!q) return;
+    rawText = (q.stem || q.title || "") + "。" + (q.subtitle || "");
+  }
   if (window.AudioManager) {
     updateSpeakBtn(true);
     window.AudioManager.play(rawText, {

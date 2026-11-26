@@ -1,0 +1,203 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-S-4-4",
+  "curriculum_code": "S-4-4",
+  "grade": 4,
+  "unit_name": "體積：切割重組與單位推理（補充單元，有別於 N-4-12 積木堆疊點數）",
+  "source_paper": "臺北市南湖國小 111-2／112-2／113-2、高雄市獅湖國小 110-2／112-2／113-2、高雄市永安國小 114-2（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）",
+  "verified_by": "2026-11-26 ASERVER-OPENCODE 本次唯讀重抽：SSH 定向掃描 70 份合法 PDF、53 頁命中、1 檔紅線跳過、0 讀取失敗；10 題逐題比對 exam_pack/S-4-4_exam_pages.txt 原文頁次。第一層跳過任何含 017/子由 之路徑與檔名；未修改 NAS 原始檔。原卷為是非題或三選項者，題幹情境與數值皆保留真卷原文，改編為 4 選項時僅補入由原卷訊息衍生的干擾項，未杜撰新情境。",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 6、獅湖 3、永安 1；每題 4 選項並附 concept/steps/trap 與真實學校、學年度、頁碼出處。教具三活動（果汁倒杯／紙箱裝書／橡皮泥造型）為三種不同生活情境，與真題零重複；真題初始零劇透、Light/Dark 高對比、≤415px、390px 零橫向溢出。本補充單元聚焦切割重組、體積守恆與單位推理，與 N-4-12 白色積木分層點數明確區隔。未修改 app/shell.js 之 UNIT_CONCEPT_MOVIES。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-S-4-4-Q01",
+      "exam_source": "臺北市南湖國小 111-2 期末（PDF p1・一、是非題 第1題）",
+      "section": "一、是非題",
+      "question_num": "1",
+      "title": "西瓜切片合起來",
+      "stem": "老闆將一顆西瓜切成好幾片，再把所有的西瓜片合起來，這顆西瓜的體積會怎樣變化？",
+      "choices": ["變小", "變大", "不變", "無法判斷"],
+      "answer_index": 2,
+      "answer_raw": "不變",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "切割只是把同一個物體分成幾部分，再合起來沒有增減，體積不變。",
+        "steps": ["原本是一顆完整的西瓜", "切成好幾片，每片都還是西瓜的一部分", "全部合起來等於原來那一顆，所以體積不變"],
+        "trap": "看到「切」就以為變小；切開後形狀變了，但佔的空間沒有變。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q02",
+      "exam_source": "臺北市南湖國小 111-2 期末（PDF p1・一、是非題 第2題）",
+      "section": "一、是非題",
+      "question_num": "2",
+      "title": "鋁箔包排不同形體",
+      "stem": "用一樣大的鋁箔包排出不同的形體，只要數出鋁箔包的數量，就可以知道哪個形體的體積最大。這句話對嗎？",
+      "choices": ["對，數量一樣體積就一樣大", "錯，形狀不同體積一定不同", "錯，還要量高度才知道", "無法判斷"],
+      "answer_index": 0,
+      "answer_raw": "對，數量一樣體積就一樣大",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "每個鋁箔包一樣大，數量就是體積的單位數；排法不同不影響總體積。",
+        "steps": ["每一個鋁箔包的體積都相同", "不管排成一排或堆成方陣，數量都沒有變", "所以數量一樣，體積就一樣大"],
+        "trap": "以為排得越高或越寬體積就越大，其實只看數量。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q03",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p1・一、選擇題 第(1)題）",
+      "section": "一、選擇題",
+      "question_num": "1",
+      "title": "吹氣球",
+      "stem": "小妤在吹氣球，吹氣後，氣球的體積有什麼改變？",
+      "choices": ["變小", "變大", "不變", "先變小再變大"],
+      "answer_index": 1,
+      "answer_raw": "變大",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "吹進去的空氣越多，氣球佔的空間越大，體積就變大。",
+        "steps": ["沒吹氣時氣球很小", "吹氣後空氣進到氣球裡", "氣球脹大，佔的空間變多，所以體積變大"],
+        "trap": "以為氣球只是形狀變圓，體積沒有變。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q04",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p1・一、選擇題 第(2)題）",
+      "section": "一、選擇題",
+      "question_num": "2",
+      "title": "捏棉花糖",
+      "stem": "把一個棉花糖用力捏，捏成硬硬緊緊的，棉花糖的體積有什麼改變？",
+      "choices": ["變小", "變大", "不變", "先變大再變小"],
+      "answer_index": 0,
+      "answer_raw": "變小",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "棉花糖裡有很多空氣，用力捏把空氣擠掉，整體佔的空間就變小。",
+        "steps": ["原本棉花糖蓬鬆，裡面有很多空氣", "用力捏後空氣被擠出來", "變得硬硬緊緊，佔的空間變少，體積變小"],
+        "trap": "以為只是變硬、重量不變所以體積也不變，忽略空氣被擠掉。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q05",
+      "exam_source": "臺北市南湖國小 113-2 期末（PDF p1・一、選擇題 第(3)題）",
+      "section": "一、選擇題",
+      "question_num": "3",
+      "title": "橡皮擦排三種形體",
+      "stem": "用四個相同的橡皮擦，堆疊出三種不同的形體。哪一個形體的體積最大？",
+      "choices": ["甲", "丙", "一樣大", "無法比較"],
+      "answer_index": 2,
+      "answer_raw": "一樣大",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "四個橡皮擦都一樣大，不管堆成直排、方陣或疊高，總體積都是 4 個橡皮擦。",
+        "steps": ["每一個橡皮擦的體積相同", "三種形體都用了 4 個橡皮擦", "所以三種形體的體積一樣大"],
+        "trap": "以為疊高的看起來比較大，其實只比較了高度，沒有比數量。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q06",
+      "exam_source": "高雄市獅湖國小 112-2 期末（PDF p1・一、選擇題 第5題）",
+      "section": "一、選擇題",
+      "question_num": "5",
+      "title": "體積敘述辨析",
+      "stem": "以下關於體積的敘述，何者錯誤？",
+      "choices": ["形體的形狀不同，體積仍可能是一樣的", "把蘋果切成兩半，體積並無變化", "魔術方塊任意旋轉後，體積不會變化", "邊長1公分的正方體體積為1平方公分"],
+      "answer_index": 3,
+      "answer_raw": "邊長1公分的正方體體積為1平方公分",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "體積要用立方單位，不是平方單位；邊長 1 公分的正方體體積是 1 立方公分。",
+        "steps": ["形狀不同但數量相同，體積可以一樣", "切開或旋轉都不改變佔的空間", "平方公分是面積單位，不是體積單位", "所以第四個敘述錯誤"],
+        "trap": "混淆面積與體積的單位，把 cm² 當成體積單位。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q07",
+      "exam_source": "高雄市獅湖國小 113-2 期末（PDF p1・一、選擇題 第9題）",
+      "section": "一、選擇題",
+      "question_num": "9",
+      "title": "1 立方公分的記法",
+      "stem": "關於 1 立方公分的敘述，何者錯誤？",
+      "choices": ["邊長 1 公分的白色正方體積木，體積是 1 立方公分", "立方公分是體積單位", "1 立方公分可以記做 1cm²", "1 立方公分通常比一顆西瓜還要小"],
+      "answer_index": 2,
+      "answer_raw": "1 立方公分可以記做 1cm²",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "立方公分是體積單位，記做 cm³；cm² 是面積單位。",
+        "steps": ["邊長 1 公分的小正方體，體積就是 1 立方公分", "立方公分用來量物體佔的空間", "1 立方公分記做 1cm³，不是 1cm²", "所以第三個敘述錯誤"],
+        "trap": "把面積的平方記號直接套到體積上。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q08",
+      "exam_source": "高雄市獅湖國小 110-2 期末（PDF p1・一、選擇題 第5題）",
+      "section": "一、選擇題",
+      "question_num": "5",
+      "title": "208 個積木分層",
+      "stem": "208 個白色積木，堆成一個長方體，每層有 16 個，共有幾層？",
+      "choices": ["3 層", "7 層", "13 層", "17 層"],
+      "answer_index": 2,
+      "answer_raw": "13 層",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "總數 ÷ 每層個數 ＝ 層數。",
+        "steps": ["共有 208 個積木", "每層放 16 個", "208÷16＝13，所以共有 13 層"],
+        "trap": "用 208÷13 反算，或誤以為每層 16 個就只有 16 層。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q09",
+      "exam_source": "臺北市南湖國小 112-2 期末（PDF p1・一、選擇題 第4題）",
+      "section": "一、選擇題",
+      "question_num": "4",
+      "title": "64 個積木堆正方體",
+      "stem": "用 64 個白色積木，堆成一個正方體，請問每層有多少個？",
+      "choices": ["16 個", "4 個", "8 個", "64 個"],
+      "answer_index": 0,
+      "answer_raw": "16 個",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "正方體每邊一樣多；64＝4×4×4，所以每層是 4×4＝16 個。",
+        "steps": ["64 個積木要堆成正方體", "64＝4×4×4，表示長、寬、高都是 4 個", "每層 4×4＝16 個，共 4 層"],
+        "trap": "只開平方成 8×8，以為每層 8 個，但那是兩層的長方體不是正方體。"
+      }
+    },
+    {
+      "id": "G4-S-4-4-Q10",
+      "exam_source": "高雄市永安國小 114-2 期中（PDF p1・一、是非題 第2題；檔名標陽明國小，卷頭為永安國民小學）",
+      "section": "一、是非題",
+      "question_num": "2",
+      "title": "八個正方體組合",
+      "stem": "用 8 個邊長都是 1 公分的正方體組合成不同的形體，每個正方體之間都緊靠在一起。不管怎麼組合，這些形體的體積是多少？",
+      "choices": ["8 立方公分", "8 平方公分", "16 立方公分", "會隨形狀改變"],
+      "answer_index": 0,
+      "answer_raw": "8 立方公分",
+      "component": "volume_s44_g4_lab",
+      "component_path": "components/volume_s44_g4_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "每個小正方體是 1 立方公分，8 個合起來就是 8 立方公分，與排法無關。",
+        "steps": ["每一個邊長 1 公分的正方體體積是 1 立方公分", "一共有 8 個，所以 8×1＝8 立方公分", "不管排成一排或堆成方陣，總數都沒有變"],
+        "trap": "以為排得越分散體積越大，或誤用平方公分作答。"
+      }
+    }
+  ]
+}

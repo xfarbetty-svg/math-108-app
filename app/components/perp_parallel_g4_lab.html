@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>S-4-5 垂直與平行・108 課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main, #fcfbf9);
+  --card:var(--bg-card, #ffffff);
+  --ink:var(--text-primary, #1e293b);
+  --ink-soft:var(--text-secondary, #64748b);
+  --line:var(--border-color, #e2e8f0);
+  --a:var(--accent-primary, #2563eb);
+  --mint:var(--accent-mint, #0d9488);
+  --sky:var(--accent-sky, #0284c7);
+  --elev:var(--bg-elevated, #f1f5f9);
+  --ok:#16a34a; --warn:#ea580c; --hl:#fef08a;
+  --shadow:0 3px 10px rgba(0,0,0,0.06);
+  --radius:12px;
+  --ruler-bg:rgba(254, 240, 138, 0.55);
+  --ruler-stroke:#ca8a04;
+  --square-bg:rgba(186, 230, 253, 0.62);
+  --square-stroke:#0284c7;
+  --line-main:#2563eb;
+  --line-sec:#dc2626;
+  --line-perp:#059669;
+}
+html[data-theme="dark"]{
+  --bg:#0f172a; --card:#1e293b; --ink:#f8fafc; --ink-soft:#94a3b8;
+  --line:#334155; --elev:#1e293b; --ok:#4ade80; --warn:#fb923c;
+  --shadow:0 3px 10px rgba(0,0,0,0.28);
+  --ruler-bg:rgba(202, 138, 4, 0.30);
+  --ruler-stroke:#eab308;
+  --square-bg:rgba(2, 132, 199, 0.38);
+  --square-stroke:#38bdf8;
+  --line-main:#60a5fa;
+  --line-sec:#f87171;
+  --line-perp:#34d399;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+[hidden]{display:none!important}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:22px}
+.head-left{display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.head b{font-size:12px;color:var(--ink);white-space:nowrap}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+#btn-theme{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:4px 9px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;transition:all .15s}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:11.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:2px;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none}
+.stage-canvas svg{width:100%;max-width:340px;height:118px;display:block;touch-action:none;user-select:none}
+
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:4px 6px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn-action{background:var(--card);border:1.2px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:3px 7px;border-radius:7px;transition:all .12s;white-space:nowrap}
+.btn-action:hover{border-color:var(--a)}
+.btn-action.primary{background:var(--a);border-color:var(--a);color:#fff}
+.btn-action.active{background:var(--a);border-color:var(--a);color:#fff}
+
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10.5px;line-height:1.32;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+.steps-box{background:var(--card);border:1.5px solid var(--ok);border-radius:8px;padding:5px 7px;font-size:10px;line-height:1.35;color:var(--ink);display:flex;flex-direction:column;gap:2px;text-align:left}
+.step-line b{color:var(--ok);margin-right:3px}
+
+/* 嚴格雙模式隔離：q-mode 下強制隱藏所有概念活動頁籤與卡片 */
+.q-mode .activity-nav,
+.q-mode #act-0-view,
+.q-mode #act-1-view,
+.q-mode #act-2-view{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <div class="head-left">
+      <b>📐 垂直與平行</b>
+      <span id="qtag" class="card-badge" hidden></span>
+    </div>
+    <div class="head-right">
+      <button type="button" id="btn-theme">🌙 深色</button>
+    </div>
+  </div>
+
+  <nav class="activity-nav" id="activityNav">
+    <button type="button" class="act-btn active" data-act="0">① 十字路口找垂線</button>
+    <button type="button" class="act-btn" data-act="1">② 直尺推平行軌道</button>
+    <button type="button" class="act-btn" data-act="2">③ 鐵軌枕木等距尺</button>
+  </nav>
+
+  <!-- 概念探索：活動一（十字路口與直角三角板找垂線） -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head">
+      <span class="card-badge">活動一・十字路口與垂線</span>
+      <span class="card-title">拖曳三角板對齊斑馬線口</span>
+    </div>
+    <div class="stage-canvas" id="canvas-0">
+      <svg id="svg0" viewBox="0 0 340 118">
+        <!-- 東西向馬路（基準線） -->
+        <rect x="10" y="80" width="320" height="24" rx="3" fill="var(--ruler-bg)" stroke="var(--ruler-stroke)" stroke-width="1.2"/>
+        <line x1="15" y1="80" x2="325" y2="80" stroke="var(--ink)" stroke-width="2"/>
+        <text x="22" y="96" font-size="9" font-weight="800" fill="var(--ruler-stroke)">東西向道路（直尺基準邊）</text>
+        <!-- 斑馬線口目標點 A -->
+        <circle cx="170" cy="80" r="4" fill="var(--warn)"/>
+        <text x="170" y="114" font-size="9.5" font-weight="900" fill="var(--warn)" text-anchor="middle">路口燈柱 A 點</text>
+        <!-- 可拖曳三角板 -->
+        <g id="square0" transform="translate(95, 80)" style="cursor:ew-resize">
+          <polygon points="0,0 58,0 0,-62" fill="var(--square-bg)" stroke="var(--square-stroke)" stroke-width="1.6"/>
+          <path d="M 0,-10 L 10,-10 L 10,0" fill="none" stroke="var(--square-stroke)" stroke-width="1.2"/>
+          <circle cx="20" cy="-16" r="6" fill="var(--card)" stroke="var(--square-stroke)" stroke-width="1.2"/>
+          <text x="20" y="-13" font-size="8" font-weight="900" fill="var(--square-stroke)" text-anchor="middle">拖</text>
+        </g>
+        <!-- 垂線與直角記號 -->
+        <g id="perpLine0" hidden>
+          <line x1="170" y1="80" x2="170" y2="10" stroke="var(--line-sec)" stroke-width="2.4" stroke-dasharray="3,3"/>
+          <rect x="170" y="70" width="10" height="10" fill="none" stroke="var(--line-sec)" stroke-width="1.5"/>
+          <text x="184" y="28" font-size="9.5" font-weight="900" fill="var(--line-sec)">南北向垂線 (90°)</text>
+        </g>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action" id="s0Left">◀ 向左滑</button>
+        <button type="button" class="btn-action" id="s0Right">向右滑 ▶</button>
+        <button type="button" class="btn-action primary" id="s0Draw">✓ 畫出垂線</button>
+        <button type="button" class="btn-action" id="s0Reset">重置</button>
+      </div>
+      <div class="info-bubble" id="info0">左右拖曳三角板，讓直角頂點對齊路口燈柱 A 點，再按「畫出垂線」。</div>
+    </div>
+  </section>
+
+  <!-- 概念探索：活動二（直尺＋三角板滑動推平行線軌道） -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動二・直尺推平行軌道</span>
+      <span class="card-title">沿直尺導軌滑動推平行線</span>
+    </div>
+    <div class="stage-canvas" id="canvas-1">
+      <svg id="svg1" viewBox="0 0 340 118">
+        <!-- 固定直尺導軌 -->
+        <g id="ruler1" transform="translate(28, 8)">
+          <rect x="0" y="0" width="26" height="102" rx="3" fill="var(--ruler-bg)" stroke="var(--ruler-stroke)" stroke-width="1.2"/>
+          <line x1="26" y1="0" x2="26" y2="102" stroke="var(--ink)" stroke-width="1.8"/>
+          <text x="13" y="54" font-size="8.5" font-weight="800" fill="var(--ruler-stroke)" text-anchor="middle" transform="rotate(-90 13 54)">直尺固定導軌</text>
+        </g>
+        <!-- 原軌道甲 -->
+        <line x1="54" y1="32" x2="310" y2="32" stroke="var(--line-main)" stroke-width="2.2"/>
+        <rect x="54" y="22" width="10" height="10" fill="none" stroke="var(--line-main)" stroke-width="1.2"/>
+        <text x="275" y="26" font-size="9" font-weight="800" fill="var(--line-main)">軌道甲</text>
+        <!-- 可拖曳三角板 -->
+        <g id="square1" transform="translate(54, 32)" style="cursor:ns-resize">
+          <polygon points="0,0 68,0 0,50" fill="var(--square-bg)" stroke="var(--square-stroke)" stroke-width="1.6"/>
+          <path d="M 0,10 L 10,10 L 10,0" fill="none" stroke="var(--square-stroke)" stroke-width="1.2"/>
+          <circle cx="22" cy="18" r="6" fill="var(--card)" stroke="var(--square-stroke)" stroke-width="1.2"/>
+          <text x="22" y="21" font-size="8" font-weight="900" fill="var(--square-stroke)" text-anchor="middle">拖</text>
+        </g>
+        <!-- 推出的平行軌道乙 -->
+        <g id="lineB1" hidden>
+          <line x1="54" y1="86" x2="310" y2="86" stroke="var(--line-sec)" stroke-width="2.2" stroke-dasharray="3,3"/>
+          <rect x="54" y="76" width="10" height="10" fill="none" stroke="var(--line-sec)" stroke-width="1.2"/>
+          <text x="275" y="80" font-size="9" font-weight="800" fill="var(--line-sec)">軌道乙 ∥ 甲</text>
+        </g>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action" id="s1Up">▲ 往上推</button>
+        <button type="button" class="btn-action" id="s1Down">▼ 往下推</button>
+        <button type="button" class="btn-action primary" id="s1Draw">✓ 畫出平行軌道</button>
+        <button type="button" class="btn-action" id="s1Reset">重置</button>
+      </div>
+      <div class="info-bubble" id="info1">按住三角板沿直尺導軌上下拖曳，再畫出與甲線平行的軌道乙。</div>
+    </div>
+  </section>
+
+  <!-- 概念探索：活動三（鐵軌枕木與兩平行線間等距測量尺） -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動三・鐵軌枕木等距尺</span>
+      <span class="card-title">拖曳測量尺檢查平行鐵軌間距</span>
+    </div>
+    <div class="stage-canvas" id="canvas-2">
+      <svg id="svg2" viewBox="0 0 340 118">
+        <!-- 兩條平行鐵軌 -->
+        <line x1="20" y1="28" x2="320" y2="28" stroke="var(--line-main)" stroke-width="2.4"/>
+        <text x="24" y="21" font-size="9" font-weight="800" fill="var(--line-main)">上鐵軌 L1</text>
+        <line x1="20" y1="88" x2="320" y2="88" stroke="var(--line-main)" stroke-width="2.4"/>
+        <text x="24" y="103" font-size="9" font-weight="800" fill="var(--line-main)">下鐵軌 L2</text>
+        <!-- 固定枕木參考 -->
+        <line x1="75" y1="28" x2="75" y2="88" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="2,2"/>
+        <line x1="255" y1="28" x2="255" y2="88" stroke="var(--ink-soft)" stroke-width="1.4" stroke-dasharray="2,2"/>
+        <!-- 傾斜紅色斜木 D（無直角記號 ∟，標示 6.2 cm > 5.0 cm） -->
+        <g id="probeD" hidden style="display:none">
+          <line x1="225" y1="28" x2="275" y2="88" stroke="var(--line-sec)" stroke-width="3.4" stroke-linecap="round"/>
+          <circle cx="225" cy="28" r="3.2" fill="var(--line-sec)"/>
+          <circle cx="275" cy="88" r="3.2" fill="var(--line-sec)"/>
+          <path d="M 260,88 A 15,15 0 0 1 266,75" fill="none" stroke="var(--line-sec)" stroke-width="1.5"/>
+          <text x="234" y="81" font-size="8.5" font-weight="900" fill="var(--line-sec)">非直角</text>
+          <rect x="242" y="45" width="90" height="18" rx="5" fill="var(--card)" stroke="var(--line-sec)" stroke-width="1.5"/>
+          <text x="287" y="57" font-size="8.5" font-weight="900" fill="var(--line-sec)" text-anchor="middle">6.2 cm &gt; 5.0 cm</text>
+        </g>
+        <!-- 可拖曳等距測量尺 -->
+        <g id="probeSlider2" transform="translate(165, 0)" style="cursor:ew-resize">
+          <line x1="0" y1="28" x2="0" y2="88" stroke="var(--ok)" stroke-width="2.6"/>
+          <rect x="0" y="78" width="9" height="9" fill="none" stroke="var(--ok)" stroke-width="1.3"/>
+          <rect x="-24" y="47" width="48" height="18" rx="5" fill="var(--card)" stroke="var(--ok)" stroke-width="1.4"/>
+          <text x="0" y="59" font-size="8.5" font-weight="900" fill="var(--ok)" text-anchor="middle">5.0 cm</text>
+        </g>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action active" id="btnA">量左枕木(75)</button>
+        <button type="button" class="btn-action" id="btnB">量中段(165)</button>
+        <button type="button" class="btn-action" id="btnC">量右枕木(255)</button>
+        <button type="button" class="btn-action" id="btnD">測試斜木 D</button>
+      </div>
+      <div class="info-bubble ok" id="info2">左右拖曳綠色垂直測量尺，鐵軌垂直間距處處都是 5.0 cm！</div>
+    </div>
+  </section>
+
+  <!-- 真題演練模式 (帶 ?q=1..10 時唯獨顯示) -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="examBadge">真題測驗</span>
+      <span class="card-title" id="examHintTitle">動手幾何操作台</span>
+    </div>
+    <div class="stage-canvas" id="examStageWrap">
+      <svg id="examStage" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examControls"></div>
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="verifyBtn">✓ 檢查操作</button>
+        <button type="button" class="btn-action" id="revealSteps">🔍 看算理拆解</button>
+        <button type="button" class="btn-action" id="resetExamBtn">重置</button>
+      </div>
+      <div class="info-bubble" id="examMsg">請在圖上動手操作或拖曳驗證，再點「檢查操作」。</div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const btnTheme = document.getElementById('btn-theme');
+  function applyTheme(theme){
+    const t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('math108_theme', t); } catch (e) {}
+    btnTheme.textContent = t === 'dark' ? '☀️ 淺色' : '🌙 深色';
+  }
+  btnTheme.onclick = function(){
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  };
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramTheme = urlParams.get('theme');
+  if(paramTheme === 'dark' || paramTheme === 'light'){
+    applyTheme(paramTheme);
+  } else {
+    try {
+      const saved = localStorage.getItem('math108_theme');
+      if(saved) applyTheme(saved);
+    } catch (e) {}
+  }
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type === 'THEME_CHANGE') applyTheme(e.data.theme);
+  });
+
+  // 通用 SVG 拖曳工具（支援真實 pointerdown / pointermove / pointerup）
+  function attachSvgDrag(svgEl, onMove){
+    if(!svgEl) return;
+    let dragging = false;
+    function toSvgPt(ev){
+      const rect = svgEl.getBoundingClientRect();
+      const vb = svgEl.viewBox.baseVal;
+      const x = ((ev.clientX - rect.left) / (rect.width || 1)) * vb.width;
+      const y = ((ev.clientY - rect.top) / (rect.height || 1)) * vb.height;
+      return { x, y };
+    }
+    svgEl.addEventListener('pointerdown', function(ev){
+      dragging = true;
+      try { svgEl.setPointerCapture(ev.pointerId); } catch(e){}
+      onMove(toSvgPt(ev), 'down');
+    });
+    svgEl.addEventListener('pointermove', function(ev){
+      if(!dragging) return;
+      onMove(toSvgPt(ev), 'move');
+    });
+    svgEl.addEventListener('pointerup', function(ev){
+      if(!dragging) return;
+      dragging = false;
+      onMove(toSvgPt(ev), 'up');
+    });
+    svgEl.addEventListener('pointercancel', function(){ dragging = false; });
+  }
+
+  const state = window.__S45_STATE__ = { s0X: 95, s1Y: 32, s2X: 165, exam: {} };
+  const actBtns = document.querySelectorAll('.act-btn');
+
+  function showAct(idx){
+    actBtns.forEach(function(b, i){
+      b.classList.toggle('active', i === idx);
+      const v = document.getElementById('act-' + i + '-view');
+      if(v) v.hidden = (i !== idx);
+    });
+  }
+  actBtns.forEach(function(b){
+    b.onclick = function(){ showAct(parseInt(b.getAttribute('data-act'), 10)); };
+  });
+
+  // --- 活動一：十字路口與直角三角板找垂線 ---
+  const square0 = document.getElementById('square0');
+  const perp0 = document.getElementById('perpLine0');
+  const info0 = document.getElementById('info0');
+  function updateS0(){
+    square0.setAttribute('transform', 'translate(' + Math.round(state.s0X) + ', 80)');
+    if(Math.abs(state.s0X - 170) <= 6){
+      info0.textContent = '三角板直角頂點已對齊 A 點！請按「畫出垂線」。';
+      info0.className = 'info-bubble ok';
+    } else {
+      info0.textContent = '拖曳三角板對齊 A 點（目前 x=' + Math.round(state.s0X) + '，目標 x=170）。';
+      info0.className = 'info-bubble';
+    }
+  }
+  attachSvgDrag(document.getElementById('svg0'), function(pt){
+    state.s0X = Math.max(30, Math.min(260, pt.x - 15));
+    updateS0();
+  });
+  document.getElementById('s0Left').onclick = function(){ state.s0X = Math.max(30, state.s0X - 15); updateS0(); };
+  document.getElementById('s0Right').onclick = function(){ state.s0X = Math.min(260, state.s0X + 15); updateS0(); };
+  document.getElementById('s0Draw').onclick = function(){
+    if(Math.abs(state.s0X - 170) <= 10){
+      state.s0X = 170; updateS0();
+      perp0.hidden = false;
+      info0.textContent = '✓ 垂線完成！南北向與東西向相交成 90° 直角。';
+      info0.className = 'info-bubble ok';
+    } else {
+      info0.textContent = '⚠️ 請先拖曳或滑動三角板使直角頂點對齊路口燈柱 A 點！';
+      info0.className = 'info-bubble warn';
+    }
+  };
+  document.getElementById('s0Reset').onclick = function(){ state.s0X = 95; perp0.hidden = true; updateS0(); };
+
+  // --- 活動二：直尺＋三角板滑動推平行線軌道 ---
+  const square1 = document.getElementById('square1');
+  const lineB1 = document.getElementById('lineB1');
+  const info1 = document.getElementById('info1');
+  function updateS1(){
+    square1.setAttribute('transform', 'translate(54, ' + Math.round(state.s1Y) + ')');
+    if(state.s1Y >= 68){
+      info1.textContent = '三角板已沿直尺滑至新位置（y=' + Math.round(state.s1Y) + '），請按「畫出平行軌道」！';
+      info1.className = 'info-bubble ok';
+    } else {
+      info1.textContent = '沿直尺往下拖曳三角板拉開間距（目前 y=' + Math.round(state.s1Y) + '）。';
+      info1.className = 'info-bubble';
+    }
+  }
+  attachSvgDrag(document.getElementById('svg1'), function(pt){
+    state.s1Y = Math.max(25, Math.min(92, pt.y - 15));
+    updateS1();
+  });
+  document.getElementById('s1Up').onclick = function(){ state.s1Y = Math.max(25, state.s1Y - 14); updateS1(); };
+  document.getElementById('s1Down').onclick = function(){ state.s1Y = Math.min(92, state.s1Y + 14); updateS1(); };
+  document.getElementById('s1Draw').onclick = function(){
+    if(state.s1Y >= 64){
+      lineB1.setAttribute('transform', 'translate(0, ' + Math.round(state.s1Y - 86) + ')');
+      lineB1.hidden = false;
+      info1.textContent = '✓ 平行軌道乙繪製完成！甲、乙兩線皆垂直於直尺導軌，故互相平行！';
+      info1.className = 'info-bubble ok';
+    } else {
+      info1.textContent = '⚠️ 請將三角板沿著直尺再往下推一點！';
+      info1.className = 'info-bubble warn';
+    }
+  };
+  document.getElementById('s1Reset').onclick = function(){ state.s1Y = 32; lineB1.hidden = true; updateS1(); };
+
+  // --- 活動三：鐵軌枕木與兩平行線間等距測量尺 ---
+  const slider2 = document.getElementById('probeSlider2');
+  const probeD = document.getElementById('probeD');
+  const info2 = document.getElementById('info2');
+  function updateS2(mode){
+    slider2.setAttribute('transform', 'translate(' + Math.round(state.s2X) + ', 0)');
+    slider2.setAttribute('visibility', 'visible');
+    if(mode === 'D'){
+      probeD.removeAttribute('hidden');
+      probeD.style.display = 'inline';
+      info2.textContent = '⚠️ 紅色斜木 D 沒有直角記號 ∟，長度 6.2 cm > 5.0 cm！只有「垂直線段」才是兩平行線間的最短距離。';
+      info2.className = 'info-bubble warn';
+    } else {
+      probeD.setAttribute('hidden', '');
+      probeD.style.display = 'none';
+      info2.textContent = '垂直測量尺位於 x=' + Math.round(state.s2X) + '：間距 5.0 cm。兩平行線間距離處處相等！';
+      info2.className = 'info-bubble ok';
+    }
+  }
+  attachSvgDrag(document.getElementById('svg2'), function(pt){
+    state.s2X = Math.max(45, Math.min(295, pt.x));
+    updateS2();
+  });
+  function setAct3Btn(id, x, mode){
+    ['btnA','btnB','btnC','btnD'].forEach(k => document.getElementById(k).classList.toggle('active', k === id));
+    if(x !== null) state.s2X = x;
+    updateS2(mode);
+  }
+  document.getElementById('btnA').onclick = () => setAct3Btn('btnA', 75, 'perp');
+  document.getElementById('btnB').onclick = () => setAct3Btn('btnB', 165, 'perp');
+  document.getElementById('btnC').onclick = () => setAct3Btn('btnC', 255, 'perp');
+  document.getElementById('btnD').onclick = () => setAct3Btn('btnD', null, 'D');
+
+  // --- 真題模式 Q1..Q10（每題獨立 SVG 圖形 + 互動驗證） ---
+  const qNum = parseInt(urlParams.get('q'), 10);
+  const isExam = !isNaN(qNum) && qNum >= 1 && qNum <= 10;
+  window.__S45_MODE__ = isExam ? 'exam' : 'concept';
+
+  const EXAM_SPECS = {
+    1: {
+      badge: '真題 Q1・永安 114-2',
+      title: '旋轉交線檢測 90° 直角',
+      steps: [
+        '將橘紅色直線拖曳或旋轉至與橫線交角成 90°。',
+        '交角達 90° 時，四個相交夾角皆為 90° 直角。',
+        '互相垂直的兩條直線，夾角一定都是直角。'
+      ],
+      init: { angle: 60 },
+      render(st, svg, ctrl){
+        const rad = st.angle * Math.PI / 180;
+        const dx = 75 * Math.cos(rad), dy = 50 * Math.sin(rad);
+        const is90 = st.angle === 90;
+        svg.innerHTML = `
+          <line x1="40" y1="62" x2="300" y2="62" stroke="var(--line-main)" stroke-width="2.2"/>
+          <line x1="${(170-dx).toFixed(1)}" y1="${(62+dy).toFixed(1)}" x2="${(170+dx).toFixed(1)}" y2="${(62-dy).toFixed(1)}" stroke="var(--line-sec)" stroke-width="2.4"/>
+          <circle cx="${(170+dx).toFixed(1)}" cy="${(62-dy).toFixed(1)}" r="5" fill="var(--line-sec)" stroke="#fff" stroke-width="1.2"/>
+          ${is90 ? '<rect x="170" y="52" width="10" height="10" fill="none" stroke="var(--ok)" stroke-width="1.5"/><rect x="160" y="62" width="10" height="10" fill="none" stroke="var(--ok)" stroke-width="1.5"/>' : ''}
+          <text x="184" y="48" font-size="10" font-weight="900" fill="${is90?'var(--ok)':'var(--ink)'}">夾角 ${st.angle}° ${is90?'(四個都是直角!)':''}</text>
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action" id="q1Dec">-10°</button>
+          <span class="card-badge">${st.angle}°</span>
+          <button type="button" class="btn-action" id="q1Inc">+10°</button>
+          <button type="button" class="btn-action primary" id="q1Set">設為 90°</button>
+        `;
+        ctrl.querySelector('#q1Dec').onclick = () => { st.angle = Math.max(30, st.angle - 10); renderExam(); };
+        ctrl.querySelector('#q1Inc').onclick = () => { st.angle = Math.min(150, st.angle + 10); renderExam(); };
+        ctrl.querySelector('#q1Set').onclick = () => { st.angle = 90; renderExam(); };
+      },
+      onDrag(st, pt){
+        const ang = Math.round(Math.atan2(62 - pt.y, pt.x - 170) * 180 / Math.PI);
+        if(ang >= 25 && ang <= 155){ st.angle = Math.round(ang / 5) * 5; renderExam(); }
+      },
+      check: (st) => ({ ok: st.angle === 90, msg: st.angle === 90 ? '✓ 夾角 90°！互相垂直的直線所形成的四個夾角一定都是直角。' : '目前夾角 ' + st.angle + '°，請調整至 90° 觀察！' })
+    },
+    2: {
+      badge: '真題 Q2・永安 114-2',
+      title: '判斷甲乙兩平行線間的距離線段',
+      steps: [
+        '觀察連接直線甲與直線乙的線段 A、B、C、D。',
+        '線段 A、C、D 皆為傾斜線段，長度大於垂直間距。',
+        '只有線段 B 同時垂直甲與乙，因此線段 B 才是距離。'
+      ],
+      init: { sel: null },
+      render(st, svg, ctrl){
+        const s = st.sel;
+        svg.innerHTML = `
+          <line x1="25" y1="26" x2="315" y2="26" stroke="var(--line-main)" stroke-width="2.2"/>
+          <text x="18" y="30" font-size="9.5" font-weight="900" fill="var(--line-main)">甲</text>
+          <line x1="25" y1="92" x2="315" y2="92" stroke="var(--line-main)" stroke-width="2.2"/>
+          <text x="18" y="96" font-size="9.5" font-weight="900" fill="var(--line-main)">乙</text>
+          <line x1="65" y1="26" x2="90" y2="92" stroke="${s==='A'?'var(--warn)':'var(--ink-soft)'}" stroke-width="${s==='A'?3:1.8}"/>
+          <text x="68" y="18" font-size="9.5" font-weight="900" fill="${s==='A'?'var(--warn)':'var(--ink)'}">A</text>
+          <line x1="138" y1="26" x2="138" y2="92" stroke="${s==='B'?'var(--ok)':'var(--ink)'}" stroke-width="${s==='B'?3.2:2}"/>
+          <rect x="138" y="83" width="9" height="9" fill="none" stroke="${s==='B'?'var(--ok)':'var(--ink)'}" stroke-width="1.3"/>
+          <text x="138" y="18" font-size="9.5" font-weight="900" fill="${s==='B'?'var(--ok)':'var(--ink)'}" text-anchor="middle">B</text>
+          <line x1="185" y1="26" x2="215" y2="92" stroke="${s==='C'?'var(--warn)':'var(--ink-soft)'}" stroke-width="${s==='C'?3:1.8}"/>
+          <text x="188" y="18" font-size="9.5" font-weight="900" fill="${s==='C'?'var(--warn)':'var(--ink)'}">C</text>
+          <line x1="260" y1="26" x2="245" y2="92" stroke="${s==='D'?'var(--warn)':'var(--ink-soft)'}" stroke-width="${s==='D'?3:1.8}"/>
+          <text x="260" y="18" font-size="9.5" font-weight="900" fill="${s==='D'?'var(--warn)':'var(--ink)'}">D</text>
+        `;
+        ctrl.innerHTML = ['A','B','C','D'].map(k => `<button type="button" class="btn-action ${s===k?'active':''}" data-seg="${k}">線段 ${k}</button>`).join('');
+        ctrl.querySelectorAll('[data-seg]').forEach(b => { b.onclick = () => { st.sel = b.dataset.seg; renderExam(); }; });
+      },
+      check: (st) => ({ ok: st.sel === 'B', msg: st.sel === 'B' ? '✓ 線段 B 帶有直角記號，垂直於甲乙兩線，是平行線間的距離！' : '線段 ' + (st.sel || '未選') + ' 是斜線，請點選垂直於甲、乙的線段。' })
+    },
+    3: {
+      badge: '真題 Q3・永安 114-2',
+      title: '三角板直角邊對齊直線甲過點 A 畫垂線',
+      steps: [
+        '將三角板一條直角邊緊貼基準直線甲。',
+        '沿直線甲左右滑動，使另一直角邊通過線外點 A。',
+        '沿著通過點 A 的直角邊畫線，即為垂線。'
+      ],
+      init: { x: 85, drawn: false },
+      render(st, svg, ctrl){
+        svg.innerHTML = `
+          <line x1="20" y1="86" x2="320" y2="86" stroke="var(--line-main)" stroke-width="2.2"/>
+          <text x="26" y="79" font-size="9" font-weight="800" fill="var(--line-main)">直線甲</text>
+          <circle cx="175" cy="36" r="4" fill="var(--warn)"/>
+          <text x="175" y="25" font-size="9.5" font-weight="900" fill="var(--warn)" text-anchor="middle">點 A</text>
+          <g transform="translate(${Math.round(st.x)}, 86)">
+            <polygon points="0,0 56,0 0,-60" fill="var(--square-bg)" stroke="var(--square-stroke)" stroke-width="1.5"/>
+            <path d="M 0,-9 L 9,-9 L 9,0" fill="none" stroke="var(--square-stroke)" stroke-width="1.2"/>
+          </g>
+          ${st.drawn ? '<line x1="175" y1="86" x2="175" y2="12" stroke="var(--line-sec)" stroke-width="2.4"/><rect x="175" y="76" width="9" height="9" fill="none" stroke="var(--line-sec)" stroke-width="1.4"/>' : ''}
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action" id="q3L">◀ 向左滑</button>
+          <button type="button" class="btn-action" id="q3R">向右滑 ▶</button>
+          <button type="button" class="btn-action primary" id="q3D">✓ 畫出垂線</button>
+        `;
+        ctrl.querySelector('#q3L').onclick = () => { st.x = Math.max(30, st.x - 15); renderExam(); };
+        ctrl.querySelector('#q3R').onclick = () => { st.x = Math.min(240, st.x + 15); renderExam(); };
+        ctrl.querySelector('#q3D').onclick = () => { if(Math.abs(st.x - 175) <= 10){ st.x = 175; st.drawn = true; } renderExam(); };
+      },
+      onDrag(st, pt){ st.x = Math.max(30, Math.min(240, pt.x - 12)); renderExam(); },
+      check: (st) => ({ ok: st.drawn, msg: st.drawn ? '✓ 垂線完成！三角板直角邊貼齊直線甲並通過點 A。' : '請滑動三角板使左側直角邊對準點 A (x=175) 後按「畫出垂線」。' })
+    },
+    4: {
+      badge: '真題 Q4・永安 114-2',
+      title: '直尺固定導軌、三角板滑動推平行線',
+      steps: [
+        '三角板一條直角邊貼齊直線甲，直尺緊靠另一直角邊固定。',
+        '按住直尺不動，將三角板沿直尺向下滑動至新位置。',
+        '沿著三角板直角邊畫線，所得直線乙必與甲平行。'
+      ],
+      init: { y: 30, drawn: false },
+      render(st, svg, ctrl){
+        svg.innerHTML = `
+          <rect x="28" y="8" width="22" height="102" rx="3" fill="var(--ruler-bg)" stroke="var(--ruler-stroke)" stroke-width="1.2"/>
+          <line x1="50" y1="8" x2="50" y2="110" stroke="var(--ink)" stroke-width="1.8"/>
+          <line x1="50" y1="30" x2="305" y2="30" stroke="var(--line-main)" stroke-width="2.2"/>
+          <text x="275" y="24" font-size="9" font-weight="800" fill="var(--line-main)">直線甲</text>
+          <g transform="translate(50, ${Math.round(st.y)})">
+            <polygon points="0,0 56,0 0,44" fill="var(--square-bg)" stroke="var(--square-stroke)" stroke-width="1.5"/>
+            <path d="M 0,9 L 9,9 L 9,0" fill="none" stroke="var(--square-stroke)" stroke-width="1.2"/>
+          </g>
+          ${st.drawn ? `<line x1="50" y1="${Math.round(st.y)}" x2="305" y2="${Math.round(st.y)}" stroke="var(--line-sec)" stroke-width="2.2"/><text x="275" y="${Math.round(st.y)-5}" font-size="9" font-weight="800" fill="var(--line-sec)">直線乙</text>` : ''}
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action" id="q4U">▲ 往上推</button>
+          <button type="button" class="btn-action" id="q4D">▼ 往下推</button>
+          <button type="button" class="btn-action primary" id="q4Draw">✓ 畫直線乙</button>
+        `;
+        ctrl.querySelector('#q4U').onclick = () => { st.y = Math.max(30, st.y - 14); renderExam(); };
+        ctrl.querySelector('#q4D').onclick = () => { st.y = Math.min(92, st.y + 14); renderExam(); };
+        ctrl.querySelector('#q4Draw').onclick = () => { if(st.y >= 60) st.drawn = true; renderExam(); };
+      },
+      onDrag(st, pt){ st.y = Math.max(30, Math.min(92, pt.y - 12)); renderExam(); },
+      check: (st) => ({ ok: st.drawn, msg: st.drawn ? '✓ 平行線乙完成！直尺固定導軌確保兩線完全平行。' : '請沿直尺往下拖曳三角板至下方後按「畫直線乙」。' })
+    },
+    5: {
+      badge: '真題 Q5・獅湖 111-2',
+      title: '兩平行線之間可畫出無限多條垂直線',
+      steps: [
+        '直線上包含無限多個點，每個點都能向對邊作垂直線。',
+        '每按一次「增加垂直線」，圖上都可以一直插入新的垂直線。',
+        '因此兩平行線之間可以畫出無限多條垂直線段。'
+      ],
+      init: { count: 2 },
+      render(st, svg, ctrl){
+        const segs = [];
+        const step = 240 / (st.count + 1);
+        for(let i=1; i<=st.count; i++){
+          const x = 50 + i * step;
+          segs.push(`<line x1="${x.toFixed(1)}" y1="28" x2="${x.toFixed(1)}" y2="88" stroke="var(--ok)" stroke-width="1.6"/>
+                     <rect x="${x.toFixed(1)}" y="81" width="6" height="6" fill="none" stroke="var(--ok)" stroke-width="1"/>`);
+        }
+        svg.innerHTML = `
+          <line x1="30" y1="28" x2="310" y2="28" stroke="var(--line-main)" stroke-width="2.2"/>
+          <line x1="30" y1="88" x2="310" y2="88" stroke="var(--line-main)" stroke-width="2.2"/>
+          ${segs.join('')}
+          <text x="170" y="108" font-size="9.5" font-weight="900" fill="var(--ink)" text-anchor="middle">已畫 ${st.count} 條垂直線（可持續無限增加）</text>
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action" id="q5Add">+ 增加 3 條垂線</button>
+          <button type="button" class="btn-action primary" id="q5Many">密集畫出 16 條</button>
+        `;
+        ctrl.querySelector('#q5Add').onclick = () => { st.count = Math.min(24, st.count + 3); renderExam(); };
+        ctrl.querySelector('#q5Many').onclick = () => { st.count = 16; renderExam(); };
+      },
+      check: (st) => ({ ok: st.count >= 8, msg: st.count >= 8 ? '✓ 無論空間多密都能繼續畫！兩平行線之間可畫出無限多條垂直線。' : '請多按幾次「增加垂線」，體會直線上處處都能作垂線。' })
+    },
+    6: {
+      badge: '真題 Q6・獅湖 114-2',
+      title: '平行線延伸實驗：永不相交 vs 相交',
+      steps: [
+        '切換「平行線」與「傾斜線」並點擊兩端延伸。',
+        '傾斜線只要延伸夠長，最終一定會在某一點相交。',
+        '只有互相平行的兩條線，無論延伸多長都不會有交點。'
+      ],
+      init: { ext: 0, par: true },
+      render(st, svg, ctrl){
+        const x1 = 115 - st.ext, x2 = 225 + st.ext;
+        const y2R = st.par ? 82 : (82 - st.ext * 0.48);
+        const hit = !st.par && st.ext >= 70;
+        svg.innerHTML = `
+          <line x1="${x1}" y1="38" x2="${x2}" y2="38" stroke="var(--line-main)" stroke-width="2.2"/>
+          <line x1="${x1}" y1="82" x2="${x2}" y2="${y2R.toFixed(1)}" stroke="${st.par?'var(--line-main)':'var(--warn)'}" stroke-width="2.2"/>
+          ${hit ? `<circle cx="${x2}" cy="44" r="4" fill="var(--warn)"/><text x="${x2-38}" y="30" font-size="9" font-weight="900" fill="var(--warn)">延長後相交!</text>` : ''}
+          <text x="170" y="18" font-size="9.5" font-weight="800" fill="var(--ink)" text-anchor="middle">${st.par?'平行線組：延伸 +' + (st.ext*2) + 'px 永不相交':'傾斜線組：延伸 +' + (st.ext*2) + 'px 距離漸縮'}</text>
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action ${st.par?'active':''}" id="q6P">平行線</button>
+          <button type="button" class="btn-action ${!st.par?'active':''}" id="q6N">傾斜線</button>
+          <button type="button" class="btn-action primary" id="q6E">向兩端延伸 ▶</button>
+        `;
+        ctrl.querySelector('#q6P').onclick = () => { st.par = true; renderExam(); };
+        ctrl.querySelector('#q6N').onclick = () => { st.par = false; renderExam(); };
+        ctrl.querySelector('#q6E').onclick = () => { st.ext = Math.min(85, st.ext + 28); renderExam(); };
+      },
+      check: (st) => ({ ok: st.par && st.ext > 0, msg: st.par && st.ext > 0 ? '✓ 驗證成立！互相平行的兩條線，無論延伸多長都不會有交點。' : '請切換「平行線」並按「向兩端延伸」檢查是否有交點。' })
+    },
+    7: {
+      badge: '真題 Q7・獅湖 114-2',
+      title: '兩直線同時垂直於同一直線的關係',
+      steps: [
+        '先畫出垂直於基準線 M 的直線 L1（夾角 90°）。',
+        '再畫出同樣垂直於基準線 M 的直線 L2（夾角 90°）。',
+        'L1 與 L2 方向完全一致、等距不相交，故彼此互相平行。'
+      ],
+      init: { step: 1 },
+      render(st, svg, ctrl){
+        svg.innerHTML = `
+          <line x1="78" y1="12" x2="78" y2="106" stroke="var(--ink)" stroke-width="2.2"/>
+          <text x="64" y="22" font-size="9" font-weight="800" fill="var(--ink)">M</text>
+          <line x1="78" y1="36" x2="275" y2="36" stroke="var(--line-main)" stroke-width="2.2"/>
+          <rect x="78" y="27" width="9" height="9" fill="none" stroke="var(--line-main)" stroke-width="1.3"/>
+          <text x="282" y="40" font-size="9" font-weight="800" fill="var(--line-main)">L1 ⊥ M</text>
+          ${st.step >= 2 ? `
+            <line x1="78" y1="84" x2="275" y2="84" stroke="var(--line-sec)" stroke-width="2.2"/>
+            <rect x="78" y="75" width="9" height="9" fill="none" stroke="var(--line-sec)" stroke-width="1.3"/>
+            <text x="282" y="88" font-size="9" font-weight="800" fill="var(--line-sec)">L2 ⊥ M</text>
+            <text x="178" y="64" font-size="10" font-weight="900" fill="var(--ok)">L1 與 L2 方向一致！</text>
+          ` : ''}
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action ${st.step===1?'active':''}" id="q7S1">① 只畫 L1 ⊥ M</button>
+          <button type="button" class="btn-action primary ${st.step===2?'active':''}" id="q7S2">② 再畫 L2 ⊥ M</button>
+        `;
+        ctrl.querySelector('#q7S1').onclick = () => { st.step = 1; renderExam(); };
+        ctrl.querySelector('#q7S2').onclick = () => { st.step = 2; renderExam(); };
+      },
+      check: (st) => ({ ok: st.step === 2, msg: st.step === 2 ? '✓ L1 與 L2 同時垂直於 M，因此 L1 與 L2 互相平行！' : '請點擊「② 再畫 L2 ⊥ M」觀察兩線關係。' })
+    },
+    8: {
+      badge: '真題 Q8・獅湖 114-2',
+      title: '滑動測量尺驗證兩平行線等距性',
+      steps: [
+        '將垂直測量尺拖曳至左端、中段與右端。',
+        '每次讀取的垂直線段長度皆固定為 4.5 cm。',
+        '證明兩平行線之間的距離處處相等。'
+      ],
+      init: { px: 170 },
+      render(st, svg, ctrl){
+        svg.innerHTML = `
+          <line x1="25" y1="28" x2="315" y2="28" stroke="var(--line-main)" stroke-width="2.2"/>
+          <line x1="25" y1="88" x2="315" y2="88" stroke="var(--line-main)" stroke-width="2.2"/>
+          <g transform="translate(${Math.round(st.px)}, 0)">
+            <line x1="0" y1="28" x2="0" y2="88" stroke="var(--ok)" stroke-width="2.6"/>
+            <rect x="0" y="79" width="9" height="9" fill="none" stroke="var(--ok)" stroke-width="1.3"/>
+            <rect x="-22" y="48" width="44" height="17" rx="5" fill="var(--card)" stroke="var(--ok)" stroke-width="1.4"/>
+            <text x="0" y="60" font-size="8.5" font-weight="900" fill="var(--ok)" text-anchor="middle">4.5cm</text>
+          </g>
+          <text x="170" y="109" font-size="9.5" font-weight="800" fill="var(--ink)" text-anchor="middle">位置 x=${Math.round(st.px)}：實測距離 4.5 cm</text>
+        `;
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action" id="q8L">◀ 左端(65)</button>
+          <button type="button" class="btn-action" id="q8M">中段(170)</button>
+          <button type="button" class="btn-action" id="q8R">右端(275) ▶</button>
+        `;
+        ctrl.querySelector('#q8L').onclick = () => { st.px = 65; renderExam(); };
+        ctrl.querySelector('#q8M').onclick = () => { st.px = 170; renderExam(); };
+        ctrl.querySelector('#q8R').onclick = () => { st.px = 275; renderExam(); };
+      },
+      onDrag(st, pt){ st.px = Math.max(45, Math.min(295, pt.x)); renderExam(); },
+      check: (st) => ({ ok: true, msg: '✓ 位置 x=' + Math.round(st.px) + ' 實測為 4.5 cm！兩平行線之間距離處處相等。' })
+    },
+    9: {
+      badge: '真題 Q9・內湖 112-2',
+      title: '五線交錯圖中找出和 A 線平行的線',
+      steps: [
+        '觀察內湖國小段考附圖中的 A、B、C、D、E 五條線。',
+        'E 為水平線，B 為鉛直線，D 往右下傾斜，皆與 A 線相交。',
+        '只有 C 線與 A 線傾斜方向完全相同且保持等距，故 C 線與 A 線平行。'
+      ],
+      init: { sel: null },
+      render(st, svg, ctrl){
+        const s = st.sel;
+        // 忠實還原內湖 112-2 p1 一.2 附圖：E 橫線、B 鉛直線、A 與 C 左下往右上平行、D 左上往右下斜交
+        svg.innerHTML = `
+          <!-- E 水平線 -->
+          <line x1="65" y1="86" x2="275" y2="86" stroke="var(--ink-soft)" stroke-width="1.8"/>
+          <text x="280" y="90" font-size="9.5" font-weight="900" fill="var(--ink-soft)">E</text>
+          <!-- B 鉛直線 -->
+          <line x1="142" y1="16" x2="142" y2="108" stroke="${s==='B'?'var(--warn)':'var(--ink)'}" stroke-width="${s==='B'?2.8:1.8}"/>
+          <text x="142" y="12" font-size="9.5" font-weight="900" fill="${s==='B'?'var(--warn)':'var(--ink)'}" text-anchor="middle">B</text>
+          <!-- A 斜線 (基準) -->
+          <line x1="78" y1="106" x2="132" y2="28" stroke="var(--line-main)" stroke-width="2.6"/>
+          <text x="122" y="25" font-size="9.5" font-weight="900" fill="var(--line-main)">A</text>
+          <!-- C 斜線 (平行 A) -->
+          <line x1="158" y1="106" x2="212" y2="28" stroke="${s==='C'?'var(--ok)':'var(--ink)'}" stroke-width="${s==='C'?3:1.9}"/>
+          <text x="215" y="26" font-size="9.5" font-weight="900" fill="${s==='C'?'var(--ok)':'var(--ink)'}">C</text>
+          <!-- D 斜線 (相交) -->
+          <line x1="192" y1="42" x2="255" y2="108" stroke="${s==='D'?'var(--warn)':'var(--ink)'}" stroke-width="${s==='D'?2.8:1.8}"/>
+          <text x="228" y="64" font-size="9.5" font-weight="900" fill="${s==='D'?'var(--warn)':'var(--ink)'}">D</text>
+        `;
+        ctrl.innerHTML = ['A','B','C','D'].map(k => `<button type="button" class="btn-action ${s===k?'active':''}" data-ln="${k}">${k} 線</button>`).join('');
+        ctrl.querySelectorAll('[data-ln]').forEach(b => { b.onclick = () => { st.sel = b.dataset.ln; renderExam(); }; });
+      },
+      check: (st) => ({ ok: st.sel === 'C', msg: st.sel === 'C' ? '✓ 正確！C 線與 A 線方向完全一致、延伸永不相交，兩線互相平行。' : '線 ' + (st.sel || '未選') + ' 會與 A 線相交（或為 A 本身），請選出與 A 平行的線！' })
+    },
+    10: {
+      badge: '真題 Q10・內湖 113-2',
+      title: '甲∥乙、丙⊥甲，延伸丙線看乙丙關係',
+      steps: [
+        '甲線與乙線互相平行，方向完全一致。',
+        '丙線垂直於甲線，夾角為 90° 直角。',
+        '將丙線繼續向下延伸穿過乙線，與乙線交角同樣也是 90°（互相垂直）。'
+      ],
+      init: { ext: false },
+      render(st, svg, ctrl){
+        svg.innerHTML = `
+          <line x1="45" y1="34" x2="280" y2="34" stroke="var(--line-main)" stroke-width="2.2"/>
+          <text x="288" y="38" font-size="9.5" font-weight="800" fill="var(--line-main)">甲</text>
+          <line x1="45" y1="88" x2="280" y2="88" stroke="var(--line-main)" stroke-width="2.2"/>
+          <text x="288" y="92" font-size="9.5" font-weight="800" fill="var(--line-main)">乙 (∥甲)</text>
+          <line x1="155" y1="12" x2="155" y2="${st.ext?108:34}" stroke="var(--line-sec)" stroke-width="2.4"/>
+          <text x="142" y="20" font-size="9.5" font-weight="800" fill="var(--line-sec)">丙</text>
+          <rect x="155" y="34" width="9" height="9" fill="none" stroke="var(--line-sec)" stroke-width="1.3"/>
+          ${st.ext ? '<rect x="155" y="79" width="9" height="9" fill="none" stroke="var(--ok)" stroke-width="1.5"/><text x="169" y="82" font-size="9.5" font-weight="900" fill="var(--ok)">交角 90°！</text>' : ''}
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q10Ext">${st.ext ? '✓ 丙線已穿過乙線' : '延伸丙線穿過乙線 ▼'}</button>`;
+        ctrl.querySelector('#q10Ext').onclick = () => { st.ext = true; renderExam(); };
+      },
+      check: (st) => ({ ok: st.ext, msg: st.ext ? '✓ 丙線穿過乙線同樣形成 90° 直角，因此乙線與丙線互相垂直！' : '請點擊「延伸丙線穿過乙線」觀察夾角！' })
+    }
+  };
+
+  function renderExam(){
+    const cfg = EXAM_SPECS[qNum];
+    if(!cfg) return;
+    cfg.render(state.exam, document.getElementById('examStage'), document.getElementById('examControls'));
+  }
+
+  function initExam(){
+    document.body.classList.add('q-mode');
+    document.getElementById('activityNav').hidden = true;
+    [0,1,2].forEach(i => { document.getElementById('act-' + i + '-view').hidden = true; });
+    document.getElementById('examView').hidden = false;
+
+    const cfg = EXAM_SPECS[qNum];
+    if(!cfg) return;
+    const qtag = document.getElementById('qtag');
+    qtag.textContent = '真題 Q' + qNum;
+    qtag.hidden = false;
+    document.getElementById('examBadge').textContent = cfg.badge;
+    document.getElementById('examHintTitle').textContent = cfg.title;
+
+    state.exam = Object.assign({}, cfg.init);
+    const stepsBox = document.getElementById('stepsBox');
+    stepsBox.hidden = true;
+    stepsBox.innerHTML = cfg.steps.map((s, idx) => `<div class="step-line"><b>步驟 ${idx+1}：</b>${s}</div>`).join('');
+
+    if(cfg.onDrag){
+      attachSvgDrag(document.getElementById('examStage'), (pt) => cfg.onDrag(state.exam, pt));
+    }
+
+    document.getElementById('verifyBtn').onclick = function(){
+      const res = cfg.check(state.exam);
+      const m = document.getElementById('examMsg');
+      m.className = 'info-bubble ' + (res.ok ? 'ok' : 'warn');
+      m.textContent = res.msg;
+      if(res.ok) stepsBox.hidden = false;
+    };
+    document.getElementById('revealSteps').onclick = function(){ stepsBox.hidden = !stepsBox.hidden; };
+    document.getElementById('resetExamBtn').onclick = function(){
+      state.exam = Object.assign({}, cfg.init);
+      stepsBox.hidden = true;
+      const m = document.getElementById('examMsg');
+      m.className = 'info-bubble';
+      m.textContent = '已重置操作狀態，請重新操作。';
+      renderExam();
+    };
+    renderExam();
+  }
+
+  if(isExam) initExam();
+  else showAct(0);
+})();
+</script>
+</body>
+</html>

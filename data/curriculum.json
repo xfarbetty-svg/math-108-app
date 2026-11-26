@@ -543,187 +543,233 @@
         },
         {
           "code": "N-4-4",
-          "title": "解題（對大數取概數）",
-          "full_text": "解題：對大數取概數。具體生活情境。四捨五入法、無條件進入、無條件捨去。含運用概數做估算。近似符號「≈」的使用。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "title": "解題（兩步驟問題併式與括號進階應用）",
+          "full_text": "解題：兩步驟問題併式（四則混合與括號進階應用）。含括號改變運算順序、四則混合由左而右、先乘除後加減之生活情境解題。",
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：陽明 114-2 期中（3 題）、獅湖 114-1 期末（4 題）、永安 114-1 期末（1 題）、南湖 111-2 期中／113-2 期末（2 題）；填充／計算題改編為 4 選項，詳 data/units/G4/N-4-4.json",
+          "component_path": "components/two_step_adv_g4_lab.html",
+          "concept_path": "components/two_step_adv_g4_lab.html"
         },
         {
           "code": "N-4-5",
-          "title": "同分母分數",
-          "full_text": "同分母分數：一般同分母分數教學（包括「真分數」、「假分數」、「帶分數」名詞引入）。假分數和帶分數之變換。同分母分數的比較、加、減與整數倍。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "title": "同分母分數（真分數、假分數、帶分數互換與加減）",
+          "full_text": "同分母分數：真分數、假分數、帶分數名詞引入與互換；同分母分數的比較、加、減與整數倍。",
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對（並以 150dpi 原頁影像核對分子分母位置）：獅湖 113-1 期末（1 題）、南湖 111-1 期末（1 題）、陽明 114-1 期中（1 題）、獅湖 114-1 期末（2 題）、獅湖 111-2 期中（3 題）、永安 114-2 期中（2 題）；填充／計算題改編為 4 選項，詳 data/units/G4/N-4-5.json",
+          "component_path": "components/fraction_mixed_g4_lab.html",
+          "concept_path": "components/fraction_mixed_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-6",
           "title": "等值分數",
           "full_text": "等值分數：由操作活動中理解等值分數的意義。簡單異分母分數的比較、加、減的意義。簡單分數與小數的互換。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 112-2 期末／113-2 期末、高雄市永安國小 114-2 期末、高雄市獅湖國小 112-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF，pdfplumber 抽字＋ 150dpi 原頁影像逐題目視核對分數位置與題號）；詳 data/units/G4/N-4-6.json",
+          "component_path": "components/equiv_fraction_g4_lab.html",
+          "concept_path": "components/equiv_fraction_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-7",
           "title": "二位小數",
           "full_text": "二位小數：位值單位「百分位」。位值單位換算。比較、計算與解題。用直式計算二位小數的加、減與整數倍。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市永安國小 114-1 期末／114-2 期末、高雄市獅湖國小 114-1 期末／114-2 期中（fid87 卷）、臺北市南湖國小 113-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF，pdfplumber 定向抽字＋150dpi 原頁影像逐題目視核對題號、數字與選項）；詳 data/units/G4/N-4-7.json",
+          "component_path": "components/decimal_hundredth_g4_lab.html",
+          "concept_path": "components/decimal_hundredth_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-8",
           "title": "數線與分數、小數",
           "full_text": "數線與分數、小數：連結分小數長度量的經驗。以標記和簡單的比較與計算，建立整數、分數、小數一體的認識。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-2 期中／111-2 期末／112-2 期末／113-2 期末、高雄市獅湖國小 113-1 期末／113-2 期末、高雄市永安國小 114-1 期中（皆為 EXAM REAL/G4 實體試卷 PDF，pdfplumber 抽字＋ 150dpi 原頁影像逐題目視核對數線刻度與分數位置）；詳 data/units/G4/N-4-8.json",
+          "component_path": "components/number_line_g4_lab.html",
+          "concept_path": "components/number_line_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-9",
           "title": "長度（「公里」）",
           "full_text": "長度：「公里」。生活實例之應用。含其他長度單位的換算與計算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-1／112-1 期末、高雄市獅湖國小 113-1／114-1 期末、高雄市永安國小 114-2 期末（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）；詳 data/units/G4/N-4-9.json",
+          "component_path": "components/length_km_g4_lab.html",
+          "concept_path": "components/length_km_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-10",
           "title": "角度",
           "full_text": "角度：「度」（同S-4-1）。量角器的操作。實測、估測與計算。以角的合成認識180度到360度之間的角度。「平角」、「周角」。指定角度作圖。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小（111-1/112-1/113-1 期中 5 題）、高雄市獅湖國小（110-1/114-1 期中 3 題）、高雄市永安國小（114-1 期中 2 題）；填充／作圖題改編為外殼 4 選項＋教具動手操作雙軌制，詳 data/units/G4/N-4-10.json",
+          "component_path": "components/protractor_angle_g4_lab.html",
+          "concept_path": "components/protractor_angle_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-11",
           "title": "面積（「平方公尺」）",
           "full_text": "面積：「平方公尺」。實測、量感、估測與計算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市獅湖國小 112-2 期末、高雄市永安國小 114-2 期末、臺北市南湖國小 112-2／113-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/N-4-11.json",
+          "component_path": "components/area_perimeter_g4_lab.html",
+          "concept_path": "components/area_perimeter_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-12",
           "title": "體積與「立方公分」",
           "full_text": "體積與「立方公分」：以具體操作為主。體積認識基於1立方公分之正方體。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市獅湖國小 112-2／113-2 期末、臺北市南湖國小 112-2／113-2 期末、高雄市永安國小 114-2 期中（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/N-4-12.json",
+          "component_path": "components/volume_cubes_g4_lab.html",
+          "concept_path": "components/volume_cubes_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-13",
           "title": "解題（日常生活的時間加減問題）",
           "full_text": "解題：日常生活的時間加減問題。跨時、跨午、跨日、24小時制。含時間單位換算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市獅湖國小 110-2／112-2／113-2 期末與 114-2 期中、臺北市南湖國小 112-2／113-2 期末、高雄市永安國小 114-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/N-4-13.json",
+          "component_path": "components/time_calc_g4_lab.html",
+          "concept_path": "components/time_calc_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-1",
           "title": "角度",
           "full_text": "角度：「度」（同N-4-10）。量角器的操作。實測、估測與計算。以角的合成認識180度到360度之間的角度。「平角」、「周角」。指定角度作圖。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-1／112-1／113-1 期中、高雄市永安國小 114-1 期中、高雄市獅湖國小 114-1 期中（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/S-4-1.json",
+          "component_path": "components/angle_degree_g4_lab.html",
+          "concept_path": "components/angle_degree_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-2",
           "title": "解題（旋轉角）",
           "full_text": "解題：旋轉角。以具體操作為主，並結合計算。以鐘面為模型討論從始邊轉到終邊所轉的角度。旋轉有兩個方向：「順時針」、「逆時針」。「平角」、「周角」。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-1 期中／112-1 期中／113-1 期中、高雄市獅湖國小 110-1 期中、高雄市永安國小 114-1 期中（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，SSH 唯讀抽字核對）；詳 data/units/G4/S-4-2.json",
+          "component_path": "components/rotation_angle_g4_lab.html",
+          "concept_path": "components/rotation_angle_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-3",
           "title": "正方形與長方形的面積與周長",
           "full_text": "正方形與長方形的面積與周長：理解邊長與周長或面積的關係，並能理解其公式與應用。簡單複合圖形。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市永安國小 114-2 期末、高雄市獅湖國小 110-2／112-2／113-2 期末、臺北市南湖國小 113-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/S-4-3.json",
+          "component_path": "components/rect_area_perimeter_g4_lab.html",
+          "concept_path": "components/rect_area_perimeter_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-4",
           "title": "體積",
           "full_text": "體積：以具體操作為主。在活動中認識體積的意義與比較。認識1立方公分之正方體，能理解並計數正方體堆疊的體積。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-2／112-2／113-2、高雄市獅湖國小 110-2／112-2／113-2、高雄市永安國小 114-2（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）；詳 data/units/G4/S-4-4.json",
+          "component_path": "components/volume_s44_g4_lab.html",
+          "concept_path": "components/volume_s44_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-5",
           "title": "垂直與平行",
           "full_text": "垂直與平行：以具體操作為主。直角是90度。直角常用記號。垂直於一線的兩線相互平行。平行線間距離處處相等。作垂直線；作平行線。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市陽明國小 114-2 期中、高雄市獅湖國小 111-2／114-2 期中、臺北市南湖國小 112-2／113-2 期中（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/S-4-5.json",
+          "component_path": "components/perp_parallel_g4_lab.html",
+          "concept_path": "components/perp_parallel_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-6",
           "title": "平面圖形的全等",
           "full_text": "平面圖形的全等：以具體操作為主。形狀大小一樣的兩圖形全等。能用平移、旋轉、翻轉做全等疊合。全等圖形之對應角相等、對應邊相等。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市獅湖國小 110-1／114-1／114-2 期中、高雄市永安國小 114-1 期末、臺北市內湖國小（檔名標示南湖國小）111-2／112-1 期中／113-1 期末（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/S-4-6.json",
+          "component_path": "components/congruent_shapes_g4_lab.html",
+          "concept_path": "components/congruent_shapes_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-7",
           "title": "三角形",
           "full_text": "三角形：以邊與角的特徵認識特殊三角形並能作圖。如正三角形、等腰三角形、直角三角形、銳角三角形、鈍角三角形。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市內湖國小（南湖檔名）111-1／112-1 期中、高雄市永安國小 114-1 期末、高雄市獅湖國小 110-1／114-1 期中（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/S-4-7.json",
+          "component_path": "components/triangle_class_g4_lab.html",
+          "concept_path": "components/triangle_class_g4_lab.html?mode=concept"
         },
         {
           "code": "S-4-8",
           "title": "四邊形",
           "full_text": "四邊形：以邊與角的特徵（含平行）認識特殊四邊形並能作圖。如正方形、長方形、平行四邊形、菱形、梯形。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市內湖國小（南湖檔名）111-2／112-2／113-2 期中、高雄市獅湖國小 111-2／112-2／114-2 期中、高雄市陽明國小 114-2 期中（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/S-4-8.json",
+          "component_path": "components/quadrilateral_g4_lab.html",
+          "concept_path": "components/quadrilateral_g4_lab.html?mode=concept"
         },
         {
           "code": "R-4-1",
           "title": "兩步驟問題併式",
           "full_text": "兩步驟問題併式：併式是代數學習的重要基礎。含四則混合計算的約定（由左往右算、先乘除後加減、括號先算）。學習逐次減項計算。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-1 期末／111-2 期中／112-1 期末、高雄市獅湖國小 113-1 期末／114-1 期末、高雄市陽明國小 114-2 期中（皆為 EXAM REAL/G4 實體試卷 PDF，逐題 pdfplumber 抽字核對）；詳 data/units/G4/R-4-1.json",
+          "component_path": "components/two_step_combine_g4_lab.html",
+          "concept_path": "components/two_step_combine_g4_lab.html?mode=concept"
         },
         {
           "code": "R-4-2",
           "title": "四則計算規律（I）",
           "full_text": "四則計算規律（I）：兩步驟計算規則。加減混合計算、乘除混合計算。在四則混合計算中運用數的運算性質。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-1 期末／112-1 期末、高雄市永安國小 114-1 期末、高雄市陽明國小 114-2 期中（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）；詳 data/units/G4/R-4-2.json",
+          "component_path": "components/calc_laws_g4_lab.html",
+          "concept_path": "components/calc_laws_g4_lab.html?mode=concept"
         },
         {
           "code": "R-4-3",
           "title": "以文字表示數學公式",
           "full_text": "以文字表示數學公式：理解以文字和運算符號聯合表示的數學公式，並能應用公式。可併入其他教學活動（如S-4-3）。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：高雄市獅湖國小 110-2／112-2 期末、114-2 期中、臺北市南湖國小 111-2 期中、112-2 期末（皆為 EXAM REAL/G4 實體試卷 PDF）；詳 data/units/G4/R-4-3.json",
+          "component_path": "components/formula_g4_lab.html",
+          "concept_path": "components/formula_g4_lab.html?mode=concept"
         },
         {
           "code": "R-4-4",
           "title": "數量模式與推理（II）",
           "full_text": "數量模式與推理（II）：以操作活動為主。二維變化模式之觀察與推理，如二維數字圖之推理。奇數與偶數，及其加、減、乘模式。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-2／112-1、高雄市獅湖國小 113-1／114-1、高雄市永安國小 114-2（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）；詳 data/units/G4/R-4-4.json",
+          "component_path": "components/pattern_logic_g4_lab.html",
+          "concept_path": "components/pattern_logic_g4_lab.html?mode=concept"
         },
         {
           "code": "D-4-1",
           "title": "報讀長條圖與折線圖以及製作長條圖",
           "full_text": "報讀長條圖與折線圖以及製作長條圖：報讀與說明生活中的長條圖與折線圖。配合其他領域課程，學習製作長條圖。",
-          "status": "upcoming",
-          "question_count": 0,
-          "verified_source": null
+          "status": "ready",
+          "question_count": 10,
+          "verified_source": "EXAM REAL/G4 真卷逐題比對：臺北市南湖國小 111-1 期末／112-2 期中／113-1 期末、高雄市永安國小 114-1 期末、高雄市獅湖國小 111-2 期中／112-2 期中／114-2 期中（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，SSH 唯讀抽字＋渲染頁面目視核對）；詳 data/units/G4/D-4-1.json",
+          "component_path": "components/charts_g4_lab.html",
+          "concept_path": "components/charts_g4_lab.html?mode=concept"
         }
       ]
     },

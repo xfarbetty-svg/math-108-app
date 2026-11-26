@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>S-4-6 平面圖形的全等・108 課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main, #fcfbf9);
+  --card:var(--bg-card, #ffffff);
+  --ink:var(--text-primary, #1e293b);
+  --ink-soft:var(--text-secondary, #64748b);
+  --line:var(--border-color, #e2e8f0);
+  --a:var(--accent-primary, #2563eb);
+  --mint:var(--accent-mint, #0d9488);
+  --sky:var(--accent-sky, #0284c7);
+  --elev:var(--bg-elevated, #f1f5f9);
+  --ok:#16a34a; --warn:#ea580c; --hl:#fef08a;
+  --shadow:0 3px 10px rgba(0,0,0,0.06);
+  --radius:12px;
+  --shape-a:rgba(37, 99, 235, 0.22);
+  --shape-a-stroke:#2563eb;
+  --shape-b:rgba(234, 88, 12, 0.22);
+  --shape-b-stroke:#ea580c;
+  --shape-ok:rgba(22, 163, 74, 0.24);
+  --shape-ok-stroke:#16a34a;
+}
+html[data-theme="dark"]{
+  --bg:#0f172a; --card:#1e293b; --ink:#f8fafc; --ink-soft:#94a3b8;
+  --line:#334155; --elev:#1e293b; --ok:#4ade80; --warn:#fb923c;
+  --shadow:0 3px 10px rgba(0,0,0,0.28);
+  --shape-a:rgba(96, 165, 250, 0.28);
+  --shape-a-stroke:#60a5fa;
+  --shape-b:rgba(251, 146, 60, 0.28);
+  --shape-b-stroke:#fb923c;
+  --shape-ok:rgba(74, 222, 128, 0.28);
+  --shape-ok-stroke:#4ade80;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+[hidden]{display:none!important}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:22px}
+.head-left{display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.head b{font-size:12px;color:var(--ink);white-space:nowrap}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+#btn-theme{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:4px 9px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;transition:all .15s}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:11.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:2px;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none}
+.stage-canvas svg{width:100%;max-width:340px;height:118px;display:block;touch-action:none;user-select:none}
+
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:4px 6px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn-action{background:var(--card);border:1.2px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:3px 7px;border-radius:7px;transition:all .12s;white-space:nowrap}
+.btn-action:hover{border-color:var(--a)}
+.btn-action.primary{background:var(--a);border-color:var(--a);color:#fff}
+.btn-action.active{background:var(--a);border-color:var(--a);color:#fff}
+
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10.5px;line-height:1.32;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+.steps-box{background:var(--card);border:1.5px solid var(--ok);border-radius:8px;padding:5px 7px;font-size:10px;line-height:1.35;color:var(--ink);display:flex;flex-direction:column;gap:2px;text-align:left}
+.step-line b{color:var(--ok);margin-right:3px}
+
+/* 嚴格雙模式隔離：q-mode 下強制隱藏所有概念活動頁籤與卡片 */
+.q-mode .activity-nav,
+.q-mode #act-0-view,
+.q-mode #act-1-view,
+.q-mode #act-2-view{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <div class="head-left">
+      <b>🧩 平面圖形的全等</b>
+      <span id="qtag" class="card-badge" hidden></span>
+    </div>
+    <div class="head-right">
+      <button type="button" id="btn-theme">🌙 深色</button>
+    </div>
+  </div>
+
+  <nav class="activity-nav" id="activityNav">
+    <button type="button" class="act-btn active" data-act="0">① 拼布磁磚平移</button>
+    <button type="button" class="act-btn" data-act="1">② 風車葉片旋轉</button>
+    <button type="button" class="act-btn" data-act="2">③ 蝴蝶剪紙翻轉</button>
+  </nav>
+
+  <!-- 概念探索：活動一（拼布磁磚平移疊合） -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head">
+      <span class="card-badge">活動一・拼布磁磚平移疊合</span>
+      <span class="card-title">拖曳磁磚平移對齊目標框</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="svg0" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="act0Snap">自動平移疊合 ▶</button>
+        <button type="button" class="btn-action" id="act0Reset">重置磁磚</button>
+      </div>
+      <div class="info-bubble" id="act0Msg">用手指或滑鼠拖曳藍色拼布磁磚，試著向右平移疊合到橘色框線！</div>
+    </div>
+  </section>
+
+  <!-- 概念探索：活動二（風車葉片旋轉疊合） -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動二・風車葉片旋轉疊合</span>
+      <span class="card-title">拖曳或旋轉葉片對齊目標位置</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="svg1" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action" id="act1Rot45">順時針轉 45°</button>
+        <button type="button" class="btn-action primary" id="act1Rot90">轉 90° 疊合</button>
+        <button type="button" class="btn-action" id="act1Reset">重置角度</button>
+      </div>
+      <div class="info-bubble" id="act1Msg">拖曳風車葉片或點擊按鈕旋轉，轉到 180° 時兩片葉片完全疊合！</div>
+    </div>
+  </section>
+
+  <!-- 概念探索：活動三（蝴蝶剪紙翻轉鏡像疊合） -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動三・蝴蝶剪紙翻轉鏡像</span>
+      <span class="card-title">翻轉剪紙並拖曳至中線重疊</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="svg2" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="act2Flip">左右翻轉（鏡像）</button>
+        <button type="button" class="btn-action" id="act2Align">移至中線疊合</button>
+        <button type="button" class="btn-action" id="act2Reset">重置</button>
+      </div>
+      <div class="info-bubble" id="act2Msg">先點擊「左右翻轉」，再拖曳右翼蝴蝶剪紙向左靠攏中線疊合！</div>
+    </div>
+  </section>
+
+  <!-- 真題模式（?q=1..10）：嚴格零劇透，不自帶題幹與四選項 -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="examBadge">真題圖解</span>
+      <span class="card-title" id="examHintTitle">操作教具觀察全等疊合</span>
+    </div>
+    <div class="stage-canvas">
+      <svg id="examStage" viewBox="0 0 340 118"></svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examControls"></div>
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="verifyBtn">驗證疊合</button>
+        <button type="button" class="btn-action" id="revealSteps">一步一步看算理 🔍</button>
+        <button type="button" class="btn-action" id="resetExamBtn">重置</button>
+      </div>
+      <div class="info-bubble" id="examMsg">請依題意操作上方教具，觀察對應頂點、對應邊或對應角。</div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const qRaw = params.get('q');
+  const qNum = qRaw ? parseInt(qRaw, 10) : 0;
+  const isExam = Number.isInteger(qNum) && qNum >= 1 && qNum <= 10;
+  window.__S46_MODE__ = isExam ? ('q' + qNum) : 'concept';
+
+  const state = {
+    act0X: 52,
+    act1Angle: 0,
+    act2Flipped: false,
+    act2X: 225,
+    exam: {}
+  };
+  window.__S46_STATE__ = state;
+
+  /* ---------- 主題同步（Light / Dark） ---------- */
+  function applyTheme(t){
+    const mode = (t === 'dark') ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', mode);
+    const btn = document.getElementById('btn-theme');
+    if(btn) btn.textContent = mode === 'dark' ? '☀️ 淺色' : '🌙 深色';
+  }
+  applyTheme(params.get('theme') || 'light');
+  document.getElementById('btn-theme').addEventListener('click', function(){
+    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(cur);
+  });
+  window.addEventListener('message', function(ev){
+    const d = ev && ev.data;
+    if(d && d.type === 'THEME_CHANGE') applyTheme(d.theme);
+  });
+
+  /* ---------- 通用 Pointer 拖曳（SVG 座標轉換） ---------- */
+  function clientToSvg(svg, clientX, clientY){
+    const r = svg.getBoundingClientRect();
+    if(!r.width || !r.height) return { x: 170, y: 59 };
+    return {
+      x: ((clientX - r.left) / r.width) * 340,
+      y: ((clientY - r.top) / r.height) * 118
+    };
+  }
+  function attachSvgDrag(svg, onMove){
+    let dragging = false;
+    svg.addEventListener('pointerdown', function(e){
+      dragging = true;
+      if(svg.setPointerCapture) try { svg.setPointerCapture(e.pointerId); } catch(_){}
+      onMove(clientToSvg(svg, e.clientX, e.clientY));
+    });
+    svg.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      onMove(clientToSvg(svg, e.clientX, e.clientY));
+    });
+    const stop = function(e){
+      dragging = false;
+      if(svg.releasePointerCapture) try { svg.releasePointerCapture(e.pointerId); } catch(_){}
+    };
+    svg.addEventListener('pointerup', stop);
+    svg.addEventListener('pointercancel', stop);
+  }
+
+  /* ---------- 概念探索（活動一～三） ---------- */
+  function showAct(idx){
+    [0,1,2].forEach(i => {
+      document.getElementById('act-' + i + '-view').hidden = (i !== idx);
+      document.querySelector('.act-btn[data-act="' + i + '"]').classList.toggle('active', i === idx);
+    });
+    if(idx === 0) renderAct0();
+    if(idx === 1) renderAct1();
+    if(idx === 2) renderAct2();
+  }
+  document.querySelectorAll('.act-btn').forEach(b => {
+    b.addEventListener('click', () => showAct(parseInt(b.dataset.act, 10)));
+  });
+
+  // 活動一：拼布磁磚平移疊合
+  function renderAct0(){
+    const svg = document.getElementById('svg0');
+    const tx = Math.round(state.act0X);
+    const targetX = 215;
+    const matched = Math.abs(tx - targetX) <= 8;
+    const drawX = matched ? targetX : tx;
+    svg.innerHTML = `
+      <defs><pattern id="g0" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--line)" stroke-width="0.7"/></pattern></defs>
+      <rect width="340" height="118" fill="url(#g0)"/>
+      <!-- 目標橘框磁磚 (基準位置 x=215) -->
+      <polygon points="215,24 285,24 299,94 201,94" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="250" y="16" font-size="9.5" font-weight="800" fill="var(--shape-b-stroke)" text-anchor="middle">目標拼布位置</text>
+      <!-- 可拖曳藍色磁磚 -->
+      <g transform="translate(${drawX - 52}, 0)" style="cursor:grab">
+        <polygon points="52,24 122,24 136,94 38,94" fill="${matched ? 'var(--shape-ok)' : 'var(--shape-a)'}" stroke="${matched ? 'var(--shape-ok-stroke)' : 'var(--shape-a-stroke)'}" stroke-width="2.2"/>
+        <circle cx="52" cy="24" r="3" fill="var(--ink)"/>
+        <text x="87" y="64" font-size="10" font-weight="900" fill="var(--ink)" text-anchor="middle">拼布磁磚</text>
+      </g>
+      <text x="170" y="110" font-size="9" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">向右平移距離：${Math.max(0, Math.round((drawX - 52)/2))} 格單位</text>
+    `;
+    const msg = document.getElementById('act0Msg');
+    msg.className = 'info-bubble ' + (matched ? 'ok' : '');
+    msg.textContent = matched
+      ? '✓ 完全疊合！形狀與大小都一樣的磁磚，經過「平移」後能完全重疊，就是全等圖形！'
+      : '用手指或滑鼠向右拖曳藍色拼布磁磚，對齊橘色目標框！';
+  }
+  attachSvgDrag(document.getElementById('svg0'), (pt) => {
+    state.act0X = Math.max(40, Math.min(235, pt.x - 25));
+    renderAct0();
+  });
+  document.getElementById('act0Snap').onclick = () => { state.act0X = 215; renderAct0(); };
+  document.getElementById('act0Reset').onclick = () => { state.act0X = 52; renderAct0(); };
+
+  // 活動二：風車葉片旋轉疊合
+  function renderAct1(){
+    const svg = document.getElementById('svg1');
+    const ang = ((state.act1Angle % 360) + 360) % 360;
+    const matched = Math.abs(ang - 180) <= 10;
+    const drawAng = matched ? 180 : ang;
+    svg.innerHTML = `
+      <circle cx="170" cy="59" r="46" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"/>
+      <!-- 目標葉片（在左側 180° 方向） -->
+      <polygon points="170,59 112,42 124,78" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2" stroke-dasharray="4 3"/>
+      <text x="90" y="63" font-size="9" font-weight="800" fill="var(--shape-b-stroke)" text-anchor="end">目標葉片</text>
+      <!-- 可旋轉葉片（初始在右側 0°） -->
+      <g transform="rotate(${drawAng} 170 59)" style="cursor:grab">
+        <polygon points="170,59 228,76 216,40" fill="${matched ? 'var(--shape-ok)' : 'var(--shape-a)'}" stroke="${matched ? 'var(--shape-ok-stroke)' : 'var(--shape-a-stroke)'}" stroke-width="2.2"/>
+        <circle cx="228" cy="76" r="3" fill="var(--warn)"/>
+      </g>
+      <circle cx="170" cy="59" r="4.5" fill="var(--ink)"/>
+      <text x="275" y="22" font-size="9.5" font-weight="900" fill="var(--ink)">旋轉：${Math.round(drawAng)}°</text>
+    `;
+    const msg = document.getElementById('act1Msg');
+    msg.className = 'info-bubble ' + (matched ? 'ok' : '');
+    msg.textContent = matched
+      ? '✓ 旋轉 180° 完全疊合！全等圖形即使方向不同，透過「旋轉」一樣能完全重合。'
+      : '拖曳風車葉片或點擊按鈕旋轉，轉到 180° 看看能否和目標葉片疊合！';
+  }
+  attachSvgDrag(document.getElementById('svg1'), (pt) => {
+    const deg = Math.round(Math.atan2(pt.y - 59, pt.x - 170) * 180 / Math.PI);
+    state.act1Angle = (deg + 360) % 360;
+    renderAct1();
+  });
+  document.getElementById('act1Rot45').onclick = () => { state.act1Angle = (state.act1Angle + 45) % 360; renderAct1(); };
+  document.getElementById('act1Rot90').onclick = () => { state.act1Angle = 180; renderAct1(); };
+  document.getElementById('act1Reset').onclick = () => { state.act1Angle = 0; renderAct1(); };
+
+  // 活動三：蝴蝶剪紙翻轉鏡像疊合
+  function renderAct2(){
+    const svg = document.getElementById('svg2');
+    const fl = state.act2Flipped;
+    const rx = Math.round(state.act2X);
+    const matched = fl && Math.abs(rx - 170) <= 12;
+    const drawX = matched ? 170 : rx;
+    // 左翼（基準，中線在 x=170）
+    const leftWing = `M 170,40 C 132,12 92,26 105,60 C 115,82 145,100 170,84 Z`;
+    // 右翼（若未翻轉，開口朝右不對稱；翻轉後開口朝左與左翼鏡像）
+    const wingPath = `M 0,40 C 38,12 78,26 65,60 C 55,82 25,100 0,84 Z`;
+    const scaleX = fl ? -1 : 1;
+    svg.innerHTML = `
+      <line x1="170" y1="10" x2="170" y2="108" stroke="var(--ink-soft)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="170" y="114" font-size="8.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">對稱摺線（翻轉軸）</text>
+      <path d="${leftWing}" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+      <text x="116" y="58" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">左翼</text>
+      <g transform="translate(${drawX}, 0) scale(${scaleX}, 1)" style="cursor:grab">
+        <path d="${wingPath}" fill="${matched ? 'var(--shape-ok)' : 'var(--shape-a)'}" stroke="${matched ? 'var(--shape-ok-stroke)' : 'var(--shape-a-stroke)'}" stroke-width="2.2"/>
+      </g>
+      <text x="275" y="20" font-size="9.5" font-weight="800" fill="var(--ink)">${fl ? '已鏡像翻轉' : '尚未翻轉'}</text>
+    `;
+    const msg = document.getElementById('act2Msg');
+    msg.className = 'info-bubble ' + (matched ? 'ok' : '');
+    msg.textContent = matched
+      ? '✓ 左右翻轉後沿摺線完全疊合！這就是「翻轉」全等，對應頂點與對應邊完全重合！'
+      : (fl ? '已翻轉成鏡像方向！請向左拖曳右翼剪紙到中線（x=170）疊合。' : '先點擊「左右翻轉（鏡像）」，再拖曳右翼向中線靠攏！');
+  }
+  attachSvgDrag(document.getElementById('svg2'), (pt) => {
+    state.act2X = Math.max(162, Math.min(265, pt.x));
+    renderAct2();
+  });
+  document.getElementById('act2Flip').onclick = () => { state.act2Flipped = !state.act2Flipped; renderAct2(); };
+  document.getElementById('act2Align').onclick = () => { state.act2Flipped = true; state.act2X = 170; renderAct2(); };
+  document.getElementById('act2Reset').onclick = () => { state.act2Flipped = false; state.act2X = 225; renderAct2(); };
+
+  /* ---------- 真題模式（Q1~Q10 專屬 SVG 與操作驗證） ---------- */
+  const EXAM_SPECS = {
+    1: {
+      badge: '真題 Q1・獅湖 110-1',
+      title: '拖曳三角形觀察形狀大小與重疊',
+      steps: [
+        '觀察甲、乙兩個三角形的邊長與夾角，兩者形狀相同、大小也一樣。',
+        '將乙三角形向左平移，與甲三角形完全重疊在一起。',
+        '形狀和大小一樣且可以完全重疊的兩個三角形，叫作「全等三角形」。'
+      ],
+      init: { tx: 210 },
+      render(st, svg, ctrl){
+        const matched = Math.abs(st.tx - 80) <= 10;
+        const dx = matched ? 80 : Math.round(st.tx);
+        svg.innerHTML = `
+          <polygon points="80,26 44,94 136,94" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+          <text x="86" y="76" font-size="10" font-weight="900" fill="var(--shape-b-stroke)">甲</text>
+          <g transform="translate(${dx - 80}, 0)" style="cursor:grab">
+            <polygon points="80,26 44,94 136,94" fill="${matched?'var(--shape-ok)':'var(--shape-a)'}" stroke="${matched?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2.2"/>
+            <text x="86" y="76" font-size="10" font-weight="900" fill="var(--ink)">乙</text>
+          </g>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q1Snap">${matched ? '✓ 已完全重疊' : '平移重疊試試看 ◀'}</button>`;
+        ctrl.querySelector('#q1Snap').onclick = () => { st.tx = 80; renderExam(); };
+      },
+      onDrag(st, pt){ st.tx = Math.max(70, Math.min(240, pt.x)); renderExam(); },
+      check: (st) => ({ ok: Math.abs(st.tx - 80) <= 10, msg: Math.abs(st.tx - 80) <= 10 ? '✓ 兩三角形完全重疊，它們就是「全等三角形」！' : '請把乙三角形向左拖曳，看看能不能完全重疊！' })
+    },
+    2: {
+      badge: '真題 Q2・獅湖 114-1',
+      title: '疊合驗證對應角與對應邊是否相等',
+      steps: [
+        '兩個全等三角形可以完全重疊在一起。',
+        '重疊後，對應邊（4 cm 與 5 cm）長度完全相等。',
+        '重疊後，對應角（例如 53° 與 37°）大小也完全相等。'
+      ],
+      init: { merged: false },
+      render(st, svg, ctrl){
+        const m = st.merged;
+        svg.innerHTML = `
+          <polygon points="65,24 65,92 155,92" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+          <text x="53" y="62" font-size="9" font-weight="800" fill="var(--shape-b-stroke)">4cm</text>
+          <text x="110" y="106" font-size="9" font-weight="800" fill="var(--shape-b-stroke)" text-anchor="middle">5cm</text>
+          <g transform="translate(${m ? -135 : 0}, 0)">
+            <polygon points="200,24 200,92 290,92" fill="${m?'var(--shape-ok)':'var(--shape-a)'}" stroke="${m?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2.2"/>
+            <text x="188" y="62" font-size="9" font-weight="800" fill="var(--ink)">4cm</text>
+            <text x="245" y="106" font-size="9" font-weight="800" fill="var(--ink)" text-anchor="middle">5cm</text>
+          </g>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q2Merge">${m ? '✓ 對應邊與對應角完全重合' : '點擊疊合比對邊與角 ◀'}</button>`;
+        ctrl.querySelector('#q2Merge').onclick = () => { st.merged = true; renderExam(); };
+      },
+      check: (st) => ({ ok: st.merged, msg: st.merged ? '✓ 疊合後發現：對應角一樣大，對應邊一樣長！' : '請先點擊「點擊疊合比對邊與角」觀察！' })
+    },
+    3: {
+      badge: '真題 Q3・永安 114-1',
+      title: '旋轉乙圖形與甲疊合，找點 A 對應點',
+      steps: [
+        '忠實對照永安國小附圖：甲三角形直角在左上角點 A（AC=3cm，AB=4cm）。',
+        '乙三角形直角在右下角點 E，把乙順時針旋轉 180°。',
+        '旋轉疊合後，直角頂點 E 剛好與點 A 重合，所以點 A 的對應點是點 E。'
+      ],
+      init: { rot: 0 },
+      render(st, svg, ctrl){
+        const r = st.rot;
+        const ok = r === 180;
+        svg.innerHTML = `
+          <!-- 甲：A(70,28) 直角, C(118,28), B(70,92) -->
+          <polygon points="70,28 118,28 70,92" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+          <rect x="70" y="28" width="8" height="8" fill="none" stroke="var(--shape-b-stroke)" stroke-width="1.4"/>
+          <text x="64" y="24" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">A</text>
+          <text x="122" y="26" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">C</text>
+          <text x="64" y="103" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">B</text>
+          <text x="94" y="22" font-size="8.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">3cm</text>
+          <text x="54" y="62" font-size="8.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">4cm</text>
+          <text x="86" y="54" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">甲</text>
+          <!-- 乙：D(202,92), E(250,92) 直角, F(250,28)；中心 (226,60) -->
+          <g transform="translate(${ok ? -132 : 0}, 0) rotate(${r} 226 60)">
+            <polygon points="202,92 250,92 250,28" fill="${ok?'var(--shape-ok)':'var(--shape-a)'}" stroke="${ok?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2.2"/>
+            <rect x="242" y="84" width="8" height="8" fill="none" stroke="var(--ink)" stroke-width="1.4"/>
+            <text x="193" y="103" font-size="9.5" font-weight="900" fill="var(--ink)">D</text>
+            <text x="254" y="103" font-size="9.5" font-weight="900" fill="var(--ink)">E</text>
+            <text x="254" y="26" font-size="9.5" font-weight="900" fill="var(--ink)">F</text>
+            <text x="234" y="72" font-size="9.5" font-weight="900" fill="var(--ink)">乙</text>
+          </g>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q3Rot">${ok ? '✓ 已旋轉 180° 疊合' : '旋轉乙圖形 180° 疊合 ↻'}</button>`;
+        ctrl.querySelector('#q3Rot').onclick = () => { st.rot = ok ? 0 : 180; renderExam(); };
+      },
+      check: (st) => ({ ok: st.rot === 180, msg: st.rot === 180 ? '✓ 乙旋轉 180° 後與甲疊合，點 A 的對應點是點 E！' : '請點擊「旋轉乙圖形 180° 疊合」觀察點 A 對齊哪一點！' })
+    },
+    4: {
+      badge: '真題 Q4・內湖 112-1',
+      title: '旋轉 90° 疊合比對 BA 與 ED 長度',
+      steps: [
+        '甲圖形直角在左下角 ∠B（短股 BC＝3cm，長股 BA 垂直向上）。',
+        '乙圖形直角在左上角 ∠E（長股 EF＝6cm 水平向右，短股 ED 垂直向下）。',
+        '將甲順時針旋轉 90° 與乙疊合：BA 疊合到 EF（6 公分），ED 疊合到 BC（3 公分）。'
+      ],
+      init: { rot: 0 },
+      render(st, svg, ctrl){
+        const r = st.rot;
+        const ok = r === 90;
+        svg.innerHTML = `
+          <!-- 甲：A(70,22), B(70,94), C(106,94) -->
+          <g transform="translate(${ok ? 115 : 0}, ${ok ? -10 : 0}) rotate(${r} 88 58)">
+            <polygon points="70,22 70,94 106,94" fill="${ok?'var(--shape-ok)':'var(--shape-a)'}" stroke="${ok?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2"/>
+            <text x="64" y="18" font-size="9" font-weight="900" fill="var(--ink)">A</text>
+            <text x="60" y="103" font-size="9" font-weight="900" fill="var(--ink)">B</text>
+            <text x="110" y="103" font-size="9" font-weight="900" fill="var(--ink)">C(3cm)</text>
+            <text x="82" y="76" font-size="9" font-weight="900" fill="var(--ink)">甲</text>
+          </g>
+          <!-- 乙：E(180,30), F(252,30), D(180,66) -->
+          <polygon points="180,30 252,30 180,66" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2" stroke-dasharray="${ok?'3 2':'none'}"/>
+          <text x="172" y="26" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">E</text>
+          <text x="256" y="28" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">F(6cm)</text>
+          <text x="172" y="76" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">D</text>
+          <text x="198" y="45" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">乙</text>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q4Rot">${ok ? '✓ 已順時針旋轉 90°' : '將甲順時針旋轉 90° 疊合 ↻'}</button>`;
+        ctrl.querySelector('#q4Rot').onclick = () => { st.rot = ok ? 0 : 90; renderExam(); };
+      },
+      check: (st) => ({ ok: st.rot === 90, msg: st.rot === 90 ? '✓ BA 與 EF 重合為 6 公分，ED 與 BC 重合為 3 公分！' : '請點擊旋轉按鈕，把甲順時針轉 90° 疊合到乙！' })
+    },
+    5: {
+      badge: '真題 Q5・獅湖 110-1',
+      title: '旋轉 180° 找出邊ㄊㄈ的對應邊',
+      steps: [
+        '左邊三角形頂點：ㄅ（上）、ㄆ（左下）、ㄇ（右下），邊ㄆㄇ長 4 公分。',
+        '右邊三角形頂點：ㄈ（左上）、ㄊ（右上）、ㄉ（下），邊ㄉㄊ長 3 公分。',
+        '將左邊旋轉 180° 與右邊疊合：ㄅ↔ㄉ、ㄆ↔ㄊ、ㄇ↔ㄈ，故邊ㄊㄈ對應邊ㄆㄇ（4 公分）。'
+      ],
+      init: { rot: 0 },
+      render(st, svg, ctrl){
+        const r = st.rot;
+        const ok = r === 180;
+        svg.innerHTML = `
+          <g transform="translate(${ok ? 130 : 0}, 0) rotate(${r} 92 60)">
+            <polygon points="75,26 54,88 130,88" fill="${ok?'var(--shape-ok)':'var(--shape-a)'}" stroke="${ok?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2"/>
+            <text x="75" y="19" font-size="9.5" font-weight="900" fill="var(--ink)" text-anchor="middle">ㄅ</text>
+            <text x="46" y="96" font-size="9.5" font-weight="900" fill="var(--ink)">ㄆ</text>
+            <text x="134" y="96" font-size="9.5" font-weight="900" fill="var(--ink)">ㄇ</text>
+            <text x="92" y="102" font-size="8.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">4公分</text>
+          </g>
+          <polygon points="184,32 260,32 239,94" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2" stroke-dasharray="${ok?'3 2':'none'}"/>
+          <text x="176" y="30" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">ㄈ</text>
+          <text x="264" y="30" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)">ㄊ</text>
+          <text x="239" y="106" font-size="9.5" font-weight="900" fill="var(--shape-b-stroke)" text-anchor="middle">ㄉ</text>
+          <text x="268" y="68" font-size="8.5" font-weight="800" fill="var(--ink-soft)">3公分</text>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q5Rot">${ok ? '✓ 已旋轉 180° 疊合' : '旋轉 180° 比對注音頂點 ↻'}</button>`;
+        ctrl.querySelector('#q5Rot').onclick = () => { st.rot = ok ? 0 : 180; renderExam(); };
+      },
+      check: (st) => ({ ok: st.rot === 180, msg: st.rot === 180 ? '✓ ㄆ對應ㄊ、ㄇ對應ㄈ，邊ㄊㄈ的對應邊就是邊ㄆㄇ（4 公分）！' : '請點擊旋轉 180° 觀察對應頂點與邊！' })
+    },
+    6: {
+      badge: '真題 Q6・獅湖 114-1',
+      title: '左右鏡像翻轉找出 DE 對應邊長',
+      steps: [
+        '甲三角形：∠A＝87°、∠C＝67°，算出 ∠B＝180°－87°－67°＝26°（與乙的 ∠E 相同）。',
+        '將甲左右鏡像翻轉後與乙疊合：點 A↔點 D、點 B↔點 E、點 C↔點 F。',
+        '所以邊 DE 的對應邊是 AB，因此 DE＝AB＝9 公分。'
+      ],
+      init: { flipped: false },
+      render(st, svg, ctrl){
+        const f = st.flipped;
+        svg.innerHTML = `
+          <g transform="${f ? 'translate(335,0) scale(-1,1)' : ''}">
+            <polygon points="120,24 44,68 134,88" fill="${f?'var(--shape-ok)':'var(--shape-a)'}" stroke="${f?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2"/>
+            <text x="120" y="18" font-size="9" font-weight="900" fill="var(--ink)">A(87°)</text>
+            <text x="34" y="72" font-size="9" font-weight="900" fill="var(--ink)">B</text>
+            <text x="137" y="96" font-size="9" font-weight="900" fill="var(--ink)">C(67°)</text>
+            <text x="74" y="42" font-size="9" font-weight="900" fill="var(--a)">9</text>
+          </g>
+          <polygon points="200,24 276,68 186,88" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2" stroke-dasharray="${f?'3 2':'none'}"/>
+          <text x="196" y="18" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">D</text>
+          <text x="280" y="72" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">E(26°)</text>
+          <text x="176" y="96" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">F</text>
+          <text x="180" y="60" font-size="8.5" font-weight="800" fill="var(--ink-soft)">4</text>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q6Flip">${f ? '✓ 已左右翻轉疊合' : '左右鏡像翻轉疊合 ⇄'}</button>`;
+        ctrl.querySelector('#q6Flip').onclick = () => { st.flipped = !f; renderExam(); };
+      },
+      check: (st) => ({ ok: st.flipped, msg: st.flipped ? '✓ 翻轉疊合後 AB 與 DE 重合，DE＝9 公分！' : '請點擊「左右鏡像翻轉疊合」比對 AB 與 DE！' })
+    },
+    7: {
+      badge: '真題 Q7・內湖 113-1',
+      title: '翻轉疊合與三角形內角和算 ∠D',
+      steps: [
+        '觀察兩全等三角形：甲的 ∠B＝40°、BC＝12（最長邊）；乙的 ∠F＝35°、ED＝7。',
+        '疊合後對應關係為：點 A↔點 D、點 B↔點 E、點 C↔點 F，因此 ∠E＝40°、∠F＝35°。',
+        '利用三角形內角和 180°：∠D＝180°－40°－35°＝105°。'
+      ],
+      init: { aligned: false },
+      render(st, svg, ctrl){
+        const a = st.aligned;
+        svg.innerHTML = `
+          <polygon points="88,28 42,80 138,80" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+          <text x="88" y="21" font-size="9" font-weight="900" fill="var(--shape-b-stroke)" text-anchor="middle">A</text>
+          <text x="32" y="84" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">B(40°)</text>
+          <text x="142" y="84" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">C</text>
+          <text x="90" y="94" font-size="8.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">12</text>
+          <text x="116" y="50" font-size="8.5" font-weight="800" fill="var(--ink-soft)">8</text>
+          <text x="86" y="64" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">甲</text>
+          <g transform="${a ? 'translate(-150, 0) rotate(-65 235 65)' : ''}">
+            <polygon points="260,22 204,96 260,76" fill="${a?'var(--shape-ok)':'var(--shape-a)'}" stroke="${a?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2"/>
+            <text x="263" y="22" font-size="9" font-weight="900" fill="var(--ink)">E</text>
+            <text x="192" y="103" font-size="9" font-weight="900" fill="var(--ink)">F(35°)</text>
+            <text x="264" y="82" font-size="9" font-weight="900" fill="var(--ink)">D</text>
+            <text x="265" y="52" font-size="8.5" font-weight="800" fill="var(--ink-soft)">7</text>
+            <text x="242" y="68" font-size="9" font-weight="900" fill="var(--ink)">乙</text>
+          </g>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q7Align">${a ? '✓ 對應角已鎖定 (40°, 35°)' : '疊合找出 ∠E 與 ∠F 度數 ◀'}</button>`;
+        ctrl.querySelector('#q7Align').onclick = () => { st.aligned = !a; renderExam(); };
+      },
+      check: (st) => ({ ok: st.aligned, msg: st.aligned ? '✓ ∠E＝40°、∠F＝35°，所以 ∠D＝180°－40°－35°＝105°！' : '請先點擊疊合按鈕，確認 ∠E 與 ∠F 的度數！' })
+    },
+    8: {
+      badge: '真題 Q8・獅湖 114-1',
+      title: '全等周長 32 公分反推 BC 邊長',
+      steps: [
+        '甲和乙是全等三角形，因此乙三角形的周長也等於甲的周長 32 公分。',
+        '先求乙三角形第三邊 EF＝32－12－5＝15（公分）。',
+        '將乙翻轉疊合到甲，BC 的對應邊正是 EF，故 BC＝15 公分。'
+      ],
+      init: { showCalc: false },
+      render(st, svg, ctrl){
+        const c = st.showCalc;
+        svg.innerHTML = `
+          <!-- 甲：A(130,22), B(52,44), C(155,54) -->
+          <polygon points="130,22 52,44 155,54" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+          <text x="130" y="16" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">A</text>
+          <text x="42" y="47" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">B</text>
+          <text x="159" y="57" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">C</text>
+          <text x="108" y="42" font-size="9" font-weight="900" fill="var(--shape-b-stroke)">甲(周長32)</text>
+          <!-- 乙：F(180,74), E(286,62), D(210,104) -->
+          <polygon points="180,74 286,62 210,104" fill="${c?'var(--shape-ok)':'var(--shape-a)'}" stroke="${c?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2"/>
+          <text x="170" y="77" font-size="9" font-weight="900" fill="var(--ink)">F</text>
+          <text x="290" y="65" font-size="9" font-weight="900" fill="var(--ink)">E</text>
+          <text x="210" y="114" font-size="9" font-weight="900" fill="var(--ink)">D</text>
+          <text x="188" y="96" font-size="8.5" font-weight="800" fill="var(--ink-soft)">5</text>
+          <text x="255" y="90" font-size="8.5" font-weight="800" fill="var(--ink-soft)">12</text>
+          <text x="234" y="62" font-size="9" font-weight="900" fill="${c?'var(--ok)':'var(--ink)'}">${c ? 'EF=15' : 'EF=?'}</text>
+        `;
+        ctrl.innerHTML = `<button type="button" class="btn-action primary" id="q8Calc">${c ? '✓ 已算出 EF＝32－12－5＝15' : '用周長 32 算出 EF 邊長 🔍'}</button>`;
+        ctrl.querySelector('#q8Calc').onclick = () => { st.showCalc = true; renderExam(); };
+      },
+      check: (st) => ({ ok: st.showCalc, msg: st.showCalc ? '✓ EF＝15 公分，與它對應的 BC 也是 15 公分！' : '請點擊按鈕計算乙三角形的第三邊 EF！' })
+    },
+    9: {
+      badge: '真題 Q9・獅湖 114-2',
+      title: '四邊形沿對角線剪開能否疊合測試',
+      steps: [
+        '正方形、菱形、平行四邊形對邊等長，沿對角線剪開後旋轉 180° 可完全疊合。',
+        '一般梯形的上底與下底不等長，沿對角線剪開後的兩個三角形無法疊合。',
+        '因此梯形沿對角線剪開無法得到兩個全等三角形。'
+      ],
+      init: { shape: 'trap', rot: false },
+      render(st, svg, ctrl){
+        const isTrap = st.shape === 'trap';
+        const r = st.rot;
+        if(isTrap){
+          svg.innerHTML = `
+            <polygon points="120,24 200,24 100,94" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+            <g transform="${r ? 'rotate(180 160 59)' : ''}">
+              <polygon points="200,24 240,94 100,94" fill="var(--shape-a)" stroke="var(--shape-a-stroke)" stroke-width="2"/>
+            </g>
+            <line x1="200" y1="24" x2="100" y2="94" stroke="var(--warn)" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="170" y="110" font-size="9" font-weight="800" fill="var(--warn)" text-anchor="middle">${r ? '梯形上底≠下底，旋轉後無法疊合！' : '梯形沿對角線剪開'}</text>
+          `;
+        } else {
+          svg.innerHTML = `
+            <polygon points="110,24 220,24 100,94" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+            <g transform="${r ? 'rotate(180 160 59)' : ''}">
+              <polygon points="220,24 210,94 100,94" fill="${r?'var(--shape-ok)':'var(--shape-a)'}" stroke="${r?'var(--shape-ok-stroke)':'var(--shape-a-stroke)'}" stroke-width="2"/>
+            </g>
+            <line x1="220" y1="24" x2="100" y2="94" stroke="var(--ok)" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="170" y="110" font-size="9" font-weight="800" fill="var(--ok)" text-anchor="middle">${r ? '✓ 平行四邊形旋轉 180° 完全疊合！' : '平行四邊形沿對角線剪開'}</text>
+          `;
+        }
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action ${isTrap?'active':''}" id="q9Trap">梯形</button>
+          <button type="button" class="btn-action ${!isTrap?'active':''}" id="q9Para">平行四邊形</button>
+          <button type="button" class="btn-action primary" id="q9Rot">${r ? '復原' : '旋轉 180° 試疊合 ↻'}</button>
+        `;
+        ctrl.querySelector('#q9Trap').onclick = () => { st.shape = 'trap'; st.rot = false; renderExam(); };
+        ctrl.querySelector('#q9Para').onclick = () => { st.shape = 'para'; st.rot = false; renderExam(); };
+        ctrl.querySelector('#q9Rot').onclick = () => { st.rot = !r; renderExam(); };
+      },
+      check: (st) => ({ ok: st.shape === 'trap' && st.rot, msg: (st.shape === 'trap' && st.rot) ? '✓ 實測梯形旋轉 180° 後無法重合，只有梯形無法得到兩個全等三角形！' : '請選擇「梯形」並點擊「旋轉 180° 試疊合」驗證！' })
+    },
+    10: {
+      badge: '真題 Q10・內湖 111-2',
+      title: '剪開得兩個全等等腰三角形測試',
+      steps: [
+        '菱形四條邊都相等，沿對角線剪開後，每個三角形都有兩條等長的腰，是等腰三角形。',
+        '這兩個等腰三角形的三邊長完全相同，旋轉 180° 可完全疊合（全等）。',
+        '一般長方形鄰邊不等長，剪開後是兩股不等長的直角三角形，不是等腰三角形。'
+      ],
+      init: { shape: 'rhombus', split: false },
+      render(st, svg, ctrl){
+        const isRh = st.shape === 'rhombus';
+        const sp = st.split;
+        if(isRh){
+          svg.innerHTML = `
+            <polygon points="170,18 225,59 115,59" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+            <g transform="translate(0, ${sp ? 12 : 0})">
+              <polygon points="170,100 225,59 115,59" fill="var(--shape-ok)" stroke="var(--shape-ok-stroke)" stroke-width="2"/>
+            </g>
+            <text x="170" y="114" font-size="9" font-weight="800" fill="var(--ok)" text-anchor="middle">${sp ? '✓ 四邊等長 → 兩個全等的等腰三角形！' : '菱形（四條邊一樣長）'}</text>
+          `;
+        } else {
+          svg.innerHTML = `
+            <polygon points="110,24 230,24 110,88" fill="var(--shape-b)" stroke="var(--shape-b-stroke)" stroke-width="2"/>
+            <g transform="translate(${sp ? 10 : 0}, ${sp ? 10 : 0})">
+              <polygon points="230,24 230,88 110,88" fill="var(--shape-a)" stroke="var(--shape-a-stroke)" stroke-width="2"/>
+            </g>
+            <text x="170" y="114" font-size="9" font-weight="800" fill="var(--warn)" text-anchor="middle">${sp ? '長方形長≠寬 → 不是等腰三角形' : '一般長方形（長≠寬）'}</text>
+          `;
+        }
+        ctrl.innerHTML = `
+          <button type="button" class="btn-action ${isRh?'active':''}" id="q10Rh">菱形</button>
+          <button type="button" class="btn-action ${!isRh?'active':''}" id="q10Rect">長方形</button>
+          <button type="button" class="btn-action primary" id="q10Split">${sp ? '合起來' : '沿對角線剪開 ✂'}</button>
+        `;
+        ctrl.querySelector('#q10Rh').onclick = () => { st.shape = 'rhombus'; st.split = false; renderExam(); };
+        ctrl.querySelector('#q10Rect').onclick = () => { st.shape = 'rect'; st.split = false; renderExam(); };
+        ctrl.querySelector('#q10Split').onclick = () => { st.split = !sp; renderExam(); };
+      },
+      check: (st) => ({ ok: st.shape === 'rhombus' && st.split, msg: (st.shape === 'rhombus' && st.split) ? '✓ 菱形沿對角線剪開，可得到兩個全等的等腰三角形！' : '請選擇「菱形」並點擊「沿對角線剪開」觀察兩腰長度！' })
+    }
+  };
+
+  function renderExam(){
+    const cfg = EXAM_SPECS[qNum];
+    if(!cfg) return;
+    cfg.render(state.exam, document.getElementById('examStage'), document.getElementById('examControls'));
+  }
+
+  function initExam(){
+    document.body.classList.add('q-mode');
+    document.getElementById('activityNav').hidden = true;
+    [0,1,2].forEach(i => { document.getElementById('act-' + i + '-view').hidden = true; });
+    document.getElementById('examView').hidden = false;
+
+    const cfg = EXAM_SPECS[qNum];
+    if(!cfg) return;
+    const qtag = document.getElementById('qtag');
+    qtag.textContent = '真題 Q' + qNum;
+    qtag.hidden = false;
+    document.getElementById('examBadge').textContent = cfg.badge;
+    document.getElementById('examHintTitle').textContent = cfg.title;
+
+    state.exam = Object.assign({}, cfg.init);
+    const stepsBox = document.getElementById('stepsBox');
+    stepsBox.hidden = true;
+    stepsBox.innerHTML = cfg.steps.map((s, idx) => `<div class="step-line"><b>步驟 ${idx+1}：</b>${s}</div>`).join('');
+
+    if(cfg.onDrag){
+      attachSvgDrag(document.getElementById('examStage'), (pt) => cfg.onDrag(state.exam, pt));
+    }
+
+    document.getElementById('verifyBtn').onclick = function(){
+      const res = cfg.check(state.exam);
+      const m = document.getElementById('examMsg');
+      m.className = 'info-bubble ' + (res.ok ? 'ok' : 'warn');
+      m.textContent = res.msg;
+      if(res.ok) stepsBox.hidden = false;
+    };
+    document.getElementById('revealSteps').onclick = function(){ stepsBox.hidden = !stepsBox.hidden; };
+    document.getElementById('resetExamBtn').onclick = function(){
+      state.exam = Object.assign({}, cfg.init);
+      stepsBox.hidden = true;
+      const m = document.getElementById('examMsg');
+      m.className = 'info-bubble';
+      m.textContent = '已重置操作狀態，請重新操作。';
+      renderExam();
+    };
+    renderExam();
+  }
+
+  if(isExam) initExam();
+  else showAct(0);
+})();
+</script>
+</body>
+</html>

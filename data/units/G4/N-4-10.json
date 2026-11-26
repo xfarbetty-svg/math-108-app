@@ -1,0 +1,293 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-N-4-10",
+  "curriculum_code": "N-4-10",
+  "grade": 4,
+  "unit_name": "角度：「度」（量角器實測、畫角與角度加減；整合 S-4-1）",
+  "source_paper": "臺北市南湖國小 111-1／112-1／113-1 期中、高雄市獅湖國小 110-1／114-1 期中、高雄市永安國小 114-1 期中（皆為 EXAM REAL/G4 實體試卷 PDF）",
+  "verified_by": "pdfplumber 與 pymupdf 頁面渲染逐題核對（頁碼見各題 exam_source）＋ 填充／作圖題轉化為外殼 4 選項＋教具動手操作雙軌制 ＋ CDP 機械化閘門＋ Light/Dark 雙模式截圖目視",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 5 題、獅湖 3 題、永安 2 題。涵蓋角度邊長無關、銳鈍直平周角分類、非0度起點量角器讀數、內外圈順逆轉動、平角直角推算、180~360度角合成、扇子雙向旋轉與指定角度作圖。本階段不含微電影，未修改 app/shell.js 影片映射；未碰 017 或子由。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-N-4-10-Q01",
+      "exam_source": "臺北市南湖國小 113-1 期中（PDF p1・一、選擇題 第1題）",
+      "section": "一、選擇題",
+      "question_num": "1",
+      "title": "角的邊長和角度大小的關係",
+      "stem": "下面關於角度的敘述，哪一個選項正確？",
+      "choices": [
+        "鈍角的角度小於直角",
+        "角的邊長和角度大小無關",
+        "比 90 度大的角度稱為直角",
+        "當角度是 180 度，稱為周角"
+      ],
+      "answer_index": 1,
+      "answer_raw": "角的邊長和角度大小無關",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "角的大小只跟「兩條邊張開的程度」有關，跟邊畫得多長沒有關係。",
+        "steps": [
+          "鈍角大於 90 度、小於 180 度，所以大於直角（90°）。",
+          "把角的兩條邊拉長或縮短，張開的角度維持 60° 不變。",
+          "180 度稱為平角，360 度才稱為周角。"
+        ],
+        "trap": "誤以為邊畫得比較長，角就比較大；其實只看張開幅度。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q02",
+      "exam_source": "高雄市永安國小 114-1 期中（PDF p1・二、選擇題 第3題）",
+      "section": "二、選擇題",
+      "question_num": "3",
+      "title": "判斷 155° 的角屬於哪一種角",
+      "stem": "一個 155° 的角，可叫作下列哪一種角？",
+      "choices": [
+        "銳角",
+        "直角",
+        "鈍角",
+        "平角"
+      ],
+      "answer_index": 2,
+      "answer_raw": "鈍角",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "以直角 90° 與平角 180° 為基準：小於 90° 是銳角，等於 90° 是直角，大於 90° 且小於 180° 是鈍角。",
+        "steps": [
+          "90° ＜ 155° ＜ 180°。",
+          "在量角器上可以看出 155° 已經超過 90° 垂線，但還沒到 180° 平角線。",
+          "因此 155° 是鈍角。"
+        ],
+        "trap": "看錯量角器內外圈把 155° 誤認成 25°（銳角），或和 180° 平角混淆。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q03",
+      "exam_source": "臺北市南湖國小 111-1 期中（PDF p1・二、填填看 第(9)題）",
+      "section": "二、填填看",
+      "question_num": "(9)",
+      "title": "360 度的角名稱（周角）",
+      "stem": "我們稱 360 度的角是 ( ) 角。",
+      "choices": [
+        "平角",
+        "周角",
+        "鈍角",
+        "直角"
+      ],
+      "answer_index": 1,
+      "answer_raw": "周角",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "從始邊旋轉一整圈回到原本位置，剛好是 4 個直角（90°×4＝360°），稱為「周角」。",
+        "steps": [
+          "旋轉 90° 是 1 個直角；旋轉 180° 是 2 個直角（平角）。",
+          "再轉半圈到 360°，等於 4 個直角合起來的大小。",
+          "360° 的角稱為「周角」。"
+        ],
+        "trap": "常把 180° 平角和 360° 周角名稱搞混：平角是一條直線 180°，周角是轉一圈 360°。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q04",
+      "exam_source": "高雄市獅湖國小 114-1 期中（PDF p1・三、填填看 第(6)題）",
+      "section": "三、填填看",
+      "question_num": "(6)",
+      "title": "非 0° 起點的量角器實測讀數",
+      "stem": "下面量角器量出來的角是幾度？( ) 度（圖中左邊射線對準外圈 30°／內圈 150°，右邊射線對準內圈 45°／外圈 135°）",
+      "choices": [
+        "105 度",
+        "15 度",
+        "115 度",
+        "135 度"
+      ],
+      "answer_index": 0,
+      "answer_raw": "105 度",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "角的一邊沒有對齊 0° 時，必須用「同一圈」的大刻度減去小刻度，才能得到真正的夾角。",
+        "steps": [
+          "選擇外圈刻度：右邊射線對準 135°，左邊射線對準 30°。",
+          "135° − 30° ＝ 105°（若看內圈則是 150° − 45° ＝ 105°）。",
+          "也可以把量角器 0° 轉去對齊其中一邊，直接讀出 105°。"
+        ],
+        "trap": "跨圈亂減（例如拿外圈 135° 減內圈 45°＝90°）或把外圈 30° 當作起點直接讀另一邊 135°。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q05",
+      "exam_source": "臺北市南湖國小 113-1 期中（PDF p1・一、選擇題 第3題）",
+      "section": "一、選擇題",
+      "question_num": "3",
+      "title": "量角器外圈 0° 起點順轉再逆轉",
+      "stem": "將竹籤的一端固定在量角器的中心點，從外圈 0 度線開始，往順時針方向轉 175°，再往逆時針轉 65°，竹籤會停在外圈的幾度？",
+      "choices": [
+        "70 度",
+        "110 度",
+        "15 度",
+        "105 度"
+      ],
+      "answer_index": 1,
+      "answer_raw": "110 度",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "從外圈 0°（左邊）順時針轉動會使外圈度數增加，再往逆時針轉回來則要相減。",
+        "steps": [
+          "從外圈 0° 順時針轉 175°，停在外圈 175°。",
+          "接著往逆時針方向轉回 65°：175° − 65° ＝ 110°。",
+          "竹籤最後停在外圈的 110 度（內圈則是 70 度）。"
+        ],
+        "trap": "誤看成內圈刻度 70°，或把兩次轉動直接相加（175＋65＝240）。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q06",
+      "exam_source": "臺北市南湖國小 111-1 期中（PDF p2・三、做做看 第5題）",
+      "section": "三、做做看",
+      "question_num": "5",
+      "title": "量角器內圈 0° 起點逆轉再順轉",
+      "stem": "將吸管的一端放在量角器的中心點，對齊內圈的 0 度，先往逆時針方向轉了 108 度，再往順時針方向轉 74 度，吸管會停在內圈多少度？( ) 度",
+      "choices": [
+        "34 度",
+        "182 度",
+        "146 度",
+        "74 度"
+      ],
+      "answer_index": 0,
+      "answer_raw": "34 度",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "內圈 0° 在量角器右邊，往逆時針方向轉度數會變大，往順時針轉回來度數會變小。",
+        "steps": [
+          "從內圈 0° 逆時針轉 108°，停在內圈 108°。",
+          "再往順時針方向轉回 74°：108° − 74° ＝ 34°。",
+          "吸管最後停在內圈 34 度。"
+        ],
+        "trap": "誤以為兩次旋轉要相加（108＋74＝182），沒注意到方向相反一增一減。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q07",
+      "exam_source": "臺北市南湖國小 112-1 期中（PDF p1・一、選擇題 第2題）",
+      "section": "一、選擇題",
+      "question_num": "2",
+      "title": "平角與直角推算 ∠1",
+      "stem": "已知 ∠1＋∠2＋∠3 是一個平角，∠2＋∠3 是一個直角，∠1 是幾度？",
+      "choices": [
+        "45°",
+        "90°",
+        "180°",
+        "270°"
+      ],
+      "answer_index": 1,
+      "answer_raw": "90°",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "平角＝180°，直角＝90°。三個角合起來是平角，扣掉其中兩個角的和（直角）就是剩下的角。",
+        "steps": [
+          "∠1＋∠2＋∠3 ＝ 180°（平角）。",
+          "已知 ∠2＋∠3 ＝ 90°（直角）。",
+          "∠1 ＝ 180° − 90° ＝ 90°。"
+        ],
+        "trap": "忘記平角是 180°（誤用 360° 減 90° 得 270°），或誤以為 ∠1 是直角的一半 45°。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q08",
+      "exam_source": "高雄市永安國小 114-1 期中（PDF p2・五、應用題 第3題）",
+      "section": "五、應用題",
+      "question_num": "3",
+      "title": "180°～360° 角合成（直角＋130°）",
+      "stem": "圖中的 ∠1 是直角，∠2 是 130 度，∠1 和 ∠2 合起來是幾度？",
+      "choices": [
+        "40 度",
+        "130 度",
+        "220 度",
+        "230 度"
+      ],
+      "answer_index": 2,
+      "answer_raw": "220 度",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "角的合成就是把兩個角的度數相加，兩個鈍角或直角＋鈍角合起來可以超過 180°（介於 180° 與 360° 之間）。",
+        "steps": [
+          "∠1 是直角 ＝ 90°。",
+          "∠2 ＝ 130°。",
+          "∠1＋∠2 ＝ 90°＋130° ＝ 220°。"
+        ],
+        "trap": "誤以為角度不能超過 180° 而用相減（130−90＝40），或進位算錯成 230°。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q09",
+      "exam_source": "高雄市獅湖國小 110-1 期中（PDF p1・二、填填看 第5題）",
+      "section": "二、填填看",
+      "question_num": "5",
+      "title": "扇子張開與雙向旋轉後角度",
+      "stem": "一個打開 25 度的扇子，其中右邊的邊順時針旋轉 130 度，然後又逆時針旋轉 20 度，最後扇子打開 ( ) 度。",
+      "choices": [
+        "135 度",
+        "175 度",
+        "155 度",
+        "110 度"
+      ],
+      "answer_index": 0,
+      "answer_raw": "135 度",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "扇子右邊的邊順時針轉會讓扇子張得更大（角度增加），逆時針轉回來則會合攏（角度減少）。",
+        "steps": [
+          "原本打開 25°，右邊順時針轉 130° 後：25°＋130° ＝ 155°。",
+          "接著又逆時針轉回 20°：155° − 20° ＝ 135°。",
+          "最後扇子打開 135 度。"
+        ],
+        "trap": "忘記加上原本已經打開的 25°（算出 110°），或把逆時針也當作相加（算出 175°）。"
+      }
+    },
+    {
+      "id": "G4-N-4-10-Q10",
+      "exam_source": "高雄市獅湖國小 110-1 期中（PDF p2・五、作圖題 第1題②）",
+      "section": "五、作圖題",
+      "question_num": "1②",
+      "title": "指定角度作圖（155° 畫角）",
+      "stem": "請在量角器上畫出 155 度的角：若角的一邊對齊外圈 0 度線（左邊），另一邊應該對準哪一個刻度線來作圖？",
+      "choices": [
+        "外圈 155° 刻度線",
+        "內圈 155° 刻度線",
+        "外圈 25° 刻度線",
+        "內圈 65° 刻度線"
+      ],
+      "answer_index": 0,
+      "answer_raw": "外圈 155° 刻度線",
+      "component": "protractor_angle_g4_lab",
+      "component_path": "components/protractor_angle_g4_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "畫角口訣：「對齊哪一圈的 0° 線，就看那一圈的刻度」。左邊對齊外圈 0°，就要找外圈 155° 畫點連線。",
+        "steps": [
+          "始邊對齊量角器左邊的外圈 0° 刻度線。",
+          "沿著外圈刻度由 0° 數過 90° 到 155° 的位置做記號。",
+          "用直尺將頂點與記號連起來，形成 155° 鈍角。"
+        ],
+        "trap": "最常見錯誤是左邊對齊外圈 0°，卻錯畫到內圈 155°（即外圈 25°），畫成銳角。"
+      }
+    }
+  ]
+}

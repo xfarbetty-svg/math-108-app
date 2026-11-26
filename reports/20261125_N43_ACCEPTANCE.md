@@ -1,30 +1,44 @@
-# [LOG][OPENCODE][N-4-3][2026-11-25] N-4-3 觀念小教室教具與真題庫完工驗收
+# N-4-3 教學邏輯與互動全面升級驗收報告（2026-11-25）
 
-> 課綱單元：四年級 N-4-3（整合 R-4-1）兩步驟應用問題與併式。施工者：OpenCode。全程遵守安全隔離紅線：未讀取／掃描／引用任何「017」或「子由」路徑；Python 執行前皆設定 `$env:PYTHONIOENCODING='utf-8'`；真題僅取自 `EXAM REAL/G4/` 合法台灣國小段考 PDF；未製作微電影、未改 `app/shell.js` 影片映射、未動 N-4-1／N-4-2 任何檔案。
-
-## 標準 5 欄驗收
+## 交付五欄
 
 | 欄位 | 內容 |
 |---|---|
-| **範圍** | 僅 N-4-3 專屬：新建 `app/components/two_step_expr_g4_lab.html`、`data/units/G4/N-4-3.json`；`data/curriculum.json` 僅改 N-4-3 該筆；另建 N-4-3 專屬驗證腳本 `tools/verify_n43.js`、`tools/verify_n43_cdp.js`；`tools/verify_curriculum_131.js` 僅於 EXPECTED_READY_CODES 補入 `N-4-3` 以反映新ready條目。 |
-| **變更** | 教具含三大互動活動：①算式合併天平（真實 pointerdown/move/up 拖曳算式積木與括號卡，拖曳 20px 驗證 transform 變動，即時判定括號必要性）②運算順序高亮階梯（先乘除後加減／括號優先，逐步化簡）③情境線段圖與併式配對（正確併式 vs 迷思對照）；支援 `?q=1..10`、`theme=dark/light`、一步一步看算理，作答前不渲染解析。題庫 10 題、每題 4 選項、完整題幹、concept/steps/trap 與學校＋學年度＋頁碼出處，跨 3 校（獅湖 3／永安 3／南湖 4）。課綱 N-4-3：`upcoming→ready`、`question_count 0→10`、補 `verified_source`／`component_path`／`concept_path`。 |
-| **驗證指令** | `node tools/verify_n43.js`；`node tools/verify_n43_cdp.js`；`node tools/verify_curriculum_131.js`；CDP `Page.captureScreenshot` 產出 4 張 Light/Dark 截圖並以 read 工具目視。 |
-| **真實 Exit Code** | 結構檢查 **0**（ALL PASS）；CDP 雙視口 **0**（PASS）；課綱總檢 **0**（ALL PASS，131 units／6 grades）；`git commit 9182e85` **0**。途中兩次失敗為驗證腳本自身 selector／期待值錯誤（非教具），已單點修正後重測通過，符合 3 次重試熔斷（實際 2 次）。 |
-| **證據** | CDP 實測：Light 最高 333.7px、Dark 333.7px、Desktop 328.0px（皆 ≤420px）；390px 視口 Light/Dark `scrollWidth=390`（零橫向溢出）；10 題 × 2 模式 × 2 視口零 console error／exception；三大活動真實事件全綠（拖曳 transform 變動、第一步高亮、配對命中）。截圖：`tools/_scratch/n43_q1_light.png`、`n43_q2_light.png`、`n43_q2_dark.png`、`n43_q10_dark.png` 目視確認高對比、無暗字融背、無穿模、無文字遮擋。私下目視發現 Q1 積木曾顯示错误算式，已修正為 `(無括號) 240÷12 ×5`、Q2 為 `( 568−28 )÷20` 後重測通過。 |
+| 範圍 | `app/components/two_step_expr_g4_lab.html` 全面重構；`tools/verify_n43.js`、`tools/verify_n43_cdp.js` 升級守門。**未觸碰**題庫 JSON、`curriculum.json`、`app/shell.js`、017／子由、N-4-1／N-4-2 |
+| 變更 | ① 真題 `?q=1..10` 改「兩階段算式組合器」：階段 A 只用線段圖＋積木按鈕組合，初始 DOM 零算式和零答案；驗證成功或按「看算理拆解」才展開階段 B 的均一兩步驟；② 概念模式三活動改用三道不同生活例題（鉛筆／餅乾／紙藤），活動一支援點擊＋拖曳雙操作、活動二提供兩種合法列式切換、活動三三選一附錯誤解析；③ 收緊版面 max-width／overflow，修復右側邊框裁切 |
+| 驗證指令 | `node tools/verify_n43.js`；`node tools/verify_n43_cdp.js`；`node tools/verify_curriculum_131.js` |
+| 真實 Exit Code | 三者皆 **0**（`N43_STATIC_ALL_PASS`／`PASS verify_n43_cdp`／`CURRICULUM_131_VERIFIED — ALL PASS`） |
+| 證據 | `MAX_HEIGHT light=359.6 dark=359.6 desktop=347.6`（≤420）、`MAX_WIDTH light=390 dark=390`（零溢出）；Q1~Q10×Light/Dark 初始 DOM 實測 `leakExp=false／leakFinal=false／stepsHidden=true`；Q2 點積木組出 `(568−28)÷20` → 驗證成功 → 展開 `540÷20＝27`；截圖 `tools/_scratch/n43_q2_light.png`、`n43_q2_dark.png`、`n43_concept_act0_light.png`、`n43_concept_act2_light.png` 目視無劇透、無疊字、無右框裁切 |
 
-## 真題出處明細（逐題合法真卷）
-1. 獅湖 113-1 期末 p3 應用3：`240÷12×5＝100`
-2. 獅湖 113-1 期末 p3 應用7：`(568−28)÷20＝27`
-3. 永安 114-1 期末 p2 四(5)：`(40×7)＋199＝479`
-4. 永安 114-1 期末 p2 六(3)：`48÷(60÷10)＝8`
-5. 永安 114-1 期末 p2 六(4)：`(6500−300×5)÷5＝1000`
-6. 南湖 111-1 期末 p3：`120×12÷240＝6`
-7. 南湖 111-2 期中 p1 選擇1：`56×4÷7＝32`
-8. 南湖 112-1 期末 p3 應用4：`840÷70×12＝144`
-9. 南湖 113-1 期末 p3 應用3：`900÷25÷6＝6`
-10. 獅湖 114-1 期末 p3 五(4)：`(1040−1018)×5＝110`
+---
 
-## 異動與後續
-- 規格書正文係以本地 `nlm source content --profile dayou` 讀取（官方 MCP 無讀內文 API），上一輪 WIP 來源 `a7a9e2a3-d72b-4784-bafc-81765202e479` 已依指示刪除。
-- 官方 notebooklm MCP 無 `delete_source` 工具，改由本地 `nlm source delete --profile dayou` 執行；如實記載。
-- Git：主體 commit `9182e85`；本輪教具算理修正與驗證腳本另行 commit。依專案慣例 push 由 AGY／使用者統一處理。
+## 一、真題演練：先組合、後展開（十題全數套用）
+
+- **階段 A（零劇透）**：標題改為「先找中間量・組合併式」；線段圖 `diagramHTML(d.viz)` 只呈現題目既有條件（例如 Q2 只顯示 `568 顆草莓 → 壓爛 28 顆 → 每 20 顆裝 1 盒`），不再出現 `(568−28)÷20` 或 `27 盒`。
+- 由_expression_自動生成積木按鈕：Q2 提供 `568／28／20／−／÷／(／)`；學生依序點選排出完整併式，按「✓ 驗證算式」做字串正規化比對，正確才高亮並自動展開階段 B；錯誤只給引導提示（「第一步要先算哪兩個數？」），不洩漏答案。
+- **階段 B（展開才寫入 DOM）**：`stepsBox` 初始 `hidden=true`，展開後才插入均一風格三行：`第一步：先算剩下的草莓 → 568−28＝540`、`第二步：再算裝成幾盒 → 540÷20＝27`、`併式：(568−28)÷20＝27`。按「🔍 看算理拆解」亦可在未組合時主動展開。
+- CDP 逐題（10×2 主題）機械檢查初始 `innerText` 不含 `s.exp` 與 `＝s.final`，確保十題無一劇透。
+
+## 二、概念探索：三道獨立生活例題
+
+| 活動 | 例題 | 互動設計 |
+|---|---|---|
+| 一・先乘後減 | 鉛筆 15 元買 4 枝、付 100 元，找回幾元？ | 三槽位＋四積木；先點積木再點槽位（或反向），並保留真實 `pointerdown/move/up` 拖曳；放入即高光吸附並顯示即時提示，完成後才揭示 `100 − 15 × 4 ＝ 40` |
+| 二・連除與括號 | 360 顆餅乾，每 6 顆一包、每 5 包一盒 | 兩種合法列式切換：`360÷6÷5`（由左而右）vs `360÷(6×5)`（括號先算）；點第一步區塊高亮，明確顯示中間量（60 包／30 顆），移除舊版混亂紅字 |
+| 三・線段配對 | 240 條紙藤平分 12 人，5 人共幾條？ | 三段線段圖＋三選項：`240÷12×5`（正解）、`240÷(12×5)`、`240×12÷5`；點選即顯示具體錯誤原因（把 12 與 5 先乘成 60 人／順序相反） |
+
+## 三、算式引擎與安全性
+
+- AST 引擎（`tokenize → parse → firstReducible → 逐次化簡 → render`）與 `evalAST` 等價驗證完整保留；`__N43_SELFTEST__` Q1~Q10 全綠，Q1 仍為 `240÷12＝20 → 20×5＝100`，無憑空 `+`、無重複 12。
+- 教具內部仍無題幹、4 選項與提交按鈕（外殼 `shellStem`／`shellOptions` 統一呈現）；CDP 實測 `.opt/.option-btn/.shell-opt` 為 0。
+- `theme-tokens.css`＋`html[data-theme="dark"]` 覆寫，Light/Dark 截圖目視對比通過；無 100vh，iframe resize 訊息正常。
+
+## 四、驗收強化
+
+- `verify_n43.js` 新增 6 道守門：零劇透 `viz`／`steps` 資料、線段圖只用 `d.viz`、兩階段組合器函式存在、階段 B 初始隱藏、三活動不同例題、點擊＋拖曳雙操作。
+- `verify_n43_cdp.js` 新增三類實測：每題初始 DOM 零劇透、Q2 完整組合→驗證→展開、Q1 拆解按鈕、概念三活動文本差異與三選項數。
+- 遭遇一次失敗（Q9 只有 4 個相異積木，原閾值 5 過嚴）已單點修正閾值為 4 後重測通過，未放寬任何劇透檢查。
+
+## 五、後續
+
+- 依「完工即停」本輪不 commit／push、不部署、不碰其餘單元；已寫入 `[LOG][OPENCODE][N-4-3]` 至 NotebookLM 對應筆記本。

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-7 二位小數・百分位與直式</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#2fa36b; --warn:#c2410c;
+  --shadow:0 6px 18px var(--shadow-color); --radius:14px;
+}
+html[data-theme="dark"]{ --ok:#4ade80; --warn:#fca5a5; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 6px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10px;color:var(--ink-soft);min-height:14px}
+.head b{font-size:12.5px;color:var(--ink)}
+.activity-nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;background:var(--elev);padding:4px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:6px 9px;font-size:10.5px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:12px;font-weight:800;color:var(--ink)}
+.card-desc{font-size:10px;line-height:1.3;color:var(--ink-soft)}
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:4px;display:flex;justify-content:center;align-items:center;overflow:hidden;min-height:52px}
+.stage-canvas svg{width:100%;max-width:360px;height:auto;max-height:70px;display:block}
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:4px 6px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:10px;font-weight:800;padding:4px 8px;border-radius:8px}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff;transform:translateY(1px)}
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:10px;line-height:1.3;color:var(--ink);font-weight:700;text-align:left;min-height:16px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+.steps-box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 6px;display:flex;flex-direction:column;gap:1px;text-align:left}
+.steps-box .st{font-size:9.8px;line-height:1.22;color:var(--ink)}
+.steps-box .st b{color:var(--a)}
+.steps-box .fin{font-size:10px;font-weight:900;color:var(--ok)}
+/* 位值表 */
+.vt{display:flex;flex-direction:column;gap:2px;align-items:center;width:100%}
+.vt-row{display:flex;gap:2px;justify-content:center;flex-wrap:nowrap}
+.vt-cell{min-width:38px;min-height:23px;border:1.5px solid var(--line);border-radius:6px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--ink);padding:0 3px}
+.vt-cell.lbl{font-size:9px;font-weight:700;color:var(--ink-soft);border-style:dashed;min-height:18px}
+.vt-cell.on{border-color:var(--a);background:var(--elev);color:var(--a)}
+.vt-cell.hit{border-color:var(--ok);color:var(--ok)}
+.vt-cell.dot{font-size:14px;min-width:18px;border-color:var(--a)}
+.digit-card{display:inline-block;border:1.5px solid var(--a);border-radius:7px;background:var(--card);color:var(--a);font-size:13px;font-weight:900;padding:4px 9px;margin:2px;cursor:pointer;touch-action:none;user-select:none}
+.digit-card.hit{outline:2px solid var(--mint);background:var(--elev)}
+.a0-slot{min-width:44px;min-height:24px;border:2px dashed var(--line);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-soft);margin:2px;cursor:pointer;padding:0 3px}
+.a0-slot.filled{border-style:solid;border-color:var(--mint);color:var(--ink);font-weight:900}
+/* 0.01 方格 */
+.eq-cells{display:flex;gap:1px;flex-wrap:nowrap;justify-content:center}
+.eq-cell{width:5px;height:9px;border:1px solid var(--line);border-radius:1px;background:var(--card);padding:0}
+.eq-cell.on{background:var(--a);border-color:var(--a)}
+.eq-row{display:flex;align-items:center;gap:5px;justify-content:center}
+.eq-lbl{font-size:9px;font-weight:800;color:var(--ink-soft);width:44px;text-align:right;white-space:nowrap}
+.eq-count{font-size:10.5px;font-weight:900;color:var(--a);text-align:center;min-height:13px;line-height:1.2}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1;margin:0 .1em}
+.frac .n,.frac .d{font-weight:900;font-size:.95em;padding:0 .14em}
+.frac .n{color:var(--a)} .frac .d{color:var(--sky)}
+.frac .l{display:block;width:100%;height:2px;background:var(--ink);margin:1.5px 0}
+html[data-theme="dark"] .frac .n{color:#8BE0C8} html[data-theme="dark"] .frac .d{color:#A8CEEA}
+/* 直式格線 */
+.vgrid{display:flex;flex-direction:column;gap:1px;align-items:center;width:100%}
+.vrow{display:flex;gap:1px;justify-content:center;flex-wrap:nowrap}
+.vcell{min-width:28px;min-height:18px;border:1px solid var(--line);border-radius:3px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--ink)}
+.vcell.lbl{font-size:8px;font-weight:700;color:var(--ink-soft);border-style:dashed;min-height:15px}
+.vcell.on{border-color:var(--a);color:var(--a);background:var(--elev)}
+.vcell.dot{color:var(--a);border-color:var(--a)}
+.vcell.fin{border-color:var(--ok);color:var(--ok);background:var(--card)}
+.vline{height:2px;background:var(--ink);width:calc(100% - 8px);border-radius:2px;margin:1px 0}
+/* 工具列 */
+.tool-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.tool-btn{background:var(--elev);border:1px solid var(--line);color:var(--ink);font-size:10px;font-weight:800;padding:4px 8px;border-radius:8px}
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:12px;font-weight:900;padding:7px;border-radius:11px;text-align:center}
+.concept-footer{margin-top:1px}
+[hidden]{display:none!important}
+#draftOverlay{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.72);display:flex;flex-direction:column;gap:6px;padding:10px}
+#draftCanvas{flex:1;width:100%;background:#fff;border-radius:10px;touch-action:none}
+.draft-head{display:flex;justify-content:space-between;align-items:center;color:#fff;font-size:13px;font-weight:800}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head"><b>N-4-7 二位小數・百分位與直式</b><span>108 課綱活動</span></div>
+  <nav class="activity-nav" id="actNav">
+    <button class="act-btn active" data-act="0">🎒 活動一・書包秤重</button>
+    <button class="act-btn" data-act="1">🐠 活動二・魚缸水量</button>
+    <button class="act-btn" data-act="2">🥛 活動三・牛奶容量</button>
+  </nav>
+
+  <section class="act-card" id="act-0-view">
+    <div class="card-head"><span class="card-badge">課綱活動 1・位值單位百分位</span></div>
+    <div class="card-title">🎒 活動一：書包秤重・百分位位值表</div>
+    <div class="card-desc" id="a0desc"></div>
+    <div class="stage-canvas">
+      <svg viewBox="0 0 340 50" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="330" height="40" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="170" y="21" font-size="10.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">小數點右邊第一位是十分位，第二位是百分位</text>
+        <text x="170" y="38" font-size="12" font-weight="900" fill="var(--ink)" text-anchor="middle">1 . 3 7 公斤＝1 個 1、3 個 0.1、7 個 0.01</text>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="a0Pool"></div>
+      <div class="btn-grid" id="a0Slots"></div>
+      <div class="btn-grid"><button class="btn-action" id="a0Check">✓ 檢查位值</button></div>
+      <div class="info-bubble" id="a0Msg">💡 先點數字卡，再點「個位／十分位／百分位」格子。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱活動 2・位值單位換算與比較</span></div>
+    <div class="card-title">🐠 活動二：魚缸水量・補零比大小</div>
+    <div class="card-desc" id="a1desc"></div>
+    <div class="stage-canvas">
+      <svg viewBox="0 0 340 50" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="330" height="40" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="170" y="21" font-size="10.5" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">補成兩位小數再比較</text>
+        <text x="170" y="38" font-size="12" font-weight="900" fill="var(--ink)" text-anchor="middle" id="a1svg">2.05 公升  ≟  2.5 公升</text>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div id="a1bars"></div>
+      <div class="btn-grid"><button class="btn-action" id="a1Go">① 補 0 對齊百分位</button></div>
+      <div class="info-bubble" id="a1Msg">💡 2.5 公升補成 2.50 公升，再比百分位。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱活動 3・直式加法</span></div>
+    <div class="card-title">🥛 活動三：牛奶容量・直式格線</div>
+    <div class="card-desc" id="a2desc"></div>
+    <div class="stage-canvas" id="a2diagram"></div>
+    <div class="interact-panel">
+      <div id="a2grid"></div>
+      <div class="btn-grid"><button class="btn-action" id="a2Align">① 對齊小數點</button><button class="btn-action" id="a2Check">② 檢查加法</button></div>
+      <div class="info-bubble" id="a2Msg">💡 0.25 和 0.38 都在十分位、百分位，先對齊小數點。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head"><span class="card-badge" id="examBadge">🎯 段考真題</span><span id="examSrc" style="font-size:9px;color:var(--ink-soft)"></span></div>
+    <div class="card-title" id="examTitle"></div>
+    <div class="card-desc" id="examDesc"></div>
+    <div class="stage-canvas" id="examDiagram"></div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examActions"></div>
+      <div class="info-bubble" id="examMsg"></div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+
+  <div class="tool-row" id="toolRow">
+    <button class="tool-btn" id="btnSpeakLab">🔊 語音導讀</button>
+    <button class="tool-btn" id="btnDraftLab">📝 算草稿</button>
+  </div>
+  <footer class="concept-footer" id="conceptFooter">
+    <button class="btn-go-quiz" id="goQuiz">🎯 進入真題測驗（10 題）</button>
+  </footer>
+</div>
+
+<div id="draftOverlay" hidden>
+  <div class="draft-head"><span>📝 手寫計算草稿板</span><button id="draftClose" style="color:#fff;font-weight:800">✕ 關閉</button></div>
+  <canvas id="draftCanvas"></canvas>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function msg(html,cls){ const el=$('examMsg'); el.innerHTML=html; el.className='info-bubble'+(cls?' '+cls:''); }
+
+/* QS —— 與 data/units/G4/N-4-7.json 對應；此教具不自帶題幹與四選項 */
+const QS=[
+  {t:'place',c:'70+8+0*0.1+3*0.01',a:78.03,s:'永安 114-1 期末 p1',title:'位值表・十位個位十分位百分位',hint:'點「放入位值表」，看四個數字怎麼定位。',
+   v:{kind:'compose',cols:['十位','個位','十分位','百分位'],tiles:['3','8','0','7'],targets:[0,1,2,3]},
+   st:['十位 7、個位 8 → 整數部分 78','十分位 0、百分位 3 → .03','合起來是 78.03']},
+  {t:'place',c:'Math.floor(214.38*100)%10',a:8,s:'永安 114-1 期末 p1',title:'位值表・找出百分位',hint:'點「標出百分位」，看小數點右邊第二格。',
+   v:{kind:'mark',cols:['百位','十位','個位','十分位','百分位'],digits:['2','1','4','3','8'],target:4},
+   st:['小數點右邊第一位 3 是十分位','右邊第二位 8 是百分位','所以百分位數字是 8']},
+  {t:'place',c:'20+7+3*0.1+4*0.01',a:27.34,s:'獅湖 114-1 期末 p2',title:'位值表・十位個位十分位百分位',hint:'點「放入位值表」，注意 3 與 4 的順序。',
+   v:{kind:'compose',cols:['十位','個位','十分位','百分位'],tiles:['4','2','7','3'],targets:[0,1,2,3]},
+   st:['十位 2、個位 7 → 27','十分位 3、百分位 4 → .34','合起來是 27.34']},
+  {t:'convert',c:'300*0.01',a:3,s:'獅湖 114-1 期末 p2',title:'0.01 單位・三個一百格',hint:'點「每 100 個換成 1」，數數有幾個 1。',
+   v:{kind:'count',groups:3,per:100,total:300},
+   st:['100 個 0.01＝1','300 個是 3 組 100 個','3×1＝3']},
+  {t:'convert',c:'38/100',a:0.38,s:'南湖 113-2 期末 p2',title:'分數換小數・百分位方格',hint:'點「塗出 38 個 0.01」，再看兩位小數。',
+   v:{kind:'fraction',n:38,d:100},
+   st:['38/100 是 38 個 0.01','38 個 0.01 記成 0.38','所以 38/100＝0.38']},
+  {t:'compare',c:'5.01>4.9&&5.01<5.1?5.01:0',a:5.01,s:'獅湖 114-1 期末 p2',title:'數線・百分位放大鏡',hint:'點「放大百分位刻度」，看兩端之間有哪些格子。',
+   v:{kind:'range',lo:4.9,hi:5.1,pick:5.01},
+   st:['4.9＝4.90，5.1＝5.10','5.01 比 4.90 大','5.01 比 5.10 小，符合條件']},
+  {t:'vertical',c:'6.7+42.83',a:49.53,s:'永安 114-1 期末 p1',title:'直式加法・小數點對齊',hint:'點「對齊小數點」，再點「算出答案」。',
+   v:{kind:'add',cols:['十位','個位','．','十分位','百分位'],a:['','6','．','7','0'],b:['4','2','．','8','3'],sum:['4','9','．','5','3']},
+   st:['6.7 補成 6.70，小數點對齊','百分位 0＋3＝3；十分位 7＋8＝15，進 1','個位 6＋2＋1＝9 → 49.53']},
+  {t:'vertical',c:'12-0.18',a:11.82,s:'永安 114-1 期末 p2',title:'直式減法・補零退位',hint:'點「對齊小數點」，再點「算出答案」。',
+   v:{kind:'sub',cols:['十位','個位','．','十分位','百分位'],a:['1','2','．','0','0'],b:['','0','．','1','8'],sum:['1','1','．','8','2']},
+   st:['12 補成 12.00，小數點對齊','百分位借位 10－8＝2；十分位 9－1＝8','剩下 11 → 11.82']},
+  {t:'vertical',c:'2.62*35',a:91.7,s:'永安 114-2 期末 p1',title:'直式乘法・部分積與小數點',hint:'點「對齊位值」，再點「算部分積」。',
+   v:{kind:'mul',cols:['千位','百位','十位','個位','空位'],a:['','2','6','2',''],b:['','','×','3','5'],parts:[['1','3','1','0',''],['7','8','6','0','']],sum:['9','1','7','0',''],dec:2},
+   st:['262×5＝1310，262×30＝7860','部分積相加：1310＋7860＝9170','2.62 有兩位小數 → 91.70＝91.7']},
+  {t:'convert',c:'0.67*10',a:6.7,s:'獅湖 114-2 期中 p1',title:'位值表・乘以 10 左移一位',hint:'點「乘以 10」，看每個數字往左移一格。',
+   v:{kind:'shift',cols:['十位','個位','．','十分位','百分位'],digits:['','0','．','6','7'],shifted:['','6','．','7','']},
+   st:['0.67 是 67 個 0.01','乘以 10 變成 670 個 0.01','670 個 0.01＝6.7']}
+];
+const DATA=QS.map((x,i)=>({q:i+1,type:x.t,check:x.c,ans:x.a,src:x.s,title:x.title,hint:x.hint,viz:x.v,steps:x.st}));
+window.__N47_SELFTEST__=(function(){
+  const details=DATA.map((d,i)=>{
+    try{ const v=Function('"use strict";return ('+d.check+')')();
+      return {q:i+1,pass:Number.isFinite(v)&&Math.abs(v-d.ans)<2e-3,final:v,expected:d.ans};
+    }catch(e){ return {q:i+1,pass:false,error:String(e.message||e),final:null,expected:d.ans}; }
+  });
+  return {allPass:details.every(x=>x.pass),details:details};
+})();
+
+const P=new URLSearchParams(location.search);
+const qParam=parseInt(P.get('q')||'0',10);
+const FORCE_CONCEPT=P.get('mode')==='concept';
+const EXAM=(qParam>=1&&qParam<=10)&&!FORCE_CONCEPT;
+const Q=EXAM?qParam:1;
+const d=DATA[Q-1];
+if(P.get('theme')==='dark'||P.get('theme')==='light') document.documentElement.dataset.theme=P.get('theme');
+window.__N47_MODE__=EXAM?'exam':'concept';
+window.__N47_Q__=Q;
+window.__N47_TYPE__=EXAM?d.type:'concept';
+
+/* ===== 通用位值／方格／直式繪製 ===== */
+function vtRow(vals,cls){ return '<div class="vt-row">'+vals.map((x,i)=>'<div class="vt-cell '+((cls&&cls[i])||'')+'">'+x+'</div>').join('')+'</div>'; }
+function eqCells(n,cls){ let s=''; for(let i=0;i<n;i++) s+='<button class="eq-cell'+(cls?' '+cls:'')+'"></button>'; return s; }
+function vRow(vals,cls){ return '<div class="vrow">'+vals.map((x,i)=>'<div class="vcell '+((cls&&cls[i])||'')+'">'+x+'</div>').join('')+'</div>'; }
+function vLine(){ return '<div class="vline"></div>'; }
+
+const RENDER={
+  place:function(){
+    const v=d.viz;
+    if(v.kind==='compose'){
+      $('examDiagram').innerHTML='<div class="vt">'+vtRow(v.cols,Array(v.cols.length).fill('lbl'))+'<div class="vt-row" id="placeSlots">'+v.cols.map(()=>'<div class="vt-cell a0-slot" data-i="?">？</div>').join('')+'</div></div><div class="eq-count" id="eqCount"></div>';
+      $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 放入位值表</button>';
+      $('eqGo').onclick=()=>{
+        const slots=$('placeSlots').querySelectorAll('.vt-cell');
+        v.targets.forEach((t,i)=>{ slots[t].textContent=v.tiles[i]; slots[t].dataset.i=t; slots[t].classList.add('on'); });
+        $('eqCount').textContent=v.targets.map((t,i)=>v.tiles[i]).join('');
+        msg('✓ 數字已按位值定位','ok');
+      };
+    }else{
+      $('examDiagram').innerHTML='<div class="vt">'+vtRow(v.cols,Array(v.cols.length).fill('lbl'))+vtRow(v.digits)+'</div><div class="eq-count" id="eqCount"></div>';
+      $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 標出百分位</button>';
+      $('eqGo').onclick=()=>{
+        const cells=$('examDiagram').querySelectorAll('.vt-row:last-child .vt-cell');
+        cells[v.target].classList.add('on');
+        $('eqCount').textContent='百分位＝'+v.digits[v.target];
+        msg('✓ 從小數點往右數第二格是 '+v.digits[v.target],'ok');
+      };
+    }
+  },
+  convert:function(){
+    const v=d.viz;
+    if(v.kind==='count'){
+      $('examDiagram').innerHTML='<div class="vt">'+Array.from({length:v.groups},(_,r)=>'<div class="eq-row"><span class="eq-lbl">'+(r+1)+'×100</span><div class="eq-cells" data-g="'+r+'">'+eqCells(v.per)+'</div></div>').join('')+'</div><div class="eq-count" id="eqCount"></div>';
+      $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 每 100 個換成 1</button>';
+      $('eqGo').onclick=()=>{
+        $('examDiagram').querySelectorAll('.eq-cell').forEach(c=>c.classList.add('on'));
+        $('eqCount').textContent=v.groups+' 個 1 ＝ '+v.total+' 個 0.01';
+        msg('✓ 100 個 0.01＝1，共 '+v.groups+' 個 1','ok');
+      };
+    }else if(v.kind==='fraction'){
+      $('examDiagram').innerHTML='<div class="eq-row"><span class="eq-lbl">分數</span><span class="frac"><span class="n">'+v.n+'</span><span class="l"></span><span class="d">'+v.d+'</span></span><span class="eq-lbl">→</span><div class="eq-cells" id="fracCells">'+eqCells(v.d)+'</div></div><div class="eq-count" id="eqCount"></div>';
+      $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 塗出 '+v.n+' 個 0.01</button>';
+      $('eqGo').onclick=()=>{
+        const cs=$('fracCells').querySelectorAll('.eq-cell');
+        for(let i=0;i<v.n;i++) cs[i].classList.add('on');
+        $('eqCount').textContent=v.n+' 個 0.01＝'+(v.n/100).toFixed(2);
+        msg('✓ '+v.n+'/100＝'+(v.n/100).toFixed(2),'ok');
+      };
+    }else{
+      $('examDiagram').innerHTML='<div class="vt">'+vtRow(v.cols,Array(v.cols.length).fill('lbl'))+vtRow(v.digits)+'</div><div class="eq-count" id="eqCount"></div>';
+      $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 乘以 10（左移一位）</button>';
+      $('eqGo').onclick=()=>{
+        const rows=$('examDiagram').querySelectorAll('.vt-row');
+        rows[1].innerHTML=v.shifted.map((x,i)=>'<div class="vt-cell'+(x?' on':'')+'">'+x+'</div>').join('');
+        $('eqCount').textContent='670 個 0.01＝6.7';
+        msg('✓ 每一位變大 10 倍，數字左移一格','ok');
+      };
+    }
+  },
+  compare:function(){
+    const v=d.viz, lo=v.lo, hi=v.hi;
+    $('examDiagram').innerHTML='<svg viewBox="0 0 340 66" xmlns="http://www.w3.org/2000/svg" id="cmpSvg"><rect x="4" y="3" width="332" height="60" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/><line x1="30" y1="40" x2="310" y2="40" stroke="var(--ink)" stroke-width="2"/><text x="30" y="57" font-size="10" fill="var(--ink-soft)" text-anchor="middle">'+lo.toFixed(1)+'</text><text x="310" y="57" font-size="10" fill="var(--ink-soft)" text-anchor="middle">'+hi.toFixed(1)+'</text><g id="cmpTicks"></g><g id="cmpBand"></g></svg><div class="eq-count" id="eqCount"></div>';
+    $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 放大百分位刻度</button>';
+    $('eqGo').onclick=()=>{
+      const ticks=$('cmpTicks'), band=$('cmpBand');
+      let s=''; for(let i=0;i<=20;i++){ const x=30+i*14; s+='<line class="cmp-tick" x1="'+x+'" y1="'+(i%10===0?32:36)+'" x2="'+x+'" y2="40" stroke="var(--a)" stroke-width="1"/>'; }
+      ticks.innerHTML=s;
+      band.innerHTML='<rect x="156" y="25" width="14" height="15" rx="3" fill="var(--mint)" stroke="var(--ok)" stroke-width="2"/><text x="163" y="22" font-size="10" font-weight="900" fill="var(--ok)" text-anchor="middle">5.01</text>';
+      $('eqCount').textContent='4.90 ＜ 5.01 ＜ 5.10';
+      msg('✓ 補零後，5.01 落在 4.90 與 5.10 之間','ok');
+    };
+  },
+  vertical:function(){
+    const v=d.viz;
+    const labels=vtRow(v.cols.map(x=>x),Array(v.cols.length).fill('lbl')).replace(/vt-cell/g,'vcell lbl');
+    const init='<div class="vgrid">'+labels+'<div id="vRows"></div></div><div class="eq-count" id="eqCount"></div>';
+    $('examDiagram').innerHTML=init;
+    let stage=0;
+    function drawRows(){
+      let h='';
+      if(v.kind==='mul'){
+        h+=vRow(v.a)+vRow(v.b)+vLine();
+        if(stage>=2){ h+=vRow(v.parts[0])+vRow(v.parts[1])+vLine()+vRow(v.sum,Array(5).fill('fin')); }
+      }else{
+        h+=vRow(v.a)+vRow(v.b)+vLine();
+        if(stage>=2) h+=vRow(v.sum,Array(5).fill('fin'));
+      }
+      $('vRows').innerHTML=h;
+    }
+    drawRows();
+    $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 對齊'+(v.kind==='mul'?'位值':'小數點')+'</button><button class="btn-action" id="eqGo2">② '+(v.kind==='mul'?'算部分積':'算出答案')+'</button>';
+    $('eqGo').onclick=()=>{
+      stage=Math.max(stage,1); drawRows();
+      $('vRows').querySelectorAll('.vcell').forEach(c=>{ if(c.textContent&&c.textContent!=='×'&&c.textContent!=='．') c.classList.add('on'); });
+      msg('✓ 已經對齊位值，小數點在同一條線上','ok');
+    };
+    $('eqGo2').onclick=()=>{
+      if(stage<1){ msg('✗ 先按「① 對齊」','warn'); return; }
+      stage=2; drawRows();
+      $('eqCount').textContent=v.kind==='mul'?'9170 → 91.70＝91.7':v.sum.join('');
+      msg('✓ 直式完成，答案是 '+(v.kind==='mul'?'91.7':v.sum.join('')),'ok');
+    };
+  }
+};
+
+/* ===== 概念探索：三個不同生活情境 ===== */
+function renderAct0(){
+  $('a0desc').innerHTML='書包重 1.37 公斤。把 1、3、7 放進個位、十分位、百分位，看清楚 7 是 7 個 0.01。';
+  const cards=[['1','個位'],['3','十分位'],['7','百分位']];
+  $('a0Pool').innerHTML=cards.map(c=>'<button class="digit-card" data-v="'+c[0]+'" data-slot="'+c[1]+'">'+c[0]+'</button>').join('');
+  $('a0Slots').innerHTML=['個位','十分位','百分位'].map(s=>'<div class="a0-slot" data-slot="'+s+'">'+s+'</div>').join('');
+  let sel=null;
+  $('a0Msg').className='info-bubble'; $('a0Msg').textContent='💡 先點數字卡，再點對應的位值格子。';
+  $('a0Pool').onclick=e=>{ const b=e.target.closest('.digit-card'); if(!b) return; sel=b; b.classList.add('hit'); $('a0Msg').textContent='💡 已選 '+b.dataset.v+'，點「'+b.dataset.slot+'」格子。'; };
+  $('a0Slots').onclick=e=>{ const s=e.target.closest('.a0-slot'); if(!s||!sel) return;
+    s.textContent=sel.dataset.v; s.classList.add('filled'); s.dataset.v=sel.dataset.v;
+    sel.classList.remove('hit'); sel.disabled=true; sel=null; };
+  $('a0Check').onclick=()=>{
+    const ok=['個位','十分位','百分位'].every(s=>{ const el=$('a0Slots').querySelector('[data-slot="'+s+'"]'); return el&&el.dataset.v===(s==='個位'?'1':s==='十分位'?'3':'7'); });
+    $('a0Msg').className='info-bubble '+(ok?'ok':'warn');
+    $('a0Msg').textContent=ok?'✓ 1.37 公斤：7 在百分位，是 7 個 0.01。':'✗ 再對照一次：1 個位、3 十分位、7 百分位。';
+    notifyHeight();
+  };
+}
+function renderAct1(){
+  $('a1desc').innerHTML='魚缸 A 有 2.05 公升，魚缸 B 有 2.5 公升。把 2.5 補成 2.50，再比百分位。';
+  $('a1bars').innerHTML='<div class="eq-row"><span class="eq-lbl">2.05</span><div class="eq-cells" id="a1barA">'+eqCells(10)+'</div></div><div class="eq-row"><span class="eq-lbl">2.50</span><div class="eq-cells" id="a1barB">'+eqCells(10)+'</div></div>';
+  $('a1Msg').className='info-bubble'; $('a1Msg').textContent='💡 先補 0 對齊百分位，再比較。';
+  $('a1Go').onclick=()=>{
+    const a=$('a1barA').querySelectorAll('.eq-cell'), b=$('a1barB').querySelectorAll('.eq-cell');
+    for(let i=0;i<5;i++) a[i].classList.add('on');
+    for(let i=0;i<10;i++) b[i].classList.add('on');
+    $('a1svg').textContent='2.05 公升  ＜  2.50 公升';
+    $('a1Msg').className='info-bubble ok'; $('a1Msg').textContent='✓ 補成兩位小數：2.05 ＜ 2.50，B 缸水比較多。';
+    notifyHeight();
+  };
+}
+function renderAct2(){
+  $('a2desc').innerHTML='牛奶 0.25 公升再加 0.38 公升。對齊小數點後，用直式格子算合起来多少。';
+  $('a2diagram').innerHTML='<div class="vgrid"><div class="vrow">'+['個位','．','十分位','百分位'].map(x=>'<div class="vcell lbl">'+x+'</div>').join('')+'</div><div id="a2rows"></div></div>';
+  const rows=()=>'<div class="vrow">'+['0','．','2','5'].map((x,i)=>'<div class="vcell'+(x==='．'?' dot':'')+'">'+x+'</div>').join('')+'</div><div class="vrow">'+['0','．','3','8'].map((x,i)=>'<div class="vcell'+(x==='．'?' dot':'')+'">'+x+'</div>').join('')+'</div>';
+  $('a2grid').innerHTML=rows()+'<div class="eq-count" id="a2count"></div>';
+  $('a2Msg').className='info-bubble'; $('a2Msg').textContent='💡 先對齊小數點，再算十分位與百分位。';
+  $('a2Align').onclick=()=>{
+    $('a2rows').innerHTML='<div class="vline"></div>';
+    $('a2grid').querySelectorAll('.vcell').forEach(c=>{ if(c.textContent!=='．') c.classList.add('on'); });
+    $('a2Msg').textContent='✓ 0.25 與 0.38 的小數點已經在同一條線上。';
+    notifyHeight();
+  };
+  $('a2Check').onclick=()=>{
+    $('a2count').textContent='0.25＋0.38＝0.63';
+    $('a2Msg').className='info-bubble ok'; $('a2Msg').textContent='✓ 百分位 5＋8＝13，進 1；合計 0.63 公升。';
+    notifyHeight();
+  };
+}
+
+/* ===== 真題模式 ===== */
+function revealSteps(){
+  if($('stepsBox').hidden){
+    $('stepsBox').innerHTML=d.steps.map((s,i)=>'<div class="'+(i===2?'fin':'st')+'"><b>'+['①','②','③'][i]+'</b> '+s+'</div>').join('');
+    $('stepsBox').hidden=false;
+  }
+  notifyHeight();
+}
+function renderExam(){
+  $('examBadge').textContent='🎯 段考真題 第 '+Q+' 題 / 10';
+  $('examSrc').textContent=d.src;
+  $('examTitle').textContent=d.title;
+  $('examDesc').textContent='';  /* 題幹與四選項由外殼提供，教具不自帶 */
+  $('stepsBox').hidden=true; $('stepsBox').innerHTML='';
+  msg('💡 '+d.hint,'');
+  (RENDER[d.type])();
+  const btn=document.createElement('button'); btn.className='btn-action'; btn.id='revealSteps';
+  btn.textContent='🔍 看算理拆解'; btn.onclick=revealSteps; $('examActions').appendChild(btn);
+}
+function setAct(n){
+  for(let i=0;i<3;i++){ const tab=document.querySelector('.act-btn[data-act="'+i+'"]'); const view=$('act-'+i+'-view'); if(tab) tab.classList.toggle('active',i===n); if(view) view.hidden=(i!==n); }
+  notifyHeight();
+}
+function goToQuiz(){ if(window.parent&&window.parent!==window&&window.parent.switchToExamMode) window.parent.switchToExamMode(); else location.href=location.pathname+'?q=1'; }
+document.querySelectorAll('.act-btn').forEach(b=>b.onclick=()=>setAct(+b.dataset.act));
+$('goQuiz').onclick=goToQuiz;
+if(EXAM){
+  $('actNav').hidden=true; $('conceptFooter').hidden=true;
+  for(let i=0;i<3;i++) $('act-'+i+'-view').hidden=true;
+  $('examView').hidden=false; renderExam();
+}else{
+  $('examView').hidden=true; renderAct0(); renderAct1(); renderAct2(); setAct(0);
+}
+window.__N47_READY__=true;
+function notifyHeight(){ try{ const h=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight); window.parent.postMessage({type:'resize',height:h},'*'); }catch(e){} }
+window.addEventListener('load',notifyHeight);
+window.addEventListener('resize',notifyHeight);
+
+/* 語音導讀／算草稿：與外殼 AudioManager 及手寫草稿板共存 */
+$('btnSpeakLab').onclick=()=>{
+  let txt='';
+  const card=document.querySelector('.act-card:not([hidden])');
+  if(card){ const t=card.querySelector('.card-title'), dd=card.querySelector('.card-desc'); txt=[t&&t.textContent,dd&&dd.textContent].filter(Boolean).join('。'); }
+  if(!txt) txt='二位小數，百分位與直式計算。';
+  try{ window.parent.postMessage({type:'TTS_SPEAK',text:txt},'*'); }catch(e){}
+  try{ if(window.parent&&window.parent.document&&window.parent.document.getElementById('btnSpeakLab')) window.parent.document.getElementById('btnSpeakLab').click(); }catch(e){}
+};
+(function(){
+  const ov=$('draftOverlay'), cv=$('draftCanvas'); let drawing=false, ctx=null;
+  function open(){ ov.hidden=false; ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); ctx.strokeStyle='#1f2937'; ctx.lineWidth=3; ctx.lineCap='round'; }
+  $('btnDraftLab').onclick=()=>{
+    try{
+      const p=window.parent&&window.parent.document&&window.parent.document.getElementById('btnOpenScratchpad');
+      if(p&&p.style.display!=='none'){ p.click(); return; }
+    }catch(e){}
+    open();
+  };
+  $('draftClose').onclick=()=>{ ov.hidden=true; };
+  const pos=e=>{ const r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height}; };
+  cv.addEventListener('pointerdown',e=>{ drawing=true; cv.setPointerCapture(e.pointerId); const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+  cv.addEventListener('pointermove',e=>{ if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); });
+  cv.addEventListener('pointerup',()=>{ drawing=false; });
+})();
+</script>
+<script>
+(function(){
+  const P=new URLSearchParams(location.search);
+  try{ if(!P.get('theme')) document.documentElement.dataset.theme=localStorage.getItem('math108_theme')||'light'; }
+  catch(e){ document.documentElement.dataset.theme='light'; }
+  window.addEventListener('message',function(e){ if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme){ document.documentElement.dataset.theme=e.data.theme; try{ localStorage.setItem('math108_theme',e.data.theme); }catch(err){} } });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-4 兩步驟問題併式（四則混合與括號進階）・108 課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#2fa36b; --warn:#c2410c; --hl:#fde68a;
+  --shadow:0 6px 18px var(--shadow-color); --radius:14px;
+}
+html[data-theme="dark"]{ --ok:#4ade80; --warn:#fca5a5; --hl:#7c5c1e; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:6px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:6px;overflow:visible}
+
+/* 標準 G3 外殼：頂部膠囊活動導航 */
+.activity-nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:4px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:6px 10px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;transition:all .2s}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:16px}
+.head b{font-size:12.5px;color:var(--ink)}
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:13px;font-weight:800;color:var(--ink)}
+.card-desc{font-size:11px;line-height:1.45;color:var(--ink-soft)}
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:5px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.stage-canvas svg{width:100%;max-width:360px;height:auto;max-height:132px;display:block}
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:6px 8px;display:flex;flex-direction:column;gap:5px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:11px;font-weight:800;padding:5px 10px;border-radius:8px;transition:all .15s}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff;transform:translateY(1px)}
+.info-bubble{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:11px;line-height:1.45;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+/* 積木池＋槽位（點擊或拖曳雙操作） */
+.pool{display:flex;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;min-height:30px;padding:3px;border:1px dashed var(--line);border-radius:8px}
+.card{border:1px solid var(--a);background:var(--card);color:var(--ink);border-radius:7px;padding:4px 7px;font-size:10.5px;font-weight:800;cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+.card.selected{outline:2px solid var(--a);transform:translateY(-2px)}
+.card.paren{border-color:var(--sky)}
+.slots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.slot{min-width:56px;min-height:25px;border:2px dashed var(--line);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-soft);padding:2px;cursor:pointer}
+.slot.active{border-color:var(--a)}
+.slot.filled{border-style:solid;border-color:var(--mint)}
+.slot .card{cursor:grab}
+
+/* 活動二：運算順序高亮階梯 */
+.tok{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:4px 7px;margin:2px 2px;font-size:11.5px;font-weight:800;background:var(--card);color:var(--ink);cursor:pointer}
+.tok.hit{outline:2px solid var(--mint);background:var(--elev)}
+.tok.bad{outline:2px solid var(--warn);color:var(--warn)}
+.form-tab{border:1.5px solid var(--line);background:var(--card);color:var(--ink-soft);border-radius:8px;padding:4px 9px;font-size:10.5px;font-weight:800}
+.form-tab.active{border-color:var(--a);color:var(--a);background:var(--elev)}
+
+/* 活動三：線段圖配對 */
+.pair-btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:5px 9px;font-size:11px;font-weight:800;transition:all .15s}
+.pair-btn.right{border-color:var(--ok);color:var(--ok)}
+.pair-btn.wrong{border-color:var(--warn);color:var(--warn)}
+
+/* 真題模式：兩階段算式組合器 */
+.combo-line{display:flex;align-items:center;justify-content:center;gap:6px}
+.combo-label{font-size:10px;color:var(--ink-soft);font-weight:800;white-space:nowrap}
+.combo-view{min-width:150px;max-width:100%;border:2px solid var(--line);border-radius:8px;padding:3px 8px;font-size:12px;font-weight:900;color:var(--ink);background:var(--card);word-break:break-all}
+.combo-view.ok{border-color:var(--ok);color:var(--ok)}
+.token-btn{border:1.5px solid var(--a);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 9px;font-size:11.5px;font-weight:900;min-width:34px;transition:all .12s}
+.token-btn:active{background:var(--a);color:#fff;transform:translateY(1px)}
+.token-btn.paren{border-color:var(--sky)}
+.stage-tag{font-size:10px;font-weight:900;color:var(--a);text-align:left}
+.step-line{font-size:11px;line-height:1.5;color:var(--ink);text-align:left}
+.step-line b{color:var(--a)}
+.final-line{font-size:11.5px;font-weight:900;color:var(--ok);margin-top:3px;text-align:left}
+
+.concept-footer{margin-top:2px}
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:13px;font-weight:900;padding:9px;border-radius:11px;text-align:center;transition:transform .15s}
+.btn-go-quiz:active{transform:scale(.98)}
+[hidden]{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head"><b>N-4-4 四則混合・括號進階</b><span id="qtag">108 課綱活動</span></div>
+
+  <nav class="activity-nav" id="actNav">
+    <button class="act-btn active" data-act="0">🧮 活動一・四則積木機</button>
+    <button class="act-btn" data-act="1">🪜 活動二・括號優先階梯</button>
+    <button class="act-btn" data-act="2">🧩 活動三・情境線段配對</button>
+  </nav>
+
+  <!-- ============ 觀念小教室：活動一（先乘後加・四則積木機） ============ -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-4 探究活動 1</span></div>
+    <div class="card-title">🧮 活動一：先乘後加・四則積木機</div>
+    <div class="card-desc">便利商店買 3 盒牛奶，每盒 28 元，再加一條 45 元的麵包，共付幾元？先點積木再點槽位（也可直接拖曳），組出 28×3＋45。</div>
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 62" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="14" width="86" height="34" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="53" y="36" font-size="10.5" font-weight="800" fill="var(--ink)" text-anchor="middle">28 元 × 3</text>
+        <text x="105" y="36" font-size="13" font-weight="900" fill="var(--a)" text-anchor="middle">→</text>
+        <rect x="122" y="14" width="86" height="34" rx="8" fill="var(--elev)" stroke="var(--mint)" stroke-width="2"/>
+        <text x="165" y="36" font-size="10.5" font-weight="800" fill="var(--ink)" text-anchor="middle">先算中間量</text>
+        <text x="217" y="36" font-size="13" font-weight="900" fill="var(--a)" text-anchor="middle">→</text>
+        <rect x="234" y="14" width="76" height="34" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="272" y="36" font-size="10.5" font-weight="800" fill="var(--ink)" text-anchor="middle">再 ＋ 45</text>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="pool" id="pool"></div>
+      <div class="slots" id="slots"></div>
+      <div class="info-bubble" id="a1msg">💡 先點一張積木，再點要放入的槽位；也可以直接拖過去。</div>
+    </div>
+  </section>
+
+  <!-- ============ 觀念小教室：活動二（括號優先・順序階梯） ============ -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-4 探究活動 2</span></div>
+    <div class="card-title">🪜 活動二：括號優先・順序階梯</div>
+    <div class="card-desc">120 公分的紙條先剪掉 32 公分，剩下的平均分成 4 段，每段幾公分？比較「有括號」與「沒括號」的第一步有什麼不同。</div>
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 62" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="8" width="304" height="46" rx="9" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="160" y="26" font-size="11" font-weight="800" fill="var(--ink-soft)" text-anchor="middle" id="a2svgTitle">算式：(120−32)÷4</text>
+        <text x="160" y="45" font-size="10" font-weight="800" fill="var(--ink)" text-anchor="middle" id="a2svgStep">還沒選第一步</text>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="a2forms"></div>
+      <div id="a2tokens"></div>
+      <button class="btn-action" id="a2reset">🧹 重新選擇</button>
+      <div class="info-bubble" id="a2msg">💡 點選「第一步要先算的那一塊」，看看中間量怎麼變化。</div>
+    </div>
+  </section>
+
+  <!-- ============ 觀念小教室：活動三（情境線段圖與併式配對） ============ -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-4 探究活動 3</span></div>
+    <div class="card-title">🧩 活動三：情境線段圖與併式配對</div>
+    <div class="card-desc">84 顆蘋果平分裝成 6 箱，賣掉 2 箱，還剩幾顆？選出與三段線段圖吻合的併式。</div>
+    <div class="stage-canvas" id="a3diagram"></div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="a3pairs"></div>
+      <div class="info-bubble" id="a3msg">💡 選一個併式，即時看它對不對、哪裡錯。</div>
+    </div>
+  </section>
+
+  <!-- ============ 真題演練（?q=1..10）：兩階段組合器，初始零劇透 ============ -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head"><span class="card-badge" id="examBadge">🎯 段考真題</span><span id="examSrc" style="font-size:9.5px;color:var(--ink-soft)"></span></div>
+    <div class="card-title" id="examTitle">階段 A：先找中間量・組合併式</div>
+    <div class="card-desc">看題目與條件圖，把「第一步的中間量」先算出來，再點數字、運算號、括號組成一個併式。</div>
+    <div class="stage-canvas" id="examDiagram"></div>
+    <div class="interact-panel">
+      <div class="combo-line"><span class="combo-label">我的併式</span><span class="combo-view" id="comboSlots">（還沒開始）</span></div>
+      <div class="btn-grid" id="comboPool"></div>
+      <div class="btn-grid">
+        <button class="btn-action" id="clearCombo">🧹 清空</button>
+        <button class="btn-action" id="verifyCombo">✓ 驗證算式</button>
+        <button class="btn-action" id="revealSteps">🔍 看算理拆解</button>
+      </div>
+      <div class="info-bubble" id="examMsg">💡 先想：題目要先把哪兩個數算起來？需要括號時，先點 ( 再點 )。</div>
+      <div id="stepsBox" hidden></div>
+    </div>
+  </section>
+
+  <footer class="concept-footer" id="conceptFooter">
+    <button class="btn-go-quiz" id="goQuiz">🎯 進入真題測驗（10 題）</button>
+  </footer>
+</div>
+
+<script>
+/* N44_DATA_BEGIN —— 與 data/units/G4/N-4-4.json 逐題對照的教具鏡像
+   viz：只放題目既有條件，嚴禁放入中間量或最終答案，杜絕作答前劇透。
+   steps：均一風格「第一步 → 第二步 → 併式」，只在階段 B 展開後才寫入 DOM。 */
+const DATA = [
+  {exp:'128÷(10＋6)', ans:8, trap:'128÷(10−6)',
+   viz:['128 顆巧克力','10 男＋6 女','每人 ? 顆'],
+   steps:['第一步：先算全班人數 → 10＋6＝16','第二步：再用巧克力平分 → 128÷16＝8','併式：128÷(10＋6)＝8'],
+   src:'陽明 114-2 期中 p2'},
+  {exp:'(50−25)×8', ans:200, trap:'(50＋25)×8',
+   viz:['奶茶 50 元','比綠茶貴 25 元','8 杯綠茶 ? 元'],
+   steps:['第一步：先算綠茶單價 → 50−25＝25','第二步：再算 8 杯的錢 → 25×8＝200','併式：(50−25)×8＝200'],
+   src:'陽明 114-2 期中 p2'},
+  {exp:'189×5÷(6＋1)', ans:135, trap:'189×5÷6',
+   viz:['餅乾 189 元/包','合買 5 包・7 人','每人 ? 元'],
+   steps:['第一步：先算 5 包總價 → 189×5＝945','第二步：先算人數再平分 → 945÷(6＋1)＝135','併式：189×5÷(6＋1)＝135'],
+   src:'獅湖 114-1 期末 p3'},
+  {exp:'91÷7＋7', ans:20, trap:'(91＋7)÷7',
+   viz:['奶奶 91 歲','美美的 7 倍','7 年後 ? 歲'],
+   steps:['第一步：先算美美今年幾歲 → 91÷7＝13','第二步：再算 7 年後 → 13＋7＝20','併式：91÷7＋7＝20'],
+   src:'獅湖 114-1 期末 p3'},
+  {exp:'165×5−630÷5', ans:699, trap:'165×5＋630÷5',
+   viz:['165×5','630÷5','相減 = ?'],
+   steps:['第一步：先算乘除 → 165×5＝825，630÷5＝126','第二步：再算減法 → 825－126＝699','併式：165×5－630÷5＝699'],
+   src:'獅湖 114-1 期末 p2'},
+  {exp:'325＋450−540', ans:235, trap:'325＋450＋540',
+   viz:['原有 325 ml','倒入 450 ml','喝掉 540 ml・剩 ?'],
+   steps:['第一步：先算倒入後 → 325＋450＝775','第二步：再算喝掉後 → 775－540＝235','併式：325＋450－540＝235'],
+   src:'永安 114-1 期末 p2'},
+  {exp:'125×18×8', ans:18000, trap:'125×(18＋8)',
+   viz:['125 元/盒','18 盒/箱','買 8 箱 ? 元'],
+   steps:['第一步：先算一箱多少元 → 125×18＝2250','第二步：再算 8 箱總價 → 2250×8＝18000','併式：125×18×8＝18000'],
+   src:'南湖 113-2 期末 p3'},
+  {exp:'1367−989−211', ans:167, trap:'1367−(989−211)',
+   viz:['共 1367 kg','果醬 989 kg','果乾 211 kg・剩 ?'],
+   steps:['第一步：先扣做果醬的 → 1367－989＝378','第二步：再扣做果乾的 → 378－211＝167','併式：1367－989－211＝167'],
+   src:'南湖 113-2 期末 p3'},
+  {exp:'380×12÷38', ans:120, trap:'380÷(12×38)',
+   viz:['題目算式 380×12','再 ÷38','答案 ?'],
+   steps:['第一步：先算乘法 → 380×12＝4560','第二步：再算除法 → 4560÷38＝120','併式：380×12÷38＝120'],
+   src:'陽明 114-2 期中 p1'},
+  {exp:'63＋17×3', ans:114, trap:'(63＋17)×3',
+   viz:['63','17×3','相加 = ?'],
+   steps:['第一步：先算乘法 → 17×3＝51','第二步：再算加法 → 63＋51＝114','併式：63＋17×3＝114'],
+   src:'獅湖 114-1 期末 p2'}
+];
+/* N44_DATA_END */
+
+/* ===== 算式解析引擎：由 AST 逐次化簡，嚴禁憑空捏造運算符 ===== */
+const SYM = {'+':'＋','-':'−','*':'×','/':'÷'};
+function tokenize(expr){
+  const s = String(expr).replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/＋/g,'+').replace(/\s/g,'');
+  const out=[]; let i=0;
+  while(i<s.length){
+    const ch=s[i];
+    if(/[0-9.]/.test(ch)){ let j=i; while(j<s.length && /[0-9.]/.test(s[j])) j++; out.push({t:'num',v:Number(s.slice(i,j))}); i=j; }
+    else if('+-*/()'.indexOf(ch)>=0){ out.push({t:ch}); i++; }
+    else throw new Error('未知字元：'+ch);
+  }
+  return out;
+}
+function parse(tokens){
+  let i=0;
+  function factor(){
+    if(tokens[i] && tokens[i].t==='('){ i++; const n=expr(); if(!tokens[i]||tokens[i].t!==')') throw new Error('括號未閉合'); i++; return n; }
+    if(tokens[i] && tokens[i].t==='num') return {k:'num',v:tokens[i++].v};
+    throw new Error('因式錯誤');
+  }
+  function term(){ let n=factor(); while(tokens[i]&&(tokens[i].t==='*'||tokens[i].t==='/')){ const op=tokens[i++].t; n={k:'bin',op,l:n,r:factor()}; } return n; }
+  function expr(){ let n=term(); while(tokens[i]&&(tokens[i].t==='+'||tokens[i].t==='-')){ const op=tokens[i++].t; n={k:'bin',op,l:n,r:term()}; } return n; }
+  const ast=expr(); if(i!==tokens.length) throw new Error('解析殘餘'); return ast;
+}
+const PREC={'+':1,'-':1,'*':2,'/':2};
+function fmt(n){ return Number.isInteger(n)? String(n) : String(Math.round(n*1000)/1000); }
+function render(node, parentOp, isRight){
+  if(node.k==='num') return fmt(node.v);
+  const p=PREC[node.op];
+  let s=render(node.l,node.op,false)+SYM[node.op]+render(node.r,node.op,true);
+  if(parentOp!==null){
+    const pp=PREC[parentOp];
+    if(p<pp || (p===pp && isRight && (parentOp==='-'||parentOp==='/'))) s='('+s+')';
+  }
+  return s;
+}
+function evalAST(n){
+  if(n.k==='num') return n.v;
+  const a=evalAST(n.l), b=evalAST(n.r);
+  if(n.op==='+') return a+b; if(n.op==='-') return a-b; if(n.op==='*') return a*b;
+  if(b===0) throw new Error('除以零'); return a/b;
+}
+function firstReducible(n){
+  if(n.k==='num') return null;
+  const l=firstReducible(n.l); if(l) return l;
+  const r=firstReducible(n.r); if(r) return r;
+  return (n.l.k==='num'&&n.r.k==='num') ? n : null;
+}
+function findParent(root, target){
+  if(!root||root.k!=='bin') return null;
+  if(root.l===target||root.r===target) return root;
+  return findParent(root.l,target)||findParent(root.r,target);
+}
+function reduceSteps(exp){
+  const ast=parse(tokenize(exp));
+  const steps=[]; let guard=0;
+  while(ast.k==='bin'){
+    if(++guard>20) throw new Error('化簡次數超標');
+    const before=render(ast,null,false);
+    const value0=evalAST(ast);
+    const node=firstReducible(ast);
+    if(!node) throw new Error('找不到可化簡節點');
+    const parent=findParent(ast,node);
+    const inParen=!!parent;
+    const a=node.l.v,b=node.r.v,op=node.op;
+    let v;
+    if(op==='+') v=a+b; else if(op==='-') v=a-b; else if(op==='*') v=a*b; else { if(b===0) throw new Error('除以零'); v=a/b; }
+    if(!Number.isFinite(v)) throw new Error('非有限數');
+    node.k='num'; node.v=v; delete node.op; delete node.l; delete node.r;
+    const after=render(ast,null,false);
+    if(Math.abs(evalAST(ast)-value0)>1e-9) throw new Error('每一步必須與原式等價');
+    const note=inParen?'括號內優先':((op==='*'||op==='/')?'先乘除・由左而右':'後加減・由左而右');
+    steps.push({before:before, calc:fmt(a)+SYM[op]+fmt(b)+'＝'+fmt(v), after:after, note:note});
+  }
+  return {steps:steps, final:ast.v};
+}
+/* 逐題機械自檢：Q1~Q10 每一步等價、正解與題庫答案一致 */
+const SELFTEST = DATA.map((d,i)=>{
+  try{
+    const r=reduceSteps(d.exp);
+    return {q:i+1, exp:d.exp, steps:r.steps.map(s=>s.calc), final:r.final, expected:d.ans, pass:r.steps.length>=2 && Math.abs(r.final-d.ans)<1e-9 && r.steps.every(s=>/＝/.test(s.calc))};
+  }catch(e){ return {q:i+1, exp:d.exp, error:String(e.message||e), pass:false}; }
+});
+window.__N44_SELFTEST__={allPass:SELFTEST.every(x=>x.pass), details:SELFTEST};
+window.N44_ENGINE={tokenize:tokenize,parse:parse,reduceSteps:reduceSteps,evalAST:evalAST};
+</script>
+
+<script>
+const P=new URLSearchParams(location.search);
+const qParam=parseInt(P.get('q')||'0',10);
+const FORCE_CONCEPT=P.get('mode')==='concept';
+const EXAM=(qParam>=1&&qParam<=10)&&!FORCE_CONCEPT;
+const Q=EXAM?qParam:1;
+const d=DATA[Q-1];
+const $=id=>document.getElementById(id);
+if(P.get('theme')==='dark'||P.get('theme')==='light') document.documentElement.dataset.theme=P.get('theme');
+
+window.__N44_MODE__=EXAM?'exam':'concept';
+window.__N44_Q__=Q;
+
+/* ===== 情境／條件圖（三段式，標籤只含題目條件） ===== */
+function diagramHTML(labels){
+  const w=96,gap=12,x0=12,y=16,h=30;
+  let s='<svg viewBox="0 0 320 62" xmlns="http://www.w3.org/2000/svg">';
+  labels.forEach((lab,i)=>{
+    const x=x0+i*(w+gap);
+    s+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="7" fill="'+(i===2?'var(--elev)':'var(--card)')+'" stroke="'+(i===2?'var(--mint)':'var(--line)')+'" stroke-width="2"/>';
+    s+='<text x="'+(x+w/2)+'" y="'+(y+19)+'" font-size="9.5" font-weight="800" fill="var(--ink)" text-anchor="middle">'+lab+'</text>';
+    if(i<2) s+='<text x="'+(x+w+gap/2)+'" y="'+(y+20)+'" font-size="12" font-weight="900" fill="var(--a)" text-anchor="middle">→</text>';
+  });
+  s+='</svg>'; return s;
+}
+
+/* ===== 概念活動一：四則積木機（點擊＋拖曳雙操作） ===== */
+const A1_BLOCKS=[
+  {k:'pre', t:'28 × 3',hint:'✓ 第一步先算 3 盒牛奶的錢：28×3＝84（中間量）。',paren:false},
+  {k:'op', t:'＋',hint:'✓ 還要加上一條麵包的錢。'},
+  {k:'after', t:'45',hint:'✓ 45 是麵包的價錢，要加在後面。'},
+  {k:'bad', t:'28 ＋ 45',hint:'✗ 先加 28 和 45 會改變題意，這張先不要放。'}
+];
+const A1_KEYS=['pre','op','after'];
+let a1sel=null,a1slot=-1,placed=[null,null,null];
+function renderAct0(){
+  $('pool').innerHTML=A1_BLOCKS.map(b=>'<div class="card'+(b.paren?' paren':'')+'" data-k="'+b.k+'" title="'+b.hint+'">'+b.t+'</div>').join('');
+  $('slots').innerHTML=['先算的中間量','運算號','後加的數'].map((n,i)=>'<div class="slot" data-i="'+i+'">'+n+'</div>').join('');
+  a1sel=null;a1slot=-1;placed=[null,null,null];
+  $('a1msg').className='info-bubble';
+  $('a1msg').textContent='💡 先點一張積木，再點要放入的槽位；也可以直接拖過去。';
+  bindA1Click();bindA1Drag();
+}
+function a1Highlight(){
+  document.querySelectorAll('#pool .card').forEach(c=>c.classList.toggle('selected',!!a1sel&&c===a1sel));
+  document.querySelectorAll('#slots .slot').forEach(s=>s.classList.toggle('active',+s.dataset.i===a1slot));
+}
+function a1Place(i,card){
+  if(!card) return;
+  const slot=$('slots').querySelector('.slot[data-i="'+i+'"]');
+  const old=slot.querySelector('.card');
+  if(old&&old!==card){ old.style.transform=''; old.style.position=''; old.style.zIndex=''; $('pool').appendChild(old); }
+  slot.innerHTML=''; slot.appendChild(card);
+  slot.classList.add('filled');
+  card.style.transform='';card.style.position='';card.style.zIndex='';
+  card.style.borderColor=card.dataset.k===A1_KEYS[i]?'var(--ok)':'var(--warn)';
+  placed[i]=card.dataset.k;
+  const b=A1_BLOCKS.find(x=>x.k===card.dataset.k);
+  if(card.dataset.k!==A1_KEYS[i]){ $('a1msg').className='info-bubble warn'; $('a1msg').textContent='✗ 這一格不合適，再想想「先算的中間量要放哪裡？」'; }
+  else{ $('a1msg').className='info-bubble ok'; $('a1msg').textContent=b.hint; }
+  a1sel=null;a1slot=-1;a1Highlight();
+  if(placed.every((v,j)=>v===A1_KEYS[j])){
+    $('a1msg').className='info-bubble ok';
+    $('a1msg').textContent='✓ 併式完成：28×3＋45＝129（先算牛奶 84 元，再加麵包 45 元）。';
+  }
+}
+function bindA1Click(){
+  $('pool').onclick=e=>{
+    const c=e.target.closest('.card'); if(!c||c.parentNode.id!=='pool') return;
+    a1sel=c; if(a1slot>=0) a1Place(a1slot,c); else a1Highlight();
+  };
+  $('slots').onclick=e=>{
+    const s=e.target.closest('.slot'); if(!s) return;
+    a1slot=+s.dataset.i; if(a1sel) a1Place(a1slot,a1sel); else a1Highlight();
+  };
+}
+function bindA1Drag(){
+  const pool=$('pool');
+  pool.addEventListener('pointerdown',e=>{
+    const c=e.target.closest('.card'); if(!c||c.parentNode.id!=='pool') return;
+    c.setPointerCapture(e.pointerId);
+    const sx=e.clientX,sy=e.clientY; c.style.position='relative'; c.style.zIndex='9';
+    const mv=ev=>{ c.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px)'; };
+    const up=ev=>{
+      c.releasePointerCapture(e.pointerId); c.removeEventListener('pointermove',mv); c.removeEventListener('pointerup',up);
+      const under=document.elementFromPoint(ev.clientX,ev.clientY);
+      const slot=under&&under.closest?under.closest('.slot'):null;
+      if(slot){ a1Place(+slot.dataset.i,c); }
+      else{ c.style.transform='translate(0,0)'; c.style.position=''; c.style.zIndex=''; }
+    };
+    c.addEventListener('pointermove',mv); c.addEventListener('pointerup',up);
+  });
+}
+
+/* ===== 概念活動二：括號有無・第一步高亮 ===== */
+const A2_FORMS=[
+  {exp:'(120−32)÷4',label:'① 括號先算',tip:'括號內先算 120−32＝88（剩下的紙條），再平分。'},
+  {exp:'120−32÷4',label:'② 沒括號',tip:'沒括號要先算 32÷4＝8，再算 120−8＝112，與題意不同。'}
+];
+let a2form=0;
+function a2Tokens(){ return A2_FORMS[a2form].exp.replace(/[()]/g,'').split(/(×|÷|＋|−)/); }
+function firstTokenIndex(){
+  const toks=A2_FORMS[a2form].exp.replace(/[()]/g,'').split(/(×|÷|＋|−)/);
+  const s=reduceSteps(A2_FORMS[a2form].exp).steps[0].calc;
+  const left=s.split('＝')[0].split(/[×÷＋−]/)[0];
+  const idx=toks.indexOf(left);
+  return idx>=0?idx:0;
+}
+function renderAct1(){
+  $('a2forms').innerHTML=A2_FORMS.map((f,i)=>'<button class="form-tab'+(i===a2form?' active':'')+'" data-f="'+i+'">'+f.label+'　'+f.exp+'</button>').join('');
+  $('a2forms').onclick=e=>{ const b=e.target.closest('.form-tab'); if(!b) return; a2form=+b.dataset.f; renderAct1(); };
+  $('a2svgTitle').textContent='算式：'+A2_FORMS[a2form].exp;
+  $('a2svgStep').textContent='還沒選第一步';
+  $('a2tokens').innerHTML=a2Tokens().map((t,i)=>'<span class="tok" data-i="'+i+'">'+t+'</span>').join('');
+  $('a2msg').className='info-bubble';
+  $('a2msg').textContent='💡 兩種寫法第一步不同：'+A2_FORMS[a2form].tip+' 點選第一步要先算的那一塊。';
+  $('a2tokens').onclick=e=>{
+    const t=e.target.closest('.tok'); if(!t) return;
+    document.querySelectorAll('#a2tokens .tok').forEach(x=>x.classList.remove('hit','bad'));
+    const st=reduceSteps(A2_FORMS[a2form].exp).steps[0];
+    if(+t.dataset.i===firstTokenIndex()){
+      t.classList.add('hit');
+      $('a2svgStep').textContent='第一步：'+st.calc;
+      $('a2msg').className='info-bubble ok';
+      $('a2msg').textContent='✓ '+st.calc+' → '+(a2form===0?'中間量再往下算，最後每段 22 公分。':'注意：沒括號會得到 112，和題意不同。')+'（'+st.note+'）';
+    }else{
+      t.classList.add('bad');
+      $('a2msg').className='info-bubble warn';
+      $('a2msg').textContent='✗ 先看括號裡的那一對數字（或最左邊），那裡才是第一步。';
+    }
+  };
+}
+
+/* ===== 概念活動三：三段線段圖＋三選一配對與錯誤解析 ===== */
+const A3={
+  seg:['84 顆平分 6 箱','每箱 ? 顆','剩 4 箱 ? 顆'],
+  options:[
+    {x:1,e:'84÷6×(6−2)',why:'✓ 正確：先算每箱 14 顆，再算剩 4 箱＝56 顆。'},
+    {x:0,e:'84÷6×2',why:'✗ 迷思：算出賣掉的 28 顆，不是剩下的。'},
+    {x:0,e:'84÷(6−2)×6',why:'✗ 迷思：把 84 平分給 4 箱再乘 6＝126，順序全錯。'}
+  ]
+};
+function renderAct2(){
+  $('a3diagram').innerHTML=diagramHTML(A3.seg);
+  $('a3pairs').innerHTML=A3.options.map(o=>'<button class="pair-btn" data-x="'+o.x+'" data-e="'+o.e+'">'+o.e+'</button>').join('');
+  $('a3msg').className='info-bubble'; $('a3msg').textContent='💡 選一個併式，即時看它對不對、哪裡錯。';
+  $('a3pairs').onclick=e=>{
+    const b=e.target.closest('.pair-btn'); if(!b) return;
+    const o=A3.options.find(x=>x.e===b.dataset.e);
+    if(+b.dataset.x===1){ b.classList.add('right'); $('a3msg').className='info-bubble ok'; }
+    else{ b.classList.add('wrong'); $('a3msg').className='info-bubble warn'; }
+    $('a3msg').textContent=o.why;
+  };
+}
+
+/* ===== 真題模式：兩階段算式組合器（階段 A 零劇透 → 階段 B 才展開） ===== */
+function normExpr(s){ return String(s).replace(/＋/g,'+').replace(/−/g,'-').replace(/×/g,'*').replace(/÷/g,'/').replace(/（/g,'(').replace(/）/g,')').replace(/\s/g,''); }
+function comboTokens(exp){
+  const nums=Array.from(new Set(String(exp).match(/\d+/g)||[]));
+  const ops=[]; for(const ch of exp) if('＋−×÷'.indexOf(ch)>=0 && ops.indexOf(ch)<0) ops.push(ch);
+  const out=nums.concat(ops);
+  if(String(exp).indexOf('(')>=0) out.push('(',')');
+  return out;
+}
+let combo=[];
+function renderCombo(){
+  $('comboSlots').textContent=combo.length?combo.join(''):'（還沒開始）';
+  $('comboSlots').classList.remove('ok');
+}
+function renderExam(){
+  combo=[];
+  $('examBadge').textContent='🎯 段考真題 第 '+Q+' 題 / 10';
+  $('examSrc').textContent=d.src;
+  $('examTitle').textContent='階段 A：先找中間量・組合併式';
+  $('examDiagram').innerHTML=diagramHTML(d.viz);
+  $('comboPool').innerHTML=comboTokens(d.exp).map(t=>'<button class="token-btn'+(t==='('||t===')'?' paren':'')+'" data-t="'+t+'">'+t+'</button>').join('');
+  $('stepsBox').hidden=true;
+  $('stepsBox').innerHTML='';
+  renderCombo();
+  $('examMsg').className='info-bubble';
+  $('examMsg').textContent='💡 先想：題目要先把哪兩個數算起來？需要括號時，先點 ( 再點 )。';
+  $('comboPool').onclick=e=>{
+    const b=e.target.closest('.token-btn'); if(!b) return;
+    combo.push(b.dataset.t); renderCombo();
+  };
+}
+function revealSteps(){
+  if($('stepsBox').hidden){
+    $('stepsBox').innerHTML='<div class="stage-tag">階段 B：逐步算理（均一兩步驟）</div>'
+      +'<div class="step-line"><b>①</b> '+d.steps[0]+'</div>'
+      +'<div class="step-line"><b>②</b> '+d.steps[1]+'</div>'
+      +'<div class="final-line"><b>③</b> '+d.steps[2]+'</div>';
+    $('stepsBox').hidden=false;
+  }
+  notifyHeight();
+}
+function verifyCombo(){
+  const got=normExpr(combo.join(''));
+  if(!got){ $('examMsg').className='info-bubble warn'; $('examMsg').textContent='✗ 還沒排算式，先點下面的數字與運算號。'; return; }
+  if(got===normExpr(d.exp)){
+    $('comboSlots').classList.add('ok');
+    $('examMsg').className='info-bubble ok';
+    $('examMsg').textContent='✓ 列式正確！第二步的結果就是答案，展開看逐步算理。';
+    revealSteps();
+  }else{
+    $('examMsg').className='info-bubble warn';
+    $('examMsg').textContent='✗ 再想想：第一步要先算哪兩個數？如果題目要「先減再乘／先加再除」，括號要放在哪裡？';
+  }
+}
+
+/* ===== 模式切換 & 事件綁定 ===== */
+function setAct(n){
+  for(let i=0;i<3;i++){
+    const tab=document.querySelector('.act-btn[data-act="'+i+'"]');
+    const view=$('act-'+i+'-view');
+    if(tab) tab.classList.toggle('active',i===n);
+    if(view) view.hidden=(i!==n);
+  }
+  notifyHeight();
+}
+function goToQuiz(){
+  if(window.parent&&window.parent!==window&&window.parent.switchToExamMode) window.parent.switchToExamMode();
+  else location.href=location.pathname+'?q=1';
+}
+document.querySelectorAll('.act-btn').forEach(b=>b.onclick=()=>setAct(+b.dataset.act));
+$('goQuiz').onclick=goToQuiz;
+$('a2reset').onclick=renderAct1;
+$('clearCombo').onclick=()=>{ combo=[]; renderCombo(); $('stepsBox').hidden=true; $('stepsBox').innerHTML=''; $('examMsg').className='info-bubble'; $('examMsg').textContent='💡 已清空，再從第一步的中間量開始排。'; notifyHeight(); };
+$('verifyCombo').onclick=verifyCombo;
+$('revealSteps').onclick=revealSteps;
+
+if(EXAM){
+  $('actNav').hidden=true; $('conceptFooter').hidden=true;
+  for(let i=0;i<3;i++) $('act-'+i+'-view').hidden=true;
+  $('examView').hidden=false;
+  renderExam();
+}else{
+  $('examView').hidden=true;
+  renderAct0(); renderAct1(); renderAct2(); setAct(0);
+}
+window.__N44_READY__=true;
+function notifyHeight(){ try{ const h=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight); window.parent.postMessage({type:'resize',height:h},'*'); }catch(e){} }
+window.addEventListener('load',notifyHeight);
+window.addEventListener('resize',notifyHeight);
+</script>
+<script>
+/* theme bridge：與外殼 Light/Dark 同步，无私自提交按鈕 */
+(function(){
+  try{ if(!P.get('theme')) document.documentElement.dataset.theme=localStorage.getItem('math108_theme')||'light'; }
+  catch(e){ document.documentElement.dataset.theme='light'; }
+  window.addEventListener('message',function(e){
+    if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme){
+      document.documentElement.dataset.theme=e.data.theme;
+      try{ localStorage.setItem('math108_theme',e.data.theme); }catch(err){}
+    }
+  });
+})();
+</script>
+</body>
+</html>

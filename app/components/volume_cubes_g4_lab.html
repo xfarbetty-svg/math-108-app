@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-12 體積與「立方公分」・108 課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#1f8f58; --warn:#c2410c; --hl:#fde68a;
+  --shadow:0 4px 14px var(--shadow-color); --radius:14px;
+  --cube-top:#ffffff; --cube-left:#dbeafe; --cube-right:#93c5fd; --cube-stroke:#1e3a8a;
+  --hl-top:#fef08a; --hl-left:#facc15; --hl-right:#eab308; --hl-stroke:#854d0e;
+  --m-top:#bbf7d0; --m-left:#4ade80; --m-right:#22c55e; --m-stroke:#14532d;
+  --can-body:#ef4444; --can-rim:#e2e8f0;
+}
+html[data-theme="dark"]{
+  --ok:#4ade80; --warn:#fb923c; --hl:#7c5c1e;
+  --cube-top:#e2e8f0; --cube-left:#94a3b8; --cube-right:#64748b; --cube-stroke:#0f172a;
+  --hl-top:#fde047; --hl-left:#eab308; --hl-right:#ca8a04; --hl-stroke:#422006;
+  --m-top:#86efac; --m-left:#22c55e; --m-right:#16a34a; --m-stroke:#052e16;
+  --can-body:#dc2626; --can-rim:#cbd5e1;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:22px}
+.head-left{display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.head b{font-size:12.5px;color:var(--ink);white-space:nowrap}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+#btn-theme{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:4px 9px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;transition:all .15s}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-desc{font-size:10.5px;line-height:1.32;color:var(--ink-soft)}
+
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:2px;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none}
+.stage-canvas svg{width:100%;max-width:340px;height:112px;display:block;touch-action:none;user-select:none}
+
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:4px 6px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:8px;transition:all .12s;white-space:nowrap}
+.btn-action.primary{background:var(--a);border-color:var(--a);color:#fff}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff}
+
+.dial-row{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap}
+.dial-chip{display:inline-flex;align-items:center;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:2px 5px;font-size:10.5px;font-weight:800}
+.dial-chip button{width:18px;height:18px;border-radius:5px;background:var(--elev);color:var(--ink);font-weight:900;font-size:11px;line-height:18px;text-align:center}
+.dial-chip span{min-width:14px;text-align:center;color:var(--a)}
+
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px 7px;font-size:10.5px;line-height:1.3;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+.vgrid-wrap{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+.vgrid{display:inline-grid;grid-template-columns:repeat(4,16px);gap:1px;font-family:ui-monospace,Consolas,monospace;font-size:11px;font-weight:800;background:var(--elev);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+.vgrid .c{text-align:center;line-height:15px}
+.vgrid .bar{grid-column:1/-1;height:1.5px;background:var(--ink);margin:1px 0}
+
+.steps-box{background:var(--card);border:1.5px solid var(--ok);border-radius:8px;padding:4px 7px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.step-line{font-size:10px;line-height:1.28;color:var(--ink)}
+.step-line b{color:var(--a)}
+.final-line{font-size:10.5px;font-weight:900;color:var(--ok)}
+
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:11.5px;font-weight:900;padding:5px;border-radius:10px;text-align:center}
+body.q-mode .activity-nav,body.q-mode .concept-footer{display:none!important}
+[hidden]{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <div class="head-left">
+      <b>N-4-12 體積與「立方公分」</b>
+      <span id="qtag">108 課綱活動</span>
+    </div>
+    <div class="head-right">
+      <button type="button" id="btn-theme" aria-label="切換深淺主題">🌙 深色</button>
+    </div>
+  </div>
+
+  <nav class="activity-nav" id="actNav">
+    <button type="button" class="act-btn active" data-act="0">🧊 活動一・冰塊守恆</button>
+    <button type="button" class="act-btn" data-act="1">🧱 活動二・分層透視</button>
+    <button type="button" class="act-btn" data-act="2">📦 活動三・禮盒裝箱</button>
+  </nav>
+
+  <!-- ============ 概念探索 1：冰塊盒裡的秘密 ============ -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head">
+      <span class="card-badge">活動 1／3</span>
+      <span class="card-title">🧊 草莓冰塊盒裡的秘密</span>
+    </div>
+    <p class="card-desc">用 8 顆邊長 1 公分的立方體冰塊，切換不同排法或切開移動，看看體積有沒有變。</p>
+    <div class="stage-canvas" id="c0Stage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="c0Btns">
+        <button type="button" class="btn-action active" data-shape="bar">1×8 長條冰</button>
+        <button type="button" class="btn-action" data-shape="slab">2×4 扁盒</button>
+        <button type="button" class="btn-action" data-shape="cube">2×2×2 正方塊</button>
+        <button type="button" class="btn-action" data-shape="castle">L 型城堡</button>
+        <button type="button" class="btn-action primary" id="c0SplitBtn">✂️ 切開比對</button>
+      </div>
+      <div class="info-bubble ok" id="c0Info">目前排法：1×8 長條冰｜共 8 顆 ＝ 8 立方公分（形狀變了，體積不變！）</div>
+    </div>
+  </section>
+
+  <!-- ============ 概念探索 2：積木展望台分層透視 ============ -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動 2／3</span>
+      <span class="card-title">🧱 積木展望台分層透視</span>
+    </div>
+    <p class="card-desc">左右拖曳畫布或點按鈕，把上層積木掀開，看清楚底下被壓住的每一顆積木。</p>
+    <div class="stage-canvas" id="c1Stage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="c1ExplodeBtn">🔼 拆層掀開</button>
+        <button type="button" class="btn-action" data-layer="1">第 1 層 (底)</button>
+        <button type="button" class="btn-action" data-layer="2">第 2 層 (中)</button>
+        <button type="button" class="btn-action" data-layer="3">第 3 層 (頂)</button>
+        <button type="button" class="btn-action" data-layer="0">全部恢復</button>
+      </div>
+      <div class="info-bubble" id="c1Info">點擊「🔼 拆層掀開」或左右拖曳圖形，檢查被遮住的底層積木。</div>
+    </div>
+  </section>
+
+  <!-- ============ 概念探索 3：鳳梨酥禮盒裝箱師 ============ -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動 3／3</span>
+      <span class="card-title">📦 鳳梨酥禮盒裝箱師</span>
+    </div>
+    <p class="card-desc">調整禮盒的「長」、「寬」與「疊幾層」，算算看一共能裝幾顆 1 立方公分小方塊。</p>
+    <div class="stage-canvas" id="c2Stage"></div>
+    <div class="interact-panel">
+      <div class="dial-row">
+        <div class="dial-chip">長<button type="button" data-dim="l" data-d="-1">−</button><span id="valL">4</span><button type="button" data-dim="l" data-d="1">＋</button></div>
+        <div class="dial-chip">寬<button type="button" data-dim="w" data-d="-1">−</button><span id="valW">3</span><button type="button" data-dim="w" data-d="1">＋</button></div>
+        <div class="dial-chip">層<button type="button" data-dim="h" data-d="-1">−</button><span id="valH">2</span><button type="button" data-dim="h" data-d="1">＋</button></div>
+        <button type="button" class="btn-action primary" id="c2LayerBtn">🔍 標示底層</button>
+      </div>
+      <div class="info-bubble ok" id="c2Info">每層 4 × 3 ＝ 12 個，共 2 層 → 12 × 2 ＝ 24 立方公分</div>
+    </div>
+  </section>
+
+  <div class="concept-footer">
+    <button type="button" class="btn-go-quiz" id="btnGoQuiz">我懂體積怎麼算了！進入真題演練 ➜</button>
+  </div>
+
+  <!-- ============ 真題演練模式 (?q=1..10) ============ -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="qBadge">真題 Q1</span>
+      <span class="card-title" id="qTitle">題目圖解</span>
+    </div>
+    <p class="card-desc" id="qDesc">觀察圖形，點擊互動工具檢查分層結構。</p>
+    <div class="stage-canvas" id="examStage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examBtns"></div>
+      <div id="examGridBox" hidden></div>
+      <div class="info-bubble" id="examInfo">請點擊上方互動鈕觀察立體結構，確認後於下方作答。</div>
+    </div>
+    <div class="steps-box" id="stepsBox" hidden></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const qRaw = parseInt(params.get('q') || '', 10);
+  const isExam = Number.isInteger(qRaw) && qRaw >= 1 && qRaw <= 10;
+  const qNum = isExam ? qRaw : 0;
+  window.__N412_MODE__ = isExam ? 'exam' : 'concept';
+  window.__N412_Q__ = qNum;
+
+  /* ---------- 主題雙向同步 ---------- */
+  const btnTheme = document.getElementById('btn-theme');
+  function applyTheme(t){
+    const dark = t === 'dark';
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btnTheme.textContent = dark ? '☀️ 淺色' : '🌙 深色';
+  }
+  applyTheme(params.get('theme') === 'dark' ? 'dark' : 'light');
+  btnTheme.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  });
+  window.addEventListener('message', (ev) => {
+    if (ev.data && ev.data.type === 'THEME_CHANGE') applyTheme(ev.data.theme);
+  });
+
+  /* ---------- 3D 等角投影積木引擎 ---------- */
+  const COS30 = 0.8660254, SIN30 = 0.5;
+  function renderCubesSVG(cubes, opts){
+    const o = Object.assign({
+      size: 16, gapZ: 0, highlightLayer: null, highlightSet: null,
+      showLayerLabels: false, width: 320, height: 124, annotate: ''
+    }, opts || {});
+    const s = o.size;
+    // 計算投影邊界以自動置中
+    const pts = [];
+    const sorted = [...cubes].sort((a,b) => (a[0]+a[1]) - (b[0]+b[1]) || a[2] - b[2]);
+    sorted.forEach(([x,y,z]) => {
+      const ez = z * (1 + o.gapZ);
+      const px = (x - y) * COS30 * s;
+      const py = (x + y) * SIN30 * s - ez * s;
+      pts.push([px, py - s], [px, py + s], [px - COS30*s, py], [px + COS30*s, py]);
+    });
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    pts.forEach(([px,py]) => {
+      if (px < minX) minX = px; if (px > maxX) maxX = px;
+      if (py < minY) minY = py; if (py > maxY) maxY = py;
+    });
+    if (!isFinite(minX)) { minX = -20; maxX = 20; minY = -20; maxY = 20; }
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    const spanX = Math.max(40, maxX - minX + 14), spanY = Math.max(40, maxY - minY + 14);
+    const scale = Math.min((o.width - 16) / spanX, (o.height - 10) / spanY, 1.35);
+    const ox = o.width / 2 - cx * scale;
+    const oy = o.height / 2 - cy * scale;
+
+    let polys = '';
+    sorted.forEach(([x,y,z,tag]) => {
+      const ez = z * (1 + o.gapZ);
+      const px = ox + (x - y) * COS30 * s * scale;
+      const py = oy + ((x + y) * SIN30 * s - ez * s) * scale;
+      const dx = COS30 * s * scale, dy = SIN30 * s * scale, dz = s * scale;
+      const isHL = (o.highlightLayer !== null && (z + 1) === o.highlightLayer) ||
+                   (o.highlightSet && o.highlightSet(x,y,z,tag));
+      const isMint = tag === 'mint';
+      const topC = isHL ? 'var(--hl-top)' : isMint ? 'var(--m-top)' : 'var(--cube-top)';
+      const leftC = isHL ? 'var(--hl-left)' : isMint ? 'var(--m-left)' : 'var(--cube-left)';
+      const rightC = isHL ? 'var(--hl-right)' : isMint ? 'var(--m-right)' : 'var(--cube-right)';
+      const stC = isHL ? 'var(--hl-stroke)' : isMint ? 'var(--m-stroke)' : 'var(--cube-stroke)';
+      const op = (o.highlightLayer !== null && (z + 1) !== o.highlightLayer) ? '0.32' : '1';
+      // 頂面、左面、右面
+      const pTop = `${px},${py-dz} ${px+dx},${py-dy} ${px},${py} ${px-dx},${py-dy}`;
+      const pLeft = `${px-dx},${py-dy} ${px},${py} ${px},${py+dz} ${px-dx},${py+dy}`;
+      const pRight = `${px},${py} ${px+dx},${py-dy} ${px+dx},${py+dy} ${px},${py+dz}`;
+      polys += `<g opacity="${op}">` +
+        `<polygon points="${pTop}" fill="${topC}" stroke="${stC}" stroke-width="1.1" stroke-linejoin="round"/>` +
+        `<polygon points="${pLeft}" fill="${leftC}" stroke="${stC}" stroke-width="1.1" stroke-linejoin="round"/>` +
+        `<polygon points="${pRight}" fill="${rightC}" stroke="${stC}" stroke-width="1.1" stroke-linejoin="round"/>` +
+      `</g>`;
+    });
+
+    const ann = o.annotate
+      ? `<text x="8" y="15" font-size="11" font-weight="800" fill="var(--a)">${o.annotate}</text>`
+      : '';
+    return `<svg viewBox="0 0 ${o.width} ${o.height}" aria-label="3D 立方公分積木圖">${polys}${ann}</svg>`;
+  }
+
+  function makeBox(lx, ly, lz, tagFn){
+    const arr = [];
+    for (let z = 0; z < lz; z++)
+      for (let y = 0; y < ly; y++)
+        for (let x = 0; x < lx; x++)
+          arr.push([x, y, z, tagFn ? tagFn(x,y,z) : undefined]);
+    return arr;
+  }
+
+  /* ---------- 概念探索模式 ---------- */
+  if (!isExam) {
+    const actBtns = document.querySelectorAll('.act-btn');
+    const views = [0,1,2].map(i => document.getElementById(`act-${i}-view`));
+    actBtns.forEach(b => b.addEventListener('click', () => {
+      const idx = Number(b.dataset.act);
+      actBtns.forEach(x => x.classList.toggle('active', Number(x.dataset.act) === idx));
+      views.forEach((v, i) => v.hidden = i !== idx);
+    }));
+
+    /* 活動 1：冰塊守恆 */
+    let c0Shape = 'bar', c0Split = false;
+    const shapes = {
+      bar:    { name: '1×8 長條冰', cubes: makeBox(8,1,1) },
+      slab:   { name: '2×4 扁盒',   cubes: makeBox(4,2,1) },
+      cube:   { name: '2×2×2 正方塊', cubes: makeBox(2,2,2) },
+      castle: { name: 'L 型城堡',   cubes: [[0,0,0],[1,0,0],[2,0,0],[3,0,0],[0,1,0],[0,0,1],[1,0,1],[0,0,2]] }
+    };
+    function drawC0(){
+      const sh = shapes[c0Shape];
+      const cubes = sh.cubes.map(([x,y,z], idx) => {
+        const half = idx >= 4;
+        return [x + (c0Split && half ? 1.1 : 0), y, z, (c0Split && half) ? 'mint' : undefined];
+      });
+      document.getElementById('c0Stage').innerHTML = renderCubesSVG(cubes, {
+        size: c0Shape === 'bar' ? 14 : 18,
+        annotate: c0Split ? '兩半 4＋4 ＝ 8 cm³' : '共 8 顆'
+      });
+      document.getElementById('c0Info').textContent =
+        `目前排法：${sh.name}｜共 8 顆 ＝ 8 立方公分（${c0Split ? '切開兩半再合起來，體積還是 8！' : '形狀變了，體積不變！'}）`;
+    }
+    document.querySelectorAll('#c0Btns [data-shape]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        c0Shape = btn.dataset.shape;
+        document.querySelectorAll('#c0Btns [data-shape]').forEach(x => x.classList.toggle('active', x === btn));
+        drawC0();
+      });
+    });
+    document.getElementById('c0SplitBtn').addEventListener('click', () => {
+      c0Split = !c0Split;
+      document.getElementById('c0SplitBtn').textContent = c0Split ? '🔗 合回原狀' : '✂️ 切開比對';
+      drawC0();
+    });
+    drawC0();
+
+    /* 活動 2：分層透視（支援 pointerdown/move/up 拖曳拆層） */
+    const towerCubes = [
+      // 第 1 層 6 顆
+      [0,0,0],[1,0,0],[2,0,0],[0,1,0],[1,1,0],[0,2,0],
+      // 第 2 層 3 顆
+      [0,0,1],[1,0,1],[0,1,1],
+      // 第 3 層 1 顆
+      [0,0,2]
+    ];
+    let c1Gap = 0, c1Layer = 0;
+    function drawC1(){
+      const cnts = [10, 6, 3, 1];
+      document.getElementById('c1Stage').innerHTML = renderCubesSVG(towerCubes, {
+        size: 16, gapZ: c1Gap, highlightLayer: c1Layer || null,
+        annotate: c1Layer ? `第 ${c1Layer} 層：${cnts[c1Layer]} 顆` : (c1Gap > 0.2 ? '已掀開分層檢視' : '左右拖曳可拆層')
+      });
+      const msg = c1Layer
+        ? `第 ${c1Layer} 層有 ${cnts[c1Layer]} 顆積木（6＋3＋1 ＝ 10 立方公分）`
+        : (c1Gap > 0.2 ? '上層掀開後看得很清楚：底層 6 ＋ 中層 3 ＋ 頂層 1 ＝ 10 立方公分！' : '點擊「🔼 拆層掀開」或左右拖曳圖形，檢查被遮住的底層積木。');
+      document.getElementById('c1Info').textContent = msg;
+    }
+    document.getElementById('c1ExplodeBtn').addEventListener('click', () => {
+      c1Gap = c1Gap > 0.2 ? 0 : 0.75;
+      document.getElementById('c1ExplodeBtn').textContent = c1Gap > 0.2 ? '🔽 合回原狀' : '🔼 拆層掀開';
+      drawC1();
+    });
+    document.querySelectorAll('#act-1-view [data-layer]').forEach(b => {
+      b.addEventListener('click', () => {
+        c1Layer = Number(b.dataset.layer);
+        if (c1Layer > 0 && c1Gap === 0) { c1Gap = 0.65; document.getElementById('c1ExplodeBtn').textContent = '🔽 合回原狀'; }
+        if (c1Layer === 0) { c1Gap = 0; document.getElementById('c1ExplodeBtn').textContent = '🔼 拆層掀開'; }
+        drawC1();
+      });
+    });
+    const c1Stage = document.getElementById('c1Stage');
+    let dragStartX = null, dragStartGap = 0;
+    c1Stage.addEventListener('pointerdown', (e) => { dragStartX = e.clientX; dragStartGap = c1Gap; c1Stage.setPointerCapture(e.pointerId); });
+    c1Stage.addEventListener('pointermove', (e) => {
+      if (dragStartX === null) return;
+      const dx = Math.abs(e.clientX - dragStartX);
+      c1Gap = Math.max(0, Math.min(1.0, dragStartGap + (e.clientX - dragStartX) / 90));
+      if (dx > 6) drawC1();
+    });
+    c1Stage.addEventListener('pointerup', () => { dragStartX = null; });
+    drawC1();
+
+    /* 活動 3：鳳梨酥禮盒裝箱 */
+    let boxL = 4, boxW = 3, boxH = 2, hlBase = false;
+    function drawC2(){
+      document.getElementById('valL').textContent = boxL;
+      document.getElementById('valW').textContent = boxW;
+      document.getElementById('valH').textContent = boxH;
+      const cubes = makeBox(boxL, boxW, boxH);
+      document.getElementById('c2Stage').innerHTML = renderCubesSVG(cubes, {
+        size: (boxL + boxW + boxH) > 9 ? 11 : 14,
+        gapZ: hlBase ? 0.45 : 0,
+        highlightLayer: hlBase ? 1 : null,
+        annotate: `${boxL}×${boxW}×${boxH}`
+      });
+      document.getElementById('c2Info').textContent =
+        `每層 ${boxL} × ${boxW} ＝ ${boxL * boxW} 個，共 ${boxH} 層 → ${boxL * boxW} × ${boxH} ＝ ${boxL * boxW * boxH} 立方公分`;
+    }
+    document.querySelectorAll('#act-2-view [data-dim]').forEach(b => {
+      b.addEventListener('click', () => {
+        const d = b.dataset.dim, delta = Number(b.dataset.d);
+        if (d === 'l') boxL = Math.max(2, Math.min(5, boxL + delta));
+        if (d === 'w') boxW = Math.max(1, Math.min(4, boxW + delta));
+        if (d === 'h') boxH = Math.max(1, Math.min(4, boxH + delta));
+        drawC2();
+      });
+    });
+    document.getElementById('c2LayerBtn').addEventListener('click', () => {
+      hlBase = !hlBase;
+      document.getElementById('c2LayerBtn').textContent = hlBase ? '📦 恢復整盒' : '🔍 標示底層';
+      drawC2();
+    });
+    drawC2();
+
+    document.getElementById('btnGoQuiz').addEventListener('click', () => {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'OPEN_EXAM', code: 'N-4-12' }, '*');
+      } else {
+        location.search = '?q=1';
+      }
+    });
+    return;
+  }
+
+  /* ============ 真題演練模式 (?q=1..10) ============ */
+  document.body.classList.add('q-mode');
+  [0,1,2].forEach(i => document.getElementById(`act-${i}-view`).hidden = true);
+  document.getElementById('qtag').textContent = `真題 Q${qNum}／10`;
+  document.getElementById('examView').hidden = false;
+
+  const Q_CONFIG = {
+    1: {
+      title: '單位與守恆實驗台',
+      desc: '觀察 1 立方公分正方體與切割重組，驗證哪個說法合理。',
+      btns: [
+        { id: 'unit', label: '📏 看 1 立方公分邊長' },
+        { id: 'cut', label: '🍎 切半再合起來' },
+        { id: 'rot', label: '🔄 旋轉方向' }
+      ],
+      steps: [
+        '邊長 1 公分的正方體，體積是「1 立方公分」（不是平方公分）。',
+        '把物體切開或任意旋轉，佔據的總空間不變，體積也不變。',
+        '所以「邊長 1 公分的正方體體積為 1 平方公分」是錯的。'
+      ],
+      ans: '正解：邊長 1 公分的正方體體積為 1 平方公分'
+    },
+    2: {
+      title: '鋁罐壓扁前後對比',
+      desc: '點擊按鈕壓扁乙鋁罐，觀察內部佔據空間的變化。',
+      btns: [
+        { id: 'squash', label: '🔨 用力壓扁乙罐' },
+        { id: 'restore', label: '🥤 恢復原狀' }
+      ],
+      steps: [
+        '完好的可樂鋁罐（甲）維持圓柱體，佔據較大的空間。',
+        '壓扁後的鋁罐（乙）凹陷變平，內部空間被擠壓縮小。',
+        '佔據空間越大體積越大，所以甲 ＞ 乙。'
+      ],
+      ans: '正解：甲 ＞ 乙'
+    },
+    3: {
+      title: '十字凸起形體・分層透視',
+      desc: '點擊「🔼 拆層檢視」掀起頂層，看清楚底層正中央藏著的那顆積木。',
+      cubes: [[1,0,0],[0,1,0],[1,1,0],[2,1,0],[1,2,0],[1,1,1]],
+      size: 16,
+      btns: [
+        { id: 'explode', label: '🔼 拆層檢視' },
+        { id: 'l1', label: '👀 只看第 1 層' },
+        { id: 'reset', label: '🔄 恢復' }
+      ],
+      steps: [
+        '第 1 層（底層）：中間 1 個＋前後左右各 1 個 ＝ 5 個。',
+        '第 2 層（上層）：正中央 1 個。',
+        '合計 5 ＋ 1 ＝ 6 個，體積為 6 立方公分。'
+      ],
+      ans: '正解：6 立方公分'
+    },
+    4: {
+      title: 'L 型積木・拆解對比',
+      desc: '點擊「🎨 區分直柱與橫排」，避免轉角處重複計算。',
+      cubes: [[0,0,0],[0,0,1],[0,0,2],[0,0,3],[1,0,0],[2,0,0],[3,0,0]],
+      size: 14,
+      btns: [
+        { id: 'split', label: '🎨 區分直柱與橫排' },
+        { id: 'explode', label: '🔼 拆層檢視' },
+        { id: 'reset', label: '🔄 恢復' }
+      ],
+      steps: [
+        '左邊直立柱子從下到上共有 4 個積木。',
+        '底層向右邊另外延伸出 3 個積木（轉角不再重複算）。',
+        '合計 4 ＋ 3 ＝ 7 個，體積為 7 立方公分。'
+      ],
+      ans: '正解：7 立方公分'
+    },
+    5: {
+      title: '階梯轉角形體・逐層透視',
+      desc: '點擊各層按鈕掀開上層，逐層數清楚每一層有幾個積木。',
+      cubes: [
+        [0,2,0],[0,1,0],[0,0,0],[1,0,0],[2,0,0],
+        [0,1,1],[0,0,1],[1,0,1],[2,0,1],
+        [2,0,2]
+      ],
+      size: 15,
+      btns: [
+        { id: 'explode', label: '🔼 全部拆層' },
+        { id: 'l1', label: '第 1 層' },
+        { id: 'l2', label: '第 2 層' },
+        { id: 'l3', label: '第 3 層' }
+      ],
+      steps: [
+        '第 1 層（底層）：轉角一排共有 5 個積木。',
+        '第 2 層（中層）：共有 4 個積木。',
+        '第 3 層（頂層）：最右後方有 1 個；5 ＋ 4 ＋ 1 ＝ 10 立方公分。'
+      ],
+      ans: '正解：10 立方公分'
+    },
+    6: {
+      title: '戊形體・分層與雙翼拆解',
+      desc: '點擊按鈕高亮兩翼或拆開上下層，點數對稱複合形體。',
+      cubes: [
+        // 第1,2層：中央 2x2 + 左翼 2x1 + 右翼 2x1
+        ...[0,1].flatMap(z => [
+          [1,1,z],[2,1,z],[1,2,z],[2,2,z],
+          [0,1,z],[0,2,z],[3,1,z],[3,2,z]
+        ]),
+        // 第3,4層：後方 2x1
+        [1,1,2],[2,1,2],[1,1,3],[2,1,3]
+      ],
+      size: 12,
+      btns: [
+        { id: 'explode', label: '🔼 上下拆層' },
+        { id: 'wings', label: '🎨 標示左右兩翼' },
+        { id: 'reset', label: '🔄 恢復' }
+      ],
+      steps: [
+        '第 1、2 層各有：中央 4 ＋ 左翼 2 ＋ 右翼 2 ＝ 8 個，兩層共 16 個。',
+        '第 3、4 層後方高起處各有 2 個，兩層共 4 個。',
+        '合計 16 ＋ 4 ＝ 20 個，體積為 20 立方公分。'
+      ],
+      ans: '正解：20 立方公分'
+    },
+    7: {
+      title: '三層金字塔・中層透視',
+      desc: '點擊「👀 透視中層」，把上層 2×2 移開，看清楚完整的 3×3 中層。',
+      cubes: [
+        ...[0,1,2,3].flatMap(x => [0,1,2,3].map(y => [x,y,0])),
+        ...[0,1,2].flatMap(x => [0,1,2].map(y => [x,y,1])),
+        ...[0,1].flatMap(x => [0,1].map(y => [x,y,2]))
+      ],
+      size: 11,
+      btns: [
+        { id: 'mid', label: '👀 透視中層' },
+        { id: 'explode', label: '🔼 三層拉開' },
+        { id: 'reset', label: '🔄 恢復' }
+      ],
+      steps: [
+        '上層是 2 × 2 ＝ 4 個積木，蓋住了中層的其中 4 個。',
+        '把上層掀開後，中層是一個完整的 3 × 3 正方形排列。',
+        '3 × 3 ＝ 9，所以中層由 9 個積木組成。'
+      ],
+      ans: '正解：9 個'
+    },
+    8: {
+      title: '長方體 5×4×4・分層直式',
+      desc: '點擊「🔼 拆開 4 層」與「📊 分層直式」，看清每層 20 個共有 4 層。',
+      cubes: makeBox(5, 4, 4),
+      size: 9,
+      btns: [
+        { id: 'explode', label: '🔼 拆開 4 層' },
+        { id: 'l1', label: '🔍 標示 1 層' },
+        { id: 'grid', label: '📊 分層直式' }
+      ],
+      steps: [
+        '頂面每排 5 個、共有 4 排，1 層有 5 × 4 ＝ 20（個）。',
+        '從下到上總共疊了 4 層。',
+        '20 × 4 ＝ 80，體積為 80 立方公分。'
+      ],
+      ans: '正解：80 立方公分'
+    },
+    9: {
+      title: '64 個積木堆正方體・分層推算',
+      desc: '點擊「🔍 看每層排列」，觀察長、寬、高都相等的 4×4×4 正方體。',
+      cubes: makeBox(4, 4, 4),
+      size: 10,
+      btns: [
+        { id: 'explode', label: '🔼 拆開 4 層' },
+        { id: 'l1', label: '🔍 標示每層' },
+        { id: 'reset', label: '🔄 恢復' }
+      ],
+      steps: [
+        '正方體長、寬、高相等：4 × 4 × 4 ＝ 64，每邊 4 個、共 4 層。',
+        '每一層都是 4 × 4 的正方形。',
+        '4 × 4 ＝ 16，所以每層有 16 個積木。'
+      ],
+      ans: '正解：16 個'
+    },
+    10: {
+      title: '甲圖 vs 乙圖・體積比較直式',
+      desc: '點擊切換甲圖與乙圖對比，並開啟「📊 比較直式」核對兩圖體積。',
+      btns: [
+        { id: 'both', label: '⚖️ 並排對比' },
+        { id: 'a', label: '📦 單看甲 (7×5×4)' },
+        { id: 'b', label: '📦 單看乙 (6×5×5)' },
+        { id: 'grid', label: '📊 比較直式' }
+      ],
+      steps: [
+        '甲圖：每層 7 × 5 ＝ 35 個，共 4 層 → 35 × 4 ＝ 140 立方公分。',
+        '乙圖：每層 6 × 5 ＝ 30 個，共 5 層 → 30 × 5 ＝ 150 立方公分。',
+        '150 ＞ 140，乙圖大 150 － 140 ＝ 10 立方公分。'
+      ],
+      ans: '正解：乙圖，大 10 立方公分'
+    }
+  };
+
+  const cfg = Q_CONFIG[qNum];
+  document.getElementById('qBadge').textContent = `真題 Q${qNum}`;
+  document.getElementById('qTitle').textContent = cfg.title;
+  document.getElementById('qDesc').textContent = cfg.desc;
+
+  const examStage = document.getElementById('examStage');
+  const examBtns = document.getElementById('examBtns');
+  const examInfo = document.getElementById('examInfo');
+  const examGridBox = document.getElementById('examGridBox');
+  const stepsBox = document.getElementById('stepsBox');
+  stepsBox.hidden = true;
+
+  let qState = { gapZ: 0, hlLayer: null, mode: 'default', showGrid: false };
+
+  function renderExamVisual(){
+    if (qNum === 1) {
+      const split = qState.mode === 'cut';
+      const rot = qState.mode === 'rot';
+      const cubes = split
+        ? [[0,0,0],[1,0,0],[2.3,0,0,'mint'],[3.3,0,0,'mint']]
+        : (rot ? [[0,0,0],[0,1,0],[0,1,1],[0,2,0]] : [[0,0,0]]);
+      const ann = qState.mode === 'unit' ? '邊長 1cm → 體積 1 cm³' :
+                  split ? '切開兩半再合起，總體積不變' :
+                  rot ? '旋轉方向，體積仍不變' : '1 立方公分正方體';
+      examStage.innerHTML = renderCubesSVG(cubes, { size: qState.mode === 'default' || qState.mode === 'unit' ? 24 : 16, annotate: ann });
+      examInfo.textContent = qState.mode === 'unit'
+        ? '注意：體積單位是「立方公分（cm³）」，不是平方公分！'
+        : '物體切割或旋轉後，佔據空間總大小不變。';
+    } else if (qNum === 2) {
+      const squashed = qState.mode === 'squash';
+      const eth = squashed ? 22 : 56;
+      const ety = squashed ? 78 : 44;
+      examStage.innerHTML = `<svg viewBox="0 0 320 124" aria-label="鋁罐壓扁對比">
+        <g transform="translate(65,24)">
+          <rect x="0" y="10" width="44" height="66" rx="6" fill="var(--can-body)" stroke="var(--cube-stroke)" stroke-width="1.5"/>
+          <ellipse cx="22" cy="10" rx="22" ry="6" fill="var(--can-rim)" stroke="var(--cube-stroke)" stroke-width="1.5"/>
+          <text x="22" y="48" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">甲 完好</text>
+          <text x="22" y="92" text-anchor="middle" font-size="11" font-weight="800" fill="var(--ink)">空間大</text>
+        </g>
+        <text x="160" y="64" text-anchor="middle" font-size="14" font-weight="900" fill="var(--a)">VS</text>
+        <g transform="translate(205,24)">
+          <rect x="-2" y="${ety - 10}" width="${squashed ? 52 : 44}" height="${eth}" rx="5" fill="var(--can-body)" stroke="var(--cube-stroke)" stroke-width="1.5"/>
+          <ellipse cx="${squashed ? 24 : 22}" cy="${ety - 10}" rx="${squashed ? 26 : 22}" ry="5" fill="var(--can-rim)" stroke="var(--cube-stroke)" stroke-width="1.5"/>
+          <text x="${squashed ? 24 : 22}" y="${ety + eth/2 - 6}" text-anchor="middle" font-size="10.5" font-weight="900" fill="#fff">${squashed ? '乙 壓扁' : '乙 原狀'}</text>
+          <text x="22" y="92" text-anchor="middle" font-size="11" font-weight="800" fill="var(--ink)">${squashed ? '空間變小！' : '點「壓扁」對比'}</text>
+        </g>
+      </svg>`;
+      examInfo.textContent = squashed ? '乙罐被壓扁後內部空間縮小，佔據的空間變小了！' : '點擊「🔨 用力壓扁乙罐」觀察體積變化。';
+    } else if (qNum === 10) {
+      if (qState.mode === 'a') {
+        examStage.innerHTML = renderCubesSVG(makeBox(7,5,4), { size: 7.5, gapZ: 0.35, highlightLayer: 1, annotate: '甲圖：每層 7×5＝35，共 4 層' });
+        examInfo.textContent = '甲圖底層 7×5＝35 個，疊了 4 層。';
+      } else if (qState.mode === 'b') {
+        examStage.innerHTML = renderCubesSVG(makeBox(6,5,5), { size: 7.5, gapZ: 0.35, highlightLayer: 1, annotate: '乙圖：每層 6×5＝30，共 5 層' });
+        examInfo.textContent = '乙圖底層 6×5＝30 個，疊了 5 層。';
+      } else {
+        examStage.innerHTML = `<svg viewBox="0 0 320 112" aria-label="甲乙長方體比較">
+          <rect x="24" y="20" width="112" height="68" rx="8" fill="var(--card)" stroke="var(--a)" stroke-width="2"/>
+          <text x="80" y="48" text-anchor="middle" font-size="12" font-weight="900" fill="var(--ink)">甲圖長方體</text>
+          <text x="80" y="68" text-anchor="middle" font-size="11" font-weight="800" fill="var(--a)">每層 7×5 × 4 層</text>
+          <text x="160" y="58" text-anchor="middle" font-size="13" font-weight="900" fill="var(--ink)">VS</text>
+          <rect x="184" y="20" width="112" height="68" rx="8" fill="var(--card)" stroke="var(--warn)" stroke-width="2"/>
+          <text x="240" y="48" text-anchor="middle" font-size="12" font-weight="900" fill="var(--ink)">乙圖長方體</text>
+          <text x="240" y="68" text-anchor="middle" font-size="11" font-weight="800" fill="var(--warn)">每層 6×5 × 5 層</text>
+        </svg>`;
+        examInfo.textContent = '可點上方按鈕單獨檢視甲、乙立體圖，或點「📊 比較直式」計算。';
+      }
+      if (qState.showGrid) {
+        examGridBox.hidden = false;
+        examGridBox.innerHTML = `<div class="vgrid-wrap">
+          <div class="vgrid"><span class="c"></span><span class="c">3</span><span class="c">5</span><span class="c"></span>
+            <span class="c">×</span><span class="c"></span><span class="c">4</span><span class="c"></span>
+            <div class="bar"></div>
+            <span class="c"></span><span class="c">?</span><span class="c">?</span><span class="c">?</span></div>
+          <div class="vgrid"><span class="c"></span><span class="c">3</span><span class="c">0</span><span class="c"></span>
+            <span class="c">×</span><span class="c"></span><span class="c">5</span><span class="c"></span>
+            <div class="bar"></div>
+            <span class="c"></span><span class="c">?</span><span class="c">?</span><span class="c">?</span></div>
+        </div>`;
+      } else { examGridBox.hidden = true; }
+    } else {
+      let hlSet = null, ann = '';
+      if (qNum === 4 && qState.mode === 'split') {
+        hlSet = (x,y,z) => x === 0;
+        ann = '黃色直柱 4 個 ＋ 白色橫排 3 個';
+      } else if (qNum === 6 && qState.mode === 'wings') {
+        hlSet = (x) => x === 0 || x === 3;
+        ann = '黃色左右兩翼（2＋2）× 2 層';
+      } else if (qNum === 7 && qState.hlLayer === 2) {
+        ann = '中層完整 3 × 3 正方形';
+      } else if (qState.gapZ > 0) {
+        ann = qState.hlLayer ? `第 ${qState.hlLayer} 層高亮檢視` : '已拆層展開';
+      }
+      examStage.innerHTML = renderCubesSVG(cfg.cubes, {
+        size: cfg.size, gapZ: qState.gapZ, highlightLayer: qState.hlLayer, highlightSet: hlSet, annotate: ann
+      });
+      if (qNum === 8 && qState.showGrid) {
+        examGridBox.hidden = false;
+        examGridBox.innerHTML = `<div class="vgrid-wrap"><div class="vgrid">
+          <span class="c"></span><span class="c">2</span><span class="c">0</span><span class="c"></span>
+          <span class="c">×</span><span class="c"></span><span class="c">4</span><span class="c"></span>
+          <div class="bar"></div>
+          <span class="c"></span><span class="c">?</span><span class="c">?</span><span class="c"></span>
+        </div></div>`;
+      } else { examGridBox.hidden = true; }
+      examInfo.textContent = qState.hlLayer
+        ? `目前高亮第 ${qState.hlLayer} 層，數數看這一層排了幾個積木！`
+        : (qState.gapZ > 0 ? '已拆開各層，注意被上層壓住的位置也有積木喔！' : '點擊上方互動鈕觀察立體結構，確認後於下方作答。');
+    }
+  }
+
+  cfg.btns.forEach(b => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn-action';
+    btn.textContent = b.label;
+    btn.addEventListener('click', () => {
+      if (b.id === 'explode') { qState.gapZ = qState.gapZ > 0 ? 0 : 0.7; qState.hlLayer = null; }
+      else if (b.id === 'l1') { qState.gapZ = 0.65; qState.hlLayer = 1; }
+      else if (b.id === 'l2' || b.id === 'mid') { qState.gapZ = 0.75; qState.hlLayer = 2; }
+      else if (b.id === 'l3') { qState.gapZ = 0.65; qState.hlLayer = 3; }
+      else if (b.id === 'grid') { qState.showGrid = !qState.showGrid; }
+      else if (b.id === 'reset') { qState = { gapZ: 0, hlLayer: null, mode: 'default', showGrid: false }; }
+      else { qState.mode = b.id; }
+      renderExamVisual();
+    });
+    examBtns.appendChild(btn);
+  });
+
+  const revBtn = document.createElement('button');
+  revBtn.type = 'button';
+  revBtn.id = 'revealSteps';
+  revBtn.className = 'btn-action primary';
+  revBtn.textContent = '一步一步看算理 🔍';
+  revBtn.addEventListener('click', () => {
+    const open = !stepsBox.hidden;
+    stepsBox.hidden = open;
+    revBtn.textContent = open ? '一步一步看算理 🔍' : '收合算理 ▲';
+    if (!open) {
+      stepsBox.innerHTML = cfg.steps.map((s, i) => `<div class="step-line"><b>步驟 ${i+1}：</b>${s}</div>`).join('') +
+        `<div class="final-line">${cfg.ans}</div>`;
+    }
+  });
+  examBtns.appendChild(revBtn);
+
+  renderExamVisual();
+})();
+</script>
+</body>
+</html>

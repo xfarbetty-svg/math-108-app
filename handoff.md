@@ -1,48 +1,50 @@
 # 斷點交接日誌 (handoff.md)
 
 ## ⏯️ 目前做到哪
-- **G4 第二站 N-4-2（較大位數的乘法，僅乘法子範圍）完工（2026-11-24）**：不含微電影，僅觀念小教室＋10 題真題庫。
-  - 新建 `app/components/g4_mul_lab.html`：三位數×二位數／四位數×二位數／三位數×三位數直式，一步一步揭示部分積、十位／百位部分積高光與補 0（真實 onclick）、進位提示、`?q=1..10`＋`?theme=dark|light`；禁 100vh、`height:auto;min-height:0`、接 theme-tokens.css。
-  - 新建 `data/units/G4/N-4-2.json`（10 題 4 選項）：獅湖 110-1/114-1/114-2 期中＋內湖 112-1/113-2 期中、113-2 期末；逐題卷首校名／頁碼／檔名差異。Q7 原卷第三選項誤植「① 2 個」以 PyMuPDF 8x 截圖目視確認，保留數值「2 個」僅校正字形為③並加 `source_anomaly` 如實記載。
-  - `data/curriculum.json` N-4-2 → ready／10；`verify_curriculum_131.js` ready 期待值 +1；新建 `tools/verify_n42.js`、`tools/verify_n42_cdp.js`。四道閘門 Exit 0（CDP 390/1280 雙模式零溢出、教具 ≤420px、分步揭示／高光補 0／進位全綠）。
-  - 施工與驗收報告：`reports/20261124_008_N42_PLAN.md`、`reports/20261124_009_N42_ACCEPTANCE.md`；截圖／逐字頁文在 `tools/_scratch/`（隔離不入 Git）。
-  - **官方 N-4-2 為乘除合併條目，本站僅乘法子範圍；除法（估商、多位數除數）待另立站點，未假稱全覆蓋。**
-  - N-4-1 首站已 commit `1a6cd99`（8 檔），N-4-2 本輪 commit 後尚未 push，待累積數單元統一部署。
-- **G4 首站 N-4-1（一億以內的數）完工（2026-11-24）**：不含微電影，僅觀念小教室＋10 題真題庫。
-  - 新建 `app/components/place_value_g4_lab.html`：八位位值表（萬級千萬～萬｜個級千～個）、活動一真實 pointerdown/move/up 拖曳磁吸、活動二點擊零位亮燈（前導／級尾省略／讀零三類）、活動三高位逐欄比對；一步一步看算理（作答前不洩漏）；`?q=1..10`；`theme-tokens.css` 雙模式；body margin:0/padding:8px/height:auto/min-height:0，禁 100vh。
-  - 新建 `data/units/G4/N-4-1.json`（math-app-unit-v1，10 題 4 選項）：永安 114-1 期中 p1（Q01–Q03）、獅湖 114-1 期中 p1/p2/p3（Q04–Q07、Q09–Q10）、內湖 113-1 期中 p1（Q08）；填充題改編為 4 選項，逐題 concept/steps/trap＋頁碼出處。
-  - `data/curriculum.json` N-4-1：upcoming→ready、question_count=10、verified_source/component_path/concept_path 補齊；未改 `app/shell.js` 影片映射。
-  - 新建 `tools/verify_n41.js`、`tools/verify_n41_cdp.js`；`verify_curriculum_131.js` 的 EXPECTED_READY_CODES 加入 N-4-1（陳舊期待值單點修正 59→60 / 72→71）。
-  - 閘門全綠 Exit 0：static／CDP（390×844 雙模式＋1280×800、教具 ≤420px、零溢出、拖曳/亮燈/逐欄比對）／capture_preview 雙模式截圖／curriculum_131 總檢。
-  - 目視修正 Q04：60006000 個級千位為 6，正確讀法「六千萬六千」（原誤設「六千萬零六千」已單點修正）。
-  - 施工計畫：`reports/20261124_007_N41_PLAN.md`；抽字暫檔與截圖在 `tools/_scratch/`（隔離不入 Git）。
-- **G4 雙貓最終精修全數達標（2026-11-24）**：004（額頭修復）→005（ping-pong＋白邊）→006（起跑 x=760＋局部 ROI）三段收尾完成。
-  - 多米 `loop_domi_point`：ping-pong **187 幀**（正放 0..93 ＋精確倒放 92..1 ＋首幀回收），倒放逐像素相同 → 零半透明重影，**MAE=0.0000**；webm vp9/alpha_mode=1，2,200,535 B。
-  - 小貓 `loop_kitten_walk`：005 全域 `RGB>205 & sat<18` 清白邊 ＋ 006 局部 ROI（sprite `x0–258 / y396–418`，映射全幀 `(415,926)-(932,970)`，局部 `mn>180 & sat<18` ＋ 1.5px 羽化）清灰墊，共 **779,249 px**；白色腳趾完整，**MAE=0.0000**；webm 1,842,623 B。
-  - 舞台：多米 `(305,845)/680px`；小貓 walk `x=760→1150, y=855`（t=0 兩貓不透明像素交集 **0 px**）；sit 鏡面朝左 `(1150,855)` ＋ ±1.5%/3s 呼吸縮放。
-  - 驗收檔：`Temp\opencode\g4_dual_cats_stage_preview.jpg`（1920×1080 / 848,732 B）、`g4_dual_cats_demo_10s.mp4`（1920×1080 / 30fps / 300 幀 / 10.000s / 5,088,424 B）。
-  - 5 欄報告：`reports/20261124_005_G4_FINAL_REFINE_ACCEPTANCE.md`、`reports/20261124_006_G4_FINAL_ROI_ACCEPTANCE.md`。
-- G3 24/24 概念影片與 YouTube 總合集（`M4N_UNwBT5Y`）已於 2026-11-23 收官，詳見 `reports/` 與 `CHANGELOG.md`。
+- **N-4-2 高位估算精算直式裁切修復完工（2026-11-25 02:32）**：
+  - 修改 `app/components/mul_div_g4_lab.html`：「🌱 概念探索 → ③ 高位估算大挑戰」點擊「揭開精算直式」時，自動收合 `.stage-hint`、將 `.est-box.revealed` 切換為左右雙欄並排（左：`.est-left` 選項與回饋；右：`.est-reveal` 直式），並壓縮展開後乘法直式列高（表頭 `14px`／數字列 `18px`／進位列 `11px`／橫線列 `4px`）。
+  - 驗收全綠：`node tools/verify_n42_cdp.js` Exit Code 0；390×844 實機截圖（`tools/_scratch/n42_est_reveal.png`）確認總高 `382.19px`（`appBottom = 388.19px <= 415px`）、橫向 `390px` 零溢出，`58×317` 至底部總和 `18386`（`totalBottom = 308.69px < stageBottom = 364.19px`）完整可見。
+- **G4 近期單元狀態**：
+  - `N-4-1`（一億以內的數）：已 commit `1a6cd99`，4 閘門 Exit 0。
+  - `N-4-2`（較大位數乘除計算）：已建立 `mul_div_g4_lab.html`、`N-4-2.json`（10 題）與 `verify_n42*.js`，CDP 全綠。
+  - `N-4-3`（兩步驟應用問題與併式）：已 commit `9182e85`、`33be110`（`two_step_expr_g4_lab.html`、`N-4-3.json`、`verify_n43*.js`、`reports/20261125_N43_ACCEPTANCE.md`）。
+  - `G4 雙貓動畫`：已完成 006 最終 ROI 精修（`reports/20261124_006_G4_FINAL_ROI_ACCEPTANCE.md`）。
 
 ## 🚦 目前狀態
-- N-4-1 四道閘門全 Exit 0；CURRICULUM_131_VERIFIED ALL PASS；雙模式截圖目視高對比、無暗字融背。
-- 006 主腳本 Exit 0（`FINAL_006_OK`）；四支 loop webm 全數 alpha_mode=1；demo／preview 均已更新。
-- **Git 完全未執行**：使用者明確禁令（status/add/commit/push 全禁），本機改動只存在於工作區，另一台電腦看不到。
-- 工作能力正常；本框已達步數上限，建議開新框。
+- `app/components/mul_div_g4_lab.html` 已通過 `verify_n42_cdp.js` 與 390×844 實機截圖目視驗收。
+- 工作區尚有多筆未提交／未追蹤檔案（含 `app/components/mul_div_g4_lab.html`、`AGENTS.md`、`app/shell.js`、`data/units/G4/N-4-2.json`、`tools/verify_n42*.js`、`tools/verify_n43*.js`、`GEMINI.md`、`app/assets/domi_poses/` 等），待使用者確認 commit 範圍後再行提交與推送。
+- 本機未掛載 Obsidian MCP 工具，L3 筆記未更新。
 
 ## ➡️ 下一步（接續建議）
-1. 若要入版控：先取得使用者解除 Git 禁令的明確授權，再一次 commit N-4-1 教具／題庫／課綱／兩支 verify 腳本與 handoff（本輪依既有禁令未執行 Git）。
-2. G4 26 條真題／教具啟動前，先依 AGENTS.md 鐵律一～三確立角色規格與題庫 SSOT。
-3. 先前待確認：`R-3-1／R-3-2／D-3-1` 教具 P0～P3 微調（`reports/20261123_008_R31_R32_D31_AUDIT.md`）。
+1. 確認工作區待提交檔案清單，執行 `git add` / `commit` / `push`（僅納入確認過之檔案，`_scratch/` 與 `handoff.md` 維持隔離）。
+2. 待確認：`R-3-1／R-3-2／D-3-1` 教具 P0～P3 微調（`reports/20261123_008_R31_R32_D31_AUDIT.md`）。
+3. 推進 G4 後續單元真題與教具開發。
 
 ## ⚠️ 注意事項
-- **勿全域降亮度清白墊**：實測閾值 ≤190 會啃掉右前腳白色腳趾（對照圖 `Temp\opencode\verify_pad_thresholds.png`）；務必維持「全域 >205 ＋ 局部 ROI」雙層做法。
-- ffmpeg 9.0 gyan 解 webm alpha 恆為 255（容器標籤），視覺驗收看 sprite/alpha PNG 與 demo 合成，勿用 webm 解碼 alpha 判斷。
-- 多米 ping-pong 已推翻 002 的 `seamless()`；重建時切勿再對尾 8 幀做 cross-dissolve。
 - `_scratch/`、`handoff.md`、憑證檔維持隔離不進 commit；嚴禁碰 `017\` 或「子由」，嚴禁修改 `D:\NAS\XX.CF995\8.下載` 原始檔。
+- 實機測試主入口需於根目錄啟動本機靜態 server（如 `python -m http.server 8000 --bind 127.0.0.1`），直接開 `file://` 會因 `fetch()` 限制無法載入 JSON 題庫。
 
 ## 🕐 最後更新
-- **N-4-1 交付**：2026-11-24（UTC+8），4 閘門 Exit 0，Git 依既有禁令未執行。
-- **時間**：2026-11-24（UTC+8）
-- **更新者**：OpenCode CLI @ DESKTOP-6ELKIRH
-- **Git Push 狀態**：❌ 未推（使用者明確嚴禁任何 Git 操作，含 status）
+- **時間**：2026-11-25 02:45 (UTC+8)
+- **更新者**：Antigravity @ DESKTOP-6ELKIRH
+- **Git Push 狀態**：❌ 待推（待使用者確認 commit 範圍與訊息草稿後執行）
+
+## [WIP][AMD3950-OPENCODE][N-4-4] 2026-11-25 — 施工尚未開始（對話框步數額度到期）
+- **已確認**：NotebookLM 筆記本 `e7559548-f722-4f07-9494-b4d865eb54bb` 可連線；統一規格書 source ID = `8724c388-44de-4728-ab96-da19921fc65e`（`[SPEC][G4-UNIFIED]`）。
+- **連線方式變更**：官方 Google MCP（mcp-remote/OAuth, port 14713）token 過期且卡待授權，本框清除其進程/狀態，`notebooklm` MCP namespace 已離線、**本框不可再用**。改走本機 Python 版 `C:\Users\PXP\.local\bin\notebooklm-mcp.exe --transport stdio`（v4.2.5，auth 可用），呼叫器 `C:\Users\PXP\AppData\Local\Temp\opencode\nlm.py`（用法 `python nlm.py <tool> @args.json`）。
+- **待辦**：先用 `tools/list` 查 `source_get_content` 正確參數名（本框誤用 `notebook_id` 被拒）→ 讀規格全文 → 再施工 N-4-4 三檔與三道門禁。
+- **本框零專案更動**：未建 `app/components/two_step_adv_g4_lab.html`、`data/units/G4/N-4-4.json`、`tools/verify_n44*.js`；未碰 shell.js/curriculum.json/017/子由。工作區既有 uncommitted 變更是其他節點成果，**本框未 stage/commit**。
+- **下一步**：請開新對話框接續，先讀規格再施工。
+
+## [WIP][AMD3950-OPENCODE][N-4-6] 2026-11-25 — 教具與兩支門禁已落地，待題檔入場（對話框 30/30 段點）
+- **已確認**：認領 N-4-6 等值分數（擴分、約分、簡單分數比較）；`[SPEC][G4-UNIFIED]` source `1db23388-0375-454a-9842-a58fd7d234bf` 已讀全文（規格：10 題／3 校以上、≤415px、三門禁、禁改 `UNIT_CONCEPT_MOVIES`）。
+- **MCP 查證**：本機 `nlm.py` 可用；`source_get_content` 的正確參數是 `source_id`（非 `notebook_id`）；`source_search` 被禁用（Native source search experimental disabled），勿再試。
+- **本框施工更動**（新檔，零既有檔覆寫）：
+  - `app/components/equiv_fraction_g4_lab.html`：完整 10 題資料驅動教具，四類真實事件（expand/reduce/equal/compare）＋概念三活動（拖曳／約分配對／等值長條），含 `__N46_SELFTEST__`、Light/Dark、`≤415px` 框架。
+  - `tools/verify_n46.js`：靜態契約（10 題／4 選項／無「分之」／check 真值／shell 映射）。
+  - `tools/verify_n46_cdp.js`：CDP 實機（10 題×Light/Dark×390px＋1280px、零劇透、教具事件、算理 3 行、概念三活動、主入口 Q1~Q10）；port 9466/9467。
+- **題檔已到（子代理完工，Exit 0）**：`data/units/G4/N-4-6.json` 已建立，10 題跨 3 校（永安 2／南湖 6／獅湖 2），基礎 5／進階 3／陷阱 2；pdfplumber 掃 71 份 G4 PDF＋4 份轉 150dpi 逐題目視核對。教具 `QS` 已逐題對齊題檔的 check/ans/數字（expand 7、equal 1、compare 3）。
+- **QA 通道三首跑 FAIL（真實 bug，非假綠）**：`register_g4_unit.py --code N-4-6 --lab equiv_fraction_g4_lab.html` → Exit 1；`tools/_scratch/qa_review_N-4-6.json` 指出 `p` 字串中 `F(8)`／`F(18)`／`F(15)` 少傳分母參數（會顯示 undefined）。三處已修正，**尚未重跑**。
+- **門禁現況**：`node tools/verify_n46.js` → Exit 1，唯一失敗項「shell.js 缺 N-4-6 概念映射」（屬 register 職責，非教具問題）；`verify_n46_cdp.js` 尚未跑。shell.js／curriculum.json／verify_curriculum_131.js 皆未被本框修改。
+- **未碰**：`app/shell.js` 的 `UNIT_CONCEPT_MOVIES`（shell 映射留給 `register_g4_unit.py` 冪等寫入）、`data/curriculum.json`、`017`、子由、NAS；零 Git 操作；零 API Key 硬編碼。
+- **下一步（新對話框）**：① 重跑 `python tools/register_g4_unit.py --code N-4-6 --lab equiv_fraction_g4_lab.html`（QA 第 2 次；若再 FAIL 依 3 次熔斷停手寫 `[LOG][BLOCKED]`）→ ② `node tools/verify_n46.js` → ③ `node tools/verify_n46_cdp.js` → ④ `node tools/verify_curriculum_131.js` → ⑤ 新增 `[LOG]` 5 欄結案 → 更新本 WIP 為完工。⚠️ 通道三 3 次熔斷額度已用 1 次。

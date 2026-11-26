@@ -57,6 +57,7 @@
 - [x] **S-3-4 幾何形體概念小教室影片 5 大硬傷精修（2026-11-23）**：修復等角透視正方體/長方體、並排三角形木棍真題規律、滾動家族分欄消疊字、提升字幕安全框高距底 76px、米米兔多姿勢走位與「量折線」破音字二聲「良」校正；成片 `S34_Final.mp4`（106.12s / 9.54 MiB / AV diff 0.02s）與門禁全綠，commit `7ded6a8` 已 push 部署至 Cloudflare Pages。
 - [x] **G3 概念影片第 1/3 批（N-3-1／N-3-2／N-3-3）＋ N-3-9 響度統一（2026-11-23）**：3 支四幕 `full_stage` 成片全綠（N31 101.033s／N32 97.767s／N33 97.067s，皆 1920×1080、−14.04 LUFS、<9.1 MiB）；`g3_n39_concept_final.mp4` 由 −19.37 拉至 −14.29 LUFS（`-c:v copy`）；`shell.js` 掛載 6 行映射；7 道門禁全 Exit 0（單點修正 `verify_n31.js` Q1 選項數 2→4 陈旧期待值）；commit `fe33be6` 已 push，Pre-Push Hook 完成 Cloudflare Pages 部署。報告 `reports/20261123_014_N31_N32_N33_CONCEPT_MOVIES_ACCEPTANCE.md`。
 - [ ] **R-3-1／R-3-2／D-3-1 唯讀地毯盤點（2026-11-23）**：30 題＋3 教具完成靜態解析與 CDP 60 組合（390×844／1280×800）量測，正式檔零修改；報告 `reports/20261123_008_R31_R32_D31_AUDIT.md`。待確認「繼續」後依 P0（R-3-2 補 q-scene/.b/.t/.s CSS）→P1（R-3-1 去舊分頁還原互動）→P2（D-3-1 去舊 nav／修桌面留白）→P3 回歸施工。
+- [x] **G4 雙貓最終精修（2026-11-24）**：多米 ping-pong 187 幀（倒放逐像素相同、MAE=0.0000、零交叉溶解重影）；小貓全域 >205 清白邊＋局部 ROI（sprite x0–258/y396–418, mn>180）清灰墊（MAE=0.0000）；起跑 x=760 使 t=0 重疊 0px；10s demo／preview 重生。報告 `reports/20261124_006_G4_FINAL_ROI_ACCEPTANCE.md`；全程無 Git。
 
 ---
 

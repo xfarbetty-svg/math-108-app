@@ -1,0 +1,203 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-R-4-2",
+  "curriculum_code": "R-4-2",
+  "grade": 4,
+  "unit_name": "四則計算規律（I）（交換律、結合律、連減／連除巧算、湊整數巧算）",
+  "source_paper": "臺北市南湖國小 111-1 期末／112-1 期末、高雄市永安國小 114-1 期末、高雄市陽明國小 114-2 期中（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）",
+  "verified_by": "Tailscale SSH＋PYTHONIOENCODING=utf-8 唯讀抽字；第一層跳過任何含 017／子由 之路徑與檔名（71 份 PDF，1 份遭紅線剔除，70 份受檢）；10 題逐題比對 exam_pack/R-4-2_exam_pages.txt 原文頁次；填充／計算題保留原卷題幹與括號，改編 1 正解＋3 迷思誘答；教具雙軌（外殼四選一＋動手填答）且初始零劇透；Light/Dark 高對比、390px 零橫向溢出、高度 <= 415px",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 7 題、永安 2 題、陽明 1 題。算式比較／規律判斷 7 題（Q1~Q7）、生活情境應用 2 題（Q8~Q9）、計算巧算 1 題（Q10）。未修改 app/shell.js、data/curriculum.json 或任何全冊共用檔；未碰 017 或子由。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-R-4-2-Q01",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p3・七、下面兩個算式答案一樣的在□裡打ˇ 第1題）",
+      "section": "七、算式比較",
+      "question_num": "1",
+      "title": "32－16＋14 與 32－(16＋14)",
+      "stem": "下面兩個算式，答案一樣的在□裡打ˇ，不一樣的打×：□32－16＋14 和 32－(16＋14)",
+      "choices": ["一樣（ˇ）", "不一樣（×）", "無法判斷", "要先算括號才一樣"],
+      "answer_index": 1,
+      "answer_raw": "不一樣（×）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "加了括號後先算 16＋14，等於一次減掉兩數的和，和由左而右的結果不同。",
+        "steps": ["32－16＋14 由左而右：32－16＝16", "16＋14＝30", "32－(16＋14)＝32－30＝2", "30≠2，所以不一樣"],
+        "trap": "以為減去括號和連續減兩個數相同，忽略括號改變了運算順序。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q02",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p3・七 第2題）",
+      "section": "七、算式比較",
+      "question_num": "2",
+      "title": "81＋(46－22) 與 81＋46－22",
+      "stem": "下面兩個算式，答案一樣的在□裡打ˇ，不一樣的打×：□81＋(46－22) 和 81＋46－22",
+      "choices": ["一樣（ˇ）", "不一樣（×）", "只有括號先算才一樣", "無法判斷"],
+      "answer_index": 0,
+      "answer_raw": "一樣（ˇ）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "加法後面的括號可以去掉，結果不變，這是加法結合律的應用。",
+        "steps": ["81＋(46－22)＝81＋24＝105", "81＋46－22＝127－22＝105", "兩個算式答案都是 105"],
+        "trap": "看到括號就以為答案一定不同。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q03",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p3・七 第3題）",
+      "section": "七、算式比較",
+      "question_num": "3",
+      "title": "(72÷24)÷3 與 72÷(24÷3)",
+      "stem": "下面兩個算式，答案一樣的在□裡打ˇ，不一樣的打×：□(72÷24)÷3 和 72÷(24÷3)",
+      "choices": ["一樣（ˇ）", "不一樣（×）", "無法判斷", "兩個都等於 3"],
+      "answer_index": 1,
+      "answer_raw": "不一樣（×）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "連除巧算是 a÷b÷c＝a÷(b×c)，不是 a÷(b÷c)。",
+        "steps": ["(72÷24)÷3＝3÷3＝1", "72÷(24÷3)＝72÷8＝9", "1≠9，所以不一樣"],
+        "trap": "把括號內的乘號誤寫成除號，是連除最常見的迷思。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q04",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p3・七 第4題）",
+      "section": "七、算式比較",
+      "question_num": "4",
+      "title": "70－(35－15) 與 70－35－15",
+      "stem": "下面兩個算式，答案一樣的在□裡打ˇ，不一樣的打×：□70－(35－15) 和 70－35－15",
+      "choices": ["一樣（ˇ）", "不一樣（×）", "兩個都等於 50", "無法判斷"],
+      "answer_index": 1,
+      "answer_raw": "不一樣（×）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "連減巧算是 a－b－c＝a－(b＋c)，括號內必須是加號才相等。",
+        "steps": ["70－(35－15)＝70－20＝50", "70－35－15＝35－15＝20", "50≠20，所以不一樣"],
+        "trap": "直接把括號內的減號搬到括號外，是典型陷阱。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q05",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p1・二、填填看 第5(1)題）",
+      "section": "二、填填看",
+      "question_num": "5(1)",
+      "title": "600÷30÷5 與 600÷(30÷5)",
+      "stem": "下面各題中，兩個算式答案一樣的，在□裡畫✓，不一樣的打×：□(1) 600÷30÷5 和 600÷(30÷5)",
+      "choices": ["一樣（✓）", "不一樣（×）", "兩個都等於 4", "兩個都等於 100"],
+      "answer_index": 1,
+      "answer_raw": "不一樣（×）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "左式是連除巧算 a÷b÷c＝a÷(b×c)；右式括號內是 30÷5，兩者不同。",
+        "steps": ["600÷30÷5＝20÷5＝4", "600÷(30÷5)＝600÷6＝100", "4≠100"],
+        "trap": "以為括號放在哪裡都一樣，忽略括號內的運算子。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q06",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p1・二、填填看 第5(2)題）",
+      "section": "二、填填看",
+      "question_num": "5(2)",
+      "title": "850－55＋77 與 850－(55＋77)",
+      "stem": "下面各題中，兩個算式答案一樣的，在□裡畫✓，不一樣的打×：□(2) 850－55＋77 和 850－(55＋77)",
+      "choices": ["一樣（✓）", "不一樣（×）", "兩個都等於 872", "無法判斷"],
+      "answer_index": 1,
+      "answer_raw": "不一樣（×）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "左式是減後再加；右式是一次減掉 55 與 77 的和。",
+        "steps": ["850－55＋77＝795＋77＝872", "850－(55＋77)＝850－132＝718", "872≠718"],
+        "trap": "把 850－55＋77 誤看成 850－(55＋77)。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q07",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p1・二、填填看 第5(3)題）",
+      "section": "二、填填看",
+      "question_num": "5(3)",
+      "title": "150×45÷15 與 150×(45÷15)",
+      "stem": "下面各題中，兩個算式答案一樣的，在□裡畫✓，不一樣的打×：□(3) 150×45÷15 和 150×(45÷15)",
+      "choices": ["一樣（✓）", "不一樣（×）", "兩個都等於 4500", "無法判斷"],
+      "answer_index": 0,
+      "answer_raw": "一樣（✓）",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘除混合由左而右，但可以先把 45÷15 約成 3，結果不變。",
+        "steps": ["150×45÷15＝6750÷15＝450", "150×(45÷15)＝150×3＝450", "兩個算式答案都是 450"],
+        "trap": "以為只要出現括號就一定會改變答案。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q08",
+      "exam_source": "高雄市永安國小 114-1 期末（PDF p2・六、應用題 第(3)題）",
+      "section": "六、應用題",
+      "question_num": "(3)",
+      "title": "鉛筆 10 枝 60 元，48 元可以買幾枝",
+      "stem": "鉛筆 10 枝賣 60 元，皮皮有 48 元，可以買幾枝鉛筆？先算：(  )，再算：(  )，合併成一個有括號的算式：(  )",
+      "choices": ["48÷(60÷10)＝8 枝", "48÷60÷10＝8 枝", "48÷60×10＝8 枝", "60÷10×48＝288 枝"],
+      "answer_index": 0,
+      "answer_raw": "8 枝",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先求 1 枝單價，再求 48 元能買幾枝；合併時要用括號把 60÷10 括起來。",
+        "steps": ["60÷10＝6（1 枝 6 元）", "48÷6＝8", "合併：48÷(60÷10)＝8 枝"],
+        "trap": "寫成 48÷60÷10 或 48÷60×10，都是括號位置錯。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q09",
+      "exam_source": "高雄市永安國小 114-1 期末（PDF p2・六、應用題 第(6)題）",
+      "section": "六、應用題",
+      "question_num": "(6)",
+      "title": "冷水壺果汁倒入又喝掉後剩多少",
+      "stem": "冷水壺裡原本有 325 毫升的果汁，媽媽再倒入 450 毫升的果汁，接著哥哥又喝掉 540 毫升的果汁，現在冷水壺裡的果汁有多少毫升？",
+      "choices": ["235 毫升", "335 毫升", "445 毫升", "1315 毫升"],
+      "answer_index": 0,
+      "answer_raw": "235 毫升",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "加減混合由左而右，也可以先把倒入的量加上，再扣掉喝掉的量。",
+        "steps": ["325＋450＝775", "775－540＝235", "所以剩下 235 毫升"],
+        "trap": "先算 450－540 會得到負數，是順序錯了。"
+      }
+    },
+    {
+      "id": "G4-R-4-2-Q10",
+      "exam_source": "高雄市陽明國小 114-2 期中（PDF p1・二、選擇題 第2題）",
+      "section": "二、選擇題",
+      "question_num": "2",
+      "title": "380×12÷38 用交換律湊整",
+      "stem": "（  ）算式「380×12÷38」的答案是多少？ ○1 4560 ○2 120 ○3 12 ○4 10",
+      "choices": ["4560", "120", "12", "10"],
+      "answer_index": 1,
+      "answer_raw": "120",
+      "component": "calc_laws_g4_lab",
+      "component_path": "components/calc_laws_g4_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "乘除混合可以調換順序先約分：380÷38＝10，再乘 12。",
+        "steps": ["380÷38＝10", "10×12＝120", "所以答案是 120"],
+        "trap": "照順序硬算 380×12＝4560 再÷38，容易在長除法出錯。"
+      }
+    }
+  ]
+}

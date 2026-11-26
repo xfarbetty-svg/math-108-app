@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-9 長度「公里」・108課綱互動教具（三活動＋真題雙軌）</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --elev:var(--bg-elevated);
+  --ink:var(--text-primary); --soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --ok:#15803d; --warn:#b91c1c;
+  --shadow:0 6px 16px var(--shadow-color); --radius:12px;
+}
+html[data-theme="dark"]{--ok:#4ade80;--warn:#fca5a5;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{margin:0;padding:8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:470px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:5px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:18px;font-size:10px;color:var(--soft)}
+.head b{font-size:12px;color:var(--ink);font-weight:900}
+.head-right{display:flex;align-items:center;gap:5px}
+#btn-theme{width:26px;height:26px;flex:0 0 26px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+#modeTag{font-size:9.5px;font-weight:800;color:var(--a);white-space:nowrap}
+.tabs{display:flex;gap:4px;background:var(--elev);padding:3px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:5px 8px;border-radius:999px;font-size:10.5px;font-weight:900;color:var(--soft);white-space:nowrap}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+body.q-mode .tabs{display:none!important}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow);max-width:100%}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:900;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.title{font-size:12px;font-weight:900;color:var(--ink);line-height:1.3}
+.desc{font-size:10.5px;line-height:1.4;color:var(--soft)}
+.box{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:6px 8px;display:flex;flex-direction:column;gap:5px}
+.actrow{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.actbtn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 9px;font-size:10.5px;font-weight:900;transition:transform .08s}
+.actbtn.main{border-color:var(--a);color:var(--a)}
+.actbtn.sel,.actbtn.active{background:var(--a);color:#fff;border-color:var(--a)}
+.actbtn:active{transform:translateY(1px)}
+.msg{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10px;line-height:1.35;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.msg.ok{border-color:var(--ok);color:var(--ok)}
+.msg.warn{border-color:var(--warn);color:var(--warn)}
+.explain{display:grid;grid-template-columns:46px 1fr;gap:2px 6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;line-height:1.35;background:var(--elev);border-radius:8px;padding:5px 7px;border:1px dashed var(--line)}
+.explain .k{color:var(--a);font-weight:900;white-space:nowrap}
+.explain .v{color:var(--ink);min-width:0;word-break:break-word}
+.explain .trap{color:var(--warn)}
+[hidden]{display:none!important}
+
+/* 活動一 & 比例尺條 */
+.meter-read{display:flex;justify-content:space-between;align-items:baseline;font-variant-numeric:tabular-nums;gap:6px}
+.meter-big{font-size:15px;font-weight:900;color:var(--a)}
+.meter-sub{font-size:11px;font-weight:800;color:var(--ink)}
+.km-bars{display:flex;flex-direction:column;gap:4px}
+.km-row{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800}
+.km-tag{width:46px;flex:0 0 46px;text-align:right;color:var(--soft)}
+.km-track{flex:1;height:14px;background:var(--card);border:1px solid var(--line);border-radius:999px;overflow:hidden;position:relative}
+.km-fill{height:100%;background:var(--mint);transition:width .18s}
+.km-fill.full{background:var(--a)}
+.km-val{width:54px;flex:0 0 54px;font-variant-numeric:tabular-nums;color:var(--ink);font-size:10px}
+input[type=range]{width:100%;accent-color:var(--a);height:18px}
+
+/* 雙欄直式對齊板（公里｜公尺） */
+.col-board{display:grid;grid-template-columns:34px 1fr 22px 1fr;gap:2px 4px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 7px;font-variant-numeric:tabular-nums;font-size:12px;font-weight:900}
+.col-h{font-size:9.5px;color:var(--soft);text-align:center;border-bottom:1px dashed var(--line);padding-bottom:2px}
+.col-v{text-align:right;padding:1px 4px;border-radius:5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}
+.col-u{font-size:10px;color:var(--soft);text-align:left}
+.col-op{text-align:center;color:var(--a);font-size:13px}
+.col-line{grid-column:1/-1;height:2px;background:var(--ink);margin:2px 0;opacity:.75}
+.strike{text-decoration:line-through;opacity:.45;font-size:11px;margin-right:3px}
+.hi{color:var(--a);background:rgba(244,105,75,.14)}
+html[data-theme="dark"] .hi{background:rgba(59,130,118,.28)}
+.ok-cell{color:var(--ok)}
+
+/* 廠字形長除法 */
+.ldiv{display:inline-grid;grid-template-columns:22px repeat(4,20px);gap:1px 2px;align-items:center;justify-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:900;margin:0 auto}
+.ld-q{color:var(--ok)}
+.ld-div{border-right:2px solid var(--ink);border-radius:0 0 5px 0;padding-right:4px}
+.ld-top{border-top:2px solid var(--ink);width:100%;text-align:center}
+.ld-sub{border-bottom:1.5px solid var(--ink);width:100%;text-align:center}
+
+/* 左右雙欄緊湊排版（Q07/Q08 防捲軸） */
+.two-col{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}
+.two-col-right{display:flex;flex-direction:column;gap:4px;min-width:0}
+
+/* 小數乘法直式網格（Q08） */
+.vmul{display:inline-grid;grid-template-columns:18px repeat(5,14px);gap:1px 1px;align-items:center;justify-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 7px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;font-weight:900;font-variant-numeric:tabular-nums}
+.vm-op{color:var(--a)}
+.vm-bar{grid-column:1/-1;width:100%;height:1.8px;background:var(--ink);margin:1px 0;opacity:.8}
+.vm-hi{color:var(--a)}
+.vm-ok{color:var(--ok)}
+.vm-dim{color:var(--soft);opacity:.45}
+
+/* 9 等份道路比例條（Q07） */
+.seg-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:2px}
+.seg-cell{background:var(--card);border:1px solid var(--sky);border-radius:4px;padding:3px 1px;text-align:center;font-size:9px;font-weight:800;line-height:1.2}
+.seg-cell b{display:block;color:var(--a);font-size:9.5px}
+
+/* 統一換算對照卡（Q03/Q04/Q05） */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cmp-card{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:5px 6px;display:flex;flex-direction:column;gap:3px;text-align:left;transition:border-color .15s}
+.cmp-card.done{border-color:var(--a)}
+.cmp-orig{font-size:11.5px;font-weight:900;color:var(--ink)}
+.cmp-conv{font-size:10.5px;font-weight:800;color:var(--a);font-variant-numeric:tabular-nums}
+.cmp-bar{height:6px;background:var(--elev);border-radius:999px;overflow:hidden}
+.cmp-bar>i{display:block;height:100%;background:var(--mint);border-radius:999px}
+.pair-row{display:grid;grid-template-columns:1fr auto 1fr;gap:5px;align-items:center}
+.symbtn{border:1.5px solid var(--sky);background:var(--card);color:var(--ink);border-radius:7px;min-width:34px;height:26px;font-size:14px;font-weight:900}
+.symbtn.sel{background:var(--a);color:#fff;border-color:var(--a)}
+
+/* 拆解／合成卡（Q01/Q02/Q08） */
+.chip-row{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.chip{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px;font-weight:900;font-variant-numeric:tabular-nums}
+.chip.accent{border-color:var(--a);color:var(--a)}
+.chip.ok{border-color:var(--ok);color:var(--ok)}
+
+@media (max-width:390px){
+  .head b{font-size:11px}
+  .tab{font-size:10px;padding:5px 6px}
+  .title{font-size:11.5px}
+  .col-v{font-size:12px}
+}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <b>N-4-9 長度「公里」・換算與複名數</b>
+    <div class="head-right"><span id="modeTag">🌱 概念探索</span><button id="btn-theme" type="button" aria-label="切換主題">🌙</button></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" type="button" data-act="0">活動一・比例尺</button>
+    <button class="tab" type="button" data-act="1">活動二・借位直式</button>
+    <button class="tab" type="button" data-act="2">活動三・單位轉換機</button>
+  </nav>
+
+  <section class="panel" id="act0"></section>
+  <section class="panel" id="act1" hidden></section>
+  <section class="panel" id="act2" hidden></section>
+  <section class="panel" id="examPanel" hidden></section>
+</div>
+
+<script>
+const P = new URLSearchParams(location.search);
+const qParam = parseInt(P.get('q') || '0', 10);
+const EXAM = qParam >= 1 && qParam <= 10;
+const Q = EXAM ? qParam : 1;
+const $ = id => document.getElementById(id);
+
+/* 主題同步 */
+function applyTheme(t) {
+  const theme = t === 'dark' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  $('btn-theme').textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+applyTheme(P.get('theme') || localStorage.getItem('math108_theme') || 'light');
+$('btn-theme').onclick = () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('math108_theme', next);
+  applyTheme(next);
+};
+window.addEventListener('message', e => {
+  if (e && e.data && e.data.type === 'THEME_CHANGE') applyTheme(e.data.theme);
+});
+
+function explainHTML(c, st) {
+  if (!st.shown) return '';
+  return `<div class="explain">
+    <span class="k">觀念</span><span class="v">${c.concept}</span>
+    <span class="k">步驟</span><span class="v">${c.steps.join(' → ')}</span>
+    <span class="k trap">陷阱</span><span class="v trap">${c.trap}</span>
+  </div>`;
+}
+
+/* ================= 觀念探索模式（三活動，與真題情境完全區隔） ================= */
+let actIdx = 0;
+let c1Meters = 1000;
+let c2Borrowed = false, c2Solved = false;
+let c3Step = 0;
+
+function renderAct0() {
+  const km = Math.floor(c1Meters / 1000);
+  const rem = c1Meters % 1000;
+  const rows = [0, 1, 2].map(i => {
+    const val = Math.max(0, Math.min(1000, c1Meters - i * 1000));
+    const pct = (val / 10).toFixed(0);
+    const full = val === 1000;
+    return `<div class="km-row">
+      <span class="km-tag">第 ${i + 1} 千</span>
+      <div class="km-track"><div class="km-fill ${full ? 'full' : ''}" style="width:${pct}%"></div></div>
+      <span class="km-val">${full ? '1 公里' : val + ' 公尺'}</span>
+    </div>`;
+  }).join('');
+
+  $('act0').innerHTML = `
+    <div class="card-head"><span class="badge">🌱 活動一・1 公里＝1000 公尺</span><span class="title">公里與公尺比例尺對照器</span></div>
+    <p class="desc">每集滿 <b>1000 公尺</b> 就進位成 <b>1 公里</b>。點選生活地點或拖動滑桿觀察滿格進位！</p>
+    <div class="box">
+      <div class="actrow">
+        <button class="actbtn ${c1Meters === 1000 ? 'sel' : ''}" type="button" data-m="1000">操場 200m×5圈</button>
+        <button class="actbtn ${c1Meters === 1500 ? 'sel' : ''}" type="button" data-m="1500">捷運兩站 1500m</button>
+        <button class="actbtn ${c1Meters === 2400 ? 'sel' : ''}" type="button" data-m="2400">河濱步道 2400m</button>
+      </div>
+      <input id="c1Range" type="range" min="0" max="2500" step="100" value="${c1Meters}" aria-label="公尺滑桿">
+      <div class="meter-read">
+        <span class="meter-big" id="c1Read">${c1Meters} 公尺</span>
+        <span class="meter-sub">＝ <b>${km}</b> 公里 <b>${rem}</b> 公尺</span>
+      </div>
+      <div class="km-bars">${rows}</div>
+    </div>
+    <div class="msg ok">💡 1000 公尺就是 1 公里；剩下的 ${rem} 公尺不夠 1000，留在公尺欄。</div>
+  `;
+  $('act0').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { c1Meters = +b.dataset.m; renderAct0(); });
+  $('c1Range').oninput = e => { c1Meters = +e.target.value; renderAct0(); };
+}
+
+function renderAct1() {
+  $('act1').innerHTML = `
+    <div class="card-head"><span class="badge">🌱 活動二・退位補零</span><span class="title">複名數減法借位直式板</span></div>
+    <p class="desc">示範：<b>6 公里 − 3 公里 48 公尺</b>。0 公尺不夠減 48，必須從公里借 1 變成 1000 公尺！</p>
+    <div class="box">
+      <div class="col-board">
+        <span></span><span class="col-h">公里 (km)</span><span></span><span class="col-h">公尺 (m)</span>
+        <span class="col-op"></span>
+        <span class="col-v">${c2Borrowed ? '<span class="strike">6</span><span class="hi">5</span>' : '6'}</span>
+        <span class="col-u">km</span>
+        <span class="col-v">${c2Borrowed ? '<span class="strike">0</span><span class="hi">1000</span>' : '0'}</span>
+        <span class="col-op">−</span><span class="col-v">3</span><span class="col-u">km</span><span class="col-v">48</span>
+        <div class="col-line"></div>
+        <span class="col-op">＝</span>
+        <span class="col-v ${c2Solved ? 'ok-cell' : ''}">${c2Solved ? '2' : '?'}</span>
+        <span class="col-u">km</span>
+        <span class="col-v ${c2Solved ? 'ok-cell' : ''}">${c2Solved ? '952' : '?'}</span>
+      </div>
+      <div class="actrow">
+        <button class="actbtn main" id="c2BorrowBtn" type="button">${c2Borrowed ? '✓ 已借 1 km＝1000 m' : '① 從公里借 1'}</button>
+        <button class="actbtn" id="c2SolveBtn" type="button">② 算出結果</button>
+        <button class="actbtn" id="c2ResetBtn" type="button">重置</button>
+      </div>
+    </div>
+    <div class="msg ${c2Solved ? 'ok' : (c2Borrowed ? '' : 'warn')}" id="c2Msg">
+      ${!c2Borrowed ? '⚠️ 0 − 48 不夠減！千萬別直接寫 48 或 52，請先按「從公里借 1」。'
+        : !c2Solved ? '✓ 6 km 0 m 變成 5 km 1000 m！現在算 1000 − 48，小心補零陷阱。'
+        : '✅ 1000 − 48 ＝ 952 公尺（不是 52！），5 − 3 ＝ 2 公里 → 2 公里 952 公尺。'}
+    </div>
+  `;
+  $('c2BorrowBtn').onclick = () => { c2Borrowed = true; renderAct1(); };
+  $('c2SolveBtn').onclick = () => { if (!c2Borrowed) c2Borrowed = true; c2Solved = true; renderAct1(); };
+  $('c2ResetBtn').onclick = () => { c2Borrowed = false; c2Solved = false; renderAct1(); };
+}
+
+function renderAct2() {
+  $('act2').innerHTML = `
+    <div class="card-head"><span class="badge">🌱 活動三・先換再除</span><span class="title">複名數除法單位轉換機</span></div>
+    <p class="desc">示範：<b>8 公里 136 公尺 ÷ 9</b>。複名數除法先全部換成「公尺」，再用標準長除法平分！</p>
+    <div class="box">
+      <div class="chip-row">
+        <span class="chip">8 公里 136 公尺</span>
+        <span>→</span>
+        <span class="chip ${c3Step >= 1 ? 'accent' : ''}">${c3Step >= 1 ? '8136 公尺' : '？ 公尺'}</span>
+        <span>÷ 9 ＝</span>
+        <span class="chip ${c3Step >= 2 ? 'ok' : ''}">${c3Step >= 2 ? '904 公尺' : '？ 公尺'}</span>
+      </div>
+      ${c3Step >= 2 ? `
+      <div class="ldiv" aria-label="8136 除以 9 長除法">
+        <span></span><span></span><span class="ld-q">9</span><span class="ld-q">0</span><span class="ld-q">4</span>
+        <span class="ld-div">9</span><span class="ld-top">8</span><span class="ld-top">1</span><span class="ld-top">3</span><span class="ld-top">6</span>
+        <span></span><span class="ld-sub">8</span><span class="ld-sub">1</span><span></span><span></span>
+        <span></span><span></span><span></span><span>3</span><span>6</span>
+        <span></span><span></span><span></span><span class="ld-sub">3</span><span class="ld-sub">6</span>
+        <span></span><span></span><span></span><span></span><span>0</span>
+      </div>` : `<div class="msg">請先點擊「① 全部換成公尺」，再展開長除法。</div>`}
+      <div class="actrow">
+        <button class="actbtn main" id="c3Step1" type="button">① 全部換成公尺</button>
+        <button class="actbtn" id="c3Step2" type="button">② 展開長除法</button>
+        <button class="actbtn" id="c3Reset" type="button">重置</button>
+      </div>
+    </div>
+    <div class="msg ${c3Step === 2 ? 'ok' : ''}" id="c3Msg">
+      ${c3Step === 0 ? '提示：8 公里＝8000 公尺，合起來是多少公尺？'
+        : c3Step === 1 ? '✓ 8136 公尺完成！接下來點擊「② 展開長除法」平分 9 份。'
+        : '✅ 8136 ÷ 9 ＝ 904 公尺（十位 3 不夠 9 除要補 0，別寫成 94！）。'}
+    </div>
+  `;
+  $('c3Step1').onclick = () => { c3Step = Math.max(c3Step, 1); renderAct2(); };
+  $('c3Step2').onclick = () => { c3Step = 2; renderAct2(); };
+  $('c3Reset').onclick = () => { c3Step = 0; renderAct2(); };
+}
+
+/* ================= 真題演練模式（?q=1..10 專屬互動台，無假線段／無計數器／零劇透） ================= */
+const EXAMS = {
+  1: {
+    module: 'split_km_m', badge: '🎯 Q01・南湖國小 111-1', title: '6927 公尺拆成幾公里幾公尺',
+    desc: '把 6927 公尺依「千位＝公里、末三位＝公尺」拆開對齊（作答前不劇透答案）。',
+    concept: '1 公里＝1000 公尺，6927 拆成 6000＋927。',
+    steps: ['6927 m = 6000 m + 927 m', '6000 m = 6 km', '答案 6 km 927 m'],
+    trap: '拆成 69 km 27 m 或 6 km 9270 m 是千位沒對齊。'
+  },
+  2: {
+    module: 'join_km_m', badge: '🎯 Q02・獅湖國小 113-1', title: '1 公里 890 公尺合成公尺',
+    desc: '先將「1 公里」換成 1000 公尺，再和 890 公尺合併。',
+    concept: '1 公里＝1000 公尺，加上 890 公尺。',
+    steps: ['1 公里 = 1000 公尺', '1000 + 890 = 1890 公尺'],
+    trap: '寫成 10890 或 189 公尺，是忘了 1 km = 1000 m。'
+  },
+  3: {
+    module: 'compare_pair', badge: '🎯 Q03・獅湖國小 113-1', title: '統一換算成公尺比大小',
+    left: { orig: '14 公里', conv: '14000 公尺', note: '14 × 1000 = 14000' },
+    right: { orig: '140000 公尺', conv: '140000 公尺', note: '已是公尺（6 位數）' },
+    ans: '＜',
+    concept: '14 公里＝14000 公尺（5 位數），140000 公尺是 6 位數。',
+    steps: ['14 km = 14000 m', '14000 < 140000', '14 公里 ＜ 140000 公尺'],
+    trap: '多數或少數一個 0 會誤選 ＞ 或 ＝。'
+  },
+  4: {
+    module: 'compare_four', badge: '🎯 Q04・南湖國小 112-1', title: '統一換算成公尺對照卡',
+    items: [
+      { orig: '5000 公分', conv: '50 公尺', pct: 8 },
+      { orig: '500 公尺', conv: '500 公尺', pct: 25 },
+      { orig: '5 公里', conv: '5000 公尺', pct: 100 },
+      { orig: '5.52 公尺', conv: '5.52 公尺', pct: 3 }
+    ],
+    concept: '全部統一換算成「公尺」再比較長短。',
+    steps: ['5000cm=50m', '500m=500m', '5km=5000m', '5.52m=5.52m'],
+    trap: '把 5000 公分看成 5000 公尺就會誤選。'
+  },
+  5: {
+    module: 'compare_pair', badge: '🎯 Q05・獅湖國小 114-1', title: '統一換算成公尺比大小',
+    left: { orig: '8005 公尺', conv: '8005 公尺', note: '已是公尺（4 位數）' },
+    right: { orig: '80 公里 5 公尺', conv: '80005 公尺', note: '80×1000 + 5 = 80005' },
+    ans: '＜',
+    concept: '80 公里 5 公尺＝80005 公尺，比 8005 公尺大很多。',
+    steps: ['80 km = 80000 m', '80 km 5 m = 80005 m', '8005 < 80005'],
+    trap: '只看到兩個「5」就誤以為相等。'
+  },
+  6: {
+    module: 'col_borrow_sub', badge: '🎯 Q06・南湖國小 111-1', title: '馬拉松距離・雙欄借位直式板',
+    k1: 6, m1: 0, k2: 3, m2: 48, resK: 2, resM: 952,
+    concept: '6 公里不夠減 48 公尺，先借 1 公里成 5 公里 1000 公尺。',
+    steps: ['6 km 0 m = 5 km 1000 m', '1000 - 48 = 952 m', '5 - 3 = 2 km → 2 km 952 m'],
+    trap: '直接 6-3=3、48 不減會誤選 3 公里 48 公尺或 3 公里 52 公尺。'
+  },
+  7: {
+    module: 'div_bar_machine', badge: '🎯 Q07・獅湖國小 114-1', title: '道路平分 9 天・兩步驟轉換台',
+    concept: '先把 8 公里 136 公尺換成 8136 公尺，再平分到 9 天。',
+    steps: ['8 km 136 m = 8136 m', '8136 ÷ 9 = 904 公尺'],
+    trap: '8136 ÷ 9 十位不夠除未補 0，易誤算為 94 公尺。'
+  },
+  8: {
+    module: 'dec_mul_split', badge: '🎯 Q08・永安國小 114-2', title: '操場 35 圈・分步乘法算理台',
+    concept: '1 圈 2.62 公里，35 圈拆成 30 圈＋5 圈。',
+    steps: ['2.62 × 30 = 78.6', '2.62 × 5 = 13.1', '78.6 + 13.1 = 91.7 公里'],
+    trap: '小數點未對齊或誤加 35，會得到 36.62 或 56.2。'
+  },
+  9: {
+    module: 'col_carry_add', badge: '🎯 Q09・南湖國小 111-1', title: '複名數加法・滿千進位直式板',
+    k1: 6, m1: 576, k2: 11, m2: 897, sumK: 17, sumM: 1473, resK: 18, resM: 473,
+    concept: '公尺部分 576＋897＝1473，滿 1000 要進 1 公里。',
+    steps: ['6+11=17 公里', '576+897=1473 公尺', '1473=1000+473 → 18 公里 473 公尺'],
+    trap: '寫成 17 公里 1473 公尺，忘了滿千進位。'
+  },
+  10: {
+    module: 'col_borrow_sub', badge: '🎯 Q10・南湖國小 112-1', title: '複名數減法・雙欄借位直式板',
+    k1: 9, m1: 0, k2: 4, m2: 875, resK: 4, resM: 125,
+    concept: '9 公里借 1 公里變 8 公里 1000 公尺，再相減。',
+    steps: ['9 km = 8 km 1000 m', '1000 - 875 = 125 m', '8 - 4 = 4 km → 4 km 125 m'],
+    trap: '忘了 9 已經借走 1 公里，誤寫成 5 公里 125 公尺。'
+  }
+};
+
+const examState = { step: 0, picked: [false, false, false, false], sym: '', shown: false };
+
+function renderExam() {
+  const cfg = EXAMS[Q];
+  const st = examState;
+  window.__N49_MODULE__ = cfg.module;
+  let bodyHTML = '';
+
+  if (cfg.module === 'split_km_m') {
+    bodyHTML = `
+      <p class="desc">${cfg.desc}</p>
+      <div class="box">
+        <div class="chip-row">
+          <span class="chip">6927 公尺</span>
+          <span>→</span>
+          <span class="chip ${st.step >= 1 ? 'accent' : ''}">${st.step >= 1 ? '6000 公尺' : '？ 千公尺'}</span>
+          <span>＋</span>
+          <span class="chip ${st.step >= 1 ? 'accent' : ''}">${st.step >= 1 ? '927 公尺' : '？ 公尺'}</span>
+        </div>
+        ${st.step >= 2 ? `<div class="chip-row"><span class="chip ok">6000 公尺 ＝ 6 公里</span><span class="chip ok">剩下 927 公尺</span></div>` : ''}
+        <div class="actrow">
+          <button class="actbtn main" id="qAct1" type="button">① 拆出整千公尺</button>
+          <button class="actbtn" id="qAct2" type="button">② 換成幾公里幾公尺</button>
+        </div>
+      </div>`;
+  } else if (cfg.module === 'join_km_m') {
+    bodyHTML = `
+      <p class="desc">${cfg.desc}</p>
+      <div class="box">
+        <div class="chip-row">
+          <span class="chip">${st.step >= 1 ? '1000 公尺' : '1 公里'}</span>
+          <span>＋</span>
+          <span class="chip">890 公尺</span>
+          <span>＝</span>
+          <span class="chip ${st.step >= 2 ? 'ok' : ''}">${st.step >= 2 ? '1890 公尺' : '？ 公尺'}</span>
+        </div>
+        <div class="actrow">
+          <button class="actbtn main" id="qAct1" type="button">① 1 公里換成 1000 公尺</button>
+          <button class="actbtn" id="qAct2" type="button">② 合併計算</button>
+        </div>
+      </div>`;
+  } else if (cfg.module === 'compare_pair') {
+    const lDone = st.picked[0], rDone = st.picked[1];
+    const symOk = st.sym ? (st.sym === cfg.ans ? 'ok' : 'warn') : '';
+    bodyHTML = `
+      <p class="desc">點擊左右卡片統一換算成「公尺」後，再點選符號比較大小。</p>
+      <div class="box">
+        <div class="pair-row">
+          <button class="cmp-card ${lDone ? 'done' : ''}" id="cmpL" type="button">
+            <span class="cmp-orig">${cfg.left.orig}</span>
+            <span class="cmp-conv">${lDone ? '＝ ' + cfg.left.conv : '👆 點擊換算成公尺'}</span>
+          </button>
+          <span class="chip ${st.sym ? 'accent' : ''}">${st.sym || '□'}</span>
+          <button class="cmp-card ${rDone ? 'done' : ''}" id="cmpR" type="button">
+            <span class="cmp-orig">${cfg.right.orig}</span>
+            <span class="cmp-conv">${rDone ? '＝ ' + cfg.right.conv : '👆 點擊換算成公尺'}</span>
+          </button>
+        </div>
+        <div class="actrow">
+          ${['＞', '＜', '＝'].map(s => `<button class="symbtn ${st.sym === s ? 'sel' : ''}" type="button" data-sym="${s}">${s}</button>`).join('')}
+        </div>
+      </div>
+      ${st.sym ? `<div class="msg ${symOk}">${st.sym === cfg.ans ? '✅ 比較正確！' + cfg.left.conv + ' ' + cfg.ans + ' ' + cfg.right.conv : '⚠️ 再核對兩邊換算後的位數！'}</div>` : ''}`;
+  } else if (cfg.module === 'compare_four') {
+    bodyHTML = `
+      <p class="desc">點擊下方 4 張選項卡，全部統一換算成「公尺」後就能一眼看出誰最長！</p>
+      <div class="box">
+        <div class="cmp-grid">
+          ${cfg.items.map((it, idx) => {
+            const done = st.picked[idx];
+            return `<button class="cmp-card ${done ? 'done' : ''}" type="button" data-card="${idx}">
+              <span class="cmp-orig">${it.orig}</span>
+              <span class="cmp-conv">${done ? '＝ ' + it.conv : '👆 點擊換算成公尺'}</span>
+              <span class="cmp-bar"><i style="width:${done ? it.pct : 0}%"></i></span>
+            </button>`;
+          }).join('')}
+        </div>
+      </div>`;
+  } else if (cfg.module === 'col_borrow_sub') {
+    const b = st.step >= 1, s = st.step >= 2;
+    bodyHTML = `
+      <p class="desc">「公里｜公尺」雙欄直式板：0 公尺不夠減，先從公里借 1 變成 1000 公尺。</p>
+      <div class="box">
+        <div class="col-board">
+          <span></span><span class="col-h">公里 (km)</span><span></span><span class="col-h">公尺 (m)</span>
+          <span class="col-op"></span>
+          <span class="col-v">${b ? `<span class="strike">${cfg.k1}</span><span class="hi">${cfg.k1 - 1}</span>` : cfg.k1}</span>
+          <span class="col-u">km</span>
+          <span class="col-v">${b ? `<span class="strike">${cfg.m1}</span><span class="hi">1000</span>` : cfg.m1}</span>
+          <span class="col-op">−</span><span class="col-v">${cfg.k2}</span><span class="col-u">km</span><span class="col-v">${cfg.m2}</span>
+          <div class="col-line"></div>
+          <span class="col-op">＝</span>
+          <span class="col-v ${s ? 'ok-cell' : ''}">${s ? cfg.resK : '?'}</span>
+          <span class="col-u">km</span>
+          <span class="col-v ${s ? 'ok-cell' : ''}">${s ? cfg.resM : '?'}</span>
+        </div>
+        <div class="actrow">
+          <button class="actbtn main" id="qAct1" type="button">${b ? '✓ 已借 1 km＝1000 m' : '① 借 1 公里＝1000 公尺'}</button>
+          <button class="actbtn" id="qAct2" type="button">② 計算直式結果</button>
+        </div>
+      </div>`;
+  } else if (cfg.module === 'col_carry_add') {
+    const a1 = st.step >= 1, a2 = st.step >= 2;
+    bodyHTML = `
+      <p class="desc">「公里｜公尺」雙欄直式板：先分別相加，公尺滿 1000 要進位 1 公里。</p>
+      <div class="box">
+        <div class="col-board">
+          <span></span><span class="col-h">公里 (km)</span><span></span><span class="col-h">公尺 (m)</span>
+          <span class="col-op"></span><span class="col-v">${cfg.k1}</span><span class="col-u">km</span><span class="col-v">${cfg.m1}</span>
+          <span class="col-op">＋</span><span class="col-v">${cfg.k2}</span><span class="col-u">km</span><span class="col-v">${cfg.m2}</span>
+          <div class="col-line"></div>
+          <span class="col-op">＝</span>
+          <span class="col-v ${a2 ? 'ok-cell' : ''}">${a2 ? cfg.resK : (a1 ? cfg.sumK : '?')}</span>
+          <span class="col-u">km</span>
+          <span class="col-v ${a2 ? 'ok-cell' : (a1 ? 'hi' : '')}">${a2 ? cfg.resM : (a1 ? cfg.sumM : '?')}</span>
+        </div>
+        <div class="actrow">
+          <button class="actbtn main" id="qAct1" type="button">① 先分別相加</button>
+          <button class="actbtn" id="qAct2" type="button">② 滿 1000 公尺進 1 公里</button>
+        </div>
+      </div>`;
+  } else if (cfg.module === 'div_bar_machine') {
+    const s1 = st.step >= 1, s2 = st.step >= 2;
+    const days = Array.from({ length: 9 }, (_, i) => `<div class="seg-cell">D${i + 1}<b>${s2 ? '904' : '?'}</b></div>`).join('');
+    bodyHTML = `
+      <p class="desc">兩步驟轉換台：先換成純公尺，再用標準廠字形長除法平分到 9 天。</p>
+      <div class="box two-col">
+        <div class="ldiv" aria-label="8136 除以 9 廠字形長除法直式">
+          <span></span><span></span><span class="ld-q">${s2 ? '9' : '?'}</span><span class="ld-q">${s2 ? '0' : ''}</span><span class="ld-q">${s2 ? '4' : ''}</span>
+          <span class="ld-div">9</span><span class="ld-top">${s1 ? '8' : '?'}</span><span class="ld-top">${s1 ? '1' : '?'}</span><span class="ld-top">${s1 ? '3' : '?'}</span><span class="ld-top">${s1 ? '6' : '?'}</span>
+          <span></span><span class="ld-sub">${s2 ? '8' : ' '}</span><span class="ld-sub">${s2 ? '1' : ' '}</span><span></span><span></span>
+          <span></span><span></span><span></span><span>${s2 ? '3' : ''}</span><span>${s2 ? '6' : ''}</span>
+          <span></span><span></span><span></span><span class="ld-sub">${s2 ? '3' : ' '}</span><span class="ld-sub">${s2 ? '6' : ' '}</span>
+          <span></span><span></span><span></span><span></span><span>${s2 ? '0' : ''}</span>
+        </div>
+        <div class="two-col-right">
+          <div class="chip-row">
+            <span class="chip">8km136m</span><span>→</span>
+            <span class="chip ${s1 ? 'accent' : ''}">${s1 ? '8136 m' : '？ m'}</span>
+            <span>÷ 9 ＝</span>
+            <span class="chip ${s2 ? 'ok' : ''}">${s2 ? '904 m' : '？ m'}</span>
+          </div>
+          <div class="seg-grid" aria-label="9 天平分道路比例條">${days}</div>
+          <div class="actrow">
+            <button class="actbtn main" id="qAct1" type="button">① 先換成純公尺</button>
+            <button class="actbtn" id="qAct2" type="button">② 展開長除法</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (cfg.module === 'dec_mul_split') {
+    const s1 = st.step >= 1, s2 = st.step >= 2;
+    bodyHTML = `
+      <p class="desc">操場 1 圈 2.62 公里，跑 35 圈拆成「×30」與「×5」小數乘法直式對齊。</p>
+      <div class="box two-col">
+        <div class="vmul" aria-label="2.62 乘以 35 小數乘法直式網格">
+          <span></span><span></span><span>2</span><span>.</span><span>6</span><span>2</span>
+          <span class="vm-op">×</span><span></span><span></span><span></span><span>3</span><span>5</span>
+          <div class="vm-bar"></div>
+          <span></span><span class="${s2 ? 'vm-hi' : 'vm-dim'}">${s2 ? '1' : '?'}</span><span class="${s2 ? 'vm-hi' : 'vm-dim'}">${s2 ? '3' : '?'}</span><span>.</span><span class="${s2 ? 'vm-hi' : 'vm-dim'}">${s2 ? '1' : '?'}</span><span class="${s2 ? 'vm-hi' : 'vm-dim'}">${s2 ? '0' : '?'}</span>
+          <span></span><span class="${s1 ? 'vm-hi' : 'vm-dim'}">${s1 ? '7' : '?'}</span><span class="${s1 ? 'vm-hi' : 'vm-dim'}">${s1 ? '8' : '?'}</span><span>.</span><span class="${s1 ? 'vm-hi' : 'vm-dim'}">${s1 ? '6' : '?'}</span><span class="${s1 ? 'vm-hi' : 'vm-dim'}">${s1 ? '0' : '?'}</span>
+          <div class="vm-bar"></div>
+          <span></span><span class="${s2 ? 'vm-ok' : 'vm-dim'}">${s2 ? '9' : '?'}</span><span class="${s2 ? 'vm-ok' : 'vm-dim'}">${s2 ? '1' : '?'}</span><span>.</span><span class="${s2 ? 'vm-ok' : 'vm-dim'}">${s2 ? '7' : '?'}</span><span class="${s2 ? 'vm-ok' : 'vm-dim'}">${s2 ? '0' : '?'}</span>
+        </div>
+        <div class="two-col-right">
+          <div class="chip-row">
+            <span class="chip ${s1 ? 'accent' : ''}">30圈：${s1 ? '78.6 km' : '？'}</span>
+            <span class="chip ${s2 ? 'accent' : ''}">5圈：${s2 ? '13.1 km' : '？'}</span>
+          </div>
+          ${s2 ? `<div class="chip-row"><span class="chip ok">合計：78.6 ＋ 13.1 ＝ 91.7 km</span></div>` : ''}
+          <div class="actrow">
+            <button class="actbtn main" id="qAct1" type="button">① 先算 30 圈</button>
+            <button class="actbtn" id="qAct2" type="button">② 算 5 圈並合計</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  $('examPanel').innerHTML = `
+    <div class="card-head"><span class="badge">${cfg.badge}</span><span class="title">${cfg.title}</span></div>
+    ${bodyHTML}
+    <div class="actrow">
+      <button class="actbtn main" id="rbtn" type="button">${st.shown ? '收起算理' : '一步一步看算理 🔍'}</button>
+      <button class="actbtn" id="qReset" type="button">重置</button>
+    </div>
+    ${explainHTML(cfg, st)}
+  `;
+
+  if ($('qAct1')) $('qAct1').onclick = () => { st.step = Math.max(st.step, 1); renderExam(); };
+  if ($('qAct2')) $('qAct2').onclick = () => { st.step = 2; renderExam(); };
+  if ($('cmpL')) $('cmpL').onclick = () => { st.picked[0] = true; renderExam(); };
+  if ($('cmpR')) $('cmpR').onclick = () => { st.picked[1] = true; renderExam(); };
+  $('examPanel').querySelectorAll('[data-sym]').forEach(b => b.onclick = () => { st.sym = b.dataset.sym; renderExam(); });
+  $('examPanel').querySelectorAll('[data-card]').forEach(b => b.onclick = () => { st.picked[+b.dataset.card] = true; renderExam(); });
+  $('rbtn').onclick = () => { st.shown = !st.shown; renderExam(); };
+  $('qReset').onclick = () => { st.step = 0; st.picked = [false, false, false, false]; st.sym = ''; st.shown = false; renderExam(); };
+}
+
+function showAct(idx) {
+  actIdx = idx;
+  [0, 1, 2].forEach(i => $('act' + i).hidden = i !== idx);
+  $('tabs').querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.act === idx));
+}
+
+if (EXAM) {
+  document.body.classList.add('q-mode');
+  $('tabs').hidden = true;
+  $('modeTag').textContent = '🎯 真題演練 Q' + Q;
+  $('act0').hidden = $('act1').hidden = $('act2').hidden = true;
+  $('examPanel').hidden = false;
+  window.__N49_MODE__ = 'exam';
+  window.__N49_Q__ = Q;
+  renderExam();
+} else {
+  $('modeTag').textContent = '🌱 概念探索';
+  window.__N49_MODE__ = 'concept';
+  window.__N49_Q__ = 0;
+  renderAct0(); renderAct1(); renderAct2();
+  showAct(0);
+  $('tabs').querySelectorAll('.tab').forEach(t => t.onclick = () => showAct(+t.dataset.act));
+}
+</script>
+</body>
+</html>

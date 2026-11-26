@@ -1,0 +1,204 @@
+{
+  "$schema": "math-app-unit-v1",
+  "unit_id": "G4-N-4-9",
+  "curriculum_code": "N-4-9",
+  "grade": 4,
+  "unit_name": "長度：「公里」（公里與公尺複名數換算與計算）",
+  "source_paper": "臺北市南湖國小 111-1／112-1 期末、高雄市獅湖國小 113-1／114-1 期末、高雄市永安國小 114-2 期末（皆為 AMD3950 D:\\ANTIGRAVITY\\028-1_國小數學APP\\EXAM REAL\\G4\\ 實體試卷 PDF，唯讀抽字核對）",
+  "verified_by": "SSH＋PYTHONIOENCODING=utf-8 唯讀抽字（第一層跳過含 017／子由 之路徑，已記錄 1 檔 SKIPPED_BY_REDLINE）；填充／計算題保留原卷題幹與括號，改編 1 正解＋3 迷思誘答；10 題逐題比對 exam_pages 原文；雙軌教具 pumpkin 操作區與外殼四選一分離；Light/Dark 高對比與 390px 零橫向溢出目視",
+  "note": "10 題全數來自合法真卷，跨 3 校：南湖 5 題、獅湖 4 題、永安 1 題。基礎換算／比較 5 題（Q1~Q5）、生活路徑應用 3 題（Q6~Q8）、複名數進退位陷阱 2 題（Q9~Q10）。未修改 app/shell.js、data/curriculum.json 或任何全冊共用檔；未碰 017 或子由。",
+  "question_count": 10,
+  "questions": [
+    {
+      "id": "G4-N-4-9-Q01",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p1・二、填填看 第4題）",
+      "section": "二、填填看",
+      "question_num": "4",
+      "title": "6927 m 換成公里與公尺複名數",
+      "stem": "6927m=(    )km (    )m",
+      "source_anomaly": "原南湖國小 111-1 期末試卷誤植為 6927km=( )km ( )m，依算理與解析修正題幹單位為 6927m",
+      "choices": ["6 km 927 m", "69 km 27 m", "6 km 9270 m", "692 km 7 m"],
+      "answer_index": 0,
+      "answer_raw": "6 公里 927 公尺",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=1",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "1 公里＝1000 公尺，把 6927 拆成 6000＋927，就是 6 公里 927 公尺。",
+        "steps": ["6927 = 6000 + 927", "6000 m = 6 km", "6927 m = 6 km 927 m"],
+        "trap": "拆成 69 km 27 m 或 6 km 9270 m，都是位值沒對齊。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q02",
+      "exam_source": "高雄市獅湖國小 113-1 期末（PDF p2・三、做做看 第6題）",
+      "section": "三、做做看",
+      "question_num": "6",
+      "title": "1 公里 890 公尺換成公尺",
+      "stem": "英英家距離學校是1 公里 890 公尺，也就是（          ）公尺。",
+      "choices": ["1890 公尺", "10890 公尺", "189 公尺", "18900 公尺"],
+      "answer_index": 0,
+      "answer_raw": "1890 公尺",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=2",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先把 1 公里換成 1000 公尺，再加上 890 公尺。",
+        "steps": ["1 公里 = 1000 公尺", "1000 + 890 = 1890", "所以是 1890 公尺"],
+        "trap": "寫成 10890 或 189，都是沒把 1 公里對齊成 1000 公尺。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q03",
+      "exam_source": "高雄市獅湖國小 113-1 期末（PDF p1・二、請在()中填入＞、＜或＝ 第4題）",
+      "section": "二、請在()中填入＞、＜或＝",
+      "question_num": "4",
+      "title": "14 公里與 140000 公尺比大小",
+      "stem": "14公里（    ）140000公尺",
+      "choices": ["＞", "＜", "＝", "無法比較"],
+      "answer_index": 1,
+      "answer_raw": "＜",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=3",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先統一單位：14 公里＝14000 公尺，不是 140000 公尺。",
+        "steps": ["1 公里 = 1000 公尺", "14 公里 = 14000 公尺", "14000 < 140000", "所以 14 公里 ＜ 140000 公尺"],
+        "trap": "多寫一個 0 會誤選 ＞ 或 ＝。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q04",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p1・一、選擇題 第3題）",
+      "section": "一、選擇題",
+      "question_num": "3",
+      "title": "四個長度中找最長",
+      "stem": "下面哪一個長度最長？ ○1 5000公分 ○2 500公尺 ○3 5公里 ○4 5.52公尺",
+      "choices": ["5000公分", "500公尺", "5公里", "5.52公尺"],
+      "answer_index": 2,
+      "answer_raw": "5公里",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=4",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "全部換成公尺再比較：5000 公分＝50 公尺、5 公里＝5000 公尺。",
+        "steps": ["5000 公分 = 50 公尺", "500 公尺 = 500 公尺", "5 公里 = 5000 公尺", "5.52 公尺 = 5.52 公尺", "最長是 5 公里"],
+        "trap": "把 5000 公分當成 5000 公尺，就會選錯。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q05",
+      "exam_source": "高雄市獅湖國小 114-1 期末（PDF p2・三、填入＞、＜或＝ 第(1)題）",
+      "section": "三、填入＞、＜或＝",
+      "question_num": "(1)",
+      "title": "8005 公尺與 80 公里 5 公尺比大小",
+      "stem": "8005 公尺 □ 80 公里 5 公尺",
+      "choices": ["＞", "＜", "＝", "無法比較"],
+      "answer_index": 1,
+      "answer_raw": "＜",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=5",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "80 公里 5 公尺＝80005 公尺，比 8005 公尺大很多。",
+        "steps": ["80 公里 = 80000 公尺", "80 公里 5 公尺 = 80005 公尺", "8005 < 80005", "所以 8005 公尺 ＜ 80 公里 5 公尺"],
+        "trap": "只看到兩個「5」就以為相等。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q06",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p3・六、應用題 第2題）",
+      "section": "六、應用題",
+      "question_num": "2",
+      "title": "日月潭環湖馬拉松還要跑多少",
+      "stem": "安妮亞在「日月潭環湖馬拉松」活動中，報名參賽的組別是「6 公里活力健走組」。主辦單位規定，若該組選手能在限定的時間內，跑完全程 6 公里，就能獲得「6K 完賽紀念獎」。目前安妮亞已跑了 3 公里 48 公尺，請問她還要再跑幾公里幾公尺，才有可能順利拿到「6K 完賽紀念獎」?",
+      "choices": ["2 公里 952 公尺", "3 公里 52 公尺", "2 公里 520 公尺", "3 公里 48 公尺"],
+      "answer_index": 0,
+      "answer_raw": "2 公里 952 公尺",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=6",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "6 公里＝6000 公尺，先換成同一單位再相減，不夠減要借 1 公里。",
+        "steps": ["6 km = 6000 m", "3 km 48 m = 3048 m", "6000 - 3048 = 2952 m", "2952 m = 2 km 952 m"],
+        "trap": "直接 6-3=3、48 不處理，會寫成 3 公里 48 公尺。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q07",
+      "exam_source": "高雄市獅湖國小 114-1 期末（PDF p3・六、應用問題 第(二)題）",
+      "section": "六、應用問題",
+      "question_num": "(二)",
+      "title": "8 公里 136 公尺平分 9 天修築",
+      "stem": "工人9 天修築一條 8 公里136 公尺的道路，平均一天修築多少公尺？",
+      "choices": ["904 公尺", "94 公尺", "9040 公尺", "8136 公尺"],
+      "answer_index": 0,
+      "answer_raw": "904 公尺",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=7",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "先把複名數化成公尺，再平分到 9 天。",
+        "steps": ["8 km 136 m = 8136 m", "8136 ÷ 9 = 904", "平均一天修築 904 公尺"],
+        "trap": "8136÷9 算成 94 或 9040，都是位數對齊錯了。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q08",
+      "exam_source": "高雄市永安國小 114-2 期末（PDF p1・一、選擇題 第１題）",
+      "section": "一、選擇題",
+      "question_num": "１",
+      "title": "操場一圈 2.62 公里跑 35 圈",
+      "stem": "（  ）繞操場跑一圈是 2.62 公里，丹丹這個月跑了 35 圈，共跑了多少公里？",
+      "choices": ["36.62 公里", "56.2 公里", "75 公里", "91.7 公里"],
+      "answer_index": 3,
+      "answer_raw": "91.7 公里",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=8",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "一圈 2.62 公里，35 圈就是 2.62×35。",
+        "steps": ["2.62 × 35", "= 2.62 × (30 + 5)", "= 78.6 + 13.1", "= 91.7 公里"],
+        "trap": "把 2.62 看成 262 或只加 35，會得到 36.62 或 56.2。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q09",
+      "exam_source": "臺北市南湖國小 111-1 期末（PDF p2・五、寫出直式，再算算看 第(3)題）",
+      "section": "五、寫出直式，再算算看",
+      "question_num": "(3)",
+      "title": "6 公里 576 公尺加 11 公里 897 公尺（進位）",
+      "stem": "6 公里 576 公尺+11 公里 897 公尺 =(        )公里(        )公尺",
+      "choices": ["18 公里 473 公尺", "17 公里 1473 公尺", "18 公里 373 公尺", "17 公里 473 公尺"],
+      "answer_index": 0,
+      "answer_raw": "18 公里 473 公尺",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=9",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "公尺部分 576＋897＝1473，滿 1000 要進 1 公里。",
+        "steps": ["6 + 11 = 17 公里", "576 + 897 = 1473 公尺", "1473 = 1000 + 473", "17 + 1 = 18 公里 473 公尺"],
+        "trap": "寫成 17 公里 1473 公尺，忘了進位。"
+      }
+    },
+    {
+      "id": "G4-N-4-9-Q10",
+      "exam_source": "臺北市南湖國小 112-1 期末（PDF p3・三、做做看 第4題）",
+      "section": "三、做做看",
+      "question_num": "4",
+      "title": "9 公里減 4 公里 875 公尺（退位）",
+      "stem": "9公里－4公里875公尺 ＝(  )公里(  )公尺",
+      "choices": ["4 公里 125 公尺", "5 公里 125 公尺", "4 公里 875 公尺", "5 公里 875 公尺"],
+      "answer_index": 0,
+      "answer_raw": "4 公里 125 公尺",
+      "component": "length_km_g4_lab",
+      "component_path": "components/length_km_g4_lab.html?q=10",
+      "fallback_height": 420,
+      "explanation": {
+        "concept": "9 公里不夠直接減 875 公尺，先借 1 公里變 8000 公尺。",
+        "steps": ["9 km = 8 km 1000 m", "1000 - 875 = 125 m", "8 - 4 = 4 km", "答案 4 公里 125 公尺"],
+        "trap": "寫成 5 公里 125 公尺，是忘了被減數已經借走 1 公里。"
+      }
+    }
+  ]
+}

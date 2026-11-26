@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-S-4-2 解題：旋轉角・108課綱互動教具（三活動＋真題雙軌）</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{--bg:var(--bg-main);--card:var(--bg-card);--elev:var(--bg-elevated);--ink:var(--text-primary);--soft:var(--text-secondary);--line:var(--border-color);--a:var(--accent-primary);--mint:var(--accent-mint);--sky:var(--accent-sky);--lemon:var(--accent-lemon);--ok:#2fa36b;--warn:#c2410c;--shadow:0 6px 16px var(--shadow-color);--radius:12px}
+html[data-theme="dark"]{--ok:#4ade80;--warn:#fca5a5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{margin:0;padding:8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:470px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:5px;max-height:415px;overflow:hidden}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:18px;font-size:10px;color:var(--soft)}
+.head b{font-size:12px;color:var(--ink);font-weight:900}
+.head-right{display:flex;align-items:center;gap:5px}
+#btn-theme{width:26px;height:26px;flex:0 0 26px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+#modeTag{font-size:9.5px;font-weight:800;color:var(--a);white-space:nowrap}
+.tabs{display:flex;gap:4px;background:var(--elev);padding:3px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:5px 8px;border-radius:999px;font-size:10.5px;font-weight:900;color:var(--soft);white-space:nowrap}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+body.q-mode .tabs{display:none!important}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow);max-width:100%;max-height:350px;overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.badge{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:900;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.title{font-size:12.5px;font-weight:900;color:var(--ink)}
+.desc{font-size:10.5px;line-height:1.4;color:var(--soft)}
+.stage{width:100%;background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:3px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.stage svg{width:100%;max-width:420px;height:auto;max-height:104px;display:block}
+.slotbox{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:5px 7px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.actrow{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.actbtn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 9px;font-size:10.5px;font-weight:900}
+.actbtn.main{border-color:var(--a);color:var(--a)}
+.actbtn:active{transform:translateY(1px)}
+.pick{min-width:30px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:7px;padding:3px 7px;font-size:10.5px;font-weight:900}
+.pick.on{border-color:var(--a);color:var(--a);background:var(--elev)}
+.msg{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10px;line-height:1.4;color:var(--ink);font-weight:700;text-align:left;min-height:19px}
+.msg.ok{border-color:var(--ok);color:var(--ok)}
+.msg.warn{border-color:var(--warn);color:var(--warn)}
+.explain{display:grid;grid-template-columns:42px 1fr;gap:1px 6px;font-size:9.5px;line-height:1.2;background:var(--elev);border-radius:8px;padding:4px 6px;border:1px dashed var(--line)}
+.explain .k{color:var(--a);font-weight:900;white-space:nowrap}
+.explain .v{color:var(--ink);min-width:0;word-break:break-word}
+.explain .trap{color:var(--warn)}
+[hidden]{display:none!important}
+@media (max-width:390px){.head b{font-size:11px}.tab{font-size:10px;padding:5px 6px}.title{font-size:11.5px}.actbtn{padding:4px 7px;font-size:10px}.pick{padding:3px 5px;font-size:10px}}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head"><b>S-4-2 解題：旋轉角</b><div class="head-right"><span id="modeTag">🌱 概念探索</span><button id="btn-theme" type="button" aria-label="切換主題">🌙</button></div></div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" type="button" data-act="0">活動一・時針半圈</button>
+    <button class="tab" type="button" data-act="1">活動二・指南針</button>
+    <button class="tab" type="button" data-act="2">活動三・方向盤</button>
+  </nav>
+  <section class="panel" id="act0"></section>
+  <section class="panel" id="act1" hidden></section>
+  <section class="panel" id="act2" hidden></section>
+  <section class="panel" id="examPanel" hidden></section>
+</div>
+<script>
+/* G4-S-4-2：教具內不含題幹框、四選項與換題鈕；初始零劇透。
+   三活動情境（時針半圈／指南針方位／方向盤來回轉）與 10 題真題零重複。*/
+const P=new URLSearchParams(location.search);
+const qParam=parseInt(P.get('q')||'0',10);
+const EXAM=qParam>=1&&qParam<=10;
+const Q=EXAM?qParam:1;
+const $=id=>document.getElementById(id);
+const DIRS=['北','東','南','西'];
+
+/* ---------- 概念三活動（生活情境，與真題零重疊） ---------- */
+const CONCEPT=[
+ {badge:'🌱 活動一・時針走半圈',title:'時鐘：3 點走到 9 點',desc:'弟弟從下午 3 點等到 9 點。點 endTime 看看時針走了幾大格。',
+  kind:'clock',start:3,target:9,labels:[3,6,9,12],answer:'9 點，轉了 180 度',
+  concept:'時針走半圈就是平角 180°；一大格 30°，6 大格就是 180°。',
+  steps:['3 點到 9 點共 6 大格','6×30＝180 度','180 度的角叫做平角'],
+  trap:'只看到起訖相差 6 就寫 6 度，忘了每大格是 30 度。'},
+ {badge:'🌱 活動二・指南針方位',title:'操場：從東轉到北',desc:'體育老師原本面向東方，聽口令「逆時針轉到北方」。點方位鈕試試看。',
+  kind:'compass',start:1,target:0,labels:[0,1,2,3],answer:'北，逆時針 90 度',
+  concept:'四方位把一圈分成 4 等份，每份 90°；東往逆時針一格就是北。',
+  steps:['一圈 360÷4＝90 度','東→北是逆時針一格','所以轉了 90 度，面向北'],
+  trap:'把東→北看成順時針，會多走 3 格變成 270 度。'},
+ {badge:'🌱 活動三・方向盤來回轉',title:'開車：方向盤先順後逆',desc:'司機先順時針轉 90°，再逆時針回 45°。點兩個按鈕，看方向盤最後轉了多少。',
+  kind:'ops',start:0,target:45,ops:[{label:'順時針 90°',delta:90},{label:'逆時針 45°',delta:-45}],answer:'最後轉了 45 度',
+  concept:'反方向旋轉要相減；先轉 90° 再回 45°，剩下 45°。',
+  steps:['順時針 90 度','逆時針 45 度是往回轉','90－45＝45 度'],
+  trap:'把兩次相加成 135 度，忽略方向相反。'}
+];
+
+/* ---------- 真題：十題各自專屬互動模組（stem 與四選項由外殼呈現） ---------- */
+const DATA=[
+ {module:'clock_cw_quarter',kind:'clock',start:12,target:3,labels:[3,6,9,12],
+  concept:'鐘面一大格 30°，90° 就是順時針走 3 格。',steps:['360÷12＝30 度','90÷30＝3 大格','12 順時針走 3 格到 3'],trap:'把 90 度當成 9 大格或選逆時針方向。'},
+ {module:'straw_inner_scale',kind:'ops',start:0,target:34,ops:[{label:'逆時針 108°',delta:108},{label:'順時針 74°',delta:-74}],
+  concept:'先逆時針再加、後順時針要減，是同一條吸管的來回旋轉。',steps:['內圈 0 度出發','逆時針 108 度','108－74＝34 度'],trap:'把 108＋74＝182 度當成停在內圈的度數。'},
+ {module:'stick_outer_scale',kind:'ops',start:0,target:110,ops:[{label:'順時針 175°',delta:175},{label:'逆時針 65°',delta:-65}],
+  concept:'外圈刻度随順時針增加，逆向就是扣掉。',steps:['外圈 0 度出發','順時針到 175 度','175－65＝110 度'],trap:'誤用內圈刻度或把兩次相加成 240 度。'},
+ {module:'clock_ccw_short',kind:'clock',start:11,target:8,labels:[8,9,10,12],
+  concept:'同一段取較短路徑：11 到 8 逆時針 3 大格。',steps:['順時針要走 9 大格＝270 度','逆時針 11→10→9→8 走 3 大格','3×30＝90 度'],trap:'算出 90 度卻寫成順時針方向。'},
+ {module:'clock_full_turn',kind:'full',start:0,target:360,ops:[{label:'從 7 轉一圈回 7',delta:360}],
+  concept:'起訖相同又轉一整圈就是周角 360°。',steps:['起點終點都是 7','一圈 12 大格','12×30＝360 度，稱周角'],trap:'以為回到原位就是 0 度或平角。'},
+ {module:'compare_four_arcs',kind:'compare',start:4,target:2,labels:[0,1,2,3],
+  arcs:[{from:4,to:9,dir:1,deg:150},{from:8,to:11,dir:1,deg:90},{from:3,to:9,dir:-1,deg:180},{from:8,to:5,dir:-1,deg:90}],
+  concept:'四個選項都要換成「大格數 × 30°」再比大小。',steps:['①150 度　②90 度','③逆 3→9 是 6 大格＝180 度','④90 度，最大是③'],trap:'只比終點數字，忽略順逆方向與格數。'},
+ {module:'clock_ccw_long',kind:'clock',start:1,target:9,labels:[3,9,10,12],
+  concept:'逆時針跨過 12 仍要繼續數，共 4 大格。',steps:['1→12→11→10→9','共 4 大格','4×30＝120 度'],trap:'用 9－1＝8 大格或跨 12 就停止。'},
+ {module:'fan_open_close',kind:'ops',start:25,target:135,ops:[{label:'順時針轉開 130°',delta:130},{label:'逆時針收合 20°',delta:-20}],
+  concept:'扇子開口是兩邊夾角；同向加、反向減。',steps:['原來 25 度','25＋130＝155 度','155－20＝135 度'],trap:'把兩次都相加成 175 度。'},
+ {module:'compass_north_west',kind:'compass',start:0,target:3,labels:[0,1,2,3],
+  concept:'北到西走逆時針一格；順時針則要三格。',steps:['一圈分 4 份，每份 90 度','逆時針 北→西 一格','所以是逆時針 90 度'],trap:'選成順時針 90 度，其實會面向東。'},
+ {module:'right_angle_four',kind:'quad',start:0,target:4,labels:[2,3,4,6],
+  concept:'周角 360° 裡有 4 個直角 90°。',steps:['直角＝90 度','周角＝360 度','360÷90＝4 個'],trap:'把周角當平角 180 度而選 2 個。'}
+];
+
+function esc(t){return String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+/* ---------- 依題型真實繪製 SVG（按鈕點擊後指向或刻度必變） ---------- */
+function clockSVG(st,d){
+  let s='<svg viewBox="0 0 400 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="鐘面旋轉角示意圖">';
+  s+='<rect x="4" y="4" width="392" height="96" rx="10" fill="var(--elev)" stroke="var(--line)"/>';
+  const cx=52,cy=52,r=42;
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>';
+  for(let n=1;n<=12;n++){const a=(n*30-90)*Math.PI/180,x=cx+34*Math.cos(a),y=cy+34*Math.sin(a);
+    s+='<text x="'+x.toFixed(1)+'" y="'+(y+3).toFixed(1)+'" text-anchor="middle" font-size="9" font-weight="800" fill="var(--ink)">'+n+'</text>';}
+  const end=(st.pick===null?d.start:st.pick),ea=(end*30-90)*Math.PI/180;
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+30*Math.cos(ea)).toFixed(1)+'" y2="'+(cy+30*Math.sin(ea)).toFixed(1)+'" stroke="var(--a)" stroke-width="4" stroke-linecap="round"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="var(--a)"/>';
+  s+='<text x="200" y="30" text-anchor="middle" font-size="12" font-weight="900" fill="var(--ink)">旋轉角演示</text>';
+  s+='<text x="200" y="50" text-anchor="middle" font-size="11" font-weight="800" fill="var(--a)">目前指在 '+(st.pick===null?d.start:st.pick)+'</text>';
+  s+='<text x="200" y="68" text-anchor="middle" font-size="10" fill="var(--soft)">一大格 = 30 度</text>';
+  s+='<text x="200" y="86" text-anchor="middle" font-size="10" font-weight="800" fill="var(--soft)">'+esc(d.answer||'')+'</text>';
+  return s+'</svg>';
+}
+function protoSVG(st,d){
+  let s='<svg viewBox="0 0 400 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="量角器旋轉示意圖">';
+  s+='<rect x="4" y="4" width="392" height="96" rx="10" fill="var(--elev)" stroke="var(--line)"/>';
+  const cx=200,cy=92,r=70;
+  s+='<path d="M '+(cx-r)+' '+cy+' A '+r+' '+r+' 0 0 1 '+(cx+r)+' '+cy+' Z" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>';
+  for(let k=0;k<=180;k+=30){const a=(180-k)*Math.PI/180,x1=cx+(r-10)*Math.cos(a),y1=cy-(r-10)*Math.sin(a),x2=cx+r*Math.cos(a),y2=cy-r*Math.sin(a);
+    s+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="var(--line)"/>';
+    s+='<text x="'+(cx+(r-20)*Math.cos(a)).toFixed(1)+'" y="'+(cy-(r-20)*Math.sin(a)).toFixed(1)+'" text-anchor="middle" font-size="9" fill="var(--soft)">'+k+'</text>';}
+  const a=(180-Math.max(0,Math.min(180,st.angle)))*Math.PI/180;
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+(r-6)*Math.cos(a)).toFixed(1)+'" y2="'+(cy-(r-6)*Math.sin(a)).toFixed(1)+'" stroke="var(--a)" stroke-width="4" stroke-linecap="round"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="var(--a)"/>';
+  s+='<text x="200" y="26" text-anchor="middle" font-size="11" font-weight="900" fill="var(--a)">目前刻度 '+(st.angle===0?'0（起點）':st.angle+'°')+'</text>';
+  return s+'</svg>';
+}
+function compassSVG(st,d){
+  let s='<svg viewBox="0 0 400 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="方位指南針示意圖">';
+  s+='<rect x="4" y="4" width="392" height="96" rx="10" fill="var(--elev)" stroke="var(--line)"/>';
+  const cx=80,cy=52,r=40;
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>';
+  DIRS.forEach((t,i)=>{const a=(i*90-90)*Math.PI/180,x=cx+30*Math.cos(a),y=cy+30*Math.sin(a),on=(st.pick===i);
+    s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="'+(on?'var(--a)':'var(--elev)')+'" stroke="var(--line)" stroke-width="2"/>';
+    s+='<text x="'+x.toFixed(1)+'" y="'+(y+4).toFixed(1)+'" text-anchor="middle" font-size="12" font-weight="900" fill="'+(on?'#fff':'var(--ink)')+'">'+t+'</text>';});
+  s+='<text x="235" y="38" text-anchor="middle" font-size="12" font-weight="900" fill="var(--ink)">目前面向</text>';
+  s+='<text x="235" y="62" text-anchor="middle" font-size="15" font-weight="900" fill="var(--a)">'+(st.pick===null?DIRS[d.start]:DIRS[st.pick])+'</text>';
+  s+='<text x="235" y="82" text-anchor="middle" font-size="10" fill="var(--soft)">四方位每格 90 度</text>';
+  return s+'</svg>';
+}
+function quadSVG(st,d){
+  let s='<svg viewBox="0 0 400 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="周角與直角示意圖">';
+  s+='<rect x="4" y="4" width="392" height="96" rx="10" fill="var(--elev)" stroke="var(--line)"/>';
+  const cx=56,cy=52,r=38;
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>';
+  for(let i=0;i<4;i++){const a1=i*90*Math.PI/180,a2=(i+1)*90*Math.PI/180;
+    s+='<path d="M '+cx+' '+cy+' L '+(cx+r*Math.cos(a1)).toFixed(1)+' '+(cy+r*Math.sin(a1)).toFixed(1)+' A '+r+' '+r+' 0 0 1 '+(cx+r*Math.cos(a2)).toFixed(1)+' '+(cy+r*Math.sin(a2)).toFixed(1)+' Z" fill="'+(i<(st.pick||0)?'var(--a)':'var(--elev)')+'" opacity="0.75"/>';}
+  s+='<text x="235" y="38" text-anchor="middle" font-size="12" font-weight="900" fill="var(--ink)">周角 = 360 度</text>';
+  s+='<text x="235" y="62" text-anchor="middle" font-size="11" font-weight="800" fill="var(--a)">直角 = 90 度</text>';
+  s+='<text x="235" y="82" text-anchor="middle" font-size="10" fill="var(--soft)">已經畫了 '+(st.pick||0)+' 個直角</text>';
+  return s+'</svg>';
+}
+function fullTurnSVG(st,d){
+  const cx=52,cy=52,r=42,on=st.angle>0;
+  const a=(7*30-90)*Math.PI/180;
+  let s='<svg viewBox="0 0 400 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="鐘面整圈周角示意圖">';
+  s+='<rect x="4" y="4" width="392" height="96" rx="10" fill="var(--elev)" stroke="var(--line)"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>';
+  if(on)s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r+5)+'" fill="none" stroke="var(--a)" stroke-width="5" opacity="0.9"/>';
+  for(let n=1;n<=12;n++){const an=(n*30-90)*Math.PI/180,x=cx+34*Math.cos(an),y=cy+34*Math.sin(an);
+    s+='<text x="'+x.toFixed(1)+'" y="'+(y+3).toFixed(1)+'" text-anchor="middle" font-size="9" font-weight="800" fill="var(--ink)">'+n+'</text>';}
+  s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+30*Math.cos(a)).toFixed(1)+'" y2="'+(cy+30*Math.sin(a)).toFixed(1)+'" stroke="var(--a)" stroke-width="4" stroke-linecap="round"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="var(--a)"/>';
+  s+='<text x="235" y="36" text-anchor="middle" font-size="12" font-weight="900" fill="var(--ink)">'+(on?'整圈 360 度':'尚未旋轉')+'</text>';
+  s+='<text x="235" y="60" text-anchor="middle" font-size="11" font-weight="800" fill="var(--a)">'+(on?'周角':'從 7 出發')+'</text>';
+  s+='<text x="235" y="82" text-anchor="middle" font-size="10" fill="var(--soft)">12 大格 × 30 度</text>';
+  return s+'</svg>';
+}
+function compareSVG(st,d){
+  const arcs=d.arcs||[],r=22;
+  const pol=(cx,cy,rr,n)=>{const a=(n*30-90)*Math.PI/180;return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)];};
+  let s='<svg viewBox="0 0 400 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="四種時針旋轉角比較示意圖">';
+  s+='<rect x="4" y="4" width="392" height="96" rx="10" fill="var(--elev)" stroke="var(--line)"/>';
+  arcs.forEach((ar,i)=>{
+    const cx=52+i*100,cy=50,sel=(st.pick===i),p1=pol(cx,cy,r,ar.from),p2=pol(cx,cy,r,ar.to);
+    const large=(ar.deg>180)?1:0,sweep=(ar.dir===1)?1:0,col=sel?'var(--a)':'var(--line)';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r+5)+'" fill="var(--card)" stroke="'+col+'" stroke-width="'+(sel?2.5:1)+'"/>';
+    s+='<path d="M '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' A '+r+' '+r+' 0 '+large+' '+sweep+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)+'" fill="none" stroke="'+col+'" stroke-width="'+(sel?3.5:2)+'"/>';
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p2[0].toFixed(1)+'" y2="'+p2[1].toFixed(1)+'" stroke="'+col+'" stroke-width="2"/>';
+    s+='<text x="'+cx+'" y="86" text-anchor="middle" font-size="10" font-weight="900" fill="'+col+'">'+String.fromCharCode(9312+i)+' '+ar.deg+'°</text>';
+  });
+  return s+'</svg>';
+}
+function diagram(st,d){
+  if(st.kind==='clock')return clockSVG(st,d);
+  if(st.kind==='ops')return protoSVG(st,d);
+  if(st.kind==='compass')return compassSVG(st,d);
+  if(st.kind==='full')return fullTurnSVG(st,d);
+  if(st.kind==='compare')return compareSVG(st,d);
+  return quadSVG(st,d);
+}
+
+let st=null;
+function initState(d){
+  st={kind:d.kind,start:d.start,pick:null,angle:d.start||0,shown:false,ok:false,step:0};
+}
+function host(){return EXAM?$('examPanel'):$('act'+currentAct);}
+function pickButtons(d){
+  const list=d.labels||d.ops.map((_,i)=>i);
+  return list.map(v=>{
+    if(d.kind==='compass')return '<button type="button" class="pick" data-i="'+v+'">'+DIRS[v]+'</button>';
+    if((d.kind==='clock'&&d.target===2)||d.kind==='compare')return '<button type="button" class="pick" data-i="'+v+'">選項'+(v+1)+'</button>';
+    if(d.kind==='ops'||d.kind==='full')return '<button type="button" class="pick" data-i="'+v+'">'+esc(d.ops[v].label)+'</button>';
+    return '<button type="button" class="pick" data-i="'+v+'">'+v+'</button>';
+  }).join('');
+}
+function explainHTML(d){
+  if (!st.shown) return '';
+  let s='<div class="explain"><span class="k">概念</span><span class="v">'+esc(d.concept)+'</span>';
+  d.steps.forEach((t,i)=>{s+='<span class="k">步驟'+(i+1)+'</span><span class="v">'+esc(t)+'</span>';});
+  s+='<span class="k trap">陷阱</span><span class="v trap">'+esc(d.trap)+'</span></div>';
+  return s;
+}
+function isOK(d){
+  if(d.kind==='ops'||d.kind==='full')return st.angle===d.target;
+  return st.pick===d.target;
+}
+function verify(d){st.shown=true;st.step=1;st.ok=isOK(d);renderPanel(d);notifyHeight();}
+function reveal(d){st.shown=true;st.step=1;renderPanel(d);notifyHeight();}
+function msgText(d){
+  if(!st.shown)return '💡 先點上面的操作鈕，再按「驗證算式」或「一步一步看算理」。';
+  return st.ok?'✓ 已到目標位置，算理展開如下。':'✗ 還沒到目標，可再操作或點「一步一步看算理」。';
+}
+function renderPanel(d){
+  const badge=EXAM?('🎯 段考真題 Q'+Q):d.badge;
+  const title=EXAM?('第 '+Q+' 題・動手操作區'):d.title;
+  const desc=EXAM?'題幹與四選項由外殼呈現；請操作下方圖示，驗證後才展開算理。':d.desc;
+  const vId=EXAM?'rbtn':('c'+(currentAct+1)+'Cmp');
+  const mId=EXAM?'':(' id="c'+(currentAct+1)+'Msg"');
+  const h='<div class="card-head"><span class="badge">'+esc(badge)+'</span><span class="title">'+esc(title)+'</span></div>'
+   +'<div class="desc">'+esc(desc)+'</div>'
+   +'<div class="stage">'+diagram(st,d)+'</div>'
+   +'<div class="slotbox"><div class="actrow">'+pickButtons(d)+'</div></div>'
+   +'<div class="msg'+(st.shown?(st.ok?' ok':' warn'):'')+'"'+mId+'>'+esc(msgText(d))+'</div>'
+   +'<div class="actrow"><button type="button" class="actbtn main" id="'+vId+'" data-v="1">驗證算式</button><button type="button" class="actbtn" id="qAct1" data-r="1">一步一步看算理 🔍</button></div>'
+   +explainHTML(d);
+  host().innerHTML=h;bind(d);
+}
+function bind(d){
+  host().querySelectorAll('button').forEach(b=>{
+    if(b.dataset.i!==undefined)b.onclick=()=>{
+      const i=parseInt(b.dataset.i,10);
+      if(d.kind==='ops'||d.kind==='full')st.angle+=d.ops[i].delta;else st.pick=i;
+      renderPanel(d);notifyHeight();
+    };
+    else if(b.dataset.v)b.onclick=()=>verify(d);
+    else if(b.dataset.r)b.onclick=()=>reveal(d);
+  });
+}
+let currentAct=0;
+function setAct(i){
+  currentAct=i;
+  for(let k=0;k<3;k++){$('act'+k).hidden=(k!==i);if(k!==i)$('act'+k).innerHTML='';}
+  Array.from($('tabs').children).forEach((b,k)=>b.classList.toggle('active',k===i));
+  initState(CONCEPT[i]);renderPanel(CONCEPT[i]);notifyHeight();
+}
+function applyTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('math108_theme',t);}catch(e){}$('btn-theme').textContent=(t==='dark')?'☀️':'🌙';$('btn-theme').setAttribute('aria-label',(t==='dark')?'切換到亮色':'切換到暗色');}
+$('btn-theme').onclick=()=>{const cur=document.documentElement.dataset.theme||'light',next=(cur==='dark')?'light':'dark';applyTheme(next);try{const u=new URL(location.href);u.searchParams.set('theme',next);history.replaceState(null,'',u);}catch(e){}try{window.parent.postMessage({type:'THEME_CHANGE',theme:next},'*');}catch(e){}try{window.dispatchEvent(new CustomEvent('THEME_CHANGE',{detail:{theme:next}}));}catch(e){}};
+window.addEventListener('message',e=>{if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme)applyTheme(e.data.theme);});
+(function(){const tq=P.get('theme');if(tq==='dark'||tq==='light')applyTheme(tq);else{let s='light';try{s=localStorage.getItem('math108_theme')||'light';}catch(e){}applyTheme(s);}})();
+function notifyHeight(){try{const h=Math.min(415,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight));window.parent.postMessage({type:'resize',height:h},'*');}catch(e){}}
+
+window.__S42_MODE__=EXAM?'exam':'concept';window.__S42_Q__=Q;
+const CMOD='concept_only';
+window.__S42_MODULE__=EXAM?DATA[Q-1].module:CMOD;
+Object.defineProperty(window,'__S42_STATE__',{get:()=>st,configurable:true});
+if(EXAM){document.body.classList.add('q-mode');$('tabs').hidden=true;for(let k=0;k<3;k++)$('act'+k).hidden=true;$('modeTag').textContent='🎯 段考真題 Q'+Q;$('examPanel').hidden=false;initState(DATA[Q-1]);renderPanel(DATA[Q-1]);}
+else{$('examPanel').hidden=true;Array.from($('tabs').children).forEach((b,k)=>b.onclick=()=>setAct(k));setAct(0);}
+window.__S42_READY__=true;window.addEventListener('load',notifyHeight);window.addEventListener('resize',notifyHeight);
+</script>
+</body>
+</html>

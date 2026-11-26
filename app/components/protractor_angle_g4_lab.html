@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-10 角度與量角器・108 課綱互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#1f8f58; --warn:#c2410c; --hl:#fde68a;
+  --shadow:0 4px 14px var(--shadow-color); --radius:14px;
+  --prot-fill:rgba(125,184,232,.16); --prot-ring:#2575ba; --prot-inner:#d97706;
+  --ray-main:#e11d48; --ray-base:#0f766e; --pizza:#f59e0b;
+}
+html[data-theme="dark"]{
+  --ok:#4ade80; --warn:#fb923c; --hl:#7c5c1e;
+  --prot-fill:rgba(96,165,250,.18); --prot-ring:#60a5fa; --prot-inner:#fbbf24;
+  --ray-main:#fb7185; --ray-base:#2dd4bf; --pizza:#fbbf24;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:22px}
+.head-left{display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden}
+.head b{font-size:12.5px;color:var(--ink);white-space:nowrap}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+#btn-theme{border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:5px 10px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;transition:all .15s}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:12.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-desc{font-size:11px;line-height:1.38;color:var(--ink-soft)}
+
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:2px;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:none}
+.stage-canvas svg{width:100%;max-width:340px;height:126px;display:block;touch-action:none;user-select:none}
+
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:5px 7px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;align-items:center}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;transition:all .12s;white-space:nowrap}
+.btn-action.primary{background:var(--a);border-color:var(--a);color:#fff}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff}
+
+.dial-row{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.dial-val{min-width:62px;padding:3px 8px;border:1.5px solid var(--a);border-radius:8px;background:var(--card);color:var(--ink);font-size:12px;font-weight:900;text-align:center}
+
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:11px;line-height:1.35;color:var(--ink);font-weight:700;text-align:left;min-height:18px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+.steps-box{background:var(--card);border:1.5px solid var(--ok);border-radius:8px;padding:5px 8px;text-align:left;display:flex;flex-direction:column;gap:2px}
+.step-line{font-size:10.5px;line-height:1.35;color:var(--ink)}
+.step-line b{color:var(--a)}
+.final-line{font-size:11px;font-weight:900;color:var(--ok)}
+
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:12px;font-weight:900;padding:6px;border-radius:10px;text-align:center}
+body.q-mode .activity-nav,body.q-mode .concept-footer{display:none!important}
+[hidden]{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <div class="head-left">
+      <b>N-4-10 角度與量角器</b>
+      <span id="qtag">108 課綱活動</span>
+    </div>
+    <div class="head-right">
+      <button type="button" id="btn-theme" aria-label="切換深淺主題">🌙 深色</button>
+    </div>
+  </div>
+
+  <nav class="activity-nav" id="actNav">
+    <button type="button" class="act-btn active" data-act="0">📏 活動一・量角器實測</button>
+    <button type="button" class="act-btn" data-act="1">✏️ 活動二・指定角作圖</button>
+    <button type="button" class="act-btn" data-act="2">🔄 活動三・平角與周角</button>
+  </nav>
+
+  <!-- ============ 觀念小教室：三道不同生活情境 ============ -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head">
+      <span class="card-badge">活動 1／3</span>
+      <span class="card-title">🍕 披薩切片實測工坊</span>
+    </div>
+    <p class="card-desc">拖曳透明量角器對齊披薩的兩條切邊，切換內/外圈讀出這塊披薩是幾度。</p>
+    <div class="stage-canvas" id="c0Stage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action" id="c0AlignBtn">🎯 自動對齊 0° 邊</button>
+        <button type="button" class="btn-action" id="c0ScaleBtn">🔁 切換外/內圈高亮</button>
+        <button type="button" class="btn-action primary" id="c0CheckBtn">✅ 量好了！是 55°</button>
+      </div>
+      <div class="info-bubble" id="c0Msg">拖曳量角器旋轉刻度，讓 0° 基準線對準披薩底部切邊。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動 2／3</span>
+      <span class="card-title">💌 手工立體卡片畫角台</span>
+    </div>
+    <p class="card-desc">卡片底邊已對齊<b>內圈 0°</b>（右邊），拖曳紅色摺線畫出 <b>135°</b> 的展開角！</p>
+    <div class="stage-canvas" id="c1Stage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action" id="c1SnapBtn">↺ 歸位 30°</button>
+        <button type="button" class="btn-action primary" id="c1CheckBtn">✅ 檢查作圖 (135°)</button>
+      </div>
+      <div class="info-bubble" id="c1Msg">目前射線在內圈 30°（小心！外圈寫 150°）。拖曳紅色端點到 135°！</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head">
+      <span class="card-badge">活動 3／3</span>
+      <span class="card-title">🔦 舞台燈光旋轉合成（180°～360°）</span>
+    </div>
+    <p class="card-desc">燈光先轉 <b>120°</b>，再加轉 <b>95°</b>。拖曳綠色光束或按按鈕，觀察突破平角 180°！</p>
+    <div class="stage-canvas" id="c2Stage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid">
+        <button type="button" class="btn-action" id="c2Step1">① 先轉 120°</button>
+        <button type="button" class="btn-action" id="c2Step2">② 再加 95°</button>
+        <button type="button" class="btn-action" id="c2Flat">📏 看平角 180° / 周角 360°</button>
+        <button type="button" class="btn-action" id="c2Reset">↺ 歸零</button>
+      </div>
+      <div class="info-bubble" id="c2Msg">目前總旋轉：0°。點擊步驟或直接拖曳 360° 刻度盤上的光束！</div>
+    </div>
+  </section>
+
+  <div class="concept-footer" id="conceptFooter">
+    <button type="button" class="btn-go-quiz" id="goQuizBtn">🎯 我學會了！進入段考真題測驗 →</button>
+  </div>
+
+  <!-- ============ 真題演練模式（?q=1..10，零劇透雙軌操作台） ============ -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="examBadge">互動量角實驗台</span>
+      <span class="card-title" id="examHintTitle">動手操作驗證（作答前零劇透）</span>
+    </div>
+    <div class="stage-canvas" id="examStage"></div>
+    <div class="interact-panel">
+      <div class="dial-row" id="examControls"></div>
+      <div class="btn-grid">
+        <button type="button" class="btn-action primary" id="verifyBtn">✅ 檢查操作</button>
+        <button type="button" class="btn-action" id="revealSteps">🔍 一步一步看算理</button>
+        <button type="button" class="btn-action" id="resetExamBtn">↺ 重置</button>
+      </div>
+      <div class="info-bubble" id="examMsg">請先拖曳圖形或調整數值，再點「檢查操作」。</div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const P = new URLSearchParams(location.search);
+  const rawQ = parseInt(P.get('q') || '0', 10);
+  const isExam = Number.isInteger(rawQ) && rawQ >= 1 && rawQ <= 10;
+  window.__N410_MODE__ = isExam ? 'exam' : 'concept';
+  window.__N410_Q__ = isExam ? rawQ : 0;
+
+  /* ---------- 主題雙向同步（?theme= / localStorage / THEME_CHANGE） ---------- */
+  const btnTheme = document.getElementById('btn-theme');
+  function applyTheme(t) {
+    const mode = t === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', mode);
+    btnTheme.textContent = mode === 'dark' ? '☀️ 淺色' : '🌙 深色';
+  }
+  const initTheme = P.get('theme') || localStorage.getItem('math108_theme') || 'light';
+  applyTheme(initTheme);
+  btnTheme.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('math108_theme', next); } catch (_) {}
+  });
+  window.addEventListener('message', (ev) => {
+    if (ev && ev.data && ev.data.type === 'THEME_CHANGE') applyTheme(ev.data.theme);
+  });
+
+  /* ---------- 共用 SVG 量角器繪圖器（輕量精準刻度） ---------- */
+  const NS = 'http://www.w3.org/2000/svg';
+  const RAD = Math.PI / 180;
+  function pt(cx, cy, r, degMath) {
+    return [cx + r * Math.cos(degMath * RAD), cy - r * Math.sin(degMath * RAD)];
+  }
+  // degMath: 0° 在正右方 (內圈 0°)，90° 正上方，180° 正左方 (外圈 0°)
+  function buildProtractorGroup(cx, cy, R, rotDeg, highlightScale) {
+    const rot = rotDeg || 0;
+    const g = [`<g transform="rotate(${rot} ${cx} ${cy})">`];
+    g.push(`<path d="M ${cx - R} ${cy} A ${R} ${R} 0 0 1 ${cx + R} ${cy} Z" fill="var(--prot-fill)" stroke="var(--prot-ring)" stroke-width="1.6"/>`);
+    g.push(`<line x1="${cx - R}" y1="${cy}" x2="${cx + R}" y2="${cy}" stroke="var(--prot-ring)" stroke-width="1.4"/>`);
+    g.push(`<circle cx="${cx}" cy="${cy}" r="3.5" fill="var(--prot-ring)"/>`);
+    const outerCol = highlightScale === 'outer' ? 'var(--ray-main)' : 'var(--prot-ring)';
+    const innerCol = highlightScale === 'inner' ? 'var(--ray-main)' : 'var(--prot-inner)';
+    for (let d = 0; d <= 180; d += 5) {
+      const major = d % 10 === 0;
+      const len = major ? 9 : 4.5;
+      const [x1, y1] = pt(cx, cy, R, d);
+      const [x2, y2] = pt(cx, cy, R - len, d);
+      g.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${major ? outerCol : 'var(--ink-soft)'}" stroke-width="${major ? 1.2 : 0.7}"/>`);
+      if (d % 30 === 0 || d === 90) {
+        const [ox, oy] = pt(cx, cy, R - 16, 180 - d);
+        g.push(`<text x="${ox.toFixed(1)}" y="${(oy + 3).toFixed(1)}" text-anchor="middle" font-size="7.5" font-weight="800" fill="${outerCol}">${d}</text>`);
+        if (d !== 90) {
+          const [ix, iy] = pt(cx, cy, R - 26, d);
+          g.push(`<text x="${ix.toFixed(1)}" y="${(iy + 3).toFixed(1)}" text-anchor="middle" font-size="7" font-weight="800" fill="${innerCol}">${d}</text>`);
+        }
+      }
+    }
+    g.push('</g>');
+    return g.join('');
+  }
+  function sectorPath(cx, cy, r, startMathDeg, endMathDeg) {
+    const [x1, y1] = pt(cx, cy, r, startMathDeg);
+    const [x2, y2] = pt(cx, cy, r, endMathDeg);
+    const diff = ((endMathDeg - startMathDeg) % 360 + 360) % 360;
+    const large = diff > 180 ? 1 : 0;
+    return `M ${cx} ${cy} L ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${large} 0 ${x2.toFixed(1)} ${y2.toFixed(1)} Z`;
+  }
+  function attachDrag(svg, onAngle) {
+    let dragging = false;
+    function calc(ev) {
+      const rect = svg.getBoundingClientRect();
+      const vb = svg.viewBox.baseVal;
+      const x = (ev.clientX - rect.left) * (vb.width / rect.width);
+      const y = (ev.clientY - rect.top) * (vb.height / rect.height);
+      const cx = Number(svg.dataset.cx), cy = Number(svg.dataset.cy);
+      let deg = Math.atan2(cy - y, x - cx) / RAD;
+      if (deg < 0) deg += 360;
+      onAngle(Math.round(deg), ev);
+    }
+    svg.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+      calc(e);
+    });
+    svg.addEventListener('pointermove', (e) => { if (dragging) calc(e); });
+    svg.addEventListener('pointerup', (e) => {
+      if (!dragging) return;
+      dragging = false;
+      try { svg.releasePointerCapture(e.pointerId); } catch (_) {}
+    });
+  }
+
+  /* ---------- 觀念小教室：三活動（披薩 55° / 手工卡 135° / 舞台燈 120°+95°） ---------- */
+  const state = { c0Rot: -25, c0Scale: 'inner', c1Deg: 30, c2Deg: 0, exam: {} };
+  window.__N410_STATE__ = state;
+
+  function renderC0() {
+    const st = document.getElementById('c0Stage');
+    const cx = 160, cy = 122, R = 96;
+    const baseStart = 15, targetAngle = 55;
+    const [bx, by] = pt(cx, cy, 108, baseStart);
+    const [tx, ty] = pt(cx, cy, 108, baseStart + targetAngle);
+    st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy}">
+      <path d="${sectorPath(cx, cy, 88, baseStart, baseStart + targetAngle)}" fill="rgba(245,158,11,.24)" stroke="var(--pizza)" stroke-width="2.2"/>
+      <line x1="${cx}" y1="${cy}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="var(--ray-base)" stroke-width="2.4"/>
+      <line x1="${cx}" y1="${cy}" x2="${tx.toFixed(1)}" y2="${ty.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.4"/>
+      ${buildProtractorGroup(cx, cy, R, state.c0Rot, state.c0Scale)}
+      <text x="12" y="16" font-size="10" font-weight="800" fill="var(--ink-soft)">量角器旋轉：${state.c0Rot}°</text>
+    </svg>`;
+    const svg = st.querySelector('svg');
+    attachDrag(svg, (deg) => {
+      let r = 180 - deg;
+      if (r > 90) r -= 180;
+      if (r < -90) r += 180;
+      state.c0Rot = Math.max(-60, Math.min(60, Math.round(r)));
+      const aligned = Math.abs(state.c0Rot + baseStart) <= 3;
+      renderC0();
+      const msg = document.getElementById('c0Msg');
+      if (aligned) {
+        msg.className = 'info-bubble ok';
+        msg.textContent = '已對齊底邊 0°！順著內圈刻度往上讀，披薩角是 55°！';
+      } else {
+        msg.className = 'info-bubble';
+        msg.textContent = `量角器旋轉中（${state.c0Rot}°），目標讓 0° 對準綠色底邊（約 -15°）。`;
+      }
+    });
+  }
+
+  function renderC1() {
+    const st = document.getElementById('c1Stage');
+    const cx = 160, cy = 124, R = 96;
+    const d = Math.max(0, Math.min(180, state.c1Deg));
+    const [rx, ry] = pt(cx, cy, 108, d);
+    st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy}">
+      ${buildProtractorGroup(cx, cy, R, 0, 'inner')}
+      <path d="${sectorPath(cx, cy, 42, 0, d)}" fill="rgba(225,29,72,.15)"/>
+      <line x1="${cx}" y1="${cy}" x2="${cx + 108}" y2="${cy}" stroke="var(--ray-base)" stroke-width="2.6"/>
+      <line x1="${cx}" y1="${cy}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.8"/>
+      <circle cx="${rx.toFixed(1)}" cy="${ry.toFixed(1)}" r="6" fill="var(--ray-main)" stroke="#fff" stroke-width="1.5"/>
+      <text x="12" y="16" font-size="10.5" font-weight="900" fill="var(--ray-main)">內圈：${d}°</text>
+      <text x="242" y="16" font-size="10" font-weight="700" fill="var(--ink-soft)">外圈：${180 - d}°</text>
+    </svg>`;
+    attachDrag(st.querySelector('svg'), (deg) => {
+      state.c1Deg = deg > 180 ? (deg > 270 ? 0 : 180) : deg;
+      renderC1();
+      const msg = document.getElementById('c1Msg');
+      msg.className = Math.abs(state.c1Deg - 135) <= 2 ? 'info-bubble ok' : 'info-bubble';
+      msg.textContent = `目前畫在內圈 ${state.c1Deg}°（外圈 ${180 - state.c1Deg}°）。目標：內圈 135°！`;
+    });
+  }
+
+  function renderC2() {
+    const st = document.getElementById('c2Stage');
+    const cx = 160, cy = 74, R = 64;
+    const d = ((state.c2Deg % 360) + 360) % 360;
+    const isFull = state.c2Deg === 360;
+    const endDeg = isFull ? 359.9 : d;
+    const [rx, ry] = pt(cx, cy, R + 8, endDeg);
+    st.innerHTML = `<svg viewBox="0 0 320 148" data-cx="${cx}" data-cy="${cy}">
+      <circle cx="${cx}" cy="${cy}" r="${R}" fill="var(--prot-fill)" stroke="var(--prot-ring)" stroke-width="1.4"/>
+      <line x1="${cx - R - 8}" y1="${cy}" x2="${cx + R + 8}" y2="${cy}" stroke="var(--ink-soft)" stroke-dasharray="4 3" stroke-width="1"/>
+      <line x1="${cx}" y1="${cy - R - 4}" x2="${cx}" y2="${cy + R + 4}" stroke="var(--ink-soft)" stroke-dasharray="3 3" stroke-width="0.9"/>
+      ${state.c2Deg > 0 ? `<path d="${sectorPath(cx, cy, R - 4, 0, endDeg)}" fill="rgba(31,143,88,.22)" stroke="var(--ok)" stroke-width="1.5"/>` : ''}
+      <line x1="${cx}" y1="${cy}" x2="${cx + R + 6}" y2="${cy}" stroke="var(--ray-base)" stroke-width="2.4"/>
+      <line x1="${cx}" y1="${cy}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ok)" stroke-width="2.6"/>
+      <circle cx="${rx.toFixed(1)}" cy="${ry.toFixed(1)}" r="5.5" fill="var(--ok)" stroke="#fff" stroke-width="1.5"/>
+      <text x="12" y="18" font-size="11" font-weight="900" fill="var(--ok)">總轉角：${state.c2Deg}°</text>
+      <text x="12" y="34" font-size="9.5" font-weight="700" fill="var(--ink-soft)">${state.c2Deg === 180 ? '剛好成一條直線＝平角 180°' : state.c2Deg === 360 ? '繞一整圈＝周角 360°' : state.c2Deg > 180 ? '超過平角 180°（優角）' : '小於平角 180°'}</text>
+    </svg>`;
+    attachDrag(st.querySelector('svg'), (deg) => {
+      state.c2Deg = deg;
+      renderC2();
+      document.getElementById('c2Msg').textContent = `光束已轉動 ${state.c2Deg}°${state.c2Deg > 180 ? '（已超過平角 180°）' : ''}。`;
+    });
+  }
+
+  /* ---------- 概念頁籤控制 ---------- */
+  const navBtns = [...document.querySelectorAll('.act-btn')];
+  const views = [0, 1, 2].map((i) => document.getElementById(`act-${i}-view`));
+  function showAct(idx) {
+    navBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+    views.forEach((v, i) => { v.hidden = i !== idx; });
+    if (idx === 0) renderC0();
+    if (idx === 1) renderC1();
+    if (idx === 2) renderC2();
+  }
+  navBtns.forEach((b) => b.addEventListener('click', () => showAct(Number(b.dataset.act))));
+
+  document.getElementById('c0AlignBtn').addEventListener('click', () => {
+    state.c0Rot = -15; renderC0();
+    const m = document.getElementById('c0Msg');
+    m.className = 'info-bubble ok'; m.textContent = '已對齊 0° 基準線！對準內圈刻度讀數是 55°。';
+  });
+  document.getElementById('c0ScaleBtn').addEventListener('click', () => {
+    state.c0Scale = state.c0Scale === 'inner' ? 'outer' : 'inner'; renderC0();
+  });
+  document.getElementById('c0CheckBtn').addEventListener('click', () => {
+    const m = document.getElementById('c0Msg');
+    m.className = 'info-bubble ok'; m.textContent = '✅ 答對了！這塊披薩切片張開的角度是 55°（銳角）。';
+  });
+  document.getElementById('c1SnapBtn').addEventListener('click', () => {
+    state.c1Deg = 30; renderC1();
+    const m = document.getElementById('c1Msg');
+    m.className = 'info-bubble'; m.textContent = '已歸位 30°，請拖曳紅色端點到內圈 135°！';
+  });
+  document.getElementById('c1CheckBtn').addEventListener('click', () => {
+    const m = document.getElementById('c1Msg');
+    if (Math.abs(state.c1Deg - 135) <= 3) {
+      m.className = 'info-bubble ok'; m.textContent = `✅ 作圖成功！目前 ${state.c1Deg}° 落在內圈 135°（鈍角）。`;
+    } else {
+      m.className = 'info-bubble warn'; m.textContent = `目前是內圈 ${state.c1Deg}°，請再拖曳紅色端點對準 135°！`;
+    }
+  });
+  document.getElementById('c2Step1').addEventListener('click', () => {
+    state.c2Deg = 120; renderC2();
+    document.getElementById('c2Msg').className = 'info-bubble';
+    document.getElementById('c2Msg').textContent = '① 第一步轉了 120°（鈍角）。再點「② 再加 95°」！';
+  });
+  document.getElementById('c2Step2').addEventListener('click', () => {
+    state.c2Deg = 215; renderC2();
+    document.getElementById('c2Msg').className = 'info-bubble ok';
+    document.getElementById('c2Msg').textContent = '② 120°＋95°＝215°！超過平角 180° 多出了 35°。';
+  });
+  document.getElementById('c2Flat').addEventListener('click', () => {
+    state.c2Deg = state.c2Deg === 180 ? 360 : 180; renderC2();
+    document.getElementById('c2Msg').className = 'info-bubble ok';
+    document.getElementById('c2Msg').textContent = state.c2Deg === 180 ? '平角＝180°（2 個直角，成一條直線）。' : '周角＝360°（4 個直角，繞完一整圈）。';
+  });
+  document.getElementById('c2Reset').addEventListener('click', () => {
+    state.c2Deg = 0; renderC2();
+    document.getElementById('c2Msg').className = 'info-bubble';
+    document.getElementById('c2Msg').textContent = '已歸零！可重新點擊或拖曳光束。';
+  });
+  document.getElementById('goQuizBtn').addEventListener('click', () => {
+    if (window.parent && typeof window.parent.switchToExamMode === 'function') {
+      window.parent.switchToExamMode();
+    } else {
+      location.search = '?q=1&theme=' + (document.documentElement.getAttribute('data-theme') || 'light');
+    }
+  });
+
+  /* ---------- 真題演練模式（?q=1..10，零劇透雙軌互動） ---------- */
+  const EXAM_SPECS = {
+    1: {
+      badge: 'Q01・南湖 113-1 概念驗證', title: '拖曳拉長角的兩邊，觀察角度變化',
+      init: { len: 56, deg: 60 },
+      steps: ['角的大小只看「兩條邊張開的程度」。', '邊長從 56 拉長到 110，夾角依舊是 60°。', '正確觀念：角的邊長和角度大小無關。'],
+      check: (s) => ({ ok: s.len !== 56, msg: s.len !== 56 ? '✅ 已驗證！邊長改變了，但張開的角還是 60°（與邊長無關）。' : '請先拖曳橘色圓點拉長或縮短邊長！' })
+    },
+    2: {
+      badge: 'Q02・永安 114-1 角度分類', title: '拖曳射線到 155°，比對 90° 與 180°',
+      init: { deg: 50 },
+      steps: ['直角＝90°、平角＝180°。', '155° 介於 90° 與 180° 之間（90° ＜ 155° ＜ 180°）。', '結論：155° 是「鈍角」。'],
+      check: (s) => ({ ok: Math.abs(s.deg - 155) <= 3, msg: Math.abs(s.deg - 155) <= 3 ? '✅ 已對準 155°！超過 90° 直角、小於 180° 平角 → 鈍角。' : `目前在 ${s.deg}°，請拖曳紅點到 155° 觀察！` })
+    },
+    3: {
+      badge: 'Q03・南湖 111-1 周角探索', title: '拖曳指針轉滿一整圈（360°）',
+      init: { deg: 90, guess: 0 },
+      steps: ['1 個直角＝90°，2 個直角＝平角 180°。', '4 個直角合起來＝360°，剛好轉一圈。', '360° 的角稱為「周角」。'],
+      check: (s) => ({ ok: s.deg >= 355 || s.deg === 360, msg: (s.deg >= 355) ? '✅ 已轉滿一圈 360°（4 個直角），稱為「周角」！' : `目前轉了 ${s.deg}°，請繼續往回轉滿一整圈到 360°！` })
+    },
+    4: {
+      badge: 'Q04・獅湖 114-1 量角器實測', title: '非 0° 起點：旋轉對齊或用撥盤算出夾角',
+      init: { protRot: 0, val: 90, scale: 'outer' },
+      steps: ['看外圈刻度：135° − 30° ＝ 105°。', '看內圈刻度：150° − 45° ＝ 105°。', '夾角大小為 105 度。'],
+      check: (s) => ({ ok: s.val === 105, msg: s.val === 105 ? '✅ 計算正確！同圈大刻度減小刻度＝105°。' : `目前設定 ${s.val}°，請試著旋轉量角器對齊 0° 或調對夾角！` })
+    },
+    5: {
+      badge: 'Q05・南湖 113-1 外圈雙向旋轉', title: '從外圈 0° 順轉 175° 再逆轉 65°',
+      init: { deg: 0, val: 0 },
+      steps: ['起始對齊外圈 0°（左邊）。', '順時針轉 175° → 到達外圈 175°。', '逆時針轉回 65°：175° − 65° ＝ 外圈 110°。'],
+      check: (s) => ({ ok: s.val === 110 || Math.abs(s.deg - 110) <= 2, msg: (s.val === 110 || Math.abs(s.deg - 110) <= 2) ? '✅ 停在外圈 110°！注意不要誤看成內圈 70°。' : `目前停在外圈 ${s.deg}°／撥盤 ${s.val}°，請模擬「先 +175° 再 -65°」！` })
+    },
+    6: {
+      badge: 'Q06・南湖 111-1 內圈雙向旋轉', title: '從內圈 0° 逆轉 108° 再順轉 74°',
+      init: { deg: 0, val: 0 },
+      steps: ['起始對齊內圈 0°（右邊）。', '逆時針轉 108° → 到達內圈 108°。', '順時針轉回 74°：108° − 74° ＝ 內圈 34°。'],
+      check: (s) => ({ ok: s.val === 34 || Math.abs(s.deg - 34) <= 2, msg: (s.val === 34 || Math.abs(s.deg - 34) <= 2) ? '✅ 停在內圈 34°！方向相反要先減回來。' : `目前停在內圈 ${s.deg}°／撥盤 ${s.val}°，請模擬「先 +108° 再 -74°」！` })
+    },
+    7: {
+      badge: 'Q07・南湖 112-1 平角推算', title: '平角(180°) 扣掉直角(90°) 剩多少？',
+      init: { split: 120, val: 60 },
+      steps: ['∠1＋∠2＋∠3 ＝ 平角 ＝ 180°。', '已知 ∠2＋∠3 ＝ 直角 ＝ 90°。', '∠1 ＝ 180° − 90° ＝ 90°。'],
+      check: (s) => ({ ok: s.val === 90, msg: s.val === 90 ? '✅ 正確！平角 180° 扣掉 90° 直角，∠1 也是 90°。' : `目前撥盤 ${s.val}°，請想想平角總共幾度！` })
+    },
+    8: {
+      badge: 'Q08・永安 114-1 優角合成', title: '直角(90°) ＋ 130° 合起來幾度？',
+      init: { sweep: 90, val: 180 },
+      steps: ['∠1 是直角 ＝ 90°，∠2 ＝ 130°。', '兩角拼合超過平角 180°。', '90° ＋ 130° ＝ 220°。'],
+      check: (s) => ({ ok: s.val === 220, msg: s.val === 220 ? '✅ 合成成功！90°＋130°＝220°（超過平角 180°）。' : `目前撥盤 ${s.val}°，點擊「拼上 ∠2 (+130°)」再算算看！` })
+    },
+    9: {
+      badge: 'Q09・獅湖 110-1 扇子旋轉', title: '原開 25°，右邊順轉 130° 再逆轉 20°',
+      init: { currentAngle: 25, step1Done: false, step2Done: false },
+      steps: ['扇子原本張開 25°。', '右邊順時針轉大 130°：25°＋130° ＝ 155°。', '再逆時針轉回 20°：155° − 20° ＝ 135°。'],
+      check: (s) => ({ ok: s.currentAngle === 135, msg: s.currentAngle === 135 ? '✅ 最後扇子打開 135°！記得加上原本的 25°。' : `目前扇角 ${s.currentAngle}°，請依序點「① 順轉 +130°」→「② 逆轉 -20°」！` })
+    },
+    10: {
+      badge: 'Q10・獅湖 110-1 指定角作圖', title: '始邊對齊外圈 0°（左），拖曳畫出 155°',
+      init: { deg: 40 },
+      steps: ['始邊對齊量角器左邊的外圈 0° 線。', '沿外圈刻度數過 90° 到 155°。', '連線即成 155° 鈍角（位於內圈 25° 處）。'],
+      check: (s) => ({ ok: Math.abs(s.deg - 155) <= 3, msg: Math.abs(s.deg - 155) <= 3 ? '✅ 作圖精準！外圈 155° 正是鈍角（若誤看內圈 155° 會變銳角 25°）。' : `目前畫在外圈 ${s.deg}°，請拖曳紅點到外圈 155°！` })
+    }
+  };
+
+  function renderExam() {
+    const spec = EXAM_SPECS[rawQ];
+    const es = state.exam;
+    const st = document.getElementById('examStage');
+    const ctrl = document.getElementById('examControls');
+    const cx = 160, cy = 122, R = 94;
+
+    if (rawQ === 1) {
+      const [rx, ry] = pt(cx - 40, cy, es.len, 60);
+      const ex = cx - 40 + es.len;
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx - 40}" data-cy="${cy}">
+        <path d="${sectorPath(cx - 40, cy, 24, 0, 60)}" fill="rgba(37,117,186,.2)" stroke="var(--a)" stroke-width="1.5"/>
+        <line x1="${cx - 40}" y1="${cy}" x2="${ex}" y2="${cy}" stroke="var(--ray-base)" stroke-width="2.6"/>
+        <line x1="${cx - 40}" y1="${cy}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.6"/>
+        <circle cx="${rx.toFixed(1)}" cy="${ry.toFixed(1)}" r="6" fill="var(--pizza)" stroke="#fff" stroke-width="1.5"/>
+        <text x="12" y="18" font-size="10.5" font-weight="800" fill="var(--ink)">邊長：${es.len}px｜夾角維持：60°</text>
+      </svg>`;
+      ctrl.innerHTML = `<button type="button" class="btn-action" id="q1Short">縮短邊長 (45px)</button><button type="button" class="btn-action" id="q1Long">拉長邊長 (108px)</button>`;
+      ctrl.querySelector('#q1Short').onclick = () => { es.len = 45; renderExam(); };
+      ctrl.querySelector('#q1Long').onclick = () => { es.len = 108; renderExam(); };
+      const svg = st.querySelector('svg');
+      svg.addEventListener('pointerdown', (e) => {
+        const rect = svg.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (320 / rect.width);
+        const y = (e.clientY - rect.top) * (144 / rect.height);
+        es.len = Math.max(36, Math.min(115, Math.round(Math.hypot(x - (cx - 40), cy - y))));
+        renderExam();
+      });
+    } else if (rawQ === 2 || rawQ === 10) {
+      // Q2 (內圈0°) / Q10 (外圈0° 左邊)
+      const isOuter = rawQ === 10;
+      const d = Math.max(0, Math.min(180, es.deg));
+      const mathDeg = isOuter ? (180 - d) : d;
+      const [rx, ry] = pt(cx, cy, 105, mathDeg);
+      const baseEnd = isOuter ? cx - 105 : cx + 105;
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy}">
+        ${buildProtractorGroup(cx, cy, R, 0, isOuter ? 'outer' : 'inner')}
+        <path d="${sectorPath(cx, cy, 38, isOuter ? mathDeg : 0, isOuter ? 180 : mathDeg)}" fill="rgba(225,29,72,.16)"/>
+        <line x1="${cx}" y1="${cy}" x2="${baseEnd}" y2="${cy}" stroke="var(--ray-base)" stroke-width="2.6"/>
+        <line x1="${cx}" y1="${cy}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.6"/>
+        <circle cx="${rx.toFixed(1)}" cy="${ry.toFixed(1)}" r="6" fill="var(--ray-main)" stroke="#fff" stroke-width="1.5"/>
+        <text x="10" y="16" font-size="10.5" font-weight="900" fill="var(--ray-main)">${isOuter ? '外圈' : '內圈'}：${d}°</text>
+      </svg>`;
+      ctrl.innerHTML = `<button type="button" class="btn-action" id="q2Set90">對齊 90°</button><button type="button" class="btn-action" id="q2Set155">撥到 155°</button>`;
+      ctrl.querySelector('#q2Set90').onclick = () => { es.deg = 90; renderExam(); };
+      ctrl.querySelector('#q2Set155').onclick = () => { es.deg = 155; renderExam(); };
+      attachDrag(st.querySelector('svg'), (deg) => {
+        const clamped = deg > 180 ? (deg > 270 ? 0 : 180) : deg;
+        es.deg = isOuter ? (180 - clamped) : clamped;
+        renderExam();
+      });
+    } else if (rawQ === 3) {
+      const cy3 = 72, R3 = 60;
+      const d = es.deg >= 360 ? 359.9 : es.deg;
+      const [rx, ry] = pt(cx, cy3, R3 + 6, d);
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy3}">
+        <circle cx="${cx}" cy="${cy3}" r="${R3}" fill="var(--prot-fill)" stroke="var(--prot-ring)" stroke-width="1.5"/>
+        <line x1="${cx - R3}" y1="${cy3}" x2="${cx + R3}" y2="${cy3}" stroke="var(--ink-soft)" stroke-dasharray="3 3" stroke-width="0.9"/>
+        <line x1="${cx}" y1="${cy3 - R3}" x2="${cx}" y2="${cy3 + R3}" stroke="var(--ink-soft)" stroke-dasharray="3 3" stroke-width="0.9"/>
+        <path d="${sectorPath(cx, cy3, R3 - 4, 0, d)}" fill="rgba(31,143,88,.22)"/>
+        <line x1="${cx}" y1="${cy3}" x2="${cx + R3 + 6}" y2="${cy3}" stroke="var(--ray-base)" stroke-width="2.4"/>
+        <line x1="${cx}" y1="${cy3}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.4"/>
+        <circle cx="${rx.toFixed(1)}" cy="${ry.toFixed(1)}" r="5.5" fill="var(--ray-main)" stroke="#fff" stroke-width="1.4"/>
+        <text x="12" y="18" font-size="10.5" font-weight="900" fill="var(--ink)">已旋轉：${es.deg}°（約 ${Math.round(es.deg / 90)} 個直角）</text>
+      </svg>`;
+      ctrl.innerHTML = `<button type="button" class="btn-action" id="q3p90">+1 個直角 (90°)</button><button type="button" class="btn-action" id="q3Full">轉滿一圈 (360°)</button>`;
+      ctrl.querySelector('#q3p90').onclick = () => { es.deg = Math.min(360, es.deg + 90); renderExam(); };
+      ctrl.querySelector('#q3Full').onclick = () => { es.deg = 360; renderExam(); };
+      attachDrag(st.querySelector('svg'), (deg) => { es.deg = deg === 0 ? 360 : deg; renderExam(); });
+    } else if (rawQ === 4) {
+      // 非0°起點：外圈30°(math 150°) 與 內圈45°(math 45°)
+      const [xL, yL] = pt(cx, cy, 104, 150);
+      const [xR, yR] = pt(cx, cy, 104, 45);
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy}">
+        <path d="${sectorPath(cx, cy, 74, 45, 150)}" fill="rgba(245,158,11,.22)"/>
+        <line x1="${cx}" y1="${cy}" x2="${xL.toFixed(1)}" y2="${yL.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.5"/>
+        <line x1="${cx}" y1="${cy}" x2="${xR.toFixed(1)}" y2="${yR.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.5"/>
+        ${buildProtractorGroup(cx, cy, R, es.protRot, es.scale)}
+        <text x="10" y="16" font-size="10" font-weight="800" fill="var(--ink-soft)">可拖曳旋轉量角器（${es.protRot}°）</text>
+      </svg>`;
+      ctrl.innerHTML = `
+        <button type="button" class="btn-action" id="q4Align">對齊 0° 邊</button>
+        <button type="button" class="btn-action" data-d="-10">-10°</button>
+        <button type="button" class="btn-action" data-d="-5">-5°</button>
+        <span class="dial-val">${es.val}°</span>
+        <button type="button" class="btn-action" data-d="5">+5°</button>
+        <button type="button" class="btn-action" data-d="10">+10°</button>`;
+      ctrl.querySelector('#q4Align').onclick = () => { es.protRot = -30; renderExam(); };
+      ctrl.querySelectorAll('[data-d]').forEach((b) => {
+        b.onclick = () => { es.val = Math.max(0, Math.min(180, es.val + Number(b.dataset.d))); renderExam(); };
+      });
+      attachDrag(st.querySelector('svg'), (deg) => {
+        let r = 180 - deg; if (r > 90) r -= 180; if (r < -90) r += 180;
+        es.protRot = Math.max(-60, Math.min(60, Math.round(r)));
+        renderExam();
+      });
+    } else if (rawQ === 5 || rawQ === 6) {
+      const isOuter = rawQ === 5;
+      const d = Math.max(0, Math.min(180, es.deg));
+      const mathDeg = isOuter ? (180 - d) : d;
+      const [rx, ry] = pt(cx, cy, 105, mathDeg);
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy}">
+        ${buildProtractorGroup(cx, cy, R, 0, isOuter ? 'outer' : 'inner')}
+        <line x1="${cx}" y1="${cy}" x2="${isOuter ? cx - 105 : cx + 105}" y2="${cy}" stroke="var(--ray-base)" stroke-width="2.4"/>
+        <line x1="${cx}" y1="${cy}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.8"/>
+        <circle cx="${rx.toFixed(1)}" cy="${ry.toFixed(1)}" r="5.5" fill="var(--ray-main)" stroke="#fff" stroke-width="1.5"/>
+        <text x="10" y="16" font-size="10.5" font-weight="900" fill="var(--ray-main)">${isOuter ? '外圈' : '內圈'}停在：${d}°</text>
+      </svg>`;
+      const s1 = isOuter ? 175 : 108, s2 = isOuter ? 65 : 74;
+      ctrl.innerHTML = `
+        <button type="button" class="btn-action" id="q5s1">① ${isOuter ? '順' : '逆'}轉 ${s1}°</button>
+        <button type="button" class="btn-action" id="q5s2">② ${isOuter ? '逆' : '順'}轉 ${s2}°</button>
+        <button type="button" class="btn-action" data-d="-10">-10°</button>
+        <span class="dial-val">${es.val}°</span>
+        <button type="button" class="btn-action" data-d="10">+10°</button>
+        <button type="button" class="btn-action" data-d="1">+1°</button>`;
+      ctrl.querySelector('#q5s1').onclick = () => { es.deg = s1; es.val = s1; renderExam(); };
+      ctrl.querySelector('#q5s2').onclick = () => { es.deg = Math.max(0, es.deg - s2); es.val = es.deg; renderExam(); };
+      ctrl.querySelectorAll('[data-d]').forEach((b) => {
+        b.onclick = () => { es.val = Math.max(0, Math.min(180, es.val + Number(b.dataset.d))); es.deg = es.val; renderExam(); };
+      });
+      attachDrag(st.querySelector('svg'), (deg) => {
+        const clamped = deg > 180 ? (deg > 270 ? 0 : 180) : deg;
+        es.deg = isOuter ? (180 - clamped) : clamped;
+        es.val = es.deg;
+        renderExam();
+      });
+    } else if (rawQ === 7) {
+      const [rx, ry] = pt(cx, cy, 98, 90);
+      const [sx, sy] = pt(cx, cy, 90, es.split);
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy}">
+        <path d="${sectorPath(cx, cy, 78, 0, 90)}" fill="rgba(37,117,186,.18)" stroke="var(--a)" stroke-width="1.2"/>
+        <path d="${sectorPath(cx, cy, 78, 90, 180)}" fill="rgba(245,158,11,.18)" stroke="var(--pizza)" stroke-width="1.2"/>
+        <line x1="${cx - 105}" y1="${cy}" x2="${cx + 105}" y2="${cy}" stroke="var(--ink)" stroke-width="2.4"/>
+        <line x1="${cx}" y1="${cy}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-base)" stroke-width="2.4"/>
+        <line x1="${cx}" y1="${cy}" x2="${sx.toFixed(1)}" y2="${sy.toFixed(1)}" stroke="var(--ray-main)" stroke-dasharray="4 3" stroke-width="1.8"/>
+        <rect x="${cx}" y="${cy - 12}" width="12" height="12" fill="none" stroke="var(--a)" stroke-width="1.5"/>
+        <text x="12" y="20" font-size="10.5" font-weight="800" fill="var(--ink)">左：∠1 = ?°｜右：∠2+∠3 = 直角 90°</text>
+      </svg>`;
+      ctrl.innerHTML = `
+        <button type="button" class="btn-action" data-d="-15">-15°</button>
+        <span class="dial-val">∠1 = ${es.val}°</span>
+        <button type="button" class="btn-action" data-d="15">+15°</button>`;
+      ctrl.querySelectorAll('[data-d]').forEach((b) => {
+        b.onclick = () => { es.val = Math.max(0, Math.min(180, es.val + Number(b.dataset.d))); renderExam(); };
+      });
+      attachDrag(st.querySelector('svg'), (deg) => { es.split = Math.max(95, Math.min(175, deg)); renderExam(); });
+    } else if (rawQ === 8) {
+      const cy8 = 72, R8 = 60;
+      const [rx, ry] = pt(cx, cy8, R8 + 4, es.sweep);
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy8}">
+        <circle cx="${cx}" cy="${cy8}" r="${R8}" fill="var(--prot-fill)" stroke="var(--line)" stroke-width="1.2"/>
+        <line x1="${cx - R8 - 6}" y1="${cy8}" x2="${cx + R8 + 6}" y2="${cy8}" stroke="var(--ink-soft)" stroke-dasharray="3 3" stroke-width="1"/>
+        <path d="${sectorPath(cx, cy8, R8 - 4, 0, 90)}" fill="rgba(37,117,186,.24)"/>
+        ${es.sweep > 90 ? `<path d="${sectorPath(cx, cy8, R8 - 4, 90, es.sweep)}" fill="rgba(245,158,11,.24)"/>` : ''}
+        <line x1="${cx}" y1="${cy8}" x2="${cx + R8 + 4}" y2="${cy8}" stroke="var(--ray-base)" stroke-width="2.2"/>
+        <line x1="${cx}" y1="${cy8}" x2="${rx.toFixed(1)}" y2="${ry.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.4"/>
+        <text x="10" y="18" font-size="10" font-weight="800" fill="var(--ink)">∠1(90°) ＋ ∠2(130°)</text>
+      </svg>`;
+      ctrl.innerHTML = `
+        <button type="button" class="btn-action" id="q8Add">拼上 ∠2 (+130°)</button>
+        <button type="button" class="btn-action" data-d="-10">-10°</button>
+        <span class="dial-val">${es.val}°</span>
+        <button type="button" class="btn-action" data-d="10">+10°</button>`;
+      ctrl.querySelector('#q8Add').onclick = () => { es.sweep = 220; renderExam(); };
+      ctrl.querySelectorAll('[data-d]').forEach((b) => {
+        b.onclick = () => { es.val = Math.max(90, Math.min(360, es.val + Number(b.dataset.d))); renderExam(); };
+      });
+      attachDrag(st.querySelector('svg'), (deg) => { es.sweep = deg; renderExam(); });
+    } else if (rawQ === 9) {
+      const cy9 = 108, R9 = 88;
+      const startDeg = 165, endDeg = startDeg - es.currentAngle;
+      const [x1, y1] = pt(cx, cy9, R9, startDeg);
+      const [x2, y2] = pt(cx, cy9, R9, endDeg);
+      st.innerHTML = `<svg viewBox="0 0 320 144" data-cx="${cx}" data-cy="${cy9}">
+        <path d="${sectorPath(cx, cy9, R9, endDeg, startDeg)}" fill="rgba(245,158,11,.25)" stroke="var(--pizza)" stroke-width="2"/>
+        <line x1="${cx}" y1="${cy9}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="var(--ray-base)" stroke-width="2.4"/>
+        <line x1="${cx}" y1="${cy9}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="var(--ray-main)" stroke-width="2.6"/>
+        <circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="5" fill="var(--ray-main)" stroke="#fff" stroke-width="1.4"/>
+        <text x="12" y="18" font-size="11" font-weight="900" fill="var(--ink)">扇子張開：${es.currentAngle}°</text>
+      </svg>`;
+      ctrl.innerHTML = `
+        <button type="button" class="btn-action ${es.step1Done ? 'active' : ''}" id="q9s1">${es.step1Done ? '✓ 已順轉 +130°' : '① 順轉 +130°'}</button>
+        <button type="button" class="btn-action ${es.step2Done ? 'active' : ''}" id="q9s2">${es.step2Done ? '✓ 已逆轉 -20°' : '② 逆轉 -20°'}</button>
+        <button type="button" class="btn-action" data-d="-5">-5°</button>
+        <span class="dial-val">${es.currentAngle}°</span>
+        <button type="button" class="btn-action" data-d="5">+5°</button>`;
+      ctrl.querySelector('#q9s1').onclick = () => {
+        if (!es.step1Done) {
+          es.currentAngle = Math.min(180, es.currentAngle + 130);
+          es.step1Done = true;
+          renderExam();
+        }
+      };
+      ctrl.querySelector('#q9s2').onclick = () => {
+        es.currentAngle = Math.max(0, es.currentAngle - 20);
+        es.step2Done = true;
+        renderExam();
+      };
+      ctrl.querySelectorAll('[data-d]').forEach((b) => {
+        b.onclick = () => {
+          es.currentAngle = Math.max(0, Math.min(180, es.currentAngle + Number(b.dataset.d)));
+          renderExam();
+        };
+      });
+      attachDrag(st.querySelector('svg'), (deg) => {
+        let diff = startDeg - deg;
+        if (diff < -180) diff += 360;
+        es.currentAngle = Math.max(0, Math.min(180, Math.round(diff)));
+        renderExam();
+      });
+    }
+  }
+
+  function initExam() {
+    document.body.classList.add('q-mode');
+    document.getElementById('qtag').textContent = `真題 Q${rawQ}`;
+    document.getElementById('examView').hidden = false;
+    [0, 1, 2].forEach((i) => { document.getElementById(`act-${i}-view`).hidden = true; });
+    const spec = EXAM_SPECS[rawQ];
+    state.exam = Object.assign({}, spec.init);
+    document.getElementById('examBadge').textContent = spec.badge;
+    document.getElementById('examHintTitle').textContent = spec.title;
+    const stepsBox = document.getElementById('stepsBox');
+    stepsBox.hidden = true;
+    stepsBox.innerHTML = spec.steps.map((s, i) => `<div class="step-line"><b>步驟 ${i + 1}：</b>${s}</div>`).join('');
+    renderExam();
+
+    document.getElementById('verifyBtn').onclick = () => {
+      const res = spec.check(state.exam);
+      const m = document.getElementById('examMsg');
+      m.className = 'info-bubble ' + (res.ok ? 'ok' : 'warn');
+      m.textContent = res.msg;
+      if (res.ok) stepsBox.hidden = false;
+    };
+    document.getElementById('revealSteps').onclick = () => {
+      stepsBox.hidden = !stepsBox.hidden;
+    };
+    document.getElementById('resetExamBtn').onclick = () => {
+      state.exam = Object.assign({}, spec.init);
+      stepsBox.hidden = true;
+      const m = document.getElementById('examMsg');
+      m.className = 'info-bubble';
+      m.textContent = '已重置，請重新操作並點「檢查操作」。';
+      renderExam();
+    };
+  }
+
+  if (isExam) initExam();
+  else showAct(0);
+})();
+</script>
+</body>
+</html>

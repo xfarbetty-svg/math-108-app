@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-R-4-4 數量模式與推理（II）・三活動雙軌互動教具</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{--bg:var(--bg-main);--card:var(--bg-card);--elev:var(--bg-elevated);--ink:var(--text-primary);--soft:var(--text-secondary);--line:var(--border-color);--a:var(--accent-primary);--mint:var(--accent-mint);--sky:var(--accent-sky);--lemon:var(--accent-lemon);--ok:#2fa36b;--warn:#c2410c;--radius:12px}
+html[data-theme="dark"]{--ok:#4ade80;--warn:#fca5a5}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{margin:0;padding:8px}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+#app{width:100%;max-width:470px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:5px;max-height:415px;overflow:hidden}
+.top{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:18px;font-size:10px;color:var(--soft)}
+.top b{font-size:12px;color:var(--ink);font-weight:900}
+.tools{display:flex;align-items:center;gap:5px}
+#btn-theme{width:26px;height:26px;flex:0 0 26px;border:1.5px solid var(--line);border-radius:50%;background:var(--card);color:var(--ink);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center}
+#modeTag{font-size:9.5px;font-weight:800;color:var(--a);white-space:nowrap}
+#tabs{display:flex;gap:4px;background:var(--elev);padding:3px;border-radius:999px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:5px 8px;border-radius:999px;font-size:10.5px;font-weight:900;color:var(--soft);white-space:nowrap}
+.tab.active{background:var(--card);color:var(--a);box-shadow:0 2px 5px rgba(0,0,0,.08)}
+body.quiz #tabs{display:none!important}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;max-width:100%;max-height:350px;overflow:hidden}
+.cap{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.tag{background:var(--elev);color:var(--a);font-size:9.5px;font-weight:900;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.ttl{font-size:12.5px;font-weight:900;color:var(--ink)}
+.sub{font-size:10.5px;line-height:1.45;color:var(--soft)}
+.stage{width:100%;background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:3px;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.stage svg{width:100%;max-width:420px;height:auto;max-height:112px;display:block}
+.slot{background:var(--elev);border:1px solid var(--line);border-radius:9px;padding:5px 7px;text-align:center}
+.row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.btn{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:4px 9px;font-size:10.5px;font-weight:900}
+.btn.main{border-color:var(--a);color:var(--a)}
+.btn:active{transform:translateY(1px)}
+.note{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10px;line-height:1.4;color:var(--ink);font-weight:700;text-align:left;min-height:19px}
+.note.good{border-color:var(--ok);color:var(--ok)}
+.note.bad{border-color:var(--warn);color:var(--warn)}
+.explain{display:grid;grid-template-columns:46px 1fr;gap:1px 6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;line-height:1.2;background:var(--elev);border-radius:8px;padding:4px 6px;border:1px dashed var(--line)}
+.explain .k{color:var(--a);font-weight:900;white-space:nowrap}
+.explain .v{color:var(--ink);min-width:0;word-break:break-word}
+.explain .trap{color:var(--warn)}
+[hidden]{display:none!important}
+@media (max-width:390px){.top b{font-size:11px}.tab{font-size:10px;padding:5px 6px}.ttl{font-size:11.5px}.btn{padding:4px 7px;font-size:10px}}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="top"><b>R-4-4 數量模式與推理（II）</b><div class="tools"><span id="modeTag">🌱 概念探索</span><button id="btn-theme" type="button" aria-label="切換主題">🌙</button></div></div>
+  <nav id="tabs">
+    <button class="tab active" type="button">活動一・花園澆水</button>
+    <button class="tab" type="button">活動二・課桌方陣</button>
+    <button class="tab" type="button">活動三・圍巾色塊</button>
+  </nav>
+  <section class="panel" id="s0"></section>
+  <section class="panel" id="s1" hidden></section>
+  <section class="panel" id="s2" hidden></section>
+  <section class="panel" id="squiz" hidden></section>
+</div>
+<script>
+/* 本教具只提供操作圖與算理；題幹、四選項、換題鈕一律由外殼呈現。 */
+var U=new URLSearchParams(location.search);
+var qn=parseInt(U.get('q')||'0',10);
+var QUIZ=qn>=1&&qn<=10;
+var NO=QUIZ?qn:1;
+var get=function(id){return document.getElementById(id);};
+var DAY=['日','一','二','三','四','五','六'];
+
+/* 三個不同生活情境的 108 課綱活動 */
+var LESSONS=[
+ {tag:'🌱 活動一・花園澆水日誌',ttl:'花園：每 7 天巡一次澆水',sub:'今天 6 日星期五，園丁每 7 天巡一次。點「＋7 天」看看日期與星期怎麼變。',
+  kind:'garden',d:6,w:5,step:7,targetD:13,targetW:5,
+  idea:'同一星期幾每隔 7 天出現一次：日期加 7，星期不變。',
+  steps:['今天是 6 日星期五','6＋7＝13','13 日仍是星期五'],
+  trap:'以為日期加 7 時星期也要往後挪 7 格，其實回到同一星期幾。'},
+ {tag:'🌱 活動二・課桌方陣',ttl:'課桌：每排 5 張的方陣',sub:'第一排已排 5 張課桌。點「排下一排」每次補 5 張，數數三排共幾張。',
+  kind:'desk',rows:1,cols:5,per:5,targetRows:3,
+  idea:'方陣每排固定 5 張，排數 × 5 就是總數。',
+  steps:['1 排：1×5＝5 張','2 排：2×5＝10 張','3 排：3×5＝15 張'],
+  trap:'把「排數」當成「每排張數」，或誤以為每次只加 1 張。'},
+ {tag:'🌱 活動三・圍巾色塊',ttl:'圍巾：紅→黃→藍三色循環',sub:'圍巾依「紅、黃、藍」一直重複。點「再織一格」補上下一塊。',
+  kind:'scarf',cells:['紅','黃','藍','?','?','?'],fills:['紅','黃','藍'],done:0,
+  idea:'三色為一循環，每隔 3 格回到同一種顏色。',
+  steps:['第 1、4 格都是紅色','第 2、5 格都是黃色','第 3、6 格都是藍色'],
+  trap:'只看前一格就猜下一格，忽略三色一循環。'}
+];
+
+/* 10 題真題的專屬操作資料（題幹與選項由外殼承載） */
+var BANK=[
+ {k:'cal',d:10,w:2,ops:[7,1],td:25,tw:3,c:'星期以 7 天為一循環；相隔天數除以 7，餘數就是往後挪幾個星期名。',s:['25－10＝15（相隔 15 天）','15÷7＝2 餘 1','星期二往後 1 天是星期三'],t:'把 15 直接當成星期數，或誤把餘數 1 往後算成星期四。'},
+ {k:'grid',cols:6,rows:4,r:0,c:4,target:'6',cpt:'方陣表格每橫排固定 6 個數，所以同一直排往下剛好多 6。',s:['5 在第 1 排第 5 格；11 在第 2 排第 5 格','由 22 向上三排是 4，再右移兩格是 6','27 在直排 3，13 在直排 1','每一直排上下相差 6'],t:'只看相鄰兩數就以為上下相差 1，忽略表格寬度是 6。'},
+ {k:'tiles',cells:['2','4','6','?','10','12','3','?','9','12','15','18'],fills:['8','6'],done:0,target:'2',op:'相減',cpt:'先找出每排的固定增量，再補上缺漏的數。',s:['上排每次＋2：2、4、6、8、10、12','下排每次＋3：3、6、9、12、15、18','8－6＝2'],t:'把兩格位置看反或用 10－3＝7，沒有先還原數列。'},
+ {k:'tiles',cells:['2','4','6','?','10','12','3','?','9','12','15','18'],fills:['8','6'],done:0,target:'14',op:'相加',cpt:'同一組數列可以問相差，也可以問相加；先把遮蔽數還原。',s:['上排＋2，缺的是 8','下排＋3，缺的是 6','8＋6＝14'],t:'沿用前一題的「相減」直覺，忘記題目問的是相加。'},
+ {k:'cal',d:5,w:5,ops:[7],td:19,tw:5,c:'同一星期幾每隔 7 天出現一次；從 1 月 5 日（第 1 個星期五）往後數。',s:['1 月 1 日星期一，所以第 1 個星期五是 5 日','5＋7＝12（第 2 個星期五）','12＋7＝19（第 3 個星期五）'],t:'把「第 3 個」算成 5＋3＝8，或用 1＋7×3＝22。'},
+ {k:'cal',d:19,w:5,ops:[-7,-1],td:11,tw:4,c:'往前回溯跨週時，先退 7 天到同一星期幾，再退剩下的天數。',s:['19－7＝12，仍是星期五','再退 1 天：12－1＝11，星期四','所以期末考是 1 月 11 日星期四'],t:'直接算 19－8＝11 但忘了星期也要跟著退，或誤算成星期三。'},
+ {k:'cal',d:1,w:2,ops:[1],td:2,tw:3,c:'月曆橫排是連續日期，往右一天就加 1。',s:['看 7 月月曆同一列：1、2、3、4、5、6、7','相鄰兩數相差 1','所以右邊比左邊大 1'],t:'把直排的＋7誤用到橫排。'},
+ {k:'cal',d:1,w:2,ops:[7],td:8,tw:2,c:'同一星期幾隔一週出現，所以直排往下加 7。',s:['看 7 月月曆同一行：1、8、15、22、29','8－1＝7、15－8＝7','所以上下相差 7'],t:'誤以為一週有 5 個上課日就加 5。'},
+ {k:'grid',cols:4,rows:6,r:5,c:3,target:'24',seat:1,cpt:'座位按每排 4 個的方陣排列；同排相鄰座位相差 2。',s:['每排座椅：17、19、20、18；21、23、24、22','22 號在第 6 排右側靠窗','同排旁邊是 24 號'],t:'以為 22＋2＝24 是下一排，其實是同排相鄰；20 號在上一排。'},
+ {k:'cal',d:15,w:2,ops:[-6,7],td:9,tw:3,c:'右上方是「下一列且往右一格」：往下＋7、往右＋1，所以右上方的數比自己小 7－1＝6。',s:['以 15 為例，右上方是 9','15－9＝6','所以每一個數比它右上方的數大 6'],t:'只看橫向＋1或縱向＋7，沒有合併兩個方向。'}
+];
+
+function safe(v){return String(v).replace(/[&<>]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[ch];});}
+function frame(inner){return '<svg viewBox="0 0 400 88" xmlns="http://www.w3.org/2000/svg" role="img">'+inner+'</svg>';}
+function paper(){return '<rect x="4" y="4" width="392" height="80" rx="10" fill="var(--elev)" stroke="var(--line)"/>';}
+function footer(label){return '<text x="200" y="82" text-anchor="middle" font-size="10.5" font-weight="900" fill="var(--a)">'+safe(label)+'</text>';}
+
+function calSVG(st){
+ var s=paper(),label=st.td!==undefined?'Q'+NO:'活動一';
+ DAY.forEach(function(day,i){var x=24+i*53,hit=(day===DAY[st.w]);
+  s+='<circle cx="'+x+'" cy="28" r="'+(hit?15:12)+'" fill="'+(hit?'var(--a)':'var(--card)')+'" stroke="var(--line)" stroke-width="2"/>';
+  s+='<text x="'+x+'" y="32" text-anchor="middle" font-size="12" font-weight="900" fill="'+(hit?'#fff':'var(--ink)')+'">'+day+'</text>';});
+ s+='<line x1="18" y1="52" x2="382" y2="52" stroke="var(--line)"/>';
+ s+='<text x="200" y="70" text-anchor="middle" font-size="13.5" font-weight="900" fill="var(--ink)">'+label+'　目前：'+st.d+' 日（星期'+DAY[st.w]+'）</text>';
+ return frame(s);
+}
+function gridSVG(st){
+ var s=paper(),cols=st.cols,rows=st.rows,cw=Math.floor(352/cols),x0=22,y0=9,ch=17;
+ for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+  var x=x0+c*cw,y=y0+r*ch,num;
+  if(st.seat){num=String(r*4+[1,3,4,2][c]);}
+  else if(st.per){num=String(r*st.per+c+1);}
+  else{num=String(r*cols+c+1);}
+  var on=(r===st.r&&c===st.c);
+  s+='<rect x="'+x+'" y="'+y+'" width="'+(cw-3)+'" height="'+(ch-2)+'" rx="3" fill="'+(on?'var(--a)':'var(--card)')+'" stroke="var(--line)"/>';
+  s+='<text x="'+(x+(cw-3)/2)+'" y="'+(y+12)+'" text-anchor="middle" font-size="9" font-weight="800" fill="'+(on?'#fff':'var(--ink)')+'">'+num+'</text>';
+ }
+ s+=footer((QUIZ?'Q'+NO+'　':'')+'游標落在 '+(st.seat?(st.r*4+[1,3,4,2][st.c]):(st.r*cols+st.c+1)));
+ return frame(s);
+}
+function tilesSVG(st){
+ var s=paper(),cells=st.cells||['紅','黃','藍','?','?','?'],per=6,cw=59,x0=20,y0=12,ch=31;
+ var palette={'紅':'var(--warn)','黃':'var(--lemon)','藍':'var(--a)','綠':'var(--mint)'};
+ cells.forEach(function(v,i){var r=Math.floor(i/per),c=i%per,x=x0+c*cw,y=y0+r*ch,unknown=(v==='?');
+  var fill=unknown?'var(--card)':(palette[v]||'var(--elev)');
+  s+='<rect x="'+x+'" y="'+y+'" width="'+(cw-4)+'" height="'+(ch-4)+'" rx="5" fill="'+fill+'" stroke="'+(unknown?'var(--a)':'var(--line)')+'" stroke-width="'+(unknown?2:1)+'"/>';
+  s+='<text x="'+(x+(cw-4)/2)+'" y="'+(y+20)+'" text-anchor="middle" font-size="11.5" font-weight="900" fill="var(--ink)">'+safe(v)+'</text>';});
+ s+=footer((QUIZ?'Q'+NO+'　':'')+(st.op||'三色循環'));
+ return frame(s);
+}
+function gardenSVG(st){var x=calSVG(st);return x;}
+function deskSVG(st){var s=paper();
+ for(var r=0;r<st.rows;r++)for(var c=0;c<st.cols;c++){
+  var x=62+c*69,y=11+r*20;
+  s+='<rect x="'+x+'" y="'+y+'" width="62" height="17" rx="3" fill="var(--card)" stroke="var(--a)" stroke-width="1.5"/>';
+  s+='<text x="'+(x+31)+'" y="'+(y+12)+'" text-anchor="middle" font-size="9" font-weight="800" fill="var(--ink)">'+(r*st.per+c+1)+'</text>';}
+ s+=footer(st.rows+' 排 × '+st.per+' 張 ＝ '+(st.rows*st.per)+' 張');
+ return frame(s);
+}
+function scarfSVG(st){return tilesSVG(st);}
+function draw(st){
+ if(st.kind==='cal')return calSVG(st);
+ if(st.kind==='grid')return gridSVG(st);
+ if(st.kind==='tiles')return tilesSVG(st);
+ if(st.kind==='garden')return gardenSVG(st);
+ if(st.kind==='desk')return deskSVG(st);
+ return scarfSVG(st);
+}
+
+var cur=0,state=null;
+function kindOf(d){return d.kind||d.k;}
+function make(d){
+ var k=kindOf(d);
+ if(k==='cal')return {kind:'cal',d:d.d,w:d.w,ops:d.ops||[7],td:d.td,tw:d.tw,shown:0,ok:0,qno:NO};
+ if(k==='garden')return {kind:'garden',d:d.d,w:d.w,ops:d.ops||[d.step],td:d.targetD,tw:d.targetW,shown:0,ok:0,qno:NO};
+ if(k==='grid')return {kind:'grid',cols:d.cols,rows:d.rows,r:d.r,c:d.c,target:d.target,seat:!!d.seat,shown:0,ok:0,qno:NO};
+ if(k==='desk')return {kind:'desk',rows:d.rows,cols:d.cols,per:d.per,target:d.targetRows,shown:0,ok:0};
+ if(k==='tiles')return {kind:'tiles',cells:d.cells.slice(),fills:d.fills,done:0,target:d.target,op:d.op||'',shown:0,ok:0,qno:NO};
+ return {kind:'scarf',cells:d.cells.slice(),fills:d.fills,done:0,shown:0,ok:0};
+}
+function buttons(d){
+ var k=kindOf(d);
+ if(k==='cal'||k==='garden')return (d.ops||[d.step]).map(function(n,i){return '<button type="button" class="btn" data-delta="'+n+'"'+(i===0?' data-op="0"':'')+'>'+(n>=0?'＋':'－')+Math.abs(n)+' 天</button>';}).join('');
+ if(k==='grid')return ['往左','往右','往上','往下'].map(function(v){return '<button type="button" class="btn" data-move="'+v+'">'+v+'</button>';}).join('');
+ if(k==='desk')return '<button type="button" class="btn main" data-row="1" data-addrow="1">排下一排</button>';
+ return '<button type="button" class="btn main" data-next="1" data-fill="1">'+(k==='scarf'?'再織一格':'填入下一格')+'</button>';
+}
+function explain(d){
+ var st=state;if(!st.shown)return '';
+ var out='<div class="explain"><span class="k">概念</span><span class="v">'+safe(d.cpt||d.c||d.idea)+'</span>';
+ (d.s||d.steps).forEach(function(v,i){out+='<span class="k">步驟'+(i+1)+'</span><span class="v">'+safe(v)+'</span>';});
+ out+='<span class="k trap">陷阱</span><span class="v trap">'+safe(d.t||d.trap)+'</span></div>';
+ return out;
+}
+function stShown(){return !!(state&&state.shown);}
+function feedback(d){
+ if(!stShown())return '💡 先操作圖示，再按「驗證算式」或「一步一步看算理」。';
+ return state.ok?'✓ 已到達目標位置，算理展開如下。':'✗ 尚未到達目標，可再操作或點「一步一步看算理」。';
+}
+function render(d){
+ var head=QUIZ?('🎯 段考真題 Q'+NO):d.tag;
+ var title=QUIZ?('第 '+NO+' 題・動手操作區'):d.ttl;
+ var sub=QUIZ?'題幹與四選項由外殼呈現；操作下方圖示，驗證後才展開算理。':d.sub;
+ var html='<div class="cap"><span class="tag">'+safe(head)+'</span><span class="ttl">'+safe(title)+'</span></div>'
+  +'<div class="sub">'+safe(sub)+'</div>'
+  +'<div class="stage">'+draw(state)+'</div>'
+  +'<div class="slot"><div class="row">'+buttons(d)+'</div></div>'
+  +'<div class="note'+(stShown()?(state.ok?' good':' bad'):'')+'">'+safe(feedback(d))+'</div>'
+  +'<div class="row"><button type="button" class="btn main" data-check="1">驗證算式</button><button type="button" class="btn" data-r="1">一步一步看算理 🔍</button></div>'
+  +explain(d);
+ host().innerHTML=html;wire(d);grow();
+}
+function host(){return get(QUIZ?'squiz':'s'+cur);}
+function decide(d){
+ if(state.kind==='cal'||state.kind==='garden')state.ok=(state.d===state.td&&state.w===state.tw);
+ else if(state.kind==='grid')state.ok=(String(state.r*state.cols+state.c+1)===String(state.target)||(state.seat&&String(state.r*4+[1,3,4,2][state.c])===String(state.target)));
+ else if(state.kind==='desk')state.ok=(state.rows===state.target);
+ else state.ok=(state.done===(state.fills||[]).length);
+ state.shown=1;render(d);
+}
+function wire(d){
+ host().querySelectorAll('button').forEach(function(b){
+  if(b.dataset.delta!==undefined)b.onclick=function(){var n=parseInt(b.dataset.delta,10);state.d+=n;state.w=((state.w+(n%7))%7+7)%7;render(d);};
+  else if(b.dataset.move)b.onclick=function(){var m=b.dataset.move;if(m==='往左')state.c=Math.max(0,state.c-1);if(m==='往右')state.c=Math.min(state.cols-1,state.c+1);if(m==='往上')state.r=Math.max(0,state.r-1);if(m==='往下')state.r=Math.min(state.rows-1,state.r+1);render(d);};
+  else if(b.dataset.row)b.onclick=function(){if(state.rows<4)state.rows++;render(d);};
+  else if(b.dataset.next)b.onclick=function(){if(state.done<state.fills.length){var i=state.cells.indexOf('?');if(i>=0)state.cells[i]=state.fills[state.done];state.done++;render(d);}};
+  else if(b.dataset.check)b.onclick=function(){decide(d);};
+  else if(b.dataset.r)b.onclick=function(){state.shown=1;render(d);};
+ });
+}
+function choose(i){
+ cur=i;for(var k=0;k<3;k++){get('s'+k).hidden=(k!==i);if(k!==i)get('s'+k).innerHTML='';}
+ Array.prototype.forEach.call(get('tabs').children,function(b,k){b.classList.toggle('active',k===i);});
+ state=make(LESSONS[i]);render(LESSONS[i]);
+}
+function theme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem('math108_theme',t);}catch(e){}get('btn-theme').textContent=(t==='dark')?'☀️':'🌙';get('btn-theme').setAttribute('aria-label',(t==='dark')?'切換到亮色':'切換到暗色');}
+get('btn-theme').onclick=function(){var t=(document.documentElement.dataset.theme==='dark')?'light':'dark';theme(t);try{var u=new URL(location.href);u.searchParams.set('theme',t);history.replaceState(null,'',u);}catch(e){}try{window.parent.postMessage({type:'THEME_CHANGE',theme:t},'*');window.dispatchEvent(new CustomEvent('THEME_CHANGE',{detail:{theme:t}}));}catch(e){}};
+window.addEventListener('message',function(e){if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme)theme(e.data.theme);});
+var tq=U.get('theme');if(tq==='dark'||tq==='light')theme(tq);else{var saved='light';try{saved=localStorage.getItem('math108_theme')||'light';}catch(e){}theme(saved);}
+function grow(){try{var h=Math.min(415,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight));window.parent.postMessage({type:'resize',height:h},'*');}catch(e){}}
+
+window.__R44_MODE__=QUIZ?'exam':'concept';window.__R44_Q__=NO;
+if(QUIZ){document.body.classList.add('quiz');get('tabs').hidden=true;for(var k=0;k<3;k++)get('s'+k).hidden=true;get('modeTag').textContent='🎯 段考真題 Q'+NO;get('squiz').hidden=false;state=make(BANK[NO-1]);render(BANK[NO-1]);}
+else{get('squiz').hidden=true;Array.prototype.forEach.call(get('tabs').children,function(b,k){b.onclick=function(){choose(k);};});choose(0);}
+window.__R44_READY__=true;window.addEventListener('load',grow);window.addEventListener('resize',grow);
+</script>
+</body>
+</html>

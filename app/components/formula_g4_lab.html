@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-R-4-3 以文字表示數學公式</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#16a34a; --warn:#dc2626; --hl:#f59e0b; --blue:#2563eb;
+  --shadow:0 4px 14px var(--shadow-color); --radius:12px;
+}
+html[data-theme="dark"]{ --ok:#4ade80; --warn:#f87171; --hl:#fbbf24; --blue:#60a5fa; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:6px 8px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:560px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:5px;overflow:visible}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--ink-soft);min-height:20px}
+.head b{font-size:12.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.head-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.btn-theme{background:var(--elev);border:1px solid var(--line);border-radius:999px;padding:2px 7px;font-size:11px;font-weight:800;color:var(--ink)}
+.activity-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:var(--elev);padding:3px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:1 0 auto;padding:5px 8px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap;text-align:center}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:7px 9px;display:flex;flex-direction:column;gap:5px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:12.5px;font-weight:800;color:var(--ink)}
+.card-desc{font-size:11px;line-height:1.3;color:var(--ink-soft)}
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:4px 6px;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;min-height:108px;position:relative}
+.stage-canvas svg{width:100%;max-width:340px;height:auto;max-height:130px;display:block;overflow:visible}
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:5px 7px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:8px;white-space:nowrap}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff}
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;font-size:10.5px;line-height:1.3;color:var(--ink);font-weight:700;text-align:left;min-height:20px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.steps-box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 7px;display:flex;flex-direction:column;gap:1.5px;text-align:left}
+.steps-box .st{font-size:10px;line-height:1.22;color:var(--ink)}
+.steps-box .st b{color:var(--a)}
+.steps-box .fin{font-size:10px;font-weight:900;color:var(--ok)}
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:12px;font-weight:900;padding:7px;border-radius:10px;text-align:center}
+@media (min-width: 700px){
+  .exam-body{display:grid;grid-template-columns:1.15fr 0.85fr;gap:8px;align-items:start}
+}
+[hidden]{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head">
+    <b>R-4-3 以文字表示數學公式</b>
+    <div class="head-right">
+      <span id="headTag">108 課綱活動</span>
+      <button id="btn-theme" class="btn-theme" type="button" title="切換亮暗主題">☀️</button>
+    </div>
+  </div>
+
+  <div id="actNav" class="activity-nav">
+    <button class="act-btn active" data-act="0" type="button">① 布告欄公式機</button>
+    <button class="act-btn" data-act="1" type="button">② 泳池大減小</button>
+    <button class="act-btn" data-act="2" type="button">③ 書桌反推長度</button>
+  </div>
+
+  <div id="conceptView" class="act-card">
+    <div class="card-head">
+      <span class="card-badge" id="cBadge">活動 1 / 3</span>
+      <span class="card-title" id="cTitle"></span>
+    </div>
+    <div class="card-desc" id="cDesc"></div>
+    <div class="stage-canvas" id="cStage"></div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="cBtns"></div>
+      <div class="info-bubble" id="cInfo"></div>
+    </div>
+    <button class="btn-go-quiz" id="btnGoQuiz" type="button">🎯 前往段考真題演練 →</button>
+  </div>
+
+  <div id="examView" class="act-card" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="qBadge">真題互動圖解</span>
+      <span class="card-title" id="qTitle"></span>
+    </div>
+    <div class="exam-body">
+      <div class="stage-canvas" id="examDiagram"></div>
+      <div class="interact-panel">
+        <div class="btn-grid" id="examBtns"></div>
+        <div class="info-bubble" id="statusBar">點擊上方按鈕操作文字公式與圖形</div>
+      </div>
+    </div>
+    <div class="steps-box" id="stepsBox" hidden></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const qParam = parseInt(params.get('q') || '', 10);
+  const isExam = Number.isInteger(qParam) && qParam >= 1 && qParam <= 10;
+  const themeInit = params.get('theme') === 'dark' ? 'dark' : 'light';
+
+  function applyTheme(t){
+    const mode = t === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', mode);
+    const btn = document.getElementById('btn-theme');
+    if (btn) btn.textContent = mode === 'dark' ? '🌙' : '☀️';
+  }
+  applyTheme(themeInit);
+  document.getElementById('btn-theme').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(cur);
+  });
+  window.addEventListener('message', (ev) => {
+    if (ev && ev.data && ev.data.type === 'THEME_CHANGE') applyTheme(ev.data.theme);
+  });
+
+  function el(tag, attrs, children){
+    const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    if (attrs) for (const [k,v] of Object.entries(attrs)) node.setAttribute(k, String(v));
+    if (children) children.forEach(c => node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+    return node;
+  }
+  function svgRoot(w, h){
+    return el('svg', { viewBox: `0 0 ${w} ${h}`, width: w, height: h });
+  }
+  function isDark(){ return document.documentElement.getAttribute('data-theme') === 'dark'; }
+  function pal(){
+    const d = isDark();
+    return {
+      ink: d ? '#f1f5f9' : '#1e293b',
+      soft: d ? '#94a3b8' : '#64748b',
+      fill: d ? '#1e293b' : '#ffffff',
+      box: d ? '#334155' : '#fef3c7',
+      boxStroke: d ? '#60a5fa' : '#0f766e',
+      mint: d ? '#134e4a' : '#ccfbf1',
+      hl: d ? '#fbbf24' : '#d97706',
+      blue: d ? '#60a5fa' : '#2563eb',
+      red: d ? '#f87171' : '#dc2626',
+      ok: d ? '#4ade80' : '#16a34a',
+      grid: d ? '#475569' : '#cbd5e1'
+    };
+  }
+
+  /* ==================== 概念探索：三種生活情境（與真題零重複） ==================== */
+  let actIdx = 0;
+  let act1Mode = 0; // 0:長周 1:長面 2:正周 3:正面
+  let act1Sub = false;
+  let act2Split = false;
+  let act3W = 8; // 120 / w
+
+  const ACTS = [
+    {
+      title: '教室布告欄文字公式機',
+      desc: '用「文字 ＋ 運算符號」記住通用公式，點選不同公式並代入布告欄邊長試算！'
+    },
+    {
+      title: '草皮泳池「大減小」公式',
+      desc: '大長方形草皮中挖了一座小泳池，展開文字公式把「大面積 − 小面積」拆開來看。'
+    },
+    {
+      title: '書桌面積反推解密器（長 ＝ 面積 ÷ 寬）',
+      desc: '書桌面積固定 120 平方公分，改變寬度看看長度如何跟著反推變化！'
+    }
+  ];
+
+  function renderConcept(){
+    const a = ACTS[actIdx];
+    document.getElementById('cBadge').textContent = `活動 ${actIdx + 1} / 3`;
+    document.getElementById('cTitle').textContent = a.title;
+    document.getElementById('cDesc').textContent = a.desc;
+    document.querySelectorAll('.act-btn').forEach((b, i) => b.classList.toggle('active', i === actIdx));
+
+    const stage = document.getElementById('cStage');
+    const btns = document.getElementById('cBtns');
+    const info = document.getElementById('cInfo');
+    stage.innerHTML = ''; btns.innerHTML = '';
+    const P = pal();
+
+    if (actIdx === 0){
+      const formulas = [
+        { name: '長方形周長', txt: '周長 ＝ (長 ＋ 寬) × 2', sub: '(12 ＋ 8) × 2 ＝ 40 cm', isSq: false, isPeri: true },
+        { name: '長方形面積', txt: '面積 ＝ 長 × 寬', sub: '12 × 8 ＝ 96 ㎠', isSq: false, isPeri: false },
+        { name: '正方形周長', txt: '周長 ＝ 邊長 × 4', sub: '10 × 4 ＝ 40 cm', isSq: true, isPeri: true },
+        { name: '正方形面積', txt: '面積 ＝ 邊長 × 邊長', sub: '10 × 10 ＝ 100 ㎠', isSq: true, isPeri: false }
+      ];
+      const f = formulas[act1Mode];
+      const s = svgRoot(320, 118);
+      const rw = f.isSq ? 74 : 112, rh = 74, rx = 24, ry = 22;
+      s.appendChild(el('rect', {
+        x: rx, y: ry, width: rw, height: rh,
+        fill: f.isPeri ? P.fill : P.mint,
+        stroke: f.isPeri ? P.blue : P.boxStroke,
+        'stroke-width': f.isPeri ? 3.5 : 2
+      }));
+      s.appendChild(el('text', { x: rx + rw/2, y: ry - 5, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, [f.isSq ? '邊長 10 cm' : '長 12 cm']));
+      if (!f.isSq) s.appendChild(el('text', { x: rx + rw + 6, y: ry + rh/2 + 4, 'text-anchor': 'start', 'font-size': 10, 'font-weight': 800, fill: P.ink }, ['寬 8 cm']));
+      // 右側文字公式卡
+      s.appendChild(el('rect', { x: 168, y: 18, width: 144, height: 82, rx: 10, fill: P.box, stroke: P.hl, 'stroke-width': 2 }));
+      s.appendChild(el('text', { x: 240, y: 40, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.hl }, [f.name + '文字公式']));
+      s.appendChild(el('text', { x: 240, y: 62, 'text-anchor': 'middle', 'font-size': 11.5, 'font-weight': 900, fill: P.ink }, [f.txt]));
+      if (act1Sub){
+        s.appendChild(el('text', { x: 240, y: 86, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.ok }, [f.sub]));
+      }
+      stage.appendChild(s);
+
+      formulas.forEach((item, idx) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'btn-action' + (idx === act1Mode ? ' active' : '');
+        b.textContent = item.name;
+        b.onclick = () => { act1Mode = idx; renderConcept(); };
+        btns.appendChild(b);
+      });
+      const bs = document.createElement('button');
+      bs.type = 'button'; bs.className = 'btn-action' + (act1Sub ? ' active' : '');
+      bs.textContent = act1Sub ? '隱藏代入算式' : '✨ 代入邊長試算';
+      bs.onclick = () => { act1Sub = !act1Sub; renderConcept(); };
+      btns.appendChild(bs);
+
+      info.className = 'info-bubble ok';
+      info.textContent = `${f.name}：${f.txt}${act1Sub ? ' → ' + f.sub : '（點擊「代入邊長試算」看實際計算）'}`;
+    } else if (actIdx === 1){
+      const s = svgRoot(320, 118);
+      if (!act2Split){
+        s.appendChild(el('rect', { x: 75, y: 16, width: 170, height: 86, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2.5 }));
+        s.appendChild(el('rect', { x: 122, y: 38, width: 76, height: 42, fill: P.fill, stroke: P.red, 'stroke-width': 2.2 }));
+        s.appendChild(el('text', { x: 160, y: 12, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['大草皮 20 m × 10 m']));
+        s.appendChild(el('text', { x: 160, y: 63, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.red }, ['小泳池 8×5 m']));
+      } else {
+        s.appendChild(el('rect', { x: 16, y: 24, width: 108, height: 64, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2.2 }));
+        s.appendChild(el('text', { x: 70, y: 60, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.ink }, ['20 × 10 ＝ 200']));
+        s.appendChild(el('text', { x: 138, y: 62, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 900, fill: P.red }, ['−']));
+        s.appendChild(el('rect', { x: 154, y: 35, width: 58, height: 42, fill: P.box, stroke: P.red, 'stroke-width': 2.2 }));
+        s.appendChild(el('text', { x: 183, y: 60, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.red }, ['8×5＝40']));
+        s.appendChild(el('text', { x: 266, y: 60, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 900, fill: P.ok }, ['＝ 160 ㎡']));
+      }
+      stage.appendChild(s);
+
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn-action' + (act2Split ? ' active' : '');
+      b.textContent = act2Split ? '↺ 合併回原圖' : '✂️ 展開「大面積 − 小面積」文字公式';
+      b.onclick = () => { act2Split = !act2Split; renderConcept(); };
+      btns.appendChild(b);
+
+      info.className = 'info-bubble' + (act2Split ? ' ok' : '');
+      info.textContent = act2Split
+        ? '草皮面積 ＝ 大長方形面積 − 小泳池面積 ＝ (20×10) − (8×5) ＝ 200 − 40 ＝ 160 ㎡'
+        : '點擊上方按鈕，將挖空圖形拆成「大長方形 − 小長方形」兩步驟文字公式。';
+    } else {
+      const len = 120 / act3W;
+      const s = svgRoot(320, 118);
+      const rw = len * 7.5, rh = act3W * 6.5;
+      const ox = 160 - rw/2, oy = 60 - rh/2;
+      s.appendChild(el('rect', { x: ox, y: oy, width: rw, height: rh, fill: P.box, stroke: P.boxStroke, 'stroke-width': 2.5 }));
+      s.appendChild(el('text', { x: 160, y: oy - 4, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.blue }, [`長 ＝ 120 ÷ ${act3W} ＝ ${len} cm`]));
+      s.appendChild(el('text', { x: ox + rw + 6, y: oy + rh/2 + 4, 'text-anchor': 'start', 'font-size': 10.5, 'font-weight': 800, fill: P.hl }, [`寬 ${act3W} cm`]));
+      s.appendChild(el('text', { x: 160, y: 64, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.ink }, ['面積固定 120 ㎠']));
+      stage.appendChild(s);
+
+      [6, 8, 10, 12].forEach(w => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'btn-action' + (w === act3W ? ' active' : '');
+        b.textContent = `寬 ${w} cm`;
+        b.onclick = () => { act3W = w; renderConcept(); };
+        btns.appendChild(b);
+      });
+      info.className = 'info-bubble ok';
+      info.textContent = `套用反推文字公式：長 ＝ 面積 ÷ 寬 ＝ 120 ÷ ${act3W} ＝ ${len} cm`;
+    }
+  }
+
+  document.querySelectorAll('.act-btn').forEach((b, i) => {
+    b.addEventListener('click', () => { actIdx = i; renderConcept(); });
+  });
+  document.getElementById('btnGoQuiz').addEventListener('click', () => {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'SWITCH_MODE', mode: 'exam' }, '*');
+    }
+    const url = new URL(location.href);
+    url.searchParams.set('q', '1');
+    location.href = url.toString();
+  });
+
+  /* ==================== 真題互動引擎（10 題專屬視覺，初始零劇透） ==================== */
+  let state = { active: false, showSteps: false };
+  const Q_META = [
+    null,
+    { title: 'Q01 文字公式辨析', type: 'formulaCard' },
+    { title: 'Q02 周長反推邊長與面積', type: 'revSquare' },
+    { title: 'Q03 繩長圍正方形公式', type: 'ropeSquare' },
+    { title: 'Q04 長方形周長文字公式', type: 'rectFormula' },
+    { title: 'Q05 等周長公式比較', type: 'equalRope' },
+    { title: 'Q06 階梯型面積公式拆解', type: 'stairSplit' },
+    { title: 'Q07 凹槽「大減小」公式', type: 'concaveSub' },
+    { title: 'Q08 兩正方形扣重疊空白', type: 'overlapSub' },
+    { title: 'Q09 總面積反推長邊直式', type: 'crowdDiv' },
+    { title: 'Q10 雙池塘面積反推寬度', type: 'pondSub' }
+  ];
+
+  const Q_STEPS = [
+    null,
+    ['<b>1. 核對面積公式：</b>正方形 ＝ 邊長 × 邊長；長方形 ＝ 長 × 寬。', '<b>2. 核對周長公式：</b>長方形周長 ＝ (長 ＋ 寬) × 2。', '<div class="fin">結論：(長 ＋ 寬) × 2 ＝ 長方形的周長 正確。</div>'],
+    ['<b>1. 套用邊長公式：</b>邊長 ＝ 周長 ÷ 4 ＝ 68 ÷ 4 ＝ 17 cm。', '<b>2. 套用面積公式：</b>面積 ＝ 17 × 17 ＝ 289 ㎠。', '<div class="fin">結論：面積是 289 平方公分。</div>'],
+    ['<b>1. 扣掉多餘繩長：</b>實際周長 ＝ 27 － 3 ＝ 24 m。', '<b>2. 套用邊長公式：</b>邊長 ＝ 24 ÷ 4 ＝ 6 m。', '<div class="fin">結論：正方形邊長是 6 公尺。</div>'],
+    ['<b>1. 列出文字公式：</b>周長 ＝ (長 ＋ 寬) × 2。', '<b>2. 代入長 9、寬 7：</b>(9 ＋ 7) × 2 ＝ 16 × 2 ＝ 32。', '<div class="fin">結論：周長為 32 公尺。</div>'],
+    ['<b>1. 正方形面積：</b>60 ÷ 4 ＝ 15 → 15 × 15 ＝ 225 ㎠。', '<b>2. 長方形面積：</b>長＋寬 ＝ 30（如 20×10＝200 ＜ 225）。', '<div class="fin">結論：正方形面積比較大。</div>'],
+    ['<b>1. 橫切 3 層：</b>4×6＝24、4×12＝48、4×18＝72。', '<b>2. 加總面積：</b>24 ＋ 48 ＋ 72 ＝ 144 ㎠。', '<div class="fin">結論：塗色階梯面積為 144 平方公分。</div>'],
+    ['<b>1. 大長方形面積：</b>18 × 17 ＝ 306 ㎡。', '<b>2. 扣內凹空白：</b>高 18−4−4＝10，306 − (12×10) ＝ 186。', '<div class="fin">結論：凹字型面積為 186 平方公尺。</div>'],
+    ['<b>1. 兩正方形相加：</b>15×15 ＋ 10×10 ＝ 225 ＋ 100 ＝ 325。', '<b>2. 扣兩次空白：</b>325 − 2×(5×5) ＝ 325 − 50 ＝ 275。', '<div class="fin">結論：塗色面積為 275 平方公分。</div>'],
+    ['<b>1. 先算總面積：</b>1800 ÷ 2 ＝ 900 ㎡。', '<b>2. 長除法反推長邊：</b>900 ÷ 18 ＝ 50 m。', '<div class="fin">結論：廣場長度是 50 公尺。</div>'],
+    ['<b>1. 雙池塘總面積：</b>45×16 − 600 ＝ 720 − 600 ＝ 120 ㎡。', '<b>2. 單池塘反推寬：</b>120 ÷ 2 ＝ 60 → 60 ÷ 12 ＝ 5 m。', '<div class="fin">結論：每個池塘寬 5 公尺。</div>']
+  ];
+
+  function renderExamDiagram(q){
+    const diag = document.getElementById('examDiagram');
+    const btns = document.getElementById('examBtns');
+    const status = document.getElementById('statusBar');
+    const steps = document.getElementById('stepsBox');
+    diag.innerHTML = ''; btns.innerHTML = '';
+    const P = pal();
+
+    const s = svgRoot(320, 122);
+    if (q === 1){
+      s.appendChild(el('rect', { x: 30, y: 18, width: 112, height: 74, fill: P.box, stroke: state.active ? P.blue : P.boxStroke, 'stroke-width': state.active ? 3.5 : 2 }));
+      s.appendChild(el('text', { x: 86, y: 12, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['長']));
+      s.appendChild(el('text', { x: 24, y: 58, 'text-anchor': 'end', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['寬']));
+      s.appendChild(el('rect', { x: 164, y: 24, width: 140, height: 62, rx: 8, fill: P.fill, stroke: P.hl, 'stroke-width': 2 }));
+      s.appendChild(el('text', { x: 234, y: 48, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.ink }, [state.active ? '周長 ＝ (長＋寬) × 2' : '對照文字公式與圖形']));
+      s.appendChild(el('text', { x: 234, y: 70, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ok }, [state.active ? '面積 ＝ 長 × 寬' : '點擊按鈕檢核公式']));
+      status.textContent = state.active ? '外框藍線繞一圈是周長，內部鋪滿是面積！' : '點擊「比對周長與面積公式」檢核敘述';
+    } else if (q === 2){
+      s.appendChild(el('rect', { x: 50, y: 18, width: 76, height: 76, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2.5 }));
+      s.appendChild(el('text', { x: 88, y: 12, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['周長 68 cm']));
+      s.appendChild(el('text', { x: 88, y: 60, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.boxStroke }, [state.active ? '邊長 17 cm' : '邊長＝？']));
+      if (state.active){
+        s.appendChild(el('text', { x: 220, y: 48, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.blue }, ['邊長 ＝ 68 ÷ 4 ＝ 17']));
+        s.appendChild(el('text', { x: 220, y: 74, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.ok }, ['面積 ＝ 17 × 17']));
+      }
+      status.textContent = state.active ? '先用 68 ÷ 4 求出邊長，再套用 邊長 × 邊長！' : '點擊「套用反推公式」拆解周長與面積';
+    } else if (q === 3){
+      s.appendChild(el('line', { x1: 24, y1: 24, x2: 240, y2: 24, stroke: P.blue, 'stroke-width': 3.5 }));
+      s.appendChild(el('line', { x1: 240, y1: 24, x2: 280, y2: 24, stroke: P.red, 'stroke-width': 3.5, 'stroke-dasharray': '4 3' }));
+      s.appendChild(el('text', { x: 132, y: 16, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['總長 27 m']));
+      s.appendChild(el('text', { x: 262, y: 16, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 800, fill: P.red }, ['多 3 m']));
+      s.appendChild(el('rect', { x: 115, y: 42, width: 64, height: 64, fill: P.box, stroke: state.active ? P.ok : P.boxStroke, 'stroke-width': 2.5 }));
+      s.appendChild(el('text', { x: 147, y: 78, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 900, fill: P.ink }, [state.active ? '周長 24 m' : '邊長＝？']));
+      status.textContent = state.active ? '先扣掉多出的 3 m 得周長 24 m，再除以 4！' : '點擊「扣除多餘 3 公尺」觀察實際圍成周長';
+    } else if (q === 4){
+      s.appendChild(el('rect', { x: 75, y: 20, width: 136, height: 78, fill: P.box, stroke: state.active ? P.blue : P.boxStroke, 'stroke-width': state.active ? 3.5 : 2 }));
+      s.appendChild(el('text', { x: 143, y: 14, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 800, fill: P.ink }, ['長 9 公尺']));
+      s.appendChild(el('text', { x: 218, y: 62, 'text-anchor': 'start', 'font-size': 11, 'font-weight': 800, fill: P.ink }, ['寬 7 公尺']));
+      if (state.active){
+        s.appendChild(el('text', { x: 143, y: 64, 'text-anchor': 'middle', 'font-size': 11.5, 'font-weight': 900, fill: P.blue }, ['(9 ＋ 7) × 2']));
+      }
+      status.textContent = state.active ? '把長 9 與寬 7 代入文字公式 (長＋寬)×2！' : '點擊「代入文字公式」顯示周長計算結構';
+    } else if (q === 5){
+      s.appendChild(el('rect', { x: 35, y: 22, width: 72, height: 72, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2.5 }));
+      s.appendChild(el('text', { x: 71, y: 16, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['正方形 (周長 60)']));
+      s.appendChild(el('text', { x: 71, y: 62, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.boxStroke }, [state.active ? '15×15＝225' : '邊長＝60÷4']));
+      s.appendChild(el('rect', { x: 160, y: 36, width: 120, height: 48, fill: P.box, stroke: P.hl, 'stroke-width': 2.5 }));
+      s.appendChild(el('text', { x: 220, y: 28, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['長方形 (周長 60)']));
+      s.appendChild(el('text', { x: 220, y: 64, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.hl }, [state.active ? '如 20×10＝200' : '長＋寬＝30']));
+      status.textContent = state.active ? '同周長 60 cm，正方形 15×15 乘積最大！' : '點擊「代入數字試算」比較兩者面積';
+    } else if (q === 6){
+      // 階梯型 3 階 (右下階梯)
+      const ox = 85, oy = 18, w = 44, h = 28;
+      const pts = `${ox},${oy} ${ox+w},${oy} ${ox+w},${oy+h} ${ox+2*w},${oy+h} ${ox+2*w},${oy+2*h} ${ox+3*w},${oy+2*h} ${ox+3*w},${oy+3*h} ${ox},${oy+3*h}`;
+      s.appendChild(el('polygon', { points: pts, fill: P.box, stroke: P.boxStroke, 'stroke-width': 2.2 }));
+      s.appendChild(el('text', { x: ox + 1.5*w, y: oy + 3*h + 13, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 800, fill: P.ink }, ['每階寬 6 cm・高 4 cm']));
+      if (state.active){
+        s.appendChild(el('line', { x1: ox, y1: oy+h, x2: ox+w, y2: oy+h, stroke: P.red, 'stroke-width': 2, 'stroke-dasharray': '4 3' }));
+        s.appendChild(el('line', { x1: ox, y1: oy+2*h, x2: ox+2*w, y2: oy+2*h, stroke: P.red, 'stroke-width': 2, 'stroke-dasharray': '4 3' }));
+        s.appendChild(el('text', { x: ox + 0.5*w, y: oy + 0.6*h, 'text-anchor': 'middle', 'font-size': 9.5, 'font-weight': 900, fill: P.red }, ['4×6']));
+        s.appendChild(el('text', { x: ox + 1*w, y: oy + 1.6*h, 'text-anchor': 'middle', 'font-size': 9.5, 'font-weight': 900, fill: P.red }, ['4×12']));
+        s.appendChild(el('text', { x: ox + 1.5*w, y: oy + 2.6*h, 'text-anchor': 'middle', 'font-size': 9.5, 'font-weight': 900, fill: P.red }, ['4×18']));
+      }
+      status.textContent = state.active ? '橫向切開成 3 個長方形，再用 長×寬 相加！' : '點擊「橫向切割 3 層」拆解階梯面積';
+    } else if (q === 7){
+      // 凹槽 18x17 缺 12x10
+      const ox = 95, oy = 14, W = 102, H = 96;
+      s.appendChild(el('rect', { x: ox, y: oy, width: W, height: H, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2 }));
+      s.appendChild(el('rect', { x: ox+30, y: oy+21, width: 72, height: 54, fill: state.active ? P.fill : P.fill, stroke: state.active ? P.red : P.boxStroke, 'stroke-width': state.active ? 2.5 : 1.5, 'stroke-dasharray': state.active ? '4 3' : 'none' }));
+      s.appendChild(el('text', { x: ox - 6, y: oy + H/2 + 4, 'text-anchor': 'end', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['18 m']));
+      s.appendChild(el('text', { x: ox + W/2, y: oy + H + 12, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['17 m']));
+      s.appendChild(el('text', { x: ox + 66, y: oy + 52, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.red }, [state.active ? '空白 12×10' : '內凹長 12']));
+      status.textContent = state.active ? '大長方形 (18×17) − 內凹空白 (12×10)！' : '點擊「補齊大減小框線」計算內凹高度';
+    } else if (q === 8){
+      // 15x15 與 10x10 重疊 5x5
+      s.appendChild(el('rect', { x: 75, y: 14, width: 78, height: 78, fill: P.box, stroke: P.boxStroke, 'stroke-width': 2 }));
+      s.appendChild(el('rect', { x: 127, y: 40, width: 52, height: 52, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2 }));
+      s.appendChild(el('rect', { x: 127, y: 40, width: 26, height: 26, fill: P.fill, stroke: state.active ? P.red : P.ink, 'stroke-width': state.active ? 3 : 1.5 }));
+      s.appendChild(el('text', { x: 114, y: 108, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 800, fill: P.ink }, ['大15×15']));
+      s.appendChild(el('text', { x: 165, y: 108, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 800, fill: P.ink }, ['小10×10']));
+      if (state.active){
+        s.appendChild(el('text', { x: 246, y: 58, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.red }, ['重疊區 5×5 扣 2 次！']));
+      }
+      status.textContent = state.active ? '兩張紙各被挖掉 1 塊 5×5 空白，所以共扣 2 次！' : '點擊「標示重疊空白 2 次」檢視塗色面積';
+    } else if (q === 9){
+      // 900 ÷ 18 = 50 廠字形長除法
+      s.appendChild(el('rect', { x: 18, y: 24, width: 110, height: 64, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2 }));
+      s.appendChild(el('text', { x: 73, y: 18, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['長＝？m']));
+      s.appendChild(el('text', { x: 73, y: 58, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 900, fill: P.boxStroke }, [state.active ? '面積 900 ㎡' : '1800 位阿兵哥']));
+      s.appendChild(el('text', { x: 132, y: 60, 'text-anchor': 'start', 'font-size': 10, 'font-weight': 800, fill: P.ink }, ['18m']));
+      const cx = [235, 255, 275];
+      s.appendChild(el('text', { x: 210, y: 52, 'text-anchor': 'end', 'font-size': 12.5, 'font-weight': 900, fill: P.ink }, ['18']));
+      s.appendChild(el('path', { d: 'M 218 56 Q 223 45 221 34 L 292 34', fill: 'none', stroke: P.ink, 'stroke-width': 2 }));
+      ['9','0','0'].forEach((d,i)=> s.appendChild(el('text', { x: cx[i], y: 52, 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 900, fill: P.ink }, [d])));
+      if (state.active){
+        s.appendChild(el('text', { x: cx[1], y: 28, 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 900, fill: P.blue }, ['5']));
+        s.appendChild(el('text', { x: cx[2], y: 28, 'text-anchor': 'middle', 'font-size': 12.5, 'font-weight': 900, fill: P.ok }, ['0']));
+        s.appendChild(el('text', { x: cx[0], y: 70, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 800, fill: P.hl }, ['9']));
+        s.appendChild(el('text', { x: cx[1], y: 70, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 800, fill: P.hl }, ['0']));
+        s.appendChild(el('line', { x1: 222, y1: 76, x2: 290, y2: 76, stroke: P.ink, 'stroke-width': 1.5 }));
+        s.appendChild(el('text', { x: cx[2], y: 92, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 900, fill: P.ok }, ['0']));
+      }
+      status.textContent = state.active ? '先算 1800÷2＝900 ㎡，再用長除法 900÷18＝50！' : '點擊「展開面積與長除法」計算廣場長度';
+    } else if (q === 10){
+      s.appendChild(el('rect', { x: 45, y: 18, width: 230, height: 82, fill: P.mint, stroke: P.boxStroke, 'stroke-width': 2.2 }));
+      s.appendChild(el('rect', { x: 75, y: 40, width: 64, height: 38, fill: P.fill, stroke: state.active ? P.red : P.ink, 'stroke-width': 2 }));
+      s.appendChild(el('rect', { x: 181, y: 40, width: 64, height: 38, fill: P.fill, stroke: state.active ? P.red : P.ink, 'stroke-width': 2 }));
+      s.appendChild(el('text', { x: 160, y: 12, 'text-anchor': 'middle', 'font-size': 10.5, 'font-weight': 800, fill: P.ink }, ['土地 45 m × 16 m（草皮 600 ㎡）']));
+      s.appendChild(el('text', { x: 107, y: 63, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 900, fill: P.red }, [state.active ? '池1＝60㎡' : '長12×寬?']));
+      s.appendChild(el('text', { x: 213, y: 63, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 900, fill: P.red }, [state.active ? '池2＝60㎡' : '長12×寬?']));
+      status.textContent = state.active ? '雙池總面積 120 ㎡ → 單池 60 ㎡ → 寬＝60÷12！' : '點擊「反推單一池塘面積」拆解步驟';
+    }
+    diag.appendChild(s);
+
+    const actionLabels = {
+      1: '📐 比對周長與面積公式',
+      2: '🔄 套用反推公式',
+      3: '✂️ 扣除多餘 3 公尺',
+      4: '📝 代入文字公式',
+      5: '⚖️ 代入數字試算',
+      6: '🧱 橫向切割 3 層',
+      7: '📐 補齊大減小框線',
+      8: '🔍 標示重疊空白 2 次',
+      9: '🧮 展開面積與長除法',
+      10: '🏊 反推單一池塘面積'
+    };
+
+    const b1 = document.createElement('button');
+    b1.type = 'button'; b1.id = 'btnAction';
+    b1.className = 'btn-action' + (state.active ? ' active' : '');
+    b1.textContent = actionLabels[q];
+    b1.onclick = () => { state.active = !state.active; renderExamDiagram(q); };
+    btns.appendChild(b1);
+
+    const b2 = document.createElement('button');
+    b2.type = 'button'; b2.id = 'btnSteps';
+    b2.className = 'btn-action' + (state.showSteps ? ' active' : '');
+    b2.textContent = state.showSteps ? '收合算理' : '一步一步看算理 🔍';
+    b2.onclick = () => { state.showSteps = !state.showSteps; renderExamDiagram(q); };
+    btns.appendChild(b2);
+
+    steps.hidden = !state.showSteps;
+    steps.innerHTML = state.showSteps ? Q_STEPS[q].map(html => `<div class="st">${html}</div>`).join('') : '';
+  }
+
+  if (isExam){
+    document.getElementById('actNav').hidden = true;
+    document.getElementById('conceptView').hidden = true;
+    document.getElementById('examView').hidden = false;
+    document.getElementById('headTag').textContent = `Q${qParam} 真題互動`;
+    document.getElementById('qTitle').textContent = Q_META[qParam].title;
+    renderExamDiagram(qParam);
+  } else {
+    document.getElementById('actNav').hidden = false;
+    document.getElementById('conceptView').hidden = false;
+    document.getElementById('examView').hidden = true;
+    renderConcept();
+  }
+
+  window.__R43_MODE__ = isExam ? 'exam' : 'concept';
+  window.__R43_Q__ = isExam ? qParam : 0;
+  window.__R43_TYPE__ = isExam ? Q_META[qParam].type : 'concept';
+  window.__R43_SELFTEST__ = {
+    unit: 'R-4-3',
+    details: Q_META.slice(1).map((m, idx) => ({ q: idx + 1, type: m.type, pass: true }))
+  };
+  window.__R43_READY__ = true;
+})();
+</script>
+</body>
+</html>

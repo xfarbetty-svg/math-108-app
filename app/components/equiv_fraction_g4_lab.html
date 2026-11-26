@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>G4-N-4-6 等值分數・擴分約分比較</title>
+<link rel="stylesheet" href="../styles/theme-tokens.css">
+<style>
+:root{
+  --bg:var(--bg-main); --card:var(--bg-card); --ink:var(--text-primary);
+  --ink-soft:var(--text-secondary); --line:var(--border-color);
+  --a:var(--accent-primary); --mint:var(--accent-mint); --sky:var(--accent-sky);
+  --lemon:var(--accent-lemon); --elev:var(--bg-elevated);
+  --ok:#2fa36b; --warn:#c2410c; --hl:#fde68a;
+  --shadow:0 6px 18px var(--shadow-color); --radius:14px;
+}
+html[data-theme="dark"]{ --ok:#4ade80; --warn:#fca5a5; --hl:#7c5c1e; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+body{padding:4px 6px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:4px;overflow:visible}
+.frac{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;vertical-align:middle;line-height:1;margin:0 .1em;min-width:.85em}
+.frac .n,.frac .d{font-weight:900;font-size:.94em;padding:0 .14em;line-height:1.05;white-space:nowrap}
+.frac .n{color:var(--a)} .frac .d{color:var(--sky)}
+.frac .l{display:block;width:100%;height:2px;background:var(--ink);border-radius:2px;margin:1.5px 0}
+html[data-theme="dark"] .frac .n{color:#8BE0C8} html[data-theme="dark"] .frac .d{color:#A8CEEA}
+.activity-nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;background:var(--elev);padding:4px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+.activity-nav::-webkit-scrollbar{display:none}
+.act-btn{flex:0 0 auto;padding:6px 10px;font-size:11px;font-weight:800;border-radius:999px;color:var(--ink-soft);white-space:nowrap}
+.act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10px;color:var(--ink-soft);min-height:14px}
+.head b{font-size:12.5px;color:var(--ink)}
+.act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.card-title{font-size:12px;font-weight:800;color:var(--ink)}
+.card-desc{font-size:10px;line-height:1.3;color:var(--ink-soft)}
+.stage-canvas{width:100%;background:var(--elev);border-radius:10px;border:1px solid var(--line);padding:4px;display:flex;justify-content:center;align-items:center;overflow:hidden;min-height:56px}
+.stage-canvas svg{width:100%;max-width:340px;height:auto;max-height:72px;display:block}
+.interact-panel{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:4px 6px;display:flex;flex-direction:column;gap:4px;text-align:center;max-width:100%}
+.btn-grid{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.btn-action{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:8px}
+.btn-action.active,.btn-action:active{background:var(--a);border-color:var(--a);color:#fff;transform:translateY(1px)}
+.info-bubble{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 6px;font-size:10.5px;line-height:1.3;color:var(--ink);font-weight:700;text-align:left;min-height:16px}
+.info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+.info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+.steps-box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 6px;display:flex;flex-direction:column;gap:1px;text-align:left}
+.steps-box .st{font-size:10px;line-height:1.22;color:var(--ink)}
+.steps-box .st b{color:var(--a)}
+.steps-box .fin{font-size:10px;font-weight:900;color:var(--ok)}
+.pool{display:flex;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;min-height:26px;padding:3px;border:1px dashed var(--line);border-radius:8px}
+.card{border:1px solid var(--a);background:var(--card);color:var(--ink);border-radius:7px;padding:4px 7px;font-size:12px;font-weight:800;cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+.slots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:3px}
+.slot{min-width:64px;min-height:23px;border:2px dashed var(--line);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-soft);padding:2px;cursor:pointer}
+.slot.filled{border-style:solid;border-color:var(--mint)}
+.tok,.rdtok,.eq-tok{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:4px 7px;margin:2px;font-size:11.5px;font-weight:800;background:var(--card);color:var(--ink);cursor:pointer}
+.tok.hit,.rdtok.hit,.eq-tok.hit{outline:2px solid var(--mint);background:var(--elev)}
+.tok.bad,.rdtok.bad,.eq-tok.bad{outline:2px solid var(--warn);color:var(--warn)}
+.acseg{display:inline-block;width:22px;height:24px;border:1.5px solid var(--line);border-radius:3px;background:var(--card);font-size:9px;margin:1px;cursor:pointer}
+.acseg.on{background:var(--a)}
+.eq-bars{display:flex;flex-direction:column;gap:3px;align-items:center;width:100%}
+.eq-row{display:flex;align-items:center;gap:5px;justify-content:center}
+.eq-lbl{font-size:9px;font-weight:800;color:var(--ink-soft);width:38px;text-align:right}
+.eq-cells{display:flex;gap:1px;flex-wrap:nowrap}
+.eq-cell{width:8px;height:16px;border:1px solid var(--line);border-radius:2px;background:var(--card);padding:0;cursor:pointer}
+.eq-cell.on{background:var(--a);border-color:var(--a)}
+.eq-cell.half{background:var(--lemon);border-color:var(--a)}
+.eq-cell.grp{background:var(--mint);border-color:var(--mint)}
+.eq-count{font-size:10.5px;font-weight:900;color:var(--a);text-align:center;margin-top:2px;min-height:13px;line-height:1.2}
+.cross-prod{display:inline-grid;grid-template-columns:26px 26px;gap:2px 6px;align-items:center;justify-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px 7px;font-size:11px;font-weight:900}
+.xp-a{color:var(--a)}
+.concept-footer{margin-top:2px}
+.btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:13px;font-weight:900;padding:9px;border-radius:11px;text-align:center}
+.eq-rowtxt{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:900;flex-wrap:wrap;margin-bottom:2px}
+[hidden]{display:none!important}
+</style>
+<script src="../js/audio_manager.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="head"><b>N-4-6 等值分數・擴分約分比較</b><span>108 課綱活動</span></div>
+  <nav class="activity-nav" id="actNav">
+    <button class="act-btn active" data-act="0">🔍 活動一・擴分顯微鏡</button>
+    <button class="act-btn" data-act="1">🧩 活動二・約分配對</button>
+    <button class="act-btn" data-act="2">🧱 活動三・等值長條</button>
+  </nav>
+
+  <section class="act-card" id="act-0-view">
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-6 探究活動 1</span></div>
+    <div class="card-title">🔍 活動一：擴分顯微鏡</div>
+    <div class="card-desc" id="a0desc"></div>
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 52" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="6" width="304" height="40" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="160" y="23" font-size="11" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">分子、分母同乘一個數，分數大小不變</text>
+        <text x="160" y="40" font-size="11" font-weight="900" fill="var(--ink)" text-anchor="middle" id="a0svg">1/2 → 2/4</text>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="pool" id="pool"></div>
+      <div class="slots" id="slots"></div>
+      <div class="info-bubble" id="a0msg">💡 點一張分數卡，再點「等值」箱子；也可以拖過去。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-6 探究活動 2</span></div>
+    <div class="card-title">🧩 活動二：約分配對</div>
+    <div class="card-desc" id="a1desc"></div>
+    <div class="stage-canvas">
+      <svg viewBox="0 0 320 52" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="6" width="304" height="40" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2"/>
+        <text x="160" y="24" font-size="11" font-weight="800" fill="var(--ink-soft)" text-anchor="middle">分子、分母同除以公因數</text>
+        <text x="160" y="41" font-size="11" font-weight="900" fill="var(--ink)" text-anchor="middle" id="a1svg">6/8 → 3/4</text>
+      </svg>
+    </div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="rdTokens"></div>
+      <div class="info-bubble" id="rdMsg">💡 點第一步：先找出 6 和 8 的公因數。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱手冊 N-4-6 探究活動 3</span></div>
+    <div class="card-title">🧱 活動三：等值長條檢查</div>
+    <div class="card-desc" id="a2desc"></div>
+    <div class="stage-canvas" id="a2diagram"></div>
+    <div class="interact-panel">
+      <div id="acCells"></div>
+      <div class="btn-grid"><button class="btn-action" id="acCheck">✓ 檢查操作</button></div>
+      <div class="info-bubble" id="acMsg">💡 4 格中的 2 格，等於 8 格中的 4 格。</div>
+    </div>
+  </section>
+
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head"><span class="card-badge" id="examBadge">🎯 段考真題</span><span id="examSrc" style="font-size:9.5px;color:var(--ink-soft)"></span></div>
+    <div class="card-title" id="examTitle"></div>
+    <div class="card-desc" id="examDesc"></div>
+    <div class="stage-canvas" id="examDiagram"></div>
+    <div class="interact-panel">
+      <div class="btn-grid" id="examActions"></div>
+      <div class="info-bubble" id="examMsg"></div>
+      <div class="steps-box" id="stepsBox" hidden></div>
+    </div>
+  </section>
+
+  <footer class="concept-footer" id="conceptFooter">
+    <button class="btn-go-quiz" id="goQuiz">🎯 進入真題測驗（10 題）</button>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const F=(n,d)=>'<span class="frac"><span class="n">'+n+'</span><span class="l"></span><span class="d">'+d+'</span></span>';
+function msg(html,cls){ const el=$('examMsg'); el.innerHTML=html; el.className='info-bubble'+(cls?' '+cls:''); }
+function bars(cells0,cells1,label0,label1){
+  const row=(cells,label)=>'<div class="eq-row"><span class="eq-lbl">'+label+'</span><div class="eq-cells">'+cells+'</div></div>';
+  return '<div class="eq-bars">'+row(cells0,label0)+row(cells1,label1)+'</div>';
+}
+function cells(n,d,filled,cls){
+  let s=''; for(let i=0;i<d;i++) s+='<button class="eq-cell'+(i<filled?' '+(cls||'on'):'')+'" data-cell="'+i+'"></button>';
+  return s;
+}
+
+/* QS —— 與 data/units/G4/N-4-6.json 對應的 10 題（ Expansion / Reduction / Equality / Comparison ） */
+const QS=[
+ {t:'expand',c:'3*8/4',a:6,s:'永安 114-2 期末 p1',
+  p:`完成等值分數：${F(3,4)}＝（　）/8，空格填多少？`,
+  h:'點「每格切成 2 倍」，看分母 4 如何變成 8。',
+  v:{n:3,d:4,k:2,nn:6,nd:8},
+  st:[`分母 4 變成 8，是乘以 2`,`分子也要乘以 2：3×2＝6`,`${F(3,4)}＝${F(6,8)}，空格填 6`]},
+ {t:'expand',c:'5*18/6',a:15,s:'永安 114-2 期末 p1',
+  p:`完成等值分數：${F(5,6)}＝（　）/18，空格填多少？`,
+  h:'點「切成 3 倍」，分子分母同乘 3。',
+  v:{n:5,d:6,k:3,nn:15,nd:18},
+  st:[`分母倍數：18÷6＝3`,`分子同步乘 3：5×3＝15`,`${F(5,6)}＝${F(15,18)}，空格填 15`]},
+ {t:'expand',c:'3*24/12',a:6,s:'南湖 113-2 期末 p2',
+  p:`等值分數（　）/4＝${F(3,12)}＝（　）/24，${F(3,12)}＝（　）/24 填多少？`,
+  h:'點「切成 2 倍」，把 3/12 擴分到分母 24。',
+  v:{n:3,d:12,k:2,nn:6,nd:24},
+  st:[`${F(3,12)} 約分是 ${F(1,4)}`,`分母 12 變成 24 是乘以 2`,`分子 3×2＝6，所以填 6`]},
+ {t:'expand',c:'6*8/2',a:24,s:'南湖 112-2 期末 p2',
+  p:`等值分數（　）/4＝${F(2,8)}＝6/（　），6/（　）的分母填多少？`,
+  h:'點「切成 3 倍」，看分子 2 變成 6 時分母怎麼變。',
+  v:{n:2,d:8,k:3,nn:6,nd:24},
+  st:[`${F(2,8)} 約分成 ${F(1,4)}`,`分子 2 變成 6，是乘以 3`,`分母 8×3＝24，所以填 24`]},
+ {t:'expand',c:'32*5/16',a:10,s:'南湖 112-2 期末 p2',
+  p:`一盒 32 片餅乾，吃了 ${F(5,16)} 盒，也就是幾片？`,
+  h:'點「切成 2 倍」：每 1 份是 2 片，取 5 份。',
+  v:{n:5,d:16,k:2,nn:10,nd:32},
+  st:[`先把 32÷16＝2，求出 1 份 2 片`,`再算 5 份：2×5＝10 片`,`32×5/16＝10 片`]},
+ {t:'equal',c:'9/12',a:9/12,s:'南湖 112-2 期末 p1',
+  p:`A＝${F(9,12)}，B＝${F(3,4)}，C＝${F(18,24)}，約分後共同值是多少？`,
+  h:'點候選卡，用交叉相乘驗證誰等於 9/12。',
+  v:{a:[9,12],opts:[[2,3],[3,4],[6,7]],ok:1},
+  st:[`${F(9,12)} 分子分母同除以 3 → ${F(3,4)}`,`${F(18,24)} 同除以 6 → ${F(3,4)}`,`三者共同值是 ${F(3,4)}`]},
+ {t:'expand',c:'1*15/3',a:5,s:'獅湖 112-2 期末 p1',
+  p:`數線上 ${F(1,3)}＝（　）/15，空格填多少？`,
+  h:'點「切成 5 倍」，把 1/3 擴分到分母 15。',
+  v:{n:1,d:3,k:5,nn:5,nd:15},
+  st:[`分母倍數：15÷3＝5`,`分子同步乘 5：1×5＝5`,`${F(1,3)}＝${F(5,15)}，空格填 5`]},
+ {t:'compare',c:'17/20',a:17/20,s:'獅湖 112-2 期末 p1',
+  p:`比較 ${F(17,20)} 和 ${F(8,10)}，哪一個比較大？`,
+  h:'點「通分到 20」，把 8/10  expands 成 16/20。',
+  v:{a:[17,20],b:[8,10],lcd:20,an:17,bn:16},
+  st:[`${F(8,10)} 擴分：分母乘 2，分子也乘 2 → ${F(16,20)}`,`比較同分母的 ${F(17,20)} 與 ${F(16,20)}`,`17＞16，所以 ${F(17,20)} 比較大`]},
+ {t:'compare',c:'4/5',a:4/5,s:'南湖 113-2 期末 p2',
+  p:`比較 ${F(4,5)} 和 ${F(4,10)}，哪一個比較大？（同分子陷阱）`,
+  h:'點「通分到 10」，同分子時分母越小反而越大。',
+  v:{a:[4,5],b:[4,10],lcd:10,an:8,bn:4},
+  st:[`${F(4,5)} 擴分到分母 10：4×2＝8 → ${F(8,10)}`,`比較 ${F(8,10)} 與 ${F(4,10)}`,`8＞4，所以 ${F(4,5)} 比較大`]},
+ {t:'compare',c:'5/9',a:5/9,s:'南湖 113-2 期末 p2',
+  p:`比較 ${F(5,9)} 和 ${F(7,18)}，哪一個比較大？`,
+  h:'點「通分到 18」，把 5/9 擴分成 10/18。',
+  v:{a:[5,9],b:[7,18],lcd:18,an:10,bn:7},
+  st:[`${F(5,9)} 擴分到分母 18：5×2＝10 → ${F(10,18)}`,`另一個數是 ${F(7,18)}，分母已相同`,`10＞7，所以 ${F(5,9)} 比較大`]}
+];
+const DATA=QS.map((x,i)=>({q:i+1,type:x.t,check:x.c,ans:x.a,src:x.s,prompt:x.p,hint:x.h,viz:x.v,steps:x.st}));
+window.__N46_SELFTEST__=(function(){
+  const details=DATA.map((d,i)=>{
+    try{ const v=Function('"use strict";return ('+d.check+')')();
+      return {q:i+1,pass:Number.isFinite(v)&&Math.abs(v-d.ans)<2e-3,final:v,expected:d.ans,
+              steps:d.steps.map(s=>s.replace(/<[^>]*>/g,''))};
+    }catch(e){ return {q:i+1,pass:false,error:String(e.message||e),final:null,expected:d.ans,steps:[]}; }
+  });
+  return {allPass:details.every(x=>x.pass),details:details};
+})();
+
+const P=new URLSearchParams(location.search);
+const qParam=parseInt(P.get('q')||'0',10);
+const FORCE_CONCEPT=P.get('mode')==='concept';
+const EXAM=(qParam>=1&&qParam<=10)&&!FORCE_CONCEPT;
+const Q=EXAM?qParam:1;
+const d=DATA[Q-1];
+if(P.get('theme')==='dark'||P.get('theme')==='light') document.documentElement.dataset.theme=P.get('theme');
+window.__N46_MODE__=EXAM?'exam':'concept';
+window.__N46_Q__=Q;
+window.__N46_TYPE__=EXAM?d.type:'concept';
+
+/* ===== 真題視覺教具 ===== */
+function renderExpand(d){
+  const v=d.viz;
+  const draw=(done)=>{
+    const c0=cells(done?v.n:0,v.d,done?v.n:0,'on');
+    const c1=done?cells(v.nn,v.nd,v.nn,'half'):cells(0,v.nd,0,'on');
+    $('examDiagram').innerHTML=bars(c0,c1,'原分數','擴分後')+'<div class="eq-count" id="eqCount">'+(done?F(v.n,v.d)+'＝'+F(v.nn,v.nd):'')+'</div>';
+  };
+  draw(false);
+  $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 每格切成 '+v.k+' 倍</button>';
+  $('eqGo').onclick=()=>{ draw(true); msg('✓ '+v.n+'×'+v.k+'＝'+v.nn+'，'+v.d+'×'+v.k+'＝'+v.nd,'ok'); };
+}
+function renderReduce(d){
+  const v=d.viz;
+  const draw=(done)=>{
+    const c0=cells(v.n,v.d,'on');
+    let c1=''; for(let i=0;i<v.rd;i++) c1+='<button class="eq-cell'+(done&&i<v.rn?' grp':'')+'" data-cell="'+i+'"></button>';
+    $('examDiagram').innerHTML=bars(c0,c1,'原分數','約分後')+'<div class="eq-count" id="eqCount">'+(done?F(v.n,v.d)+'＝'+F(v.rn,v.rd):'')+'</div>';
+  };
+  draw(false);
+  $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 每 '+v.g+' 格合併</button>';
+  $('eqGo').onclick=()=>{ draw(true); msg('✓ '+v.n+'÷'+v.g+'＝'+v.rn+'，'+v.d+'÷'+v.g+'＝'+v.rd,'ok'); };
+}
+function renderEqual(d){
+  const v=d.viz;
+  $('examDiagram').innerHTML='<div class="eq-rowtxt">'+F(v.a[0],v.a[1])+' ≟ ?</div><div class="btn-grid" id="eqToks">'+v.opts.map((o,i)=>'<button class="eq-tok" data-i="'+i+'">'+F(o[0],o[1])+'</button>').join('')+'</div><div class="cross-prod" id="cpBox"><span class="xp-a" id="xp-a">?</span><span>×</span><span class="xp-a" id="xp-b">?</span><span>＝</span><span class="xp-a" id="xp-c">?</span></div><div class="eq-count" id="eqCount"></div>';
+  $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 交叉相乘檢查</button>';
+  let chosen=-1;
+  $('eqToks').onclick=e=>{
+    const t=e.target.closest('.eq-tok'); if(!t) return;
+    chosen=+t.dataset.i;
+    document.querySelectorAll('#eqToks .eq-tok').forEach(x=>x.classList.remove('hit','bad'));
+    t.classList.add(chosen===v.ok?'hit':'bad');
+    msg(chosen===v.ok?'✓ 找到等值分數':'✗ 交叉相乘不相等，再試一次',chosen===v.ok?'ok':'warn');
+  };
+  $('eqGo').onclick=()=>{
+    if(chosen<0){ msg('✗ 先選一個候選分數。','warn'); return; }
+    const o=v.opts[chosen], left=v.a[0]*o[1], right=v.a[1]*o[0];
+    $('xp-a').textContent=left; $('xp-b').textContent=right; $('xp-c').textContent=v.a[0]+'×'+o[1];
+    $('eqCount').innerHTML=left+' '+(left===right?'＝':'≠')+' '+right;
+    msg(left===right?'✓ 交叉相乘相等，是等值分數':'✗ 兩邊不相等',left===right?'ok':'warn');
+  };
+}
+function renderCompare(d){
+  const v=d.viz;
+  const draw=(done)=>{
+    const c0=done?cells(v.an,v.lcd,v.an,'on'):cells(0,v.a[1],0,'on');
+    const c1=done?cells(v.bn,v.lcd,v.bn,'on'):cells(0,v.b[1],0,'on');
+    $('examDiagram').innerHTML=bars(c0,c1,'左邊','右邊')+'<div class="eq-count" id="eqCount">'+(done?F(v.an,v.lcd)+' vs '+F(v.bn,v.lcd):'')+'</div>';
+  };
+  draw(false);
+  $('examActions').innerHTML='<button class="btn-action" id="eqGo">① 通分到 '+v.lcd+'</button>';
+  $('eqGo').onclick=()=>{ draw(true); msg('✓ '+v.an+' '+(v.an>v.bn?'＞':'＜')+' '+v.bn,'ok'); };
+}
+const RENDER={expand:renderExpand,reduce:renderReduce,equal:renderEqual,compare:renderCompare};
+
+/* ===== 活動一：擴分顯微鏡（點擊＋拖曳） ===== */
+const A0_CARDS=[
+  {k:'e',t:'1/2',html:F(1,2)}, {k:'e',t:'2/4',html:F(2,4)},
+  {k:'n',t:'2/5',html:F(2,5)}, {k:'e',t:'3/6',html:F(3,6)}
+];
+let a0sel=null,placed=null;
+function renderAct0(){
+  $('a0desc').innerHTML=''+F(1,2)+'、'+F(2,4)+'、'+F(3,6)+' 都一樣大。找出和 '+F(1,2)+' 等值的分數，放進「等值」箱子。';
+  $('pool').innerHTML=A0_CARDS.map(b=>'<div class="card" data-k="'+b.k+'" data-t="'+b.t+'">'+b.html+'</div>').join('');
+  $('slots').innerHTML='<div class="slot" data-i="0">等值</div>';
+  a0sel=null;placed=null;
+  $('a0msg').className='info-bubble'; $('a0msg').textContent='💡 點一張分數卡，再點「等值」箱子；也可以拖過去。';
+  $('pool').onclick=e=>{ const c=e.target.closest('.card'); if(!c||c.parentNode.id!=='pool') return; a0sel=c; $('a0msg').innerHTML='💡 已選 '+c.dataset.t+'，點箱子放入。'; };
+  $('slots').onclick=e=>{ const s=e.target.closest('.slot'); if(!s||!a0sel) return; placeA0(a0sel); };
+  const pool=$('pool');
+  pool.addEventListener('pointerdown',e=>{
+    const c=e.target.closest('.card'); if(!c||c.parentNode.id!=='pool') return;
+    c.setPointerCapture(e.pointerId);
+    const sx=e.clientX,sy=e.clientY; c.style.position='relative'; c.style.zIndex='9';
+    const mv=ev=>{ c.style.transform='translate('+(ev.clientX-sx)+'px,'+(ev.clientY-sy)+'px)'; };
+    const up=ev=>{
+      c.releasePointerCapture(e.pointerId); c.removeEventListener('pointermove',mv); c.removeEventListener('pointerup',up);
+      const under=document.elementFromPoint(ev.clientX,ev.clientY);
+      const slot=under&&under.closest?under.closest('.slot'):null;
+      if(slot) placeA0(c); else{ c.style.transform='translate(0,0)'; c.style.position=''; c.style.zIndex=''; }
+    };
+    c.addEventListener('pointermove',mv); c.addEventListener('pointerup',up);
+  });
+}
+function placeA0(card){
+  if(placed) return;
+  $('slots').querySelector('.slot').appendChild(card);
+  card.style.transform='';card.style.position='';card.style.zIndex='';
+  placed=card.dataset.k;
+  const okp=card.dataset.k==='e';
+  card.style.borderColor=okp?'var(--ok)':'var(--warn)';
+  $('a0msg').className='info-bubble '+(okp?'ok':'warn');
+  $('a0msg').innerHTML=okp?('✓ '+card.dataset.t+' 和 '+F(1,2)+' 等值'):('✗ '+card.dataset.t+' 不等於 '+F(1,2));
+}
+
+/* ===== 活動二：約分配對 ===== */
+function renderAct1(){
+  $('a1desc').innerHTML=''+F(6,8)+' 和 '+F(3,4)+' 一樣大。先點 6 和 8 的公因數，再把兩數同除以它。';
+  $('rdTokens').innerHTML=['6','8','2','÷2','3','4'].map((t,i)=>'<button class="rdtok" data-i="'+i+'">'+t+'</button>').join('');
+  $('rdMsg').className='info-bubble'; $('rdMsg').innerHTML='💡 點第一步：先找出 6 和 8 的公因數（複選 6、8）。';
+  $('rdTokens').onclick=e=>{
+    const t=e.target.closest('.rdtok'); if(!t) return;
+    t.classList.toggle('hit'); t.classList.remove('bad');
+    const hit=document.querySelectorAll('#rdTokens .rdtok.hit').length;
+    if(hit>=2){ $('rdMsg').className='info-bubble ok'; $('rdMsg').innerHTML='✓ 6÷2＝3，8÷2＝4 → '+F(6,8)+'＝'+F(3,4); }
+    else $('rdMsg').innerHTML='目前已選 '+hit+' 個，公因數要同時整除 6 和 8。';
+  };
+}
+
+/* ===== 活動三：等值長條 ===== */
+function renderAct2(){
+  $('a2desc').innerHTML=F(2,4)+' 等於 '+F(4,8)+'：把 4 格中的 2 格塗色，相當於 8 格中的 4 格。點 4 個格子檢查。';
+  $('a2diagram').innerHTML='<div class="eq-rowtxt">'+F(2,4)+' ＝ '+F(4,8)+'</div>';
+  $('acCells').innerHTML=Array.from({length:8},(_,i)=>'<button class="acseg" data-i="'+i+'"></button>').join('');
+  $('acMsg').className='info-bubble'; $('acMsg').innerHTML='💡 8 格中塗 4 格＝一半；目標是 4 格。';
+  $('acCells').onclick=e=>{
+    const b=e.target.closest('.acseg'); if(!b) return;
+    b.classList.toggle('on');
+    const n=document.querySelectorAll('#acCells .acseg.on').length;
+    $('acMsg').className='info-bubble'; $('acMsg').innerHTML='目前已塗 '+n+' 格，目標是 4 格。';
+  };
+  $('acCheck').onclick=()=>{
+    const n=document.querySelectorAll('#acCells .acseg.on').length;
+    if(n===4){ $('acMsg').className='info-bubble ok'; $('acMsg').innerHTML='✓ 正確：'+F(4,8)+'＝'+F(2,4)+'，兩者一樣大。'; }
+    else{ $('acMsg').className='info-bubble warn'; $('acMsg').textContent='✗ 再數一次：目標是 4 格，不是 '+n+'。'; }
+    notifyHeight();
+  };
+}
+
+/* ===== 真題模式 ===== */
+function revealSteps(){
+  if($('stepsBox').hidden){
+    $('stepsBox').innerHTML=d.steps.map((s,i)=>'<div class="'+(i===2?'fin':'st')+'"><b>'+['①','②','③'][i]+'</b> '+s+'</div>').join('');
+    $('stepsBox').hidden=false;
+  }
+  notifyHeight();
+}
+function renderExam(){
+  $('examBadge').textContent='🎯 段考真題 第 '+Q+' 題 / 10';
+  $('examSrc').textContent=d.src;
+  $('examTitle').textContent={expand:'擴分・每格再切',reduce:'約分・每幾格合一',equal:'等值判定・交叉相乘',compare:'比較大小・通分'}[d.type];
+  $('examDesc').innerHTML=d.prompt;
+  $('stepsBox').hidden=true; $('stepsBox').innerHTML='';
+  msg('💡 '+d.hint,'');
+  (RENDER[d.type])(d);
+  const btn=document.createElement('button'); btn.className='btn-action'; btn.id='revealSteps';
+  btn.textContent='🔍 看算理拆解'; btn.onclick=revealSteps; $('examActions').appendChild(btn);
+}
+function setAct(n){
+  for(let i=0;i<3;i++){ const tab=document.querySelector('.act-btn[data-act="'+i+'"]'); const view=$('act-'+i+'-view'); if(tab) tab.classList.toggle('active',i===n); if(view) view.hidden=(i!==n); }
+  notifyHeight();
+}
+function goToQuiz(){ if(window.parent&&window.parent!==window&&window.parent.switchToExamMode) window.parent.switchToExamMode(); else location.href=location.pathname+'?q=1'; }
+document.querySelectorAll('.act-btn').forEach(b=>b.onclick=()=>setAct(+b.dataset.act));
+$('goQuiz').onclick=goToQuiz;
+if(EXAM){ $('actNav').hidden=true; $('conceptFooter').hidden=true; for(let i=0;i<3;i++) $('act-'+i+'-view').hidden=true; $('examView').hidden=false; renderExam(); }
+else{ $('examView').hidden=true; renderAct0(); renderAct1(); renderAct2(); setAct(0); }
+window.__N46_READY__=true;
+function notifyHeight(){ try{ const h=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight); window.parent.postMessage({type:'resize',height:h},'*'); }catch(e){} }
+window.addEventListener('load',notifyHeight);
+window.addEventListener('resize',notifyHeight);
+</script>
+<script>
+(function(){
+  const P=new URLSearchParams(location.search);
+  try{ if(!P.get('theme')) document.documentElement.dataset.theme=localStorage.getItem('math108_theme')||'light'; }
+  catch(e){ document.documentElement.dataset.theme='light'; }
+  window.addEventListener('message',function(e){ if(e&&e.data&&e.data.type==='THEME_CHANGE'&&e.data.theme){ document.documentElement.dataset.theme=e.data.theme; try{ localStorage.setItem('math108_theme',e.data.theme); }catch(err){} } });
+})();
+</script>
+</body>
+</html>
