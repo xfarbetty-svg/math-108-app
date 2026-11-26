@@ -519,7 +519,7 @@
           "question_count": 10,
           "verified_source": "EXAM REAL/G4 真卷逐題比對：永安國小 114-1 期中（p1，3 題）、獅湖國小 114-1 期中（p1/p2/p3，6 題）、內湖國小 113-1 期中（p1，1 題）；填充題改編為 4 選項，詳 data/units/G4/N-4-1.json",
           "component_path": "components/place_value_g4_lab.html",
-          "concept_path": "components/place_value_g4_lab.html"
+          "concept_path": "components/place_value_g4_lab.html?mode=concept"
         },
         {
           "code": "N-4-2",

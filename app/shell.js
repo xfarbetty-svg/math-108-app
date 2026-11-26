@@ -380,6 +380,7 @@ const CONCEPT_COMPONENTS = {
 
 
 
+
   "N-2-1": "components/g2_place_value_1000_lab.html",
   "N-2-2": "components/g2_vertical_addition_subtraction_lab.html",
   "N-2-3": "components/g2_addition_subtraction_word_lab.html",
@@ -452,7 +453,8 @@ const CONCEPT_COMPONENTS = {
   "S-4-1": "components/angle_degree_g4_lab.html?mode=concept",
   "R-4-3": "components/formula_g4_lab.html?mode=concept",
   "S-4-4": "components/volume_s44_g4_lab.html?mode=concept",
-  "R-4-1": "components/two_step_combine_g4_lab.html?mode=concept"
+  "R-4-1": "components/two_step_combine_g4_lab.html?mode=concept",
+  "N-4-1": "components/place_value_g4_lab.html?mode=concept"
 };
 
 let currentUnitMode = "exam"; // "concept" | "exam"
@@ -516,7 +518,7 @@ function renderStage() {
     btnConcept.onclick = () => setUnitMode("concept");
     btnExam.onclick = () => setUnitMode("exam");
     // N-4-2、N-4-10 預設進入「🌱 概念探索」，其餘單元維持既有預設
-    const DEFAULT_CONCEPT_CODES = new Set(["N-4-2", "N-4-10", "N-4-9", "S-4-5", "N-4-5", "R-4-2", "N-4-12", "R-4-4", "N-4-11", "S-4-6", "D-4-1", "N-4-13", "N-4-6", "S-4-2", "S-4-7", "N-4-7", "S-4-8", "N-4-8", "S-4-3", "S-4-1", "R-4-3", "S-4-4", "R-4-1"]);
+    const DEFAULT_CONCEPT_CODES = new Set(["N-4-2", "N-4-10", "N-4-9", "S-4-5", "N-4-5", "R-4-2", "N-4-12", "R-4-4", "N-4-11", "S-4-6", "D-4-1", "N-4-13", "N-4-6", "S-4-2", "S-4-7", "N-4-7", "S-4-8", "N-4-8", "S-4-3", "S-4-1", "R-4-3", "S-4-4", "R-4-1", "N-4-1"]);
     setUnitMode(DEFAULT_CONCEPT_CODES.has(code) ? "concept" : "exam");
   } else {
     tabs.style.display = "none";

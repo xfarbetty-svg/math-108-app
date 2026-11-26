@@ -21,7 +21,9 @@ ok(fs.existsSync(lab), '教具檔案不存在');
 const html = fs.readFileSync(lab, 'utf8');
 ok(!/100vh/.test(html), '嚴禁 100vh');
 ok(/theme-tokens\.css/.test(html), '必須接入 theme-tokens.css');
-ok(/margin:0;padding:8px;height:auto;min-height:0/.test(html), 'body 版面規格不符');
+ok(/margin:0;padding:(?:8px|6px 8px);height:auto;min-height:0/.test(html), 'body 版面規格不符');
+ok(/mode=concept|mode'?\)\s*===\s*'concept'/.test(html), '缺少 ?mode=concept 概念探索模式');
+ok(!/class="opts"|class="stem"/.test(html), '真題教具不得私自渲染重複題幹或四選項');
 ok(/pointerdown/.test(html) && /pointerup/.test(html), '缺少真實指標事件');
 ok(/URLSearchParams/.test(html) && /get\('q'\)/.test(html), '未提供 ?q 題庫聯動');
 

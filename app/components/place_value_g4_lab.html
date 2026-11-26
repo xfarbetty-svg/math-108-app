@@ -1,134 +1,481 @@
 <!DOCTYPE html>
-<html lang="zh-TW" data-theme="light">
+<html lang="zh-Hant" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>N-4-1 一億以內的數・位值實驗室</title>
 <link rel="stylesheet" href="../styles/theme-tokens.css">
 <style>
-  :root{--g4-bg:#fff9f0;--g4-card:#fff;--g4-line:#f0e7da;--g4-ink:#3d3a34;--g4-sub:#8a857b;--g4-a:#f4694b;--g4-b:#3f9c81;--g4-c:#7db8e8;--g4-warn:#c2410c}
-  html[data-theme="dark"]{--g4-bg:#161B26;--g4-card:#1F2736;--g4-line:#334155;--g4-ink:#E2E8F0;--g4-sub:#94A3B8;--g4-a:#3B8276;--g4-b:#4A9E8F;--g4-c:#5B8AA8;--g4-warn:#D9B382}
+  :root{
+    --bg:var(--bg-main,#fff9f0); --card:var(--bg-card,#fff); --elev:var(--bg-elevated,#faf3e8);
+    --ink:var(--text-primary,#3d3a34); --sub:var(--text-secondary,#6e685f); --line:var(--border-color,#e6dccb);
+    --a:var(--accent-primary,#f4694b); --mint:var(--accent-mint,#3f9c81); --sky:var(--accent-sky,#5b9bd5);
+    --lemon:var(--accent-lemon,#ffd166); --ok:#1f8a5b; --warn:#c2410c;
+    --tag-read:#c2410c; --tag-omit:#64748b;
+    --shadow:0 4px 14px var(--shadow-color,rgba(0,0,0,.06)); --radius:12px;
+  }
+  html[data-theme="dark"]{
+    --bg:#161B26; --card:#1F2736; --elev:#273142;
+    --ink:#F1F5F9; --sub:#CBD5E1; --line:#3B4A63;
+    --a:#F47A5E; --mint:#4CC9A7; --sky:#7CC4FA;
+    --lemon:#FBBF24; --ok:#4ADE80; --warn:#FCA5A5;
+    --tag-read:#FBBF24; --tag-omit:#94A3B8;
+  }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-  body{font-family:'Segoe UI','Microsoft JhengHei',Tahoma,sans-serif;background:var(--g4-bg);color:var(--g4-ink);margin:0;padding:8px;height:auto;min-height:0;overflow-x:hidden}
-  .wrap{width:100%;max-width:100%;display:flex;flex-direction:column;gap:4px}
-  .head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10px;color:var(--g4-sub)}
-  .head b{color:var(--g4-ink);font-size:13px}
-  .src{font-size:9.5px;text-align:right;color:var(--g4-sub)}
-  .stem{background:var(--g4-card);border-left:4px solid var(--g4-a);border-radius:10px;padding:4px 7px;font-size:11px;line-height:1.35;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-  .tabs{display:flex;gap:4px;flex-wrap:wrap}
-  .tab{border:1px solid var(--g4-line);background:var(--g4-card);color:var(--g4-sub);border-radius:14px;padding:4px 9px;font-size:10.5px;cursor:pointer}
-  .tab.on{background:var(--g4-a);color:#fff;border-color:var(--g4-a)}
-  .board{background:var(--g4-card);border:1px solid var(--g4-line);border-radius:12px;padding:6px;min-height:148px;max-height:158px;overflow:auto}
-  .ttl{font-size:10.5px;color:var(--g4-sub);margin-bottom:5px}
-  .group{display:flex;gap:5px;align-items:flex-end;justify-content:center;margin-bottom:5px}
-  .glabel{font-size:9px;color:var(--g4-sub);text-align:center;margin-bottom:2px}
-  .slot{width:31px;height:38px;border:2px dashed var(--g4-line);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:var(--g4-ink);background:var(--g4-bg)}
-  .slot.hit{border-color:var(--g4-b);background:color-mix(in srgb,var(--g4-b) 18%,transparent)}
-  .slot.set{border-style:solid;border-color:var(--g4-b)}
-  .slot .lab{position:absolute;transform:translateY(26px);font-size:8px;color:var(--g4-sub);font-weight:400}
-  .tray{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:4px;min-height:30px}
-  .tile{width:28px;height:28px;border-radius:6px;background:var(--g4-c);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none}
+  html,body{width:100%;max-width:100vw;overflow-x:hidden;height:auto;min-height:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+  body{margin:0;padding:6px 8px;height:auto;min-height:0}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  #app{width:100%;max-width:480px;min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:6px;overflow:visible}
+
+  .head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11px;color:var(--sub);min-height:18px}
+  .head b{color:var(--ink);font-size:13px;font-weight:800}
+
+  /* 概念探索：頂部膠囊導航 */
+  .activity-nav{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--elev);padding:4px;border-radius:999px;flex-wrap:nowrap;max-width:100%}
+  .activity-nav::-webkit-scrollbar{display:none}
+  .act-btn{flex:0 0 auto;padding:5px 10px;font-size:11px;font-weight:800;border-radius:999px;color:var(--sub);white-space:nowrap;transition:all .18s}
+  .act-btn.active{background:var(--card);color:var(--a);box-shadow:0 2px 6px rgba(0,0,0,.1)}
+
+  .act-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);max-width:100%;overflow:visible}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .card-badge{background:var(--elev);color:var(--a);font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .card-title{font-size:13px;font-weight:800;color:var(--ink)}
+  .card-desc{font-size:11px;line-height:1.45;color:var(--sub)}
+
+  .board{background:var(--elev);border:1px solid var(--line);border-radius:10px;padding:8px 6px;display:flex;flex-direction:column;gap:6px}
+  .ttl{font-size:11px;color:var(--sub);text-align:center;font-weight:700}
+
+  /* 活動一 / 合成位值表 */
+  .group{display:flex;gap:4px;align-items:flex-end;justify-content:center;flex-wrap:nowrap}
+  .col{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .col.sep{margin-left:5px;padding-left:5px;border-left:2px dashed var(--line)}
+  .glabel{font-size:9.5px;color:var(--sub);font-weight:700;white-space:nowrap}
+  .slot{width:34px;height:36px;border:2px dashed var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--ink);background:var(--card);cursor:pointer;transition:all .15s}
+  .slot.set{border-style:solid;border-color:var(--mint);background:color-mix(in srgb,var(--mint) 14%,var(--card))}
+  .slot.hit{border-color:var(--a)}
+  .tray{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;min-height:30px}
+  .tile{width:30px;height:30px;border-radius:7px;background:var(--sky);color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+  .tile.selected{outline:2.5px solid var(--a);transform:translateY(-2px)}
   .tile.used{opacity:.25;pointer-events:none}
-  .readnum{display:flex;gap:3px;justify-content:center;flex-wrap:wrap}
-  .digit{width:31px;height:44px;border-radius:7px;border:1px solid var(--g4-line);background:var(--g4-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:21px;font-weight:700;color:var(--g4-ink);cursor:pointer;position:relative}
-  .digit.zero.lit{background:color-mix(in srgb,var(--g4-lemon,#ffd166) 55%,transparent);border-color:var(--g4-a)}
-  .digit .pos{font-size:8px;font-weight:400;color:var(--g4-sub)}
-  .digit .tag{position:absolute;bottom:-13px;font-size:8px;white-space:nowrap;color:var(--g4-a)}
+
+  /* 活動二 / 跨級讀零亮燈 */
+  .readnum{display:flex;gap:4px;justify-content:center;flex-wrap:nowrap;padding:2px 0}
+  .dcol{display:flex;flex-direction:column;align-items:center;gap:3px;width:38px}
+  .dcol.sep{margin-left:4px;padding-left:4px;border-left:2px dashed var(--line)}
+  .digit{width:34px;height:42px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--ink);cursor:pointer;transition:all .15s}
+  .digit.zero{border-color:var(--sky)}
+  .digit.zero.lit{background:color-mix(in srgb,var(--lemon) 38%,var(--card));border-color:var(--a);transform:translateY(-1px)}
+  .digit .pos{font-size:8.5px;font-weight:700;color:var(--sub);line-height:1}
+  .dtag{font-size:9px;font-weight:800;line-height:1.1;text-align:center;min-height:11px;white-space:nowrap;color:var(--tag-omit);opacity:0;transition:opacity .15s}
+  .dtag.read{color:var(--tag-read)}
+  .dcol.lit .dtag{opacity:1}
+
+  /* 活動三 / 高位逐欄比大小 */
   .cmp{display:flex;flex-direction:column;gap:4px;align-items:center}
-  .cmprow{display:flex;gap:3px}
-  .cbox{width:29px;height:32px;border:1px solid var(--g4-line);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;background:var(--g4-bg)}
-  .cbox.diff{background:color-mix(in srgb,var(--g4-a) 25%,transparent);border-color:var(--g4-a)}
-  .msg{font-size:11px;color:var(--g4-b);min-height:15px;text-align:center}
-  .mini{border:1px solid var(--g4-line);background:var(--g4-card);color:var(--g4-ink);font-size:10.5px;border-radius:12px;padding:4px 9px;cursor:pointer}
-  .opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-  .opt{border:1px solid var(--g4-line);background:var(--g4-card);color:var(--g4-ink);border-radius:9px;padding:4px 5px;font-size:10.5px;cursor:pointer;text-align:left;line-height:1.25}
-  .opt.sel{border-color:var(--g4-a);background:color-mix(in srgb,var(--g4-a) 14%,transparent)}
-  .opt.right{border-color:var(--g4-b);background:color-mix(in srgb,var(--g4-b) 18%,transparent)}
-  .opt.wrong{border-color:var(--g4-warn)}
-  .steps{background:var(--g4-card);border:1px solid var(--g4-line);border-radius:10px;padding:4px 7px;min-height:32px;max-height:68px;overflow:auto;font-size:10.5px;line-height:1.35}
-  .steps b{color:var(--g4-a)}
-  .steps .ln{opacity:0;transition:opacity .2s}
-  .steps .ln.show{opacity:1}
-  .act{display:flex;gap:5px;align-items:center;justify-content:center}
+  .cmprow{display:flex;gap:3px;align-items:center}
+  .cbox{width:32px;height:30px;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;background:var(--card);color:var(--ink)}
+  .cbox.lbl{border:none;background:transparent;height:16px;font-size:9px;color:var(--sub);font-weight:700}
+  .cbox.sep{margin-left:5px}
+  .cbox.diff{background:color-mix(in srgb,var(--a) 22%,var(--card));border-color:var(--a);color:var(--ink)}
+  .cbox.same{background:color-mix(in srgb,var(--mint) 18%,var(--card));border-color:var(--mint)}
+
+  .btn-grid{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;align-items:center}
+  .mini{border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-size:11px;font-weight:800;border-radius:10px;padding:5px 10px;transition:all .15s}
+  .mini.primary{background:var(--a);border-color:var(--a);color:#fff}
+  .mini.active{border-color:var(--a);color:var(--a);background:var(--elev)}
+  .mini:active{transform:translateY(1px)}
+
+  .info-bubble{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:11px;line-height:1.45;color:var(--ink);font-weight:700;text-align:left;min-height:20px}
+  .info-bubble.ok{border-color:var(--ok);color:var(--ok)}
+  .info-bubble.warn{border-color:var(--warn);color:var(--warn)}
+
+  .steps-box{background:var(--elev);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:11px;line-height:1.45;color:var(--ink)}
+  .steps-box .sline{margin-bottom:2px}
+  .steps-box .sline:last-child{margin-bottom:0;font-weight:800;color:var(--ok)}
+
+  .concept-footer{margin-top:2px}
+  .btn-go-quiz{width:100%;background:var(--a);color:#fff;font-size:13px;font-weight:900;padding:9px;border-radius:11px;text-align:center}
+  .btn-go-quiz:active{transform:scale(.98)}
+  [hidden]{display:none!important}
 </style>
+<script src="../js/audio_manager.js"></script>
 </head>
 <body>
-<div class="wrap">
-  <div class="head"><b>N-4-1 一億以內的數</b><span id="qtag">第 ? 題</span></div>
-  <div class="src" id="src"></div>
-  <div class="stem" id="stem"></div>
-  <div class="tabs" id="tabs"></div>
-  <div class="board" id="board"></div>
-  <div class="opts" id="opts"></div>
-  <div class="steps" id="steps">選出答案後，點「一步一步看算理」拆解。</div>
-  <div class="act"><button class="mini" id="next">下一步 ▸</button><button class="mini" id="reset">重置教具</button><span class="msg" id="msg"></span></div>
+<div id="app">
+  <div class="head"><b>N-4-1 一億以內的數</b><span id="qtag">108 課綱實驗室</span></div>
+
+  <nav class="activity-nav" id="actNav">
+    <button class="act-btn active" data-act="0">🧩 活動一・位值拖曳</button>
+    <button class="act-btn" data-act="1">💡 活動二・讀零亮燈</button>
+    <button class="act-btn" data-act="2">⚖️ 活動三・高位比大小</button>
+  </nav>
+
+  <!-- 概念探索：活動一（四位一級位值拖曳，高鐵年度旅運情境） -->
+  <section class="act-card" id="act-0-view">
+    <div class="card-head"><span class="card-badge">課綱活動 1 · 四位一級定位</span></div>
+    <div class="card-title">🧩 活動一：把積木放到對的位值</div>
+    <div class="card-desc">高鐵年運量有「7 個千萬、2 個十萬、5 個萬和 3 個百」。拖曳或點選數字卡放進位值表，沒數的位子補 0！</div>
+    <div class="board" id="c0Board"></div>
+    <div class="btn-grid">
+      <button class="mini" id="c0Reset">🧹 重置積木</button>
+      <button class="mini primary" id="c0Check">✓ 檢查位值</button>
+    </div>
+    <div class="info-bubble" id="c0Msg">💡 先點數字卡再點槽位，也可直接拖曳；四位一級中間虛線是「萬級｜個級」。</div>
+  </section>
+
+  <!-- 概念探索：活動二（跨級讀零亮燈規則，獨立範例 40500800 / 30009020） -->
+  <section class="act-card" id="act-1-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱活動 2 · 零的讀法</span></div>
+    <div class="card-title">💡 活動二：哪幾個 0 要讀「零」？</div>
+    <div class="card-desc">點選算盤上的「0」字塊亮燈：每級末尾的 0 不讀，段中或個級開頭有 0 且後面還有數才補讀一個「零」。</div>
+    <div class="btn-grid" id="c1Samples">
+      <button class="mini active" data-v="40500800">範例 A：40500800</button>
+      <button class="mini" data-v="30009020">範例 B：30009020</button>
+    </div>
+    <div class="board" id="c1Board"></div>
+    <div class="info-bubble" id="c1Msg">💡 點每一個「0」亮燈，觀察它屬於「級尾省略」還是「讀零」。</div>
+  </section>
+
+  <!-- 概念探索：活動三（高位逐欄比大小，兩館藏書量情境） -->
+  <section class="act-card" id="act-2-view" hidden>
+    <div class="card-head"><span class="card-badge">課綱活動 3 · 高位比大小</span></div>
+    <div class="card-title">⚖️ 活動三：兩座圖書館誰藏書較多？</div>
+    <div class="card-desc">甲館藏書 52480900 冊、乙館藏書 52491200 冊。從最高位（千萬位）一欄一欄往右比！</div>
+    <div class="board" id="c2Board"></div>
+    <div class="btn-grid">
+      <button class="mini primary" id="c2Step">從高位比一比 ▸</button>
+      <button class="mini" id="c2Reset">🧹 重新比對</button>
+    </div>
+    <div class="info-bubble" id="c2Msg">💡 點「從高位比一比」，找出第一個不相同的位值欄位！</div>
+  </section>
+
+  <!-- 真題互動舞台（?q=1..10）：純具象操作＋算理拆解，題幹與四選項交由外殼統一呈現 -->
+  <section class="act-card" id="examView" hidden>
+    <div class="card-head">
+      <span class="card-badge" id="examBadge">🎯 具象位值操作</span>
+      <span id="examSrc" style="font-size:10px;color:var(--sub)"></span>
+    </div>
+    <div class="board" id="examBoard"></div>
+    <div class="btn-grid">
+      <button class="mini" id="examExtraBtn" hidden></button>
+      <button class="mini primary" id="revealSteps">🔍 看算理拆解</button>
+      <button class="mini" id="examReset">🧹 重置教具</button>
+    </div>
+    <div class="info-bubble" id="examMsg">💡 先操作上方教具協助思考，再到下方選出正確選項。</div>
+    <div class="steps-box" id="stepsBox" hidden></div>
+  </section>
+
+  <footer class="concept-footer" id="conceptFooter">
+    <button class="btn-go-quiz" id="goQuiz">🎯 進入真題測驗（10 題）</button>
+  </footer>
 </div>
+
 <script>
-const P=new URLSearchParams(location.search);
-let Q=Math.max(1,Math.min(10,parseInt(P.get('q')||'1',10)||1));
-const LABEL=['千萬','百萬','十萬','萬','千','百','十','個'];
-const L={
- 1:{m:'read',s:'永安國小 114-1 期中（p1）',stem:'選擇題：「8400350」讀作什麼？',v:'8400350',c:['八千四百萬零三百五十','八千零四十萬零三百五十','八十四萬零三百五十','八百四十萬零三百五十'],a:3,t:['從右邊數四位：8400350 分成「840」萬級與「0350」個級。','萬級 840 讀「八百四十」，後面加「萬」。','個級 0350 的千位是 0，要讀一個「零」，再讀「三百五十」。','合起來：八百四十萬零三百五十。']},
- 2:{m:'compose',s:'永安國小 114-1 期中（p1）',stem:'選擇題：3 個十萬、6 個千和 4 個百合起來是多少？',tile:['3','6','4','0','0','0','0','0'],c:['364000','306400','306040','306004'],a:1,t:['3 個十萬放在十萬位 → 300000。','6 個千放在千位 → 6000。','4 個百放在百位 → 400。','其餘位值沒有數，用 0 占位：300000＋6000＋400＝306400。']},
- 3:{m:'compose',s:'永安國小 114-1 期中（p1）',stem:'是非題：「35768」中的 5 表示 50000。',tile:['3','5','7','6','8','0','0','0'],c:['⭕ 對','❌ 錯，5 表示 5000','❌ 錯，5 表示 500','❌ 錯，5 表示 50'],a:1,t:['把 35768 放進八位位值表：3 在萬位、5 在千位。','千位的 5 表示 5 個一千，也就是 5000。','50000 是 5 在萬位才有的值，這裡萬位是 3。','所以這句話是錯的，5 表示 5000。']},
- 4:{m:'read',s:'獅湖國小 114-1 期中（p1）',stem:'填填看：60006000 讀作（　）。',v:'60006000',c:['六千萬六千','六千零六萬','六千萬零六千','六千零六萬零六千'],a:0,t:['四位一級：60006000 →「6000」萬級、「6000」個級。','萬級 6000 讀「六千」加「萬」→ 六千萬；萬級尾端三個 0 省略。','個級 6000 的千位是 6（不是 0），個級開頭沒有要補的零，直接讀「六千」。','所以讀「六千萬六千」，不必加「零」。']},
- 5:{m:'read',s:'獅湖國小 114-1 期中（p1）',stem:'填填看：6080506 讀作（　）。',v:'6080506',c:['六百零八萬五百零六','六百零八萬零五百零六','六百八萬零五百六','六千零八十萬五千零六'],a:1,t:['補成八位 06080506 →「608」萬級、「0506」個級。','萬級 608 讀「六百零八」加「萬」。','個級 0506 的千位是 0，先讀「零」，再讀「五百」；十位 0 再讀「零」，最後「六」。','所以讀「六百零八萬零五百零六」。']},
- 6:{m:'compose',s:'獅湖國小 114-1 期中（p1）',stem:'填填看：五千萬零一十八記作（　）。',tile:['5','1','8','0','0','0','0','0'],c:['50000018','5000018','50000180','500018'],a:0,t:['「五千萬」表示千萬位放 5 → 50000000。','「零一十八」表示十位 1、個位 8 → 18。','中間百萬、十萬、萬、千、百位都沒有數，全部寫 0 占位。','50000000＋18＝50000018。']},
- 7:{m:'compose',s:'獅湖國小 114-1 期中（p1）',stem:'填填看：19 個百萬、47 個十萬和 6 個一合起來記作（　）。',tile:['1','9','4','7','6','0','0','0'],c:['23700006','19470006','23700060','23700600'],a:0,t:['19 個百萬＝19000000，也就是 1900 萬。','47 個十萬＝4700000，也就是 470 萬。','1900 萬＋470 萬＝2370 萬＝23700000。','再加 6 個一（個位 6）：23700006。']},
- 8:{m:'compose',s:'內湖國小 113-1 期中（p1）',stem:'填填看：2 個千萬、3 個百萬、4 個十萬、6 個千、6 個百和 8 個一合起來是多少人？',tile:['2','3','4','6','6','8','0','0'],c:['23406608','23046608','23400608','2346608'],a:0,t:['千萬位 2、百萬位 3、十萬位 4 → 2340 萬。','千位 6、百位 6、十位 0、個位 8 → 6608。','萬位沒有數，寫 0 占位。','合起來 23400000＋6608＝23406608。']},
- 9:{m:'compose',s:'獅湖國小 114-1 期中（p2）',stem:'填填看：用 1、2、3、5、7、9、8、0 排成最大的 7 位數。',tile:['1','2','3','5','7','9','8','0'],c:['9875321','9875312','9857321','98753210'],a:0,t:['7 位數的最高位（百萬位）不能放 0，要放最大的數字。','把 9、8、7、5、3、2、1 由大到小排列。','剩餘的 0 不用（用了就變成 8 位數）。','最大 7 位數是 9875321。']},
- 10:{m:'compare',s:'獅湖國小 114-1 期中（p3）',stem:'應用題：去年營業額 43600000 元，今年比去年少 8900000 元，今年大約是幾萬元？',x:'34700000',b:'43600000',c:['3470 萬','347 萬','5250 萬','34700 萬'],a:0,t:['去年 43600000 元＝4360 萬。','今年比去年少 8900000 元＝890 萬。','4360 萬－890 萬＝3470 萬。','用萬級逐欄核對：3470 萬＜4360 萬，答案 3470 萬。']}
+const P = new URLSearchParams(location.search);
+const RAW_Q = P.get('q');
+const MODE = (P.get('mode') === 'concept' || !RAW_Q) ? 'concept' : 'exam';
+const Q = Math.max(1, Math.min(10, parseInt(RAW_Q || '1', 10) || 1));
+const LABEL = ['千萬','百萬','十萬','萬','千','百','十','個'];
+
+const EXAM_DATA = {
+  1: {m:'read', s:'永安國小 114-1 期中 p1', v:'8400350',
+      steps:['1. 從右數四位：「840」萬級｜「0350」個級。','2. 萬級 840 讀「八百四十萬」。','3. 個級 0350 千位為 0 要補讀「零」，合起來「八百四十萬零三百五十」。']},
+  2: {m:'compose', s:'永安國小 114-1 期中 p1', tile:['3','6','4','0','0','0','0','0'],
+      steps:['1. 3 個十萬放十萬位 → 300000。','2. 6 個千放千位 → 6000，4 個百放百位 → 400。','3. 其餘空位補 0：300000＋6000＋400＝306400。']},
+  3: {m:'compose', s:'永安國小 114-1 期中 p1', tile:['3','5','7','6','8','0','0','0'],
+      steps:['1. 把 35768 放入位值表：3 在萬位、5 在千位。','2. 千位的 5 代表 5 個一千＝5000。','3. 題目說表示 50000 是錯的，5 表示 5000。']},
+  4: {m:'read', s:'獅湖國小 114-1 期中 p1', v:'60006000',
+      steps:['1. 四位一級：「6000」萬級｜「6000」個級。','2. 萬級 6000 讀「六千萬」，級尾三個 0 省略。','3. 個級千位為 6（非 0），直接讀「六千」→ 六千萬六千。']},
+  5: {m:'read', s:'獅湖國小 114-1 期中 p1', v:'6080506',
+      steps:['1. 補滿八位 06080506：「608」萬級｜「0506」個級。','2. 萬級讀「六百零八萬」。','3. 個級千位 0 讀「零」，十位 0 讀「零」→ 六百零八萬零五百零六。']},
+  6: {m:'compose', s:'獅湖國小 114-1 期中 p1', tile:['5','1','8','0','0','0','0','0'],
+      steps:['1. 「五千萬」放千萬位 5 → 50000000。','2. 「零一十八」放十位 1、個位 8 → 18。','3. 中間空位全部補 0 → 50000018。']},
+  7: {m:'compose', s:'獅湖國小 114-1 期中 p1', tile:['1','9','4','7','6','0','0','0'],
+      steps:['1. 19 個百萬＝1900 萬，47 個十萬＝470 萬。','2. 1900 萬＋470 萬＝2370 萬＝23700000。','3. 再加 6 個一 → 23700006。']},
+  8: {m:'compose', s:'內湖國小 113-1 期中 p1', tile:['2','3','4','6','6','8','0','0'],
+      steps:['1. 千萬位 2、百萬位 3、十萬位 4 → 2340 萬。','2. 千位 6、百位 6、十位 0、個位 8 → 6608。','3. 萬位空位補 0 → 23406608。']},
+  9: {m:'compose', s:'獅湖國小 114-1 期中 p2', tile:['1','2','3','5','7','9','8','0'],
+      steps:['1. 7 位數最高位在百萬位，不能放 0。','2. 選最大的 7 張數字卡由大到小放：9、8、7、5、3、2、1。','3. 捨棄 0，最大 7 位數為 9875321。']},
+  10:{m:'compare', s:'獅湖國小 114-1 期中 p3', x:'34700000', b:'43600000',
+      steps:['1. 去年 43600000 元＝4360 萬，今年少 8900000 元＝890 萬。','2. 4360 萬－890 萬＝3470 萬（34700000）。','3. 逐欄對比 34700000 ＜ 43600000，今年大約 3470 萬元。']}
 };
-if(P.get('theme')==='dark'||P.get('theme')==='light')document.documentElement.dataset.theme=P.get('theme');
-const d=L[Q],board=document.getElementById('board'),opts=document.getElementById('opts'),steps=document.getElementById('steps'),msg=document.getElementById('msg');
-document.getElementById('qtag').textContent='第 '+Q+' 題 / 10';
-document.getElementById('src').textContent='真題出處：'+d.s;
-document.getElementById('stem').textContent=d.stem;
-document.getElementById('tabs').innerHTML=['活動一 四位一級拖曳','活動二 跨級讀零亮燈','活動三 高位逐欄比大小'].map((x,i)=>'<button class="tab'+((d.m==='compose'&&i===0)||(d.m==='read'&&i===1)||(d.m==='compare'&&i===2)?' on':'')+'" data-i="'+i+'">'+x+'</button>').join('');
-document.getElementById('tabs').onclick=e=>{const t=e.target.closest('.tab');if(!t)return;const i=+t.dataset.i,m=i===0?'compose':i===1?'read':'compare';msg.textContent=i===0?'本題以拖曳位值定位作答':i===1?'點擊數字亮燈，認識讀零':'用高位逐欄比對';if(m!==d.m)msg.textContent='本題使用「'+['活動一','活動二','活動三'][i]+'」示範，正式作答請看題幹。';};
-let picked=-1,stepN=0,slots=[],tiles=[],drag=null,cmpI=-1;
-function compose(){
-  slots=Array(8).fill('');
-  board.innerHTML='<div class="ttl">八位位值表：拖曳數字到對應位值（萬級｜個級）</div>'+
-   '<div class="group">'+LABEL.map((l,i)=>'<div><div class="glabel">'+(i===4?'│':'')+l+'</div><div class="slot" data-i="'+i+'"></div></div>').join('')+'</div>'+
-   '<div class="ttl" id="val">目前数值：________（八位）</div><div class="tray" id="tray"></div>';
-  tiles=d.tile.map((v,i)=>({v,i,used:false}));
-  renderTray();paint();
-  board.querySelectorAll('.slot').forEach(s=>{
-    s.addEventListener('pointerup',()=>{if(drag===null)return;const i=+s.dataset.i;if(slots[i]===''){slots[i]=tiles[drag].v;tiles[drag].used=true;drag=null;renderTray();paint();}});
+
+const $ = (id) => document.getElementById(id);
+function notifyHeight(){
+  try{
+    const h = Math.ceil(document.getElementById('app').getBoundingClientRect().height) + 12;
+    if (window.parent && window.parent !== window) window.parent.postMessage({type:'resize', height:h}, '*');
+  }catch(e){}
+}
+
+/* ---------- 共用元件：位值拖曳盤 / 讀零亮燈盤 / 逐欄比大小盤 ---------- */
+function mountCompose(boardEl, tileArr, onUpdate){
+  const slots = Array(8).fill('');
+  const tiles = tileArr.map((v, i) => ({v, i, used:false}));
+  let pickedTile = null;
+
+  boardEl.innerHTML =
+    '<div class="ttl">八位位值表（萬級｜個級）— 點選或拖曳數字卡放入欄位</div>' +
+    '<div class="group">' + LABEL.map((l, i) =>
+      '<div class="col' + (i===4?' sep':'') + '"><div class="glabel">' + l + '</div><div class="slot" data-i="' + i + '"></div></div>'
+    ).join('') + '</div>' +
+    '<div class="ttl" data-role="val">目前數值：________（萬級 ｜個級 ）</div>' +
+    '<div class="tray" data-role="tray"></div>';
+
+  const trayEl = boardEl.querySelector('[data-role="tray"]');
+  const valEl = boardEl.querySelector('[data-role="val"]');
+
+  function paint(){
+    boardEl.querySelectorAll('.slot').forEach((s, i) => {
+      s.textContent = slots[i];
+      s.classList.toggle('set', !!slots[i]);
+    });
+    const wan = slots.slice(0,4).map(x=>x||'_').join('');
+    const ge = slots.slice(4).map(x=>x||'_').join('');
+    valEl.textContent = '目前數值：' + slots.map(x=>x||'_').join('') + '（萬級 ' + wan + '｜個級 ' + ge + '）';
+    if (onUpdate) onUpdate(slots);
+  }
+  function placeAt(slotIdx){
+    if (pickedTile === null) return;
+    if (slots[slotIdx] === '') {
+      slots[slotIdx] = tiles[pickedTile].v;
+      tiles[pickedTile].used = true;
+      pickedTile = null;
+      renderTray();
+      paint();
+    }
+  }
+  function renderTray(){
+    trayEl.innerHTML = tiles.map(t =>
+      '<div class="tile' + (t.used?' used':'') + (pickedTile===t.i?' selected':'') + '" data-i="' + t.i + '">' + t.v + '</div>'
+    ).join('');
+    trayEl.querySelectorAll('.tile:not(.used)').forEach(el => {
+      el.addEventListener('pointerdown', (e) => {
+        const idx = +el.dataset.i;
+        pickedTile = (pickedTile === idx) ? null : idx;
+        renderTray();
+        try{ el.setPointerCapture(e.pointerId); }catch(err){}
+      });
+    });
+  }
+  boardEl.querySelectorAll('.slot').forEach(s => {
+    const idx = +s.dataset.i;
+    s.addEventListener('pointerup', () => placeAt(idx));
+    s.addEventListener('click', () => placeAt(idx));
+  });
+  renderTray();
+  paint();
+  return { getSlots: () => slots.slice() };
+}
+
+function mountRead(boardEl, numStr, msgEl){
+  const v = numStr.padStart(8, '0');
+  const gp = v.slice(0, 4), ge = v.slice(4);
+  const first = v.search(/[1-9]/);
+  const zeroInfo = (g, base) => g.split('').map((ch, j) => {
+    const idx = base + j;
+    if (ch !== '0') return null;
+    if (idx < first) return { text:'前導省略', read:false };
+    const tailZero = g.slice(j + 1).split('').every(x => x === '0');
+    return tailZero ? { text:'級尾省略', read:false } : { text:'讀「零」', read:true };
+  });
+  const zi = zeroInfo(gp, 0).concat(zeroInfo(ge, 4));
+
+  boardEl.innerHTML =
+    '<div class="ttl">四位一級：' + gp + '（萬級）｜' + ge + '（個級）— 點 0 亮燈看規則</div>' +
+    '<div class="readnum">' + LABEL.map((l, i) => {
+      const info = zi[i];
+      return '<div class="dcol' + (i===4?' sep':'') + '" data-i="' + i + '">' +
+        '<div class="digit' + (v[i]==='0'?' zero':'') + '"><span>' + v[i] + '</span><span class="pos">' + l + '</span></div>' +
+        '<div class="dtag' + (info && info.read ? ' read' : '') + '">' + (info ? info.text : '') + '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+
+  boardEl.querySelectorAll('.dcol').forEach(col => {
+    const d = col.querySelector('.digit.zero');
+    if (!d) return;
+    d.addEventListener('click', () => {
+      const on = d.classList.toggle('lit');
+      col.classList.toggle('lit', on);
+      const tag = col.querySelector('.dtag').textContent;
+      if (msgEl) msgEl.textContent = on ? ('這個 0 屬於「' + tag + '」。') : '已取消亮燈，可點其他 0 觀察。';
+    });
   });
 }
-function renderTray(){document.getElementById('tray').innerHTML=tiles.map(t=>'<div class="tile'+(t.used?' used':'')+'" data-i="'+t.i+'">'+t.v+'</div>').join('');
-  document.querySelectorAll('.tile:not(.used)').forEach(el=>el.addEventListener('pointerdown',e=>{drag=+el.dataset.i;try{el.setPointerCapture(e.pointerId);}catch(err){/* 合成事件無有效 pointer，忽略 */}}));}
-function paint(){board.querySelectorAll('.slot').forEach((s,i)=>{s.textContent=slots[i];s.classList.toggle('set',!!slots[i]);});
-  document.getElementById('val').textContent='目前数值：'+(slots.join('')||'________')+'（萬級 '+slots.slice(0,4).join('')+'｜個級 '+slots.slice(4).join('')+'）';}
-function readBoard(){
-  const v=d.v.padStart(8,'0'),gp=v.slice(0,4),ge=v.slice(4);
-  const first=v.search(/[1-9]/);
-  const zeroInfo=(g,base)=>g.split('').map((ch,j)=>{const idx=base+j;if(ch!=='0')return '';if(idx<first)return '前導省略';const last=g.slice(j+1).split('').every(x=>x==='0');return last?'級尾省略':'讀「零」';});
-  const zi=zeroInfo(gp,0).concat(zeroInfo(ge,4));
-  board.innerHTML='<div class="ttl">四位一級：'+gp+'（萬級）｜'+ge+'（個級）— 點數字亮燈，看零怎麼讀</div><div class="readnum">'+
-   LABEL.map((l,i)=>'<div class="digit'+(v[i]==='0'?' zero':'')+'" data-i="'+i+'"><span>'+v[i]+'</span><span class="pos">'+l+'</span>'+(zi[i]?'<span class="tag">'+zi[i]+'</span>':'')+'</div>').join('')+'</div>';
-  board.querySelectorAll('.digit.zero').forEach(el=>el.addEventListener('click',()=>{el.classList.toggle('lit');msg.textContent=el.querySelector('.tag')?el.querySelector('.tag').textContent:'零';}));
+
+function mountCompare(boardEl, aStr, bStr, msgEl){
+  const a = aStr.padStart(8, '0'), b = bStr.padStart(8, '0');
+  let cmpI = -1;
+  boardEl.innerHTML =
+    '<div class="ttl">從最高位（千萬位）逐欄往右比</div>' +
+    '<div class="cmp">' +
+      '<div class="cmprow">' + LABEL.map((l, i) => '<div class="cbox lbl' + (i===4?' sep':'') + '">' + l + '</div>').join('') + '</div>' +
+      '<div class="cmprow">' + LABEL.map((l, i) => '<div class="cbox' + (i===4?' sep':'') + '" data-c="' + i + '">' + a[i] + '</div>').join('') + '</div>' +
+      '<div class="cmprow">' + LABEL.map((l, i) => '<div class="cbox' + (i===4?' sep':'') + '" data-c="' + i + '">' + b[i] + '</div>').join('') + '</div>' +
+    '</div>';
+  return {
+    step: () => {
+      cmpI = (cmpI + 1) % 8;
+      const same = a[cmpI] === b[cmpI];
+      boardEl.querySelectorAll('.cbox[data-c]').forEach(el => {
+        const idx = +el.dataset.c;
+        el.classList.toggle('diff', idx === cmpI && !same);
+        el.classList.toggle('same', idx === cmpI && same);
+      });
+      if (msgEl) {
+        msgEl.textContent = same
+          ? ('第 ' + (cmpI + 1) + ' 欄（' + LABEL[cmpI] + '位）同為 ' + a[cmpI] + '，繼續往右比！')
+          : ('第 ' + (cmpI + 1) + ' 欄（' + LABEL[cmpI] + '位）' + a[cmpI] + ' 對 ' + b[cmpI] + ' → ' + (a[cmpI] > b[cmpI] ? '上列較大！' : '下列較大！'));
+      }
+    }
+  };
 }
-function compareBoard(){
-  const a=d.x.padStart(8,'0'),b=d.b.padStart(8,'0');
-  board.innerHTML='<div class="ttl">從最高位（千萬位）逐欄比，找出第一個不同的欄位</div><div class="cmp">'+
-   '<div class="cmprow">'+LABEL.map((l,i)=>'<div class="cbox" data-c="'+i+'">'+a[i]+'</div>').join('')+'</div>'+
-   '<div class="cmprow">'+LABEL.map((l,i)=>'<div class="cbox" data-c="'+i+'">'+b[i]+'</div>').join('')+'</div>'+
-   '<div class="cmprow">'+LABEL.map(l=>'<div class="cbox" style="border:none;font-size:8px;color:var(--g4-sub)">'+l+'</div>').join('')+'</div></div>'+
-   '<div class="act"><button class="mini" id="cmpbtn">從高位比一比 ▸</button></div>';
-  document.getElementById('cmpbtn').onclick=()=>{cmpI=(cmpI+1)%8;board.querySelectorAll('.cbox[data-c]').forEach(el=>el.classList.toggle('diff',+el.dataset.c===cmpI));
-    msg.textContent=a[cmpI]===b[cmpI]?'第 '+(cmpI+1)+' 欄同為 '+a[cmpI]+'，繼續往右比':'第 '+(cmpI+1)+' 欄 '+a[cmpI]+' 對 '+b[cmpI]+' → '+(a[cmpI]>b[cmpI]?'上列較大':'下列較大');};
+
+/* ---------- 概念探索三活動初始化 ---------- */
+let c0Ctrl = null, c2Ctrl = null;
+function initConcept(){
+  // 活動一：70250300（與真題數字零重複）
+  function resetC0(){
+    c0Ctrl = mountCompose($('c0Board'), ['7','2','5','3','0','0','0','0']);
+    $('c0Msg').className = 'info-bubble';
+    $('c0Msg').textContent = '💡 提示：7 個千萬、2 個十萬、5 個萬、3 個百，其餘空位補 0。';
+  }
+  resetC0();
+  $('c0Reset').onclick = resetC0;
+  $('c0Check').onclick = () => {
+    const val = c0Ctrl.getSlots().join('');
+    if (val === '70250300') {
+      $('c0Msg').className = 'info-bubble ok';
+      $('c0Msg').textContent = '✅ 完全正確！70250300 讀作「七千零二十五萬零三百」。';
+    } else {
+      $('c0Msg').className = 'info-bubble warn';
+      $('c0Msg').textContent = '✗ 目前拼出「' + (val || '尚未完成') + '」，再對照：千萬位 7、十萬位 2、萬位 5、百位 3、其餘補 0。';
+    }
+  };
+
+  // 活動二：範例切換（40500800 / 30009020）
+  function loadC1(v){ mountRead($('c1Board'), v, $('c1Msg')); }
+  loadC1('40500800');
+  $('c1Samples').querySelectorAll('button').forEach(btn => {
+    btn.onclick = () => {
+      $('c1Samples').querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+      $('c1Msg').textContent = '💡 已切換範例，點每一個「0」亮燈看讀法規則。';
+      loadC1(btn.dataset.v);
+    };
+  });
+
+  // 活動三：52480900 vs 52491200
+  function resetC2(){
+    c2Ctrl = mountCompare($('c2Board'), '52480900', '52491200', $('c2Msg'));
+    $('c2Msg').textContent = '💡 點「從高位比一比」，找出第一個不相同的位值欄位！';
+  }
+  resetC2();
+  $('c2Step').onclick = () => c2Ctrl.step();
+  $('c2Reset').onclick = resetC2;
 }
-({compose,read:readBoard,compare:compareBoard})[d.m]();
-opts.innerHTML=d.c.map((x,i)=>'<button class="opt" data-i="'+i+'">'+(i+1)+'. '+x+'</button>').join('');
-opts.onclick=e=>{const o=e.target.closest('.opt');if(!o||picked>=0)return;picked=+o.dataset.i;o.classList.add('sel');const ok=picked===d.a;
-  opts.querySelectorAll('.opt').forEach((x,i)=>{if(i===d.a)x.classList.add('right');else if(i===picked)x.classList.add('wrong');});
-  msg.textContent=ok?'答對了！點「下一步」看算理。':'再想想，正確選項已標綠。';steps.innerHTML=d.t.map((t,i)=>'<div class="ln" data-i="'+i+'">'+(i+1)+'. '+t+'</div>').join('');stepN=0;};
-document.getElementById('next').onclick=()=>{if(picked<0){msg.textContent='請先選出答案。';return;}const el=steps.querySelector('.ln[data-i="'+stepN+'"]');if(el){el.classList.add('show');stepN++;msg.textContent='算理 '+stepN+' / '+d.t.length;}else msg.textContent='已拆解完成。';};
-document.getElementById('reset').onclick=()=>{picked=-1;stepN=0;cmpI=-1;opts.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel','right','wrong'));steps.textContent='選出答案後，點「一步一步看算理」拆解。';msg.textContent='';({compose,read:readBoard,compare:compareBoard})[d.m]();};
-try{const top=window.parent!==window;if(top&&window.parent.document.documentElement.dataset.theme){document.documentElement.dataset.theme=window.parent.document.documentElement.dataset.theme;}}catch(e){}
+
+/* ---------- 真題模式初始化 ---------- */
+let examStepOpen = false;
+function initExam(){
+  const d = EXAM_DATA[Q];
+  $('qtag').textContent = '第 ' + Q + ' 題 / 10';
+  $('examSrc').textContent = d.s;
+  const extraBtn = $('examExtraBtn');
+  const stepsBox = $('stepsBox');
+
+  function renderBoard(){
+    examStepOpen = false;
+    stepsBox.hidden = true;
+    stepsBox.innerHTML = '';
+    $('examMsg').className = 'info-bubble';
+    $('examMsg').textContent = '💡 先操作上方教具協助思考，再到下方選出正確選項。';
+    if (d.m === 'compose') {
+      extraBtn.hidden = true;
+      mountCompose($('examBoard'), d.tile);
+    } else if (d.m === 'read') {
+      extraBtn.hidden = true;
+      mountRead($('examBoard'), d.v, $('examMsg'));
+    } else {
+      const cmp = mountCompare($('examBoard'), d.x, d.b, $('examMsg'));
+      extraBtn.hidden = false;
+      extraBtn.className = 'mini primary';
+      extraBtn.textContent = '從高位比一比 ▸';
+      extraBtn.onclick = () => cmp.step();
+    }
+    notifyHeight();
+  }
+  renderBoard();
+
+  $('examReset').onclick = renderBoard;
+  $('revealSteps').onclick = () => {
+    examStepOpen = !examStepOpen;
+    if (examStepOpen) {
+      stepsBox.innerHTML = d.steps.map(s => '<div class="sline">' + s + '</div>').join('');
+      stepsBox.hidden = false;
+      $('examMsg').textContent = '📖 已展開算理拆解步驟。';
+    } else {
+      stepsBox.hidden = true;
+      stepsBox.innerHTML = '';
+    }
+    notifyHeight();
+  };
+}
+
+function setAct(n){
+  for (let i = 0; i < 3; i++) {
+    const tab = document.querySelector('.act-btn[data-act="' + i + '"]');
+    const view = $('act-' + i + '-view');
+    if (tab) tab.classList.toggle('active', i === n);
+    if (view) view.hidden = (i !== n);
+  }
+  notifyHeight();
+}
+document.querySelectorAll('.act-btn').forEach(b => b.onclick = () => setAct(+b.dataset.act));
+$('goQuiz').onclick = () => {
+  if (window.parent && window.parent !== window && window.parent.switchToExamMode) window.parent.switchToExamMode();
+  else location.href = location.pathname + '?q=1';
+};
+
+if (MODE === 'exam') {
+  $('actNav').hidden = true;
+  $('conceptFooter').hidden = true;
+  for (let i = 0; i < 3; i++) $('act-' + i + '-view').hidden = true;
+  $('examView').hidden = false;
+  initExam();
+} else {
+  $('examView').hidden = true;
+  initConcept();
+  setAct(0);
+}
+
+window.__N41_MODE__ = MODE;
+window.__N41_Q__ = Q;
+window.__N41_READY__ = true;
+window.addEventListener('load', notifyHeight);
+window.addEventListener('resize', notifyHeight);
+</script>
+<script>
+(function(){
+  const t = P.get('theme');
+  if (t === 'dark' || t === 'light') {
+    document.documentElement.dataset.theme = t;
+  } else {
+    try {
+      const top = window.parent !== window;
+      if (top && window.parent.document.documentElement.dataset.theme) {
+        document.documentElement.dataset.theme = window.parent.document.documentElement.dataset.theme;
+      } else {
+        document.documentElement.dataset.theme = localStorage.getItem('math108_theme') || 'light';
+      }
+    } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  }
+  window.addEventListener('message', function(e){
+    if (e && e.data && e.data.type === 'THEME_CHANGE' && e.data.theme) {
+      document.documentElement.dataset.theme = e.data.theme;
+      try { localStorage.setItem('math108_theme', e.data.theme); } catch (err) {}
+    }
+  });
+})();
 </script>
 </body>
 </html>
