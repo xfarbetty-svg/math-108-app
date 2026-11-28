@@ -28,6 +28,24 @@ const argsPort = (() => {
 })();
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * 輪詢等待頁面就緒（取代固定短 sleep，避免慢載入被誤判為 FAIL）。
+ * 每次送出 Runtime.evaluate，expression 回傳 true 即放行；逾時拋錯熔斷。
+ */
+async function waitForFunction(ws, expression, timeoutMs, label, intervalMs = 100) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await ws.send('Runtime.evaluate', { expression, returnByValue: true });
+      if (res && res.result && res.result.value === true) return;
+    } catch (e) {
+      // 頁面切換中 evaluate 可能落在舊 context，忽略後繼續輪詢
+    }
+    await sleep(intervalMs);
+  }
+  throw new Error(`等待「${label}」逾時（上限 ${timeoutMs}ms）`);
+}
+
 function findChrome() {
   for (const p of CHROME_CANDIDATES) if (fs.existsSync(p)) return p;
   throw new Error('找不到可用 Chrome/Edge 瀏覽器');
@@ -119,7 +137,17 @@ async function main() {
       consoleErrors = [];
       const url = pathToFileURL(path.join(process.cwd(), 'app', q.component_path)).href;
       await ws.send('Page.navigate', { url });
-      await sleep(350);
+      // 輪詢等待（含 N-2-9-Q01）真正載入並暴露 window.check()，
+      // 以 location.pathname 確認已切到本題文件，避免舊頁 context 假就緒。
+      // 逾時上限 15s，逾時即熔斷，不再用固定 350ms 賭運氣。
+      const readyExpr = `(() => {
+        try {
+          return location.pathname.endsWith(${JSON.stringify('/' + path.basename(q.component_path))})
+            && typeof window.check === 'function'
+            && !!document.querySelector('.wrap');
+        } catch (e) { return false; }
+      })()`;
+      await waitForFunction(ws, readyExpr, 15000, `${q.id} 就緒並暴露 window.check()`);
 
       const snap = await ws.send('Runtime.evaluate', {
         expression: `(() => ({

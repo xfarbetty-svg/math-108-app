@@ -157,7 +157,7 @@ def main():
     run_cmd(["git", "add", "."])
     status_proc = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True)
     if status_proc.stdout.strip():
-        commit_msg = f"release: 發布新版 (Build {build_version}) - S-3-4 寬螢幕置中＋等角3D積木＋Q03進位按鈕＋Q02步驟引導 (開放 59/131)"
+        commit_msg = f"release: 發布新版 (Build {build_version}) - G4 概念微電影 26 支全量掛載 (就緒 85/131)"
         run_cmd(["git", "commit", "-m", commit_msg])
     else:
         print("   (無新增變更，跳過 commit)")
@@ -168,12 +168,24 @@ def main():
 
     # S3: 部署至 Cloudflare Pages (math-108)
     print("\n[S3] 實體部署至 Cloudflare Pages 邊緣節點 (math-108)...")
+    # 與 pre-push hook 一致：wrangler 不理會 .wranglerignore，必須先排除 _scratch/（含超大暫存檔）
+    stage_dir = os.path.join(ROOT, ".wrangler", "deploy-stage")
     run_cmd([
-        "npx", "wrangler", "pages", "deploy", ".",
-        "--project-name=math-108",
-        "--branch=main",
-        "--commit-dirty=true"
+        "python", "-c",
+        "import shutil,pathlib; root=pathlib.Path('.').resolve(); dst=root/'.wrangler'/'deploy-stage'; "
+        "shutil.rmtree(dst,ignore_errors=True); "
+        "shutil.copytree(root,dst,ignore=shutil.ignore_patterns('_scratch','.git','node_modules','.wrangler','*.log')); "
+        "print('[stage] ok ->',dst)"
     ])
+    try:
+        run_cmd([
+            "npx", "wrangler", "pages", "deploy", stage_dir,
+            "--project-name=math-108",
+            "--branch=main",
+            "--commit-dirty=true"
+        ])
+    finally:
+        shutil.rmtree(stage_dir, ignore_errors=True)
     print("✅ [S3] Cloudflare Pages 實體部署上傳成功！")
 
     # S4: 遠端邊緣節點實測驗真

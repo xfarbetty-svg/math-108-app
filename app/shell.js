@@ -333,7 +333,33 @@ const UNIT_CONCEPT_MOVIES = {
   "S-3-4": "assets/classroom_videos/S34_Final.mp4",
   "R-3-1": "assets/classroom_videos/R31_Final.mp4",
   "R-3-2": "assets/classroom_videos/R32_Final.mp4",
-  "D-3-1": "assets/classroom_videos/D31_Final.mp4"
+  "D-3-1": "assets/classroom_videos/D31_Final.mp4",
+  "N-4-1": "assets/classroom_videos/G4_N41_Final.mp4",
+  "N-4-2": "assets/classroom_videos/G4_N42_Final.mp4",
+  "N-4-3": "assets/classroom_videos/G4_N43_Final.mp4",
+  "N-4-4": "assets/classroom_videos/G4_N44_Final.mp4",
+  "N-4-5": "assets/classroom_videos/G4_N45_Final.mp4",
+  "N-4-6": "assets/classroom_videos/G4_N46_Final.mp4",
+  "N-4-7": "assets/classroom_videos/G4_N47_Final.mp4",
+  "N-4-8": "assets/classroom_videos/G4_N48_Final.mp4",
+  "N-4-9": "assets/classroom_videos/G4_N49_Final.mp4",
+  "N-4-10": "assets/classroom_videos/G4_N410_Final.mp4",
+  "N-4-11": "assets/classroom_videos/G4_N411_Final.mp4",
+  "N-4-12": "assets/classroom_videos/G4_N412_Final.mp4",
+  "N-4-13": "assets/classroom_videos/G4_N413_Final.mp4",
+  "S-4-1": "assets/classroom_videos/G4_S41_Final.mp4",
+  "S-4-2": "assets/classroom_videos/G4_S42_Final.mp4",
+  "S-4-3": "assets/classroom_videos/G4_S43_Final.mp4",
+  "S-4-4": "assets/classroom_videos/G4_S44_Final.mp4",
+  "S-4-5": "assets/classroom_videos/G4_S45_Final.mp4",
+  "S-4-6": "assets/classroom_videos/G4_S46_Final.mp4",
+  "S-4-7": "assets/classroom_videos/G4_S47_Final.mp4",
+  "S-4-8": "assets/classroom_videos/G4_S48_Final.mp4",
+  "R-4-1": "assets/classroom_videos/G4_R41_Final.mp4",
+  "R-4-2": "assets/classroom_videos/G4_R42_Final.mp4",
+  "R-4-3": "assets/classroom_videos/G4_R43_Final.mp4",
+  "R-4-4": "assets/classroom_videos/G4_R44_Final.mp4",
+  "D-4-1": "assets/classroom_videos/G4_D41_Final.mp4"
 };
 
 const UNIT_CONCEPT_MOVIE_TITLES = {
@@ -357,7 +383,33 @@ const UNIT_CONCEPT_MOVIE_TITLES = {
   "S-3-4": "概念小教室：幾何形體之操作",
   "R-3-1": "概念小教室：乘法與除法的關係",
   "R-3-2": "概念小教室：數量模式與推理（I）",
-  "D-3-1": "概念小教室：一維表格與二維表格"
+  "D-3-1": "概念小教室：一維表格與二維表格",
+  "N-4-1": "概念小教室：一億以內的數",
+  "N-4-2": "概念小教室：較大位數之乘除計算",
+  "N-4-3": "概念小教室：解題（兩步驟應用問題（乘除，連除））",
+  "N-4-4": "概念小教室：解題（兩步驟問題併式與括號進階應用）",
+  "N-4-5": "概念小教室：同分母分數（真分數、假分數、帶分數互換與加減）",
+  "N-4-6": "概念小教室：等值分數",
+  "N-4-7": "概念小教室：二位小數",
+  "N-4-8": "概念小教室：數線與分數、小數",
+  "N-4-9": "概念小教室：長度（「公里」）",
+  "N-4-10": "概念小教室：角度",
+  "N-4-11": "概念小教室：面積（「平方公尺」）",
+  "N-4-12": "概念小教室：體積與「立方公分」",
+  "N-4-13": "概念小教室：解題（日常生活的時間加減問題）",
+  "S-4-1": "概念小教室：角度",
+  "S-4-2": "概念小教室：解題（旋轉角）",
+  "S-4-3": "概念小教室：正方形與長方形的面積與周長",
+  "S-4-4": "概念小教室：體積",
+  "S-4-5": "概念小教室：垂直與平行",
+  "S-4-6": "概念小教室：平面圖形的全等",
+  "S-4-7": "概念小教室：三角形",
+  "S-4-8": "概念小教室：四邊形",
+  "R-4-1": "概念小教室：兩步驟問題併式",
+  "R-4-2": "概念小教室：四則計算規律（I）",
+  "R-4-3": "概念小教室：以文字表示數學公式",
+  "R-4-4": "概念小教室：數量模式與推理（II）",
+  "D-4-1": "概念小教室：報讀長條圖與折線圖以及製作長條圖"
 };
 
 const CONCEPT_COMPONENTS = {
@@ -433,7 +485,7 @@ const CONCEPT_COMPONENTS = {
   "R-3-1": "components/multiplication_division_lab.html",
   "R-3-2": "components/pattern_reasoning_lab.html",
   "D-3-1": "components/table_cross_lab.html",
-  "N-4-2": "components/mul_div_g4_lab.html",
+  "N-4-2": "components/mul_div_g4_lab.html?mode=concept",
   "N-4-10": "components/protractor_angle_g4_lab.html?mode=concept",
   "N-4-9": "components/length_km_g4_lab.html?mode=concept",
   "S-4-5": "components/perp_parallel_g4_lab.html?mode=concept",
@@ -518,7 +570,7 @@ function renderStage() {
     btnConcept.onclick = () => setUnitMode("concept");
     btnExam.onclick = () => setUnitMode("exam");
     // N-4-2、N-4-10 預設進入「🌱 概念探索」，其餘單元維持既有預設
-    const DEFAULT_CONCEPT_CODES = new Set(["N-4-2", "N-4-10", "N-4-9", "S-4-5", "N-4-5", "R-4-2", "N-4-12", "R-4-4", "N-4-11", "S-4-6", "D-4-1", "N-4-13", "N-4-6", "S-4-2", "S-4-7", "N-4-7", "S-4-8", "N-4-8", "S-4-3", "S-4-1", "R-4-3", "S-4-4", "R-4-1", "N-4-1"]);
+    const DEFAULT_CONCEPT_CODES = new Set(["N-4-2", "N-4-10", "N-4-9", "S-4-5", "N-4-5", "R-4-2", "N-4-12", "R-4-4", "N-4-11", "S-4-6", "D-4-1", "N-4-13", "N-4-6", "S-4-2", "S-4-7", "N-4-7", "S-4-8", "N-4-8", "S-4-3", "S-4-1", "R-4-3", "S-4-4", "R-4-1", "N-4-1", "N-4-3", "N-4-4"]);
     setUnitMode(DEFAULT_CONCEPT_CODES.has(code) ? "concept" : "exam");
   } else {
     tabs.style.display = "none";

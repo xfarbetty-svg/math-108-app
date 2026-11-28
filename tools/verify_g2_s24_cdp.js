@@ -28,6 +28,24 @@ const argsPort = (() => {
 })();
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * 輪詢等待頁面就緒（取代固定 sleep）。
+ * expression 回傳 true 即放行；逾時拋錯熔斷，避免無限等待。
+ */
+async function waitForFunction(ws, expression, timeoutMs, label, intervalMs = 100) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await ws.send('Runtime.evaluate', { expression, returnByValue: true });
+      if (res && res.result && res.result.value === true) return;
+    } catch (e) {
+      // 頁面切換中 evaluate 可能落在舊 context，忽略後繼續輪詢
+    }
+    await sleep(intervalMs);
+  }
+  throw new Error(`等待「${label}」逾時（上限 ${timeoutMs}ms）`);
+}
+
 function findChrome() {
   for (const p of CHROME_CANDIDATES) if (fs.existsSync(p)) return p;
   throw new Error('找不到可用 Chrome/Edge 瀏覽器');
@@ -79,7 +97,8 @@ function connect(wsUrl) {
 
 function fail(msg) {
   console.error('❌ FAIL: ' + msg);
-  process.exit(1);
+  process.exitCode = 1;
+  throw new Error(msg); // 讓 finally 有機會清理 Chrome / 暫存 profile
 }
 
 async function main() {
@@ -126,21 +145,46 @@ async function main() {
       if (!fs.existsSync(compPath)) fail(`${q.id} 組件不存在: ${compPath}`);
       const url = pathToFileURL(compPath).href;
       await ws.send('Page.navigate', { url });
-      await sleep(400);
+      // 輪詢等待本題文件就緒：.wrap 有實際高度、選項已渲染。
+      // 原本固定 sleep(400) 在慢載入時會讓 .wrap 尚未出現，
+      // 舊寫法 `?.offsetHeight || 0` 把 null 吞成 0 再退回 bodyHeight，
+      // evaluate 整句拋錯時 metrics 更直接 undefined → 難以定位。
+      const readyExpr = `(() => {
+        try {
+          const wrap = document.querySelector('.wrap');
+          return location.pathname.endsWith(${JSON.stringify('/' + path.basename(q.component_path))})
+            && !!wrap && wrap.getBoundingClientRect().height > 0
+            && document.querySelectorAll('.opt-btn').length > 0;
+        } catch (e) { return false; }
+      })()`;
+      await waitForFunction(ws, readyExpr, 15000, `${q.id} 就緒（.wrap + 選項渲染完成）`);
 
-      const metrics = (await ws.send('Runtime.evaluate', {
-        expression: `({
-          scrollWidth: document.documentElement.scrollWidth,
-          scrollHeight: document.documentElement.scrollHeight,
-          bodyHeight: document.body.offsetHeight,
-          wrapHeight: document.querySelector('.wrap')?.offsetHeight || 0,
-          optCount: document.querySelectorAll('.opt-btn').length,
-          feedbackText: document.getElementById('feedback')?.textContent?.trim() || ''
-        })`,
+      const metricsRes = await ws.send('Runtime.evaluate', {
+        expression: `(() => {
+          const wrap = document.querySelector('.wrap');
+          const rect = wrap ? wrap.getBoundingClientRect() : null;
+          return {
+            scrollWidth: document.documentElement ? document.documentElement.scrollWidth : null,
+            scrollHeight: document.documentElement ? document.documentElement.scrollHeight : null,
+            bodyHeight: document.body ? document.body.offsetHeight : null,
+            wrapHeight: rect ? Math.round(rect.height) : null,
+            optCount: document.querySelectorAll('.opt-btn').length,
+            feedbackText: (document.getElementById('feedback')?.textContent || '').trim()
+          };
+        })()`,
         returnByValue: true
-      })).result.value;
+      });
+      if (metricsRes.exceptionDetails || !metricsRes.result || typeof metricsRes.result.value !== 'object' || metricsRes.result.value === null) {
+        fail(`${q.id} 高度量測失敗（Runtime.evaluate 未回傳有效物件）`);
+      }
+      const metrics = metricsRes.result.value;
 
-      const cardH = metrics.wrapHeight || metrics.bodyHeight;
+      // 空值防呆：wrapHeight 優先，無效時退回 bodyHeight；兩者皆無效直接熔斷。
+      const usable = (n) => typeof n === 'number' && Number.isFinite(n) && n > 0;
+      const cardH = usable(metrics.wrapHeight) ? metrics.wrapHeight
+        : (usable(metrics.bodyHeight) ? metrics.bodyHeight : null);
+      if (cardH === null) fail(`${q.id} 無法取得有效高度（wrapHeight=${metrics.wrapHeight}, bodyHeight=${metrics.bodyHeight}）`);
+      if (!usable(metrics.scrollWidth)) fail(`${q.id} 無法取得有效寬度（scrollWidth=${metrics.scrollWidth}）`);
       console.log(`  [${q.id}] 測量高: ${cardH}px, 寬: ${metrics.scrollWidth}px, 選項: ${metrics.optCount}`);
 
       if (metrics.scrollWidth > 390) fail(`${q.id} 橫向溢出 (寬 ${metrics.scrollWidth} > 390)`);
