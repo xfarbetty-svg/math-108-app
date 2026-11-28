@@ -269,17 +269,7 @@ function openConceptLab(code) {
   if (examWrap) examWrap.style.display = "none";
   const frame = $("conceptFrame");
   if (frame) frame.src = comp;
-  const btnMovie = $("btnConceptMovie");
-  if (btnMovie) {
-    const movieUrl = UNIT_CONCEPT_MOVIES[code];
-    if (movieUrl) {
-      btnMovie.href = movieUrl;
-      btnMovie.title = UNIT_CONCEPT_MOVIE_TITLES[code] || "概念小教室微電影";
-      btnMovie.style.display = "inline-flex";
-    } else {
-      btnMovie.style.display = "none";
-    }
-  }
+  syncConceptMovieBtn(code);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -509,10 +499,27 @@ const CONCEPT_COMPONENTS = {
   "N-4-1": "components/place_value_g4_lab.html?mode=concept"
 };
 
+function syncConceptMovieBtn(code) {
+  const btnMovie = $("btnConceptMovie");
+  if (!btnMovie) return;
+  const movieUrl = code ? UNIT_CONCEPT_MOVIES[code] : null;
+  if (movieUrl) {
+    btnMovie.href = movieUrl;
+    btnMovie.title = UNIT_CONCEPT_MOVIE_TITLES[code] || "概念小教室微電影";
+    btnMovie.style.display = "inline-flex";
+  } else {
+    btnMovie.removeAttribute("href");
+    btnMovie.removeAttribute("title");
+    btnMovie.style.display = "none";
+  }
+}
+
 let currentUnitMode = "exam"; // "concept" | "exam"
 
 function setUnitMode(mode) {
   currentUnitMode = mode;
+  const code = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
+  syncConceptMovieBtn(code);
   const tabs = $("unitModeTabs");
   const conceptWrap = $("unitConceptWrap");
   const examWrap = $("unitExamWrap");
@@ -528,7 +535,6 @@ function setUnitMode(mode) {
     const btnSpeak = $("btnSpeak");
     if (btnSpeak) btnSpeak.style.display = "";
     const frame = $("conceptFrame");
-    const code = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
     if (frame && code && CONCEPT_COMPONENTS[code]) {
       if (!frame.src || !frame.src.includes(CONCEPT_COMPONENTS[code])) {
         frame.src = CONCEPT_COMPONENTS[code];
@@ -561,6 +567,7 @@ let heightTimer = null;
 function renderStage() {
   showView("stageView");
   const code = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
+  syncConceptMovieBtn(code);
   const tabs = $("unitModeTabs");
   const btnConcept = $("btnModeConcept");
   const btnExam = $("btnModeExam");
@@ -593,18 +600,8 @@ function renderQuestion() {
   $("stageTitle").textContent = q.title;
 
   // 微電影導流
-  const btnMovie = $("btnConceptMovie");
-  if (btnMovie) {
-    const curCode = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
-    const movieUrl = UNIT_CONCEPT_MOVIES[curCode];
-    if (movieUrl) {
-      btnMovie.href = movieUrl;
-      btnMovie.title = UNIT_CONCEPT_MOVIE_TITLES[curCode] || "概念小教室微電影";
-      btnMovie.style.display = "inline-flex";
-    } else {
-      btnMovie.style.display = "none";
-    }
-  }
+  const curCode = state.unit ? (state.unit.code || state.unit.curriculum_code) : null;
+  syncConceptMovieBtn(curCode);
 
   // Shorts 影片解題導流
   const btnVideo = $("btnShortsVideo");
